@@ -1,0 +1,17 @@
+[
+{
+  "modid": "patchouli",
+  "name": "Patchouli",
+  "description": "Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "logoFile": "",
+  "url": "http://www.vazkii.us",
+  "updateUrl": "",
+  "authorList": ["Vazkii"],
+  "credits": "",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
