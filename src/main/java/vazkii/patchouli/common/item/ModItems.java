@@ -1,4 +1,4 @@
-package vazkii.patchouli.item;
+package vazkii.patchouli.common.item;
 
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
