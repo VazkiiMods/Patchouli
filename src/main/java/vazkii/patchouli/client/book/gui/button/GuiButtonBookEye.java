@@ -5,11 +5,11 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
+import vazkii.patchouli.client.book.gui.GuiBook;
 
-public class GuiButtonLexiconEye extends GuiButtonLexicon {
+public class GuiButtonBookEye extends GuiButtonBook {
 
-	public GuiButtonLexiconEye(GuiLexicon parent, int x, int y) {
+	public GuiButtonBookEye(GuiBook parent, int x, int y) {
 		super(parent, x, y, 308, 31, 11, 11,
 				I18n.translateToLocal("alquimia.gui.lexicon.button.visualize"),
 				TextFormatting.GRAY + I18n.translateToLocal("alquimia.gui.lexicon.button.visualize.info"));

@@ -12,16 +12,16 @@ import vazkii.patchouli.client.base.PersistentData.DataHolder.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 
-public class GuiLexiconEntry extends GuiLexicon {
+public class GuiBookEntry extends GuiBook {
 
 	BookEntry entry;
 	BookPage leftPage, rightPage;
 
-	public GuiLexiconEntry(BookEntry entry) {
+	public GuiBookEntry(BookEntry entry) {
 		this(entry, 0);
 	}
 
-	public GuiLexiconEntry(BookEntry entry, int page) {
+	public GuiBookEntry(BookEntry entry, int page) {
 		this.entry = entry;
 		this.page = page; 
 	}
@@ -52,8 +52,8 @@ public class GuiLexiconEntry extends GuiLexicon {
 				PersistentData.data.history.remove(key);
 			
 			PersistentData.data.history.add(0, key);
-			while(PersistentData.data.history.size() > GuiLexiconEntryList.ENTRIES_PER_PAGE)
-				PersistentData.data.history.remove(GuiLexiconEntryList.ENTRIES_PER_PAGE);
+			while(PersistentData.data.history.size() > GuiBookEntryList.ENTRIES_PER_PAGE)
+				PersistentData.data.history.remove(GuiBookEntryList.ENTRIES_PER_PAGE);
 			
 			dirty = true;
 		}
@@ -133,7 +133,7 @@ public class GuiLexiconEntry extends GuiLexicon {
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj == this || (obj instanceof GuiLexiconEntry && ((GuiLexiconEntry) obj).entry == entry && ((GuiLexiconEntry) obj).page == page);
+		return obj == this || (obj instanceof GuiBookEntry && ((GuiBookEntry) obj).entry == entry && ((GuiBookEntry) obj).page == page);
 	}
 
 	@Override
@@ -163,8 +163,8 @@ public class GuiLexiconEntry extends GuiLexicon {
 		needsBookmarkUpdate = true;
 	}
 	
-	public static void displayOrBookmark(GuiLexicon currGui, BookEntry entry) {
-		GuiLexiconEntry gui = new GuiLexiconEntry(entry);
+	public static void displayOrBookmark(GuiBook currGui, BookEntry entry) {
+		GuiBookEntry gui = new GuiBookEntry(entry);
 		if(GuiScreen.isShiftKeyDown()) {
 			if(gui.isBookmarkedAlready()) {
 				String key = entry.getResource().toString();

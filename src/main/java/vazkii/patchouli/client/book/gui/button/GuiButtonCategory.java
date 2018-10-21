@@ -10,13 +10,13 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookCategory;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
+import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class GuiButtonCategory extends GuiButton {
 
 	private static final int ANIM_TIME = 5;
 
-	GuiLexicon parent;
+	GuiBook parent;
 	BookCategory category;
 	ItemStack stack;
 	String name;
@@ -24,13 +24,13 @@ public class GuiButtonCategory extends GuiButton {
 	float timeHovered;
 	boolean unread;
 	
-	public GuiButtonCategory(GuiLexicon parent, int x, int y, BookCategory category) {
+	public GuiButtonCategory(GuiBook parent, int x, int y, BookCategory category) {
 		this(parent, x, y, category.getIconItem(), category.getName());
 		this.category = category;
 		unread = category.isUnread();
 	}
 	
-	public GuiButtonCategory(GuiLexicon parent, int x, int y, ItemStack stack, String name) {
+	public GuiButtonCategory(GuiBook parent, int x, int y, ItemStack stack, String name) {
 		super(0, parent.bookLeft + x, parent.bookTop + y, 20, 20, "");
 		this.parent = parent;
 		this.u = x;
@@ -54,7 +54,7 @@ public class GuiButtonCategory extends GuiButton {
 
 			if(locked) {
 				GlStateManager.color(1F, 1F, 1F, 0.7F);
-				GuiLexicon.drawLock(x + 2, y + 2); 
+				GuiBook.drawLock(x + 2, y + 2); 
 			} else {
 				RenderHelper.enableGUIStandardItemLighting();
 				mc.getRenderItem().renderItemIntoGUI(stack, x + 2, y + 2);	
@@ -63,7 +63,7 @@ public class GuiButtonCategory extends GuiButton {
 			GlStateManager.pushMatrix();
 			GlStateManager.color(1F, 1F, 1F, transparency);
 			GlStateManager.translate(0, 0, 200);
-			GuiLexicon.drawFromTexture(x, y, u, v, width, height);
+			GuiBook.drawFromTexture(x, y, u, v, width, height);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			
 			if(unread) 
@@ -77,7 +77,7 @@ public class GuiButtonCategory extends GuiButton {
 	
 	@Override
     public void playPressSound(SoundHandler soundHandlerIn) {
-		GuiLexicon.playBookFlipSound();
+		GuiBook.playBookFlipSound();
 	}
 	
 	public BookCategory getCategory() {

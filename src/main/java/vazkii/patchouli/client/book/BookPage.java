@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import vazkii.patchouli.client.book.gui.GuiLexiconEntry;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.util.SerializationUtil;
 
@@ -25,7 +25,7 @@ public abstract class BookPage {
 
 	protected transient Minecraft mc;
 	protected transient FontRenderer fontRenderer;
-	protected transient GuiLexiconEntry parent;
+	protected transient GuiBookEntry parent;
 	protected transient int pageNum;
 	private transient List<GuiButton> buttons;
 	public transient int left, top;
@@ -36,7 +36,7 @@ public abstract class BookPage {
 		this.pageNum = pageNum;
 	}
 	
-	public void onDisplayed(GuiLexiconEntry parent, int left, int top) { 
+	public void onDisplayed(GuiBookEntry parent, int left, int top) { 
 		mc = parent.mc;
 		fontRenderer = mc.fontRenderer;
 		this.parent = parent;
@@ -45,7 +45,7 @@ public abstract class BookPage {
 		buttons = new ArrayList();
 	}
 	
-	public void onHidden(GuiLexiconEntry parent) {
+	public void onHidden(GuiBookEntry parent) {
 		parent.getButtonList().removeAll(buttons);
 	}
 	

@@ -29,7 +29,7 @@ import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import vazkii.patchouli.client.base.ClientAdvancements;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
+import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.PageCrafting;
 import vazkii.patchouli.client.book.page.PageEmpty;
 import vazkii.patchouli.client.book.page.PageImage;
@@ -107,7 +107,7 @@ public class BookRegistry implements IResourceManagerReloadListener {
 	public void reloadLexiconRegistry() {
 		firstLoad = false;
 		errored = false;
-		GuiLexicon.onReload();
+		GuiBook.onReload();
 		AdvancementSyncHandler.trackedNamespaces.clear();
 		categories.clear();
 		entries.clear();

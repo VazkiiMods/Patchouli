@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.page.abstr;
 
 import net.minecraft.item.ItemStack;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
+import vazkii.patchouli.client.book.gui.GuiBook;
 
 public abstract class PageDoubleRecipe<T> extends PageWithText {
 
@@ -54,7 +54,7 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	
 	@Override
 	public boolean shouldRenderText() {
-		return getTextHeight() + 10 < GuiLexicon.PAGE_HEIGHT;
+		return getTextHeight() + 10 < GuiBook.PAGE_HEIGHT;
 	}
 	
 	protected abstract void drawRecipe(T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
@@ -63,7 +63,7 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	protected abstract int getRecipeHeight();
 	
 	protected int getX() {
-		return GuiLexicon.PAGE_WIDTH / 2 - 49;
+		return GuiBook.PAGE_WIDTH / 2 - 49;
 	}
 	
 	protected int getY() {

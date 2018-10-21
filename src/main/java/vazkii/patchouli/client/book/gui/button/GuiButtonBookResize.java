@@ -6,13 +6,13 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import scala.actors.threadpool.Arrays;
 import vazkii.patchouli.client.base.PersistentData;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
+import vazkii.patchouli.client.book.gui.GuiBook;
 
-public class GuiButtonLexiconResize extends GuiButtonLexicon {
+public class GuiButtonBookResize extends GuiButtonBook {
 
 	final boolean uiscale;
 	
-	public GuiButtonLexiconResize(GuiLexicon parent, int x, int y, boolean uiscale) {
+	public GuiButtonBookResize(GuiBook parent, int x, int y, boolean uiscale) {
 		super(parent, x, y, 330, 9, 11, 11,
 				I18n.translateToLocal("alquimia.gui.lexicon.button.resize"));
 		this.uiscale = uiscale;

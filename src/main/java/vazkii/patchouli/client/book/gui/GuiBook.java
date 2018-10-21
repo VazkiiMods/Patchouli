@@ -27,17 +27,16 @@ import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookRegistry;
-import vazkii.patchouli.client.book.gui.button.GuiButtonLexiconArrow;
-import vazkii.patchouli.client.book.gui.button.GuiButtonLexiconBack;
-import vazkii.patchouli.client.book.gui.button.GuiButtonLexiconBookmark;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookBack;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark;
 
-public abstract class GuiLexicon extends GuiScreen {
+public abstract class GuiBook extends GuiScreen {
 
 	// TODO: support multiple books
-	public static final ResourceLocation LEXICON_TEXTURE = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/lexicon/lexicon.png"); 
-	public static final ResourceLocation FILLER_TEXTURE = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/lexicon/elements.png"); 
-	public static final ResourceLocation CRAFTING_TEXTURE = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/lexicon/crafting.png"); 
-	public static final ResourceLocation RITUAL_CIRCLE_TEXTURE = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/lexicon/ritual_circle.png"); 
+	public static final ResourceLocation BOOK_TEXTURE = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/book.png"); 
+	public static final ResourceLocation FILLER_TEXTURE = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/page_filler.png"); 
+	public static final ResourceLocation CRAFTING_TEXTURE = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/crafting.png"); 
 
 	public static final int FULL_WIDTH = 272;
 	public static final int FULL_HEIGHT = 180;
@@ -49,8 +48,8 @@ public abstract class GuiLexicon extends GuiScreen {
 	public static final int TEXT_LINE_HEIGHT = 9;
 	public static final int MAX_BOOKMARKS = 10;
 
-	public static Stack<GuiLexicon> guiStack = new Stack();
-	public static GuiLexicon currentGui;
+	public static Stack<GuiBook> guiStack = new Stack();
+	public static GuiBook currentGui;
 	private static int lastSound;
 	public int bookLeft, bookTop;
 
@@ -64,9 +63,9 @@ public abstract class GuiLexicon extends GuiScreen {
 	
 	boolean needsBookmarkUpdate = false;
 
-	public static GuiLexicon getCurrentGui() {
+	public static GuiBook getCurrentGui() {
 		if(currentGui == null)
-			currentGui = new GuiLexiconLanding();
+			currentGui = new GuiBookLanding();
 
 		return currentGui;
 	}
@@ -76,11 +75,11 @@ public abstract class GuiLexicon extends GuiScreen {
 		guiStack.clear();
 	}
 
-	public static void displayLexiconGui(GuiLexicon gui, boolean push) {
+	public static void displayLexiconGui(GuiBook gui, boolean push) {
 		if(gui.canBeOpened()) {
 			Minecraft mc = Minecraft.getMinecraft();
-			if(push && mc.currentScreen instanceof GuiLexicon && gui != mc.currentScreen)
-				guiStack.push((GuiLexicon) mc.currentScreen);
+			if(push && mc.currentScreen instanceof GuiBook && gui != mc.currentScreen)
+				guiStack.push((GuiBook) mc.currentScreen);
 
 			mc.displayGuiScreen(gui);
 			gui.onFirstOpened();
@@ -108,9 +107,9 @@ public abstract class GuiLexicon extends GuiScreen {
 
 		buttonList.clear();
 
-		buttonList.add(new GuiButtonLexiconBack(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5));
-		buttonList.add(new GuiButtonLexiconArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
-		buttonList.add(new GuiButtonLexiconArrow(this, bookLeft + FULL_WIDTH - 14, bookTop + FULL_HEIGHT - 6, false));
+		buttonList.add(new GuiButtonBookBack(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5));
+		buttonList.add(new GuiButtonBookArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
+		buttonList.add(new GuiButtonBookArrow(this, bookLeft + FULL_WIDTH - 14, bookTop + FULL_HEIGHT - 6, false));
 		
 		addBookmarkButtons();
 	}
@@ -158,17 +157,17 @@ public abstract class GuiLexicon extends GuiScreen {
 	}
 
 	public void addBookmarkButtons() {
-		buttonList.removeIf((b) -> b instanceof GuiButtonLexiconBookmark);
+		buttonList.removeIf((b) -> b instanceof GuiButtonBookBookmark);
 		int y = 0;
 		for(int i = 0; i < PersistentData.data.bookmarks.size(); i++) {
 			Bookmark bookmark = PersistentData.data.bookmarks.get(i);
-			buttonList.add(new GuiButtonLexiconBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
+			buttonList.add(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
 			y += 12;
 		}
 		
 		y += (y == 0 ? 0 : 2);
 		if(shouldAddAddBookmarkButton() && PersistentData.data.bookmarks.size() <= MAX_BOOKMARKS)
-			buttonList.add(new GuiButtonLexiconBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
+			buttonList.add(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
 
 		// TODO: port multiblock system
 //		if(MultiblockVisualizationHandler.hasMultiblock && MultiblockVisualizationHandler.bookmark != null)
@@ -209,7 +208,7 @@ public abstract class GuiLexicon extends GuiScreen {
 			renderToolTip(tooltipStack, mouseX, mouseY);
 
 			Pair<BookEntry, Integer> provider = BookRegistry.INSTANCE.getEntryForStack(tooltipStack);
-			if(provider != null && (!(this instanceof GuiLexiconEntry) || ((GuiLexiconEntry) this).entry != provider.getLeft())) {
+			if(provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getLeft())) {
 				GuiUtils.drawHoveringText(Arrays.asList(TextFormatting.GRAY + I18n.translateToLocal("alquimia.gui.lexicon.shift_for_recipe")),
 						mouseX, mouseY - 20, width, height, -1, fontRenderer);
 				targetPage = provider;
@@ -225,7 +224,7 @@ public abstract class GuiLexicon extends GuiScreen {
 	}
 
 	public static void drawFromTexture(int x, int y, int u, int v, int w, int h) {
-		Minecraft.getMinecraft().renderEngine.bindTexture(LEXICON_TEXTURE);
+		Minecraft.getMinecraft().renderEngine.bindTexture(BOOK_TEXTURE);
 		drawModalRectWithCustomSizedTexture(x, y, u, v, w, h, 512, 256);
 	}
 
@@ -236,12 +235,12 @@ public abstract class GuiLexicon extends GuiScreen {
 
 	@Override
 	public void actionPerformed(GuiButton button) throws IOException {
-		if(button instanceof GuiButtonLexiconBack)
+		if(button instanceof GuiButtonBookBack)
 			back(false);
-		else if(button instanceof GuiButtonLexiconArrow)
-			changePage(((GuiButtonLexiconArrow) button).left, false);
-		else if(button instanceof GuiButtonLexiconBookmark) {
-			GuiButtonLexiconBookmark bookmarkButton = (GuiButtonLexiconBookmark) button;
+		else if(button instanceof GuiButtonBookArrow)
+			changePage(((GuiButtonBookArrow) button).left, false);
+		else if(button instanceof GuiButtonBookBookmark) {
+			GuiButtonBookBookmark bookmarkButton = (GuiButtonBookBookmark) button;
 			Bookmark bookmark = bookmarkButton.bookmark;
 			if(bookmark == null || bookmark.getEntry() == null)
 				bookmarkThis();
@@ -250,7 +249,7 @@ public abstract class GuiLexicon extends GuiScreen {
 					PersistentData.data.bookmarks.remove(bookmark);
 					PersistentData.save();
 					needsBookmarkUpdate = true;
-				} else displayLexiconGui(new GuiLexiconEntry(bookmark.getEntry(), bookmark.page), true);
+				} else displayLexiconGui(new GuiBookEntry(bookmark.getEntry(), bookmark.page), true);
 			}
 		}
 	}
@@ -262,7 +261,7 @@ public abstract class GuiLexicon extends GuiScreen {
 		switch(mouseButton) {
 		case 0:
 			if(targetPage != null && isShiftKeyDown())
-				displayLexiconGui(new GuiLexiconEntry(targetPage.getLeft(), targetPage.getRight()), true);
+				displayLexiconGui(new GuiBookEntry(targetPage.getLeft(), targetPage.getRight()), true);
 			break;
 		case 1: 
 			back(true);
@@ -290,7 +289,7 @@ public abstract class GuiLexicon extends GuiScreen {
 	void back(boolean sfx) {
 		if(!guiStack.isEmpty()) {
 			if(isShiftKeyDown()) {
-				displayLexiconGui(new GuiLexiconLanding(), false);
+				displayLexiconGui(new GuiBookLanding(), false);
 				guiStack.clear();
 			} else displayLexiconGui(guiStack.pop(), false);
 			

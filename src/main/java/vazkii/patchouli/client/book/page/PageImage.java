@@ -3,9 +3,9 @@ package vazkii.patchouli.client.book.page;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
-import vazkii.patchouli.client.book.gui.GuiLexiconEntry;
-import vazkii.patchouli.client.book.gui.button.GuiButtonLexiconArrowSmall;
+import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookArrowSmall;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 
 public class PageImage extends PageWithText {
@@ -18,7 +18,7 @@ public class PageImage extends PageWithText {
 	transient int index;
 	
 	@Override
-	public void onDisplayed(GuiLexiconEntry parent, int left, int top) {
+	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 		
 		imageRes = new ResourceLocation[images.length];
@@ -27,15 +27,15 @@ public class PageImage extends PageWithText {
 		
 		int x = 90;
 		int y = 100;
-		adddButton(new GuiButtonLexiconArrowSmall(parent, x, y, true, () -> index > 0));
-		adddButton(new GuiButtonLexiconArrowSmall(parent, x + 10, y, false, () -> index < images.length - 1));
+		adddButton(new GuiButtonBookArrowSmall(parent, x, y, true, () -> index > 0));
+		adddButton(new GuiButtonBookArrowSmall(parent, x + 10, y, false, () -> index < images.length - 1));
 	}
 	
 	@Override
 	public void render(int mouseX, int mouseY, float pticks) {
 		mc.renderEngine.bindTexture(imageRes[index]);
 		
-		int x = GuiLexicon.PAGE_WIDTH / 2 - 53;
+		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 6;
 		GlStateManager.color(1F, 1F, 1F);
 		GlStateManager.enableBlend();
@@ -44,10 +44,10 @@ public class PageImage extends PageWithText {
 		GlStateManager.scale(2F, 2F, 2F);
 
 		if(border)
-			GuiLexicon.drawFromTexture(x, y, 405, 149, 106, 106);
+			GuiBook.drawFromTexture(x, y, 405, 149, 106, 106);
 		
 		if(title != null && !title.isEmpty())
-			parent.drawCenteredStringNoShadow(title, GuiLexicon.PAGE_WIDTH / 2, -3, 0x333333);
+			parent.drawCenteredStringNoShadow(title, GuiBook.PAGE_WIDTH / 2, -3, 0x333333);
 		
 		if(images.length > 1 && border) {
 			int xs = x + 83;
@@ -61,8 +61,8 @@ public class PageImage extends PageWithText {
 	
 	@Override
 	protected void onButtonClicked(GuiButton button) {
-		if(button instanceof GuiButtonLexiconArrowSmall) {
-			boolean left = ((GuiButtonLexiconArrowSmall) button).left;
+		if(button instanceof GuiButtonBookArrowSmall) {
+			boolean left = ((GuiButtonBookArrowSmall) button).left;
 			if(left)
 				index--;
 			else index++;

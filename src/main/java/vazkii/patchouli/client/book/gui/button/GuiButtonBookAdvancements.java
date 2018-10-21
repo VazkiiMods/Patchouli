@@ -1,11 +1,11 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.util.text.translation.I18n;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
+import vazkii.patchouli.client.book.gui.GuiBook;
 
-public class GuiButtonLexiconAdvancements extends GuiButtonLexicon {
+public class GuiButtonBookAdvancements extends GuiButtonBook {
 
-	public GuiButtonLexiconAdvancements(GuiLexicon parent, int x, int y) {
+	public GuiButtonBookAdvancements(GuiBook parent, int x, int y) {
 		super(parent, x, y, 330, 20, 11, 11,
 				I18n.translateToLocal("alquimia.gui.lexicon.button.advancements"));
 	}

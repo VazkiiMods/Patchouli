@@ -16,31 +16,31 @@ import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookRegistry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonIndex;
-import vazkii.patchouli.client.book.gui.button.GuiButtonLexiconAdvancements;
-import vazkii.patchouli.client.book.gui.button.GuiButtonLexiconConfig;
-import vazkii.patchouli.client.book.gui.button.GuiButtonLexiconEdit;
-import vazkii.patchouli.client.book.gui.button.GuiButtonLexiconHistory;
-import vazkii.patchouli.client.book.gui.button.GuiButtonLexiconResize;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookAdvancements;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookConfig;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookEdit;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookHistory;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
 
-public class GuiLexiconLanding extends GuiLexicon {
+public class GuiBookLanding extends GuiBook {
 
-	LexiconTextRenderer text;
+	BookTextRenderer text;
 	int loadedCategories = 0;
 	
 	@Override
 	public void initGui() {
 		super.initGui();
 		
-		text = new LexiconTextRenderer(this, I18n.translateToLocal("alquimia.gui.lexicon.landing_info"), LEFT_PAGE_X, TOP_PADDING + 25);
+		text = new BookTextRenderer(this, I18n.translateToLocal("alquimia.gui.lexicon.landing_info"), LEFT_PAGE_X, TOP_PADDING + 25);
 
 		int x = bookLeft + 20;
 		int y = bookTop + FULL_HEIGHT - 62;
 		int dist = 15;
-		buttonList.add(new GuiButtonLexiconResize(this, x + dist * 0, y, true));
-		buttonList.add(new GuiButtonLexiconHistory(this, x + dist * 1, y));
-		buttonList.add(new GuiButtonLexiconAdvancements(this, x + dist * 2, y));
-		buttonList.add(new GuiButtonLexiconConfig(this, x + dist * 3, y));
-		buttonList.add(new GuiButtonLexiconEdit(this, x + dist * 4, y));
+		buttonList.add(new GuiButtonBookResize(this, x + dist * 0, y, true));
+		buttonList.add(new GuiButtonBookHistory(this, x + dist * 1, y));
+		buttonList.add(new GuiButtonBookAdvancements(this, x + dist * 2, y));
+		buttonList.add(new GuiButtonBookConfig(this, x + dist * 3, y));
+		buttonList.add(new GuiButtonBookEdit(this, x + dist * 4, y));
 		
 		int i = 0;
 		List<BookCategory> categories = new ArrayList(BookRegistry.INSTANCE.categories.values());
@@ -111,23 +111,23 @@ public class GuiLexiconLanding extends GuiLexicon {
 		super.actionPerformed(button);
 
 		if(button instanceof GuiButtonIndex)
-			displayLexiconGui(new GuiLexiconIndex(), true);
+			displayLexiconGui(new GuiBookIndex(), true);
 		else if(button instanceof GuiButtonCategory)
-			displayLexiconGui(new GuiLexiconCategory(((GuiButtonCategory) button).getCategory()), true);
-		else if(button instanceof GuiButtonLexiconHistory)
-			displayLexiconGui(new GuiLexiconHistory(), true); // TODO bring back config and advancements
+			displayLexiconGui(new GuiBookCategory(((GuiButtonCategory) button).getCategory()), true);
+		else if(button instanceof GuiButtonBookHistory)
+			displayLexiconGui(new GuiBookHistory(), true); // TODO bring back config and advancements
 //		else if(button instanceof GuiButtonLexiconConfig)
 //			mc.displayGuiScreen(new GuiFactory.GuiAlquimiaConfig(this));
 //		else if(button instanceof GuiButtonLexiconAdvancements)
 //			mc.displayGuiScreen(new GuiAdvancementsExt(mc.player.connection.getAdvancementManager(), this));
-		else if(button instanceof GuiButtonLexiconEdit) {
+		else if(button instanceof GuiButtonBookEdit) {
 			if(isCtrlKeyDown()) {
 				long time = System.currentTimeMillis();
 				BookRegistry.INSTANCE.reloadLexiconRegistry();
-				displayLexiconGui(new GuiLexiconLanding(), false);
+				displayLexiconGui(new GuiBookLanding(), false);
 				mc.player.sendMessage(new TextComponentTranslation("alquimia.gui.lexicon.reloaded", (System.currentTimeMillis() - time)));
-			} else displayLexiconGui(new GuiLexiconWriter(), true);
-		} else if(button instanceof GuiButtonLexiconResize) {
+			} else displayLexiconGui(new GuiBookWriter(), true);
+		} else if(button instanceof GuiButtonBookResize) {
 			if(PersistentData.data.bookGuiScale >= maxScale)
 				PersistentData.data.bookGuiScale = 2;
 			else PersistentData.data.bookGuiScale = Math.max(2, PersistentData.data.bookGuiScale + 1);

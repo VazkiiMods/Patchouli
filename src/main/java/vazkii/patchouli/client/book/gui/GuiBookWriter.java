@@ -7,11 +7,11 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.text.translation.I18n;
-import vazkii.patchouli.client.book.gui.button.GuiButtonLexiconResize;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
 
-public class GuiLexiconWriter extends GuiLexicon {
+public class GuiBookWriter extends GuiBook {
 
-	LexiconTextRenderer text, editableText;
+	BookTextRenderer text, editableText;
 	GuiTextField textfield;
 	
 	private static String savedText = "";
@@ -21,12 +21,12 @@ public class GuiLexiconWriter extends GuiLexicon {
 	public void initGui() {
 		super.initGui();
 		
-		text = new LexiconTextRenderer(this, I18n.translateToLocal("alquimia.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
+		text = new BookTextRenderer(this, I18n.translateToLocal("alquimia.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
 		textfield = new GuiTextField(0, fontRenderer, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20);
 		textfield.setMaxStringLength(Integer.MAX_VALUE);
 		textfield.setText(savedText);
 		
-		buttonList.add(new GuiButtonLexiconResize(this, bookLeft + 115, bookTop + PAGE_HEIGHT - 36, false));
+		buttonList.add(new GuiButtonBookResize(this, bookLeft + 115, bookTop + PAGE_HEIGHT - 36, false));
 		
 		Keyboard.enableRepeatEvents(true);
 		refreshText();
@@ -71,7 +71,7 @@ public class GuiLexiconWriter extends GuiLexicon {
 	public void actionPerformed(GuiButton button) throws IOException {
 		super.actionPerformed(button);
 		
-		if(button instanceof GuiButtonLexiconResize) {
+		if(button instanceof GuiButtonBookResize) {
 			drawHeader = !drawHeader;
 			refreshText();
 		}
@@ -83,9 +83,9 @@ public class GuiLexiconWriter extends GuiLexicon {
 		boolean unicode = fontRenderer.getUnicodeFlag();
 		savedText = textfield.getText();
 		try {
-			editableText = new LexiconTextRenderer(this, savedText, RIGHT_PAGE_X, yPos);
+			editableText = new BookTextRenderer(this, savedText, RIGHT_PAGE_X, yPos);
 		} catch(Throwable e) {
-			editableText = new LexiconTextRenderer(this, "[ERROR]", RIGHT_PAGE_X, yPos);
+			editableText = new BookTextRenderer(this, "[ERROR]", RIGHT_PAGE_X, yPos);
 			e.printStackTrace();
 		}
 		fontRenderer.setUnicodeFlag(unicode); // if there's an error the state might not be reset

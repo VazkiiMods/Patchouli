@@ -13,7 +13,7 @@ import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookRegistry;
 
-public class LexiconTextRenderer {
+public class BookTextRenderer {
 	
 	private static final int LINK_COLOR = 0x0000EE;
 	private static final int LINK_COLOR_HOVER = 0x8800EE;
@@ -38,7 +38,7 @@ public class LexiconTextRenderer {
 		put("$(thing)", "$(#490)");
 	}};
 
-	final GuiLexicon gui;
+	final GuiBook gui;
 	final FontRenderer font;
 	final String text;
 	final int x, y, width;
@@ -53,11 +53,11 @@ public class LexiconTextRenderer {
 	
 	List<Word> words;
 	
-	public LexiconTextRenderer(GuiLexicon gui, String text, int x, int y) {
-		this(gui, text, x, y, GuiLexicon.PAGE_WIDTH, GuiLexicon.TEXT_LINE_HEIGHT);
+	public BookTextRenderer(GuiBook gui, String text, int x, int y) {
+		this(gui, text, x, y, GuiBook.PAGE_WIDTH, GuiBook.TEXT_LINE_HEIGHT);
 	}
 	
-	public LexiconTextRenderer(GuiLexicon gui, String text, int x, int y, int width, int lineHeight) {
+	public BookTextRenderer(GuiBook gui, String text, int x, int y, int width, int lineHeight) {
 		this.gui = gui;
 		this.font = gui.mc.fontRenderer;
 		this.text = text;
@@ -267,11 +267,11 @@ public class LexiconTextRenderer {
 		private void onClicked() {
 			if(href != null) {
 				if(externalHref)
-					GuiLexicon.openWebLink(href.toString());
+					GuiBook.openWebLink(href.toString());
 				else {
 					BookEntry entry = getHrefEntry();
 					if(entry != null)
-						gui.displayLexiconGui(new GuiLexiconEntry(entry), true);
+						gui.displayLexiconGui(new GuiBookEntry(entry), true);
 				}
 			}
 		}

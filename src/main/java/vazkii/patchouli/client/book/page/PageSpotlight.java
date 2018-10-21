@@ -3,7 +3,7 @@ package vazkii.patchouli.client.book.page;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
+import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
@@ -27,12 +27,12 @@ public class PageSpotlight extends PageWithText {
 		int w = 66;
 		int h = 26;
 		
-		mc.renderEngine.bindTexture(GuiLexicon.CRAFTING_TEXTURE);
+		mc.renderEngine.bindTexture(GuiBook.CRAFTING_TEXTURE);
 		GlStateManager.enableBlend();
-		parent.drawModalRectWithCustomSizedTexture(GuiLexicon.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 128);
+		parent.drawModalRectWithCustomSizedTexture(GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 128);
 		
-		parent.drawCenteredStringNoShadow(title != null && !title.isEmpty() ? title : itemStack.getDisplayName(), GuiLexicon.PAGE_WIDTH / 2, 0, 0x333333);
-		renderItem(GuiLexicon.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, itemStack);
+		parent.drawCenteredStringNoShadow(title != null && !title.isEmpty() ? title : itemStack.getDisplayName(), GuiBook.PAGE_WIDTH / 2, 0, 0x333333);
+		renderItem(GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, itemStack);
 		
 		super.render(mouseX, mouseY, pticks);
 	}

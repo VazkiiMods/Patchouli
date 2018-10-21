@@ -6,7 +6,7 @@ import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookRegistry;
 
-public class GuiLexiconIndex extends GuiLexiconEntryList {
+public class GuiBookIndex extends GuiBookEntryList {
 
 	@Override
 	protected String getName() {

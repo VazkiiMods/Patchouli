@@ -10,20 +10,20 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
+import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class GuiButtonEntry extends GuiButton {
 	
 	private static final int ANIM_TIME = 5;
 
-	GuiLexicon parent;
+	GuiBook parent;
 	BookEntry entry;
 	int i;
 	float timeHovered;
 	boolean unread;
 
-	public GuiButtonEntry(GuiLexicon parent, int x, int y, BookEntry entry, int i) {
-		super(0, x, y, GuiLexicon.PAGE_WIDTH, 10, "");
+	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, int i) {
+		super(0, x, y, GuiBook.PAGE_WIDTH, 10, "");
 		this.parent = parent;
 		this.entry = entry;
 		this.i = i;
@@ -49,7 +49,7 @@ public class GuiButtonEntry extends GuiButton {
 
 			if(locked) {
 				GlStateManager.color(1F, 1F, 1F, 0.7F);
-				GuiLexicon.drawLock(x * 2 + 2, y * 2 + 2); 
+				GuiBook.drawLock(x * 2 + 2, y * 2 + 2); 
 			} else {
 				RenderHelper.enableGUIStandardItemLighting();
 				mc.getRenderItem().renderItemIntoGUI(entry.getIconItem(), x * 2 + 2, y * 2 + 2);	
@@ -77,7 +77,7 @@ public class GuiButtonEntry extends GuiButton {
 	
 	@Override
     public void playPressSound(SoundHandler soundHandlerIn) {
-		GuiLexicon.playBookFlipSound();
+		GuiBook.playBookFlipSound();
 	}
 	
 	public BookEntry getEntry() {

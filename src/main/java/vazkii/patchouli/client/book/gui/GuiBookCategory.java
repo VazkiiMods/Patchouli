@@ -12,11 +12,11 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookRegistry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 
-public class GuiLexiconCategory extends GuiLexiconEntryList {
+public class GuiBookCategory extends GuiBookEntryList {
 
 	BookCategory category;
 	
-	public GuiLexiconCategory(BookCategory category) {
+	public GuiBookCategory(BookCategory category) {
 		this.category = category;
 	}
 
@@ -63,7 +63,7 @@ public class GuiLexiconCategory extends GuiLexiconEntryList {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return obj == this || (obj instanceof GuiLexiconCategory && ((GuiLexiconCategory) obj).category == category && ((GuiLexiconCategory) obj).page == page);
+		return obj == this || (obj instanceof GuiBookCategory && ((GuiBookCategory) obj).category == category && ((GuiBookCategory) obj).page == page);
 	}
 	
 	@Override

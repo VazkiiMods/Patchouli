@@ -5,18 +5,18 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.Bookmark;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
+import vazkii.patchouli.client.book.gui.GuiBook;
 
-public class GuiButtonLexiconBookmark extends GuiButtonLexicon {
+public class GuiButtonBookBookmark extends GuiButtonBook {
 
 	public final Bookmark bookmark;
 	public final boolean multiblock;
 
-	public GuiButtonLexiconBookmark(GuiLexicon parent, int x, int y, Bookmark bookmark) {
+	public GuiButtonBookBookmark(GuiBook parent, int x, int y, Bookmark bookmark) {
 		this(parent, x, y, bookmark, false);
 	}
 
-	public GuiButtonLexiconBookmark(GuiLexicon parent, int x, int y, Bookmark bookmark, boolean multiblock) {
+	public GuiButtonBookBookmark(GuiBook parent, int x, int y, Bookmark bookmark, boolean multiblock) {
 		super(parent, x, y, 272, bookmark == null ? 170 : 160, 13, 10, getTooltip(bookmark, multiblock));
 		this.bookmark = bookmark;
 		this.multiblock = multiblock;

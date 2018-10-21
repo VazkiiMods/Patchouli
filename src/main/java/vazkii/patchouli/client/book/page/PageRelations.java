@@ -11,8 +11,8 @@ import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookRegistry;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
-import vazkii.patchouli.client.book.gui.GuiLexiconEntry;
+import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonEntry;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 
@@ -35,7 +35,7 @@ public class PageRelations extends PageWithText {
 	}
 	
 	@Override
-	public void onDisplayed(GuiLexiconEntry parent, int left, int top) {
+	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 		
 		List<BookEntry> displayedEntries = new ArrayList(entryObjs);
@@ -50,12 +50,12 @@ public class PageRelations extends PageWithText {
 	@Override
 	protected void onButtonClicked(GuiButton button) {
 		if(button instanceof GuiButtonEntry)
-			GuiLexiconEntry.displayOrBookmark(parent, ((GuiButtonEntry) button).getEntry());
+			GuiBookEntry.displayOrBookmark(parent, ((GuiButtonEntry) button).getEntry());
 	}
 	
 	@Override
 	public void render(int mouseX, int mouseY, float pticks) {
-		parent.drawCenteredStringNoShadow(title == null || title.isEmpty() ? I18n.translateToLocal("alquimia.gui.lexicon.relations") : title, GuiLexicon.PAGE_WIDTH / 2, 0, 0x333333);
+		parent.drawCenteredStringNoShadow(title == null || title.isEmpty() ? I18n.translateToLocal("alquimia.gui.lexicon.relations") : title, GuiBook.PAGE_WIDTH / 2, 0, 0x333333);
 		parent.drawSeparator(0, 12);
 		
 		super.render(mouseX, mouseY, pticks);

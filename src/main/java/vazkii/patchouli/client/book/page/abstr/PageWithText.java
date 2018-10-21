@@ -1,20 +1,20 @@
 package vazkii.patchouli.client.book.page.abstr;
 
 import vazkii.patchouli.client.book.BookPage;
-import vazkii.patchouli.client.book.gui.GuiLexiconEntry;
-import vazkii.patchouli.client.book.gui.LexiconTextRenderer;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
+import vazkii.patchouli.client.book.gui.BookTextRenderer;
 
 public abstract class PageWithText extends BookPage {
 
 	String text;
 
-	transient LexiconTextRenderer textRender;
+	transient BookTextRenderer textRender;
 	
 	@Override
-	public void onDisplayed(GuiLexiconEntry parent, int left, int top) {
+	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 		
-		textRender = new LexiconTextRenderer(parent, text, 0, getTextHeight());
+		textRender = new BookTextRenderer(parent, text, 0, getTextHeight());
 	}
 	
 	public abstract int getTextHeight();

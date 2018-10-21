@@ -9,7 +9,7 @@ import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookRegistry;
 
-public class GuiLexiconHistory extends GuiLexiconEntryList {
+public class GuiBookHistory extends GuiBookEntryList {
 
 	@Override
 	protected String getName() {

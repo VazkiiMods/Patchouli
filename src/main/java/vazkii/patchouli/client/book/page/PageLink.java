@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book.page;
 
 import net.minecraft.client.gui.GuiButton;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
-import vazkii.patchouli.client.book.gui.GuiLexiconEntry;
+import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 
 public class PageLink extends PageWithText {
@@ -13,10 +13,10 @@ public class PageLink extends PageWithText {
 	transient GuiButton linkButton;
 
 	@Override
-	public void onDisplayed(GuiLexiconEntry parent, int left, int top) {
+	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 
-		adddButton(linkButton = new GuiButton(0, GuiLexicon.PAGE_WIDTH / 2 - 50, GuiLexicon.PAGE_HEIGHT - 35, 100, 20, link_text));
+		adddButton(linkButton = new GuiButton(0, GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, link_text));
 	}
 	
 	@Override
@@ -29,7 +29,7 @@ public class PageLink extends PageWithText {
 		super.onButtonClicked(button);
 
 		if(button == linkButton)
-			GuiLexicon.openWebLink(url);
+			GuiBook.openWebLink(url);
 	}
 
 }

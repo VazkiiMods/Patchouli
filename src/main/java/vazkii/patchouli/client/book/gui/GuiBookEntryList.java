@@ -14,12 +14,12 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonEntry;
 
-public abstract class GuiLexiconEntryList extends GuiLexicon {
+public abstract class GuiBookEntryList extends GuiBook {
 
 	public static final int ENTRIES_PER_PAGE = 13;
 	public static final int ENTRIES_IN_FIRST_PAGE = 11;
 	
-	LexiconTextRenderer text;
+	BookTextRenderer text;
 	
 	List<GuiButton> dependentButtons;
 	List<BookEntry> allEntries;
@@ -31,7 +31,7 @@ public abstract class GuiLexiconEntryList extends GuiLexicon {
 	public void initGui() {
 		super.initGui();
 		
-		text = new LexiconTextRenderer(this, getDescriptionText(), LEFT_PAGE_X, TOP_PADDING + 22);
+		text = new BookTextRenderer(this, getDescriptionText(), LEFT_PAGE_X, TOP_PADDING + 22);
 		
 		visibleEntries = new ArrayList<>();
 		allEntries = new ArrayList<>(getEntries());
@@ -96,9 +96,9 @@ public abstract class GuiLexiconEntryList extends GuiLexicon {
 		}
 		
 		if(visibleEntries.isEmpty()) {
-			drawCenteredStringNoShadow(I18n.translateToLocal("alquimia.gui.lexicon.no_results"), GuiLexicon.RIGHT_PAGE_X + GuiLexicon.PAGE_WIDTH / 2, 80, 0x333333);
+			drawCenteredStringNoShadow(I18n.translateToLocal("alquimia.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
 			GlStateManager.scale(2F, 2F, 2F);
-			drawCenteredStringNoShadow(I18n.translateToLocal("alquimia.gui.lexicon.sad"), GuiLexicon.RIGHT_PAGE_X / 2 + GuiLexicon.PAGE_WIDTH / 4, 47, 0x999999);
+			drawCenteredStringNoShadow(I18n.translateToLocal("alquimia.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 		}
 	}
@@ -117,7 +117,7 @@ public abstract class GuiLexiconEntryList extends GuiLexicon {
 		
 		if(keyCode == 28) { // Enter
 			if(visibleEntries.size() == 1)
-				displayLexiconGui(new GuiLexiconEntry(visibleEntries.get(0)), true);
+				displayLexiconGui(new GuiBookEntry(visibleEntries.get(0)), true);
 		} else {
 			String currQuery = searchField.getText();
 			searchField.textboxKeyTyped(typedChar, keyCode);
@@ -131,9 +131,9 @@ public abstract class GuiLexiconEntryList extends GuiLexicon {
 		super.actionPerformed(button);
 		
 		if(button instanceof GuiButtonCategory)
-			displayLexiconGui(new GuiLexiconCategory(((GuiButtonCategory) button).getCategory()), true);
+			displayLexiconGui(new GuiBookCategory(((GuiButtonCategory) button).getCategory()), true);
 		else if(button instanceof GuiButtonEntry)
-			GuiLexiconEntry.displayOrBookmark(this, ((GuiButtonEntry) button).getEntry());
+			GuiBookEntry.displayOrBookmark(this, ((GuiButtonEntry) button).getEntry());
 	}
 	
 	@Override

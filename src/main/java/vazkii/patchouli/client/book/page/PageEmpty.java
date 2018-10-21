@@ -1,13 +1,13 @@
 package vazkii.patchouli.client.book.page;
 
 import vazkii.patchouli.client.book.BookPage;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
+import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class PageEmpty extends BookPage {
 
 	@Override
 	public void render(int mouseX, int mouseY, float pticks) {
-		GuiLexicon.drawPageFiller(0, 0);
+		GuiBook.drawPageFiller(0, 0);
 	}
 
 }

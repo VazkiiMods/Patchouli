@@ -9,20 +9,20 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
+import vazkii.patchouli.client.book.gui.GuiBook;
 
-public class GuiButtonLexicon extends GuiButton {
+public class GuiButtonBook extends GuiButton {
 
-	GuiLexicon parent;
+	GuiBook parent;
 	int u, v;
 	Supplier<Boolean> displayCondition;
 	List<String> tooltip;
 	
-	public GuiButtonLexicon(GuiLexicon parent, int x, int y, int u, int v, int w, int h, String... tooltip) {
+	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, String... tooltip) {
 		this(parent, x, y, u, v, w, h, ()->true, tooltip);
 	}
 	
-	public GuiButtonLexicon(GuiLexicon parent, int x, int y, int u, int v, int w, int h, Supplier<Boolean> displayCondition, String... tooltip) {
+	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, Supplier<Boolean> displayCondition, String... tooltip) {
 		super(0, x, y, w, h, "");
 		this.parent = parent;
 		this.u = u;
@@ -38,7 +38,7 @@ public class GuiButtonLexicon extends GuiButton {
 		hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 		
 		if(visible) {
-			GuiLexicon.drawFromTexture(x, y, u + (hovered ? width : 0), v, width, height);
+			GuiBook.drawFromTexture(x, y, u + (hovered ? width : 0), v, width, height);
 			if(hovered)
 				parent.setTooltip(getTooltip());
 		}
@@ -46,7 +46,7 @@ public class GuiButtonLexicon extends GuiButton {
 	
 	@Override
     public void playPressSound(SoundHandler soundHandlerIn) {
-		GuiLexicon.playBookFlipSound();
+		GuiBook.playBookFlipSound();
 	}
 	
 	public List<String> getTooltip() {

@@ -10,14 +10,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.gui.GuiLexicon;
+import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipe;
 
 public class PageCrafting extends PageDoubleRecipe<IRecipe> {
 	
 	@Override
 	protected void drawRecipe(IRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-		mc.renderEngine.bindTexture(GuiLexicon.CRAFTING_TEXTURE);
+		mc.renderEngine.bindTexture(GuiBook.CRAFTING_TEXTURE);
 		GlStateManager.enableBlend();
 		parent.drawModalRectWithCustomSizedTexture(recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 128);
 		
@@ -30,7 +30,7 @@ public class PageCrafting extends PageDoubleRecipe<IRecipe> {
 				parent.setTooltip(I18n.translateToLocal("alquimia.gui.lexicon.shapeless"));
 		}
 
-		parent.drawCenteredStringNoShadow(getTitle(second), GuiLexicon.PAGE_WIDTH / 2, recipeY - 10, 0x333333);
+		parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, 0x333333);
 		
 		renderItem(recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getRecipeOutput());
 		
