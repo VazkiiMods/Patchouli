@@ -1,0 +1,20 @@
+{
+	"name": "Ritual of Purification",
+	"icon": "alquimia:alchemical_ash",
+	"category": "ritualism",
+	"priority": false,
+	"read_by_default": false,
+	"advancement": "alquimia:make_ash",
+	"pages": [
+		{
+			"type": "ritual",
+			"title": "Ritual of Purification",
+			"ritual": "alquimia:purification",
+			"text": "Click the eye icon for help."
+		},
+		{
+			"type": "text",
+			"text": "The most basic, and most likely the first ritual an artisan will do is the $(thing)Ritual of Purification$().$(br2)This ritual, made with a $(l:ritualism/ritual_circles)small circle$(), allows one to transform $(l:intro/impure_ash)Impure Ash$() into $(l:intro/alchemical_ash)Alchemical Ash$(). This process is elementary: simply toss $(item)Impure Ash$() into the circle, and it'll be converted to $(item)Alchemical Ash$() at a 16:1 ratio.$(br2)Note that this ritual is highly inefficient, so avoid using it for large quantities."
+		}
+	]
+}

@@ -8,8 +8,8 @@ public class GuiButtonBookBack extends GuiButtonBook {
 
 	public GuiButtonBookBack(GuiBook parent, int x, int y) {
 		super(parent, x, y, 308, 0, 18, 9, () -> parent.canSeeBackButton(),
-				I18n.translateToLocal("alquimia.gui.lexicon.button.back"),
-				TextFormatting.GRAY + I18n.translateToLocal("alquimia.gui.lexicon.button.back.info"));
+				I18n.translateToLocal("patchouli.gui.lexicon.button.back"),
+				TextFormatting.GRAY + I18n.translateToLocal("patchouli.gui.lexicon.button.back.info"));
 	}
 	
 	

@@ -75,7 +75,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		
 		if(page == 0) {
 			drawCenteredStringNoShadow(getName(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
-			drawCenteredStringNoShadow(I18n.translateToLocal("alquimia.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
+			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
 
 			drawSeparator(LEFT_PAGE_X, TOP_PADDING + 12);
 			drawSeparator(RIGHT_PAGE_X, TOP_PADDING + 12);
@@ -96,9 +96,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 		}
 		
 		if(visibleEntries.isEmpty()) {
-			drawCenteredStringNoShadow(I18n.translateToLocal("alquimia.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
+			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
 			GlStateManager.scale(2F, 2F, 2F);
-			drawCenteredStringNoShadow(I18n.translateToLocal("alquimia.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
+			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 		}
 	}

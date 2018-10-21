@@ -36,7 +36,7 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 			GlStateManager.disableDepth();
 			String s = Integer.toString(bookmark.page + 1);
 			if(multiblock)
-				s = I18n.translateToLocal("alquimia.gui.lexicon.visualize_letter");
+				s = I18n.translateToLocal("patchouli.gui.lexicon.visualize_letter");
 			mc.fontRenderer.drawStringWithShadow(s, px + 12, py + 10, 0xFFFFFF);
 			GlStateManager.popMatrix();
 		}
@@ -44,13 +44,13 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 
 	private static String[] getTooltip(Bookmark bookmark, boolean multiblock) {
 		if(bookmark == null || bookmark.getEntry() == null)
-			return new String[] { I18n.translateToLocal("alquimia.gui.lexicon.add_bookmark") };
+			return new String[] { I18n.translateToLocal("patchouli.gui.lexicon.add_bookmark") };
 
 		return new String[] {
 				bookmark.getEntry().getName(),
 				TextFormatting.GRAY + I18n.translateToLocal(multiblock 
-						? "alquimia.gui.lexicon.multiblock_bookmark"
-								: "alquimia.gui.lexicon.remove_bookmark")
+						? "patchouli.gui.lexicon.multiblock_bookmark"
+								: "patchouli.gui.lexicon.remove_bookmark")
 		};
 	}
 

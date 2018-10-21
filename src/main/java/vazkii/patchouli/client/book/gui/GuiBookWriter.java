@@ -21,7 +21,7 @@ public class GuiBookWriter extends GuiBook {
 	public void initGui() {
 		super.initGui();
 		
-		text = new BookTextRenderer(this, I18n.translateToLocal("alquimia.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
+		text = new BookTextRenderer(this, I18n.translateToLocal("patchouli.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
 		textfield = new GuiTextField(0, fontRenderer, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20);
 		textfield.setMaxStringLength(Integer.MAX_VALUE);
 		textfield.setText(savedText);
@@ -36,11 +36,11 @@ public class GuiBookWriter extends GuiBook {
 	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
 		super.drawForegroundElements(mouseX, mouseY, partialTicks);
 		
-		drawCenteredStringNoShadow(I18n.translateToLocal("alquimia.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
+		drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
 		drawSeparator(LEFT_PAGE_X, TOP_PADDING + 12);
 
 		if(drawHeader) {
-			drawCenteredStringNoShadow(I18n.translateToLocal("alquimia.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
+			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
 			drawSeparator(RIGHT_PAGE_X, TOP_PADDING + 12);
 		}
 		

@@ -31,7 +31,7 @@ public class GuiBookLanding extends GuiBook {
 	public void initGui() {
 		super.initGui();
 		
-		text = new BookTextRenderer(this, I18n.translateToLocal("alquimia.gui.lexicon.landing_info"), LEFT_PAGE_X, TOP_PADDING + 25);
+		text = new BookTextRenderer(this, I18n.translateToLocal("patchouli.gui.lexicon.landing_info"), LEFT_PAGE_X, TOP_PADDING + 25);
 
 		int x = bookLeft + 20;
 		int y = bookTop + FULL_HEIGHT - 62;
@@ -70,7 +70,7 @@ public class GuiBookLanding extends GuiBook {
 	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
 		text.render(mouseX, mouseY);
 		
-		drawCenteredStringNoShadow(I18n.translateToLocal("alquimia.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
+		drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
 		
 		int topSeparator = TOP_PADDING + 12;
 		int bottomSeparator = topSeparator + 25 + 24 * (loadedCategories / 4 + 1);
@@ -80,7 +80,7 @@ public class GuiBookLanding extends GuiBook {
 		drawSeparator(RIGHT_PAGE_X, bottomSeparator);
 		
 		if(BookRegistry.INSTANCE.isErrored())
-			drawCenteredStringNoShadow(I18n.translateToLocal("alquimia.gui.lexicon.loading_error"), RIGHT_PAGE_X + PAGE_WIDTH / 2, bottomSeparator + 12, 0xFF0000);
+			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.loading_error"), RIGHT_PAGE_X + PAGE_WIDTH / 2, bottomSeparator + 12, 0xFF0000);
 		
 		drawProgressBar(mouseX, mouseY, (e) -> true);
 	}
@@ -123,9 +123,9 @@ public class GuiBookLanding extends GuiBook {
 		else if(button instanceof GuiButtonBookEdit) {
 			if(isCtrlKeyDown()) {
 				long time = System.currentTimeMillis();
-				BookRegistry.INSTANCE.reloadLexiconRegistry();
+				BookRegistry.INSTANCE.reloadRegistry();
 				displayLexiconGui(new GuiBookLanding(), false);
-				mc.player.sendMessage(new TextComponentTranslation("alquimia.gui.lexicon.reloaded", (System.currentTimeMillis() - time)));
+				mc.player.sendMessage(new TextComponentTranslation("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)));
 			} else displayLexiconGui(new GuiBookWriter(), true);
 		} else if(button instanceof GuiButtonBookResize) {
 			if(PersistentData.data.bookGuiScale >= maxScale)

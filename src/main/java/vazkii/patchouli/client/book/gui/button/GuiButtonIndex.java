@@ -8,7 +8,7 @@ import vazkii.patchouli.client.book.gui.GuiBook;
 public class GuiButtonIndex extends GuiButtonCategory {
 
 	public GuiButtonIndex(GuiBook parent, int x, int y) {
-		super(parent, x, y, new ItemStack(Items.BOOK), I18n.translateToLocal("alquimia.gui.lexicon.index")); // TODO support multiples
+		super(parent, x, y, new ItemStack(Items.BOOK), I18n.translateToLocal("patchouli.gui.lexicon.index")); // TODO support multiples
 	}
 
 }

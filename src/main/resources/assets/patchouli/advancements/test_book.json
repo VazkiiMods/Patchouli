@@ -1,0 +1,26 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:book"
+        },
+        "title": {
+            "translate": "Test"
+        },
+        "description": {
+            "translate": "Test Advancement"
+        }
+    },
+    "parent": "patchouli:root",
+    "criteria": {
+        "book": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "item": "minecraft:book"
+                    }
+                ]
+            }
+        }
+    }
+}

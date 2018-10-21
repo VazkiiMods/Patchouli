@@ -2,6 +2,7 @@ package vazkii.patchouli.common.base;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import vazkii.patchouli.Patchouli;
@@ -16,11 +17,16 @@ public class CommonProxy {
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(Patchouli.instance, new GuiHandler());
 		
-		MinecraftForge.EVENT_BUS.register(new AdvancementSyncHandler());
+		MinecraftForge.EVENT_BUS.register(AdvancementSyncHandler.class);
 	}
 	
 	public void init(FMLInitializationEvent event) {
 		// NO-OP
 	}
+	
+	public void postInit(FMLPostInitializationEvent event) {
+		// NO-OP
+	}
+	
 	
 }

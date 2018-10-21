@@ -1,0 +1,20 @@
+{
+	"name": "Ritual of Rainy Days",
+	"icon": "minecraft:water_bucket",
+	"category": "ritualism",
+	"priority": false,
+	"read_by_default": false,
+	"advancement": "alquimia:pedestal",
+	"pages": [
+		{
+			"type": "ritual",
+			"title": "Ritual of Rainy Days",
+			"ritual": "alquimia:storms",
+			"text": ""
+		},
+		{
+			"type": "text",
+			"text": "The $(thing)Ritual of Rainy Days$() is a rather simple ritual. When started, it'll make it rain after a short period.$(br2)Regardless to say, attempting this ritual while it's already raining will result in the world looking at you like you just fell on your face and absolutely nothing happening."
+		}
+	]
+}

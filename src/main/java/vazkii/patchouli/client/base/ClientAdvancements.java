@@ -66,8 +66,8 @@ public class ClientAdvancements {
 			toastGui.drawTexturedModalRect(0, 0, 0, 32, 160, 32);
 			
 			// TODO support multiple book types
-            toastGui.getMinecraft().fontRenderer.drawString(I18n.format("alquimia.gui.lexicon.toast"), 30, 7, -11534256);
-            toastGui.getMinecraft().fontRenderer.drawString(I18n.format("alquimia.gui.lexicon.toast.info"), 30, 17, -16777216);
+            toastGui.getMinecraft().fontRenderer.drawString(I18n.format("patchouli.gui.lexicon.toast"), 30, 7, -11534256);
+            toastGui.getMinecraft().fontRenderer.drawString(I18n.format("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
 
             RenderHelper.enableGUIStandardItemLighting();
             toastGui.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(null, new ItemStack(Items.BOOK), 8, 8); 

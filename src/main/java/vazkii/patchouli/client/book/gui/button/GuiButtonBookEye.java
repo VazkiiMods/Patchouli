@@ -11,8 +11,8 @@ public class GuiButtonBookEye extends GuiButtonBook {
 
 	public GuiButtonBookEye(GuiBook parent, int x, int y) {
 		super(parent, x, y, 308, 31, 11, 11,
-				I18n.translateToLocal("alquimia.gui.lexicon.button.visualize"),
-				TextFormatting.GRAY + I18n.translateToLocal("alquimia.gui.lexicon.button.visualize.info"));
+				I18n.translateToLocal("patchouli.gui.lexicon.button.visualize"),
+				TextFormatting.GRAY + I18n.translateToLocal("patchouli.gui.lexicon.button.visualize.info"));
 	}
 	
 	@Override

@@ -59,7 +59,7 @@ public class GuiButtonEntry extends GuiButton {
 			int color = 0;
 			String name = (entry.isPriority() ? TextFormatting.ITALIC : "") + entry.getName();
 			if(locked) {
-				name = I18n.translateToLocal("alquimia.gui.lexicon.locked");
+				name = I18n.translateToLocal("patchouli.gui.lexicon.locked");
 				color = 0x77000000;
 			}
 			if(entry.isSecret())

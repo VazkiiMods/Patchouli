@@ -16,7 +16,7 @@ public final class PersistentData {
 	public static DataHolder data;
 	
 	public static void setup(File dir) {
-		saveFile = new File(dir, "alquimiadata.json");
+		saveFile = new File(dir, "patchouli_data.json");
 		load();
 	}
 	

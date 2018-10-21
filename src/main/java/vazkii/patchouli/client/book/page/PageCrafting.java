@@ -27,7 +27,7 @@ public class PageCrafting extends PageDoubleRecipe<IRecipe> {
 			int iconY = recipeY + 2;
 			parent.drawModalRectWithCustomSizedTexture(iconX, iconY, 0, 64, 11, 11, 128, 128);
 			if(parent.isMouseInRelativeRange(mouseX, mouseY, iconX, iconY, 11, 11))
-				parent.setTooltip(I18n.translateToLocal("alquimia.gui.lexicon.shapeless"));
+				parent.setTooltip(I18n.translateToLocal("patchouli.gui.lexicon.shapeless"));
 		}
 
 		parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, 0x333333);

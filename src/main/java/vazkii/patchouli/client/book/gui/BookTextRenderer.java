@@ -247,11 +247,11 @@ public class BookTextRenderer {
 				renderColor = LINK_COLOR_HOVER;
 				
 				if(externalHref)
-					gui.setTooltip(I18n.translateToLocal("alquimia.gui.lexicon.external_link"));
+					gui.setTooltip(I18n.translateToLocal("patchouli.gui.lexicon.external_link"));
 				else {
 					BookEntry entry = getHrefEntry();
 					if(entry != null) 
-						gui.setTooltip(entry.isLocked() ? (TextFormatting.GRAY +  I18n.translateToLocal("alquimia.gui.lexicon.locked")) : entry.getName());
+						gui.setTooltip(entry.isLocked() ? (TextFormatting.GRAY +  I18n.translateToLocal("patchouli.gui.lexicon.locked")) : entry.getName());
 					else gui.setTooltip("BAD LINK " + href);
 				}
 			}

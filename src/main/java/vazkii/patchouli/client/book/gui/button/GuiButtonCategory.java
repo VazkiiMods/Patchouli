@@ -71,7 +71,7 @@ public class GuiButtonCategory extends GuiButton {
 			GlStateManager.popMatrix();
 			
 			if(hovered)
-				parent.setTooltip(locked ? (TextFormatting.GRAY + I18n.translateToLocal("alquimia.gui.lexicon.locked")) : name);		
+				parent.setTooltip(locked ? (TextFormatting.GRAY + I18n.translateToLocal("patchouli.gui.lexicon.locked")) : name);		
 			}
 	}
 	

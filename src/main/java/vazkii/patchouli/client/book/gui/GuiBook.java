@@ -209,7 +209,7 @@ public abstract class GuiBook extends GuiScreen {
 
 			Pair<BookEntry, Integer> provider = BookRegistry.INSTANCE.getEntryForStack(tooltipStack);
 			if(provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getLeft())) {
-				GuiUtils.drawHoveringText(Arrays.asList(TextFormatting.GRAY + I18n.translateToLocal("alquimia.gui.lexicon.shift_for_recipe")),
+				GuiUtils.drawHoveringText(Arrays.asList(TextFormatting.GRAY + I18n.translateToLocal("patchouli.gui.lexicon.shift_for_recipe")),
 						mouseX, mouseY - 20, width, height, -1, fontRenderer);
 				targetPage = provider;
 			}
@@ -376,21 +376,21 @@ public abstract class GuiBook extends GuiScreen {
 		drawGradientRect(barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, 0xFFDDDDDD, 0xFFBBBBBB);
 		drawGradientRect(barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, 0xFFFFFF55, 0xFFBBBB00);
 
-		fontRenderer.drawString(I18n.translateToLocal("alquimia.gui.lexicon.progress_meter"), barLeft, barTop - 9, 0x444444);
+		fontRenderer.drawString(I18n.translateToLocal("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, 0x444444);
 
 		if(isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
 			List<String> tooltip = new ArrayList();
-			String progressStr = I18n.translateToLocalFormatted("alquimia.gui.lexicon.progress_tooltip", unlockedEntries, totalEntries);
+			String progressStr = I18n.translateToLocalFormatted("patchouli.gui.lexicon.progress_tooltip", unlockedEntries, totalEntries);
 			tooltip.add(progressStr);
 			
 			if(unlockedSecretEntries > 0) {
 				if(unlockedSecretEntries == 1)
-					tooltip.add(TextFormatting.GRAY + I18n.translateToLocal("alquimia.gui.lexicon.progress_tooltip.secret1"));
-				else tooltip.add(TextFormatting.GRAY + I18n.translateToLocalFormatted("alquimia.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries)); 
+					tooltip.add(TextFormatting.GRAY + I18n.translateToLocal("patchouli.gui.lexicon.progress_tooltip.secret1"));
+				else tooltip.add(TextFormatting.GRAY + I18n.translateToLocalFormatted("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries)); 
 			}
 			
 			if(unlockedEntries != totalEntries)
-				tooltip.add(TextFormatting.GRAY + I18n.translateToLocal("alquimia.gui.lexicon.progress_tooltip.info"));
+				tooltip.add(TextFormatting.GRAY + I18n.translateToLocal("patchouli.gui.lexicon.progress_tooltip.info"));
 			
 			setTooltip(tooltip);
 		}

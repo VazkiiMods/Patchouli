@@ -14,7 +14,7 @@ public class GuiButtonBookResize extends GuiButtonBook {
 	
 	public GuiButtonBookResize(GuiBook parent, int x, int y, boolean uiscale) {
 		super(parent, x, y, 330, 9, 11, 11,
-				I18n.translateToLocal("alquimia.gui.lexicon.button.resize"));
+				I18n.translateToLocal("patchouli.gui.lexicon.button.resize"));
 		this.uiscale = uiscale;
 	}
 	
@@ -22,7 +22,7 @@ public class GuiButtonBookResize extends GuiButtonBook {
 	public List<String> getTooltip() {
 		return !uiscale ? tooltip : Arrays.asList(new String[] { 
 				tooltip.get(0),
-				TextFormatting.GRAY + I18n.translateToLocalFormatted("alquimia.gui.lexicon.button.resize.size" + PersistentData.data.bookGuiScale)});
+				TextFormatting.GRAY + I18n.translateToLocalFormatted("patchouli.gui.lexicon.button.resize.size" + PersistentData.data.bookGuiScale)});
 	}
 
 }

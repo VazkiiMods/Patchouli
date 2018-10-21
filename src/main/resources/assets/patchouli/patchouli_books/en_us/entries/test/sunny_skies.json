@@ -1,0 +1,20 @@
+{
+	"name": "Ritual of Sunny Skies",
+	"icon": "minecraft:double_plant",
+	"category": "ritualism",
+	"priority": false,
+	"read_by_default": false,
+	"advancement": "alquimia:pedestal",
+	"pages": [
+		{
+			"type": "ritual",
+			"title": "Ritual of Sunny Skies",
+			"ritual": "alquimia:clear_skies",
+			"text": ""
+		},
+		{
+			"type": "text",
+			"text": "The $(thing)Ritual of Clear Skies$() is the perfect answer for those days when you just want to go outside but the rain isn't letting up. When started, the ritual will quickly turn the weather sunny again.$(br2)As expected, trying this ritual while it's already sunny will cause you to just lose some time and look silly."
+		}
+	]
+}

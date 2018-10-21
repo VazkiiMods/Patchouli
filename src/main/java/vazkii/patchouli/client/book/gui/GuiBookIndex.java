@@ -10,12 +10,12 @@ public class GuiBookIndex extends GuiBookEntryList {
 
 	@Override
 	protected String getName() {
-		return I18n.translateToLocal("alquimia.gui.lexicon.index");
+		return I18n.translateToLocal("patchouli.gui.lexicon.index");
 	}
 
 	@Override
 	protected String getDescriptionText() {
-		return I18n.translateToLocal("alquimia.gui.lexicon.index.info");
+		return I18n.translateToLocal("patchouli.gui.lexicon.index.info");
 	}
 
 	@Override

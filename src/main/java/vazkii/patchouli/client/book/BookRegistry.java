@@ -28,6 +28,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
+import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.PageCrafting;
@@ -53,15 +54,14 @@ public class BookRegistry implements IResourceManagerReloadListener {
 	public final Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap();
 	private boolean errored = false;
 	private boolean firstLoad = true;
-	
+
 	private Gson gson;
 	private String currentLang;
 
 	public static final BookRegistry INSTANCE = new BookRegistry();
 
 	private BookRegistry() {
-		gson = new GsonBuilder()
-				.registerTypeHierarchyAdapter(BookPage.class, new BookPage.LexiconPageAdapter())
+		gson = new GsonBuilder().registerTypeHierarchyAdapter(BookPage.class, new BookPage.LexiconPageAdapter())
 				.create();
 	}
 
@@ -69,15 +69,16 @@ public class BookRegistry implements IResourceManagerReloadListener {
 		addPageTypes();
 
 		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
-		if(manager instanceof IReloadableResourceManager)
+		if (manager instanceof IReloadableResourceManager)
 			((IReloadableResourceManager) manager).registerReloadListener(this);
-		else throw new RuntimeException("Minecraft's resource manager is not reloadable. Something went way wrong.");
+		else
+			throw new RuntimeException("Minecraft's resource manager is not reloadable. Something went way wrong.");
 	}
-	
+
 	public boolean isErrored() {
 		return errored;
 	}
-	
+
 	public void registerMod(String id) {
 		modsWithDocs.add(id);
 	}
@@ -93,18 +94,18 @@ public class BookRegistry implements IResourceManagerReloadListener {
 		pageTypes.put("link", PageLink.class);
 		pageTypes.put("relations", PageRelations.class);
 	}
-	
+
 	public Pair<BookEntry, Integer> getEntryForStack(ItemStack stack) {
 		return recipeMappings.get(ItemStackUtil.wrapStack(stack));
 	}
 
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager) {
-		if(!firstLoad)
-			reloadLexiconRegistry();
+		if (!firstLoad)
+			reloadRegistry();
 	}
 
-	public void reloadLexiconRegistry() {
+	public void reloadRegistry() {
 		firstLoad = false;
 		errored = false;
 		GuiBook.onReload();
@@ -119,47 +120,53 @@ public class BookRegistry implements IResourceManagerReloadListener {
 		List<ResourceLocation> foundCategories = new ArrayList();
 		List<ResourceLocation> foundEntries = new ArrayList();
 		List<ModContainer> mods = Loader.instance().getActiveModList();
-		
+
+		String loc = Patchouli.MOD_ID + "_books";
+
 		mods.forEach((mod) -> {
 			String id = mod.getModId();
-			CraftingHelper.findFiles(mod, String.format("assets/%s/alq_docs", id), (path) -> {
-				if(Files.exists(path)) {
+			CraftingHelper.findFiles(mod, String.format("assets/%s/%s", id, loc), (path) -> {
+				if (Files.exists(path)) {
 					AdvancementSyncHandler.trackedNamespaces.add(id);
 					foundMods.add(mod);
 					return true;
 				}
-				
+
 				return false;
 			}, null);
 		});
-		
+
 		try {
 			foundMods.forEach((mod) -> {
 				String id = mod.getModId();
-				CraftingHelper.findFiles(mod, String.format("assets/%s/alq_docs/%s/categories", id, DEFAULT_LANG), null, pred(id, foundCategories));
-				CraftingHelper.findFiles(mod, String.format("assets/%s/alq_docs/%s/entries", id, DEFAULT_LANG), null, pred(id, foundEntries));
+				CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/categories", id, loc, DEFAULT_LANG), null,
+						pred(id, foundCategories));
+				CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/entries", id, loc, DEFAULT_LANG), null,
+						pred(id, foundEntries));
 			});
-			
-			foundCategories.forEach(c -> loadCategory(c, new ResourceLocation(c.getResourceDomain(), String.format("alq_docs/%s/categories/%s.json", DEFAULT_LANG, c.getResourcePath()))));
-			foundEntries.forEach(e -> loadEntry(e, new ResourceLocation(e.getResourceDomain(), String.format("alq_docs/%s/entries/%s.json", DEFAULT_LANG, e.getResourcePath()))));
+
+			foundCategories.forEach(c -> loadCategory(c, new ResourceLocation(c.getResourceDomain(),
+					String.format("%s/%s/categories/%s.json", loc, DEFAULT_LANG, c.getResourcePath()))));
+			foundEntries.forEach(e -> loadEntry(e, new ResourceLocation(e.getResourceDomain(),
+					String.format("%s/%s/entries/%s.json", loc, DEFAULT_LANG, e.getResourcePath()))));
 
 			entries.forEach((res, entry) -> entry.build(res));
 			categories.forEach((res, category) -> category.build(res));
-		} catch(Exception e) {
+		} catch (Exception e) {
 			errored = true;
 			e.printStackTrace();
 		}
 
 		ClientAdvancements.updateLockStatus();
 	}
-	
+
 	private BiFunction<Path, Path, Boolean> pred(String modId, List<ResourceLocation> list) {
 		return (root, file) -> {
 			Path rel = root.relativize(file);
 			String relName = rel.toString();
-			if(relName.toString().endsWith(".json")) {
+			if (relName.toString().endsWith(".json")) {
 				relName = FilenameUtils.removeExtension(FilenameUtils.separatorsToUnix(relName));
-				ResourceLocation res = new ResourceLocation(modId, relName); 
+				ResourceLocation res = new ResourceLocation(modId, relName);
 				list.add(res);
 			}
 
@@ -169,38 +176,40 @@ public class BookRegistry implements IResourceManagerReloadListener {
 
 	private void loadCategory(ResourceLocation key, ResourceLocation res) {
 		InputStream stream = loadLocalizedJson(res);
-		if(stream == null)
+		if (stream == null)
 			throw new IllegalArgumentException(res + " does not exist.");
 
 		BookCategory category = gson.fromJson(new InputStreamReader(stream), BookCategory.class);
-		if(category == null)	
+		if (category == null)
 			throw new IllegalArgumentException(res + " does not exist.");
 
-		if(category.canAdd())
+		if (category.canAdd())
 			categories.put(key, category);
 	}
 
 	private void loadEntry(ResourceLocation key, ResourceLocation res) {
 		InputStream stream = loadLocalizedJson(res);
-		if(stream == null)
+		if (stream == null)
 			throw new IllegalArgumentException(res + " does not exist.");
 
 		BookEntry entry = gson.fromJson(new InputStreamReader(stream), BookEntry.class);
-		if(entry == null)
+		if (entry == null)
 			throw new IllegalArgumentException(res + " does not exist.");
 
-		if(entry.canAdd()) {
+		if (entry.canAdd()) {
 			BookCategory category = entry.getCategory();
-			if(category != null)
+			if (category != null)
 				category.addEntry(entry);
-			else new RuntimeException("Entry " + key + " does not have a valid category.").printStackTrace();
+			else
+				new RuntimeException("Entry " + key + " does not have a valid category.").printStackTrace();
 
 			entries.put(key, entry);
 		}
 	}
 
 	private InputStream loadLocalizedJson(ResourceLocation res) {
-		ResourceLocation localized = new ResourceLocation(res.getResourceDomain(), res.getResourcePath().replaceAll(DEFAULT_LANG, currentLang));
+		ResourceLocation localized = new ResourceLocation(res.getResourceDomain(),
+				res.getResourcePath().replaceAll(DEFAULT_LANG, currentLang));
 
 		return loadJson(localized, null);
 	}
@@ -215,8 +224,8 @@ public class BookRegistry implements IResourceManagerReloadListener {
 			e.printStackTrace();
 		}
 
-		if(res == null && fallback != null) {
-			new RuntimeException("Alquimia failed to load " + resloc + ". Switching to fallback.").printStackTrace();
+		if (res == null && fallback != null) {
+			new RuntimeException("Patchouli failed to load " + resloc + ". Switching to fallback.").printStackTrace();
 			return loadJson(fallback, null);
 		}
 

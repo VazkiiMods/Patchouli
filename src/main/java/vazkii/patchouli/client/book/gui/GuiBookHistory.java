@@ -13,12 +13,12 @@ public class GuiBookHistory extends GuiBookEntryList {
 
 	@Override
 	protected String getName() {
-		return I18n.translateToLocal("alquimia.gui.lexicon.history");
+		return I18n.translateToLocal("patchouli.gui.lexicon.history");
 	}
 
 	@Override
 	protected String getDescriptionText() {
-		return I18n.translateToLocal("alquimia.gui.lexicon.history.info");
+		return I18n.translateToLocal("patchouli.gui.lexicon.history.info");
 	}
 	
 	@Override
