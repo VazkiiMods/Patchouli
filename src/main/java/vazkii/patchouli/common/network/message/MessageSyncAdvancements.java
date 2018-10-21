@@ -26,6 +26,7 @@ public class MessageSyncAdvancements extends NetworkMessage<MessageSyncAdvanceme
 		ClientTicker.addAction(() -> {
 			ClientAdvancements.setDoneAdvancements(done, showToast);
 		});
+		
 		return null;
 	}
 	

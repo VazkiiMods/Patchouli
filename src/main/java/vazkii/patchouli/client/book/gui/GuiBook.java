@@ -147,6 +147,7 @@ public abstract class GuiBook extends GuiScreen {
 
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(bookLeft, bookTop, 0);
+		GlStateManager.color(1F, 1F, 1F);
 		drawBackgroundElements(mouseX, mouseY, partialTicks);
 		drawForegroundElements(mouseX, mouseY, partialTicks);
 		GlStateManager.popMatrix();

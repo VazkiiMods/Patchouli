@@ -62,6 +62,7 @@ public class BookEntry implements Comparable<BookEntry> {
 	
 	public void updateLockStatus() {
 		locked = advancement != null && !advancement.isEmpty() && !ClientAdvancements.hasDone(advancement);
+		System.out.println("UPADTE " + name + " LOCK STATUS: " + locked + " (Adv is " + advancement + ")");
 	}
 	
 	public boolean isLocked() {

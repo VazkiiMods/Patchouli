@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import scala.actors.threadpool.Arrays;
 import vazkii.patchouli.client.book.BookRegistry;
 import vazkii.patchouli.common.base.PatchouliConfig;
+import vazkii.patchouli.common.handler.AdvancementSyncHandler;
 
 public class ClientAdvancements {
 
@@ -23,14 +24,19 @@ public class ClientAdvancements {
 
 	public static void setDoneAdvancements(String[] done, boolean showToast) {
 		showToast &= !PatchouliConfig.disableAdvancementLocking;
+		System.out.println("Show Toast: " + showToast);
 		int doneCount = showToast ? (int) BookRegistry.INSTANCE.entries.values().stream().filter((e) -> !e.isLocked()).count() : 0;
 
 		doneAdvancements = Arrays.asList(done);
+		
+		System.out.println("DONE: " +doneAdvancements);
+		System.out.println("TRACKED: " + AdvancementSyncHandler.trackedNamespaces);
+		
 		updateLockStatus();
 
 		int doneCount2 = showToast ? (int) BookRegistry.INSTANCE.entries.values().stream().filter((e) -> !e.isLocked()).count() : 0;
 
-		if(doneCount2 > doneCount )
+		if(doneCount2 > doneCount)
 			Minecraft.getMinecraft().getToastGui().add(new LexiconToast());
 	}
 

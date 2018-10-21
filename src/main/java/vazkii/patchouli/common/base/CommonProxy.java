@@ -9,6 +9,7 @@ import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.common.handler.AdvancementSyncHandler;
 import vazkii.patchouli.common.item.ModItems;
 import vazkii.patchouli.common.network.GuiHandler;
+import vazkii.patchouli.common.network.NetworkHandler;
 
 public class CommonProxy {
 
@@ -21,7 +22,7 @@ public class CommonProxy {
 	}
 	
 	public void init(FMLInitializationEvent event) {
-		// NO-OP
+		NetworkHandler.registerMessages();
 	}
 	
 	public void postInit(FMLPostInitializationEvent event) {

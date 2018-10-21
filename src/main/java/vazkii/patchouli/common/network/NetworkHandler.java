@@ -10,7 +10,8 @@
  */
 package vazkii.patchouli.common.network;
 
-import net.minecraft.network.NetworkManager;
+import io.netty.buffer.ByteBuf;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,6 +27,23 @@ public class NetworkHandler {
 
 	public static void registerMessages() {
 		register(MessageSyncAdvancements.class, Side.CLIENT);
+		
+		NetworkMessage.mapHandler(String[].class, NetworkHandler::readStringArray, NetworkHandler::writeStringArray);
+	}
+	
+	public static String[] readStringArray(ByteBuf buf) {
+		int len = buf.readInt();
+		String[] strs = new String[len];
+		for(int i = 0; i < len; i++)
+			strs[i] = ByteBufUtils.readUTF8String(buf);
+		
+		return strs;
+	}
+	
+	public static void writeStringArray(String[] arr, ByteBuf buf) {
+		buf.writeInt(arr.length);
+		for(int i = 0; i < arr.length; i++)
+			ByteBufUtils.writeUTF8String(buf, arr[i]);
 	}
 	
 	public static void register(Class clazz, Side handlerSide) {
