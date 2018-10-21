@@ -46,12 +46,7 @@ public class BookRegistry implements IResourceManagerReloadListener {
 
 	private static final String DEFAULT_LANG = "en_us";
 
-	public final List<String> modsWithDocs = new ArrayList();
-
-	public final Map<ResourceLocation, BookCategory> categories = new HashMap();
-	public final Map<ResourceLocation, BookEntry> entries = new HashMap();
 	public final Map<String, Class<? extends BookPage>> pageTypes = new HashMap();
-	public final Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap();
 	private boolean errored = false;
 	private boolean firstLoad = true;
 
@@ -61,8 +56,7 @@ public class BookRegistry implements IResourceManagerReloadListener {
 	public static final BookRegistry INSTANCE = new BookRegistry();
 
 	private BookRegistry() {
-		gson = new GsonBuilder().registerTypeHierarchyAdapter(BookPage.class, new BookPage.LexiconPageAdapter())
-				.create();
+		gson = new GsonBuilder().registerTypeHierarchyAdapter(BookPage.class, new BookPage.LexiconPageAdapter()).create();
 	}
 
 	public void init() {
@@ -79,10 +73,6 @@ public class BookRegistry implements IResourceManagerReloadListener {
 		return errored;
 	}
 
-	public void registerMod(String id) {
-		modsWithDocs.add(id);
-	}
-
 	private void addPageTypes() {
 		pageTypes.put("text", PageText.class);
 		pageTypes.put("crafting", PageCrafting.class);
@@ -95,9 +85,6 @@ public class BookRegistry implements IResourceManagerReloadListener {
 		pageTypes.put("relations", PageRelations.class);
 	}
 
-	public Pair<BookEntry, Integer> getEntryForStack(ItemStack stack) {
-		return recipeMappings.get(ItemStackUtil.wrapStack(stack));
-	}
 
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager) {
@@ -110,9 +97,6 @@ public class BookRegistry implements IResourceManagerReloadListener {
 		errored = false;
 		GuiBook.onReload();
 		AdvancementSyncHandler.trackedNamespaces.clear();
-		categories.clear();
-		entries.clear();
-		recipeMappings.clear();
 
 		currentLang = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
 

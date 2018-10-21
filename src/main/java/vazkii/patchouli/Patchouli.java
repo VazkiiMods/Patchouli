@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import vazkii.patchouli.common.base.CommonProxy;
 
-// TODO wipe all alquimia lang keys
 // TODO rewrite book registry to support multiple books, remove any singleton/static references
 // TODO port multiblock system
 // TODO port right click handler
