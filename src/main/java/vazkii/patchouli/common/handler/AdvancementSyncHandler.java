@@ -1,4 +1,4 @@
-package vazkii.patchouli.handler;
+package vazkii.patchouli.common.handler;
 
 import java.util.ArrayList;
 import java.util.HashSet;

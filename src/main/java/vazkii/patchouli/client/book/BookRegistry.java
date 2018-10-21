@@ -37,9 +37,9 @@ import vazkii.patchouli.client.book.page.PageLink;
 import vazkii.patchouli.client.book.page.PageRelations;
 import vazkii.patchouli.client.book.page.PageSpotlight;
 import vazkii.patchouli.client.book.page.PageText;
+import vazkii.patchouli.common.handler.AdvancementSyncHandler;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
-import vazkii.patchouli.handler.AdvancementSyncHandler;
 
 public class BookRegistry implements IResourceManagerReloadListener {
 
