@@ -34,6 +34,7 @@ patchouli.gui.lexicon.history.info=This section stores the previous few chapters
 patchouli.gui.lexicon.toast=Documentation
 patchouli.gui.lexicon.toast.info=New Chapters Unlocked
 patchouli.gui.lexicon.external_link=(External Link)
+patchouli.gui.lexicon.loading_error=Loading error!
 
 patchouli.gui.lexicon.button.prev_page=Previous
 patchouli.gui.lexicon.button.next_page=Next
