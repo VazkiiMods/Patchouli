@@ -31,13 +31,7 @@ import net.minecraftforge.fml.common.ModContainer;
 import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBook;
-import vazkii.patchouli.client.book.page.PageCrafting;
-import vazkii.patchouli.client.book.page.PageEmpty;
-import vazkii.patchouli.client.book.page.PageImage;
-import vazkii.patchouli.client.book.page.PageLink;
-import vazkii.patchouli.client.book.page.PageRelations;
-import vazkii.patchouli.client.book.page.PageSpotlight;
-import vazkii.patchouli.client.book.page.PageText;
+import vazkii.patchouli.client.book.page.*;
 import vazkii.patchouli.common.handler.AdvancementSyncHandler;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
@@ -86,6 +80,7 @@ public class BookRegistry implements IResourceManagerReloadListener {
 	private void addPageTypes() {
 		pageTypes.put("text", PageText.class);
 		pageTypes.put("crafting", PageCrafting.class);
+		pageTypes.put("smelting", PageSmelting.class);
 		pageTypes.put("image", PageImage.class);
 		pageTypes.put("spotlight", PageSpotlight.class);
 		pageTypes.put("empty", PageEmpty.class);
