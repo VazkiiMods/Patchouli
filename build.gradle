@@ -47,6 +47,10 @@ jar {
     exclude "**/*.psd"
     exclude "**/*.exe"
     exclude "**/unused"
+    
+    // exclude test assets
+    exclude "**/assets/patchouli/patchouli_books/**"
+    exclude "**/assets/patchouli/advancements/**"
 }
 
 processResources {
