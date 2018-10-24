@@ -11,7 +11,9 @@ import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
+import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
 import vazkii.patchouli.common.base.PatchouliConfig;
+import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
 
@@ -25,6 +27,7 @@ public class BookEntry implements Comparable<BookEntry> {
 	String advancement;
 	
 	transient ResourceLocation resource;
+	transient Book book = null;
 	transient BookCategory lcategory = null;
 	transient ItemStack iconItem = null;
 	transient List<BookPage> realPages = new ArrayList();
@@ -53,8 +56,8 @@ public class BookEntry implements Comparable<BookEntry> {
 	public BookCategory getCategory() {
 		if(lcategory == null) {
 			if(category.contains(":"))
-				lcategory = BookRegistry.INSTANCE.categories.get(new ResourceLocation(category));
-			else lcategory = BookRegistry.INSTANCE.categories.get(new ResourceLocation(Patchouli.MOD_ID, category));
+				lcategory = book.contents.categories.get(new ResourceLocation(category));
+			else lcategory = book.contents.categories.get(new ResourceLocation(Patchouli.MOD_ID, category));
 		}
 		
 		return lcategory;
@@ -72,7 +75,8 @@ public class BookEntry implements Comparable<BookEntry> {
 	}
 	
 	public boolean isUnread() {
-		return !read_by_default && !isLocked() && !PersistentData.data.viewedEntries.contains(getResource().toString());
+		BookData data = PersistentData.data.getBookData(book);
+		return !read_by_default && !isLocked() && !data.viewedEntries.contains(getResource().toString());
 	}
 	
 	public boolean isSecret() {
@@ -102,7 +106,8 @@ public class BookEntry implements Comparable<BookEntry> {
 		return this.name.compareTo(o.name);
 	}
 	
-	public void build(ResourceLocation resource) {
+	public void build(Book book, ResourceLocation resource) {
+		this.book = book;
 		this.resource = resource;
 		for(int i = 0; i < pages.length; i++)
 			if(pages[i].canAdd()) {
@@ -115,8 +120,8 @@ public class BookEntry implements Comparable<BookEntry> {
 		StackWrapper wrapper = ItemStackUtil.wrapStack(stack);
 		relevantStacks.add(wrapper);
 		
-		if(!BookRegistry.INSTANCE.recipeMappings.containsKey(wrapper))
-			BookRegistry.INSTANCE.recipeMappings.put(wrapper, Pair.of(this, page / 2));
+		if(!book.contents.recipeMappings.containsKey(wrapper))
+			book.contents.recipeMappings.put(wrapper, Pair.of(this, page / 2));
 	}
 	
 	public boolean isStackRelevant(ItemStack stack) {

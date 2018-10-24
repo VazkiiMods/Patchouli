@@ -3,8 +3,9 @@ package vazkii.patchouli.client.base;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import vazkii.patchouli.client.book.BookRegistry;
+import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.CommonProxy;
+import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ModItems;
 
 public class ClientProxy extends CommonProxy {
@@ -15,7 +16,7 @@ public class ClientProxy extends CommonProxy {
 		
 		ModItems.setModels();
 		
-		BookRegistry.INSTANCE.init();
+		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup(event.getSuggestedConfigurationFile().getParentFile().getParentFile());
 		
 		MinecraftForge.EVENT_BUS.register(ClientTicker.class);
@@ -26,7 +27,7 @@ public class ClientProxy extends CommonProxy {
 	public void postInit(FMLPostInitializationEvent event) {
 		super.postInit(event);
 		
-		BookRegistry.INSTANCE.reloadRegistry();
+		BookRegistry.INSTANCE.reload();
 	}
 	
 	

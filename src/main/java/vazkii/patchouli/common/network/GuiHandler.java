@@ -16,10 +16,12 @@ public class GuiHandler implements IGuiHandler {
 
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		switch(ID) {
-		case BOOK_GUI: 
-			return GuiBook.getCurrentGui();
-		}
+// 	    TODO: support multi book
+//		switch(ID) {
+//		case BOOK_GUI: 
+//			return GuiBook.getCurrentGui();
+//		}
+//		
 		
 		return null;
 	}

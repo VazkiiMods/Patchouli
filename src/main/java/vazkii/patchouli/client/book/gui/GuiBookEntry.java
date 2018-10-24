@@ -8,20 +8,23 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import vazkii.patchouli.client.base.PersistentData;
-import vazkii.patchouli.client.base.PersistentData.DataHolder.Bookmark;
+import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
+import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
+import vazkii.patchouli.common.book.Book;
 
 public class GuiBookEntry extends GuiBook {
 
 	BookEntry entry;
 	BookPage leftPage, rightPage;
 
-	public GuiBookEntry(BookEntry entry) {
-		this(entry, 0);
+	public GuiBookEntry(Book book, BookEntry entry) {
+		this(book, entry, 0);
 	}
 
-	public GuiBookEntry(BookEntry entry, int page) {
+	public GuiBookEntry(Book book, BookEntry entry, int page) {
+		super(book);
 		this.entry = entry;
 		this.page = page; 
 	}
@@ -41,19 +44,22 @@ public class GuiBookEntry extends GuiBook {
 
 		boolean dirty = false;
 		String key = entry.getResource().toString();
-		if(!PersistentData.data.viewedEntries.contains(key)) {
-			PersistentData.data.viewedEntries.add(key);
+		
+		BookData data = PersistentData.data.getBookData(book);
+		
+		if(!data.viewedEntries.contains(key)) {
+			data.viewedEntries.add(key);
 			dirty = true;
 		}
 		
-		int index = PersistentData.data.history.indexOf(key);
+		int index = data.history.indexOf(key);
 		if(index != 0) {
 			if(index > 0)
-				PersistentData.data.history.remove(key);
+				data.history.remove(key);
 			
-			PersistentData.data.history.add(0, key);
-			while(PersistentData.data.history.size() > GuiBookEntryList.ENTRIES_PER_PAGE)
-				PersistentData.data.history.remove(GuiBookEntryList.ENTRIES_PER_PAGE);
+			data.history.add(0, key);
+			while(data.history.size() > GuiBookEntryList.ENTRIES_PER_PAGE)
+				data.history.remove(GuiBookEntryList.ENTRIES_PER_PAGE);
 			
 			dirty = true;
 		}
@@ -137,7 +143,7 @@ public class GuiBookEntry extends GuiBook {
 	}
 
 	@Override
-	boolean canBeOpened() {
+	public boolean canBeOpened() {
 		return !entry.isLocked() && !equals(Minecraft.getMinecraft().currentScreen);
 	}
 
@@ -148,7 +154,9 @@ public class GuiBookEntry extends GuiBook {
 	
 	boolean isBookmarkedAlready() {
 		String entryKey = entry.getResource().toString();
-		for(Bookmark bookmark : PersistentData.data.bookmarks)
+		BookData data = PersistentData.data.getBookData(book);
+		
+		for(Bookmark bookmark : data.bookmarks)
 			if(bookmark.entry.equals(entryKey) && bookmark.page == page)
 				return true;
 		
@@ -158,28 +166,33 @@ public class GuiBookEntry extends GuiBook {
 	@Override
 	public void bookmarkThis() {
 		String entryKey = entry.getResource().toString();
-		PersistentData.data.bookmarks.add(new Bookmark(entryKey, page));
+		BookData data = PersistentData.data.getBookData(book);
+		data.bookmarks.add(new Bookmark(entryKey, page));
 		PersistentData.save();
 		needsBookmarkUpdate = true;
 	}
 	
 	public static void displayOrBookmark(GuiBook currGui, BookEntry entry) {
-		GuiBookEntry gui = new GuiBookEntry(entry);
+		Book book = currGui.book;
+		GuiBookEntry gui = new GuiBookEntry(currGui.book, entry);
+		
 		if(GuiScreen.isShiftKeyDown()) {
+			BookData data = PersistentData.data.getBookData(book);
+
 			if(gui.isBookmarkedAlready()) {
 				String key = entry.getResource().toString();
-				PersistentData.data.bookmarks.removeIf((bm) -> bm.entry.equals(key) && bm.page == 0);
+				data.bookmarks.removeIf((bm) -> bm.entry.equals(key) && bm.page == 0);
 				PersistentData.save();
 				currGui.needsBookmarkUpdate = true;
 				return;
-			} else if(PersistentData.data.bookmarks.size() < MAX_BOOKMARKS) {
+			} else if(data.bookmarks.size() < MAX_BOOKMARKS) {
 				gui.bookmarkThis();
 				currGui.needsBookmarkUpdate = true;
 				return;
 			}
 		}
 		
-		displayLexiconGui(gui, true);
+		book.contents.openLexiconGui(gui, true);
 	}
 	
 }

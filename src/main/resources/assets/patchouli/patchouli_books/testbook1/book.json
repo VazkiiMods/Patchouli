@@ -1,0 +1,6 @@
+{
+	"name": "item.patchouli:test_book_1.name",
+	"advancement_namespaces": [
+		"patchouli"
+	]
+}

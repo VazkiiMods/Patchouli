@@ -10,11 +10,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.BookRegistry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonEntry;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
+import vazkii.patchouli.common.book.BookRegistry;
 
 public class PageRelations extends PageWithText {
 
@@ -28,8 +28,8 @@ public class PageRelations extends PageWithText {
 		super.build(entry, pageNum);
 
 		entryObjs = entries.stream()
-				.map((s) -> s.contains(":") ? new ResourceLocation(s) : new ResourceLocation(Patchouli.MOD_ID, s)) // TODO: support multiple books
-				.map((res) -> BookRegistry.INSTANCE.entries.get(res))
+				.map((s) -> s.contains(":") ? new ResourceLocation(s) : new ResourceLocation(book.resource.getResourceDomain(), s))
+				.map((res) -> book.contents.entries.get(res))
 				.filter((e) -> e != null)
 				.collect(Collectors.toList());
 	}

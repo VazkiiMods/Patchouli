@@ -5,7 +5,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Stack;
 import java.util.function.Predicate;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -24,12 +23,12 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
-import vazkii.patchouli.client.base.PersistentData.DataHolder.Bookmark;
+import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.BookRegistry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBack;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark;
+import vazkii.patchouli.common.book.Book;
 
 public abstract class GuiBook extends GuiScreen {
 
@@ -48,8 +47,8 @@ public abstract class GuiBook extends GuiScreen {
 	public static final int TEXT_LINE_HEIGHT = 9;
 	public static final int MAX_BOOKMARKS = 10;
 
-	public static Stack<GuiBook> guiStack = new Stack();
-	public static GuiBook currentGui;
+	public final Book book;
+	
 	private static int lastSound;
 	public int bookLeft, bookTop;
 
@@ -63,29 +62,10 @@ public abstract class GuiBook extends GuiScreen {
 	
 	boolean needsBookmarkUpdate = false;
 
-	public static GuiBook getCurrentGui() {
-		if(currentGui == null)
-			currentGui = new GuiBookLanding();
-
-		return currentGui;
+	public GuiBook(Book book) {
+		this.book = book;
 	}
-
-	public static void onReload() {
-		currentGui = null;
-		guiStack.clear();
-	}
-
-	public static void displayLexiconGui(GuiBook gui, boolean push) {
-		if(gui.canBeOpened()) {
-			Minecraft mc = Minecraft.getMinecraft();
-			if(push && mc.currentScreen instanceof GuiBook && gui != mc.currentScreen)
-				guiStack.push((GuiBook) mc.currentScreen);
-
-			mc.displayGuiScreen(gui);
-			gui.onFirstOpened();
-		}
-	}
-
+	
 	@Override
 	public void initGui() {
 		int guiScale = mc.gameSettings.guiScale;
@@ -103,7 +83,7 @@ public abstract class GuiBook extends GuiScreen {
 		bookLeft = width / 2 - FULL_WIDTH / 2;
 		bookTop = height / 2 - FULL_HEIGHT / 2;
 
-		currentGui = this;
+		book.contents.currentGui = this;
 
 		buttonList.clear();
 
@@ -160,14 +140,15 @@ public abstract class GuiBook extends GuiScreen {
 	public void addBookmarkButtons() {
 		buttonList.removeIf((b) -> b instanceof GuiButtonBookBookmark);
 		int y = 0;
-		for(int i = 0; i < PersistentData.data.bookmarks.size(); i++) {
-			Bookmark bookmark = PersistentData.data.bookmarks.get(i);
+		List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
+		for(int i = 0; i < bookmarks.size(); i++) {
+			Bookmark bookmark = bookmarks.get(i);
 			buttonList.add(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
 			y += 12;
 		}
 		
 		y += (y == 0 ? 0 : 2);
-		if(shouldAddAddBookmarkButton() && PersistentData.data.bookmarks.size() <= MAX_BOOKMARKS)
+		if(shouldAddAddBookmarkButton() && bookmarks.size() <= MAX_BOOKMARKS)
 			buttonList.add(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
 
 		// TODO: port multiblock system
@@ -208,7 +189,7 @@ public abstract class GuiBook extends GuiScreen {
 		if(tooltipStack != null) {
 			renderToolTip(tooltipStack, mouseX, mouseY);
 
-			Pair<BookEntry, Integer> provider = BookRegistry.INSTANCE.getEntryForStack(tooltipStack);
+			Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
 			if(provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getLeft())) {
 				GuiUtils.drawHoveringText(Arrays.asList(TextFormatting.GRAY + I18n.translateToLocal("patchouli.gui.lexicon.shift_for_recipe")),
 						mouseX, mouseY - 20, width, height, -1, fontRenderer);
@@ -243,14 +224,15 @@ public abstract class GuiBook extends GuiScreen {
 		else if(button instanceof GuiButtonBookBookmark) {
 			GuiButtonBookBookmark bookmarkButton = (GuiButtonBookBookmark) button;
 			Bookmark bookmark = bookmarkButton.bookmark;
-			if(bookmark == null || bookmark.getEntry() == null)
+			if(bookmark == null || bookmark.getEntry(book) == null)
 				bookmarkThis();
 			else {
 				if(isShiftKeyDown() && !bookmarkButton.multiblock) {
-					PersistentData.data.bookmarks.remove(bookmark);
+					List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
+					bookmarks.remove(bookmark);
 					PersistentData.save();
 					needsBookmarkUpdate = true;
-				} else displayLexiconGui(new GuiBookEntry(bookmark.getEntry(), bookmark.page), true);
+				} else displayLexiconGui(new GuiBookEntry(book, bookmark.getEntry(book), bookmark.page), true);
 			}
 		}
 	}
@@ -262,7 +244,7 @@ public abstract class GuiBook extends GuiScreen {
 		switch(mouseButton) {
 		case 0:
 			if(targetPage != null && isShiftKeyDown())
-				displayLexiconGui(new GuiBookEntry(targetPage.getLeft(), targetPage.getRight()), true);
+				displayLexiconGui(new GuiBookEntry(book, targetPage.getLeft(), targetPage.getRight()), true);
 			break;
 		case 1: 
 			back(true);
@@ -288,11 +270,11 @@ public abstract class GuiBook extends GuiScreen {
 	}
 
 	void back(boolean sfx) {
-		if(!guiStack.isEmpty()) {
+		if(!book.contents.guiStack.isEmpty()) {
 			if(isShiftKeyDown()) {
-				displayLexiconGui(new GuiBookLanding(), false);
-				guiStack.clear();
-			} else displayLexiconGui(guiStack.pop(), false);
+				displayLexiconGui(new GuiBookLanding(book), false);
+				book.contents.guiStack.clear();
+			} else displayLexiconGui(book.contents.guiStack.pop(), false);
 			
 			if(sfx)
 				playBookFlipSound();
@@ -316,7 +298,7 @@ public abstract class GuiBook extends GuiScreen {
 		// NO-OP
 	}
 	
-	boolean canBeOpened() {
+	public boolean canBeOpened() {
 		return true;
 	}
 
@@ -325,7 +307,7 @@ public abstract class GuiBook extends GuiScreen {
 	}
 
 	public boolean canSeeBackButton() {
-		return !guiStack.isEmpty();
+		return !book.contents.guiStack.isEmpty();
 	}
 
 	public void setTooltip(String... strings) {
@@ -358,7 +340,7 @@ public abstract class GuiBook extends GuiScreen {
 		
 		int unlockedSecretEntries = 0;
 		
-		for(BookEntry entry : BookRegistry.INSTANCE.entries.values())
+		for(BookEntry entry : book.contents.entries.values())
 			if(filter.test(entry)) {
 				if(entry.isSecret()) {
 					if(!entry.isLocked())
@@ -472,6 +454,10 @@ public abstract class GuiBook extends GuiScreen {
 		catch (Throwable e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void displayLexiconGui(GuiBook gui, boolean push) {
+		book.contents.openLexiconGui(gui, push);
 	}
 	
 }

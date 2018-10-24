@@ -1,6 +1,8 @@
 package vazkii.patchouli.client.base;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.toasts.GuiToast;
@@ -13,9 +15,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import scala.actors.threadpool.Arrays;
-import vazkii.patchouli.client.book.BookRegistry;
 import vazkii.patchouli.common.base.PatchouliConfig;
+import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.handler.AdvancementSyncHandler;
 
 public class ClientAdvancements {
@@ -25,26 +27,39 @@ public class ClientAdvancements {
 	public static void setDoneAdvancements(String[] done, boolean showToast) {
 		showToast &= !PatchouliConfig.disableAdvancementLocking;
 		System.out.println("Show Toast: " + showToast);
-		int doneCount = showToast ? (int) BookRegistry.INSTANCE.entries.values().stream().filter((e) -> !e.isLocked()).count() : 0;
+		int doneCount = getCompleteAdvancements(showToast);
 
 		doneAdvancements = Arrays.asList(done);
 		
-		System.out.println("DONE: " +doneAdvancements);
-		System.out.println("TRACKED: " + AdvancementSyncHandler.trackedNamespaces);
-		
 		updateLockStatus();
 
-		int doneCount2 = showToast ? (int) BookRegistry.INSTANCE.entries.values().stream().filter((e) -> !e.isLocked()).count() : 0;
+		int doneCount2 = getCompleteAdvancements(showToast);
 
 		if(doneCount2 > doneCount)
 			Minecraft.getMinecraft().getToastGui().add(new LexiconToast());
 	}
 
-	public static void updateLockStatus() {
-		if(doneAdvancements != null) {
-			BookRegistry.INSTANCE.entries.values().forEach((e) -> e.updateLockStatus());
-			BookRegistry.INSTANCE.categories.values().forEach((c) -> c.updateLockStatus(true));
-		}
+	private static int getCompleteAdvancements(boolean toast) {
+		if(!toast)
+			return 0;
+		
+		int total = (int) BookRegistry.INSTANCE.books.values().stream()
+				.filter(Book::usesAdvancements)
+				.map(b ->
+					b.contents.entries.values().stream()
+					.filter((e) -> !e.isLocked())
+					.count()
+				)
+				.collect(Collectors.summingInt((l) -> (int) (long) l));
+		
+		return total;
+	}
+	
+	public static void updateLockStatus() { // TODO
+//		if(doneAdvancements != null) {
+//			BookRegistry.BookContents.entries.values().forEach((e) -> e.updateLockStatus());
+//			BookRegistry.BookContents.categories.values().forEach((c) -> c.updateLockStatus(true));
+//		}
 	}
 
 	public static void resetIfNeeded() {

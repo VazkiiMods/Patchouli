@@ -19,6 +19,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
+import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
 
 public abstract class BookPage {
@@ -26,6 +28,9 @@ public abstract class BookPage {
 	protected transient Minecraft mc;
 	protected transient FontRenderer fontRenderer;
 	protected transient GuiBookEntry parent;
+
+	protected transient Book book;
+	protected transient BookEntry entry;
 	protected transient int pageNum;
 	private transient List<GuiButton> buttons;
 	public transient int left, top;
@@ -33,6 +38,8 @@ public abstract class BookPage {
 	String type, flag;
 	
 	public void build(BookEntry entry, int pageNum) {
+		this.book = entry.book;
+		this.entry = entry;
 		this.pageNum = pageNum;
 	}
 	
@@ -89,22 +96,6 @@ public abstract class BookPage {
 	
 	public boolean canAdd() {
 		return flag == null || flag.isEmpty() || PatchouliConfig.getConfigFlag(flag);
-	}
-	
-	public static class LexiconPageAdapter implements JsonDeserializer<BookPage> {
-		
-		@Override
-		public BookPage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-	        JsonObject obj = json.getAsJsonObject();
-	        JsonPrimitive prim = (JsonPrimitive) obj.get("type");
-	        String type = prim.getAsString();
-	        Class<? extends BookPage> clazz = BookRegistry.INSTANCE.pageTypes.get(type);
-	        if(clazz == null)
-	        	return null;
-	        
-	        return SerializationUtil.RAW_GSON.fromJson(json, clazz);
-		}
-		
 	}
 	
 }

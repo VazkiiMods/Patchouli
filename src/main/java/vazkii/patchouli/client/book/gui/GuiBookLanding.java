@@ -13,19 +13,24 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookCategory;
-import vazkii.patchouli.client.book.BookRegistry;
-import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
-import vazkii.patchouli.client.book.gui.button.GuiButtonIndex;
+import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookAdvancements;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookConfig;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookEdit;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookHistory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
+import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
+import vazkii.patchouli.client.book.gui.button.GuiButtonIndex;
+import vazkii.patchouli.common.book.Book;
 
 public class GuiBookLanding extends GuiBook {
 
 	BookTextRenderer text;
 	int loadedCategories = 0;
+	
+	public GuiBookLanding(Book book) {
+		super(book);
+	}
 	
 	@Override
 	public void initGui() {
@@ -43,7 +48,7 @@ public class GuiBookLanding extends GuiBook {
 		buttonList.add(new GuiButtonBookEdit(this, x + dist * 4, y));
 		
 		int i = 0;
-		List<BookCategory> categories = new ArrayList(BookRegistry.INSTANCE.categories.values());
+		List<BookCategory> categories = new ArrayList(book.contents.categories.values());
 		Collections.sort(categories);
 		
 		for(BookCategory category : categories) {	
@@ -79,7 +84,7 @@ public class GuiBookLanding extends GuiBook {
 		drawSeparator(RIGHT_PAGE_X, topSeparator);
 		drawSeparator(RIGHT_PAGE_X, bottomSeparator);
 		
-		if(BookRegistry.INSTANCE.isErrored())
+		if(book.contents.isErrored())
 			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.loading_error"), RIGHT_PAGE_X + PAGE_WIDTH / 2, bottomSeparator + 12, 0xFF0000);
 		
 		drawProgressBar(mouseX, mouseY, (e) -> true);
@@ -111,23 +116,30 @@ public class GuiBookLanding extends GuiBook {
 		super.actionPerformed(button);
 
 		if(button instanceof GuiButtonIndex)
-			displayLexiconGui(new GuiBookIndex(), true);
+			displayLexiconGui(new GuiBookIndex(book), true);
+		
 		else if(button instanceof GuiButtonCategory)
-			displayLexiconGui(new GuiBookCategory(((GuiButtonCategory) button).getCategory()), true);
+			displayLexiconGui(new GuiBookCategory(book, ((GuiButtonCategory) button).getCategory()), true);
+		
 		else if(button instanceof GuiButtonBookHistory)
-			displayLexiconGui(new GuiBookHistory(), true); // TODO bring back config and advancements
+			displayLexiconGui(new GuiBookHistory(book), true); // TODO bring back config and advancements
+		
 //		else if(button instanceof GuiButtonLexiconConfig)
 //			mc.displayGuiScreen(new GuiFactory.GuiAlquimiaConfig(this));
+		
 //		else if(button instanceof GuiButtonLexiconAdvancements)
 //			mc.displayGuiScreen(new GuiAdvancementsExt(mc.player.connection.getAdvancementManager(), this));
+		
 		else if(button instanceof GuiButtonBookEdit) {
 			if(isCtrlKeyDown()) {
 				long time = System.currentTimeMillis();
-				BookRegistry.INSTANCE.reloadRegistry();
-				displayLexiconGui(new GuiBookLanding(), false);
+				book.reloadContents();
+				displayLexiconGui(new GuiBookLanding(book), false);
 				mc.player.sendMessage(new TextComponentTranslation("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)));
-			} else displayLexiconGui(new GuiBookWriter(), true);
-		} else if(button instanceof GuiButtonBookResize) {
+			} else displayLexiconGui(new GuiBookWriter(book), true);
+		}
+		
+		else if(button instanceof GuiButtonBookResize) {
 			if(PersistentData.data.bookGuiScale >= maxScale)
 				PersistentData.data.bookGuiScale = 2;
 			else PersistentData.data.bookGuiScale = Math.max(2, PersistentData.data.bookGuiScale + 1);

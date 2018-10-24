@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
+import vazkii.patchouli.common.book.Book;
 
 public class GuiBookWriter extends GuiBook {
 
@@ -17,6 +18,10 @@ public class GuiBookWriter extends GuiBook {
 	private static String savedText = "";
 	private static boolean drawHeader;
 
+	public GuiBookWriter(Book book) {
+		super(book);
+	}
+	
 	@Override
 	public void initGui() {
 		super.initGui();

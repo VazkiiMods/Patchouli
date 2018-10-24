@@ -13,6 +13,7 @@ import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonEntry;
+import vazkii.patchouli.common.book.Book;
 
 public abstract class GuiBookEntryList extends GuiBook {
 
@@ -27,6 +28,10 @@ public abstract class GuiBookEntryList extends GuiBook {
 	
 	GuiTextField searchField;
 
+	public GuiBookEntryList(Book book) {
+		super(book);
+	}
+	
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -117,7 +122,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		
 		if(keyCode == 28) { // Enter
 			if(visibleEntries.size() == 1)
-				displayLexiconGui(new GuiBookEntry(visibleEntries.get(0)), true);
+				displayLexiconGui(new GuiBookEntry(book, visibleEntries.get(0)), true);
 		} else {
 			String currQuery = searchField.getText();
 			searchField.textboxKeyTyped(typedChar, keyCode);
@@ -131,7 +136,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		super.actionPerformed(button);
 		
 		if(button instanceof GuiButtonCategory)
-			displayLexiconGui(new GuiBookCategory(((GuiButtonCategory) button).getCategory()), true);
+			displayLexiconGui(new GuiBookCategory(book, ((GuiButtonCategory) button).getCategory()), true);
 		else if(button instanceof GuiButtonEntry)
 			GuiBookEntry.displayOrBookmark(this, ((GuiButtonEntry) button).getEntry());
 	}

@@ -9,14 +9,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.BookRegistry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
+import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.book.BookRegistry;
 
 public class GuiBookCategory extends GuiBookEntryList {
 
 	BookCategory category;
 	
-	public GuiBookCategory(BookCategory category) {
+	public GuiBookCategory(Book book, BookCategory category) {
+		super(book);
 		this.category = category;
 	}
 
@@ -38,7 +40,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 	@Override
 	protected void addSubcategoryButtons() {
 		int i = 0;
-		List<BookCategory> categories = new ArrayList(BookRegistry.INSTANCE.categories.values());
+		List<BookCategory> categories = new ArrayList(book.contents.categories.values());
 		Collections.sort(categories);
 		
 		for(BookCategory ocategory : categories) {
@@ -67,7 +69,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 	}
 	
 	@Override
-	boolean canBeOpened() {
+	public boolean canBeOpened() {
 		return !category.isLocked() && !equals(Minecraft.getMinecraft().currentScreen);
 	}
 	

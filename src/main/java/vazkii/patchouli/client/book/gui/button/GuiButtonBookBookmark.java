@@ -4,11 +4,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
-import vazkii.patchouli.client.base.PersistentData.DataHolder.Bookmark;
+import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
+import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.common.book.Book;
 
 public class GuiButtonBookBookmark extends GuiButtonBook {
 
+	private final Book book;
+	
 	public final Bookmark bookmark;
 	public final boolean multiblock;
 
@@ -17,7 +21,8 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	}
 
 	public GuiButtonBookBookmark(GuiBook parent, int x, int y, Bookmark bookmark, boolean multiblock) {
-		super(parent, x, y, 272, bookmark == null ? 170 : 160, 13, 10, getTooltip(bookmark, multiblock));
+		super(parent, x, y, 272, bookmark == null ? 170 : 160, 13, 10, getTooltip(parent.book, bookmark, multiblock));
+		this.book = parent.book;
 		this.bookmark = bookmark;
 		this.multiblock = multiblock;
 	}
@@ -26,12 +31,13 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 		super.drawButton(mc, mouseX, mouseY, partialTicks);
 
-		if(visible && bookmark != null && bookmark.getEntry() != null) {
+		BookEntry entry = bookmark.getEntry(book);
+		if(visible && bookmark != null && entry != null) {
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 			int px = x * 2 + (hovered ? 6 : 2);
 			int py = y * 2 + 2;
-			mc.getRenderItem().renderItemIntoGUI(bookmark.getEntry().getIconItem(), px, py);
+			mc.getRenderItem().renderItemIntoGUI(entry.getIconItem(), px, py);
 
 			GlStateManager.disableDepth();
 			String s = Integer.toString(bookmark.page + 1);
@@ -42,12 +48,14 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 		}
 	}
 
-	private static String[] getTooltip(Bookmark bookmark, boolean multiblock) {
-		if(bookmark == null || bookmark.getEntry() == null)
+	private static String[] getTooltip(Book book, Bookmark bookmark, boolean multiblock) {
+		BookEntry entry = bookmark.getEntry(book);
+
+		if(bookmark == null ||entry == null)
 			return new String[] { I18n.translateToLocal("patchouli.gui.lexicon.add_bookmark") };
 
 		return new String[] {
-				bookmark.getEntry().getName(),
+				entry.getName(),
 				TextFormatting.GRAY + I18n.translateToLocal(multiblock 
 						? "patchouli.gui.lexicon.multiblock_bookmark"
 								: "patchouli.gui.lexicon.remove_bookmark")

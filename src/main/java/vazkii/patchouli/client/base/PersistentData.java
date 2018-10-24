@@ -2,11 +2,14 @@ package vazkii.patchouli.client.base;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.BookRegistry;
+import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
 
 public final class PersistentData {
@@ -32,23 +35,38 @@ public final class PersistentData {
 		
 		public int bookGuiScale = 0;
 		public boolean clickedVisualize = false;
-		public List<String> viewedEntries = new ArrayList();
-		public List<Bookmark> bookmarks = new ArrayList();
-		public List<String> history = new ArrayList();
 		
-		public static final class Bookmark {
+		public Map<String, BookData> bookData = new HashMap();
+		
+		public BookData getBookData(Book book) {
+			String res = book.resource.toString();
+			if(!bookData.containsKey(res))
+				bookData.put(res, new BookData());
 			
-			public String entry;
-			public int page;
+			return bookData.get(res);
+		}
+		
+		public static final class BookData {
 			
-			public Bookmark(String entry, int page) {
-				this.entry = entry;
-				this.page = page;
-			}
-			
-			public BookEntry getEntry() {
-				ResourceLocation res = new ResourceLocation(entry);
-				return BookRegistry.INSTANCE.entries.get(res);
+			public List<String> viewedEntries = new ArrayList();
+			public List<Bookmark> bookmarks = new ArrayList();
+			public List<String> history = new ArrayList();
+
+			public static final class Bookmark {
+				
+				public String entry;
+				public int page;
+				
+				public Bookmark(String entry, int page) {
+					this.entry = entry;
+					this.page = page;
+				}
+				
+				public BookEntry getEntry(Book book) {
+					ResourceLocation res = new ResourceLocation(entry);
+					return book.contents.entries.get(res);
+				}
+				
 			}
 			
 		}

@@ -11,7 +11,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.BookRegistry;
+import vazkii.patchouli.common.book.Book;
 
 public class BookTextRenderer {
 	
@@ -38,6 +38,7 @@ public class BookTextRenderer {
 		put("$(thing)", "$(#490)");
 	}};
 
+	final Book book;
 	final GuiBook gui;
 	final FontRenderer font;
 	final String text;
@@ -58,6 +59,7 @@ public class BookTextRenderer {
 	}
 	
 	public BookTextRenderer(GuiBook gui, String text, int x, int y, int width, int lineHeight) {
+		this.book = gui.book;
 		this.gui = gui;
 		this.font = gui.mc.fontRenderer;
 		this.text = text;
@@ -271,13 +273,13 @@ public class BookTextRenderer {
 				else {
 					BookEntry entry = getHrefEntry();
 					if(entry != null)
-						gui.displayLexiconGui(new GuiBookEntry(entry), true);
+						gui.displayLexiconGui(new GuiBookEntry(book, entry), true);
 				}
 			}
 		}
 		
 		private BookEntry getHrefEntry() {
-			return BookRegistry.INSTANCE.entries.get(href);
+			return book.contents.entries.get(href);
 		}
 		
 		private boolean isHovered(int mouseX, int mouseY) {

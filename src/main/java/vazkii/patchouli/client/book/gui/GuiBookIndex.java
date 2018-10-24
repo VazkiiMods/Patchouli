@@ -4,9 +4,14 @@ import java.util.Collection;
 
 import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.BookRegistry;
+import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.client.book.BookContents;
 
 public class GuiBookIndex extends GuiBookEntryList {
+
+	public GuiBookIndex(Book book) {
+		super(book);
+	}
 
 	@Override
 	protected String getName() {
@@ -20,7 +25,7 @@ public class GuiBookIndex extends GuiBookEntryList {
 
 	@Override
 	protected Collection<BookEntry> getEntries() {
-		return BookRegistry.INSTANCE.entries.values();
+		return book.contents.entries.values();
 	}
 
 }

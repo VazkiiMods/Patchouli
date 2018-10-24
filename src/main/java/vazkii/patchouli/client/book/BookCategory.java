@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.common.base.PatchouliConfig;
+import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class BookCategory implements Comparable<BookCategory> {
@@ -13,6 +14,7 @@ public class BookCategory implements Comparable<BookCategory> {
 	String name, description, icon, parent, flag;
 	int sortnum;
 	
+	transient Book book;
 	transient boolean checkedParent = false;
 	transient BookCategory parentCategory;
 	transient List<BookCategory> children = new ArrayList<>();
@@ -50,7 +52,7 @@ public class BookCategory implements Comparable<BookCategory> {
 	
 	public BookCategory getParentCategory() {
 		if(!checkedParent && !isRootCategory()) {
-			parentCategory = BookRegistry.INSTANCE.categories.get(new ResourceLocation(parent));
+			parentCategory = book.contents.categories.get(new ResourceLocation(parent));
 			checkedParent = true;
 		}
 		
@@ -114,11 +116,17 @@ public class BookCategory implements Comparable<BookCategory> {
 		return this.sortnum - o.sortnum;
 	}
 	
-	public void build(ResourceLocation resource) {
+	public void build(Book book, ResourceLocation resource) {
+		this.book = book;
 		this.resource = resource;
 		BookCategory parent = getParentCategory();
 		if(parent != null)
 			parent.addChildCategory(this);
+	}
+	
+	
+	public Book getBook() {
+		return book;
 	}
 	
 }
