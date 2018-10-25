@@ -44,7 +44,7 @@ public class PageImage extends PageWithText {
 		GlStateManager.scale(2F, 2F, 2F);
 
 		if(border)
-			GuiBook.drawFromTexture(x, y, 405, 149, 106, 106);
+			GuiBook.drawFromTexture(book, x, y, 405, 149, 106, 106);
 		
 		if(title != null && !title.isEmpty())
 			parent.drawCenteredStringNoShadow(title, GuiBook.PAGE_WIDTH / 2, -3, 0x333333);

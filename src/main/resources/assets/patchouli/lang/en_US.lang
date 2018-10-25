@@ -7,7 +7,6 @@ item.patchouli:test_book_2.name=Test Book 2
 item.patchouli:test_book_1.landing=Not as fun landing text but still here.
 item.patchouli:test_book_2.landing=Landing text! It even supports $(2)colors$() and $(4)the $(bold)like$()!
 
-
 # Gui Strings
 patchouli.gui.lexicon.landing_info=(Placeholder landing text, define your own in your book json file!)
 patchouli.gui.lexicon.progress_meter=Unlock Progress:
@@ -42,6 +41,8 @@ patchouli.gui.lexicon.toast=New Chapters
 patchouli.gui.lexicon.toast.info=New Chapters Unlocked
 patchouli.gui.lexicon.external_link=(External Link)
 patchouli.gui.lexicon.loading_error=Loading error!
+patchouli.gui.lexicon.dev_edition=Writer's
+patchouli.gui.lexicon.edition_str=%s Edition
 
 patchouli.gui.lexicon.button.prev_page=Previous
 patchouli.gui.lexicon.button.next_page=Next

@@ -49,7 +49,7 @@ public class GuiButtonEntry extends GuiButton {
 
 			if(locked) {
 				GlStateManager.color(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(x * 2 + 2, y * 2 + 2); 
+				GuiBook.drawLock(parent.book, x * 2 + 2, y * 2 + 2); 
 			} else {
 				RenderHelper.enableGUIStandardItemLighting();
 				mc.getRenderItem().renderItemIntoGUI(entry.getIconItem(), x * 2 + 2, y * 2 + 2);	
@@ -71,7 +71,7 @@ public class GuiButtonEntry extends GuiButton {
 			mc.fontRenderer.setUnicodeFlag(unicode);
 			
 			if(unread)
-				parent.drawWarning(x + width - 5, y, entry.hashCode());
+				parent.drawWarning(parent.book, x + width - 5, y, entry.hashCode());
 		}
 	}
 	

@@ -20,7 +20,8 @@ public class Patchouli {
 	public static final String MOD_NAME = "Patchouli";
 	public static final String BUILD = "GRADLE:BUILD";
 	public static final String VERSION = "GRADLE:VERSION-" + BUILD;
-	
+	public static final String PREFIX = MOD_ID + ":";
+
 	public static final String COMMON_PROXY = "vazkii.patchouli.common.base.CommonProxy";
 	public static final String CLIENT_PROXY = "vazkii.patchouli.client.base.ClientProxy";
 	

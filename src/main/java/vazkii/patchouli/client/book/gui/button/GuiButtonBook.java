@@ -38,7 +38,7 @@ public class GuiButtonBook extends GuiButton {
 		hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 		
 		if(visible) {
-			GuiBook.drawFromTexture(x, y, u + (hovered ? width : 0), v, width, height);
+			GuiBook.drawFromTexture(parent.book, x, y, u + (hovered ? width : 0), v, width, height);
 			if(hovered)
 				parent.setTooltip(getTooltip());
 		}

@@ -7,7 +7,7 @@ public class PageEmpty extends BookPage {
 
 	@Override
 	public void render(int mouseX, int mouseY, float pticks) {
-		GuiBook.drawPageFiller(0, 0);
+		GuiBook.drawPageFiller(book, 0, 0);
 	}
 
 }

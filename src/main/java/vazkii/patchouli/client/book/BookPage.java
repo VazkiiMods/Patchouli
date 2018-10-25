@@ -29,7 +29,7 @@ public abstract class BookPage {
 	protected transient FontRenderer fontRenderer;
 	protected transient GuiBookEntry parent;
 
-	protected transient Book book;
+	public transient Book book;
 	protected transient BookEntry entry;
 	protected transient int pageNum;
 	private transient List<GuiButton> buttons;

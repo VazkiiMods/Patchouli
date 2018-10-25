@@ -19,7 +19,7 @@ public class PageText extends PageWithText {
 		if(pageNum == 0) {
 			boolean adv = mc.gameSettings.advancedItemTooltips;
 			parent.drawCenteredStringNoShadow(parent.getEntry().getName(), GuiBook.PAGE_WIDTH / 2, adv ? -3 : 0, 0x333333);
-			parent.drawSeparator(0, 12);
+			parent.drawSeparator(book, 0, 12);
 			
 			if(adv) {
 				ResourceLocation res = parent.getEntry().getResource();

@@ -27,7 +27,7 @@ public class PageSpotlight extends PageWithText {
 		int w = 66;
 		int h = 26;
 		
-		mc.renderEngine.bindTexture(GuiBook.CRAFTING_TEXTURE);
+		mc.renderEngine.bindTexture(book.craftingResource);
 		GlStateManager.enableBlend();
 		parent.drawModalRectWithCustomSizedTexture(GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 128);
 		

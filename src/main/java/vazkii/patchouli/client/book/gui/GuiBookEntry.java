@@ -74,7 +74,7 @@ public class GuiBookEntry extends GuiBook {
 		drawPage(rightPage, mouseX, mouseY, partialTicks);
 
 		if(rightPage == null)
-			drawPageFiller();
+			drawPageFiller(leftPage.book);
 	}
 
 	@Override

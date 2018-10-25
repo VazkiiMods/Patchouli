@@ -42,11 +42,11 @@ public class GuiBookWriter extends GuiBook {
 		super.drawForegroundElements(mouseX, mouseY, partialTicks);
 		
 		drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
-		drawSeparator(LEFT_PAGE_X, TOP_PADDING + 12);
+		drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
 
 		if(drawHeader) {
 			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
-			drawSeparator(RIGHT_PAGE_X, TOP_PADDING + 12);
+			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
 		}
 		
 		textfield.drawTextBox();

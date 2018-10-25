@@ -13,7 +13,7 @@ public class PageSmelting extends PageDoubleRecipe<Tuple<ItemStack, ItemStack>> 
 
     @Override
     protected void drawRecipe(Tuple<ItemStack, ItemStack> recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-        mc.renderEngine.bindTexture(GuiBook.CRAFTING_TEXTURE);
+        mc.renderEngine.bindTexture(book.craftingResource);
         GlStateManager.enableBlend();
         parent.drawModalRectWithCustomSizedTexture(recipeX, recipeY, 11, 71, 96, 24, 128, 128);
         parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, 0x333333);

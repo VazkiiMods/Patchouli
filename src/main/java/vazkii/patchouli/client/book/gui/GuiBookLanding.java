@@ -81,8 +81,8 @@ public class GuiBookLanding extends GuiBook {
 		int bottomSeparator = topSeparator + 25 + 24 * (loadedCategories / 4 + 1);
 		
 		drawHeader();
-		drawSeparator(RIGHT_PAGE_X, topSeparator);
-		drawSeparator(RIGHT_PAGE_X, bottomSeparator);
+		drawSeparator(book, RIGHT_PAGE_X, topSeparator);
+		drawSeparator(book, RIGHT_PAGE_X, bottomSeparator);
 		
 		if(book.contents.isErrored())
 			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.loading_error"), RIGHT_PAGE_X + PAGE_WIDTH / 2, bottomSeparator + 12, 0xFF0000);
@@ -92,16 +92,15 @@ public class GuiBookLanding extends GuiBook {
 	
 	void drawHeader() {
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		drawFromTexture(-8, 12, 0, 180, 140, 31);
+		drawFromTexture(book, -8, 12, 0, 180, 140, 31);
 
 		int color = 0xFFDD00;
 		boolean unicode = fontRenderer.getUnicodeFlag();
 		fontRenderer.drawString(book.getBookItem().getDisplayName(), 13, 16, color);
 		
-		// TODO: support subtitle
-//		fontRenderer.setUnicodeFlag(true);
-//		fontRenderer.drawString(ItemLexicon.getEdition(), 24, 24, color); 
-//		fontRenderer.setUnicodeFlag(unicode);
+		fontRenderer.setUnicodeFlag(true);
+		fontRenderer.drawString(book.contents.getSubtitle(), 24, 24, color); 
+		fontRenderer.setUnicodeFlag(unicode);
 	}
 	
 	@Override

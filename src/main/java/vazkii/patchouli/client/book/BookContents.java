@@ -19,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -32,6 +33,7 @@ import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
 
 public class BookContents  {
 
+	private static final String[] ORDINAL_SUFFIXES = new String[]{ "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 	private static final String DEFAULT_LANG = "en_us";
 
 	public final Book book;
@@ -71,6 +73,16 @@ public class BookContents  {
 
 			mc.displayGuiScreen(gui);
 			gui.onFirstOpened();
+		}
+	}
+	
+	public String getSubtitle() {
+		try {
+			int ver = Integer.parseInt(book.version);
+			String editionStr = ver == 0 ? I18n.translateToLocal("patchouli.gui.lexicon.dev_edition") : numberToOrdinal(ver); 
+			return I18n.translateToLocalFormatted("patchouli.gui.lexicon.edition_str", editionStr);
+		} catch(NumberFormatException e) {
+			return book.subtitle;
 		}
 	}
 
@@ -183,4 +195,8 @@ public class BookContents  {
 		return res.getInputStream();
 	}
 
+	private static String numberToOrdinal(int i) {
+		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
+	}
+	
 }

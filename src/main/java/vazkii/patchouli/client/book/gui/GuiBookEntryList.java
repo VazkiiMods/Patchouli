@@ -82,18 +82,18 @@ public abstract class GuiBookEntryList extends GuiBook {
 			drawCenteredStringNoShadow(getName(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
 			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
 
-			drawSeparator(LEFT_PAGE_X, TOP_PADDING + 12);
-			drawSeparator(RIGHT_PAGE_X, TOP_PADDING + 12);
+			drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
+			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
 
 			text.render(mouseX, mouseY);
 			if(shouldDrawProgressBar())
 				drawProgressBar(mouseX, mouseY, this::doesEntryCountForProgress);
 		} else if(page % 2 == 1 && page == maxpages - 1)
-			drawPageFiller();
+			drawPageFiller(book);
 		
 		if(!searchField.getText().isEmpty()) {
 			GlStateManager.color(1F, 1F, 1F, 1F);
-			drawFromTexture(searchField.x - 8, searchField.y, 140, 183, 99, 14);
+			drawFromTexture(book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
 			boolean unicode = fontRenderer.getUnicodeFlag();
 			fontRenderer.setUnicodeFlag(true);
 			fontRenderer.drawString(searchField.getText(), searchField.x + 7, searchField.y + 1, 0);

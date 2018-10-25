@@ -17,7 +17,7 @@ public class PageCrafting extends PageDoubleRecipe<IRecipe> {
 	
 	@Override
 	protected void drawRecipe(IRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-		mc.renderEngine.bindTexture(GuiBook.CRAFTING_TEXTURE);
+		mc.renderEngine.bindTexture(book.craftingResource);
 		GlStateManager.enableBlend();
 		parent.drawModalRectWithCustomSizedTexture(recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 128);
 		

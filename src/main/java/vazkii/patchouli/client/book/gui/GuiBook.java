@@ -32,11 +32,6 @@ import vazkii.patchouli.common.book.Book;
 
 public abstract class GuiBook extends GuiScreen {
 
-	// TODO: support multiple books
-	public static final ResourceLocation BOOK_TEXTURE = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/book.png"); 
-	public static final ResourceLocation FILLER_TEXTURE = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/page_filler.png"); 
-	public static final ResourceLocation CRAFTING_TEXTURE = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/crafting.png"); 
-
 	public static final int FULL_WIDTH = 272;
 	public static final int FULL_HEIGHT = 180;
 	public static final int PAGE_WIDTH = 116;
@@ -180,7 +175,7 @@ public abstract class GuiBook extends GuiScreen {
 	}
 
 	final void drawBackgroundElements(int mouseX, int mouseY, float partialTicks) {
-		drawFromTexture(0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT);
+		drawFromTexture(book, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT);
 	}
 
 	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) { }
@@ -205,8 +200,8 @@ public abstract class GuiBook extends GuiScreen {
 		targetPage = null;
 	}
 
-	public static void drawFromTexture(int x, int y, int u, int v, int w, int h) {
-		Minecraft.getMinecraft().renderEngine.bindTexture(BOOK_TEXTURE);
+	public static void drawFromTexture(Book book, int x, int y, int u, int v, int w, int h) {
+		Minecraft.getMinecraft().renderEngine.bindTexture(book.bookResource);
 		drawModalRectWithCustomSizedTexture(x, y, u, v, w, h, 512, 256);
 	}
 
@@ -401,39 +396,39 @@ public abstract class GuiBook extends GuiScreen {
 		return page;
 	}
 
-	public static void drawSeparator(int x, int y) {
+	public static void drawSeparator(Book book, int x, int y) {
 		int w = 110;
 		int h = 3;
 		int rx = x + PAGE_WIDTH / 2 - w / 2;
 
 		GlStateManager.enableBlend();
 		GlStateManager.color(1F, 1F, 1F, 0.8F);
-		drawFromTexture(rx, y, 140, 180, w, h);
+		drawFromTexture(book, rx, y, 140, 180, w, h);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 	
-	public static void drawLock(int x, int y) {
-		drawFromTexture(x, y, 250, 180, 16, 16);
+	public static void drawLock(Book book, int x, int y) {
+		drawFromTexture(book, x, y, 250, 180, 16, 16);
 	}
 	
-	public static void drawWarning(int x, int y, int rand) {
+	public static void drawWarning(Book book, int x, int y, int rand) {
 		GlStateManager.enableBlend();
 		GlStateManager.disableAlpha();
 		float alpha = (float) Math.sin(ClientTicker.total * 0.2F) * 0.3F + 0.7F;
 		GlStateManager.color(1F, 1F, 1F, alpha);
-		drawFromTexture(x, y, 140, 197, 8, 8);
+		drawFromTexture(book, x, y, 140, 197, 8, 8);
 		GlStateManager.enableAlpha();
 		GlStateManager.color(1F, 1F, 1F);
 	}
 	
-	public static void drawPageFiller() {
-		drawPageFiller(RIGHT_PAGE_X, TOP_PADDING);
+	public static void drawPageFiller(Book book) {
+		drawPageFiller(book, RIGHT_PAGE_X, TOP_PADDING);
 	}
 	
-	public static void drawPageFiller(int x, int y) {
+	public static void drawPageFiller(Book book, int x, int y) {
 		GlStateManager.enableBlend();
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(FILLER_TEXTURE);
+		Minecraft.getMinecraft().renderEngine.bindTexture(book.bookResource);
 		drawModalRectWithCustomSizedTexture(x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 

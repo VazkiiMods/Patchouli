@@ -54,7 +54,7 @@ public class GuiButtonCategory extends GuiButton {
 
 			if(locked) {
 				GlStateManager.color(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(x + 2, y + 2); 
+				GuiBook.drawLock(parent.book, x + 2, y + 2); 
 			} else {
 				RenderHelper.enableGUIStandardItemLighting();
 				mc.getRenderItem().renderItemIntoGUI(stack, x + 2, y + 2);	
@@ -63,11 +63,11 @@ public class GuiButtonCategory extends GuiButton {
 			GlStateManager.pushMatrix();
 			GlStateManager.color(1F, 1F, 1F, transparency);
 			GlStateManager.translate(0, 0, 200);
-			GuiBook.drawFromTexture(x, y, u, v, width, height);
+			GuiBook.drawFromTexture(parent.book, x, y, u, v, width, height);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			
 			if(unread) 
-				parent.drawWarning(x, y, 0);
+				parent.drawWarning(parent.book, x, y, 0);
 			GlStateManager.popMatrix();
 			
 			if(hovered)
