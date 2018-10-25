@@ -237,7 +237,7 @@ public class BookTextRenderer {
 			this.text = text;
 			this.color = color;
 			this.codes = codes;
-			this.href = href == null ? null : new ResourceLocation(href.contains(":") ? href : (Patchouli.PREFIX_MOD + 	href)); // TODO support multiple books
+			this.href = href == null ? null : new ResourceLocation(href.contains(":") ? href : (book.getModNamespace() + ":" +  href));
 			this.externalHref = href != null && this.href.getResourceDomain().matches("https?");
 			this.linkCluster = linkCluster;
 		}

@@ -22,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
+import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookLanding;
 import vazkii.patchouli.common.book.Book;
@@ -40,9 +41,8 @@ public class BookContents  {
 	public final Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap();
 	private boolean errored = false;
 	
-	public static Stack<GuiBook> guiStack = new Stack();
-	public static GuiBook currentGui;
-	
+	public Stack<GuiBook> guiStack = new Stack();
+	public GuiBook currentGui;
 
 	public BookContents(Book book) {
 		this.book = book;
@@ -89,26 +89,24 @@ public class BookContents  {
 
 		try { 
 			ModContainer mod = book.owner;
-			String id = book.resource.getResourceDomain();
+			String id = book.getModNamespace();
 			String loc = BookRegistry.BOOKS_LOCATION;
-			String bookName = book.resource.getResourcePath();
+			String bookName = book.resourceLoc.getResourcePath();
 			
 			CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/categories", id, loc, bookName, DEFAULT_LANG), null, pred(id, foundCategories));
 			CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/entries", id, loc, bookName, DEFAULT_LANG), null, pred(id, foundEntries));
 
 			foundCategories.forEach(c -> loadCategory(c, new ResourceLocation(c.getResourceDomain(),
-					String.format("%s/%s/%s/categories/%s.json", loc, bookName, DEFAULT_LANG, c.getResourcePath()))));
+					String.format("%s/%s/%s/categories/%s.json", loc, bookName, DEFAULT_LANG, c.getResourcePath())), book));
 			foundEntries.forEach(e -> loadEntry(e, new ResourceLocation(e.getResourceDomain(),
-					String.format("%s/%s/%s/entries/%s.json", loc, bookName, DEFAULT_LANG, e.getResourcePath()))));
+					String.format("%s/%s/%s/entries/%s.json", loc, bookName, DEFAULT_LANG, e.getResourcePath())), book));
 
-			entries.forEach((res, entry) -> entry.build(book, res));
-			categories.forEach((res, category) -> category.build(book, res));
+			entries.forEach((res, entry) -> entry.build(res));
+			categories.forEach((res, category) -> category.build(res));
 		} catch (Exception e) {
 			errored = true;
 			e.printStackTrace();
 		}
-
-//		ClientAdvancements.updateLockStatus(); TODO
 	}
 
 	private BiFunction<Path, Path, Boolean> pred(String modId, List<ResourceLocation> list) {
@@ -125,7 +123,7 @@ public class BookContents  {
 		};
 	}
 
-	private void loadCategory(ResourceLocation key, ResourceLocation res) {
+	private void loadCategory(ResourceLocation key, ResourceLocation res, Book book) {
 		InputStream stream = loadLocalizedJson(res);
 		if (stream == null)
 			throw new IllegalArgumentException(res + " does not exist.");
@@ -134,11 +132,12 @@ public class BookContents  {
 		if (category == null)
 			throw new IllegalArgumentException(res + " does not exist.");
 
+		category.setBook(book);
 		if (category.canAdd())
 			categories.put(key, category);
 	}
 
-	private void loadEntry(ResourceLocation key, ResourceLocation res) {
+	private void loadEntry(ResourceLocation key, ResourceLocation res, Book book) {
 		InputStream stream = loadLocalizedJson(res);
 		if (stream == null)
 			throw new IllegalArgumentException(res + " does not exist.");
@@ -147,6 +146,7 @@ public class BookContents  {
 		if (entry == null)
 			throw new IllegalArgumentException(res + " does not exist.");
 
+		entry.setBook(book);
 		if (entry.canAdd()) {
 			BookCategory category = entry.getCategory();
 			if (category != null)

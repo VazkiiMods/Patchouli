@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
@@ -31,10 +32,11 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 		super.drawButton(mc, mouseX, mouseY, partialTicks);
 
-		BookEntry entry = bookmark.getEntry(book);
+		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 		if(visible && bookmark != null && entry != null) {
 			GlStateManager.pushMatrix();
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+			RenderHelper.enableGUIStandardItemLighting();
 			int px = x * 2 + (hovered ? 6 : 2);
 			int py = y * 2 + 2;
 			mc.getRenderItem().renderItemIntoGUI(entry.getIconItem(), px, py);
@@ -49,9 +51,9 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	}
 
 	private static String[] getTooltip(Book book, Bookmark bookmark, boolean multiblock) {
-		BookEntry entry = bookmark.getEntry(book);
+		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 
-		if(bookmark == null ||entry == null)
+		if(bookmark == null || entry == null)
 			return new String[] { I18n.translateToLocal("patchouli.gui.lexicon.add_bookmark") };
 
 		return new String[] {

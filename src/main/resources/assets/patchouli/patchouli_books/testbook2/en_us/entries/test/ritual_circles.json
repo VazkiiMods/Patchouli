@@ -1,0 +1,24 @@
+{
+	"name": "Ritual Circles",
+	"icon": "alquimia:ash",
+	"category": "ritualism",
+	"priority": true,
+	"read_by_default": false,
+	"advancement": "alquimia:make_ash",
+	"pages": [
+		{
+			"type": "text",
+			"text": "Placing down $(l:intro/impure_ash)Impure Ash$() on the ground in a proper circular formation creates a $(thing)Ritual Circle$(). These are the crux of the $(thing)ritualism$() branch, and as such, it is highly recommended that one stocks up on the stuff.$(br2)Instructions on how to create specific sized ritual circles come with the respective rituals' chapters."
+		},
+		{
+			"type": "image",
+			"title": "A Ritual Circle",
+			"images": [
+				"alquimia:textures/gui/lexicon/img/ritual_circle.png",
+				"alquimia:textures/gui/lexicon/img/ritual_circle_lit.png"
+			],
+			"border": true,
+			"text": "When completed, light the $(thing)Ritual Circle$() with $(item)Flint and Steel$() to begin the ritual."
+		}
+	]
+}

@@ -116,8 +116,11 @@ public class BookCategory implements Comparable<BookCategory> {
 		return this.sortnum - o.sortnum;
 	}
 	
-	public void build(Book book, ResourceLocation resource) {
+	public void setBook(Book book) {
 		this.book = book;
+	}
+	
+	public void build(ResourceLocation resource) {
 		this.resource = resource;
 		BookCategory parent = getParentCategory();
 		if(parent != null)

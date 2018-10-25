@@ -16,6 +16,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import vazkii.patchouli.Patchouli;
+import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
 
 // Basically a copy of the ARL one but I want to avoid the dep so hey it's here too
@@ -27,7 +28,8 @@ public class NetworkHandler {
 
 	public static void registerMessages() {
 		register(MessageSyncAdvancements.class, Side.CLIENT);
-		
+		register(MessageOpenBookGui.class, Side.CLIENT);
+
 		NetworkMessage.mapHandler(String[].class, NetworkHandler::readStringArray, NetworkHandler::writeStringArray);
 	}
 	

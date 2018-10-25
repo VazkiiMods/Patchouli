@@ -2,7 +2,7 @@ package vazkii.patchouli.common.base;
 
 public class PatchouliConfig {
 
-	// TODO stub
+	// TODO: IMPORTANT implement config
 	
 	public static boolean disableAdvancementLocking = false;
 	

@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import vazkii.patchouli.common.base.CommonProxy;
 
-// TODO rewrite book registry to support multiple books, remove any singleton/static references
 // TODO port multiblock system
 // TODO port right click handler
 
@@ -17,11 +16,10 @@ import vazkii.patchouli.common.base.CommonProxy;
 public class Patchouli {
 
 	// Mod Constants
-	public static final String MOD_ID = "patchouli"; // TODO: ensure lack of hard references
+	public static final String MOD_ID = "patchouli";
 	public static final String MOD_NAME = "Patchouli";
 	public static final String BUILD = "GRADLE:BUILD";
 	public static final String VERSION = "GRADLE:VERSION-" + BUILD;
-	public static final String PREFIX_MOD = MOD_ID + ":";
 	
 	public static final String COMMON_PROXY = "vazkii.patchouli.common.base.CommonProxy";
 	public static final String CLIENT_PROXY = "vazkii.patchouli.client.base.ClientProxy";

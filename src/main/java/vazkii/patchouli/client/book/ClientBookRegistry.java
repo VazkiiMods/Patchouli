@@ -17,6 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.page.PageCrafting;
 import vazkii.patchouli.client.book.page.PageEmpty;
 import vazkii.patchouli.client.book.page.PageImage;
@@ -25,6 +26,7 @@ import vazkii.patchouli.client.book.page.PageRelations;
 import vazkii.patchouli.client.book.page.PageSmelting;
 import vazkii.patchouli.client.book.page.PageSpotlight;
 import vazkii.patchouli.client.book.page.PageText;
+import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
 
@@ -66,7 +68,6 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 		pageTypes.put("relations", PageRelations.class);
 	}
 
-
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager) {
 		currentLang = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
@@ -77,6 +78,21 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 		}
 	}
 	
+	public void reloadLocks() {
+		BookRegistry.INSTANCE.books.values().forEach(b -> {
+			BookContents contents = b.contents;
+			contents.entries.values().forEach((e) -> e.updateLockStatus());
+			contents.categories.values().forEach((c) -> c.updateLockStatus(true));
+		});
+	}
+	
+	public void displayBookGui(String bookStr) {
+		ResourceLocation res = new ResourceLocation(bookStr);
+		Book book = BookRegistry.INSTANCE.books.get(res);
+		
+		if(book != null)
+			book.contents.openLexiconGui(book.contents.getCurrentGui(), false);
+	}
 
 	public static class LexiconPageAdapter implements JsonDeserializer<BookPage> {
 		

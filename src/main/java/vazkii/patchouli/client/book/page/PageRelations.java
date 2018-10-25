@@ -28,7 +28,7 @@ public class PageRelations extends PageWithText {
 		super.build(entry, pageNum);
 
 		entryObjs = entries.stream()
-				.map((s) -> s.contains(":") ? new ResourceLocation(s) : new ResourceLocation(book.resource.getResourceDomain(), s))
+				.map((s) -> s.contains(":") ? new ResourceLocation(s) : new ResourceLocation(book.getModNamespace(), s))
 				.map((res) -> book.contents.entries.get(res))
 				.filter((e) -> e != null)
 				.collect(Collectors.toList());

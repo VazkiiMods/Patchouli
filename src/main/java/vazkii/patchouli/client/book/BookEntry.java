@@ -57,7 +57,7 @@ public class BookEntry implements Comparable<BookEntry> {
 		if(lcategory == null) {
 			if(category.contains(":"))
 				lcategory = book.contents.categories.get(new ResourceLocation(category));
-			else lcategory = book.contents.categories.get(new ResourceLocation(Patchouli.MOD_ID, category));
+			else lcategory = book.contents.categories.get(new ResourceLocation(book.getModNamespace(), category));
 		}
 		
 		return lcategory;
@@ -106,8 +106,11 @@ public class BookEntry implements Comparable<BookEntry> {
 		return this.name.compareTo(o.name);
 	}
 	
-	public void build(Book book, ResourceLocation resource) {
+	public void setBook(Book book) {
 		this.book = book;
+	}
+	
+	public void build(ResourceLocation resource) {
 		this.resource = resource;
 		for(int i = 0; i < pages.length; i++)
 			if(pages[i].canAdd()) {

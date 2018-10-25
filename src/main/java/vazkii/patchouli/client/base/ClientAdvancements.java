@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -26,15 +27,12 @@ public class ClientAdvancements {
 
 	public static void setDoneAdvancements(String[] done, boolean showToast) {
 		showToast &= !PatchouliConfig.disableAdvancementLocking;
-		System.out.println("Show Toast: " + showToast);
 		int doneCount = getCompleteAdvancements(showToast);
 
 		doneAdvancements = Arrays.asList(done);
-		
 		updateLockStatus();
 
 		int doneCount2 = getCompleteAdvancements(showToast);
-
 		if(doneCount2 > doneCount)
 			Minecraft.getMinecraft().getToastGui().add(new LexiconToast());
 	}
@@ -55,11 +53,8 @@ public class ClientAdvancements {
 		return total;
 	}
 	
-	public static void updateLockStatus() { // TODO
-//		if(doneAdvancements != null) {
-//			BookRegistry.BookContents.entries.values().forEach((e) -> e.updateLockStatus());
-//			BookRegistry.BookContents.categories.values().forEach((c) -> c.updateLockStatus(true));
-//		}
+	public static void updateLockStatus() {
+		ClientBookRegistry.INSTANCE.reloadLocks();
 	}
 
 	public static void resetIfNeeded() {

@@ -96,7 +96,7 @@ public class GuiBookLanding extends GuiBook {
 
 		int color = 0xFFDD00;
 		boolean unicode = fontRenderer.getUnicodeFlag();
-		fontRenderer.drawString(new ItemStack(Items.BOOK).getDisplayName(), 13, 16, color); // TODO: support multiple books
+		fontRenderer.drawString(book.getBookItem().getDisplayName(), 13, 16, color);
 		
 		// TODO: support subtitle
 //		fontRenderer.setUnicodeFlag(true);
@@ -122,8 +122,9 @@ public class GuiBookLanding extends GuiBook {
 			displayLexiconGui(new GuiBookCategory(book, ((GuiButtonCategory) button).getCategory()), true);
 		
 		else if(button instanceof GuiButtonBookHistory)
-			displayLexiconGui(new GuiBookHistory(book), true); // TODO bring back config and advancements
+			displayLexiconGui(new GuiBookHistory(book), true);
 		
+		// TODO bring back config and advancements
 //		else if(button instanceof GuiButtonLexiconConfig)
 //			mc.displayGuiScreen(new GuiFactory.GuiAlquimiaConfig(this));
 		
