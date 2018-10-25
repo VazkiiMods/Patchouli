@@ -44,7 +44,7 @@ public class Book {
 	private transient ItemStack bookItem;
 	
 	public transient ResourceLocation bookResource, fillerResource, craftingResource;
-	public transient int textColor, headerColor, nameplateColor;
+	public transient int textColor, headerColor, nameplateColor, linkColor, linkHoverColor;
 	
 	// JSON Loaded properties
 	public String name = "";
@@ -58,7 +58,9 @@ public class Book {
 	public String text_color = "000000";
 	public String header_color = "333333";
 	public String nameplate_color = "FFDD00";
-	
+	public String link_color = "0000EE";
+	public String link_hover_color = "8800EE";
+
 	public String version = "0";
 	public String subtitle = "";
 	
@@ -77,7 +79,9 @@ public class Book {
 		textColor = Integer.parseInt(text_color, 16);
 		headerColor = Integer.parseInt(header_color, 16);
 		nameplateColor = Integer.parseInt(nameplate_color, 16);
-		
+		linkColor = Integer.parseInt(link_color, 16);
+		linkHoverColor = Integer.parseInt(link_hover_color, 16);
+
 		for(String m : DEFAULT_MACROS.keySet())
 			if(!macros.containsKey(m))
 				macros.put(m, DEFAULT_MACROS.get(m));

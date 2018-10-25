@@ -15,9 +15,6 @@ import vazkii.patchouli.common.book.Book;
 
 public class BookTextRenderer {
 	
-	private static final int LINK_COLOR = 0x0000EE;
-	private static final int LINK_COLOR_HOVER = 0x8800EE;
-
 	final Book book;
 	final GuiBook gui;
 	final FontRenderer font;
@@ -167,7 +164,7 @@ public class BookTextRenderer {
 				
 				currHref = cmd.substring(2);
 				prevColor = currColor;
-				currColor = LINK_COLOR;
+				currColor = book.linkColor;
 				externalHref = currHref.matches("^https?\\:.*");
 			} 
 			else if(cmd.equals("/l")) { // Link breaks
@@ -226,7 +223,7 @@ public class BookTextRenderer {
 			String renderTarget = codes + text;
 			int renderColor = color;
 			if(isClusterHovered(mouseX, mouseY) && href != null) {
-				renderColor = LINK_COLOR_HOVER;
+				renderColor = book.linkHoverColor;
 				
 				if(externalHref)
 					gui.setTooltip(I18n.translateToLocal("patchouli.gui.lexicon.external_link"));

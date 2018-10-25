@@ -432,7 +432,6 @@ public abstract class GuiBook extends GuiScreen {
 		drawModalRectWithCustomSizedTexture(x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 
-	// TODO bring back sfx
 	public static void playBookFlipSound() {
 		if(ClientTicker.ticksInGame - lastSound > 6) {
 			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(PatchouliSounds.book_flip, (float) (0.7 + Math.random() * 0.3)));
