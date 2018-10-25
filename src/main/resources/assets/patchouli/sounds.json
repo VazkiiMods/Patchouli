@@ -1,0 +1,4 @@
+{
+	"book_flip": { "category": "player", "sounds": ["patchouli:book_flip"], "subtitle": "patchouli.subtitle.book_flip" },
+	"book_open": { "category": "player", "sounds": ["patchouli:book_open"], "subtitle": "patchouli.subtitle.book_open" }
+}

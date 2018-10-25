@@ -9,14 +9,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class ModItems {
+public class PatchouliItems {
 
 	public static Item book;
 	
 	public static void preInit() {
 		book = new ItemModBook();
 		
-		MinecraftForge.EVENT_BUS.register(ModItems.class);
+		MinecraftForge.EVENT_BUS.register(PatchouliItems.class);
 	}
 
 	@SideOnly(Side.CLIENT)

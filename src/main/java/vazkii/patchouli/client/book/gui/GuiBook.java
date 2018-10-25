@@ -11,16 +11,15 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Mouse;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
@@ -28,6 +27,7 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBack;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark;
+import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 
 public abstract class GuiBook extends GuiScreen {
@@ -428,16 +428,16 @@ public abstract class GuiBook extends GuiScreen {
 	public static void drawPageFiller(Book book, int x, int y) {
 		GlStateManager.enableBlend();
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		Minecraft.getMinecraft().renderEngine.bindTexture(book.bookResource);
+		Minecraft.getMinecraft().renderEngine.bindTexture(book.fillerResource);
 		drawModalRectWithCustomSizedTexture(x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 
 	// TODO bring back sfx
 	public static void playBookFlipSound() {
-//		if(ClientTicker.ticksInGame - lastSound > 6) {
-//			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(AlquimiaSounds.book_flip, (float) (0.7 + Math.random() * 0.3)));
-//			lastSound = ClientTicker.ticksInGame;
-//		}
+		if(ClientTicker.ticksInGame - lastSound > 6) {
+			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(PatchouliSounds.book_flip, (float) (0.7 + Math.random() * 0.3)));
+			lastSound = ClientTicker.ticksInGame;
+		}
 	}
 
 	public static void openWebLink(String address) {

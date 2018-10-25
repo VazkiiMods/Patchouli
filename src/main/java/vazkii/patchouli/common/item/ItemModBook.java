@@ -14,11 +14,13 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.patchouli.Patchouli;
+import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.network.NetworkHandler;
@@ -36,7 +38,7 @@ public class ItemModBook extends Item {
 	}
 	
 	public static ItemStack forBook(Book book) {
-		ItemStack stack = new ItemStack(ModItems.book);
+		ItemStack stack = new ItemStack(PatchouliItems.book);
 		NBTTagCompound cmp = new NBTTagCompound();
 		cmp.setString(TAG_BOOK, book.resourceLoc.toString());
 		stack.setTagCompound(cmp);
@@ -80,17 +82,16 @@ public class ItemModBook extends Item {
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-		// TODO: sfx
-//		if(!worldIn.isRemote)
-//			worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, AlquimiaSounds.book_open, SoundCategory.PLAYERS, 1F, (float) (0.7 + Math.random() * 0.4));
 	
 		ItemStack stack = playerIn.getHeldItem(handIn);
 		Book book = getBook(stack);
 		if(book == null)
 			return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
 		
-		if(playerIn instanceof EntityPlayerMP)
+		if(playerIn instanceof EntityPlayerMP) {
 			NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.resourceLoc.toString()), (EntityPlayerMP) playerIn);
+			worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, PatchouliSounds.book_open, SoundCategory.PLAYERS, 1F, (float) (0.7 + Math.random() * 0.4));
+		}
 		
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
