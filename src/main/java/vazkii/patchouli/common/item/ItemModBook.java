@@ -46,7 +46,8 @@ public class ItemModBook extends Item {
 		return stack;
 	}
 
-	@Override // TODO allow each book to be in its own tab
+	@Override 
+	@SideOnly(Side.CLIENT)
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		String tabName = tab.getTabLabel();
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
