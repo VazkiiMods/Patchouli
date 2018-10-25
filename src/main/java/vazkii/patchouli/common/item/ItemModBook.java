@@ -38,9 +38,14 @@ public class ItemModBook extends Item {
 	}
 
 	public static ItemStack forBook(Book book) {
+		return forBook(book.resourceLoc.toString());
+	}
+	
+	public static ItemStack forBook(String book) {
 		ItemStack stack = new ItemStack(PatchouliItems.book);
+
 		NBTTagCompound cmp = new NBTTagCompound();
-		cmp.setString(TAG_BOOK, book.resourceLoc.toString());
+		cmp.setString(TAG_BOOK, book);
 		stack.setTagCompound(cmp);
 
 		return stack;
