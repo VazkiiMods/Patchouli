@@ -27,7 +27,7 @@ import vazkii.patchouli.common.network.NetworkHandler;
 import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 
 public class ItemModBook extends Item {
-	
+
 	private static final String TAG_BOOK = "patchouli:book";
 
 	public ItemModBook() {
@@ -36,73 +36,76 @@ public class ItemModBook extends Item {
 		setRegistryName(new ResourceLocation(Patchouli.MOD_ID, "guide_book"));
 		setUnlocalizedName(getRegistryName().toString());
 	}
-	
+
 	public static ItemStack forBook(Book book) {
 		ItemStack stack = new ItemStack(PatchouliItems.book);
 		NBTTagCompound cmp = new NBTTagCompound();
 		cmp.setString(TAG_BOOK, book.resourceLoc.toString());
 		stack.setTagCompound(cmp);
-		
+
 		return stack;
 	}
-	
+
 	@Override // TODO allow each book to be in its own tab
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-		if(isInCreativeTab(tab))
-			BookRegistry.INSTANCE.books.values().forEach(b -> items.add(forBook(b)));
+		String tabName = tab.getTabLabel();
+		BookRegistry.INSTANCE.books.values().forEach(b -> {
+			if(b.creative_tab.equals(tabName))
+				items.add(forBook(b));
+		});
 	}
-	
+
 	public static Book getBook(ItemStack stack) {
 		if(!stack.hasTagCompound() || !stack.getTagCompound().hasKey(TAG_BOOK))
 			return null;
-		
+
 		String bookStr = stack.getTagCompound().getString(TAG_BOOK);
 		ResourceLocation res = new ResourceLocation(bookStr);
 		return BookRegistry.INSTANCE.books.get(res);
 	}
-	
+
 	@Override
 	public String getCreatorModId(ItemStack itemStack) {
 		Book book = getBook(itemStack);
 		if(book != null)
 			return book.owner.getModId();
-		
+
 		return super.getCreatorModId(itemStack);
 	}
-	
+
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
 		Book book = getBook(stack);
 		if(book != null)
 			return I18n.translateToLocal(book.name).trim();
-		
+
 		return super.getItemStackDisplayName(stack);
 	}
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
-		
+
 		Book book = getBook(stack);
 		if(book != null && book.contents != null)
 			tooltip.add(book.contents.getSubtitle());
 	}
-	
+
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
 		ItemStack stack = playerIn.getHeldItem(handIn);
 		Book book = getBook(stack);
 		if(book == null)
 			return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
-		
+
 		if(playerIn instanceof EntityPlayerMP) {
 			NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.resourceLoc.toString()), (EntityPlayerMP) playerIn);
 			worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, PatchouliSounds.book_open, SoundCategory.PLAYERS, 1F, (float) (0.7 + Math.random() * 0.4));
 		}
-		
+
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
 	}
-	
-	
+
+
 }

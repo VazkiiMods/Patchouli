@@ -11,5 +11,6 @@
 	"macros": {
 		"$(potato)": "(POTATO MACRO)"
 	},
-	"model": "patchouli:book_green"
+	"model": "patchouli:book_green",
+	"creative_tab": "decorations"
 }

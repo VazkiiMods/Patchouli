@@ -54,6 +54,7 @@ public class Book {
 	// JSON Loaded properties
 	public String name = "";
 	public String landing_text = "patchouli.gui.lexicon.landing_info";
+	
 	public List<String> advancement_namespaces = new ArrayList();
 	
 	public String book_texture = Patchouli.PREFIX + "textures/gui/book_brown";
@@ -70,6 +71,8 @@ public class Book {
 
 	public String version = "0";
 	public String subtitle = "";
+	
+	public String creative_tab = "misc";
 	
 	public Map<String, String> macros = new HashMap();
 	
