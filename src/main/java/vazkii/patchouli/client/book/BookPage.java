@@ -45,6 +45,7 @@ public abstract class BookPage {
 	
 	public void onDisplayed(GuiBookEntry parent, int left, int top) { 
 		mc = parent.mc;
+		book = parent.book;
 		fontRenderer = mc.fontRenderer;
 		this.parent = parent;
 		this.left = left;
