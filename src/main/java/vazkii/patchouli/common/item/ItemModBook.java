@@ -62,6 +62,15 @@ public class ItemModBook extends Item {
 	}
 	
 	@Override
+	public String getCreatorModId(ItemStack itemStack) {
+		Book book = getBook(itemStack);
+		if(book != null)
+			return book.owner.getModId();
+		
+		return super.getCreatorModId(itemStack);
+	}
+	
+	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
 		Book book = getBook(stack);
 		if(book != null)
@@ -82,7 +91,6 @@ public class ItemModBook extends Item {
 	
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-	
 		ItemStack stack = playerIn.getHeldItem(handIn);
 		Book book = getBook(stack);
 		if(book == null)
