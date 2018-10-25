@@ -10,5 +10,6 @@
 	"nameplate_color": "d52eff",
 	"macros": {
 		"$(potato)": "(POTATO MACRO)"
-	}
+	},
+	"model": "patchouli:book_green"
 }

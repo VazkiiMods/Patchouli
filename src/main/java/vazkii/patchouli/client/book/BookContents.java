@@ -31,7 +31,7 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
 
-public class BookContents  {
+public class BookContents {
 
 	private static final String[] ORDINAL_SUFFIXES = new String[]{ "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 	private static final String DEFAULT_LANG = "en_us";
