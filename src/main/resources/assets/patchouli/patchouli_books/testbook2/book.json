@@ -12,5 +12,6 @@
 		"$(potato)": "(POTATO MACRO)"
 	},
 	"model": "patchouli:book_green",
-	"creative_tab": "decorations"
+	"creative_tab": "decorations",
+	"advancements_tab": "patchouli"
 }

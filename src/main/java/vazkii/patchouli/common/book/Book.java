@@ -73,6 +73,7 @@ public class Book {
 	public String subtitle = "";
 	
 	public String creative_tab = "misc";
+	public String advancements_tab = "";
 	
 	public Map<String, String> macros = new HashMap();
 	
