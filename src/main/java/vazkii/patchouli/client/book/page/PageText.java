@@ -18,13 +18,13 @@ public class PageText extends PageWithText {
 		
 		if(pageNum == 0) {
 			boolean adv = mc.gameSettings.advancedItemTooltips;
-			parent.drawCenteredStringNoShadow(parent.getEntry().getName(), GuiBook.PAGE_WIDTH / 2, adv ? -3 : 0, 0x333333);
+			parent.drawCenteredStringNoShadow(parent.getEntry().getName(), GuiBook.PAGE_WIDTH / 2, adv ? -3 : 0, book.headerColor);
 			parent.drawSeparator(book, 0, 12);
 			
 			if(adv) {
 				ResourceLocation res = parent.getEntry().getResource();
 				GlStateManager.scale(0.5F, 0.5F, 1F);
-				parent.drawCenteredStringNoShadow(res.toString(), GuiBook.PAGE_WIDTH, 12, 0x333333);
+				parent.drawCenteredStringNoShadow(res.toString(), GuiBook.PAGE_WIDTH, 12, book.headerColor);
 				GlStateManager.scale(2F, 2F, 1F);
 			}
 		}

@@ -41,11 +41,11 @@ public class GuiBookWriter extends GuiBook {
 	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
 		super.drawForegroundElements(mouseX, mouseY, partialTicks);
 		
-		drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
+		drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 		drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
 
 		if(drawHeader) {
-			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
+			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
 		}
 		

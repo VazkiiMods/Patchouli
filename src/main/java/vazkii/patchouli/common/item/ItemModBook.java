@@ -1,5 +1,8 @@
 package vazkii.patchouli.common.item;
 
+import java.util.List;
+
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -13,6 +16,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -61,6 +66,16 @@ public class ItemModBook extends Item {
 			return I18n.translateToLocal(book.name).trim();
 		
 		return super.getItemStackDisplayName(stack);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		super.addInformation(stack, worldIn, tooltip, flagIn);
+		
+		Book book = getBook(stack);
+		if(book != null && book.contents != null)
+			tooltip.add(book.contents.getSubtitle());
 	}
 	
 	@Override

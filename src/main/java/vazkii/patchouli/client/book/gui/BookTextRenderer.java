@@ -17,26 +17,6 @@ public class BookTextRenderer {
 	
 	private static final int LINK_COLOR = 0x0000EE;
 	private static final int LINK_COLOR_HOVER = 0x8800EE;
-	
-	// TODO support custom macros
-	private static final Map<String, String> MACROS = new HashMap() {{
-		put("$(obf)", "$(k)");
-		put("$(bold)", "$(l)");
-		put("$(strike)", "$(m)");
-		put("$(italic)", "$(o)");
-		put("$(italics)", "$(o)");
-		put("$(list", "$(li"); //  The lack of ) is intended
-		put("$(reset)", "$()");
-		put("$(clear)", "$()");
-		put("$(2br)", "$(br2)");
-		put("$(p)", "$(br2)");
-		
-		put("/$", "$()");
-		put("<br>", "$(br)");
-		
-		put("$(item)", "$(#b0b)");
-		put("$(thing)", "$(#490)");
-	}};
 
 	final Book book;
 	final GuiBook gui;
@@ -82,8 +62,8 @@ public class BookTextRenderer {
 		if(actualText == null)
 			actualText = "[ERROR]";
 		
-		for(String key : MACROS.keySet())
-			actualText = actualText.replace(key, MACROS.get(key));
+		for(String key : book.macros.keySet())
+			actualText = actualText.replace(key, book.macros.get(key));
 		
 		actualText = actualText.replaceAll(" ", "\0 ").replaceAll("(\\$\\(.*?\\))", " $1 ");
 		String[] tokens = actualText.split(" ");
@@ -91,8 +71,8 @@ public class BookTextRenderer {
 		currX = x;
 		currY = y;
 		currLen = 0;
-		currColor = 0;
-		prevColor = 0;
+		currColor = book.textColor;
+		prevColor = book.textColor;
 		currCodes = "";
 		currHref = "";
 		currCluster = null;
@@ -137,7 +117,7 @@ public class BookTextRenderer {
 			
 			if(cmd.isEmpty()) { // Remove formatting
 				endingExternal = !currHref.isEmpty() && externalHref;
-				currColor = 0;
+				currColor = book.textColor;
 				currCodes = "";
 				currHref = "";
 				currCluster = null;
@@ -170,7 +150,7 @@ public class BookTextRenderer {
 				try {
 					currColor = Integer.parseInt(parse, 16);
 				} catch(NumberFormatException e) {
-					currColor = 0;
+					currColor = book.textColor;
 				}
 			}
 			

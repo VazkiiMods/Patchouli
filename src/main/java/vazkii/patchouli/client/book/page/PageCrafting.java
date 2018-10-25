@@ -30,7 +30,7 @@ public class PageCrafting extends PageDoubleRecipe<IRecipe> {
 				parent.setTooltip(I18n.translateToLocal("patchouli.gui.lexicon.shapeless"));
 		}
 
-		parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, 0x333333);
+		parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 		
 		renderItem(recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getRecipeOutput());
 		

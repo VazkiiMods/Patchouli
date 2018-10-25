@@ -60,10 +60,10 @@ public class GuiButtonEntry extends GuiButton {
 			String name = (entry.isPriority() ? TextFormatting.ITALIC : "") + entry.getName();
 			if(locked) {
 				name = I18n.translateToLocal("patchouli.gui.lexicon.locked");
-				color = 0x77000000;
+				color = 0x77000000 | (parent.book.textColor & 0x00FFFFFF);
 			}
 			if(entry.isSecret())
-				color = 0xAA000000; 
+				color = 0xAA000000 | (parent.book.textColor & 0x00FFFFFF); 
 			
 			boolean unicode = mc.fontRenderer.getUnicodeFlag();
 			mc.fontRenderer.setUnicodeFlag(true);

@@ -77,13 +77,19 @@ public class BookContents  {
 	}
 	
 	public String getSubtitle() {
+		String editionStr = "";
+		
 		try {
 			int ver = Integer.parseInt(book.version);
-			String editionStr = ver == 0 ? I18n.translateToLocal("patchouli.gui.lexicon.dev_edition") : numberToOrdinal(ver); 
-			return I18n.translateToLocalFormatted("patchouli.gui.lexicon.edition_str", editionStr);
+			if(ver == 0)
+				return book.subtitle;
+			
+			editionStr = numberToOrdinal(ver); 
 		} catch(NumberFormatException e) {
-			return book.subtitle;
+			editionStr = I18n.translateToLocal("patchouli.gui.lexicon.dev_edition");
 		}
+		
+		return I18n.translateToLocalFormatted("patchouli.gui.lexicon.edition_str", editionStr);
 	}
 
 	public void reload() {

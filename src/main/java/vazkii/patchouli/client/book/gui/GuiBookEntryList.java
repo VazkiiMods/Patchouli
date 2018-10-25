@@ -79,8 +79,8 @@ public abstract class GuiBookEntryList extends GuiBook {
 		super.drawForegroundElements(mouseX, mouseY, partialTicks);
 		
 		if(page == 0) {
-			drawCenteredStringNoShadow(getName(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
-			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
+			drawCenteredStringNoShadow(getName(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
 			drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
 			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);

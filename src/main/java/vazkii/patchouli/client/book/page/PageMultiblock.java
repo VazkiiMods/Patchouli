@@ -57,7 +57,7 @@
 //		GlStateManager.enableBlend();
 //		GuiLexicon.drawFromTexture(x, y, 405, 149, 106, 106);
 //		
-//		parent.drawCenteredStringNoShadow(name, GuiLexicon.PAGE_WIDTH / 2, 0, 0x333333);
+//		parent.drawCenteredStringNoShadow(name, GuiLexicon.PAGE_WIDTH / 2, 0, book.headerColor);
 //
 //		if(multiblockObj != null)
 //			renderMultiblock();

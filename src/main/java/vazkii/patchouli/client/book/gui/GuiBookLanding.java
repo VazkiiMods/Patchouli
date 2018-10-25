@@ -75,7 +75,7 @@ public class GuiBookLanding extends GuiBook {
 	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
 		text.render(mouseX, mouseY);
 		
-		drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, 0x333333);
+		drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 		
 		int topSeparator = TOP_PADDING + 12;
 		int bottomSeparator = topSeparator + 25 + 24 * (loadedCategories / 4 + 1);
@@ -94,7 +94,7 @@ public class GuiBookLanding extends GuiBook {
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		drawFromTexture(book, -8, 12, 0, 180, 140, 31);
 
-		int color = 0xFFDD00;
+		int color = book.nameplateColor;
 		boolean unicode = fontRenderer.getUnicodeFlag();
 		fontRenderer.drawString(book.getBookItem().getDisplayName(), 13, 16, color);
 		

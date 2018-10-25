@@ -17,6 +17,25 @@ import vazkii.patchouli.common.item.ItemModBook;
 
 public class Book {
 
+	private static final Map<String, String> DEFAULT_MACROS = new HashMap() {{
+		put("$(obf)", "$(k)");
+		put("$(bold)", "$(l)");
+		put("$(strike)", "$(m)");
+		put("$(italic)", "$(o)");
+		put("$(italics)", "$(o)");
+		put("$(list", "$(li"); //  The lack of ) is intended
+		put("$(reset)", "$()");
+		put("$(clear)", "$()");
+		put("$(2br)", "$(br2)");
+		put("$(p)", "$(br2)");
+		
+		put("/$", "$()");
+		put("<br>", "$(br)");
+		
+		put("$(item)", "$(#b0b)");
+		put("$(thing)", "$(#490)");
+	}};
+	
 	@SideOnly(Side.CLIENT)
 	public transient BookContents contents;
 	
@@ -25,7 +44,7 @@ public class Book {
 	private transient ItemStack bookItem;
 	
 	public transient ResourceLocation bookResource, fillerResource, craftingResource;
-	public transient int textColor, headerColor, frameColor;
+	public transient int textColor, headerColor, nameplateColor;
 	
 	// JSON Loaded properties
 	public String name = "";
@@ -38,7 +57,7 @@ public class Book {
 	
 	public String text_color = "000000";
 	public String header_color = "333333";
-	public String frame_color = "FFDD00";
+	public String nameplate_color = "FFDD00";
 	
 	public String version = "0";
 	public String subtitle = "";
@@ -57,7 +76,11 @@ public class Book {
 		
 		textColor = Integer.parseInt(text_color, 16);
 		headerColor = Integer.parseInt(header_color, 16);
-		frameColor = Integer.parseInt(frame_color, 16);
+		nameplateColor = Integer.parseInt(nameplate_color, 16);
+		
+		for(String m : DEFAULT_MACROS.keySet())
+			if(!macros.containsKey(m))
+				macros.put(m, DEFAULT_MACROS.get(m));
 	}
 	
 	public boolean usesAdvancements() {
