@@ -1,5 +1,6 @@
 {
 	"name": "item.patchouli:test_book_2.name",
+	"landing_text": "item.patchouli:test_book_2.landing",
 	"advancement_namespaces": [
 		"patchouli"
 	]

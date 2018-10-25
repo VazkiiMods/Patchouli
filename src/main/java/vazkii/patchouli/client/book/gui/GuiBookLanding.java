@@ -36,7 +36,7 @@ public class GuiBookLanding extends GuiBook {
 	public void initGui() {
 		super.initGui();
 		
-		text = new BookTextRenderer(this, I18n.translateToLocal("patchouli.gui.lexicon.landing_info"), LEFT_PAGE_X, TOP_PADDING + 25);
+		text = new BookTextRenderer(this, I18n.translateToLocal(book.landing_text), LEFT_PAGE_X, TOP_PADDING + 25);
 
 		int x = bookLeft + 20;
 		int y = bookTop + FULL_HEIGHT - 62;

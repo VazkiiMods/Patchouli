@@ -21,14 +21,14 @@ public class Book {
 	public transient ResourceLocation resourceLoc;
 	private transient ItemStack bookItem;
 	
-	public String name;
+	public String name = "";
+	public String landing_text = "patchouli.gui.lexicon.landing_info";
 	public List<String> advancement_namespaces = new ArrayList();
 	
 	public void build(ModContainer owner, ResourceLocation resource) {
 		this.owner = owner;
 		this.resourceLoc = resource;
 		
-		System.out.println("Building Book, name=" + name);
 		AdvancementSyncHandler.trackedNamespaces.addAll(advancement_namespaces);
 	}
 	
