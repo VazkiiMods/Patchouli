@@ -56,7 +56,7 @@ public class GuiButtonEntry extends GuiButton {
 			}
 			GlStateManager.scale(2F, 2F, 2F);
 
-			int color = 0;
+			int color = parent.book.textColor;
 			String name = (entry.isPriority() ? TextFormatting.ITALIC : "") + entry.getName();
 			if(locked) {
 				name = I18n.translateToLocal("patchouli.gui.lexicon.locked");
