@@ -1,8 +1,8 @@
 package vazkii.patchouli.common.book;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.util.HashMap;
@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.jline.utils.InputStreamReader;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
