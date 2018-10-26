@@ -38,6 +38,7 @@ public class Book {
 		put("/$", "$()");
 		put("<br>", "$(br)");
 		
+		put("$(nocolor)", "$(0)");
 		put("$(item)", "$(#b0b)");
 		put("$(thing)", "$(#490)");
 	}};
