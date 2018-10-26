@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -53,27 +54,39 @@ public class Book {
 	
 	// JSON Loaded properties
 	public String name = "";
-	public String landing_text = "patchouli.gui.lexicon.landing_info";
-	
-	public List<String> advancement_namespaces = new ArrayList();
-	
-	public String book_texture = Patchouli.PREFIX + "textures/gui/book_brown";
-	public String filler_texture = Patchouli.PREFIX + "textures/gui/page_filler";
-	public String crafting_texture = Patchouli.PREFIX + "textures/gui/crafting";
+	@SerializedName("landing_text")
+	public String landingText = "patchouli.gui.lexicon.landing_info";
+
+	@SerializedName("advancement_namespaces")
+	public List<String> advancementNamespaces = new ArrayList();
+
+	@SerializedName("book_texture")
+	public String bookTexture = Patchouli.PREFIX + "textures/gui/book_brown";
+	@SerializedName("filler_texture")
+	public String fillerTexture = Patchouli.PREFIX + "textures/gui/page_filler";
+	@SerializedName("crafting_texture")
+	public String craftingTexture = Patchouli.PREFIX + "textures/gui/crafting";
 
 	public String model = DEFAULT_MODEL;
-	
-	public String text_color = "000000";
-	public String header_color = "333333";
-	public String nameplate_color = "FFDD00";
-	public String link_color = "0000EE";
-	public String link_hover_color = "8800EE";
+
+	@SerializedName("text_color")
+	public String textColorRaw = "000000";
+	@SerializedName("header_color")
+	public String headerColorRaw = "333333";
+	@SerializedName("nameplate_color")
+	public String nameplateColorRaw = "FFDD00";
+	@SerializedName("link_color")
+	public String linkColorRaw = "0000EE";
+	@SerializedName("link_hover_color")
+	public String linkHoverColorRaw = "8800EE";
 
 	public String version = "0";
 	public String subtitle = "";
-	
-	public String creative_tab = "misc";
-	public String advancements_tab = "";
+
+	@SerializedName("creative_tab")
+	public String creativeTab = "misc";
+	@SerializedName("advancements_tab")
+	public String advancementsTab = "";
 	
 	public Map<String, String> macros = new HashMap();
 	
@@ -83,17 +96,17 @@ public class Book {
 		
 		modelResourceLoc = new ModelResourceLocation(model, "inventory");
 		
-		AdvancementSyncHandler.trackedNamespaces.addAll(advancement_namespaces);
+		AdvancementSyncHandler.trackedNamespaces.addAll(advancementNamespaces);
 		
-		bookResource = new ResourceLocation(book_texture + ".png");
-		fillerResource = new ResourceLocation(filler_texture + ".png");
-		craftingResource = new ResourceLocation(crafting_texture + ".png");
+		bookResource = new ResourceLocation(bookTexture + ".png");
+		fillerResource = new ResourceLocation(fillerTexture + ".png");
+		craftingResource = new ResourceLocation(craftingTexture + ".png");
 		
-		textColor = Integer.parseInt(text_color, 16);
-		headerColor = Integer.parseInt(header_color, 16);
-		nameplateColor = Integer.parseInt(nameplate_color, 16);
-		linkColor = Integer.parseInt(link_color, 16);
-		linkHoverColor = Integer.parseInt(link_hover_color, 16);
+		textColor = Integer.parseInt(textColorRaw, 16);
+		headerColor = Integer.parseInt(headerColorRaw, 16);
+		nameplateColor = Integer.parseInt(nameplateColorRaw, 16);
+		linkColor = Integer.parseInt(linkColorRaw, 16);
+		linkHoverColor = Integer.parseInt(linkHoverColorRaw, 16);
 
 		for(String m : DEFAULT_MACROS.keySet())
 			if(!macros.containsKey(m))
@@ -101,7 +114,7 @@ public class Book {
 	}
 	
 	public boolean usesAdvancements() {
-		return !advancement_namespaces.isEmpty();
+		return !advancementNamespaces.isEmpty();
 	}
 	
 	public String getModNamespace() {

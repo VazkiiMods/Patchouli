@@ -56,7 +56,7 @@ public class ItemModBook extends Item {
 	public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
 		String tabName = tab.getTabLabel();
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			if(b.creative_tab.equals(tabName))
+			if(b.creativeTab.equals(tabName))
 				items.add(forBook(b));
 		});
 	}

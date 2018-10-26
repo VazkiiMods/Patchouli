@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
@@ -22,7 +22,8 @@ public class BookEntry implements Comparable<BookEntry> {
 	String name, icon, category, flag;
 	boolean priority = false;
 	boolean secret = false;
-	boolean read_by_default = false;
+	@SerializedName("read_by_default")
+	boolean readByDefault = false;
 	BookPage[] pages;
 	String advancement;
 	
@@ -75,7 +76,7 @@ public class BookEntry implements Comparable<BookEntry> {
 	
 	public boolean isUnread() {
 		BookData data = PersistentData.data.getBookData(book);
-		return !read_by_default && !isLocked() && !data.viewedEntries.contains(getResource().toString());
+		return !readByDefault && !isLocked() && !data.viewedEntries.contains(getResource().toString());
 	}
 	
 	public boolean isSecret() {

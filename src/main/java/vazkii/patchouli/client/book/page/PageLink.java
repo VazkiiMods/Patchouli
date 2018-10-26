@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
+import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.gui.GuiButton;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -8,7 +9,8 @@ import vazkii.patchouli.client.book.page.abstr.PageWithText;
 public class PageLink extends PageWithText {
 
 	String url;
-	String link_text;
+	@SerializedName("link_text")
+	String linkText;
 
 	transient GuiButton linkButton;
 
@@ -16,7 +18,7 @@ public class PageLink extends PageWithText {
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 
-		adddButton(linkButton = new GuiButton(0, GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, link_text));
+		adddButton(linkButton = new GuiButton(0, GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, linkText));
 	}
 	
 	@Override

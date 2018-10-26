@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
+import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import vazkii.patchouli.client.book.BookEntry;
@@ -10,7 +11,8 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 public class PageSpotlight extends PageWithText {
 
 	String item, title;
-	boolean link_recipe;
+	@SerializedName("link_recipe")
+	boolean linkRecipe;
 
 	transient ItemStack itemStack;
 	
@@ -18,7 +20,7 @@ public class PageSpotlight extends PageWithText {
 	public void build(BookEntry entry, int pageNum) {
 		itemStack = ItemStackUtil.loadStackFromString(item);
 		
-		if(link_recipe)
+		if(linkRecipe)
 			entry.addRelevantStack(itemStack, pageNum);
 	}
 
