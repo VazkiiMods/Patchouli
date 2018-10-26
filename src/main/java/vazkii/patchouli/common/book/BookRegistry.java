@@ -44,7 +44,7 @@ public class BookRegistry {
 			CraftingHelper.findFiles(mod, String.format("assets/%s/%s", id, BOOKS_LOCATION), (path) -> Files.exists(path),
 			(path, file) -> {
 				if(file.toString().endsWith("book.json")) {
-					String fileStr = file.toString().replaceAll("\\", "/");
+					String fileStr = file.toString().replaceAll("\\\\", "/");
 					System.out.println("fileStr: " + fileStr);
 					String relPath = fileStr.substring(fileStr.indexOf(BOOKS_LOCATION) + BOOKS_LOCATION.length() + 1);
 					System.out.println("relPath: " + relPath);
