@@ -71,7 +71,7 @@ public class BookTextRenderer {
 		currColor = book.textColor;
 		prevColor = book.textColor;
 		currCodes = "";
-		currHref = "";
+		currHref = null;
 		currCluster = null;
 		
 		for(String s : tokens) {
@@ -119,10 +119,10 @@ public class BookTextRenderer {
 			boolean endingExternal = false;
 			
 			if(cmd.isEmpty()) { // Remove formatting
-				endingExternal = !currHref.isEmpty() && externalHref;
+				endingExternal = currHref != null && !currHref.isEmpty() && externalHref;
 				currColor = book.textColor;
 				currCodes = "";
-				currHref = "";
+				currHref = null;
 				currCluster = null;
 				externalHref = false;
 			}
@@ -258,6 +258,7 @@ public class BookTextRenderer {
 					if(entry != null)
 						gui.displayLexiconGui(new GuiBookEntry(book, entry), true);
 				}
+				
 				GuiBook.playBookFlipSound();
 			}
 		}
