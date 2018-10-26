@@ -4,11 +4,21 @@ import java.util.HashMap;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public class ItemStackUtil {
 
 	public static ItemStack loadStackFromString(String res) {
+		String nbt = "";
+		int nbtStart = res.indexOf("{");
+		if(nbtStart > 0) {
+			nbt = res.substring(nbtStart).replaceAll("'", "\"");
+			res = res.substring(0, nbtStart);
+		}
+		
 		int meta = 0;
 		String[] tokens = res.split(":");
 		if(tokens.length < 2)
@@ -18,7 +28,15 @@ public class ItemStackUtil {
 			meta = Integer.parseInt(tokens[2]);
 		
 		Item item = Item.REGISTRY.getObject(new ResourceLocation(tokens[0], tokens[1]));
-		return new ItemStack(item, 1, meta);
+		ItemStack stack = new ItemStack(item, 1, meta);
+		if(!nbt.isEmpty())
+			try {
+				stack.setTagCompound(JsonToNBT.getTagFromJson(nbt));
+			} catch (NBTException e) {
+				e.printStackTrace();
+			}
+		
+		return stack;
 	}
 	
 	public static StackWrapper wrapStack(ItemStack stack) {

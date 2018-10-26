@@ -11,6 +11,12 @@
             "recipe2": "minecraft:iron_ore"
         },
         {
+            "type": "spotlight",
+            "title": "Testeroni",
+            "text": "This is just a test but it's cool, you know what else is cool? ICE!!! Ha gottem",
+            "item": "minecraft:diamond_sword:293{display:{Lore:['This has lore!!!']}}"
+        },
+        {
             "type": "text",
             "text": "You may have assembled this tome yourself. Maybe it arrived at your doorstep, or was a hand-me-down from a close relative. Perhaps you just happened to come across it in your travels.$(br2)Regardless of the means of acquisition, I welcome you, to the wonderful world of $(thing)Alchemical Artisanship$(). Not to be confused with $(thing)Alchemy$(), mind you. This is a different beast altogether, and deserves just as much respect."
         },
