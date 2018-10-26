@@ -82,7 +82,7 @@ public class BookContents {
 		try {
 			int ver = Integer.parseInt(book.version);
 			if(ver == 0)
-				return book.subtitle;
+				return I18n.translateToLocal(book.subtitle);
 			
 			editionStr = numberToOrdinal(ver); 
 		} catch(NumberFormatException e) {
