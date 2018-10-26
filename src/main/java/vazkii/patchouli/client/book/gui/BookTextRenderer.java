@@ -88,13 +88,19 @@ public class BookTextRenderer {
 			
 			s = s.replaceAll("\0", "");
 			
-			int strWidth = font.getStringWidth(currCodes + s) + (space ? spaceWidth : 0);
-			currLen += strWidth;
-			if(currLen > width) {
-				currLen = strWidth;
-				currX = x;
-				currY += lineHeight;
-			}
+			int trimWidth = font.getStringWidth(currCodes + s);
+			int strWidth = trimWidth + (space ? spaceWidth : 0);
+			
+			int newLen = currLen + strWidth;
+			
+			if(newLen > width) {
+				int newTrimLen = currLen + trimWidth;
+				if(newTrimLen > width) {
+					currLen = strWidth;
+					currX = x;
+					currY += lineHeight;
+				} else currLen = newTrimLen;
+			} else currLen = newLen;
 			
 			Word word = new Word(font, currX, currY, strWidth, s, currColor, currCodes, currHref, currCluster);
 			words.add(word);
