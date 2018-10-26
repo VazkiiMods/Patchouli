@@ -11,8 +11,10 @@
 			"text": "THIS IS A TEST ENTRY"
 		},
 		{
-			"type": "text",
-			"text": "IF YOU SEE THIS THEN SHIT IS WORKING YO"
+			"type": "multiblock",
+			"multiblock": "patchouli:crucible",
+			"name": "Crucible",
+			"text": "(note, the $(item)Stone Bricks$() may be replaced with any other stone material block)"
 		}
 	]
 }

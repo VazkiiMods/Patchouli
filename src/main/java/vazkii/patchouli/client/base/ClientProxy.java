@@ -4,6 +4,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.CommonProxy;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.PatchouliItems;
@@ -21,6 +22,7 @@ public class ClientProxy extends CommonProxy {
 		
 		MinecraftForge.EVENT_BUS.register(ClientTicker.class);
 		MinecraftForge.EVENT_BUS.register(ClientAdvancements.class);
+		MinecraftForge.EVENT_BUS.register(MultiblockVisualizationHandler.class);
 	}
 	
 	@Override

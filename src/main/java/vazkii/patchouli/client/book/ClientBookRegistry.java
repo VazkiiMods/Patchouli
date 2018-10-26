@@ -22,6 +22,7 @@ import vazkii.patchouli.client.book.page.PageCrafting;
 import vazkii.patchouli.client.book.page.PageEmpty;
 import vazkii.patchouli.client.book.page.PageImage;
 import vazkii.patchouli.client.book.page.PageLink;
+import vazkii.patchouli.client.book.page.PageMultiblock;
 import vazkii.patchouli.client.book.page.PageRelations;
 import vazkii.patchouli.client.book.page.PageSmelting;
 import vazkii.patchouli.client.book.page.PageSpotlight;
@@ -62,8 +63,7 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 		pageTypes.put("image", PageImage.class);
 		pageTypes.put("spotlight", PageSpotlight.class);
 		pageTypes.put("empty", PageEmpty.class);
-		// TODO: bring back multiblocks
-//		pageTypes.put("multiblock", PageMultiblock.class); 
+		pageTypes.put("multiblock", PageMultiblock.class); 
 		pageTypes.put("link", PageLink.class);
 		pageTypes.put("relations", PageRelations.class);
 	}

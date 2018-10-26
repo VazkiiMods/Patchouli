@@ -8,6 +8,7 @@ import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.handler.AdvancementSyncHandler;
 import vazkii.patchouli.common.item.PatchouliItems;
+import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.network.NetworkHandler;
 
 public class CommonProxy {
@@ -17,6 +18,7 @@ public class CommonProxy {
 		
 		PatchouliItems.preInit();
 		PatchouliSounds.preInit();
+		MultiblockRegistry.preInit();
 		
 		BookRegistry.INSTANCE.init();
 
