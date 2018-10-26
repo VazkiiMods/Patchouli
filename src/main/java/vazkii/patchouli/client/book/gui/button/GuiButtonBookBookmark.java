@@ -39,7 +39,7 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 			RenderHelper.enableGUIStandardItemLighting();
 			int px = x * 2 + (hovered ? 6 : 2);
 			int py = y * 2 + 2;
-			mc.getRenderItem().renderItemIntoGUI(entry.getIconItem(), px, py);
+			entry.getIconItem().render(px, py);
 
 			GlStateManager.disableDepth();
 			String s = Integer.toString(bookmark.page + 1);

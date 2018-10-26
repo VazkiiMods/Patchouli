@@ -3,6 +3,8 @@ package vazkii.patchouli.client.book;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.common.base.PatchouliConfig;
@@ -11,7 +13,9 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class BookCategory implements Comparable<BookCategory> {
 
-	String name, description, icon, parent, flag;
+	String name, description, parent, flag;
+	@SerializedName("icon")
+	String iconRaw;
 	int sortnum;
 
 	transient Book book;
@@ -20,7 +24,7 @@ public class BookCategory implements Comparable<BookCategory> {
 	transient List<BookCategory> children = new ArrayList<>();
 	transient List<BookEntry> entries = new ArrayList<>();
 	transient boolean locked;
-	transient ItemStack iconItem = null;
+	transient BookIcon icon = null;
 	transient ResourceLocation resource;
 
 	public String getName() {
@@ -31,11 +35,11 @@ public class BookCategory implements Comparable<BookCategory> {
 		return description;
 	}
 
-	public ItemStack getIconItem() {
-		if(iconItem == null)
-			iconItem = ItemStackUtil.loadStackFromString(icon);
+	public BookIcon getIcon() {
+		if(icon == null)
+			icon = new BookIcon(iconRaw);
 
-		return iconItem;
+		return icon;
 	}
 
 	public void addEntry(BookEntry entry) {

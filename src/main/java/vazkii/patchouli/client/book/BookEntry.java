@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
 import org.apache.commons.lang3.tuple.Pair;
+
+import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -19,7 +20,11 @@ import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
 
 public class BookEntry implements Comparable<BookEntry> {
 
-	String name, icon, category, flag;
+	String name, category, flag;
+	
+	@SerializedName("icon")
+	String iconRaw;
+	
 	boolean priority = false;
 	boolean secret = false;
 	@SerializedName("read_by_default")
@@ -30,7 +35,7 @@ public class BookEntry implements Comparable<BookEntry> {
 	transient ResourceLocation resource;
 	transient Book book = null;
 	transient BookCategory lcategory = null;
-	transient ItemStack iconItem = null;
+	transient BookIcon icon = null;
 	transient List<BookPage> realPages = new ArrayList();
 	transient List<StackWrapper> relevantStacks = new LinkedList();
 	transient boolean locked;
@@ -47,11 +52,11 @@ public class BookEntry implements Comparable<BookEntry> {
 		return priority;
 	}
 	
-	public ItemStack getIconItem() {
-		if(iconItem == null)
-			iconItem = ItemStackUtil.loadStackFromString(icon);
+	public BookIcon getIconItem() {
+		if(icon == null)
+			icon = new BookIcon(iconRaw); 
 		
-		return iconItem;
+		return icon;
 	}
 	
 	public BookCategory getCategory() {

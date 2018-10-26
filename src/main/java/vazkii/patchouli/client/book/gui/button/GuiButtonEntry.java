@@ -50,10 +50,9 @@ public class GuiButtonEntry extends GuiButton {
 			if(locked) {
 				GlStateManager.color(1F, 1F, 1F, 0.7F);
 				GuiBook.drawLock(parent.book, x * 2 + 2, y * 2 + 2); 
-			} else {
-				RenderHelper.enableGUIStandardItemLighting();
-				mc.getRenderItem().renderItemIntoGUI(entry.getIconItem(), x * 2 + 2, y * 2 + 2);	
-			}
+			} else
+				entry.getIconItem().render(x * 2 + 2, y * 2 + 2);
+			
 			GlStateManager.scale(2F, 2F, 2F);
 
 			int color = parent.book.textColor;

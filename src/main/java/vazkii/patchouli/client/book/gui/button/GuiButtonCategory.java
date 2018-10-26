@@ -5,11 +5,11 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookCategory;
+import vazkii.patchouli.client.book.BookIcon;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class GuiButtonCategory extends GuiButton {
@@ -18,24 +18,24 @@ public class GuiButtonCategory extends GuiButton {
 
 	GuiBook parent;
 	BookCategory category;
-	ItemStack stack;
+	BookIcon icon;
 	String name;
 	int u, v;
 	float timeHovered;
 	boolean unread;
 	
 	public GuiButtonCategory(GuiBook parent, int x, int y, BookCategory category) {
-		this(parent, x, y, category.getIconItem(), category.getName());
+		this(parent, x, y, category.getIcon(), category.getName());
 		this.category = category;
 		unread = category.isUnread();
-	}
+	}	
 	
-	public GuiButtonCategory(GuiBook parent, int x, int y, ItemStack stack, String name) {
+	public GuiButtonCategory(GuiBook parent, int x, int y, BookIcon icon, String name) {
 		super(0, parent.bookLeft + x, parent.bookTop + y, 20, 20, "");
 		this.parent = parent;
 		this.u = x;
 		this.v = y;
-		this.stack = stack;
+		this.icon = icon;
 		this.name = name;
 	}
 	
@@ -55,10 +55,8 @@ public class GuiButtonCategory extends GuiButton {
 			if(locked) {
 				GlStateManager.color(1F, 1F, 1F, 0.7F);
 				GuiBook.drawLock(parent.book, x + 2, y + 2); 
-			} else {
-				RenderHelper.enableGUIStandardItemLighting();
-				mc.getRenderItem().renderItemIntoGUI(stack, x + 2, y + 2);	
-			}
+			} else
+				icon.render(x + 2, y + 2);
 			
 			GlStateManager.pushMatrix();
 			GlStateManager.color(1F, 1F, 1F, transparency);
