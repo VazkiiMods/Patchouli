@@ -52,7 +52,7 @@ public class BookEntry implements Comparable<BookEntry> {
 		return priority;
 	}
 	
-	public BookIcon getIconItem() {
+	public BookIcon getIcon() {
 		if(icon == null)
 			icon = new BookIcon(iconRaw); 
 		
@@ -124,7 +124,12 @@ public class BookEntry implements Comparable<BookEntry> {
 		for(int i = 0; i < pages.length; i++)
 			if(pages[i].canAdd()) {
 				realPages.add(pages[i]);
-				pages[i].build(this, i);
+				try {
+					pages[i].build(this, i);
+				} catch(Exception e) {
+					throw new RuntimeException("Error while loading entry " + resource + " page " + i, e);
+				}
+				
 			}
 	}
 	

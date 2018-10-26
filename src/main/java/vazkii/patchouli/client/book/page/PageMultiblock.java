@@ -2,6 +2,8 @@ package vazkii.patchouli.client.book.page;
 
 import org.lwjgl.opengl.GL11;
 
+import com.google.gson.annotations.SerializedName;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -22,18 +24,30 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.multiblock.Multiblock;
 import vazkii.patchouli.common.multiblock.Multiblock.StateMatcher;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
+import vazkii.patchouli.common.multiblock.SerializedMultiblock;
 
 public class PageMultiblock extends PageWithText {
 
 	String name;
-	String multiblock;
+	@SerializedName("multiblock_id")
+	String multiblockId;
+	
+	@SerializedName("multiblock")
+	SerializedMultiblock serializedMultiblock;
 
 	transient Multiblock multiblockObj;
 	transient GuiButton visualizeButton;
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
-		multiblockObj = MultiblockRegistry.MULTIBLOCKS.get(new ResourceLocation(multiblock));
+		if(multiblockId != null && !multiblockId.isEmpty())
+			multiblockObj = MultiblockRegistry.MULTIBLOCKS.get(new ResourceLocation(multiblockId));
+		
+		if(multiblockObj == null && serializedMultiblock != null)
+			multiblockObj = serializedMultiblock.toMultiblock();
+		
+		if(multiblockObj == null)
+			throw new IllegalArgumentException("No multiblock located for " + multiblockId);
 	}
 
 	@Override

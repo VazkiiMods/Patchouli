@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
@@ -46,11 +48,8 @@ public class BookRegistry {
 					(path, file) -> {
 						if(file.toString().endsWith("book.json")) {
 							String fileStr = file.toString().replaceAll("\\\\", "/");
-							System.out.println("fileStr: " + fileStr);
 							String relPath = fileStr.substring(fileStr.indexOf(BOOKS_LOCATION) + BOOKS_LOCATION.length() + 1);
-							System.out.println("relPath: " + relPath);
 							String bookName = relPath.substring(0, relPath.indexOf("/"));
-							System.out.println("bookName: " + bookName);
 
 							if(bookName.indexOf("/") > -1) {
 								(new IllegalArgumentException("Ignored book.json @ " + file)).printStackTrace();
@@ -58,7 +57,6 @@ public class BookRegistry {
 							}
 
 							String assetPath = fileStr.substring(fileStr.indexOf("/assets"));
-							System.out.println("assetPath: " + assetPath);
 							ResourceLocation bookId = new ResourceLocation(id, bookName);
 							foundBooks.put(Pair.of(mod, bookId), assetPath);
 						}
@@ -72,7 +70,6 @@ public class BookRegistry {
 			ResourceLocation res = pair.getRight();
 
 			InputStream stream = mod.getMod().getClass().getResourceAsStream(file);
-			System.out.println("Mod: " + mod.getMod().getClass() + ", Stream: " + stream);
 			Reader reader = new BufferedReader(new InputStreamReader(stream));
 			Book book = gson.fromJson(reader, Book.class);
 

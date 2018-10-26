@@ -37,12 +37,12 @@ public class BookContents {
 	private static final String DEFAULT_LANG = "en_us";
 
 	public final Book book;
-	
+
 	public final Map<ResourceLocation, BookCategory> categories = new HashMap();
 	public final Map<ResourceLocation, BookEntry> entries = new HashMap();
 	public final Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap();
 	private boolean errored = false;
-	
+
 	public Stack<GuiBook> guiStack = new Stack();
 	public GuiBook currentGui;
 
@@ -57,14 +57,14 @@ public class BookContents {
 	public Pair<BookEntry, Integer> getEntryForStack(ItemStack stack) {
 		return recipeMappings.get(ItemStackUtil.wrapStack(stack));
 	}
-	
+
 	public GuiBook getCurrentGui() {
 		if(currentGui == null)
 			currentGui = new GuiBookLanding(book);
 
 		return currentGui;
 	}
-	
+
 	public void openLexiconGui(GuiBook gui, boolean push) {
 		if(gui.canBeOpened()) {
 			Minecraft mc = Minecraft.getMinecraft();
@@ -75,26 +75,26 @@ public class BookContents {
 			gui.onFirstOpened();
 		}
 	}
-	
+
 	public String getSubtitle() {
 		String editionStr = "";
-		
+
 		try {
 			int ver = Integer.parseInt(book.version);
 			if(ver == 0)
 				return I18n.translateToLocal(book.subtitle);
-			
+
 			editionStr = numberToOrdinal(ver); 
 		} catch(NumberFormatException e) {
 			editionStr = I18n.translateToLocal("patchouli.gui.lexicon.dev_edition");
 		}
-		
+
 		return I18n.translateToLocalFormatted("patchouli.gui.lexicon.edition_str", editionStr);
 	}
 
 	public void reload() {
 		errored = false;
-		
+
 		currentGui = null;
 		guiStack.clear();
 		categories.clear();
@@ -110,7 +110,7 @@ public class BookContents {
 			String id = book.getModNamespace();
 			String loc = BookRegistry.BOOKS_LOCATION;
 			String bookName = book.resourceLoc.getResourcePath();
-			
+
 			CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/categories", id, loc, bookName, DEFAULT_LANG), null, pred(id, foundCategories));
 			CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/entries", id, loc, bookName, DEFAULT_LANG), null, pred(id, foundEntries));
 
@@ -119,8 +119,21 @@ public class BookContents {
 			foundEntries.forEach(e -> loadEntry(e, new ResourceLocation(e.getResourceDomain(),
 					String.format("%s/%s/%s/entries/%s.json", loc, bookName, DEFAULT_LANG, e.getResourcePath())), book));
 
-			entries.forEach((res, entry) -> entry.build(res));
-			categories.forEach((res, category) -> category.build(res));
+			entries.forEach((res, entry) -> {
+				try {
+					entry.build(res);
+				} catch(Exception e) {
+					throw new RuntimeException("Error while loading entry " + res, e);
+				}
+			});
+
+			categories.forEach((res, category) -> {
+				try {
+					category.build(res);
+				} catch(Exception e) {
+					throw new RuntimeException("Error while loading category " + res, e);
+				}
+			});
 		} catch (Exception e) {
 			errored = true;
 			e.printStackTrace();
@@ -204,5 +217,5 @@ public class BookContents {
 	private static String numberToOrdinal(int i) {
 		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
 	}
-	
+
 }
