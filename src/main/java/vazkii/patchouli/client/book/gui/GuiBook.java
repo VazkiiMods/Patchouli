@@ -238,8 +238,10 @@ public abstract class GuiBook extends GuiScreen {
 
 		switch(mouseButton) {
 		case 0:
-			if(targetPage != null && isShiftKeyDown())
+			if(targetPage != null && isShiftKeyDown()) {
 				displayLexiconGui(new GuiBookEntry(book, targetPage.getLeft(), targetPage.getRight()), true);
+				playBookFlipSound();
+			}
 			break;
 		case 1: 
 			back(true);

@@ -252,6 +252,7 @@ public class BookTextRenderer {
 					if(entry != null)
 						gui.displayLexiconGui(new GuiBookEntry(book, entry), true);
 				}
+				GuiBook.playBookFlipSound();
 			}
 		}
 		

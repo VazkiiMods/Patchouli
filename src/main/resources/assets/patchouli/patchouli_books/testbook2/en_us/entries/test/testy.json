@@ -1,18 +1,23 @@
 {
-	"name": "Test Entry",
-	"icon": "minecraft:writable_book",
-	"category": "test",
-	"priority": true,
-	"read_by_default": false,
-	"advancement": "patchouli:test_book",
-	"pages": [
-		{
-			"type": "text",
-			"text": "THIS IS A TEST ENTRY"
-		},
-		{
-			"type": "text",
-			"text": "IF YOU SEE THIS THEN SHIT IS WORKING YO"
-		}
-	]
+    "name": "Test Entry",
+    "icon": "minecraft:writable_book",
+    "category": "test",
+    "priority": true,
+    "read_by_default": false,
+    "advancement": "patchouli:test_book",
+    "pages": [
+        {
+            "type": "text",
+            "text": "THIS IS A TEST ENTRY"
+        },
+        {
+            "type": "text",
+            "text": "IF YOU SEE THIS THEN SHIT IS WORKING YO $(l:intro/preface)test$()"
+        },
+        {
+            "type": "spotlight",
+            "item": "minecraft:stone",
+            "text": "spaget"
+        }
+    ]
 }
