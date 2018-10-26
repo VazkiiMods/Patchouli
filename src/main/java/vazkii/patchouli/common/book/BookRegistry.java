@@ -44,14 +44,14 @@ public class BookRegistry {
 			CraftingHelper.findFiles(mod, String.format("assets/%s/%s", id, BOOKS_LOCATION), (path) -> Files.exists(path),
 			(path, file) -> {
 				if(file.toString().endsWith("book.json")) {
-					String fileStr = file.toString();
+					String fileStr = file.toString().replaceAll("\\", "/");
 					System.out.println("fileStr: " + fileStr);
 					String relPath = fileStr.substring(fileStr.indexOf(BOOKS_LOCATION) + BOOKS_LOCATION.length() + 1);
 					System.out.println("relPath: " + relPath);
-					String bookName = relPath.substring(0, relPath.indexOf(File.separator));
+					String bookName = relPath.substring(0, relPath.indexOf("/"));
 					System.out.println("bookName: " + bookName);
 					
-					if(bookName.indexOf(File.separator) > -1) {
+					if(bookName.indexOf("/") > -1) {
 						(new IllegalArgumentException("Ignored book.json @ " + file)).printStackTrace();
 						return true;
 					}
