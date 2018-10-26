@@ -1,14 +1,16 @@
 package vazkii.patchouli.common.book;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.jline.utils.InputStreamReader;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,7 +38,7 @@ public class BookRegistry {
 
 	public void init() {
 		List<ModContainer> mods = Loader.instance().getActiveModList();
-		Map<Pair<ModContainer, ResourceLocation>, Path> foundBooks = new HashMap();
+		Map<Pair<ModContainer, ResourceLocation>, String> foundBooks = new HashMap();
 
 		// TODO remove debugs
 		mods.forEach((mod) -> {
@@ -56,37 +58,29 @@ public class BookRegistry {
 								return true;
 							}
 
+							String assetPath = fileStr.substring(fileStr.indexOf("/assets"));
+							System.out.println("assetPath: " + assetPath);
 							ResourceLocation bookId = new ResourceLocation(id, bookName);
-							foundBooks.put(Pair.of(mod, bookId), file);
+							foundBooks.put(Pair.of(mod, bookId), assetPath);
 						}
 
 						return true;
 					}, false, true);
 		});
 
-		// Using findFiles again ensures the zip is inflated again
-		mods.forEach((mod) -> {
-			CraftingHelper.findFiles(mod, String.format("assets/%s/%s", mod.getModId(), BOOKS_LOCATION), (path) -> Files.exists(path),
-					(path, file) -> {
-						foundBooks.forEach((pair, bookFile) -> {
-							if(pair.getLeft() == mod) {
-								try {
-									Reader reader = Files.newBufferedReader(bookFile);
-									Book book = gson.fromJson(reader, Book.class);
-									System.out.println(book);
-									books.put(pair.getRight(), book);
+		foundBooks.forEach((pair, file) -> {
+			ModContainer mod = pair.getLeft();
+			ResourceLocation res = pair.getRight();
 
-									book.build(pair.getLeft(), pair.getRight());
-								} catch(IOException e) {
-									throw new RuntimeException("Failed to load book", e);
-								}
-							}
-						});
-						
-						return false;
-					});
+			InputStream stream = mod.getMod().getClass().getResourceAsStream(file);
+			System.out.println("Mod: " + mod.getMod().getClass() + ", Stream: " + stream);
+			Reader reader = new BufferedReader(new InputStreamReader(stream));
+			Book book = gson.fromJson(reader, Book.class);
+
+			books.put(res, book);
+
+			book.build(mod, res);
 		});
-
 	}
 
 	@SideOnly(Side.CLIENT)
