@@ -16,6 +16,7 @@ import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.common.handler.AdvancementSyncHandler;
 import vazkii.patchouli.common.item.ItemModBook;
+import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class Book {
 	
@@ -43,6 +44,9 @@ public class Book {
 	
 	@SideOnly(Side.CLIENT)
 	public transient BookContents contents;
+
+	@SideOnly(Side.CLIENT)
+	private transient boolean wasUpdated = false;
 	
 	public transient ModContainer owner;
 	public transient ResourceLocation resourceLoc;
@@ -53,6 +57,7 @@ public class Book {
 	public transient int textColor, headerColor, nameplateColor, linkColor, linkHoverColor;
 	
 	// JSON Loaded properties
+	
 	public String name = "";
 	@SerializedName("landing_text")
 	public String landingText = "patchouli.gui.lexicon.landing_info";
@@ -88,8 +93,13 @@ public class Book {
 	@SerializedName("advancements_tab")
 	public String advancementsTab = "";
 	
-	@SerializedName("no_book_item")
+	@SerializedName("dont_generate_book")
 	public boolean noBook = false;
+	@SerializedName("custom_book_item")
+	public String customBookItem = "";
+	
+	@SerializedName("show_toasts")
+	public boolean showToasts = true;
 	
 	public Map<String, String> macros = new HashMap();
 	
@@ -125,10 +135,24 @@ public class Book {
 	}
 	
 	public ItemStack getBookItem() {
-		if(bookItem == null)
-			bookItem = ItemModBook.forBook(this);
+		if(bookItem == null) {
+			if(noBook)
+				bookItem = ItemStackUtil.loadStackFromString(customBookItem);
+			else bookItem = ItemModBook.forBook(this);
+		}
 		
 		return bookItem;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void markUpdated() {
+		wasUpdated = true;
+	}
+	
+	public boolean popUpdated() {
+		boolean updated = wasUpdated;
+		wasUpdated = false;
+		return updated;
 	}
 	
 	@SideOnly(Side.CLIENT)

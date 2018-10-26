@@ -65,7 +65,11 @@ public class BookEntry implements Comparable<BookEntry> {
 	}
 	
 	public void updateLockStatus() {
+		boolean currLocked = locked;
 		locked = advancement != null && !advancement.isEmpty() && !ClientAdvancements.hasDone(advancement);
+		
+		if(currLocked != locked)
+			book.markUpdated();
 	}
 	
 	public boolean isLocked() {
