@@ -51,7 +51,7 @@ public class GuiBookLanding extends GuiBook {
 		// History
 		buttonList.add(new GuiButtonBookHistory(this, x + (pos++) * dist, y));
 
-		// Advancements TODO
+		// Advancements
 		if(!book.advancements_tab.isEmpty())
 			buttonList.add(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y));
 		

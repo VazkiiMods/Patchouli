@@ -13,6 +13,8 @@ import vazkii.patchouli.common.network.NetworkHandler;
 public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent event) {
+		PatchouliConfig.preInit();
+		
 		PatchouliItems.preInit();
 		PatchouliSounds.preInit();
 		
