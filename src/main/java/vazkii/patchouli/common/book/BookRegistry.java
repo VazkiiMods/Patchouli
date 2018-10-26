@@ -38,14 +38,18 @@ public class BookRegistry {
 		List<ModContainer> mods = Loader.instance().getActiveModList();
 		Map<Pair<ModContainer, ResourceLocation>, Reader> foundBooks = new HashMap();
 
+		// TODO remove debugs
 		mods.forEach((mod) -> {
 			String id = mod.getModId();
 			CraftingHelper.findFiles(mod, String.format("assets/%s/%s", id, BOOKS_LOCATION), (path) -> Files.exists(path),
 			(path, file) -> {
 				if(file.toString().endsWith("book.json")) {
 					String fileStr = file.toString();
+					System.out.println("fileStr: " + fileStr);
 					String relPath = fileStr.substring(fileStr.indexOf(BOOKS_LOCATION) + BOOKS_LOCATION.length() + 1);
+					System.out.println("relPath: " + relPath);
 					String bookName = relPath.substring(0, relPath.indexOf(File.separator));
+					System.out.println("bookName: " + bookName);
 					
 					if(bookName.indexOf(File.separator) > -1) {
 						(new IllegalArgumentException("Ignored book.json @ " + file)).printStackTrace();
@@ -54,6 +58,7 @@ public class BookRegistry {
 					
 					ResourceLocation bookId = new ResourceLocation(id, bookName);
 					try {
+						System.out.println("bookId: " + bookId);
 						foundBooks.put(Pair.of(mod, bookId), Files.newBufferedReader(file));
 					} catch (IOException e) {
 						e.printStackTrace();
