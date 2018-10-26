@@ -1,9 +1,11 @@
 package vazkii.patchouli.common.item;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -12,6 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.book.BookRegistry;
 
 public class PatchouliItems {
 
@@ -34,14 +37,9 @@ public class PatchouliItems {
 	}
 	
 	private static void bindBookModel() {
-		ModelBakery.registerItemVariants(book, 
-				new ModelResourceLocation(Patchouli.PREFIX + "book_blue", "inventory"),
-				new ModelResourceLocation(Patchouli.PREFIX + "book_brown", "inventory"),
-				new ModelResourceLocation(Patchouli.PREFIX + "book_cyan", "inventory"),
-				new ModelResourceLocation(Patchouli.PREFIX + "book_gray", "inventory"),
-				new ModelResourceLocation(Patchouli.PREFIX + "book_green", "inventory"),
-				new ModelResourceLocation(Patchouli.PREFIX + "book_purple", "inventory"),
-				new ModelResourceLocation(Patchouli.PREFIX + "book_red", "inventory"));
+		List<ModelResourceLocation> models = new LinkedList();
+		BookRegistry.INSTANCE.books.values().forEach(b -> models.add(new ModelResourceLocation(b.model, "inventory")));
+		ModelBakery.registerItemVariants(book, models.toArray(new ModelResourceLocation[models.size()]));
 		
         ModelLoader.setCustomMeshDefinition(book, (stack) -> {
     		Book book = ItemModBook.getBook(stack);

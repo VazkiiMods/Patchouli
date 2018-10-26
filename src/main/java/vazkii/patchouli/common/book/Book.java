@@ -88,6 +88,9 @@ public class Book {
 	@SerializedName("advancements_tab")
 	public String advancementsTab = "";
 	
+	@SerializedName("no_book_item")
+	public boolean noBook = false;
+	
 	public Map<String, String> macros = new HashMap();
 	
 	public void build(ModContainer owner, ResourceLocation resource) {
