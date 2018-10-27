@@ -149,7 +149,7 @@ public class GuiBookLanding extends GuiBook {
 			mc.displayGuiScreen(new GuiAdvancementsExt(mc.player.connection.getAdvancementManager(), this, book.advancementsTab));
 
 		else if(button instanceof GuiButtonBookEdit) {
-			if(isCtrlKeyDown()) {
+			if(isShiftKeyDown()) {
 				long time = System.currentTimeMillis();
 				book.reloadContents();
 				displayLexiconGui(new GuiBookLanding(book), false);
