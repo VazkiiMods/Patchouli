@@ -67,35 +67,34 @@ public class SerializedMultiblock {
 		String[] split = s.split("\\[");
 		Block block = Block.REGISTRY.getObject(new ResourceLocation(split[0]));
 		if (block != null) {
-		    if (split.length > 1) {
-                IBlockState state = block.getDefaultState();
-		        for (String part :  split[1].replace("]", "").split(",")) {
-                    String[] keyValue = part.split("=");
-                    for (IProperty<?> prop : state.getProperties().keySet()) {
-                        IBlockState changed = findProperty(state, prop, keyValue[0], keyValue[1]);
-		                if (changed != null) {
-		                    state = changed;
-		                    break;
-                        }
-                    }
-		        }
-		        return StateMatcher.fromState(state);
-            }
-		    else
-                return StateMatcher.fromBlockLoose(block);
-        }
+			if (split.length > 1) {
+				IBlockState state = block.getDefaultState();
+				for (String part : split[1].replace("]", "").split(",")) {
+					String[] keyValue = part.split("=");
+					for (IProperty<?> prop : state.getProperties().keySet()) {
+						IBlockState changed = findProperty(state, prop, keyValue[0], keyValue[1]);
+						if (changed != null) {
+							state = changed;
+							break;
+						}
+					}
+				}
+				return StateMatcher.fromState(state);
+			} else
+				return StateMatcher.fromBlockLoose(block);
+		}
 
 		return null;
 	}
 
 	private <T extends Comparable<T>> IBlockState findProperty(IBlockState state, IProperty<T> prop, String key, String newValue) {
-        if (key.equals(prop.getName())) {
-            for (T value : prop.getAllowedValues()) {
-                if (prop.getName(value).equals(newValue)) {
-                    return state.withProperty(prop, value);
-                }
-            }
-        }
-        return null;
-    }
+		if (key.equals(prop.getName())) {
+			for (T value : prop.getAllowedValues()) {
+				if (prop.getName(value).equals(newValue)) {
+					return state.withProperty(prop, value);
+				}
+			}
+		}
+		return null;
+	}
 }
