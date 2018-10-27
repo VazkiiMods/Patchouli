@@ -54,7 +54,7 @@ public class PageMultiblock extends PageWithText {
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 
-		adddButton(visualizeButton = new GuiButtonBookEye(parent, 12, 97));
+		addButton(visualizeButton = new GuiButtonBookEye(parent, 12, 97));
 	}
 
 	@Override

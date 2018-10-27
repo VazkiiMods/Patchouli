@@ -57,7 +57,7 @@ public abstract class BookPage {
 		parent.getButtonList().removeAll(buttons);
 	}
 	
-	protected void adddButton(GuiButton button) {
+	protected void addButton(GuiButton button) {
 		button.x += (parent.bookLeft + left);
 		button.y += (parent.bookTop + top);
 		buttons.add(button);

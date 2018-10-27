@@ -8,13 +8,11 @@ import java.util.stream.Collectors;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
-import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonEntry;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
-import vazkii.patchouli.common.book.BookRegistry;
 
 public class PageRelations extends PageWithText {
 
@@ -43,7 +41,7 @@ public class PageRelations extends PageWithText {
 		Collections.sort(displayedEntries);
 		for(int i = 0; i < displayedEntries.size(); i++) {
 			GuiButton button = new GuiButtonEntry(parent, 0, 20 + i * 11, displayedEntries.get(i), i);
-			adddButton(button);
+			addButton(button);
 		}
 	}
 	

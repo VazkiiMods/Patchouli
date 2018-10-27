@@ -27,8 +27,8 @@ public class PageImage extends PageWithText {
 		
 		int x = 90;
 		int y = 100;
-		adddButton(new GuiButtonBookArrowSmall(parent, x, y, true, () -> index > 0));
-		adddButton(new GuiButtonBookArrowSmall(parent, x + 10, y, false, () -> index < images.length - 1));
+		addButton(new GuiButtonBookArrowSmall(parent, x, y, true, () -> index > 0));
+		addButton(new GuiButtonBookArrowSmall(parent, x + 10, y, false, () -> index < images.length - 1));
 	}
 	
 	@Override
