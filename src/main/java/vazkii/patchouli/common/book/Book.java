@@ -59,9 +59,9 @@ public class Book {
 	public transient ResourceLocation bookResource, fillerResource, craftingResource;
 	public transient int textColor, headerColor, nameplateColor, linkColor, linkHoverColor;
 	
-	private transient boolean isExtension = false;
-	private transient List<Book> extensions = new LinkedList();
-	private transient Book extensionTarget;
+	public transient boolean isExtension = false;
+	public transient List<Book> extensions = new LinkedList();
+	public transient Book extensionTarget;
 	
 	// JSON Loaded properties
 	

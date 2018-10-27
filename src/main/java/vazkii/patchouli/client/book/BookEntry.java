@@ -33,7 +33,7 @@ public class BookEntry implements Comparable<BookEntry> {
 	String advancement;
 	
 	transient ResourceLocation resource;
-	transient Book book = null;
+	transient Book book, trueProvider;
 	transient BookCategory lcategory = null;
 	transient BookIcon icon = null;
 	transient List<BookPage> realPages = new ArrayList();
@@ -118,7 +118,10 @@ public class BookEntry implements Comparable<BookEntry> {
 	}
 	
 	public void setBook(Book book) {
-		this.book = book;
+		if(book.isExtension) {
+			this.book = book.extensionTarget;
+			trueProvider = book;
+		} else this.book = book;
 	}
 	
 	public void build(ResourceLocation resource) {
@@ -126,6 +129,8 @@ public class BookEntry implements Comparable<BookEntry> {
 			return;
 		
 		this.resource = resource;
+		System.out.println(this + " is " +  resource);
+		System.out.println("The book is " + book.resourceLoc);
 		for(int i = 0; i < pages.length; i++)
 			if(pages[i].canAdd()) {
 				realPages.add(pages[i]);
@@ -149,6 +154,18 @@ public class BookEntry implements Comparable<BookEntry> {
 	
 	public boolean isStackRelevant(ItemStack stack) {
 		return relevantStacks.contains(ItemStackUtil.wrapStack(stack));
+	}
+	
+	public Book getBook() {
+		return book;
+	}
+	
+	public Book getTrueProvider() {
+		return trueProvider;
+	}
+
+	public boolean isExtension() {
+		return getTrueProvider() != null && getTrueProvider() != getBook();
 	}
 	
 }

@@ -18,7 +18,7 @@ public class BookCategory implements Comparable<BookCategory> {
 	String iconRaw;
 	int sortnum;
 
-	transient Book book;
+	transient Book book, trueProvider;
 	transient boolean checkedParent = false;
 	transient BookCategory parentCategory;
 	transient List<BookCategory> children = new ArrayList<>();
@@ -133,7 +133,10 @@ public class BookCategory implements Comparable<BookCategory> {
 	}
 
 	public void setBook(Book book) {
-		this.book = book;
+		if(book.isExtension) {
+			this.book = book.extensionTarget;
+			trueProvider = book;
+		} else this.book = book;	
 	}
 
 	public void build(ResourceLocation resource) {
@@ -148,9 +151,16 @@ public class BookCategory implements Comparable<BookCategory> {
 		built = true;
 	}
 
-
 	public Book getBook() {
 		return book;
+	}
+	
+	public Book getTrueProvider() {
+		return trueProvider;
+	}
+
+	public boolean isExtension() {
+		return getTrueProvider() != getBook();
 	}
 
 }

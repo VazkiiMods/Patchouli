@@ -43,6 +43,7 @@ patchouli.gui.lexicon.external_link=(External Link)
 patchouli.gui.lexicon.loading_error=Loading error!
 patchouli.gui.lexicon.dev_edition=Writer's
 patchouli.gui.lexicon.edition_str=%s Edition
+patchouli.gui.lexicon.added_by=Added by %s
 
 patchouli.gui.lexicon.button.prev_page=Previous
 patchouli.gui.lexicon.button.next_page=Next

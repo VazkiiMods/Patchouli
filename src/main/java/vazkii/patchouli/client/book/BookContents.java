@@ -180,7 +180,7 @@ public class BookContents {
 			throw new IllegalArgumentException(res + " does not exist.");
 
 		entry.setBook(book);
-		if (entry.canAdd()) {
+		if(entry.canAdd()) {
 			BookCategory category = entry.getCategory();
 			if (category != null)
 				category.addEntry(entry);
