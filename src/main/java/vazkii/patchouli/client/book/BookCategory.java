@@ -56,7 +56,10 @@ public class BookCategory implements Comparable<BookCategory> {
 
 	public BookCategory getParentCategory() {
 		if(!checkedParent && !isRootCategory()) {
-			parentCategory = book.contents.categories.get(new ResourceLocation(parent));
+			if(parent.contains(":"))
+				parentCategory = book.contents.categories.get(new ResourceLocation(parent));
+			else parentCategory = book.contents.categories.get(new ResourceLocation(book.getModNamespace(), parent));
+
 			checkedParent = true;
 		}
 
