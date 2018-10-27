@@ -2,10 +2,12 @@ package vazkii.patchouli.common.book;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
+
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -57,6 +59,10 @@ public class Book {
 	public transient ResourceLocation bookResource, fillerResource, craftingResource;
 	public transient int textColor, headerColor, nameplateColor, linkColor, linkHoverColor;
 	
+	private transient boolean isExtension = false;
+	private transient List<Book> extensions = new LinkedList();
+	private transient Book extensionTarget;
+	
 	// JSON Loaded properties
 	
 	public String name = "";
@@ -102,29 +108,38 @@ public class Book {
 	@SerializedName("show_toasts")
 	public boolean showToasts = true;
 	
+	@SerializedName("extend")
+	public String extend = "";
+	@SerializedName("allow_extensions")
+	public boolean allowExtensions = true;
+	
 	public Map<String, String> macros = new HashMap();
 	
 	public void build(ModContainer owner, ResourceLocation resource) {
 		this.owner = owner;
 		this.resourceLoc = resource;
 		
-		modelResourceLoc = new ModelResourceLocation(model, "inventory");
+		isExtension = !extend.isEmpty();
 		
-		AdvancementSyncHandler.trackedNamespaces.addAll(advancementNamespaces);
-		
-		bookResource = new ResourceLocation(bookTexture + ".png");
-		fillerResource = new ResourceLocation(fillerTexture + ".png");
-		craftingResource = new ResourceLocation(craftingTexture + ".png");
-		
-		textColor = Integer.parseInt(textColorRaw, 16);
-		headerColor = Integer.parseInt(headerColorRaw, 16);
-		nameplateColor = Integer.parseInt(nameplateColorRaw, 16);
-		linkColor = Integer.parseInt(linkColorRaw, 16);
-		linkHoverColor = Integer.parseInt(linkHoverColorRaw, 16);
+		if(!isExtension) {
+			modelResourceLoc = new ModelResourceLocation(model, "inventory");
+			
+			AdvancementSyncHandler.trackedNamespaces.addAll(advancementNamespaces);
+			
+			bookResource = new ResourceLocation(bookTexture + ".png");
+			fillerResource = new ResourceLocation(fillerTexture + ".png");
+			craftingResource = new ResourceLocation(craftingTexture + ".png");
+			
+			textColor = Integer.parseInt(textColorRaw, 16);
+			headerColor = Integer.parseInt(headerColorRaw, 16);
+			nameplateColor = Integer.parseInt(nameplateColorRaw, 16);
+			linkColor = Integer.parseInt(linkColorRaw, 16);
+			linkHoverColor = Integer.parseInt(linkHoverColorRaw, 16);
 
-		for(String m : DEFAULT_MACROS.keySet())
-			if(!macros.containsKey(m))
-				macros.put(m, DEFAULT_MACROS.get(m));
+			for(String m : DEFAULT_MACROS.keySet())
+				if(!macros.containsKey(m))
+					macros.put(m, DEFAULT_MACROS.get(m));
+		}
 	}
 	
 	public boolean usesAdvancements() {
@@ -157,11 +172,42 @@ public class Book {
 	}
 	
 	@SideOnly(Side.CLIENT)
+	public void reloadContentsAndExtensions() {
+		reloadContents();
+
+		for(Book b : extensions)
+			b.reloadExtensionContents();
+	}
+	
+	@SideOnly(Side.CLIENT)
 	public void reloadContents() {
 		if(contents == null)
 			contents = new BookContents(this);
-		
-		contents.reload();
+	
+		if(!isExtension)
+			contents.reload(false);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void reloadExtensionContents() {
+		if(isExtension) {
+			if(extensionTarget == null) {
+				extensionTarget = BookRegistry.INSTANCE.books.get(new ResourceLocation(extend));
+				
+				if(extensionTarget == null)
+					throw new IllegalArgumentException("Extension Book " + resourceLoc + " has no valid target");
+				else if(!extensionTarget.allowExtensions)
+					throw new IllegalArgumentException("Book " + extensionTarget.resourceLoc + " doesn't allow extensions, so " + resourceLoc + " can't resolve");
+				
+				extensionTarget.extensions.add(this);
+				
+				contents.categories = extensionTarget.contents.categories;
+				contents.entries = extensionTarget.contents.entries;
+				contents.recipeMappings = extensionTarget.contents.recipeMappings;
+			}
+			
+			contents.reload(true);
+		}
 	}
 	
 }

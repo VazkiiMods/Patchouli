@@ -82,6 +82,7 @@ public class BookRegistry {
 	@SideOnly(Side.CLIENT)
 	public void reload() {
 		BookRegistry.INSTANCE.books.values().forEach(Book::reloadContents);
+		BookRegistry.INSTANCE.books.values().forEach(Book::reloadExtensionContents);
 		ClientAdvancements.updateLockStatus(false);
 	}
 

@@ -26,6 +26,8 @@ public class BookCategory implements Comparable<BookCategory> {
 	transient boolean locked;
 	transient BookIcon icon = null;
 	transient ResourceLocation resource;
+	
+	transient boolean built;
 
 	public String getName() {
 		return name;
@@ -135,10 +137,15 @@ public class BookCategory implements Comparable<BookCategory> {
 	}
 
 	public void build(ResourceLocation resource) {
+		if(built)
+			return;
+		
 		this.resource = resource;
 		BookCategory parent = getParentCategory();
 		if(parent != null)
 			parent.addChildCategory(this);
+		
+		built = true;
 	}
 
 

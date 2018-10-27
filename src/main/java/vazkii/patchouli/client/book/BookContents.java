@@ -38,9 +38,9 @@ public class BookContents {
 
 	public final Book book;
 
-	public final Map<ResourceLocation, BookCategory> categories = new HashMap();
-	public final Map<ResourceLocation, BookEntry> entries = new HashMap();
-	public final Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap();
+	public Map<ResourceLocation, BookCategory> categories = new HashMap();
+	public Map<ResourceLocation, BookEntry> entries = new HashMap();
+	public Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap();
 	private boolean errored = false;
 
 	public Stack<GuiBook> guiStack = new Stack();
@@ -92,14 +92,16 @@ public class BookContents {
 		return I18n.translateToLocalFormatted("patchouli.gui.lexicon.edition_str", editionStr);
 	}
 
-	public void reload() {
+	public void reload(boolean isOverride) {
 		errored = false;
 
-		currentGui = null;
-		guiStack.clear();
-		categories.clear();
-		entries.clear();
-		recipeMappings.clear();
+		if(!isOverride) {
+			currentGui = null;
+			guiStack.clear();
+			categories.clear();
+			entries.clear();
+			recipeMappings.clear();
+		}
 
 		List<ResourceLocation> foundCategories = new ArrayList();
 		List<ResourceLocation> foundEntries = new ArrayList();

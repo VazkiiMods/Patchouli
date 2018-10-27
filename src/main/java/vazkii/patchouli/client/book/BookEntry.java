@@ -40,6 +40,8 @@ public class BookEntry implements Comparable<BookEntry> {
 	transient List<StackWrapper> relevantStacks = new LinkedList();
 	transient boolean locked;
 	
+	transient boolean built;
+	
 	public String getName() {
 		return name;
 	}
@@ -120,6 +122,9 @@ public class BookEntry implements Comparable<BookEntry> {
 	}
 	
 	public void build(ResourceLocation resource) {
+		if(built)
+			return;
+		
 		this.resource = resource;
 		for(int i = 0; i < pages.length; i++)
 			if(pages[i].canAdd()) {
@@ -129,8 +134,9 @@ public class BookEntry implements Comparable<BookEntry> {
 				} catch(Exception e) {
 					throw new RuntimeException("Error while loading entry " + resource + " page " + i, e);
 				}
-				
 			}
+		
+		built = true;
 	}
 	
 	public void addRelevantStack(ItemStack stack, int page) {
