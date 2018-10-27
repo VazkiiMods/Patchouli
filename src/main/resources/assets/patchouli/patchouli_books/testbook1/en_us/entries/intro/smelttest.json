@@ -3,6 +3,7 @@
     "icon": "minecraft:furnace",
     "category": "intro",
     "priority": true,
+    "advancement": "patchouli:test_invis",   
     "pages": [
         {
             "type": "smelting",
