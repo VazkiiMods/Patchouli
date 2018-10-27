@@ -210,4 +210,8 @@ public class Book {
 		}
 	}
 	
+	public String getOwnerName() {
+		return owner.getName();
+	}
+	
 }

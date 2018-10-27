@@ -25,7 +25,7 @@ public class PageText extends PageWithText {
 				ResourceLocation res = parent.getEntry().getResource();
 				smolText = res.toString();
 			} else if(entry.isExtension()) {
-				String name = entry.getTrueProvider().owner.getName();
+				String name = entry.getTrueProvider().getOwnerName();
 				smolText = I18n.format("patchouli.gui.lexicon.added_by", name);
 			}
 
