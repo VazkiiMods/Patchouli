@@ -24,7 +24,7 @@ public class MessageSyncAdvancements extends NetworkMessage<MessageSyncAdvanceme
 	@SideOnly(Side.CLIENT)
 	public IMessage handleMessage(MessageContext context) {
 		ClientTicker.addAction(() -> {
-			ClientAdvancements.setDoneAdvancements(done, showToast);
+			ClientAdvancements.setDoneAdvancements(done, showToast, false);
 		});
 		
 		return null;

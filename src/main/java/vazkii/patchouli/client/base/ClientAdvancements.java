@@ -21,26 +21,27 @@ public class ClientAdvancements {
 
 	static List<String> doneAdvancements;
 
-	public static void setDoneAdvancements(String[] done, boolean showToast) {
+	public static void setDoneAdvancements(String[] done, boolean showToast, boolean reset) {
 		showToast &= !PatchouliConfig.disableAdvancementLocking;
 
 		doneAdvancements = Arrays.asList(done);
-		updateLockStatus();
+		updateLockStatus(reset);
 
 		if(showToast)
 			BookRegistry.INSTANCE.books.values().forEach(b -> {
-				if(b.popUpdated() && b.showToasts)
+				if(b.popUpdated() && b.showToasts) {
 					Minecraft.getMinecraft().getToastGui().add(new LexiconToast(b));
+				}
 			});
 	}
 
-	public static void updateLockStatus() {
-		ClientBookRegistry.INSTANCE.reloadLocks();
+	public static void updateLockStatus(boolean reset) {
+		ClientBookRegistry.INSTANCE.reloadLocks(reset);
 	}
 
 	public static void resetIfNeeded() {
 		if(doneAdvancements != null && doneAdvancements.size() > 0)
-			setDoneAdvancements(new String[0], false);
+			setDoneAdvancements(new String[0], false, true);
 	}
 
 	public static boolean hasDone(String advancement) {
