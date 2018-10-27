@@ -24,7 +24,7 @@
 					" ": "ANY",
 					"0": "minecraft:cauldron",
 					"F": "minecraft:fire",
-					"S": "minecraft:gold_block"
+					"S": "minecraft:stonebrick[variant=mossy_stonebrick]"
 				},
 				"symmetrical": true,
 				"offset": [0, 0, 0],
