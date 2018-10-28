@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
+import net.minecraft.client.gui.FontRenderer;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Mouse;
 
@@ -182,14 +183,18 @@ public abstract class GuiBook extends GuiScreen {
 
 	final void drawTooltip(int mouseX, int mouseY) {
 		if(tooltipStack != null) {
-			renderToolTip(tooltipStack, mouseX, mouseY);
+			List<String> tooltip = this.getItemToolTip(tooltipStack);
 
 			Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
 			if(provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getLeft())) {
-				GuiUtils.drawHoveringText(Arrays.asList(TextFormatting.GRAY + I18n.translateToLocal("patchouli.gui.lexicon.shift_for_recipe")),
-						mouseX, mouseY - 20, width, height, -1, fontRenderer);
+				tooltip.add(TextFormatting.GOLD + "(" + I18n.translateToLocal("patchouli.gui.lexicon.shift_for_recipe") + ')');
 				targetPage = provider;
 			}
+
+			GuiUtils.preItemToolTip(tooltipStack);
+			FontRenderer font = tooltipStack.getItem().getFontRenderer(tooltipStack);
+			this.drawHoveringText(tooltip, mouseX, mouseY, (font == null ? fontRenderer : font));
+			GuiUtils.postItemToolTip();
 		} else if(tooltip != null && !tooltip.isEmpty())
 			GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, width, height, -1, fontRenderer);
 	}
