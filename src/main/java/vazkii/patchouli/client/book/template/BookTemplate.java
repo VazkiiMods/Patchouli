@@ -27,6 +27,7 @@ public class BookTemplate {
 		if(compiled)
 			return;
 		
+		components.removeIf(c -> c == null);
 		for(TemplateComponent c : components)
 			c.compile(variables, inflater);
 		

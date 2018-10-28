@@ -24,7 +24,7 @@ public abstract class TemplateComponent {
 				f.setAccessible(true);
 				String curr = (String) f.get(this);
 				
-				if(curr.startsWith("#")) {
+				if(curr != null && curr.startsWith("#")) {
 					String key = curr.substring(1);
 					String val = null;
 					if(inflater != null)

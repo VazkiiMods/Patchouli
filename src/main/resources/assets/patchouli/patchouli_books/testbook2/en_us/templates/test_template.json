@@ -12,7 +12,8 @@
 			"x": 10,
 			"y": 40,
 			"max_width": 40,
-			"line_height": 12
+			"line_height": 12,
+			"color": "00FF00"
 		},
 		{
 			"type": "stack",

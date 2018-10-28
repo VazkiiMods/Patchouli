@@ -23,6 +23,7 @@ public class BookTextRenderer {
 	final int spaceWidth;
 	final int lineHeight;
 	final boolean defaultUnicode;
+	final int baseColor;
 	
 	int currX, currY, currLen, currColor, prevColor;
 	String currCodes, currHref;
@@ -32,10 +33,10 @@ public class BookTextRenderer {
 	List<Word> words;
 	
 	public BookTextRenderer(GuiBook gui, String text, int x, int y) {
-		this(gui, text, x, y, GuiBook.PAGE_WIDTH, GuiBook.TEXT_LINE_HEIGHT);
+		this(gui, text, x, y, GuiBook.PAGE_WIDTH, GuiBook.TEXT_LINE_HEIGHT, gui.book.textColor);
 	}
 	
-	public BookTextRenderer(GuiBook gui, String text, int x, int y, int width, int lineHeight) {
+	public BookTextRenderer(GuiBook gui, String text, int x, int y, int width, int lineHeight, int baseColor) {
 		this.book = gui.book;
 		this.gui = gui;
 		this.font = gui.mc.fontRenderer;
@@ -46,6 +47,7 @@ public class BookTextRenderer {
 		this.spaceWidth = font.getStringWidth(" ");
 		this.lineHeight = lineHeight;
 		this.defaultUnicode = font.getUnicodeFlag();
+		this.baseColor = baseColor;
 		
 		build();
 	}
@@ -68,8 +70,8 @@ public class BookTextRenderer {
 		currX = x;
 		currY = y;
 		currLen = 0;
-		currColor = book.textColor;
-		prevColor = book.textColor;
+		currColor = baseColor;
+		prevColor = baseColor;
 		currCodes = "";
 		currHref = null;
 		currCluster = null;
@@ -120,7 +122,7 @@ public class BookTextRenderer {
 			
 			if(cmd.isEmpty()) { // Remove formatting
 				endingExternal = currHref != null && !currHref.isEmpty() && externalHref;
-				currColor = book.textColor;
+				currColor = baseColor;
 				currCodes = "";
 				currHref = null;
 				currCluster = null;
@@ -153,7 +155,7 @@ public class BookTextRenderer {
 				try {
 					currColor = Integer.parseInt(parse, 16);
 				} catch(NumberFormatException e) {
-					currColor = book.textColor;
+					currColor = baseColor;
 				}
 			}
 			
