@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -23,9 +24,9 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
-import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookLanding;
+import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -40,6 +41,7 @@ public class BookContents {
 
 	public Map<ResourceLocation, BookCategory> categories = new HashMap();
 	public Map<ResourceLocation, BookEntry> entries = new HashMap();
+	public Map<ResourceLocation, Supplier<BookTemplate>> templates = new HashMap();
 	public Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap();
 	private boolean errored = false;
 
@@ -105,6 +107,7 @@ public class BookContents {
 
 		List<ResourceLocation> foundCategories = new ArrayList();
 		List<ResourceLocation> foundEntries = new ArrayList();
+		List<ResourceLocation> foundTemplates = new ArrayList();
 		List<ModContainer> mods = Loader.instance().getActiveModList();
 
 		try { 
@@ -115,11 +118,14 @@ public class BookContents {
 
 			CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/categories", id, loc, bookName, DEFAULT_LANG), null, pred(id, foundCategories));
 			CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/entries", id, loc, bookName, DEFAULT_LANG), null, pred(id, foundEntries));
+			CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/templates", id, loc, bookName, DEFAULT_LANG), null, pred(id, foundTemplates));
 
 			foundCategories.forEach(c -> loadCategory(c, new ResourceLocation(c.getResourceDomain(),
 					String.format("%s/%s/%s/categories/%s.json", loc, bookName, DEFAULT_LANG, c.getResourcePath())), book));
 			foundEntries.forEach(e -> loadEntry(e, new ResourceLocation(e.getResourceDomain(),
 					String.format("%s/%s/%s/entries/%s.json", loc, bookName, DEFAULT_LANG, e.getResourcePath())), book));
+			foundTemplates.forEach(e -> loadTemplate(e, new ResourceLocation(e.getResourceDomain(),
+					String.format("%s/%s/%s/templates/%s.json", loc, bookName, DEFAULT_LANG, e.getResourcePath())), book));
 
 			entries.forEach((res, entry) -> {
 				try {
@@ -146,7 +152,7 @@ public class BookContents {
 		return (root, file) -> {
 			Path rel = root.relativize(file);
 			String relName = rel.toString();
-			if (relName.toString().endsWith(".json")) {
+			if(relName.toString().endsWith(".json")) {
 				relName = FilenameUtils.removeExtension(FilenameUtils.separatorsToUnix(relName));
 				ResourceLocation res = new ResourceLocation(modId, relName);
 				list.add(res);
@@ -158,37 +164,54 @@ public class BookContents {
 
 	private void loadCategory(ResourceLocation key, ResourceLocation res, Book book) {
 		InputStream stream = loadLocalizedJson(res);
-		if (stream == null)
+		if(stream == null)
 			throw new IllegalArgumentException(res + " does not exist.");
 
 		BookCategory category = ClientBookRegistry.INSTANCE.gson.fromJson(new InputStreamReader(stream), BookCategory.class);
-		if (category == null)
+		if(category == null)
 			throw new IllegalArgumentException(res + " does not exist.");
 
 		category.setBook(book);
-		if (category.canAdd())
+		if(category.canAdd())
 			categories.put(key, category);
 	}
 
 	private void loadEntry(ResourceLocation key, ResourceLocation res, Book book) {
 		InputStream stream = loadLocalizedJson(res);
-		if (stream == null)
+		if(stream == null)
 			throw new IllegalArgumentException(res + " does not exist.");
 
 		BookEntry entry = ClientBookRegistry.INSTANCE.gson.fromJson(new InputStreamReader(stream), BookEntry.class);
-		if (entry == null)
+		if(entry == null)
 			throw new IllegalArgumentException(res + " does not exist.");
 
 		entry.setBook(book);
 		if(entry.canAdd()) {
 			BookCategory category = entry.getCategory();
-			if (category != null)
+			if(category != null)
 				category.addEntry(entry);
 			else
 				new RuntimeException("Entry " + key + " does not have a valid category.").printStackTrace();
 
 			entries.put(key, entry);
 		}
+	}
+	
+	private void loadTemplate(ResourceLocation key, ResourceLocation res, Book book) {
+		Supplier<BookTemplate> supplier = () -> {
+			InputStream stream = loadLocalizedJson(res);
+			if(stream == null)
+				throw new IllegalArgumentException(res + " does not exist.");
+			
+			return ClientBookRegistry.INSTANCE.gson.fromJson(new InputStreamReader(stream), BookTemplate.class); 
+		};
+		
+		// test supplier
+		BookTemplate template = supplier.get();
+		if(template == null)
+			throw new IllegalArgumentException(res + " does not exist.");
+		
+		templates.put(key, supplier);
 	}
 
 	private InputStream loadLocalizedJson(ResourceLocation res) {
@@ -208,7 +231,7 @@ public class BookContents {
 			e.printStackTrace();
 		}
 
-		if (res == null && fallback != null) {
+		if(res == null && fallback != null) {
 			new RuntimeException("Patchouli failed to load " + resloc + ". Switching to fallback.").printStackTrace();
 			return loadJson(fallback, null);
 		}

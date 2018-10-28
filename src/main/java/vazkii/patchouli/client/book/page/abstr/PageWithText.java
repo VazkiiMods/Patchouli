@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.page.abstr;
 
-import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
+import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.BookTextRenderer;
 
 public abstract class PageWithText extends BookPage {

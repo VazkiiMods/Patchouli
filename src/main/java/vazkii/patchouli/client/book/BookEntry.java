@@ -129,8 +129,6 @@ public class BookEntry implements Comparable<BookEntry> {
 			return;
 		
 		this.resource = resource;
-		System.out.println(this + " is " +  resource);
-		System.out.println("The book is " + book.resourceLoc);
 		for(int i = 0; i < pages.length; i++)
 			if(pages[i].canAdd()) {
 				realPages.add(pages[i]);

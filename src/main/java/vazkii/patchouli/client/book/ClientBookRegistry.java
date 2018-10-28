@@ -27,6 +27,8 @@ import vazkii.patchouli.client.book.page.PageRelations;
 import vazkii.patchouli.client.book.page.PageSmelting;
 import vazkii.patchouli.client.book.page.PageSpotlight;
 import vazkii.patchouli.client.book.page.PageText;
+import vazkii.patchouli.client.book.template.BookTemplate;
+import vazkii.patchouli.client.book.template.TemplateComponent;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
@@ -43,7 +45,10 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 	public static final ClientBookRegistry INSTANCE = new ClientBookRegistry();
 	
 	private ClientBookRegistry() { 
-		gson = new GsonBuilder().registerTypeHierarchyAdapter(BookPage.class, new LexiconPageAdapter()).create();
+		gson = new GsonBuilder()
+				.registerTypeHierarchyAdapter(BookPage.class, new LexiconPageAdapter())
+				.registerTypeHierarchyAdapter(TemplateComponent.class, new TemplateComponentAdapter())
+				.create();
 	}
 	
 	public void init() {
@@ -106,4 +111,19 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 		
 	}
 	
+	public static class TemplateComponentAdapter implements JsonDeserializer<TemplateComponent> {
+		
+		@Override
+		public TemplateComponent deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+	        JsonObject obj = json.getAsJsonObject();
+	        JsonPrimitive prim = (JsonPrimitive) obj.get("type");
+	        String type = prim.getAsString();
+	        Class<? extends TemplateComponent> clazz = BookTemplate.componentTypes.get(type);
+	        if(clazz == null)
+	        	return null;
+	        
+	        return SerializationUtil.RAW_GSON.fromJson(json, clazz);
+		}
+		
+	}	
 }
