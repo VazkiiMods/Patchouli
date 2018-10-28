@@ -1,0 +1,35 @@
+{
+  "name": "Building a Twilight Portal",
+  "icon": "minecraft:grass",
+  "category": "intro/butts",
+  "pages": [
+    {
+      "type": "multiblock",
+      "name": "Portal!",
+      "text": "Drop a diamond into the water!",
+      "multiblock": {
+        "pattern": [
+          [ " FF ", "F  F", "F  F", " FF " ],
+          [ " GG ", "GPPG", "GPPG", " GG " ],
+          [ "    ", " DD ", " 0D ", "    " ]
+        ],
+        "mapping": {
+          " ": "ANY",
+          "F": "minecraft:red_flower",
+          "G": "minecraft:grass",
+          "P": "minecraft:water",
+          "D": "minecraft:dirt",
+          "0": "minecraft:dirt"
+        },
+        "symmetrical": true,
+        "offset"     : [0, 1, 0],
+        "view_offset": [0, 0, 0]
+      }
+    }, {
+      "type": "spotlight",
+      "title": "Activate it!",
+      "text": "Just drop a Diamond and you've got yourself your very own entrance to the Twilight Forest! The Princess is in a castle somewhere, $(strike)so go save researcher Talloran from SCP-3999$() do $(bold)nothing$().",
+      "item": "minecraft:diamond"
+    }
+  ]
+}
