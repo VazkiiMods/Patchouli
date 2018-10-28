@@ -152,6 +152,7 @@ public class GuiBookLanding extends GuiBook {
 			if(isShiftKeyDown()) {
 				long time = System.currentTimeMillis();
 				book.reloadContentsAndExtensions();
+				book.reloadLocks(false);
 				displayLexiconGui(new GuiBookLanding(book), false);
 				mc.player.sendMessage(new TextComponentTranslation("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)));
 			} else displayLexiconGui(new GuiBookWriter(book), true);

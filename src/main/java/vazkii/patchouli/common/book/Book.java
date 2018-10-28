@@ -210,6 +210,15 @@ public class Book {
 		}
 	}
 	
+	@SideOnly(Side.CLIENT)
+	public void reloadLocks(boolean reset) {
+		contents.entries.values().forEach((e) -> e.updateLockStatus());
+		contents.categories.values().forEach((c) -> c.updateLockStatus(true));
+		
+		if(reset)
+			popUpdated();
+	}
+	
 	public String getOwnerName() {
 		return owner.getName();
 	}
