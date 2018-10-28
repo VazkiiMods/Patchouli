@@ -9,6 +9,10 @@ import com.google.common.base.Supplier;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
+import vazkii.patchouli.client.book.template.component.ComponentHeader;
+import vazkii.patchouli.client.book.template.component.ComponentImage;
+import vazkii.patchouli.client.book.template.component.ComponentItemStack;
+import vazkii.patchouli.client.book.template.component.ComponentSeparator;
 import vazkii.patchouli.client.book.template.component.ComponentText;
 
 public class BookTemplate {
@@ -18,6 +22,10 @@ public class BookTemplate {
 	
 	static {
 		componentTypes.put("text", ComponentText.class);
+		componentTypes.put("item", ComponentItemStack.class);
+		componentTypes.put("image", ComponentImage.class);
+		componentTypes.put("header", ComponentHeader.class);
+		componentTypes.put("separator", ComponentSeparator.class);
 	}
 
 	List<TemplateComponent> components = new ArrayList();

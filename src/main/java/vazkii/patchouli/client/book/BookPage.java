@@ -17,9 +17,9 @@ import vazkii.patchouli.common.book.Book;
 
 public abstract class BookPage {
 
-	protected transient Minecraft mc;
-	protected transient FontRenderer fontRenderer;
-	protected transient GuiBookEntry parent;
+	public transient Minecraft mc;
+	public transient FontRenderer fontRenderer;
+	public transient GuiBookEntry parent;
 
 	public transient Book book;
 	protected transient BookEntry entry;

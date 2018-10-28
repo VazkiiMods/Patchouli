@@ -87,7 +87,7 @@ public class BookEntry implements Comparable<BookEntry> {
 	
 	public boolean isUnread() {
 		BookData data = PersistentData.data.getBookData(book);
-		return !readByDefault && !isLocked() && !data.viewedEntries.contains(getResource().toString());
+		return data != null && getResource() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getResource().toString());
 	}
 	
 	public boolean isSecret() {
