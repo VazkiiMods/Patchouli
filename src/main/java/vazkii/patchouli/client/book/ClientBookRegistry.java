@@ -79,14 +79,7 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 	}
 	
 	public void reloadLocks(boolean reset) {
-		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			BookContents contents = b.contents;
-			contents.entries.values().forEach((e) -> e.updateLockStatus());
-			contents.categories.values().forEach((c) -> c.updateLockStatus(true));
-			
-			if(reset)
-				b.popUpdated();
-		});
+		BookRegistry.INSTANCE.books.values().forEach(b -> b.reloadLocks(reset));
 	}
 	
 	public void displayBookGui(String bookStr) {
