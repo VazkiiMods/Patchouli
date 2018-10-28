@@ -4,7 +4,21 @@
 			"type": "text",
 			"text": "#text",
 			"x": 20,
-			"y": 100
+			"y": 10
+		},
+		{
+			"type": "text",
+			"text": "#text2",
+			"x": 10,
+			"y": 40,
+			"max_width": 40,
+			"line_height": 12
+		},
+		{
+			"type": "stack",
+			"stack": "#stack",
+			"framed": true,
+			"link_recipe": true
 		}
 	]
 }

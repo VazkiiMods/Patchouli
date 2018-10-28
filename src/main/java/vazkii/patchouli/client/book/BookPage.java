@@ -1,15 +1,9 @@
 package vazkii.patchouli.client.book;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -20,8 +14,6 @@ import net.minecraft.item.crafting.Ingredient;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.common.book.BookRegistry;
-import vazkii.patchouli.common.util.SerializationUtil;
 
 public abstract class BookPage {
 
@@ -34,8 +26,9 @@ public abstract class BookPage {
 	protected transient int pageNum;
 	private transient List<GuiButton> buttons;
 	public transient int left, top;
+	public transient JsonObject sourceObject;
 	
-	String type, flag;
+	protected String type, flag;
 	
 	public void build(BookEntry entry, int pageNum) {
 		this.book = entry.book;
@@ -95,7 +88,7 @@ public abstract class BookPage {
 			renderItem(x, y, mouseX, mouseY, stacks[(parent.ticksInBook / 20) % stacks.length]);
 	}
 	
-	public boolean canAdd() {
+	public boolean canAdd(Book book) {
 		return flag == null || flag.isEmpty() || PatchouliConfig.getConfigFlag(flag);
 	}
 	

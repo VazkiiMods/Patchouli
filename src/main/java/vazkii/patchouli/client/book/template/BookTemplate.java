@@ -3,10 +3,10 @@ package vazkii.patchouli.client.book.template;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.common.base.Supplier;
 
+import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.component.ComponentText;
@@ -23,7 +23,7 @@ public class BookTemplate {
 	List<TemplateComponent> components = new ArrayList();
 	boolean compiled = false;
 	
-	public void compile(Map<String, String> variables, IComponentInflater inflater) {
+	public void compile(IVariableProvider variables, IComponentInflater inflater) {
 		if(compiled)
 			return;
 		
@@ -33,9 +33,9 @@ public class BookTemplate {
 		compiled = true;
 	}
 	
-	public void build(BookPage page, GuiBookEntry parent, int pageNum) {
+	public void build(BookPage page, BookEntry entry, int pageNum) {
 		if(compiled)
-			components.forEach(c -> c.build(page, parent, pageNum));
+			components.forEach(c -> c.build(page, entry, pageNum));
 	}
 	
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {

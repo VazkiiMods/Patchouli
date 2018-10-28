@@ -11,15 +11,17 @@ import vazkii.patchouli.client.book.template.TemplateComponent;
 public class ComponentText extends TemplateComponent {
 
 	@VariableHolder
-	String text;
+	public String text;
 	
+	@SerializedName("max_width")
 	int maxWidth = GuiBook.PAGE_WIDTH;
+	@SerializedName("line_height")
 	int lineHeight = GuiBook.TEXT_LINE_HEIGHT;
 	
 	transient BookTextRenderer textRenderer;
 	
 	@Override
-	public void build(BookPage page, GuiBookEntry parent, int pageNum) {
+	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
 		textRenderer = new BookTextRenderer(parent, text, x, y, maxWidth, lineHeight);
 	}
 	

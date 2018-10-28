@@ -11,8 +11,10 @@
             "recipe2": "minecraft:iron_ore"
         },
         {
-            "type": "text",
-            "text": "You may have assembled this tome yourself. Maybe it arrived at your doorstep, or was a hand-me-down from a close relative. Perhaps you just happened to come across it in your travels.$(br2)Regardless of the means of acquisition, I welcome you, to the wonderful world of $(thing)Alchemical Artisanship$(). Not to be confused with $(thing)Alchemy$(), mind you. This is a different beast altogether, and deserves just as much respect."
+            "type": "test_template",
+            "text": "The template works bitches",
+            "text2": "Using multiple variables for two components",
+            "stack": "minecraft:diamond"
         },
         {
             "type": "text",

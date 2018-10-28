@@ -1,8 +1,12 @@
 package vazkii.patchouli.client.book.template;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
-import java.util.Map;
 
+import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 
@@ -11,32 +15,35 @@ public abstract class TemplateComponent {
 	public String group = "";
 	public int x, y;
 	
-	public final void compile(Map<String, String> variables, IComponentInflater inflater) {
+	public final void compile(IVariableProvider variables, IComponentInflater inflater) {
 		Class<?> clazz = getClass();
 		Field[] fields = clazz.getFields();
-		for(Field f : fields)
+		
+		for(Field f : fields) {
 			if(f.getType() == String.class && f.getAnnotation(VariableHolder.class) != null) try {
 				f.setAccessible(true);
 				String curr = (String) f.get(this);
+				
 				if(curr.startsWith("#")) {
 					String key = curr.substring(1);
 					String val = null;
 					if(inflater != null)
 						val = inflater.getInflatedValue(key);
 					
-					if(val == null)
+					if(val == null && variables.has(key))
 						val = variables.get(key);
 					if(val == null)
-						val = "";
+						val = "[FAILED TO LOAD " + key + "]";
 					
 					f.set(this, val);
 				}
 			} catch(IllegalAccessException e) {
 				throw new RuntimeException("Error compiling component", e);
 			}
+		}
 	}
 	
-	public void build(BookPage page, GuiBookEntry parent, int pageNum) {
+	public void build(BookPage page, BookEntry entry, int pageNum) {
 		// NO-OP
 	}
 	
@@ -52,6 +59,8 @@ public abstract class TemplateComponent {
 		// NO-OP
 	}
 
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.FIELD)
 	public static @interface VariableHolder {}
 	
 }

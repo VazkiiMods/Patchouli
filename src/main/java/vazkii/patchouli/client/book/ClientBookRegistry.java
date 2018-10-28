@@ -26,6 +26,7 @@ import vazkii.patchouli.client.book.page.PageMultiblock;
 import vazkii.patchouli.client.book.page.PageRelations;
 import vazkii.patchouli.client.book.page.PageSmelting;
 import vazkii.patchouli.client.book.page.PageSpotlight;
+import vazkii.patchouli.client.book.page.PageTemplate;
 import vazkii.patchouli.client.book.page.PageText;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.TemplateComponent;
@@ -104,9 +105,12 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 	        String type = prim.getAsString();
 	        Class<? extends BookPage> clazz = ClientBookRegistry.INSTANCE.pageTypes.get(type);
 	        if(clazz == null)
-	        	return null;
+	        	clazz = PageTemplate.class;
 	        
-	        return SerializationUtil.RAW_GSON.fromJson(json, clazz);
+	        BookPage page = SerializationUtil.RAW_GSON.fromJson(json, clazz);
+	        page.sourceObject = obj;
+	        
+	        return page;
 		}
 		
 	}
@@ -119,6 +123,7 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 	        JsonPrimitive prim = (JsonPrimitive) obj.get("type");
 	        String type = prim.getAsString();
 	        Class<? extends TemplateComponent> clazz = BookTemplate.componentTypes.get(type);
+	        
 	        if(clazz == null)
 	        	return null;
 	        

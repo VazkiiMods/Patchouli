@@ -130,7 +130,7 @@ public class BookEntry implements Comparable<BookEntry> {
 		
 		this.resource = resource;
 		for(int i = 0; i < pages.length; i++)
-			if(pages[i].canAdd()) {
+			if(pages[i].canAdd(book)) {
 				realPages.add(pages[i]);
 				try {
 					pages[i].build(this, i);
