@@ -96,7 +96,7 @@ task sortArtifacts(type: Copy) {
     //Put each jar with a classifier in a subfolder with the classifier as its name
     eachFile {
         //This matcher is used to get the classifier of the jar
-        def matcher = Pattern.compile("$config.mod_name-$version-(?<classifier>\w+).jar").matcher(it.name)
+        def matcher = Pattern.compile("$config.mod_name-$version-(?<classifier>\\w+).jar").matcher(it.name)
         //Only change the destination for full matches, i.e jars with classifiers
         if (matcher.matches())
         {
