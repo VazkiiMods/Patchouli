@@ -1,0 +1,72 @@
+{
+	"name": "Lorg MultiBlocks",
+	"icon": "minecraft:textures/items/clock_06.png",
+	"category": "intro/butts",
+	"priority": true,
+	"read_by_default": false,
+	"advancement": "patchouli:test_book",
+	"pages": [
+		{
+			"type": "multiblock",
+			"multiblock_id": "",
+			"name": "I cannot even",
+			"text": "Testing multiblocks loaded from json!",
+			"multiblock": {
+				"pattern": [
+					[
+						"GGGGGGG",
+						"GGG GGG",
+						"GG   GG",
+						"G     G",
+						"GG   GG",
+						"GGG GGG",
+						"GGGGGGG"
+					], [
+						"GGG GGG",
+						"GG   GG",
+						"G     G",
+						"       ",
+						"G     G",
+						"GG   GG",
+						"GGG GGG"
+					], [
+						"GG   GG",
+						"G     G",
+						"       ",
+						"       ",
+						"       ",
+						"G     G",
+						"GG   GG"
+					], [
+						"GGG GGG",
+						"GG   GG",
+						"G     G",
+						"       ",
+						"G     G",
+						"GG   GG",
+						"GGG GGG"
+					], [
+						"RRRSRRR",
+						"RRSSSRR",
+						"RSSSSSR",
+						"SSSSSSS",
+						"RSSSSSR",
+						"RRSSSRR",
+						"RRRSRRR"
+					]
+				],
+				"mapping": {
+					" ": "ANY",
+					"G": "minecraft:glass",
+					"R": "minecraft:stone",
+					"S": "minecraft:sponge",
+					"W": "minecraft:wool",
+					"P": "minecraft:pumpkin"
+				},
+				"symmetrical": true,
+				"offset": [0, 0, 0],
+				"view_offset": [0, 0, 0]
+			}
+		}
+	]
+}

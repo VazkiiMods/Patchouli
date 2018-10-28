@@ -67,66 +67,6 @@ public class Multiblock {
 		return this;
 	}
 
-	public void place(World world, BlockPos pos, Rotation rotation) {
-		BlockPos start = pos.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
-		for(int x = 0; x < sizeX; x++)
-			for(int y = 0; y < sizeY; y++)
-				for(int z = 0; z < sizeZ; z++) {
-					BlockPos placePos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-					IBlockState targetState = stateTargets[x][y][z].displayState.withRotation(rotation);
-					Block targetBlock = targetState.getBlock();
-					if(!targetBlock.isAir(targetState, world, placePos) && targetBlock.canPlaceBlockAt(world, placePos) && world.getBlockState(placePos).getBlock().isReplaceable(world, placePos))
-						world.setBlockState(placePos, targetState);
-				}
-	}
-
-	public void forEach(World world, BlockPos pos, Rotation rotation, char c, Consumer<BlockPos> action) {
-		forEachMatcher(world, pos, rotation, c, (start, actionPos, x, y, z, ch, matcher) -> {
-		    action.accept(actionPos);
-		    return true;
-		});
-	}
-
-	public boolean forEachMatcher(World world, BlockPos pos, Rotation rotation, char c, MatcherAcceptor acceptor){
-		BlockPos start = pos.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
-		for(int x = 0; x < sizeX; x++)
-			for(int y = 0; y < sizeY; y++)
-				for(int z = 0; z < sizeZ; z++) {
-					if(c == 0 || c == pattern[y][x].charAt(z)) {
-						BlockPos actionPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-						if(!acceptor.accepts(start, actionPos, x, y, z, c, this.stateTargets[x][y][z])){
-							return false;
-						}
-					}
-				}
-        return true;
-	}
-
-	public boolean validate(World world, BlockPos pos) {
-		if(symmetrical)
-			return validate(world, pos, Rotation.NONE);
-
-		else return validate(world, pos, Rotation.NONE)
-			|| validate(world, pos, Rotation.CLOCKWISE_90)
-			|| validate(world, pos, Rotation.CLOCKWISE_180)
-			|| validate(world, pos, Rotation.COUNTERCLOCKWISE_90);
-	}
-
-
-	public boolean validate(World world, BlockPos pos, Rotation rotation) {
-		BlockPos start = pos.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
-		if(!test(world, start, centerX, centerY, centerZ, rotation))
-			return false;
-
-		for(int x = 0; x < sizeX; x++)
-			for(int y = 0; y < sizeY; y++)
-				for(int z = 0; z < sizeZ; z++)
-					if(!test(world, start, x, y, z, rotation))
-						return false;
-
-		return true;
-	}
-
 	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
 		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
 		Predicate<IBlockState> pred = stateTargets[x][y][z].statePredicate;
@@ -139,11 +79,11 @@ public class Multiblock {
 		if(targets.length % 2 == 1)
 			throw new IllegalArgumentException("Illegal argument length for targets array " + targets.length);
 
-		Map<Character, StateMatcher> stateMap = new HashMap();
+		Map<Character, StateMatcher> stateMap = new HashMap<>();
 		for(int i = 0; i < targets.length / 2; i++) {
-			char c = (Character) targets[i * 2];
+			char c = (char) targets[i * 2];
 			Object o = targets[i * 2 + 1];
-			StateMatcher state = null;
+			StateMatcher state;
 
 			if(o instanceof Block)
 				state = StateMatcher.fromBlockLoose((Block) o);
@@ -157,39 +97,30 @@ public class Multiblock {
 		}
 
 		if(!stateMap.containsKey(' '))
-			stateMap.put(' ', StateMatcher.AIR);
-		if(!stateMap.containsKey('0'))
-			stateMap.put('0', StateMatcher.AIR);
-
-		boolean foundCenter = false;
+			stateMap.put(' ', StateMatcher.ANY);
 
 		sizeX = dimensions[1];
 		sizeY = dimensions[0];
 		sizeZ = dimensions[2];
 		stateTargets = new StateMatcher[dimensions[1]][dimensions[0]][dimensions[2]];
-		for(int y = 0; y < dimensions[0]; y++)
-			for(int x = 0; x < dimensions[1]; x++)
-				for(int z = 0; z < dimensions[2]; z++) {
+
+		for(int y = 0; y < dimensions[0]; y++) {
+			for (int x = 0; x < dimensions[1]; x++) {
+				for (int z = 0; z < dimensions[2]; z++) {
 					char c = pattern[y][x].charAt(z);
-					if(!stateMap.containsKey(c))
+					if (!stateMap.containsKey(c))
 						throw new IllegalArgumentException("Character " + c + " isn't mapped");
 
-					StateMatcher matcher = stateMap.get(c);
-					if(c == '0') {
-						if(foundCenter)
-							throw new IllegalArgumentException("A structure can't have two centers");
-						foundCenter = true;
-						offX = centerX = x;
-						offY = centerY = sizeY - y - 1;
-						offZ = centerZ = z;
-						setViewOffset();
-					}
-
-					stateTargets[x][sizeY - y - 1][z] = matcher;
+					stateTargets[x][sizeY - y - 1][z] = stateMap.get(c);
 				}
+			}
+		}
 
-		if(!foundCenter)
-			throw new IllegalArgumentException("A structure can't have no center");
+
+		offX = centerX = sizeX/2;
+		offY = 1;
+		centerY = sizeY/2;
+		offZ = centerZ = sizeZ/2;
 	}
 
 	int[] getPatternDimensions() {

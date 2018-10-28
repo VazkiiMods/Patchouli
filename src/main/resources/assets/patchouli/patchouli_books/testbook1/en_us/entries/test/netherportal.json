@@ -1,0 +1,29 @@
+{
+  "name": "Building a Nether Portal",
+  "icon": "minecraft:obsidian",
+  "category": "intro/butts",
+  "pages": [
+    {
+      "type": "multiblock",
+      "name": "Portal!",
+      "text": "Flint and Steel and make this lit!",
+      "multiblock": {
+        "pattern": [
+          [ " OO " ],
+          [ "OPPO" ],
+          [ "OPPO" ],
+          [ "OPPO" ],
+          [ " OO " ]
+        ],
+        "mapping": {
+          " ": "ANY",
+          "O": "minecraft:obsidian",
+          "P": "minecraft:portal"
+        },
+        "symmetrical": true,
+        "offset"     : [0, 0, 0],
+        "view_offset": [0, 0, 0]
+      }
+    }
+  ]
+}
