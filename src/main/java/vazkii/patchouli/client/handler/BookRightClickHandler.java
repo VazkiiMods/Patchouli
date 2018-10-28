@@ -2,6 +2,9 @@ package vazkii.patchouli.client.handler;
 
 import java.util.Collection;
 
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.block.Block;
@@ -33,7 +36,7 @@ public class BookRightClickHandler {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayer player = mc.player;
 		ItemStack bookStack = player.getHeldItemMainhand();
-		if(event.getType() == ElementType.ALL && mc.currentScreen == null) { 
+		if(event.getType() == ElementType.ALL && mc.currentScreen == null) {
 			Book book = getBookFromStack(bookStack);
 
 			if(book != null) {
@@ -50,6 +53,12 @@ public class BookRightClickHandler {
 						GlStateManager.scale(2F, 2F, 1F);
 
 						mc.fontRenderer.drawStringWithShadow(entry.getName(), x + 18, y + 3, 0xFFFFFF);
+
+						GlStateManager.pushMatrix();
+						GlStateManager.scale(0.75F, 0.75F, 1F);
+						String s = I18n.format("patchouli.gui.lexicon."+(player.isSneaking() ? "view" : "sneak"));
+                        mc.fontRenderer.drawStringWithShadow(TextFormatting.ITALIC + s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
+                        GlStateManager.popMatrix();
 					}
 				}
 			}
@@ -73,6 +82,7 @@ public class BookRightClickHandler {
 						int page = hover.getRight();
 						GuiBook curr = book.contents.getCurrentGui();
 						book.contents.currentGui = new GuiBookEntry(book, entry, page);
+						player.swingArm(EnumHand.MAIN_HAND);
 
 						if(curr instanceof GuiBookEntry) {
 							GuiBookEntry currEntry = (GuiBookEntry) curr;
@@ -90,7 +100,7 @@ public class BookRightClickHandler {
 	private static Book getBookFromStack(ItemStack stack) {
 		if(stack.getItem() instanceof ItemModBook)
 			return ItemModBook.getBook(stack);
-		
+
 		Collection<Book> books = BookRegistry.INSTANCE.books.values();
 		for(Book b : books)
 			if(b.getBookItem().isItemEqual(stack))
@@ -108,7 +118,7 @@ public class BookRightClickHandler {
 			Block block = state.getBlock();
 			ItemStack picked = block.getPickBlock(state, res, mc.world, pos, mc.player);
 
-			if(!picked.isEmpty()) 
+			if(!picked.isEmpty())
 				return book.contents.recipeMappings.get(ItemStackUtil.wrapStack(picked));
 		}
 
