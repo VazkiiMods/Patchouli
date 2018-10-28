@@ -78,6 +78,9 @@ artifacts {
 }
 /**
  * Increments the buildnumber in your config file, and saves it
+ * Note: The doFirst is important, without it the build number
+ * will be incremented every time tasks are configured, i.e every
+ * time gradle is run on this project. 
  */
 task incrementBuildNumber {doFirst{
     config.build_number = (config.build_number.toString().toInteger()) + 1
@@ -90,11 +93,16 @@ import java.util.regex.*
 task copyToBuildOutput(type: Copy) {
     from jar.destinationDir
     into config.dir_output 
+    //Put each jar with a classifier in a subfolder with the classifier as its name
     eachFile {
-        def matcher = Pattern.compile(/$config.mod_name-$version-(?<classifier>\w+).jar/).matcher(it.name)
+        //This matcher is used to get the classifier of the jar
+        def matcher = Pattern.compile("$config.mod_name-$version-(?<classifier>\w+).jar").matcher(it.name)
+        //Only change the destination for full matches, i.e jars with classifiers
         if (matcher.matches())
         {
             def classifier = matcher.group('classifier')
+            /* Set the relative path to change the destination, since 
+             * Gradle doesn't seem to like the absolute path being set*/
             it.relativePath = it.relativePath.parent.append(false, classifier, it.name)
         }
     }
