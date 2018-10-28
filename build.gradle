@@ -90,7 +90,7 @@ task incrementBuildNumber {doFirst{
 }}
 
 import java.util.regex.*
-task copyToBuildOutput(type: Copy) {
+task sortArtifacts(type: Copy) {
     from jar.destinationDir
     into config.dir_output 
     //Put each jar with a classifier in a subfolder with the classifier as its name
@@ -116,4 +116,4 @@ def parseConfig(File config) {
     }
 }
 
-defaultTasks 'clean', 'build', 'copyToBuildOutput', 'incrementBuildNumber'
+defaultTasks 'clean', 'build', 'sortArtifacts', 'incrementBuildNumber'
