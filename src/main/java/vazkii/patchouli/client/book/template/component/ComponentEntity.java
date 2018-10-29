@@ -9,7 +9,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTException;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.datafix.fixes.EntityId;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -32,9 +36,23 @@ public class ComponentEntity extends TemplateComponent {
 	transient Constructor<Entity> constructor;
 	transient Entity entity;
 	transient float renderScale, offset;
+	transient NBTTagCompound nbt;
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
+		String nbtStr = "";
+		int nbtStart = entityId.indexOf("{");
+		if(nbtStart > 0) {
+			nbtStr = entityId.substring(nbtStart).replaceAll("'", "\"");
+			entityId = entityId.substring(0, nbtStart);
+			try {
+				nbt = JsonToNBT.getTagFromJson(nbtStr);
+			} catch(NBTException e) {
+				e.printStackTrace();
+				nbt = null;
+			}
+		}
+		
 		Class clazz = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityId)).getEntityClass();
 		try {
 			constructor = clazz.getConstructor(World.class);
@@ -83,6 +101,9 @@ public class ComponentEntity extends TemplateComponent {
 		if(!errored && (entity == null || entity.isDead)) {
 			try {
 				entity = constructor.newInstance(world);
+				
+				if(nbt != null)
+					entity.readFromNBT(nbt);
 				
 				float entitySize = entity.width;
 				if(entity.width < entity.height)

@@ -18,6 +18,10 @@ public class EntityTestProcessor implements IComponentProcessor {
 	@Override
 	public void setup(IVariableProvider variables) {
 		String entityType = variables.get("entity");
+		if(entityType.contains("{"))
+			entityType = entityType.substring(0, entityType.indexOf("{"));
+		
+		
 		entityName = EntityList.getTranslationName(new ResourceLocation(entityType));
 		unlockAdvancement = variables.get("unlock_advancement");
 	}
