@@ -78,43 +78,34 @@ artifacts {
 }
 /**
  * Increments the buildnumber in your config file, and saves it
+ * Note: The doFirst is important, without it the build number
+ * will be incremented every time tasks are configured, i.e every
+ * time gradle is run on this project. 
  */
-task incrementBuildNumber {
+task incrementBuildNumber {doFirst{
     config.build_number = (config.build_number.toString().toInteger()) + 1
     configFile.withWriter {
         config.toProperties().store(it, "")
     }
-}
+}}
 
-// I have no idea what I'm doing
-task wtfGradle2(type: Copy) {
-    from(jar.destinationDir)
-    into file("${config.dir_output}/wtf")
-}
-
-// Seriously, I'm desperate to make this work
-task wtfGradle1(type: Delete) {
-    dependsOn "wtfGradle2"
-    delete "${config.dir_output}/wtf/${deobfJar.archiveName}"
-}
-
-task output(type: Copy) {
-    dependsOn "wtfGradle1"
-    from(jar.destinationDir)
-    into file(config.dir_output)
-}
-
-task outputDeobf(type: Copy) {
-    dependsOn "output"
-    from(config.dir_output) {
-        include deobfJar.archiveName
+import java.util.regex.*
+task sortArtifacts(type: Copy) {
+    from jar.destinationDir
+    into config.dir_output 
+    //Put each jar with a classifier in a subfolder with the classifier as its name
+    eachFile {
+        //This matcher is used to get the classifier of the jar
+        def matcher = Pattern.compile("$config.mod_name-$version-(?<classifier>\\w+).jar").matcher(it.name)
+        //Only change the destination for full matches, i.e jars with classifiers
+        if (matcher.matches())
+        {
+            def classifier = matcher.group('classifier')
+            /* Set the relative path to change the destination, since 
+             * Gradle doesn't seem to like the absolute path being set*/
+            it.relativePath = it.relativePath.parent.append(false, classifier, it.name)
+        }
     }
-    into file("${config.dir_output}/deobf")
-}
-
-task sort(type: Delete) {
-    dependsOn "outputDeobf"
-    delete "${config.dir_output}/${deobfJar.archiveName}", "${config.dir_output}/wtf"
 }
 
 def parseConfig(File config) {
@@ -125,5 +116,4 @@ def parseConfig(File config) {
     }
 }
 
-
-defaultTasks 'clean', 'build', 'sort', 'incrementBuildNumber'
+defaultTasks 'clean', 'build', 'sortArtifacts', 'incrementBuildNumber'
