@@ -20,6 +20,7 @@ import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.page.PageCrafting;
 import vazkii.patchouli.client.book.page.PageEmpty;
+import vazkii.patchouli.client.book.page.PageEntity;
 import vazkii.patchouli.client.book.page.PageImage;
 import vazkii.patchouli.client.book.page.PageLink;
 import vazkii.patchouli.client.book.page.PageMultiblock;
@@ -72,6 +73,7 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 		pageTypes.put("multiblock", PageMultiblock.class); 
 		pageTypes.put("link", PageLink.class);
 		pageTypes.put("relations", PageRelations.class);
+		pageTypes.put("entity", PageEntity.class);
 	}
 
 	@Override

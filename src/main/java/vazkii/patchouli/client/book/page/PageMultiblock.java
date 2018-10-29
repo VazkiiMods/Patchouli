@@ -71,6 +71,7 @@ public class PageMultiblock extends PageWithText {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
 		GlStateManager.enableBlend();
+		GlStateManager.color(1F, 1F, 1F);
 		GuiBook.drawFromTexture(book, x, y, 405, 149, 106, 106);
 		
 		parent.drawCenteredStringNoShadow(name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
@@ -93,7 +94,6 @@ public class PageMultiblock extends PageWithText {
 				PersistentData.data.clickedVisualize = true;
 				PersistentData.save();
 			}
-				
 		}
 	}
 

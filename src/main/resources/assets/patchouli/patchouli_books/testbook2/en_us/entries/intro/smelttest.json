@@ -11,6 +11,11 @@
             "recipe2": "minecraft:iron_ore"
         },
         {
+            "type": "entity",
+            "entity": "minecraft:wither",
+            "text": "Wither! Super scary and evil and will kill you :("
+        },
+        {
             "type": "mob_kill_display",
             "entity": "minecraft:zombie{'ArmorItems':[{},{},{},{'Count':1,'id':'minecraft:diamond_helmet'}]}",
             "locked_text": "Chickens huh? Never heard of them...",
