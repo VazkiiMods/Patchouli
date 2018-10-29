@@ -2,6 +2,8 @@ package vazkii.patchouli.client.book.template.component;
 
 import org.lwjgl.opengl.GLSync;
 
+import com.google.gson.annotations.SerializedName;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.gen.structure.template.Template;
@@ -16,7 +18,9 @@ public class ComponentItemStack extends TemplateComponent {
 	@VariableHolder 
 	public String item;
 	
-	boolean framed, linkedRecipe;
+	boolean framed;
+	@SerializedName("link_recipe")
+	boolean linkedRecipe;
 	
 	transient ItemStack stack;
 	

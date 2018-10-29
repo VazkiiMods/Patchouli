@@ -20,7 +20,8 @@
 			"item": "#item",
 			"x": 60,
 			"y": 50,
-			"framed": true
+			"framed": true,
+			"link_recipe": true
 		},
 		{
 			"type": "item",

@@ -151,7 +151,8 @@ public abstract class GuiBookEntryList extends GuiBook {
 		dependentButtons.clear();
 		visibleEntries.clear();
 		
-		allEntries.stream().filter((e) -> e.getName().toLowerCase().contains(searchField.getText().toLowerCase())).forEach(visibleEntries::add);
+		String query = searchField.getText().toLowerCase();
+		allEntries.stream().filter((e) -> e.isFoundByQuery(query)).forEach(visibleEntries::add);
 
 		maxpages = 1;
 		int count = visibleEntries.size();

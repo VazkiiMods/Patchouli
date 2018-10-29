@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
@@ -21,17 +22,17 @@ import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
 public class BookEntry implements Comparable<BookEntry> {
 
 	String name, category, flag;
-	
+
 	@SerializedName("icon")
 	String iconRaw;
-	
+
 	boolean priority = false;
 	boolean secret = false;
 	@SerializedName("read_by_default")
 	boolean readByDefault = false;
 	BookPage[] pages;
 	String advancement;
-	
+
 	transient ResourceLocation resource;
 	transient Book book, trueProvider;
 	transient BookCategory lcategory = null;
@@ -39,9 +40,9 @@ public class BookEntry implements Comparable<BookEntry> {
 	transient List<BookPage> realPages = new ArrayList();
 	transient List<StackWrapper> relevantStacks = new LinkedList();
 	transient boolean locked;
-	
+
 	transient boolean built;
-	
+
 	public String getName() {
 		return name;
 	}
@@ -49,63 +50,74 @@ public class BookEntry implements Comparable<BookEntry> {
 	public List<BookPage> getPages() {
 		return realPages;
 	}
-	
+
 	public boolean isPriority() {
 		return priority;
 	}
-	
+
 	public BookIcon getIcon() {
 		if(icon == null)
 			icon = new BookIcon(iconRaw); 
-		
+
 		return icon;
 	}
-	
+
 	public BookCategory getCategory() {
 		if(lcategory == null) {
 			if(category.contains(":"))
 				lcategory = book.contents.categories.get(new ResourceLocation(category));
 			else lcategory = book.contents.categories.get(new ResourceLocation(book.getModNamespace(), category));
 		}
-		
+
 		return lcategory;
 	}
-	
+
 	public void updateLockStatus() {
 		boolean currLocked = locked;
 		locked = advancement != null && !advancement.isEmpty() && !ClientAdvancements.hasDone(advancement);
-		
+
 		if(currLocked != locked)
 			book.markUpdated();
 	}
-	
+
 	public boolean isLocked() {
 		if(isSecret())
 			return locked;
 		return !PatchouliConfig.disableAdvancementLocking && locked;
 	}
-	
+
 	public boolean isUnread() {
 		BookData data = PersistentData.data.getBookData(book);
 		return data != null && getResource() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getResource().toString());
 	}
-	
+
 	public boolean isSecret() {
 		return secret;
 	}
-	
+
 	public boolean shouldHide() {
 		return isSecret() && isLocked();
 	}
-	
+
 	public ResourceLocation getResource() {
 		return resource;
 	}
-	
+
 	public boolean canAdd() {
 		return (flag == null || flag.isEmpty() || PatchouliConfig.getConfigFlag(flag)) && getCategory() != null;
 	}
-	
+
+	public boolean isFoundByQuery(String query) {
+		if(getName().toLowerCase().contains(query))
+			return true;
+		
+		for(StackWrapper wrapper : relevantStacks)
+			if(StringUtils.stripControlCodes(wrapper.stack.getDisplayName()).toLowerCase().contains(query))
+				return true;
+		
+		return false;
+	}
+
 	@Override
 	public int compareTo(BookEntry o) {
 		if(o.locked != this.locked)
@@ -113,21 +125,21 @@ public class BookEntry implements Comparable<BookEntry> {
 
 		if(o.priority != this.priority)
 			return this.priority ? -1 : 1;
-		
+
 		return this.name.compareTo(o.name);
 	}
-	
+
 	public void setBook(Book book) {
 		if(book.isExtension) {
 			this.book = book.extensionTarget;
 			trueProvider = book;
 		} else this.book = book;
 	}
-	
+
 	public void build(ResourceLocation resource) {
 		if(built)
 			return;
-		
+
 		this.resource = resource;
 		for(int i = 0; i < pages.length; i++)
 			if(pages[i].canAdd(book)) {
@@ -138,26 +150,26 @@ public class BookEntry implements Comparable<BookEntry> {
 					throw new RuntimeException("Error while loading entry " + resource + " page " + i, e);
 				}
 			}
-		
+
 		built = true;
 	}
-	
+
 	public void addRelevantStack(ItemStack stack, int page) {
 		StackWrapper wrapper = ItemStackUtil.wrapStack(stack);
 		relevantStacks.add(wrapper);
-		
+
 		if(!book.contents.recipeMappings.containsKey(wrapper))
 			book.contents.recipeMappings.put(wrapper, Pair.of(this, page / 2));
 	}
-	
+
 	public boolean isStackRelevant(ItemStack stack) {
 		return relevantStacks.contains(ItemStackUtil.wrapStack(stack));
 	}
-	
+
 	public Book getBook() {
 		return book;
 	}
-	
+
 	public Book getTrueProvider() {
 		return trueProvider;
 	}
@@ -165,5 +177,5 @@ public class BookEntry implements Comparable<BookEntry> {
 	public boolean isExtension() {
 		return getTrueProvider() != null && getTrueProvider() != getBook();
 	}
-	
+
 }
