@@ -24,7 +24,8 @@
         "symmetrical": true,
         "offset"     : [0, 1, 0],
         "view_offset": [0, 0, 0]
-      }
+      },
+      "enable_visualize": false
     }, {
       "type": "spotlight",
       "title": "Activate it!",

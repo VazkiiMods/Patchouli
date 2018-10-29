@@ -35,6 +35,9 @@ public class PageMultiblock extends PageWithText {
 	@SerializedName("multiblock")
 	SerializedMultiblock serializedMultiblock;
 
+	@SerializedName("enable_visualize")
+	boolean showVisualizeButton = true;
+	
 	transient Multiblock multiblockObj;
 	transient GuiButton visualizeButton;
 
@@ -54,7 +57,8 @@ public class PageMultiblock extends PageWithText {
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 
-		addButton(visualizeButton = new GuiButtonBookEye(parent, 12, 97));
+		if(showVisualizeButton)
+			addButton(visualizeButton = new GuiButtonBookEye(parent, 12, 97));
 	}
 
 	@Override
