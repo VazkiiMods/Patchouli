@@ -29,6 +29,7 @@ public class PageEntity extends PageWithText {
 	@SerializedName("entity")
 	public String entityId;
 	
+	float scale = 1F;
 	String name;
 
 	transient boolean errored;
@@ -132,7 +133,7 @@ public class PageEntity extends PageWithText {
 					entitySize = entity.height;
 				entitySize = Math.max(1F, entitySize);
 				
-				renderScale = 100F / entitySize * 0.8F;
+				renderScale = 100F / entitySize * 0.8F * scale;
 				offset = Math.max(entity.height, entitySize) * 0.5F;
 				
 				if(name == null || name.isEmpty())
