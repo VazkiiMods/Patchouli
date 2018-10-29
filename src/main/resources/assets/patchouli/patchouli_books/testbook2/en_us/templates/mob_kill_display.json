@@ -11,7 +11,8 @@
 			"x": -1
 		},
 		{
-			"group": "locked",
+			"advancement": "#adv",
+			"negate_advancement": true,
 			"type": "header",
 			"text": "?",
 			"x": -1,
@@ -20,23 +21,31 @@
 			"color": "9F9f9F"
 		},
 		{
-			"group": "locked",
+			"advancement": "#adv",
+			"negate_advancement": true,
             "type": "text",
             "text": "#locked_text",
             "y": 120
 		},
 		{
-			"group": "unlocked",
+			"advancement": "#adv",
 			"type": "entity",
 			"entity": "#entity",
 			"x": 58,
 			"y": 60
 		},
 		{
-			"group": "unlocked",
+			"advancement": "#adv",
             "type": "text",
             "text": "#unlocked_text",
             "y": 120
-		}		
+		},
+		{
+			"flag": "mod:quark",
+            "type": "text",
+            "text": "Quark is loaded!!",
+            "color": "000066",
+            "y": 140
+		}
 	]
 }

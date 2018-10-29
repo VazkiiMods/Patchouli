@@ -65,11 +65,10 @@ public class BookTemplate {
 	
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
 		if(compiled) {
-			if(processor != null) {
+			if(processor != null)
 				processor.refresh(parent, left, top);
-				components.forEach(c -> c.isVisible = c.group == null || processor.allowRender(c.group));
-			}
-				
+
+			components.forEach(c -> c.isVisible = c.getVisibleStatus(processor));
 			components.forEach(c -> c.onDisplayed(page, parent, left, top));
 		}
 	}

@@ -15,7 +15,7 @@
             "entity": "minecraft:zombie{'ArmorItems':[{},{},{},{'Count':1,'id':'minecraft:diamond_helmet'}]}",
             "locked_text": "Chickens huh? Never heard of them...",
             "unlocked_text": "I added NBT for entities! This zombie has a helmet :3",
-            "unlock_advancement": "patchouli:kill_chicken"
+            "adv": "patchouli:kill_chicken"
         }
     ]
 }
