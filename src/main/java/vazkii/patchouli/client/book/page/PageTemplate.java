@@ -7,11 +7,13 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.BookTemplate;
+import vazkii.patchouli.client.book.template.IComponentProcessor;
 import vazkii.patchouli.client.book.template.JsonVariableWrapper;
 import vazkii.patchouli.common.book.Book;
 
 public class PageTemplate extends BookPage {
 
+	transient String processedType = "";
 	transient BookTemplate template = null;
 	
 	@Override
@@ -19,8 +21,12 @@ public class PageTemplate extends BookPage {
 		super.build(entry, pageNum);
 		
 		JsonVariableWrapper wrapper = new JsonVariableWrapper(sourceObject);
-		template.compile(wrapper, null);
+		IComponentProcessor processor = null;
 		
+		if(BookTemplate.processorTypes.containsKey(processedType))
+			processor = BookTemplate.processorTypes.get(processedType).get();
+		
+		template.compile(wrapper, processor);
 		template.build(this, entry, pageNum);
 	}
 	
@@ -57,7 +63,8 @@ public class PageTemplate extends BookPage {
 		Supplier<BookTemplate> supplier = book.contents.templates.get(key);
 		if(supplier == null)
 			throw new IllegalArgumentException("Template " + key + " does not exist");
-		
+
+		processedType = key.toString();
 		template = supplier.get();
 	}
 	

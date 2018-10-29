@@ -1,5 +1,8 @@
 package vazkii.patchouli.client.book.template.component;
 
+import org.lwjgl.opengl.GLSync;
+
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.gen.structure.template.Template;
 import vazkii.patchouli.client.book.BookEntry;
@@ -30,6 +33,8 @@ public class ComponentItemStack extends TemplateComponent {
 		super.render(page, mouseX, mouseY, pticks);
 		
 		if(framed) {
+			GlStateManager.enableBlend();
+			GlStateManager.color(1F, 1F, 1F, 1F);
 			page.mc.renderEngine.bindTexture(page.book.craftingResource);
 			page.parent.drawModalRectWithCustomSizedTexture(x - 4, y - 4, 83, 71, 24, 24, 128, 128);
 		}

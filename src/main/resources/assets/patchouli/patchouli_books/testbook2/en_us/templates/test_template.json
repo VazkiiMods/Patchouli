@@ -39,11 +39,13 @@
 			"height": 32
 		},
 		{
+			"group": "header",
 			"type": "header",
 			"text": "Template Test",
 			"x": -1
 		},
 		{
+			"group": "header",
 			"type": "separator",
 			"y": 12
 		}

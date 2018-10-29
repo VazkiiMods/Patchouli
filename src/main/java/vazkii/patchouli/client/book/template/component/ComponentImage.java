@@ -40,6 +40,7 @@ public class ComponentImage extends TemplateComponent {
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(scale, scale, scale);
 		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.enableBlend();
 		page.parent.drawModalRectWithCustomSizedTexture(x, y, u, v, width, height, textureWidth, textureHeight);
 		GlStateManager.popMatrix();
 	}

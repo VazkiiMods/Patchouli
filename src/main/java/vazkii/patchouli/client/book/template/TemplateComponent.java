@@ -15,7 +15,7 @@ public abstract class TemplateComponent {
 	public String group = "";
 	public int x, y;
 	
-	public final void compile(IVariableProvider variables, IComponentInflater inflater) {
+	public final void compile(IVariableProvider variables, IComponentProcessor processor) {
 		Class<?> clazz = getClass();
 		Field[] fields = clazz.getFields();
 		
@@ -27,8 +27,8 @@ public abstract class TemplateComponent {
 				if(curr != null && curr.startsWith("#")) {
 					String key = curr.substring(1);
 					String val = null;
-					if(inflater != null)
-						val = inflater.getInflatedValue(key);
+					if(processor != null)
+						val = processor.process(key);
 					
 					if(val == null && variables.has(key))
 						val = variables.get(key);

@@ -10,6 +10,18 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public class ItemStackUtil {
+	
+	public static String serializeStack(ItemStack stack) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(stack.getItem().getRegistryName().toString());
+		builder.append(":");
+		builder.append(stack.getItemDamage());
+		
+		if(stack.hasTagCompound())
+			builder.append(stack.getTagCompound().toString());
+		
+		return builder.toString();
+	}
 
 	public static ItemStack loadStackFromString(String res) {
 		String nbt = "";

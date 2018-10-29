@@ -18,26 +18,34 @@ import vazkii.patchouli.client.book.template.component.ComponentText;
 public class BookTemplate {
 	
 	public static final HashMap<String, Class<? extends TemplateComponent>> componentTypes = new HashMap();
-	public static final HashMap<String, Supplier<IComponentInflater>> inflaterTypes = new HashMap(); // TODO implement
+	public static final HashMap<String, Supplier<IComponentProcessor>> processorTypes = new HashMap(); 
 	
 	static {
-		componentTypes.put("text", ComponentText.class);
-		componentTypes.put("item", ComponentItemStack.class);
-		componentTypes.put("image", ComponentImage.class);
-		componentTypes.put("header", ComponentHeader.class);
-		componentTypes.put("separator", ComponentSeparator.class);
+		registerComponent("text", ComponentText.class);
+		registerComponent("item", ComponentItemStack.class);
+		registerComponent("image", ComponentImage.class);
+		registerComponent("header", ComponentHeader.class);
+		registerComponent("separator", ComponentSeparator.class);
+		
+		registerProcessorType("patchouli:recipetest", TestProcessor::new);
 	}
 
 	List<TemplateComponent> components = new ArrayList();
 	boolean compiled = false;
 	
-	public void compile(IVariableProvider variables, IComponentInflater inflater) {
+	public void compile(IVariableProvider variables, IComponentProcessor processor) {
 		if(compiled)
 			return;
 		
 		components.removeIf(c -> c == null);
+		
+		if(processor != null) {
+			processor.setup(variables);
+			components.removeIf(c -> !c.group.isEmpty() && !processor.allowRender(c.group));
+		}
+		
 		for(TemplateComponent c : components)
-			c.compile(variables, inflater);
+			c.compile(variables, processor);
 		
 		compiled = true;
 	}
@@ -61,5 +69,23 @@ public class BookTemplate {
 		if(compiled)
 			components.forEach(c -> c.mouseClicked(page, mouseX, mouseY, mouseButton));
 	}
+	
+	public static void registerComponent(String name, Class<? extends TemplateComponent> clazz) {
+		componentTypes.put(name, clazz);
+	}
 
+	public static void registerProcessorType(String name, Class<? extends IComponentProcessor> provider) {
+		processorTypes.put(name, () -> {
+			try {
+				return provider.newInstance();
+			} catch(Exception e) {
+				throw new RuntimeException("Failed to instantiate component processor for " + name, e);
+			}
+		});
+	}
+	
+	public static void registerProcessorType(String name, Supplier<IComponentProcessor> provider) {
+		processorTypes.put(name, provider);
+	}
+	
 }

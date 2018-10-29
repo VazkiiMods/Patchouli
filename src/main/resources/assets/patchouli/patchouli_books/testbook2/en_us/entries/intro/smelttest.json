@@ -11,6 +11,10 @@
             "recipe2": "minecraft:iron_ore"
         },
         {
+            "type": "recipetest",
+            "recipe": "minecraft:piston"
+        },
+        {
             "type": "test_template",
             "text": "The template works bitches",
             "text2": "Using multiple variables for two components",

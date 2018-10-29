@@ -4,6 +4,5 @@ public interface IVariableProvider {
 
 	public String get(String key);
 	public boolean has(String key);
-
 	
 }
