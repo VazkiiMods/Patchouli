@@ -59,6 +59,7 @@ public class GuiButtonCategory extends GuiButton {
 				icon.render(x + 2, y + 2);
 			
 			GlStateManager.pushMatrix();
+			GlStateManager.enableBlend();
 			GlStateManager.color(1F, 1F, 1F, transparency);
 			GlStateManager.translate(0, 0, 200);
 			GuiBook.drawFromTexture(parent.book, x, y, u, v, width, height);
