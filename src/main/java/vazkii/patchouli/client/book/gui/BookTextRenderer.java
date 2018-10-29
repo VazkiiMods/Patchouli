@@ -182,6 +182,8 @@ public class BookTextRenderer {
 				currColor = prevColor;
 				currCluster = null;
 			}
+			else if(cmd.equals("playername"))
+				return gui.mc.player.getDisplayNameString();
 			
 			if(endingExternal)
 				return TextFormatting.GRAY + "\u21AA";
