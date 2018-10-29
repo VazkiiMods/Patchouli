@@ -92,7 +92,7 @@ public class BookCategory implements Comparable<BookCategory> {
 			}
 		}
 
-		if(currLocked != locked)
+		if(!locked && currLocked != locked)
 			book.markUpdated();
 	}
 
