@@ -50,12 +50,6 @@ public class Patchouli {
 	public void post(FMLPostInitializationEvent event) {
 		proxy.postInit(event);
 	}
-	
-	@SubscribeEvent
-	public void onConfigChanged(OnConfigChangedEvent event) {
-		if(event.getModID().equals(Patchouli.MOD_ID))
-			ConfigManager.sync(Patchouli.MOD_ID, Config.Type.INSTANCE);
-	}
 
 }
 

@@ -34,6 +34,12 @@ public class PatchouliConfig {
 			setFlag("mod:" + container.getModId(), true);
 		
 		setFlag("debug", Patchouli.debug);
+		
+		updateFlags();
+	}
+	
+	private static void updateFlags() {
+		setFlag("advancements_disabled", disableAdvancementLocking);
 	}
 	
 	public static boolean getConfigFlag(String name) {
@@ -77,8 +83,11 @@ public class PatchouliConfig {
 
 		@SubscribeEvent
 		public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
-			if(eventArgs.getModID().equals(Patchouli.MOD_ID))
+			if(eventArgs.getModID().equals(Patchouli.MOD_ID)) {
 	            ConfigManager.sync(Patchouli.MOD_ID, Config.Type.INSTANCE);
+	            updateFlags();
+	            Patchouli.proxy.requestBookReload();
+			}
 		}
 
 	}

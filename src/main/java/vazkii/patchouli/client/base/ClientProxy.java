@@ -34,5 +34,9 @@ public class ClientProxy extends CommonProxy {
 		BookRegistry.INSTANCE.reload();
 	}
 	
+	@Override
+	public void requestBookReload() {
+		BookRegistry.INSTANCE.reload();
+	}
 	
 }
