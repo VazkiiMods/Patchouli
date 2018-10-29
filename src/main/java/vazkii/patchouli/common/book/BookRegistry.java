@@ -41,7 +41,6 @@ public class BookRegistry {
 		List<ModContainer> mods = Loader.instance().getActiveModList();
 		Map<Pair<ModContainer, ResourceLocation>, String> foundBooks = new HashMap();
 
-		// TODO remove debugs
 		mods.forEach((mod) -> {
 			String id = mod.getModId();
 			CraftingHelper.findFiles(mod, String.format("assets/%s/%s", id, BOOKS_LOCATION), (path) -> Files.exists(path),

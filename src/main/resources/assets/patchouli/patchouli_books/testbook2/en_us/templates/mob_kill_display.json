@@ -1,0 +1,42 @@
+{
+	"components": [
+		{
+			"type": "frame",
+			"x": -1,
+			"y": 7
+		},
+		{
+			"type": "header",
+			"text": "#name",
+			"x": -1
+		},
+		{
+			"group": "locked",
+			"type": "header",
+			"text": "?",
+			"x": -1,
+			"y": 40,
+			"scale": 5.0,
+			"color": "9F9f9F"
+		},
+		{
+			"group": "locked",
+            "type": "text",
+            "text": "#locked_text",
+            "y": 120
+		},
+		{
+			"group": "unlocked",
+			"type": "entity",
+			"entity": "#entity",
+			"x": 58,
+			"y": 60
+		},
+		{
+			"group": "unlocked",
+            "type": "text",
+            "text": "#unlocked_text",
+            "y": 120
+		}		
+	]
+}

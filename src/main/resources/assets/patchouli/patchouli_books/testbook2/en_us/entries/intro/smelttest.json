@@ -11,14 +11,11 @@
             "recipe2": "minecraft:iron_ore"
         },
         {
-            "type": "recipetest",
-            "recipe": "minecraft:piston"
-        },
-        {
-            "type": "test_template",
-            "text": "The template works bitches",
-            "text2": "Using multiple variables for two components",
-            "item": "minecraft:diamond"
+            "type": "mob_kill_display",
+            "entity": "minecraft:chicken",
+            "locked_text": "Chickens huh? Never heard of them...",
+            "unlocked_text": "Chickens are animals you can kill for feathers!",
+            "unlock_advancement": "patchouli:kill_chicken"
         }
     ]
 }

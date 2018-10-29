@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.client.renderer.GlStateManager;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -15,7 +16,8 @@ public class ComponentHeader extends TemplateComponent {
 	@VariableHolder @SerializedName("color")
 	public String colorStr;
 	
-	public boolean centered = true;
+	boolean centered = true;
+	float scale = 1F;
 	
 	transient int color;
 	
@@ -33,9 +35,14 @@ public class ComponentHeader extends TemplateComponent {
 	
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0);
+		GlStateManager.scale(scale, scale, scale);
+		
 		if(centered)
-			page.parent.drawCenteredStringNoShadow(text, x, y, color);
-		else page.fontRenderer.drawString(text, x, y, color);
+			page.parent.drawCenteredStringNoShadow(text, 0, 0, color);
+		else page.fontRenderer.drawString(text, 0, 0, color);
+		GlStateManager.popMatrix();
 	}
 	
 }

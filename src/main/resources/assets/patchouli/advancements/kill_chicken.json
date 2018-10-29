@@ -1,0 +1,24 @@
+{
+    "display": {
+        "icon": {
+            "item": "minecraft:feather"
+        },
+        "title": {
+            "translate": "Kill Chicken"
+        },
+        "description": {
+            "translate": "Killed a chicken"
+        }
+    },
+    "parent": "patchouli:root",
+    "criteria": {
+        "chicken": {
+            "trigger": "minecraft:player_killed_entity",
+            "conditions": {
+                "entity": {
+                    "type": "minecraft:chicken"
+                }
+            }
+        }
+    }
+}

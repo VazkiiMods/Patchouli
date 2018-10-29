@@ -15,6 +15,8 @@ public abstract class TemplateComponent {
 	public String group = "";
 	public int x, y;
 	
+	transient boolean isVisible = true;
+	
 	public final void compile(IVariableProvider variables, IComponentProcessor processor) {
 		Class<?> clazz = getClass();
 		Field[] fields = clazz.getFields();
@@ -32,6 +34,7 @@ public abstract class TemplateComponent {
 					
 					if(val == null && variables.has(key))
 						val = variables.get(key);
+					
 					if(val == null)
 						val = "[FAILED TO LOAD " + key + "]";
 					

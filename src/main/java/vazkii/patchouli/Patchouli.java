@@ -15,9 +15,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import vazkii.patchouli.common.base.CommonProxy;
 
-// TODO port multiblock system
-// TODO port right click handler
-
 @Mod(modid = Patchouli.MOD_ID, name = Patchouli.MOD_NAME)
 public class Patchouli {
 
@@ -54,7 +51,6 @@ public class Patchouli {
 		proxy.postInit(event);
 	}
 	
-	// TODO move to config
 	@SubscribeEvent
 	public void onConfigChanged(OnConfigChangedEvent event) {
 		if(event.getModID().equals(Patchouli.MOD_ID))

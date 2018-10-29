@@ -9,11 +9,15 @@ import com.google.common.base.Supplier;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
+import vazkii.patchouli.client.book.template.component.ComponentEntity;
+import vazkii.patchouli.client.book.template.component.ComponentFrame;
 import vazkii.patchouli.client.book.template.component.ComponentHeader;
 import vazkii.patchouli.client.book.template.component.ComponentImage;
 import vazkii.patchouli.client.book.template.component.ComponentItemStack;
 import vazkii.patchouli.client.book.template.component.ComponentSeparator;
 import vazkii.patchouli.client.book.template.component.ComponentText;
+import vazkii.patchouli.client.book.template.test.EntityTestProcessor;
+import vazkii.patchouli.client.book.template.test.TestProcessor;
 
 public class BookTemplate {
 	
@@ -26,11 +30,15 @@ public class BookTemplate {
 		registerComponent("image", ComponentImage.class);
 		registerComponent("header", ComponentHeader.class);
 		registerComponent("separator", ComponentSeparator.class);
-		
+		registerComponent("frame", ComponentFrame.class);
+		registerComponent("entity", ComponentEntity.class);
+
 		registerProcessorType("patchouli:recipetest", TestProcessor::new);
+		registerProcessorType("patchouli:mob_kill_display", EntityTestProcessor::new);
 	}
 
 	List<TemplateComponent> components = new ArrayList();
+	IComponentProcessor processor;
 	boolean compiled = false;
 	
 	public void compile(IVariableProvider variables, IComponentProcessor processor) {
@@ -40,8 +48,8 @@ public class BookTemplate {
 		components.removeIf(c -> c == null);
 		
 		if(processor != null) {
+			this.processor = processor;
 			processor.setup(variables);
-			components.removeIf(c -> !c.group.isEmpty() && !processor.allowRender(c.group));
 		}
 		
 		for(TemplateComponent c : components)
@@ -56,18 +64,30 @@ public class BookTemplate {
 	}
 	
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
-		if(compiled)
+		if(compiled) {
+			if(processor != null) {
+				processor.refresh(parent, left, top);
+				components.forEach(c -> c.isVisible = c.group == null || processor.allowRender(c.group));
+			}
+				
 			components.forEach(c -> c.onDisplayed(page, parent, left, top));
+		}
 	}
 	
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) { 
 		if(compiled)
-			components.forEach(c -> c.render(page, mouseX, mouseY, pticks));
+			components.forEach(c -> {
+				if(c.isVisible) 
+					c.render(page, mouseX, mouseY, pticks);
+			});
 	}
 	
 	public void mouseClicked(BookPage page, int mouseX, int mouseY, int mouseButton) {
 		if(compiled)
-			components.forEach(c -> c.mouseClicked(page, mouseX, mouseY, mouseButton));
+			components.forEach(c -> {
+				if(c.isVisible)
+					c.mouseClicked(page, mouseX, mouseY, mouseButton);
+			});
 	}
 	
 	public static void registerComponent(String name, Class<? extends TemplateComponent> clazz) {
