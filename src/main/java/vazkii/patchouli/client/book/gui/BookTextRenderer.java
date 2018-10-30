@@ -9,8 +9,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
-import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.book.BookEntry;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 
 public class BookTextRenderer {

@@ -5,8 +5,8 @@ import java.util.HashMap;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
-import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.api.IMultiblock;
+import vazkii.patchouli.common.base.Patchouli;
 
 public class MultiblockRegistry {
 

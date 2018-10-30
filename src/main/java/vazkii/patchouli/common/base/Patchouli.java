@@ -1,4 +1,4 @@
-package vazkii.patchouli;
+package vazkii.patchouli.common.base;
 
 import java.lang.management.ManagementFactory;
 
@@ -13,7 +13,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import vazkii.patchouli.common.base.CommonProxy;
 
 @Mod(modid = Patchouli.MOD_ID, name = Patchouli.MOD_NAME)
 public class Patchouli {

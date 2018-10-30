@@ -22,8 +22,8 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import vazkii.patchouli.Patchouli;
 import vazkii.patchouli.client.base.ClientAdvancements;
+import vazkii.patchouli.common.base.Patchouli;
 
 public class BookRegistry {
 
