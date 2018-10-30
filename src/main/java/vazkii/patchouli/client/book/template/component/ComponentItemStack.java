@@ -28,7 +28,7 @@ public class ComponentItemStack extends TemplateComponent {
 	public void build(BookPage page, BookEntry entry, int pageNum) {
 		stack = ItemStackUtil.loadStackFromString(item);
 		
-		if(!stack.isEmpty())
+		if(linkedRecipe && !stack.isEmpty())
 			entry.addRelevantStack(stack, pageNum);
 	}
 	
