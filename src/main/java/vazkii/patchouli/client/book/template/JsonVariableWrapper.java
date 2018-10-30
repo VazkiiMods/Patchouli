@@ -3,6 +3,8 @@ package vazkii.patchouli.client.book.template;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import vazkii.patchouli.api.IVariableProvider;
+
 public final class JsonVariableWrapper implements IVariableProvider {
 
 	private final JsonObject source;

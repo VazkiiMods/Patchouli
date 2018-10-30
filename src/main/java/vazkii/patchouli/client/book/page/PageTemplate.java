@@ -3,11 +3,11 @@ package vazkii.patchouli.client.book.page;
 import java.util.function.Supplier;
 
 import net.minecraft.util.ResourceLocation;
+import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.BookTemplate;
-import vazkii.patchouli.client.book.template.IComponentProcessor;
 import vazkii.patchouli.client.book.template.JsonVariableWrapper;
 import vazkii.patchouli.common.book.Book;
 
@@ -23,10 +23,7 @@ public class PageTemplate extends BookPage {
 		JsonVariableWrapper wrapper = new JsonVariableWrapper(sourceObject);
 		IComponentProcessor processor = null;
 		
-		if(BookTemplate.processorTypes.containsKey(processedType))
-			processor = BookTemplate.processorTypes.get(processedType).get();
-		
-		template.compile(wrapper, processor);
+		template.compile(wrapper);
 		template.build(this, entry, pageNum);
 	}
 	

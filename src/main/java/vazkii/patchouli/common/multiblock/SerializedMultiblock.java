@@ -1,6 +1,5 @@
 package vazkii.patchouli.common.multiblock;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.ResourceLocation;
-import vazkii.patchouli.common.multiblock.Multiblock.StateMatcher;
 
 public class SerializedMultiblock {
 

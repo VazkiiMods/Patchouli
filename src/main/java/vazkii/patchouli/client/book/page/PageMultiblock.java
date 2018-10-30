@@ -12,6 +12,8 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.ResourceLocation;
+import vazkii.patchouli.api.IMultiblock;
+import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
@@ -22,7 +24,6 @@ import vazkii.patchouli.client.book.gui.button.GuiButtonBookEye;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.multiblock.Multiblock;
-import vazkii.patchouli.common.multiblock.Multiblock.StateMatcher;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
 
@@ -43,8 +44,12 @@ public class PageMultiblock extends PageWithText {
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
-		if(multiblockId != null && !multiblockId.isEmpty())
-			multiblockObj = MultiblockRegistry.MULTIBLOCKS.get(new ResourceLocation(multiblockId));
+		if(multiblockId != null && !multiblockId.isEmpty()) {
+			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(new ResourceLocation(multiblockId));
+			
+			if(mb instanceof Multiblock)
+				multiblockObj = (Multiblock) mb;
+		}
 		
 		if(multiblockObj == null && serializedMultiblock != null)
 			multiblockObj = serializedMultiblock.toMultiblock();
@@ -134,8 +139,8 @@ public class PageMultiblock extends PageWithText {
 	}
 
 	private void renderElement(Multiblock mb, int x, int y, int z) {
-		StateMatcher matcher = mb.stateTargets[x][y][z];
-		IBlockState state = matcher.displayState;
+		IStateMatcher matcher = mb.stateTargets[x][y][z];
+		IBlockState state = matcher.getDisplayedState();
 		if(state == null)
 			return;
 

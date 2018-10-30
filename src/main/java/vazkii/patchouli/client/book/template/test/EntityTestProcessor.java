@@ -3,9 +3,9 @@ package vazkii.patchouli.client.book.template.test;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityList;
 import net.minecraft.util.ResourceLocation;
+import vazkii.patchouli.api.IComponentProcessor;
+import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.client.base.ClientAdvancements;
-import vazkii.patchouli.client.book.template.IComponentProcessor;
-import vazkii.patchouli.client.book.template.IVariableProvider;
 
 public class EntityTestProcessor implements IComponentProcessor {
 

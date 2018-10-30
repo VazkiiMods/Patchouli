@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import vazkii.patchouli.Patchouli;
+import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.handler.AdvancementSyncHandler;
 import vazkii.patchouli.common.item.PatchouliItems;
@@ -14,6 +15,8 @@ import vazkii.patchouli.common.network.NetworkHandler;
 public class CommonProxy {
 
 	public void preInit(FMLPreInitializationEvent event) {
+		PatchouliAPI.instance = PatchouliAPIImpl.INSTANCE;
+		
 		PatchouliConfig.preInit();
 		
 		PatchouliItems.preInit();

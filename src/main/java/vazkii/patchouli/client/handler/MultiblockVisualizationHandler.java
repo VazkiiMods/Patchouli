@@ -36,11 +36,12 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.common.base.ObfuscationKeys;
 import vazkii.patchouli.common.multiblock.Multiblock;
-import vazkii.patchouli.common.multiblock.Multiblock.StateMatcher;
+import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
 public class MultiblockVisualizationHandler {
@@ -210,16 +211,16 @@ public class MultiblockVisualizationHandler {
 				for(int z = 0; z < multiblock.sizeZ; z++) {
 					float alpha = 0.3F;
 					BlockPos renderPos = startPos.add(RotationUtil.x(facingRotation, x, z) , y, RotationUtil.z(facingRotation, x, z));
-					StateMatcher matcher = multiblock.stateTargets[x][y][z];
+					IStateMatcher matcher = multiblock.stateTargets[x][y][z];
 					if(renderPos.equals(checkPos)) {
-						lookingState = matcher.displayState;
+						lookingState = matcher.getDisplayedState();
 						alpha = 0.6F + (float) (Math.sin(ClientTicker.total * 0.3F) + 1F) * 0.1F;
 					}
 
 					if(matcher != StateMatcher.ANY) {
 						blocks++;
 						if(!multiblock.test(world, startPos, x, y, z, facingRotation)) {
-							IBlockState renderState = matcher.displayState.withRotation(facingRotation);
+							IBlockState renderState = matcher.getDisplayedState().withRotation(facingRotation);
 							renderBlock(world, renderState, renderPos, alpha, dispatcher);
 						} else blocksDone++;
 					}

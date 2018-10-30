@@ -6,16 +6,16 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.Patchouli;
-import vazkii.patchouli.common.multiblock.Multiblock.StateMatcher;
+import vazkii.patchouli.api.IMultiblock;
 
 public class MultiblockRegistry {
 
-	public static final HashMap<ResourceLocation, Multiblock> MULTIBLOCKS = new HashMap();
+	public static final HashMap<ResourceLocation, IMultiblock> MULTIBLOCKS = new HashMap();
 
-	public static Multiblock crucible;
+	public static IMultiblock crucible;
 
 	public static void preInit() {
-		crucible = registerMultiblock(new ResourceLocation(Patchouli.MOD_ID, "crucible"), 
+		crucible = registerMultiblock(new ResourceLocation(Patchouli.MOD_ID, "crucible"), 	
 				new Multiblock(new String[][] {
 					{ "   ", " 0 ", "   " },
 					{ "SSS", "SFS", "SSS" }},
@@ -26,9 +26,9 @@ public class MultiblockRegistry {
 				.setSymmetrical(true);
 	}
 
-	public static Multiblock registerMultiblock(ResourceLocation location, Multiblock multiblock) {
+	public static IMultiblock registerMultiblock(ResourceLocation location, IMultiblock multiblock) {
 		MULTIBLOCKS.put(location, multiblock);
-		return multiblock.setResourceName(location);
+		return multiblock.setResourceLocation(location);
 	}
 
 }

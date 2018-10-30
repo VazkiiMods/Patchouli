@@ -5,11 +5,11 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import vazkii.patchouli.client.book.template.IComponentProcessor;
-import vazkii.patchouli.client.book.template.IVariableProvider;
+import vazkii.patchouli.api.IComponentProcessor;
+import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
-public class TestProcessor implements IComponentProcessor {
+public class RecipeTestProcessor implements IComponentProcessor {
 
 	IRecipe recipe;
 	

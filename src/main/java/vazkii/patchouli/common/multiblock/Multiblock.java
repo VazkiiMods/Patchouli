@@ -7,19 +7,20 @@ import java.util.function.Predicate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import vazkii.patchouli.api.IMultiblock;
+import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
-public class Multiblock {
+public class Multiblock implements IMultiblock {
 
 	final String[][] pattern;
 
 	public ResourceLocation res;
-	public StateMatcher[][][] stateTargets;
+	public IStateMatcher[][][] stateTargets;
 	public int sizeX, sizeY, sizeZ;
 	public int offX, offY, offZ;
 	public int viewOffX, viewOffY, viewOffZ;
@@ -31,6 +32,7 @@ public class Multiblock {
 		build(targets, getPatternDimensions());
 	}
 
+	@Override
 	public Multiblock offset(int x, int y, int z) {
 		return setOffset(offX + x, offY + y, offZ + z);
 	}
@@ -46,6 +48,7 @@ public class Multiblock {
 		setViewOffset(offX, offY, offZ);
 	}
 
+	@Override
 	public Multiblock offsetView(int x, int y, int z) {
 		return setViewOffset(viewOffX + x, viewOffY + y, viewOffZ + z);
 	}
@@ -57,29 +60,33 @@ public class Multiblock {
 		return this;
 	}
 
+	@Override
 	public Multiblock setSymmetrical(boolean symmetrical) {
 		this.symmetrical = symmetrical;
 		return this;
 	}
 
-	public Multiblock setResourceName(ResourceLocation res) {
+	@Override
+	public Multiblock setResourceLocation(ResourceLocation res) {
 		this.res = res;
 		return this;
 	}
 
+	@Override
 	public void place(World world, BlockPos pos, Rotation rotation) {
 		BlockPos start = pos.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
 		for(int x = 0; x < sizeX; x++)
 			for(int y = 0; y < sizeY; y++)
 				for(int z = 0; z < sizeZ; z++) {
 					BlockPos placePos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-					IBlockState targetState = stateTargets[x][y][z].displayState.withRotation(rotation);
+					IBlockState targetState = stateTargets[x][y][z].getDisplayedState().withRotation(rotation);
 					Block targetBlock = targetState.getBlock();
 					if(!targetBlock.isAir(targetState, world, placePos) && targetBlock.canPlaceBlockAt(world, placePos) && world.getBlockState(placePos).getBlock().isReplaceable(world, placePos))
 						world.setBlockState(placePos, targetState);
 				}
 	}
 
+	@Override
 	public void forEach(World world, BlockPos pos, Rotation rotation, char c, Consumer<BlockPos> action) {
 		forEachMatcher(world, pos, rotation, c, (start, actionPos, x, y, z, ch, matcher) -> {
 		    action.accept(actionPos);
@@ -87,6 +94,7 @@ public class Multiblock {
 		});
 	}
 
+	@Override
 	public boolean forEachMatcher(World world, BlockPos pos, Rotation rotation, char c, MatcherAcceptor acceptor){
 		BlockPos start = pos.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
 		for(int x = 0; x < sizeX; x++)
@@ -102,6 +110,7 @@ public class Multiblock {
         return true;
 	}
 
+	@Override
 	public boolean validate(World world, BlockPos pos) {
 		if(symmetrical)
 			return validate(world, pos, Rotation.NONE);
@@ -113,7 +122,7 @@ public class Multiblock {
 	}
 
 
-	public boolean validate(World world, BlockPos pos, Rotation rotation) {
+	protected boolean validate(World world, BlockPos pos, Rotation rotation) {
 		BlockPos start = pos.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
 		if(!test(world, start, centerX, centerY, centerZ, rotation))
 			return false;
@@ -127,9 +136,10 @@ public class Multiblock {
 		return true;
 	}
 
+	@Override
 	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
 		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-		Predicate<IBlockState> pred = stateTargets[x][y][z].statePredicate;
+		Predicate<IBlockState> pred = stateTargets[x][y][z].getStatePredicate();
 		IBlockState state = world.getBlockState(checkPos).withRotation(RotationUtil.fixHorizontal(rotation));
 
 		return pred.test(state);
@@ -139,18 +149,18 @@ public class Multiblock {
 		if(targets.length % 2 == 1)
 			throw new IllegalArgumentException("Illegal argument length for targets array " + targets.length);
 
-		Map<Character, StateMatcher> stateMap = new HashMap();
+		Map<Character, IStateMatcher> stateMap = new HashMap();
 		for(int i = 0; i < targets.length / 2; i++) {
 			char c = (Character) targets[i * 2];
 			Object o = targets[i * 2 + 1];
-			StateMatcher state = null;
+			IStateMatcher state = null;
 
 			if(o instanceof Block)
 				state = StateMatcher.fromBlockLoose((Block) o);
 			else if(o instanceof IBlockState)
 				state = StateMatcher.fromState((IBlockState) o);
-			else if(o instanceof StateMatcher)
-				state = (StateMatcher) o;
+			else if(o instanceof IStateMatcher)
+				state = (IStateMatcher) o;
 			else throw new IllegalArgumentException("Invalid target " + o);
 
 			stateMap.put(c, state);
@@ -166,7 +176,7 @@ public class Multiblock {
 		sizeX = dimensions[1];
 		sizeY = dimensions[0];
 		sizeZ = dimensions[2];
-		stateTargets = new StateMatcher[dimensions[1]][dimensions[0]][dimensions[2]];
+		stateTargets = new IStateMatcher[dimensions[1]][dimensions[0]][dimensions[2]];
 		for(int y = 0; y < dimensions[0]; y++)
 			for(int x = 0; x < dimensions[1]; x++)
 				for(int z = 0; z < dimensions[2]; z++) {
@@ -174,7 +184,7 @@ public class Multiblock {
 					if(!stateMap.containsKey(c))
 						throw new IllegalArgumentException("Character " + c + " isn't mapped");
 
-					StateMatcher matcher = stateMap.get(c);
+					IStateMatcher matcher = stateMap.get(c);
 					if(c == '0') {
 						if(foundCenter)
 							throw new IllegalArgumentException("A structure can't have two centers");
@@ -212,61 +222,9 @@ public class Multiblock {
 		return new int[] { pattern.length, expectedLenX, expectedLenZ };
 	}
 
+	@Override
 	public boolean isSymmetrical() {
 		return symmetrical;
 	}
 
-	public static class StateMatcher {
-
-		public static final StateMatcher ANY = displayOnly(Blocks.AIR.getDefaultState());
-		public static final StateMatcher AIR = fromState(Blocks.AIR.getDefaultState());
-
-		public final IBlockState displayState;
-		public final Predicate<IBlockState> statePredicate;
-
-		private StateMatcher(IBlockState displayState, Predicate<IBlockState> statePredicate) {
-			this.displayState = displayState;
-			this.statePredicate = statePredicate;
-		}
-
-		public static StateMatcher fromPredicate(IBlockState display, Predicate<IBlockState> predicate) {
-			return new StateMatcher(display, predicate);
-		}
-
-
-		public static StateMatcher fromPredicate(Block display, Predicate<IBlockState> predicate) {
-			return fromPredicate(display.getDefaultState(), predicate);
-		}
-
-		public static StateMatcher fromState(IBlockState displayState, boolean strict) {
-			return new StateMatcher(displayState,
-					strict ? ((state) -> state.getBlock() == displayState.getBlock() && state.getProperties().equals(displayState.getProperties()))
-							: ((state) -> state.getBlock() == displayState.getBlock()));
-		}
-
-		public static StateMatcher fromState(IBlockState displayState) {
-			return fromState(displayState, true);
-		}
-
-		public static StateMatcher fromBlockLoose(Block block) {
-			return fromState(block.getDefaultState(), false);
-		}
-
-		public static StateMatcher fromBlockStrict(Block block) {
-			return fromState(block.getDefaultState(), true);
-		}
-
-		public static StateMatcher displayOnly(IBlockState state) {
-			return new StateMatcher(state, (s) -> true);
-		}
-
-		public static StateMatcher displayOnly(Block block) {
-			return displayOnly(block.getDefaultState());
-		}
-
-	}
-
-	public interface MatcherAcceptor {
-		boolean accepts(BlockPos start, BlockPos actionPos, int x, int y, int z, char c, StateMatcher matcher);
-	}
 }

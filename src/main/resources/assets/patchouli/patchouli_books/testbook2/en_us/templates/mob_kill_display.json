@@ -1,4 +1,5 @@
 {
+	"processor": "vazkii.patchouli.client.book.template.test.EntityTestProcessor",
 	"components": [
 		{
 			"type": "frame",

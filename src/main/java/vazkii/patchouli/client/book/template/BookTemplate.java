@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.google.common.base.Supplier;
+import com.google.gson.annotations.SerializedName;
 
+import vazkii.patchouli.api.IComponentProcessor;
+import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -17,12 +20,11 @@ import vazkii.patchouli.client.book.template.component.ComponentItemStack;
 import vazkii.patchouli.client.book.template.component.ComponentSeparator;
 import vazkii.patchouli.client.book.template.component.ComponentText;
 import vazkii.patchouli.client.book.template.test.EntityTestProcessor;
-import vazkii.patchouli.client.book.template.test.TestProcessor;
+import vazkii.patchouli.client.book.template.test.RecipeTestProcessor;
 
 public class BookTemplate {
 	
 	public static final HashMap<String, Class<? extends TemplateComponent>> componentTypes = new HashMap();
-	public static final HashMap<String, Supplier<IComponentProcessor>> processorTypes = new HashMap(); 
 	
 	static {
 		registerComponent("text", ComponentText.class);
@@ -32,25 +34,25 @@ public class BookTemplate {
 		registerComponent("separator", ComponentSeparator.class);
 		registerComponent("frame", ComponentFrame.class);
 		registerComponent("entity", ComponentEntity.class);
-
-		registerProcessorType("patchouli:recipetest", TestProcessor::new);
-		registerProcessorType("patchouli:mob_kill_display", EntityTestProcessor::new);
 	}
 
 	List<TemplateComponent> components = new ArrayList();
-	IComponentProcessor processor;
-	boolean compiled = false;
+	@SerializedName("processor")
+	String processorClass;
 	
-	public void compile(IVariableProvider variables, IComponentProcessor processor) {
+	transient IComponentProcessor processor;
+	transient boolean compiled = false;
+	transient boolean attemptedCreatingProcessor = false;
+	
+	public void compile(IVariableProvider variables) {
 		if(compiled)
 			return;
 		
+		createProcessor();
 		components.removeIf(c -> c == null);
 		
-		if(processor != null) {
-			this.processor = processor;
+		if(processor != null)
 			processor.setup(variables);
-		}
 		
 		for(TemplateComponent c : components)
 			c.compile(variables, processor);
@@ -92,19 +94,19 @@ public class BookTemplate {
 	public static void registerComponent(String name, Class<? extends TemplateComponent> clazz) {
 		componentTypes.put(name, clazz);
 	}
-
-	public static void registerProcessorType(String name, Class<? extends IComponentProcessor> provider) {
-		processorTypes.put(name, () -> {
-			try {
-				return provider.newInstance();
+	
+	private void createProcessor() {
+		if(!attemptedCreatingProcessor) {
+			if(processorClass != null && !processorClass.isEmpty()) try {
+				Class<?> clazz = Class.forName(processorClass);
+				if(clazz != null)
+					processor = (IComponentProcessor) clazz.newInstance();
 			} catch(Exception e) {
-				throw new RuntimeException("Failed to instantiate component processor for " + name, e);
+				throw new RuntimeException("Failed to create component processor " + processorClass, e);
 			}
-		});
+			
+			attemptedCreatingProcessor = true;
+		}
 	}
-	
-	public static void registerProcessorType(String name, Supplier<IComponentProcessor> provider) {
-		processorTypes.put(name, provider);
-	}
-	
+
 }

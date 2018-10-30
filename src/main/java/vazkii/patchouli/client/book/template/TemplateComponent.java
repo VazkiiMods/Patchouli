@@ -8,6 +8,8 @@ import java.lang.reflect.Field;
 
 import com.google.gson.annotations.SerializedName;
 
+import vazkii.patchouli.api.IComponentProcessor;
+import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
