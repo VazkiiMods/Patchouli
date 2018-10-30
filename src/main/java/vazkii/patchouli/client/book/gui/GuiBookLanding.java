@@ -94,7 +94,7 @@ public class GuiBookLanding extends GuiBook {
 		drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
 		int topSeparator = TOP_PADDING + 12;
-		int bottomSeparator = topSeparator + 25 + 24 * (loadedCategories / 4 + 1);
+		int bottomSeparator = topSeparator + 25 + 24 * ((loadedCategories - 1) / 4 + 1);
 
 		drawHeader();
 		drawSeparator(book, RIGHT_PAGE_X, topSeparator);
