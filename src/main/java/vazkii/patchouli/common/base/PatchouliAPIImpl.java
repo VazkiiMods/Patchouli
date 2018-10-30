@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
+import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.multiblock.Multiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.StateMatcher;
@@ -19,6 +20,11 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	public static final PatchouliAPIImpl INSTANCE = new PatchouliAPIImpl();
 	
 	private PatchouliAPIImpl() { }
+	
+	@Override
+	public boolean isStub() {
+		return false;
+	}
 	
 	@Override
 	public void setConfigFlag(String flag, boolean value) {
@@ -33,6 +39,11 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	public void reloadBookContents() {
 		Patchouli.proxy.requestBookReload();
+	}
+	
+	@Override
+	public ItemStack getBookStack(String book) {
+		return ItemModBook.forBook(book);
 	}
 
 	@Override

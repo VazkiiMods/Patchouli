@@ -17,6 +17,11 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	private StubPatchouliAPI() { }
 
 	@Override
+	public boolean isStub() {
+		return true;
+	}
+	
+	@Override
 	public void setConfigFlag(String flag, boolean value) {
 		// NO-OP
 	}
@@ -29,6 +34,11 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	@Override
 	public void reloadBookContents() {
 		// NO-OP
+	}
+	
+	@Override
+	public ItemStack getBookStack(String book) {
+		return ItemStack.EMPTY;
 	}
 
 	@Override

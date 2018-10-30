@@ -20,10 +20,15 @@ public class PatchouliAPI {
 	public static IPatchouliAPI instance = StubPatchouliAPI.INSTANCE;
 
 	public static interface IPatchouliAPI {
+		
+		// API
+		public boolean isStub();
+		
 		// Book and Templates
 		public void setConfigFlag(String flag, boolean value);
 		public boolean getConfigFlag(String flag);
 		public void reloadBookContents();
+		public ItemStack getBookStack(String book);
 
 		// ItemStack Serialization
 		public ItemStack deserializeItemStack(String str);
