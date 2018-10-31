@@ -2,12 +2,12 @@
     "components": [
         {
             "type": "header",
-            "text": "#count",
+            "text": "#icount",
             "x": 8
         }, 
         {
             "type": "text",
-            "text": "#output",
+            "text": "#iname",
             "color": "000000",
             "y": 12
         }

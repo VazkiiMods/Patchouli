@@ -3,14 +3,14 @@
         {
             "template": "include/recipetest",
             "as": "recipe1",
-            "with": {
+            "using": {
                 "recipe": "#foo" 
             }
         },
         {
             "template": "include/recipetest",
             "as": "recipe2",
-            "with": {
+            "using": {
                 "recipe": "#bar"
             },
             "y": 70

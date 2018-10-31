@@ -46,7 +46,6 @@ public class BookTemplate {
 	transient Book book;
 	transient TemplateInclusion encapsulation;
 	transient IComponentProcessor processor;
-	transient boolean isProcessorDerived = false;
 	transient boolean compiled = false;
 	transient boolean attemptedCreatingProcessor = false;
 	
@@ -74,7 +73,7 @@ public class BookTemplate {
 		createProcessor();
 		components.removeIf(c -> c == null);
 		
-		if(processor != null && !isProcessorDerived) {
+		if(processor != null) {
 			IVariableProvider processorVars = variables;
 			if(encapsulation != null)
 				processorVars = encapsulation.wrapProvider(variables);
@@ -85,9 +84,10 @@ public class BookTemplate {
 		for(TemplateInclusion include : inclusions) {
 			if(include.template == null || include.template.isEmpty() || include.as == null || include.as.isEmpty())
 				throw new IllegalArgumentException("Template inclusion must define both \"template\" and \"as\" fields.");
-			include.processor = processor;
-			include.upperMerge(encapsulation);
 			
+			include.upperMerge(encapsulation);
+			include.process(processor);
+
 			BookTemplate template = createTemplate(book, include.template, include);
 			template.compile(variables);
 			components.addAll(template.components);
@@ -138,21 +138,10 @@ public class BookTemplate {
 		if(!attemptedCreatingProcessor) {
 			if(processorClass != null && !processorClass.isEmpty()) try {
 				Class<?> clazz = Class.forName(processorClass);
-				if(clazz != null) {
+				if(clazz != null)
 					processor = (IComponentProcessor) clazz.newInstance();
-					
-					if(encapsulation != null && encapsulation.processor != null) {
-						processor = new CompositeComponentProcessor(processor, encapsulation.processor);
-						isProcessorDerived = true;
-					}
-				}
 			} catch(Exception e) {
 				throw new RuntimeException("Failed to create component processor " + processorClass, e);
-			}
-			
-			if(processor == null && encapsulation != null) {
-				processor = encapsulation.processor;
-				isProcessorDerived = true;
 			}
 			
 			attemptedCreatingProcessor = true;

@@ -4,6 +4,10 @@
         {
             "template": "include/namenumber",
             "as": "nn",
+            "using": {
+                "iname": "#iname",
+                "icount": "#icount"
+            },
             "x": 70,
             "y": 20
         }
@@ -35,12 +39,6 @@
 		},
 		{
 			"type": "item", "item": "#item9", "x": 44, "y": 50
-		}, 
-        {
-            "type": "text",
-            "text": "#blarg",
-            "x": 70,
-            "y": 50
-        }
+		}
 	]
 }

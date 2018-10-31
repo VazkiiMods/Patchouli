@@ -37,6 +37,12 @@ public class RecipeTestProcessor implements IComponentProcessor {
 			return out.getCount() + "x$(br)" + out.getDisplayName();
 		}
 		
+		else if(key.equals("icount"))
+			return Integer.toString(recipe.getRecipeOutput().getCount());
+		
+		else if(key.equals("iname"))
+			return recipe.getRecipeOutput().getDisplayName();
+		
 		return null;
 	}
 
