@@ -27,7 +27,7 @@ public class TemplateInclusion {
 			return;
 		
 		if(upper.visitedTemplates.contains(template))
-			throw new IllegalArgumentException("Breaking when include template " + template + ", circular dependencies aren't allowed.");
+			throw new IllegalArgumentException("Breaking when include template " + template + ", circular dependencies aren't allowed (stack = " + upper.visitedTemplates + ")");
 		
 		visitedTemplates = new ArrayList(upper.visitedTemplates);
 		visitedTemplates.add(template);
