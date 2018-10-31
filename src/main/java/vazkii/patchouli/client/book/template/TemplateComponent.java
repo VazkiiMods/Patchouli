@@ -32,8 +32,12 @@ public abstract class TemplateComponent {
 	boolean negateAdvancement = false; 
 	
 	transient boolean isVisible = true;
+	transient boolean compiled = false;
 	
 	public final void compile(IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
+		if(compiled)
+			return;
+		
 		if(encapsulation != null) {
 			x += encapsulation.x;
 			y += encapsulation.y;
@@ -46,15 +50,17 @@ public abstract class TemplateComponent {
 			if(f.getType() == String.class && f.getAnnotation(VariableHolder.class) != null) try {
 				f.setAccessible(true);
 				String curr = (String) f.get(this);
+				String original = curr;
 				
 				if(curr != null && encapsulation != null)
 					curr = encapsulation.transform(curr, true);
 				
 				if(curr != null && curr.startsWith("#")) {
 					String key = curr.substring(1);
+					String originalKey = original.substring(1);
 					String val = null;
 					if(processor != null)
-						val = processor.process(rawVariable(key));
+						val = processor.process(originalKey);
 					
 					if(val == null && variables.has(key))
 						val = variables.get(key);
@@ -68,10 +74,8 @@ public abstract class TemplateComponent {
 				throw new RuntimeException("Error compiling component", e);
 			}
 		}
-	}
-	
-	private static String rawVariable(String var) {
-		return var.replaceAll("^.+\\.", "");
+		
+		compiled = true;
 	}
 	
 	public boolean getVisibleStatus(IComponentProcessor processor) {

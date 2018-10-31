@@ -1,0 +1,15 @@
+{
+    "components": [
+        {
+            "type": "header",
+            "text": "#count",
+            "x": 8
+        }, 
+        {
+            "type": "text",
+            "text": "#output",
+            "color": "000000",
+            "y": 12
+        }
+    ]
+}

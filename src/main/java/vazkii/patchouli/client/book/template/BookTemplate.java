@@ -46,6 +46,7 @@ public class BookTemplate {
 	transient Book book;
 	transient TemplateInclusion encapsulation;
 	transient IComponentProcessor processor;
+	transient boolean isProcessorDerived = false;
 	transient boolean compiled = false;
 	transient boolean attemptedCreatingProcessor = false;
 	
@@ -73,14 +74,20 @@ public class BookTemplate {
 		createProcessor();
 		components.removeIf(c -> c == null);
 		
-		if(encapsulation != null)
-			variables = encapsulation.wrapProvider(variables);
-		
-		if(processor != null)
-			processor.setup(variables);
+		if(processor != null && !isProcessorDerived) {
+			IVariableProvider processorVars = variables;
+			if(encapsulation != null)
+				processorVars = encapsulation.wrapProvider(variables);
+			
+			processor.setup(processorVars);
+		}
 		
 		for(TemplateInclusion include : inclusions) {
+			if(include.template == null || include.template.isEmpty() || include.as == null || include.as.isEmpty())
+				throw new IllegalArgumentException("Template inclusion must define both \"template\" and \"as\" fields.");
+			include.processor = processor;
 			include.upperMerge(encapsulation);
+			
 			BookTemplate template = createTemplate(book, include.template, include);
 			template.compile(variables);
 			components.addAll(template.components);
@@ -131,10 +138,21 @@ public class BookTemplate {
 		if(!attemptedCreatingProcessor) {
 			if(processorClass != null && !processorClass.isEmpty()) try {
 				Class<?> clazz = Class.forName(processorClass);
-				if(clazz != null)
+				if(clazz != null) {
 					processor = (IComponentProcessor) clazz.newInstance();
+					
+					if(encapsulation != null && encapsulation.processor != null) {
+						processor = new CompositeComponentProcessor(processor, encapsulation.processor);
+						isProcessorDerived = true;
+					}
+				}
 			} catch(Exception e) {
 				throw new RuntimeException("Failed to create component processor " + processorClass, e);
+			}
+			
+			if(processor == null && encapsulation != null) {
+				processor = encapsulation.processor;
+				isProcessorDerived = true;
 			}
 			
 			attemptedCreatingProcessor = true;

@@ -1,12 +1,18 @@
 {
     "include": [
         {
-            "template": "recipetest",
-            "as": "recipe1"
+            "template": "include/recipetest",
+            "as": "recipe1",
+            "with": {
+                "recipe": "#foo" 
+            }
         },
         {
-            "template": "recipetest",
+            "template": "include/recipetest",
             "as": "recipe2",
+            "with": {
+                "recipe": "#bar"
+            },
             "y": 70
         }
     ],

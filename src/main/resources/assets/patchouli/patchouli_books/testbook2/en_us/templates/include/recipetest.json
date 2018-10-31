@@ -1,5 +1,13 @@
 {
     "processor": "vazkii.patchouli.client.book.template.test.RecipeTestProcessor",
+    "include": [
+        {
+            "template": "include/namenumber",
+            "as": "nn",
+            "x": 70,
+            "y": 20
+        }
+    ],
 	"components": [
 		{
 			"type": "item", "item": "#item1", "x": 4, "y": 10
@@ -27,9 +35,12 @@
 		},
 		{
 			"type": "item", "item": "#item9", "x": 44, "y": 50
-		},
-		{
-			"type": "text", "text": "#text", "x": 64, "y": 10
-		}
+		}, 
+        {
+            "type": "text",
+            "text": "#blarg",
+            "x": 70,
+            "y": 50
+        }
 	]
 }

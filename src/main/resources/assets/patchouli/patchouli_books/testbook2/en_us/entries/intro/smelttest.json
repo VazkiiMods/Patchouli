@@ -6,8 +6,12 @@
     "pages": [
         {
             "type": "doublerecipe",
-            "recipe1.recipe": "minecraft:piston",
-            "recipe2.recipe": "minecraft:dropper"
+            "foo": "minecraft:piston",
+            "bar": "minecraft:clock",
+            "recipe1.blarg": "blarg",
+            "recipe2.blarg": "asdadfs",
+            "recipe1.nn.output": "aaaaa",
+            "recipe2.nn.output": "bbbbb"
         }
     ]
 }
