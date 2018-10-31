@@ -1,0 +1,20 @@
+{
+    "include": [
+        {
+            "template": "recipetest",
+            "as": "recipe1"
+        },
+        {
+            "template": "recipetest",
+            "as": "recipe2",
+            "y": 70
+        }
+    ],
+    "components": [
+        {
+            "type": "header",
+            "text": "Two Recipes!",
+            "x": -1
+        }
+    ]
+}

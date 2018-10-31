@@ -3,10 +3,11 @@ package vazkii.patchouli.client.book.template;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Supplier;
 
-import com.google.common.base.Supplier;
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.client.book.BookEntry;
@@ -19,8 +20,7 @@ import vazkii.patchouli.client.book.template.component.ComponentImage;
 import vazkii.patchouli.client.book.template.component.ComponentItemStack;
 import vazkii.patchouli.client.book.template.component.ComponentSeparator;
 import vazkii.patchouli.client.book.template.component.ComponentText;
-import vazkii.patchouli.client.book.template.test.EntityTestProcessor;
-import vazkii.patchouli.client.book.template.test.RecipeTestProcessor;
+import vazkii.patchouli.common.book.Book;
 
 public class BookTemplate {
 	
@@ -36,13 +36,35 @@ public class BookTemplate {
 		registerComponent("entity", ComponentEntity.class);
 	}
 
+	@SerializedName("include")
+	List<TemplateInclusion> inclusions = new ArrayList();
 	List<TemplateComponent> components = new ArrayList();
+	
 	@SerializedName("processor")
 	String processorClass;
 	
+	transient Book book;
+	transient TemplateInclusion encapsulation;
 	transient IComponentProcessor processor;
 	transient boolean compiled = false;
 	transient boolean attemptedCreatingProcessor = false;
+	
+	public static BookTemplate createTemplate(Book book, String type, TemplateInclusion inclusion) {
+		ResourceLocation key;
+		if(type.contains(":"))
+			key = new ResourceLocation(type);
+		else key = new ResourceLocation(book.getModNamespace(), type);
+		
+		Supplier<BookTemplate> supplier = book.contents.templates.get(key);
+		if(supplier == null)
+			throw new IllegalArgumentException("Template " + key + " does not exist");
+		
+		BookTemplate template = supplier.get();
+		template.book = book;
+		template.encapsulation = inclusion;
+		
+		return template;
+	}
 	
 	public void compile(IVariableProvider variables) {
 		if(compiled)
@@ -51,11 +73,21 @@ public class BookTemplate {
 		createProcessor();
 		components.removeIf(c -> c == null);
 		
+		if(encapsulation != null)
+			variables = encapsulation.wrapProvider(variables);
+		
 		if(processor != null)
 			processor.setup(variables);
 		
+		for(TemplateInclusion include : inclusions) {
+			include.upperMerge(encapsulation);
+			BookTemplate template = createTemplate(book, include.template, include);
+			template.compile(variables);
+			components.addAll(template.components);
+		}
+		
 		for(TemplateComponent c : components)
-			c.compile(variables, processor);
+			c.compile(variables, processor, encapsulation);
 		
 		compiled = true;
 	}

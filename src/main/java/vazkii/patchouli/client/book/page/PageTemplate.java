@@ -13,8 +13,8 @@ import vazkii.patchouli.common.book.Book;
 
 public class PageTemplate extends BookPage {
 
-	transient String processedType = "";
 	transient BookTemplate template = null;
+	transient boolean resolved = false;
 	
 	@Override
 	public void build(BookEntry entry, int pageNum) {
@@ -46,23 +46,11 @@ public class PageTemplate extends BookPage {
 	
 	@Override
 	public boolean canAdd(Book book) {
-		resolveTemplate(book);
+		if(!resolved) {
+			template = BookTemplate.createTemplate(book, type, null);
+			resolved = true;
+		}
+		
 		return template != null && super.canAdd(book);
 	}
-	
-	void resolveTemplate(Book book) {
-		ResourceLocation key;
-		
-		if(type.contains(":"))
-			key = new ResourceLocation(type);
-		else key = new ResourceLocation(book.getModNamespace(), type);
-		
-		Supplier<BookTemplate> supplier = book.contents.templates.get(key);
-		if(supplier == null)
-			throw new IllegalArgumentException("Template " + key + " does not exist");
-
-		processedType = key.toString();
-		template = supplier.get();
-	}
-	
 }

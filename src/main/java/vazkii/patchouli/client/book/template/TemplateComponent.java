@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.client.base.ClientAdvancements;
@@ -32,7 +33,12 @@ public abstract class TemplateComponent {
 	
 	transient boolean isVisible = true;
 	
-	public final void compile(IVariableProvider variables, IComponentProcessor processor) {
+	public final void compile(IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
+		if(encapsulation != null) {
+			x += encapsulation.x;
+			y += encapsulation.y;
+		}
+		
 		Class<?> clazz = getClass();
 		Field[] fields = clazz.getFields();
 		
@@ -41,11 +47,14 @@ public abstract class TemplateComponent {
 				f.setAccessible(true);
 				String curr = (String) f.get(this);
 				
+				if(curr != null && encapsulation != null)
+					curr = encapsulation.transform(curr, true);
+				
 				if(curr != null && curr.startsWith("#")) {
 					String key = curr.substring(1);
 					String val = null;
 					if(processor != null)
-						val = processor.process(key);
+						val = processor.process(rawVariable(key));
 					
 					if(val == null && variables.has(key))
 						val = variables.get(key);
@@ -59,6 +68,10 @@ public abstract class TemplateComponent {
 				throw new RuntimeException("Error compiling component", e);
 			}
 		}
+	}
+	
+	private static String rawVariable(String var) {
+		return var.replaceAll("^.+\\.", "");
 	}
 	
 	public boolean getVisibleStatus(IComponentProcessor processor) {

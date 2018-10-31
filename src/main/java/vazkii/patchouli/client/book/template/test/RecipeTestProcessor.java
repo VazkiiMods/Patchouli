@@ -24,14 +24,15 @@ public class RecipeTestProcessor implements IComponentProcessor {
 		if(key.startsWith("item")) {
 			int index = Integer.parseInt(key.substring(4)) - 1;
 			Ingredient ingredient = recipe.getIngredients().get(index);
-			ItemStack stack = ingredient.getMatchingStacks()[0];
+			ItemStack[] stacks = ingredient.getMatchingStacks();
+			ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
 			
 			return ItemStackUtil.serializeStack(stack);
 		}
 		
 		else if(key.equals("text")) {
 			ItemStack out = recipe.getRecipeOutput();
-			return "The recipe output is " + out.getCount() + "x " + out.getDisplayName();
+			return out.getCount() + "x$(br)" + out.getDisplayName();
 		}
 		
 		return null;
