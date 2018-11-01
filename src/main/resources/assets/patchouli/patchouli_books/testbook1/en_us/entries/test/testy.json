@@ -1,10 +1,10 @@
 {
 	"name": "Test Entry",
 	"icon": "minecraft:textures/items/clock_06.png",
-	"category": "intro/butts",
+	"category": "test",
 	"priority": true,
 	"read_by_default": false,
-	"advancement": "patchouli:test_book",
+	"advancement": "patchouli:test_invis",
 	"pages": [
 		{
 			"type": "text",

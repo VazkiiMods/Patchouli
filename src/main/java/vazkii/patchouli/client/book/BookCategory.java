@@ -17,6 +17,7 @@ public class BookCategory implements Comparable<BookCategory> {
 	@SerializedName("icon")
 	String iconRaw;
 	int sortnum;
+	boolean secret = false;
 
 	transient Book book, trueProvider;
 	transient boolean checkedParent = false;
@@ -96,6 +97,14 @@ public class BookCategory implements Comparable<BookCategory> {
 			book.markUpdated();
 	}
 
+	public boolean isSecret() {
+		return secret;
+	}
+
+	public boolean shouldHide() {
+		return isSecret() && isLocked();
+	}
+	
 	public boolean isLocked() {
 		return !PatchouliConfig.disableAdvancementLocking && locked;
 	}

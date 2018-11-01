@@ -68,7 +68,7 @@ public class GuiBookLanding extends GuiBook {
 		Collections.sort(categories);
 
 		for(BookCategory category : categories) {	
-			if(category.getParentCategory() != null)
+			if(category.getParentCategory() != null || category.shouldHide())
 				continue;
 
 			addCategoryButton(i, category);

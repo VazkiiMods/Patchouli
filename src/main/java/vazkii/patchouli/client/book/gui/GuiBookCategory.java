@@ -44,7 +44,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 		Collections.sort(categories);
 		
 		for(BookCategory ocategory : categories) {
-			if(ocategory.getParentCategory() != category)
+			if(ocategory.getParentCategory() != category || ocategory.shouldHide())
 				continue;
 			
 			int x = LEFT_PAGE_X + 10 + (i % 4) * 24;
