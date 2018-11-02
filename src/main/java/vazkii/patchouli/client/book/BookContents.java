@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apache.commons.io.FilenameUtils;
@@ -111,21 +112,18 @@ public class BookContents {
 		List<ModContainer> mods = Loader.instance().getActiveModList();
 
 		try { 
-			ModContainer mod = book.owner;
-			String id = book.getModNamespace();
-			String loc = BookRegistry.BOOKS_LOCATION;
 			String bookName = book.resourceLoc.getResourcePath();
 
-			CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/categories", id, loc, bookName, DEFAULT_LANG), null, pred(id, foundCategories));
-			CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/entries", id, loc, bookName, DEFAULT_LANG), null, pred(id, foundEntries));
-			CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/templates", id, loc, bookName, DEFAULT_LANG), null, pred(id, foundTemplates));
+			findFiles("categories", foundCategories);
+			findFiles("entries", foundEntries);
+			findFiles("templates", foundTemplates);
 
 			foundCategories.forEach(c -> loadCategory(c, new ResourceLocation(c.getResourceDomain(),
-					String.format("%s/%s/%s/categories/%s.json", loc, bookName, DEFAULT_LANG, c.getResourcePath())), book));
+					String.format("%s/%s/%s/categories/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, c.getResourcePath())), book));
 			foundEntries.forEach(e -> loadEntry(e, new ResourceLocation(e.getResourceDomain(),
-					String.format("%s/%s/%s/entries/%s.json", loc, bookName, DEFAULT_LANG, e.getResourcePath())), book));
+					String.format("%s/%s/%s/entries/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getResourcePath())), book));
 			foundTemplates.forEach(e -> loadTemplate(e, new ResourceLocation(e.getResourceDomain(),
-					String.format("%s/%s/%s/templates/%s.json", loc, bookName, DEFAULT_LANG, e.getResourcePath())), book));
+					String.format("%s/%s/%s/templates/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getResourcePath())), book));
 
 			entries.forEach((res, entry) -> {
 				try {
@@ -148,6 +146,12 @@ public class BookContents {
 		}
 	}
 
+	protected void findFiles(String dir, List<ResourceLocation> list) {
+		ModContainer mod = book.owner;
+		String id = mod.getModId();
+		CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getResourcePath(), DEFAULT_LANG, dir), null, pred(id, list));
+	}
+	
 	private BiFunction<Path, Path, Boolean> pred(String modId, List<ResourceLocation> list) {
 		return (root, file) -> {
 			Path rel = root.relativize(file);
@@ -221,7 +225,7 @@ public class BookContents {
 		return loadJson(localized, null);
 	}
 
-	private InputStream loadJson(ResourceLocation resloc, ResourceLocation fallback) {
+	protected InputStream loadJson(ResourceLocation resloc, ResourceLocation fallback) {
 		IResource res = null;
 		try {
 			res = Minecraft.getMinecraft().getResourceManager().getResource(resloc);

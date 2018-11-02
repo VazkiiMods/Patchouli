@@ -69,13 +69,19 @@ public class BookRegistry {
 			ResourceLocation res = pair.getRight();
 
 			InputStream stream = mod.getMod().getClass().getResourceAsStream(file);
-			Reader reader = new BufferedReader(new InputStreamReader(stream));
-			Book book = gson.fromJson(reader, Book.class);
-
-			books.put(res, book);
-
-			book.build(mod, res);
+			loadBook(mod, res, stream);
 		});
+		
+		BookFolderLoader.findBooks();
+	}
+	
+	public void loadBook(ModContainer mod, ResourceLocation res, InputStream stream) {
+		System.out.println("LOADING BOOK " + res);
+		Reader reader = new BufferedReader(new InputStreamReader(stream));
+		Book book = gson.fromJson(reader, Book.class);
+
+		books.put(res, book);
+		book.build(mod, res);
 	}
 
 	@SideOnly(Side.CLIENT)

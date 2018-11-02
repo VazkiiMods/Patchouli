@@ -21,8 +21,6 @@ public class RecipeTestProcessor implements IComponentProcessor {
 
 	@Override
 	public String process(String key) {
-		System.out.println("Processing " + key);
-		
 		if(key.startsWith("item")) {
 			int index = Integer.parseInt(key.substring(4)) - 1;
 			Ingredient ingredient = recipe.getIngredients().get(index);

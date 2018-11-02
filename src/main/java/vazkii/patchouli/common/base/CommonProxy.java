@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.common.book.BookFolderLoader;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.handler.AdvancementSyncHandler;
 import vazkii.patchouli.common.item.PatchouliItems;
@@ -22,6 +23,7 @@ public class CommonProxy {
 		PatchouliSounds.preInit();
 		MultiblockRegistry.preInit();
 		
+		BookFolderLoader.setup(event.getSuggestedConfigurationFile().getParentFile().getParentFile());
 		BookRegistry.INSTANCE.init();
 
 		MinecraftForge.EVENT_BUS.register(AdvancementSyncHandler.class);
