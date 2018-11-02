@@ -45,11 +45,9 @@ public class Book {
 		put("$(item)", "$(#b0b)");
 		put("$(thing)", "$(#490)");
 	}};
-	
-	@SideOnly(Side.CLIENT)
+
 	public transient BookContents contents;
 
-	@SideOnly(Side.CLIENT)
 	private transient boolean wasUpdated = false;
 	
 	public transient ModContainer owner;
