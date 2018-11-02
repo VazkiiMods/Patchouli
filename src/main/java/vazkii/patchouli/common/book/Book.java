@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.patchouli.client.book.BookContents;
+import vazkii.patchouli.client.book.ExternalBookContents;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.handler.AdvancementSyncHandler;
 import vazkii.patchouli.common.item.ItemModBook;
@@ -62,6 +63,8 @@ public class Book {
 	public transient boolean isExtension = false;
 	public transient List<Book> extensions = new LinkedList();
 	public transient Book extensionTarget;
+	
+	public transient boolean isExternal;
 	
 	// JSON Loaded properties
 	
@@ -115,9 +118,10 @@ public class Book {
 	
 	public Map<String, String> macros = new HashMap();
 	
-	public void build(ModContainer owner, ResourceLocation resource) {
+	public void build(ModContainer owner, ResourceLocation resource, boolean external) {
 		this.owner = owner;
 		this.resourceLoc = resource;
+		this.isExternal = external;
 		
 		isExtension = !extend.isEmpty();
 		
@@ -185,7 +189,7 @@ public class Book {
 	@SideOnly(Side.CLIENT)
 	public void reloadContents() {
 		if(contents == null)
-			contents = new BookContents(this);
+			contents = isExternal ? new ExternalBookContents(this) : new BookContents(this);
 	
 		if(!isExtension)
 			contents.reload(false);

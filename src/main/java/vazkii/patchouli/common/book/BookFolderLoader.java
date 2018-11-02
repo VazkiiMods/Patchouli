@@ -32,7 +32,7 @@ public class BookFolderLoader {
 				try {
 					ResourceLocation res = new ResourceLocation(Patchouli.MOD_ID, dir.getName());
 					FileInputStream stream = new FileInputStream(bookJson);
-					BookRegistry.INSTANCE.loadBook(mod, res, stream);
+					BookRegistry.INSTANCE.loadBook(mod, res, stream, true);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
