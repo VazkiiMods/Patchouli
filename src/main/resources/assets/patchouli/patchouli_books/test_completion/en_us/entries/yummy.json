@@ -1,0 +1,12 @@
+{
+  "name": "3 - Bacon!",
+  "icon": "minecraft:cooked_porkchop",
+  "category": "why_tho",
+  "advancement": "patchouli:yummy",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Yay! That bacon was really yummy!"
+    }
+  ]
+}

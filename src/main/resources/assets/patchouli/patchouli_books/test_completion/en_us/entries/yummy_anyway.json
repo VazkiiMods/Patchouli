@@ -1,0 +1,12 @@
+{
+  "name": "2 - Pigman?",
+  "icon": "minecraft:rotten_flesh",
+  "category": "regret",
+  "advancement": "patchouli:yummy_anyway",
+  "pages": [
+    {
+      "type": "text",
+      "text": "That leaft a bad taste in your mouth..."
+    }
+  ]
+}

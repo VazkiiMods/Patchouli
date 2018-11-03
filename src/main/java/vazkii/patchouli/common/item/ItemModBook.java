@@ -4,8 +4,10 @@ import java.util.List;
 
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,12 +21,15 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.network.NetworkHandler;
 import vazkii.patchouli.common.network.message.MessageOpenBookGui;
+
+import javax.annotation.Nullable;
 
 public class ItemModBook extends Item {
 
@@ -35,6 +40,31 @@ public class ItemModBook extends Item {
 		setCreativeTab(CreativeTabs.MISC);
 		setRegistryName(new ResourceLocation(Patchouli.MOD_ID, "guide_book"));
 		setUnlocalizedName(getRegistryName().toString());
+
+		this.addPropertyOverride(new ResourceLocation("completion"), new IItemPropertyGetter() {
+			@SideOnly(Side.CLIENT)
+			public float apply(ItemStack stack, @Nullable World worldIn, @Nullable EntityLivingBase entityIn) {
+				Book book = getBook(stack);
+				float progression = 0f; // default incomplete
+
+				if (book != null) {
+					int totalEntries = 0;
+					int unlockedEntries = 0;
+
+					for(BookEntry entry : book.contents.entries.values()) {
+						if (!entry.isSecret()) {
+							totalEntries++;
+							if(!entry.isLocked())
+								unlockedEntries++;
+						}
+					}
+
+					progression = ((float) unlockedEntries) / Math.max(1f, (float) totalEntries);
+				}
+
+				return progression;
+			}
+		});
 	}
 
 	public static ItemStack forBook(Book book) {

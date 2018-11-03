@@ -1,0 +1,28 @@
+{
+  "__info": "This demonstrates how to create a book that changes appearance based on completion rate unlocking entries",
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "patchouli:items/book_gray"
+  },
+  "overrides": [
+    {
+      "predicate": { "completion": 0 },
+      "model": "patchouli:item/book_brown"
+    }, {
+      "predicate": { "completion": 0.2 },
+      "model": "patchouli:item/book_red"
+    }, {
+      "predicate": { "completion": 0.4 },
+      "model": "patchouli:item/book_green"
+    }, {
+      "predicate": { "completion": 0.6 },
+      "model": "patchouli:item/book_cyan"
+    }, {
+      "predicate": { "completion": 0.8 },
+      "model": "patchouli:item/book_blue"
+    }, {
+      "predicate": { "completion": 1 },
+      "model": "patchouli:item/book_purple"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:book"
+    },
+    "title": {
+      "translate": "Bacon time!"
+    },
+    "description": {
+      "translate": "Time to get the bacon!"
+    }
+  },
+  "parent": "patchouli:discover_pig",
+  "criteria": {
+    "book": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "item": "minecraft:cooked_porkchop" }] }
+    }
+  }
+}
