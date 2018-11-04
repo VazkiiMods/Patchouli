@@ -100,9 +100,10 @@ public class Multiblock implements IMultiblock {
 		for(int x = 0; x < sizeX; x++)
 			for(int y = 0; y < sizeY; y++)
 				for(int z = 0; z < sizeZ; z++) {
-					if(c == 0 || c == pattern[y][x].charAt(z)) {
+					char currC = pattern[y][x].charAt(z);
+					if(c == 0 || c == currC) {
 						BlockPos actionPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-						if(!acceptor.accepts(start, actionPos, x, y, z, c, this.stateTargets[x][y][z])){
+						if(!acceptor.accepts(start, actionPos, x, y, z, currC, this.stateTargets[x][y][z])){
 							return false;
 						}
 					}
