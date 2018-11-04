@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.IModGuiFactory;
@@ -139,11 +140,16 @@ public class GuiBookLanding extends GuiBook {
 		Throwable e = book.contents.getException();
 		List<String> lines = new LinkedList();
 		while(e != null) {
-			lines.add(e.getMessage());
+			String msg = e.getMessage();
+			if(msg != null && !msg.isEmpty())
+				lines.add(e.getMessage());
 			e = e.getCause();
 		}
 		
-		setTooltip(lines);
+		if(!lines.isEmpty()) {
+			lines.add(TextFormatting.GREEN + I18n.translateToLocal("patchouli.gui.lexicon.loading_error_log"));
+			setTooltip(lines);
+		}
 	}
 
 	@Override
