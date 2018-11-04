@@ -4,8 +4,10 @@ import java.util.function.Predicate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
@@ -31,6 +33,17 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 		return false;
 	}
 
+	@Override
+	public void openBookGUI(EntityPlayerMP player, ResourceLocation book) {
+		// NO-OP
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void openBookGUI(ResourceLocation book) {
+		// NO-OP
+	}
+	
 	@Override
 	public void reloadBookContents() {
 		// NO-OP

@@ -4,15 +4,21 @@ import java.util.function.Predicate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
+import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.multiblock.Multiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.StateMatcher;
+import vazkii.patchouli.common.network.NetworkHandler;
+import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class PatchouliAPIImpl implements IPatchouliAPI {
@@ -36,6 +42,17 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 		return PatchouliConfig.getConfigFlag(flag);
 	}
 
+	@Override
+	public void openBookGUI(EntityPlayerMP player, ResourceLocation book) {
+		NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.toString()), (EntityPlayerMP) player);
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void openBookGUI(ResourceLocation book) {
+		ClientBookRegistry.INSTANCE.displayBookGui(book.toString());
+	}
+	
 	@Override
 	public void reloadBookContents() {
 		Patchouli.proxy.requestBookReload();

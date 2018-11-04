@@ -4,8 +4,11 @@ import java.util.function.Predicate;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.patchouli.api.stub.StubPatchouliAPI;
 
 public class PatchouliAPI {
@@ -27,6 +30,8 @@ public class PatchouliAPI {
 		// Book and Templates
 		public void setConfigFlag(String flag, boolean value);
 		public boolean getConfigFlag(String flag);
+		public void openBookGUI(EntityPlayerMP player, ResourceLocation book);
+		@SideOnly(Side.CLIENT) public void openBookGUI(ResourceLocation book);
 		public void reloadBookContents();
 		public ItemStack getBookStack(String book);
 
