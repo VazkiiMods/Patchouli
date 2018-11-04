@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.sound.midi.Patch;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -23,6 +25,7 @@ import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonIndex;
 import vazkii.patchouli.client.gui.GuiAdvancementsExt;
+import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
 public class GuiBookLanding extends GuiBook {
@@ -40,8 +43,8 @@ public class GuiBookLanding extends GuiBook {
 
 		text = new BookTextRenderer(this, I18n.translateToLocal(book.landingText), LEFT_PAGE_X, TOP_PADDING + 25);
 
-		int x = bookLeft + 20;
-		int y = bookTop + FULL_HEIGHT - 62;
+		int x = bookLeft + (PatchouliConfig.disableAdvancementLocking ? 25 : 20);
+		int y = bookTop + FULL_HEIGHT - (PatchouliConfig.disableAdvancementLocking ? 25 : 62);
 		int dist = 15;
 		int pos = 0;
 		
@@ -105,7 +108,8 @@ public class GuiBookLanding extends GuiBook {
 		if(book.contents.isErrored())
 			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.loading_error"), RIGHT_PAGE_X + PAGE_WIDTH / 2, bottomSeparator + 12, 0xFF0000);
 
-		drawProgressBar(mouseX, mouseY, (e) -> true);
+		if(!PatchouliConfig.disableAdvancementLocking)
+			drawProgressBar(mouseX, mouseY, (e) -> true);
 	}
 
 	void drawHeader() {

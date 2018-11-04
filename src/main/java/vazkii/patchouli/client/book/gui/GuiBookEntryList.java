@@ -13,6 +13,7 @@ import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonEntry;
+import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
 public abstract class GuiBookEntryList extends GuiBook {
@@ -86,7 +87,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
 
 			text.render(mouseX, mouseY);
-			if(shouldDrawProgressBar())
+			if(shouldDrawProgressBar() && !PatchouliConfig.disableAdvancementLocking)
 				drawProgressBar(mouseX, mouseY, this::doesEntryCountForProgress);
 		} else if(page % 2 == 1 && page == maxpages - 1)
 			drawPageFiller(book);
