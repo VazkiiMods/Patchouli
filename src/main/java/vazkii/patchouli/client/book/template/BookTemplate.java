@@ -78,7 +78,11 @@ public class BookTemplate {
 			if(encapsulation != null)
 				processorVars = encapsulation.wrapProvider(variables);
 			
-			processor.setup(processorVars);
+			try {
+				processor.setup(processorVars);
+			} catch(Exception e) {
+				throw new RuntimeException("Error setting up template processor", e);
+			}
 		}
 		
 		for(TemplateInclusion include : inclusions) {

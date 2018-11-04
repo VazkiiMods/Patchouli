@@ -74,6 +74,11 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
+	public IMultiblock getMultiblock(ResourceLocation res) {
+		return MultiblockRegistry.MULTIBLOCKS.get(res);
+	}
+	
+	@Override
 	public IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb) {
 		return MultiblockRegistry.registerMultiblock(res, mb);
 	}

@@ -66,6 +66,11 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 
 	@Override
+	public IMultiblock getMultiblock(ResourceLocation res) {
+		return null;
+	}
+	
+	@Override
 	public IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb) {
 		return mb;
 	}

@@ -16,6 +16,9 @@ public final class JsonVariableWrapper implements IVariableProvider {
 	@Override
 	public String get(String key) {
         JsonPrimitive prim = (JsonPrimitive) source.get(key);
+        if(prim == null)
+        	throw new IllegalArgumentException("Attempted to get variable " + key + " when it's not present");
+        
         return prim.getAsString();
 	}
 	

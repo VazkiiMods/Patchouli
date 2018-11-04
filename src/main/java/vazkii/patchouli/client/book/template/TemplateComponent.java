@@ -81,7 +81,7 @@ public abstract class TemplateComponent {
 	}
 
 	public boolean getVisibleStatus(IComponentProcessor processor) {
-		if(processor != null && !processor.allowRender(group))
+		if(processor != null && group != null && !group.isEmpty() && !processor.allowRender(group))
 			return false;
 
 		if(!flag.isEmpty() && !PatchouliConfig.getConfigFlag(flag))

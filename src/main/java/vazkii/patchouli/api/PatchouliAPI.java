@@ -24,32 +24,143 @@ public class PatchouliAPI {
 
 	public static interface IPatchouliAPI {
 		
+		// ================================================================================================
 		// API
+		// ================================================================================================
+		
+		/**
+		 * Returns false if this is a real API class loaded by the actual mod.
+		 */
 		public boolean isStub();
 		
+		// ================================================================================================
 		// Book and Templates
+		// ================================================================================================
+		
+		/**
+		 * Sets a config flag to the value passed.<br>
+		 * IMPORTANT: DO NOT call this without your flag being prefixed with your
+		 * mod id. There is no protection against that, but don't be a jerk.
+		 */
 		public void setConfigFlag(String flag, boolean value);
+		
+		/**
+		 * Gets the value of a config flag, or false if it doesn't have a value.
+		 */
 		public boolean getConfigFlag(String flag);
+		
+		/**
+		 * Opens a book GUI for the given player (server version).
+		 */
 		public void openBookGUI(EntityPlayerMP player, ResourceLocation book);
+		
+		/**
+		 * Opens a book GUI. (client version)
+		 */
 		@SideOnly(Side.CLIENT) public void openBookGUI(ResourceLocation book);
+		
+		/**
+		 * Reloads the contents of all books. Call sparingly and only if you
+		 * really need it for whatever reason.
+		 */
 		public void reloadBookContents();
+		
+		/**
+		 * Returns a book item with its NBT set to the book passed in.
+		 */
 		public ItemStack getBookStack(String book);
 
+		// ================================================================================================
 		// ItemStack Serialization
+		// ================================================================================================
+		
+		/**
+		 * Deserializes a stack string into its ItemStack.
+		 */
 		public ItemStack deserializeItemStack(String str);
+		
+		/**
+		 * Serializes an ItemStack into its string correspondent.
+		 */
 		public String serializeItemStack(ItemStack stack);
 
+		// ================================================================================================
 		// Multiblocks
+		// ================================================================================================
+		
+		/**
+		 * Gets a multiblock by its resource location, or null if none exists for it.
+		 */
+		public IMultiblock getMultiblock(ResourceLocation res);
+		
+		/**
+		 * Registers a multiblock given its resource location. This takes care of both registering it
+		 * and setting its resource location to the one passed.
+		 */
 		public IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb);
+		
+		/**
+		 * Creates a multiblock given the pattern and targets given. This works in the same way as 
+		 * recipe registrations do, except it's a 2D array. The pattern works in the same way as
+		 * you'd register a multiblock using JSON. Check the page on Multiblocks on the Patchouli
+		 * wiki for more info.
+		 * <br><br>
+		 * As for the target array, it's in also in the same format as recipes. One char followed
+		 * by one Object, so on and so forth, defining each type. The Object can be a Block, an
+		 * IBlockState, or an IStateMatcher.
+		 */
 		public IMultiblock makeMultiblock(String[][] pattern, Object... targets);
+		
+		/**
+		 * Gets an IStateMatcher with the passed in IBlockState for display and the passed in
+		 * predicate for validation.
+		 */
 		public IStateMatcher predicateMatcher(IBlockState display, Predicate<IBlockState> predicate);
+		
+		/**
+		 * Gets an IStateMatcher with the passed in Block's default state for display and the
+		 * passed in predicate for validation.
+		 */
 		public IStateMatcher predicateMatcher(Block display, Predicate<IBlockState> predicate);
+		
+		/**
+		 * Gets an IStateMatcher with the passed in IBlockState for display and validation, 
+		 * requiring that the state in world be exactly the same.
+		 */
 		public IStateMatcher stateMatcher(IBlockState state);
+		
+		/**
+		 * Gets an IStateMatcher with the passed in Block's default state for display and 
+		 * validation, requiring that the state in world have only the same block.
+		 */
 		public IStateMatcher looseBlockMatcher(Block block);
+		
+		/**
+		 * Gets an IStateMatcher with the passed in Block's default state for display and 
+		 * validation, requiring that the state in world be exactly the same.
+		 */
 		public IStateMatcher strictBlockMatcher(Block block);
+		
+		/**
+		 * Gets an IStateMatcher that always validates to true, and shows the IBlockState
+		 * passed when displayed.
+		 */
 		public IStateMatcher displayOnlyMatcher(IBlockState state);
+		
+		/**
+		 * Gets an IStateMatcher that always validates to true, and shows the passed in
+		 * Block's default state when displayed.
+		 */
 		public IStateMatcher displayOnlyMatcher(Block block);
+		
+		/**
+		 * Gets an IStateMatcher that accepts only air blocks.
+		 */
 		public IStateMatcher airMatcher();
+		
+		/**
+		 * Gets an IStateMatcher that accepts anything.
+		 */
 		public IStateMatcher anyMatcher();
 	}
 
