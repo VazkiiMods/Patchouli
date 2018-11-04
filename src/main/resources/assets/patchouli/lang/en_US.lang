@@ -45,6 +45,7 @@ patchouli.gui.lexicon.toast=New Chapters
 patchouli.gui.lexicon.toast.info=New Chapters Unlocked
 patchouli.gui.lexicon.external_link=(External Link)
 patchouli.gui.lexicon.loading_error=Loading error!
+patchouli.gui.lexicon.loading_error_hover=(Hover for info)
 patchouli.gui.lexicon.dev_edition=Writer's
 patchouli.gui.lexicon.edition_str=%s Edition
 patchouli.gui.lexicon.added_by=Added by %s

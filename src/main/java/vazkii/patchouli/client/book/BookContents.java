@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apache.commons.io.FilenameUtils;
@@ -45,6 +44,7 @@ public class BookContents {
 	public Map<ResourceLocation, Supplier<BookTemplate>> templates = new HashMap();
 	public Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap();
 	private boolean errored = false;
+	private Exception exception = null;
 
 	public Stack<GuiBook> guiStack = new Stack();
 	public GuiBook currentGui;
@@ -55,6 +55,10 @@ public class BookContents {
 
 	public boolean isErrored() {
 		return errored;
+	}
+	
+	public Exception getException() {
+		return exception;
 	}
 
 	public Pair<BookEntry, Integer> getEntryForStack(ItemStack stack) {
@@ -141,6 +145,7 @@ public class BookContents {
 				}
 			});
 		} catch (Exception e) {
+			exception = e;
 			errored = true;
 			e.printStackTrace();
 		}

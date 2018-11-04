@@ -3,9 +3,8 @@ package vazkii.patchouli.client.book.gui;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
-
-import javax.sound.midi.Patch;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -105,9 +104,20 @@ public class GuiBookLanding extends GuiBook {
 		drawSeparator(book, RIGHT_PAGE_X, topSeparator);
 		drawSeparator(book, RIGHT_PAGE_X, bottomSeparator);
 
-		if(book.contents.isErrored())
-			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.loading_error"), RIGHT_PAGE_X + PAGE_WIDTH / 2, bottomSeparator + 12, 0xFF0000);
+		if(book.contents.isErrored()) {
+			int x = RIGHT_PAGE_X  + PAGE_WIDTH / 2; 
+			int y = bottomSeparator + 12;
+			
+			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
+			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.loading_error_hover"), x, y + 10, 0x777777);
 
+			x -= PAGE_WIDTH / 2;
+			y -= 4;
+			
+			if(isMouseInRelativeRange(mouseX, mouseY, x, y, PAGE_WIDTH, 20))
+				makeErrorTooltip();
+		}
+		
 		if(!PatchouliConfig.disableAdvancementLocking)
 			drawProgressBar(mouseX, mouseY, (e) -> true);
 	}
@@ -123,6 +133,17 @@ public class GuiBookLanding extends GuiBook {
 		fontRenderer.setUnicodeFlag(true);
 		fontRenderer.drawString(book.contents.getSubtitle(), 24, 24, color); 
 		fontRenderer.setUnicodeFlag(unicode);
+	}
+	
+	void makeErrorTooltip() {
+		Throwable e = book.contents.getException();
+		List<String> lines = new LinkedList();
+		while(e != null) {
+			lines.add(e.getMessage());
+			e = e.getCause();
+		}
+		
+		setTooltip(lines);
 	}
 
 	@Override
