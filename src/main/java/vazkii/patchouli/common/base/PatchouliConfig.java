@@ -19,8 +19,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class PatchouliConfig {
 
 	@Name("Disable Advancement Locking")
-	@Comment("Set this to true to disable advancement locking and make all entries visible at all times")
+	@Comment("Set this to true to disable advancement locking and make all entries visible at all times\nConfig Flag: advancements_disabled")
 	public static boolean disableAdvancementLocking = false;
+	
+	@Name("Testing Mode")
+	@Comment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want.\nConfig Flag: testing_mode")
+	public static boolean testingMode = false;
 	
 	@Ignore private static Map<String, Boolean> configFlags = new HashMap();
 	@Ignore private transient static boolean firstChange = true;
@@ -39,6 +43,7 @@ public class PatchouliConfig {
 	
 	private static void updateFlags() {
 		setFlag("advancements_disabled", disableAdvancementLocking);
+		setFlag("testing_mode", testingMode);
 	}
 	
 	public static boolean getConfigFlag(String name) {
