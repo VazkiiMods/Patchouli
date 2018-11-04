@@ -56,9 +56,11 @@ public class GuiBookLanding extends GuiBook {
 			buttonList.add(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y));
 		
 		// Config
-		IModGuiFactory guiFactory = FMLClientHandler.instance().getGuiFactoryFor(book.owner);
-		if(guiFactory != null && guiFactory.hasConfigGui())
-			buttonList.add(new GuiButtonBookConfig(this, x + (pos++) * dist, y));
+		if(!book.isExternal) {
+			IModGuiFactory guiFactory = FMLClientHandler.instance().getGuiFactoryFor(book.owner);
+			if(guiFactory != null && guiFactory.hasConfigGui())
+				buttonList.add(new GuiButtonBookConfig(this, x + (pos++) * dist, y));
+		}
 		
 		if(Minecraft.getMinecraft().player.isCreative())
 			buttonList.add(new GuiButtonBookEdit(this, x + (pos++) * dist, y));
