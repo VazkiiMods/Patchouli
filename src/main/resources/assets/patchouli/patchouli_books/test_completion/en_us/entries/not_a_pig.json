@@ -1,0 +1,12 @@
+{
+  "name": "1 - Pigman?",
+  "icon": "minecraft:spawn_egg:0{EntityTag:{id:\"minecraft:zombie_pigman\"}}",
+  "category": "regret",
+  "advancement": "patchouli:not_a_pig",
+  "pages": [
+    {
+      "type": "text",
+      "text": "That wasn't a pig you found. Eat it anyway."
+    }
+  ]
+}

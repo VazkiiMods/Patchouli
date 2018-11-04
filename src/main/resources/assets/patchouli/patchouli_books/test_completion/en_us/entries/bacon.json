@@ -1,0 +1,12 @@
+{
+  "name": "2 - Almost Bacon",
+  "icon": "minecraft:porkchop",
+  "category": "why_tho",
+  "advancement": "patchouli:bacon",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Cook the porkchop to receive bacons!"
+    }
+  ]
+}

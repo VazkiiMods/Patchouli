@@ -12,6 +12,11 @@
             "recipe2.blarg": "asdadfs",
             "recipe1.nn.output": "aaaaa",
             "recipe2.nn.output": "bbbbb"
+        },
+        {
+            "type": "entity",
+            "entity": "minecraft:chicken",
+            "text": "Chicken! Super scary and evil and will kill you :("
         }
     ]
 }

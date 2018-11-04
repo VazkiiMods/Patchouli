@@ -3,9 +3,13 @@ item.patchouli:guide_book.name=Guide Book
 
 # Testing
 item.patchouli:test_book_1.name=Test Book 1
-item.patchouli:test_book_2.name=Test Book 2
 item.patchouli:test_book_1.landing=Not as fun landing text but still here.
+
+item.patchouli:test_book_2.name=Test Book 2
 item.patchouli:test_book_2.landing=Landing text! It even supports $(2)colors$() and $(4)the $(bold)like$()!
+
+item.patchouli:test_completion.name=Test Advancement-Driven Book
+item.patchouli:test_completion.landing=This book changes colors when you unlock entries!
 
 # Gui Strings
 patchouli.gui.lexicon.landing_info=(Placeholder landing text, define your own in your book json file!)

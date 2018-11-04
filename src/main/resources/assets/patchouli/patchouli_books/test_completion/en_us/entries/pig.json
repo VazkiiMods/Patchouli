@@ -1,0 +1,12 @@
+{
+  "name": "1 - Pig?",
+  "icon": "minecraft:spawn_egg:0{EntityTag:{id:\"minecraft:pig\"}}",
+  "category": "why_tho",
+  "advancement": "patchouli:discover_pig",
+  "pages": [
+    {
+      "type": "text",
+      "text": "That was a pig you just found. Now eat it."
+    }
+  ]
+}

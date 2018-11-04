@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:rotten_flesh"
+    },
+    "title": {
+      "translate": "Yummy...?"
+    },
+    "description": {
+      "translate": "Eat the zombie pigman anyway"
+    }
+  },
+  "parent": "patchouli:not_a_pig",
+  "criteria": {
+    "book": {
+      "trigger": "minecraft:consume_item",
+      "conditions": { "items": [{ "item": "minecraft:rotten_flesh" }] }
+    }
+  }
+}

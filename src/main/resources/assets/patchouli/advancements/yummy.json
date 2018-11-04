@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:book"
+    },
+    "title": {
+      "translate": "Yummy!"
+    },
+    "description": {
+      "translate": "Eat the bacon!"
+    }
+  },
+  "parent": "patchouli:bacon",
+  "criteria": {
+    "book": {
+      "trigger": "minecraft:consume_item",
+      "conditions": { "items": [{ "item": "minecraft:cooked_porkchop" }] }
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:porkchop"
+    },
+    "title": {
+      "translate": "Find a Pig"
+    },
+    "description": {
+      "translate": "Find a Pig and do something with it"
+    }
+  },
+  "parent": "patchouli:root",
+  "criteria": {
+    "hurt": {
+      "trigger": "minecraft:entity_hurt_player",
+      "conditions": { "damage": { "source_entity": { "type": "minecraft:pig" }}}
+    },
+    "slain": {
+      "trigger": "minecraft:entity_killed_player",
+      "conditions": { "entity": { "type": "minecraft:pig" }}
+    },
+    "damage": {
+      "trigger": "minecraft:player_hurt_entity",
+      "conditions": { "entity": { "type": "minecraft:pig" }}
+    },
+    "slay": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": { "entity": { "type": "minecraft:pig" }}
+    },
+    "summon": {
+      "trigger": "minecraft:summoned_entity",
+      "conditions": { "entity": { "type": "minecraft:pig" }}
+    },
+    "tame": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": { "entity": { "type": "minecraft:pig" }}
+    },
+    "breed_parent1": {
+      "trigger": "minecraft:bred_animals",
+      "conditions": { "parent": { "type": "minecraft:pig" }}
+    },
+    "breed_parent2": {
+      "trigger": "minecraft:bred_animals",
+      "conditions": { "partner": { "type": "minecraft:pig" }}
+    },
+    "breed_child": {
+      "trigger": "minecraft:bred_animals",
+      "conditions": { "child": { "type": "minecraft:pig" }}
+    }
+  },
+  "requirements": [
+    [ "hurt", "slain", "damage", "slay", "summon", "tame", "breed_parent1", "breed_parent2", "breed_child" ]
+  ]
+}
