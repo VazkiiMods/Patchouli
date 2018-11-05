@@ -1,0 +1,12 @@
+{
+  "name": "aEntry",
+  "icon": "minecraft:textures/items/clock_01.png",
+  "category": "test_sort2",
+  "sortnum": 1,
+  "pages": [
+    {
+      "type": "text",
+      "text": "Num 1: Sortnum test! This contents of this page doesn't matter. Where it ends up on the category listing does."
+    }
+  ]
+}

@@ -32,6 +32,7 @@ public class BookEntry implements Comparable<BookEntry> {
 	boolean readByDefault = false;
 	BookPage[] pages;
 	String advancement;
+	int sortnum;
 
 	transient ResourceLocation resource;
 	transient Book book, trueProvider;
@@ -126,7 +127,9 @@ public class BookEntry implements Comparable<BookEntry> {
 		if(o.priority != this.priority)
 			return this.priority ? -1 : 1;
 
-		return this.name.compareTo(o.name);
+		int sort = this.sortnum - o.sortnum;
+
+		return sort == 0 ? this.name.compareTo(o.name) : sort;
 	}
 
 	public void setBook(Book book) {

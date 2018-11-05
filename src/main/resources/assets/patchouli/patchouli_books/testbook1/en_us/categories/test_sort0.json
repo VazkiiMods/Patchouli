@@ -1,0 +1,7 @@
+{
+  "name": "Sortnum 1",
+  "parent": "sortnum",
+  "description": "Testing Sortnum - Entries with Sortnum only",
+  "icon": "minecraft:textures/items/carrot_on_a_stick.png",
+  "sortnum": 10000
+}
