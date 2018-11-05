@@ -1,0 +1,5 @@
+{
+  "name": "Invalid crafting recipe test",
+  "description": "What'll happen if I add an invalid crafting recipe?",
+  "icon": "minecraft:textures/items/end_crystal.png"
+}
