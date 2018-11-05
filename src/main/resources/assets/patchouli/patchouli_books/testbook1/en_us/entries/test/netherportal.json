@@ -33,7 +33,8 @@
     }, {
       "type": "multiblock",
       "name": "The Result!",
-      "text": "Time to punch some pigmen!",
+      "text": "I've added unobtainable blocks so I disabled the visualization button! Time to punch some pigmen!",
+      "enable_visualize": false,
       "multiblock": {
         "pattern": [
           [ " OO " ],
