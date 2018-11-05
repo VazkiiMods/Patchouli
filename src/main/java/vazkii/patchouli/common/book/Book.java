@@ -74,11 +74,11 @@ public class Book {
 	public List<String> advancementNamespaces = new ArrayList();
 
 	@SerializedName("book_texture")
-	public String bookTexture = Patchouli.PREFIX + "textures/gui/book_brown";
+	public String bookTexture = Patchouli.PREFIX + "textures/gui/book_brown.png";
 	@SerializedName("filler_texture")
-	public String fillerTexture = Patchouli.PREFIX + "textures/gui/page_filler";
+	public String fillerTexture = Patchouli.PREFIX + "textures/gui/page_filler.png";
 	@SerializedName("crafting_texture")
-	public String craftingTexture = Patchouli.PREFIX + "textures/gui/crafting";
+	public String craftingTexture = Patchouli.PREFIX + "textures/gui/crafting.png";
 
 	public String model = DEFAULT_MODEL;
 
@@ -131,9 +131,9 @@ public class Book {
 			advancementNamespaces.remove("minecraft"); 
 			AdvancementSyncHandler.trackedNamespaces.addAll(advancementNamespaces);
 			
-			bookResource = new ResourceLocation(bookTexture + ".png");
-			fillerResource = new ResourceLocation(fillerTexture + ".png");
-			craftingResource = new ResourceLocation(craftingTexture + ".png");
+			bookResource = new ResourceLocation(bookTexture);
+			fillerResource = new ResourceLocation(fillerTexture);
+			craftingResource = new ResourceLocation(craftingTexture);
 			
 			textColor = Integer.parseInt(textColorRaw, 16);
 			headerColor = Integer.parseInt(headerColorRaw, 16);
