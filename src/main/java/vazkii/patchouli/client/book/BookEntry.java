@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.gson.annotations.SerializedName;
@@ -15,6 +16,7 @@ import net.minecraft.util.StringUtils;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
+import vazkii.patchouli.client.book.page.PageEmpty;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -50,8 +52,12 @@ public class BookEntry implements Comparable<BookEntry> {
 	}
 
 	public List<BookPage> getPages() {
-		return PatchouliConfig.disableAdvancementLocking ? realPages : realPages.stream().filter(BookPage::isPageUnlocked).collect(Collectors.toList());
+		List<BookPage> pages = PatchouliConfig.disableAdvancementLocking ? realPages : realPages.stream().filter(BookPage::isPageUnlocked).collect(Collectors.toList());
+
+		return pages.isEmpty() ? NO_PAGE : pages;
 	}
+
+	private static final List<BookPage> NO_PAGE = ImmutableList.of(new PageEmpty());
 
 	public boolean isPriority() {
 		return priority;
