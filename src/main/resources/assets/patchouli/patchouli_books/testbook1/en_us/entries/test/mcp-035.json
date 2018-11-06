@@ -14,7 +14,7 @@
       "text": "of all variations of MCP-035, collectively. These instances only variate in color, and despite numerous instances, each object takes one of the sixteen (16) distinct colors, labeled between MCP-035-00 to MCP-035-15."
     }, {
       "type": "entity",
-      "entity": "minecraft:sheep",
+      "entity": "minecraft:sheep{\"CustomName\":\"Instance of MCP-035-A\"}",
       "title": "MCP-035-A",
       "advancement": "patchouli:mcp_035_a",
       "text": "Instances of MCP-035-A are capable of producing, a count between one and three, one of"
