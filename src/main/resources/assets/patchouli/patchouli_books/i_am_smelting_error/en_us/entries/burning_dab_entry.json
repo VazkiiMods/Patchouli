@@ -1,0 +1,13 @@
+{
+  "name": "A Smelting Yes Haha",
+  "icon": "minecraft:furnace",
+  "category": "burning_dab",
+  "pages": [
+    {
+      "type": "smelting",
+      "text": "Haha yes",
+      "recipe": "minecraft:apple",
+      "recipe2": "minecraft:carrot"
+    }
+  ]
+}
