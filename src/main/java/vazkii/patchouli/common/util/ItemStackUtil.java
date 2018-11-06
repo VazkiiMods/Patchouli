@@ -45,7 +45,7 @@ public class ItemStackUtil {
 			try {
 				stack.setTagCompound(JsonToNBT.getTagFromJson(nbt));
 			} catch (NBTException e) {
-				e.printStackTrace();
+				throw new RuntimeException("Failed to parse ItemStack JSON" , e);
 			}
 		
 		return stack;
