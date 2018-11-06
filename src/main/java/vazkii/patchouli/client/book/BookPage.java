@@ -11,6 +11,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
@@ -28,7 +29,7 @@ public abstract class BookPage {
 	public transient int left, top;
 	public transient JsonObject sourceObject;
 	
-	protected String type, flag;
+	protected String type, flag, advancement;
 	
 	public void build(BookEntry entry, int pageNum) {
 		this.book = entry.book;
@@ -43,7 +44,11 @@ public abstract class BookPage {
 		this.parent = parent;
 		this.left = left;
 		this.top = top;
-		buttons = new ArrayList();
+		buttons = new ArrayList<>();
+	}
+
+	public boolean isPageUnlocked() {
+		return advancement == null || advancement.isEmpty() || ClientAdvancements.hasDone(advancement);
 	}
 	
 	public void onHidden(GuiBookEntry parent) {

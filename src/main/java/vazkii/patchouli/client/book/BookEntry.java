@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -38,8 +39,8 @@ public class BookEntry implements Comparable<BookEntry> {
 	transient Book book, trueProvider;
 	transient BookCategory lcategory = null;
 	transient BookIcon icon = null;
-	transient List<BookPage> realPages = new ArrayList();
-	transient List<StackWrapper> relevantStacks = new LinkedList();
+	transient List<BookPage> realPages = new ArrayList<>();
+	transient List<StackWrapper> relevantStacks = new LinkedList<>();
 	transient boolean locked;
 
 	transient boolean built;
@@ -49,7 +50,7 @@ public class BookEntry implements Comparable<BookEntry> {
 	}
 
 	public List<BookPage> getPages() {
-		return realPages;
+		return PatchouliConfig.disableAdvancementLocking ? realPages : realPages.stream().filter(BookPage::isPageUnlocked).collect(Collectors.toList());
 	}
 
 	public boolean isPriority() {

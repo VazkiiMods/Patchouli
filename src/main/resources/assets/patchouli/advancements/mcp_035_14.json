@@ -1,0 +1,14 @@
+{
+  "display": {
+    "icon": { "item": "minecraft:wool", "data": 14 },
+    "title": { "translate": "Red Wool" },
+    "description": { "translate": "The MCP Foundation requires you to obtain this." }
+  },
+  "parent": "patchouli:mcp_035_13",
+  "criteria": {
+    "wool": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "item": "minecraft:wool", "data": 14 }] }
+    }
+  }
+}

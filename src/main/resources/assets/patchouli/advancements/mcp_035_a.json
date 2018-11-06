@@ -1,0 +1,55 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:mutton"
+    },
+    "title": {
+      "translate": "Find a Sheep"
+    },
+    "description": {
+      "translate": "The MCP Foundation requires you to interact with this."
+    }
+  },
+  "parent": "patchouli:root",
+  "criteria": {
+    "hurt": {
+      "trigger": "minecraft:entity_hurt_player",
+      "conditions": { "damage": { "source_entity": { "type": "minecraft:sheep" }}}
+    },
+    "slain": {
+      "trigger": "minecraft:entity_killed_player",
+      "conditions": { "entity": { "type": "minecraft:sheep" }}
+    },
+    "damage": {
+      "trigger": "minecraft:player_hurt_entity",
+      "conditions": { "entity": { "type": "minecraft:sheep" }}
+    },
+    "slay": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": { "entity": { "type": "minecraft:sheep" }}
+    },
+    "summon": {
+      "trigger": "minecraft:summoned_entity",
+      "conditions": { "entity": { "type": "minecraft:sheep" }}
+    },
+    "tame": {
+      "trigger": "minecraft:tame_animal",
+      "conditions": { "entity": { "type": "minecraft:sheep" }}
+    },
+    "breed_parent1": {
+      "trigger": "minecraft:bred_animals",
+      "conditions": { "parent": { "type": "minecraft:sheep" }}
+    },
+    "breed_parent2": {
+      "trigger": "minecraft:bred_animals",
+      "conditions": { "partner": { "type": "minecraft:sheep" }}
+    },
+    "breed_child": {
+      "trigger": "minecraft:bred_animals",
+      "conditions": { "child": { "type": "minecraft:sheep" }}
+    }
+  },
+  "requirements": [
+    [ "hurt", "slain", "damage", "slay", "summon", "tame", "breed_parent1", "breed_parent2", "breed_child" ]
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "display": {
+    "icon": { "item": "minecraft:wool", "data": 5 },
+    "title": { "translate": "Lime Wool" },
+    "description": { "translate": "The MCP Foundation requires you to obtain this." }
+  },
+  "parent": "patchouli:mcp_035_4",
+  "criteria": {
+    "wool": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [{ "item": "minecraft:wool", "data": 5 }] }
+    }
+  }
+}
