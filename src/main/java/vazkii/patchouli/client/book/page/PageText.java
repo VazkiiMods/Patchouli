@@ -48,7 +48,7 @@ public class PageText extends PageWithText {
 			parent.drawSeparator(book, 0, 12);
 		}
 
-		if(title != null && !title.isEmpty())
+		else if(title != null && !title.isEmpty())
 			parent.drawCenteredStringNoShadow(title, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 	}
 
