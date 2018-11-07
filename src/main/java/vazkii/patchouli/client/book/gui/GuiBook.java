@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book.gui;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -7,12 +8,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import net.minecraft.client.gui.FontRenderer;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Mouse;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -331,7 +332,7 @@ public abstract class GuiBook extends GuiScreen {
 		return mx > x && my > y && mx <= (x + w) && my <= (y + h);
 	}
 
-	public void drawProgressBar(int mouseX, int mouseY, Predicate<BookEntry> filter) {
+	public void drawProgressBar(Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
 		int barLeft = 19;
 		int barTop = FULL_HEIGHT - 36;
 		int barWidth = PAGE_WIDTH - 10;
@@ -357,11 +358,12 @@ public abstract class GuiBook extends GuiScreen {
 		float unlockFract = (float) unlockedEntries / Math.max(1, (float) totalEntries);
 		int progressWidth = (int) (((float) barWidth - 1) * unlockFract);
 
-		drawRect(barLeft, barTop, barLeft + barWidth, barTop + barHeight, 0xFF333333);
-		drawGradientRect(barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, 0xFFDDDDDD, 0xFFBBBBBB);
-		drawGradientRect(barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, 0xFFFFFF55, 0xFFBBBB00);
+		drawRect(barLeft, barTop, barLeft + barWidth, barTop + barHeight, book.headerColor);
+		
+		drawGradient(barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, book.progressBarBackground);
+		drawGradient(barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, book.progressBarColor);
 
-		fontRenderer.drawString(I18n.translateToLocal("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, 0x444444);
+		fontRenderer.drawString(I18n.translateToLocal("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
 
 		if(isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
 			List<String> tooltip = new ArrayList();
@@ -379,6 +381,11 @@ public abstract class GuiBook extends GuiScreen {
 			
 			setTooltip(tooltip);
 		}
+	}
+	
+	private void drawGradient(int x, int y, int w, int h, int color) {
+		int darkerColor = new Color(color).darker().getRGB();
+		drawGradientRect(x, y, w, h, color, darkerColor);
 	}
 	
 	public void drawCenteredStringNoShadow(String s, int x, int y, int color) {

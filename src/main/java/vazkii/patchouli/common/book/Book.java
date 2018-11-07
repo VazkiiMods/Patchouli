@@ -56,7 +56,7 @@ public class Book {
 	private transient ItemStack bookItem;
 	
 	public transient ResourceLocation bookResource, fillerResource, craftingResource;
-	public transient int textColor, headerColor, nameplateColor, linkColor, linkHoverColor;
+	public transient int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
 	
 	public transient boolean isExtension = false;
 	public transient List<Book> extensions = new LinkedList();
@@ -92,6 +92,11 @@ public class Book {
 	public String linkColorRaw = "0000EE";
 	@SerializedName("link_hover_color")
 	public String linkHoverColorRaw = "8800EE";
+	
+	@SerializedName("proress_bar_color")
+	public String progressBarColorRaw = "FFFF55";
+	@SerializedName("proress_bar_background")
+	public String progressBarBackgroundRaw = "DDDDDD";
 
 	public String version = "0";
 	public String subtitle = "";
@@ -135,11 +140,13 @@ public class Book {
 			fillerResource = new ResourceLocation(fillerTexture);
 			craftingResource = new ResourceLocation(craftingTexture);
 			
-			textColor = Integer.parseInt(textColorRaw, 16);
-			headerColor = Integer.parseInt(headerColorRaw, 16);
-			nameplateColor = Integer.parseInt(nameplateColorRaw, 16);
-			linkColor = Integer.parseInt(linkColorRaw, 16);
-			linkHoverColor = Integer.parseInt(linkHoverColorRaw, 16);
+			textColor = 0xFF000000 | Integer.parseInt(textColorRaw, 16);
+			headerColor = 0xFF000000 | Integer.parseInt(headerColorRaw, 16);
+			nameplateColor = 0xFF000000 | Integer.parseInt(nameplateColorRaw, 16);
+			linkColor = 0xFF000000 | Integer.parseInt(linkColorRaw, 16);
+			linkHoverColor = 0xFF000000 | Integer.parseInt(linkHoverColorRaw, 16);
+			progressBarColor = 0xFF000000 | Integer.parseInt(progressBarColorRaw, 16);
+			progressBarBackground = 0xFF000000 | Integer.parseInt(progressBarBackgroundRaw, 16);
 
 			for(String m : DEFAULT_MACROS.keySet())
 				if(!macros.containsKey(m))

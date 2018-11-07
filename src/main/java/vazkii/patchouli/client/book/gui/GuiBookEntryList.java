@@ -88,7 +88,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 
 			text.render(mouseX, mouseY);
 			if(shouldDrawProgressBar() && !PatchouliConfig.disableAdvancementLocking)
-				drawProgressBar(mouseX, mouseY, this::doesEntryCountForProgress);
+				drawProgressBar(book, mouseX, mouseY, this::doesEntryCountForProgress);
 		} else if(page % 2 == 1 && page == maxpages - 1)
 			drawPageFiller(book);
 		
