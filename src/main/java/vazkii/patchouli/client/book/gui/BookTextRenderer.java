@@ -1,16 +1,15 @@
 package vazkii.patchouli.client.book.gui;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 
 public class BookTextRenderer {
@@ -182,8 +181,16 @@ public class BookTextRenderer {
 				currColor = prevColor;
 				currCluster = null;
 			}
+			
 			else if(cmd.equals("playername"))
 				return gui.mc.player.getDisplayNameString();
+			
+			else if(cmd.startsWith("k:")) { // Keybind inserts
+				String keybind = cmd.substring(2);
+				String result = getKeybindKey(keybind);
+				
+				return result;
+			}
 			
 			if(endingExternal)
 				return TextFormatting.GRAY + "\u21AA";
@@ -192,6 +199,19 @@ public class BookTextRenderer {
 		}
 		
 		return s;
+	}
+	
+	private String getKeybindKey(String keybind) {
+		String alt = "key." + keybind;
+		
+		KeyBinding[] keys = gui.mc.gameSettings.keyBindings;
+		for(KeyBinding k : keys) {
+			String name = k.getKeyDescription();
+			if(name.equals(keybind) || name.equals(alt))
+				return k.getDisplayName();
+		}
+		
+		return "N/A";
 	}
 	
 	public void render(int mouseX, int mouseY) {
