@@ -16,8 +16,6 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(FMLPreInitializationEvent event) {
 		super.preInit(event);
 		
-		PatchouliItems.setModels();
-		
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup(event.getSuggestedConfigurationFile().getParentFile().getParentFile());
 		
