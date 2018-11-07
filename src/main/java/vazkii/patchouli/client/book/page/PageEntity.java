@@ -30,6 +30,8 @@ public class PageEntity extends PageWithText {
 	public String entityId;
 	
 	float scale = 1F;
+	@SerializedName("offset")
+	float extraOffset = 0F;
 	String name;
 
 	transient boolean errored;
@@ -134,7 +136,7 @@ public class PageEntity extends PageWithText {
 				entitySize = Math.max(1F, entitySize);
 				
 				renderScale = 100F / entitySize * 0.8F * scale;
-				offset = Math.max(entity.height, entitySize) * 0.5F;
+				offset = Math.max(entity.height, entitySize) * 0.5F + extraOffset;
 				
 				if(name == null || name.isEmpty())
 					name = entity.getName();
