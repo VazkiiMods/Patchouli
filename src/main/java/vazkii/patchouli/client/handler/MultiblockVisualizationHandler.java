@@ -55,7 +55,7 @@ public class MultiblockVisualizationHandler {
 	private static boolean isAnchored;
 	private static Rotation facingRotation;
 	private static Function<BlockPos, BlockPos> offsetApplier;
-	private static int blocks, blocksDone;
+	private static int blocks, blocksDone, airFilled;
 	private static int timeComplete;
 	private static IBlockState lookingState;
 	private static BlockPos lookingPos;
@@ -138,8 +138,21 @@ public class MultiblockVisualizationHandler {
 				}
 
 				if(timeComplete == 0) {
+					color = 0xFFFFFF;
+					int posx = left + width;
+					int posy = top + height + 2;
+					int mult = 1;
 					String progress = blocksDone + "/" + blocks;
-					mc.fontRenderer.drawStringWithShadow(progress, left + width - mc.fontRenderer.getStringWidth(progress), top + height + 2, 0xFFFFFF);
+					
+					if(blocksDone == blocks && airFilled > 0) {
+						progress = I18n.translateToLocal("patchouli.gui.lexicon.needs_air");
+						color = 0xDA4E3F;
+						mult *= 2;
+						posx -= width / 2;
+						posy += 2;
+					}
+					
+					mc.fontRenderer.drawStringWithShadow(progress, posx - mc.fontRenderer.getStringWidth(progress) / mult, posy, color);
 				}
 			}
 
@@ -166,7 +179,7 @@ public class MultiblockVisualizationHandler {
 	public static void onClientTick(ClientTickEvent event) {
 		if(Minecraft.getMinecraft().world == null)
 			hasMultiblock = false;
-		else if(isAnchored && blocks == blocksDone) {
+		else if(isAnchored && blocks == blocksDone && airFilled == 0) {
 			timeComplete++;
 			if(timeComplete == 14)
 				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F));
@@ -202,7 +215,7 @@ public class MultiblockVisualizationHandler {
 		BlockPos checkPos = mc.objectMouseOver.typeOfHit == Type.BLOCK ? mc.objectMouseOver.getBlockPos().offset(mc.objectMouseOver.sideHit) : null;
 		BlockPos startPos = getStartPos();
 		
-		blocks = blocksDone = 0;
+		blocks = blocksDone = airFilled = 0;
 		lookingState = null;
 		lookingPos = checkPos;
 
@@ -218,11 +231,18 @@ public class MultiblockVisualizationHandler {
 					}
 
 					if(matcher != StateMatcher.ANY) {
-						blocks++;
+						boolean air = matcher == StateMatcher.AIR;
+						if(!air)
+							blocks++;
+						
 						if(!multiblock.test(world, startPos, x, y, z, facingRotation)) {
 							IBlockState renderState = matcher.getDisplayedState().withRotation(facingRotation);
 							renderBlock(world, renderState, renderPos, alpha, dispatcher);
-						} else blocksDone++;
+
+							if(air)
+								airFilled++;
+						} else if(!air)
+							blocksDone++;
 					}
 				}
 

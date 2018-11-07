@@ -37,6 +37,7 @@ patchouli.gui.lexicon.multiblock_bookmark=Visualized Structure
 patchouli.gui.lexicon.relations=Related Chapters
 patchouli.gui.lexicon.not_anchored=Right-Click a Block to anchor the Structure
 patchouli.gui.lexicon.structure_complete=Complete!
+patchouli.gui.lexicon.needs_air=(Clear blocks marked in red)
 patchouli.gui.lexicon.visualize_letter=V
 patchouli.gui.lexicon.seconds=%ss
 patchouli.gui.lexicon.history=Reading History
