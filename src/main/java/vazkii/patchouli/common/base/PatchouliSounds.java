@@ -30,5 +30,10 @@ public class PatchouliSounds {
 		event.getRegistry().register(book_open);
 		event.getRegistry().register(book_flip);
 	}
-
+	
+	public static SoundEvent getSound(String sound, SoundEvent fallback) {
+		SoundEvent attempt = SoundEvent.REGISTRY.getObject(new ResourceLocation(sound));
+		return attempt == null ? fallback : attempt; 
+	}
+	
 }

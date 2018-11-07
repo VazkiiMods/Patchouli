@@ -46,7 +46,7 @@ public class GuiButtonBook extends GuiButton {
 	
 	@Override
     public void playPressSound(SoundHandler soundHandlerIn) {
-		GuiBook.playBookFlipSound();
+		GuiBook.playBookFlipSound(parent.book);
 	}
 	
 	public List<String> getTooltip() {

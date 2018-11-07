@@ -97,6 +97,11 @@ public class Book {
 	public String progressBarColorRaw = "FFFF55";
 	@SerializedName("proress_bar_background")
 	public String progressBarBackgroundRaw = "DDDDDD";
+	
+	@SerializedName("open_sound")
+	public String openSound = "patchouli:book_open";
+	@SerializedName("flip_sound")
+	public String flipSound = "patchouli:book_flip";
 
 	public String version = "0";
 	public String subtitle = "";

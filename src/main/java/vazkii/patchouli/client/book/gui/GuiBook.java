@@ -19,6 +19,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.client.config.GuiUtils;
@@ -246,7 +247,7 @@ public abstract class GuiBook extends GuiScreen {
 		case 0:
 			if(targetPage != null && isShiftKeyDown()) {
 				displayLexiconGui(new GuiBookEntry(book, targetPage.getLeft(), targetPage.getRight()), true);
-				playBookFlipSound();
+				playBookFlipSound(book);
 			}
 			break;
 		case 1: 
@@ -280,7 +281,7 @@ public abstract class GuiBook extends GuiScreen {
 			} else displayLexiconGui(book.contents.guiStack.pop(), false);
 			
 			if(sfx)
-				playBookFlipSound();
+				playBookFlipSound(book);
 		}
 	}
 
@@ -293,7 +294,7 @@ public abstract class GuiBook extends GuiScreen {
 
 			onPageChanged();
 			if(sfx)
-				playBookFlipSound();
+				playBookFlipSound(book);
 		}
 	}
 
@@ -446,9 +447,10 @@ public abstract class GuiBook extends GuiScreen {
 		drawModalRectWithCustomSizedTexture(x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 
-	public static void playBookFlipSound() {
+	public static void playBookFlipSound(Book book) {
 		if(ClientTicker.ticksInGame - lastSound > 6) {
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(PatchouliSounds.book_flip, (float) (0.7 + Math.random() * 0.3)));
+			SoundEvent sfx = PatchouliSounds.getSound(book.flipSound, PatchouliSounds.book_flip);
+			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(sfx, (float) (0.7 + Math.random() * 0.3)));
 			lastSound = ClientTicker.ticksInGame;
 		}
 	}

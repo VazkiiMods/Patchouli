@@ -77,7 +77,7 @@ public class GuiButtonCategory extends GuiButton {
 	@Override
     public void playPressSound(SoundHandler soundHandlerIn) {
 		if(category != null && !category.isLocked())
-			GuiBook.playBookFlipSound();
+			GuiBook.playBookFlipSound(parent.book);
 	}
 	
 	public BookCategory getCategory() {

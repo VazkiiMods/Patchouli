@@ -77,7 +77,7 @@ public class GuiButtonEntry extends GuiButton {
 	@Override
     public void playPressSound(SoundHandler soundHandlerIn) {
 		if(entry != null && !entry.isLocked())
-			GuiBook.playBookFlipSound();
+			GuiBook.playBookFlipSound(parent.book);
 	}
 	
 	public BookEntry getEntry() {
