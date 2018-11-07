@@ -8,9 +8,17 @@ import vazkii.patchouli.client.book.page.abstr.PageWithText;
 
 public class PageText extends PageWithText {
 	
+	String title;
+	
 	@Override
 	public int getTextHeight() {
-		return pageNum == 0 ? 22 : -4;
+		if(pageNum == 0)
+			return 22;
+		
+		if(title != null && !title.isEmpty())
+			return 12;
+		
+		return -4;
 	}
 	
 	@Override
@@ -39,6 +47,9 @@ public class PageText extends PageWithText {
 			parent.drawCenteredStringNoShadow(parent.getEntry().getName(), GuiBook.PAGE_WIDTH / 2, renderedSmol ? -3 : 0, book.headerColor);
 			parent.drawSeparator(book, 0, 12);
 		}
+
+		if(title != null && !title.isEmpty())
+			parent.drawCenteredStringNoShadow(title, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 	}
 
 }
