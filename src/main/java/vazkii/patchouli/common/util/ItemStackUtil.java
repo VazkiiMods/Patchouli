@@ -27,7 +27,7 @@ public class ItemStackUtil {
 		String nbt = "";
 		int nbtStart = res.indexOf("{");
 		if(nbtStart > 0) {
-			nbt = res.substring(nbtStart).replaceAll("'", "\"");
+			nbt = res.substring(nbtStart).replaceAll("([^\\\\])'", "$1\"").replaceAll("\\\\'", "'");
 			res = res.substring(0, nbtStart);
 		}
 		

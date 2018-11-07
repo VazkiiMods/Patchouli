@@ -15,7 +15,7 @@
             "type": "spotlight",
             "title": "Testeroni",
             "text": "This is just a test but it's cool, you know what else is cool? ICE!!! Ha gottem",
-            "item": "minecraft:diamond_sword:293{display:{Lore:['This has lore!!!']}}"
+            "item": "minecraft:diamond_sword:293{display:{Lore:['This has lore!!!', 'I even added escaped \\'quotes\\'!']}}"
         },
         {
             "type": "text",

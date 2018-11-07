@@ -47,7 +47,7 @@ public class PageEntity extends PageWithText {
 		String nbtStr = "";
 		int nbtStart = entityId.indexOf("{");
 		if(nbtStart > 0) {
-			nbtStr = entityId.substring(nbtStart).replaceAll("'", "\"");
+			nbtStr = entityId.substring(nbtStart).replaceAll("([^\\\\])'", "$1\"").replaceAll("\\\\'", "'");
 			entityId = entityId.substring(0, nbtStart);
 			try {
 				nbt = JsonToNBT.getTagFromJson(nbtStr);
