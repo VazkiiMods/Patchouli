@@ -189,7 +189,7 @@ public class BookTextRenderer {
 				String keybind = cmd.substring(2);
 				String result = getKeybindKey(keybind);
 				
-				return result;
+				return result == null ? "N/A" : result;
 			}
 			
 			if(endingExternal)
@@ -202,6 +202,12 @@ public class BookTextRenderer {
 	}
 	
 	private String getKeybindKey(String keybind) {
+		if(keybind.contains("-")) {
+			String res = getKeybindKey(keybind.replaceAll("-", " "));
+			if(res != null)
+				return res;
+		}
+		
 		String alt = "key." + keybind;
 		
 		KeyBinding[] keys = gui.mc.gameSettings.keyBindings;
@@ -211,7 +217,7 @@ public class BookTextRenderer {
 				return k.getDisplayName();
 		}
 		
-		return "N/A";
+		return null;
 	}
 	
 	public void render(int mouseX, int mouseY) {
