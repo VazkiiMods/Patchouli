@@ -112,7 +112,7 @@ public class BookRightClickHandler {
 	private static Pair<BookEntry, Integer> getHoveredEntry(Book book) {
 		Minecraft mc = Minecraft.getMinecraft();
 		RayTraceResult res = mc.objectMouseOver;
-		if(res.typeOfHit == Type.BLOCK) {
+		if(res != null && res.typeOfHit == Type.BLOCK) {
 			BlockPos pos = res.getBlockPos();
 			IBlockState state = mc.world.getBlockState(pos);
 			Block block = state.getBlock();
