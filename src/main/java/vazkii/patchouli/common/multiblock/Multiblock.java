@@ -167,6 +167,8 @@ public class Multiblock implements IMultiblock {
 			stateMap.put(c, state);
 		}
 
+		if(!stateMap.containsKey('_'))
+			stateMap.put('_', StateMatcher.ANY);
 		if(!stateMap.containsKey(' '))
 			stateMap.put(' ', StateMatcher.AIR);
 		if(!stateMap.containsKey('0'))

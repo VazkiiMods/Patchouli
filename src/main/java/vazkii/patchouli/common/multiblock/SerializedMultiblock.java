@@ -17,14 +17,14 @@ public class SerializedMultiblock {
 
 	boolean symmetrical = false;
 	int[] offset = new int[] { 0, 0, 0 };
-	@SerializedName("view_offset")
-	int[] viewOffset = new int[] { 0, 0, 0 };
-
+	
 	public Multiblock toMultiblock() {
+		final String allowed = "0_ ";
+		
 		for(String[] line : pattern)
 			for(String s : line)
 				for(char c : s.toCharArray())
-					if(!mapping.containsKey(String.valueOf(c)))
+					if(allowed.indexOf(c) == -1 && !mapping.containsKey(String.valueOf(c)))
 						throw new IllegalArgumentException("Character " + c + " in multiblock isn't mapped to a block");
 
 		Object[] targets = new Object[mapping.size() * 2];
@@ -51,7 +51,6 @@ public class SerializedMultiblock {
 		Multiblock mb = new Multiblock(pattern, targets);
 		mb.setSymmetrical(symmetrical);
 		mb.offset(offset[0], offset[1], offset[2]);
-		mb.offsetView(viewOffset[0], viewOffset[1], viewOffset[2]);
 		return mb;
 	}
 

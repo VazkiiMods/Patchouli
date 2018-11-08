@@ -14,9 +14,48 @@
             "recipe2.nn.output": "bbbbb"
         },
         {
-            "type": "entity",
-            "entity": "minecraft:chicken",
-            "text": "Chicken! Super scary and evil and will kill you :("
+            "type": "multiblock",
+            "name": "Goldzebo",
+            "multiblock": {
+                "pattern": [
+                    [
+                        " GRG ",
+                        "GGRGG",
+                        "RRRRR",
+                        "GGRGG",
+                        " GRG "
+                    ], [
+                        "GG GG",
+                        "G   G",
+                        "     ",
+                        "G   G",
+                        "GG GG"
+                    ],[
+                        "G   G",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "G   G"
+                    ], [
+                        "G   G",
+                        "     ",
+                        "  0  ",
+                        "     ",
+                        "G   G"
+                    ], [
+                         "_WWW_",
+                         "WWWWW",
+                         "WWWWW",
+                         "WWWWW",
+                         "_WWW_"
+                    ]
+                ],
+                "mapping": {
+                    "G": "minecraft:gold_block",
+                    "W": "minecraft:wool",
+                    "R": "minecraft:stained_hardened_clay[color=red]"
+                }
+            }
         }
     ]
 }

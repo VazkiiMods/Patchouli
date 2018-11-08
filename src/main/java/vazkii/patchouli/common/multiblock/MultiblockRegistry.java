@@ -6,6 +6,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.IMultiblock;
+import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
 import vazkii.patchouli.common.base.Patchouli;
 
 public class MultiblockRegistry {
@@ -15,14 +17,20 @@ public class MultiblockRegistry {
 	public static IMultiblock crucible;
 
 	public static void preInit() {
-		crucible = registerMultiblock(new ResourceLocation(Patchouli.MOD_ID, "crucible"), 	
-				new Multiblock(new String[][] {
+		// This serves as an example for creating multiblocks in code
+		// You can check it out ingame by making a multiblock page without
+		// a "multiblock" defined, but rather using
+		// "multiblock_id": "patchouli:crucible"
+		
+		IPatchouliAPI api = PatchouliAPI.instance;
+		crucible = api.registerMultiblock(new ResourceLocation(Patchouli.MOD_ID, "crucible"), 	
+				api.makeMultiblock(new String[][] {
 					{ "   ", " 0 ", "   " },
 					{ "SSS", "SFS", "SSS" }},
 						'0', Blocks.CAULDRON,
 						'F', Blocks.FIRE,
-						'S', StateMatcher.fromPredicate(Blocks.STONEBRICK, (state) -> state.getBlock().isOpaqueCube(state) && state.getMaterial() == Material.ROCK),
-						' ', StateMatcher.ANY))
+						'S', api.predicateMatcher(Blocks.STONEBRICK, (state) -> state.getBlock().isOpaqueCube(state) && state.getMaterial() == Material.ROCK),
+						' ', api.anyMatcher()))
 				.setSymmetrical(true);
 	}
 
