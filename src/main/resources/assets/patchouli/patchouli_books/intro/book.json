@@ -1,0 +1,10 @@
+{
+	"name": "item.patchouli:intro_book.name",
+	"landing_text": "item.patchouli:intro_book.landing",
+	"advancement_namespaces": [
+		"patchouli"
+	],
+	"subtitle": "item.patchouli:intro_book.subtitle",
+	"creative_tab": "decorations",
+	"advancements_tab": "patchouli"
+}
