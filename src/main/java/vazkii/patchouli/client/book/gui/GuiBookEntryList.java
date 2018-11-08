@@ -170,7 +170,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		} else {
 			int start = getEntryCountStart();
 			addEntryButtons(LEFT_PAGE_X, TOP_PADDING, start, ENTRIES_PER_PAGE);
-			addEntryButtons(RIGHT_PAGE_X, TOP_PADDING, start + ENTRIES_IN_FIRST_PAGE, ENTRIES_PER_PAGE);
+			addEntryButtons(RIGHT_PAGE_X, TOP_PADDING, start + ENTRIES_PER_PAGE, ENTRIES_PER_PAGE);
 		}
 	}
 	

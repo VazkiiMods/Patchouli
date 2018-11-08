@@ -1,0 +1,35 @@
+{
+	"name": "Test Entry 2",
+	"icon": "minecraft:textures/items/clock_06.png",
+	"category": "test",
+	"priority": true,
+	"read_by_default": false,
+	"advancement": "patchouli:test_invis",
+	"pages": [
+		{
+			"type": "text",
+			"text": "THIS IS A TEST ENTRY"
+		},
+		{
+			"type": "multiblock",
+			"multiblock_id": "",
+			"name": "Cool Crucible",
+			"text": "Testing multiblocks loaded from json!",
+			"multiblock": {
+				"pattern": [
+					["   ", " 0 ", "   "], 
+					[ "SSS", "SFS", "SSS"]
+				],
+				"mapping": {
+					" ": "ANY",
+					"0": "minecraft:cauldron",
+					"F": "minecraft:fire",
+					"S": "minecraft:stonebrick[variant=mossy_stonebrick]"
+				},
+				"symmetrical": true,
+				"offset": [0, 0, 0],
+				"view_offset": [0, 0, 0]
+			}
+		}
+	]
+}
