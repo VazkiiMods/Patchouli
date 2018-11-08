@@ -11,6 +11,10 @@ item.patchouli:test_book_2.landing=Landing text! It even supports $(2)colors$() 
 item.patchouli:test_completion.name=Test Advancement-Driven Book
 item.patchouli:test_completion.landing=This book changes colors when you unlock entries!
 
+item.patchouli:intro_book.name=Patchouli
+item.patchouli:intro_book.subtitle=Documentation for everyone
+item.patchouli:intro_book.landing=With $(item)Patchouli$(), you can make easy to read, advancement unlockable $(thing)books$() for mods and modpacks!
+
 # Gui Strings
 patchouli.gui.lexicon.landing_info=(Placeholder landing text, define your own in your book json file!)
 patchouli.gui.lexicon.progress_meter=Unlock Progress:

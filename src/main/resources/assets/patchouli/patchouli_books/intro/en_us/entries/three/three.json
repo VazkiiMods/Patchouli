@@ -1,0 +1,11 @@
+{
+	"name": "Haha yes",
+	"icon": "minecraft:writable_book",
+	"category": "three",
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is just a mockup ya butt"
+		}
+	]
+}
