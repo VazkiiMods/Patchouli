@@ -1,10 +1,10 @@
 package vazkii.patchouli.client.book.text;
 
+import java.util.List;
+
 import net.minecraft.client.gui.FontRenderer;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
-
-import java.util.List;
 
 public class Word {
 	private final Book book;
@@ -16,7 +16,7 @@ public class Word {
 	private final String codes;
 	private final List<Word> linkCluster;
 	private final String tooltip;
-	private final TextClickHandler onClick;
+	private final Runnable onClick;
 
 	public Word(GuiBook gui, FontRenderer font, SpanState state, String text, int strWidth) {
 		this.book = gui.book;
@@ -49,7 +49,7 @@ public class Word {
 
 	public void click(int mouseX, int mouseY, int mouseButton) {
 		if(onClick != null && mouseButton == 0 && isHovered(mouseX, mouseY))
-			onClick.onClick();
+			onClick.run();
 	}
 
 	private boolean isHovered(int mouseX, int mouseY) {

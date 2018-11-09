@@ -1,22 +1,26 @@
 package vazkii.patchouli.client.book.text;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.client.resources.I18n;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.book.Book;
 
-import java.util.*;
-
 public class BookTextParser {
-	private static final Map<String, TextCommandHandler> COMMANDS = new HashMap<>();
-	private static final Map<String, TextFunctionHandler> FUNCTIONS = new HashMap<>();
+	private static final Map<String, CommandProcessor> COMMANDS = new HashMap<>();
+	private static final Map<String, FunctionProcessor> FUNCTIONS = new HashMap<>();
 
-	private static void register(TextCommandHandler handler, String... names) {
+	private static void register(CommandProcessor handler, String... names) {
 		for (String name : names)
 			COMMANDS.put(name, handler);
 	}
@@ -266,4 +270,13 @@ public class BookTextParser {
 
 		return null;
 	}
+	
+	public interface CommandProcessor {
+		String process(SpanState state);
+	}
+	
+	public interface FunctionProcessor {
+		String process(String parameter, SpanState state);
+	}
+
 }
