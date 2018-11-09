@@ -47,6 +47,11 @@ public class BookTextParser {
 			state.isExternalLink = false;
 			return "";
 		}, "/l");
+		register(state -> {
+			state.cluster = null;
+			state.tooltip = "";
+			return "";
+		}, "/t");
 		register(state -> state.gui.mc.player.getDisplayNameString(), "playername");
 		register(state -> state.codes( "\u00A7k"), "k", "obf");
 		register(state -> state.codes("\u00A7l"), "l", "bold");
