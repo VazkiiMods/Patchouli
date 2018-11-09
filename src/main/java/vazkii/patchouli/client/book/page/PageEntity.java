@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
@@ -56,8 +57,12 @@ public class PageEntity extends PageWithText {
 				nbt = null;
 			}
 		}
-		
-		Class clazz = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityId)).getEntityClass();
+
+		EntityEntry entityEntry = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityId));
+		if (entityEntry == null)
+			throw new RuntimeException("Could not find entity: " + entityId);
+
+		Class clazz = entityEntry.getEntityClass();
 		try {
 			constructor = clazz.getConstructor(World.class);
 		} catch(Exception e) {

@@ -27,21 +27,10 @@ public class Book {
 	public static final ModelResourceLocation DEFAULT_MODEL_RES = new ModelResourceLocation(DEFAULT_MODEL, "inventory");
 	
 	private static final Map<String, String> DEFAULT_MACROS = new HashMap() {{
-		put("$(obf)", "$(k)");
-		put("$(bold)", "$(l)");
-		put("$(strike)", "$(m)");
-		put("$(italic)", "$(o)");
-		put("$(italics)", "$(o)");
 		put("$(list", "$(li"); //  The lack of ) is intended
-		put("$(reset)", "$()");
-		put("$(clear)", "$()");
-		put("$(2br)", "$(br2)");
-		put("$(p)", "$(br2)");
-		
 		put("/$", "$()");
 		put("<br>", "$(br)");
-		
-		put("$(nocolor)", "$(0)");
+
 		put("$(item)", "$(#b0b)");
 		put("$(thing)", "$(#490)");
 	}};
