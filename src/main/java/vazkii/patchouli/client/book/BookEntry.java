@@ -57,6 +57,17 @@ public class BookEntry implements Comparable<BookEntry> {
 		return pages.isEmpty() ? NO_PAGE : pages;
 	}
 
+	public int getPageFromAnchor(String anchor) {
+		List<BookPage> pages = getPages();
+		for (int i = 0; i < pages.size(); i++) {
+			BookPage page = pages.get(i);
+			if (page.anchor != null && anchor.equals(page.anchor))
+				return i;
+		}
+
+		return -1;
+	}
+
 	private static final List<BookPage> NO_PAGE = ImmutableList.of(new PageEmpty());
 
 	public boolean isPriority() {

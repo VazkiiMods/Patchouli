@@ -29,7 +29,7 @@ public abstract class BookPage {
 	public transient int left, top;
 	public transient JsonObject sourceObject;
 	
-	protected String type, flag, advancement;
+	protected String type, flag, advancement, anchor;
 	
 	public void build(BookEntry entry, int pageNum) {
 		this.book = entry.book;
