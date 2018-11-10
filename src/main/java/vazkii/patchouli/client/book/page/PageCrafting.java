@@ -60,6 +60,9 @@ public class PageCrafting extends PageDoubleRecipe<IRecipe> {
 
 	@Override
 	protected ItemStack getRecipeOutput(IRecipe recipe) {
+		if (recipe == null)
+			return ItemStack.EMPTY;
+
 		return recipe.getRecipeOutput();
 	}
 

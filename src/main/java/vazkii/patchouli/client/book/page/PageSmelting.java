@@ -39,6 +39,9 @@ public class PageSmelting extends PageDoubleRecipe<Tuple<ItemStack, ItemStack>> 
 
     @Override
     protected ItemStack getRecipeOutput(Tuple<ItemStack, ItemStack> recipe) {
+        if (recipe == null)
+            return ItemStack.EMPTY;
+        
         return recipe.getSecond();
     }
 
