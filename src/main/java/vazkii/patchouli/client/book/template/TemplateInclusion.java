@@ -81,7 +81,7 @@ public class TemplateInclusion {
 		return var;
 	}
 	
-	public IVariableProvider wrapProvider(IVariableProvider provider) {
+	public IVariableProvider wrapProvider(IVariableProvider<String> provider) {
 		return new IVariableProvider() {
 			
 			@Override

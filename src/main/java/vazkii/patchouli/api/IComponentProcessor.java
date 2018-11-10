@@ -22,7 +22,7 @@ public interface IComponentProcessor {
 	 * way, so feel free to throw on any unrecoverable states.
 	 * @param variables
 	 */
-	public void setup(IVariableProvider variables);
+	public void setup(IVariableProvider<String> variables);
 
 	/**
 	 * Processes a variable. You should return what you think the result should be, or

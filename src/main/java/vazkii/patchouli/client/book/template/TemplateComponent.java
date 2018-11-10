@@ -34,7 +34,7 @@ public abstract class TemplateComponent {
 	transient boolean isVisible = true;
 	transient boolean compiled = false;
 
-	public final void compile(IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
+	public final void compile(IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
 		if(compiled)
 			return;
 
