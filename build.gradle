@@ -16,6 +16,7 @@ buildscript {
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -25,6 +26,11 @@ ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
 
 version = "${config.version}-${config.build_number}"
+
+if (System.getenv('BUILD_NUMBER') != null) {
+    version = "${config.version}-j"+ System.getenv('BUILD_NUMBER')
+}
+
 group = "vazkii.patchouli" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = config.mod_name
 
@@ -76,6 +82,34 @@ task deobfJar(type: Jar) {
 artifacts {
     archives deobfJar
 }
+
+publishing {
+
+    publications {
+
+        mavenJava(MavenPublication) {
+
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+
+            artifact deobfJar {
+
+                classifier 'deobf'
+            }
+        }
+    }
+
+    repositories {
+
+        maven {
+
+            url "file://" + System.getenv("local_maven")
+        }
+    }
+}
+
 /**
  * Increments the buildnumber in your config file, and saves it
  * Note: The doFirst is important, without it the build number
