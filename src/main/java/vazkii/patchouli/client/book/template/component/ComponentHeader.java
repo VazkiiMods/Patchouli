@@ -31,6 +31,8 @@ public class ComponentHeader extends TemplateComponent {
 		
 		if(x == -1)
 			x = GuiBook.PAGE_WIDTH / 2;
+		if(y == -1)
+			y = 0;
 	}
 	
 	@Override

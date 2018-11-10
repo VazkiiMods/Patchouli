@@ -36,7 +36,7 @@ public class PageImage extends PageWithText {
 		mc.renderEngine.bindTexture(imageRes[index]);
 		
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
-		int y = 6;
+		int y = 7;
 		GlStateManager.color(1F, 1F, 1F);
 		GlStateManager.enableBlend();
 		GlStateManager.scale(0.5F, 0.5F, 0.5F);
