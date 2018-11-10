@@ -190,8 +190,11 @@ public class MultiblockVisualizationHandler {
 		Minecraft mc = Minecraft.getMinecraft();
 		if(!isAnchored) {
 			facingRotation = RotationUtil.rotationFromFacing(mc.player.getHorizontalFacing());
-			pos = mc.objectMouseOver.getBlockPos();
+			if(mc.objectMouseOver != null)
+				pos = mc.objectMouseOver.getBlockPos();
 		}
+		else if(mc.player.getDistanceSq(pos) > 64 * 64)
+			return;
 
 		if(pos == null)
 			return;
@@ -212,7 +215,7 @@ public class MultiblockVisualizationHandler {
 		GlStateManager.disableLighting();
 		GlStateManager.translate(-posX, -posY, -posZ);
 
-		BlockPos checkPos = mc.objectMouseOver.typeOfHit == Type.BLOCK ? mc.objectMouseOver.getBlockPos().offset(mc.objectMouseOver.sideHit) : null;
+		BlockPos checkPos = mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == Type.BLOCK ? mc.objectMouseOver.getBlockPos().offset(mc.objectMouseOver.sideHit) : null;
 		BlockPos startPos = getStartPos();
 		
 		blocks = blocksDone = airFilled = 0;
