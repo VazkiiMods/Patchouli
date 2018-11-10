@@ -78,18 +78,36 @@ public class BookTextParser {
 			boolean isExternal = parameter.matches("^https?\\:.*");
 
 			if (isExternal) {
+				String url = parameter;
 				state.tooltip = I18n.format("patchouli.gui.lexicon.external_link");
 				state.isExternalLink = true;
-				state.onClick = () -> GuiBook.openWebLink(parameter);
+				state.onClick = () -> GuiBook.openWebLink(url);
 			} else {
+				int hash = parameter.indexOf('#');
+				String anchor = null;
+				if (hash >= 0) {
+					anchor = parameter.substring(hash + 1);
+					parameter = parameter.substring(0, hash);
+				}
+
 				ResourceLocation href = new ResourceLocation(state.book.getModNamespace(), parameter);
 				BookEntry entry = state.book.contents.entries.get(href);
 				if(entry != null) {
 					state.tooltip = entry.isLocked() ? (TextFormatting.GRAY + I18n.format("patchouli.gui.lexicon.locked")) : entry.getName();
 					GuiBook gui = state.gui;
 					Book book = state.book;
+					int page = 0;
+					if (anchor != null) {
+						int anchorPage = entry.getPageFromAnchor(anchor);
+						if (anchorPage >= 0)
+							page = anchorPage / 2;
+						else
+							state.tooltip += " (INVALID ANCHOR:" + anchor + ")";
+					}
+					int finalPage = page;
 					state.onClick = () -> {
-						gui.displayLexiconGui(new GuiBookEntry(book, entry), true);
+						GuiBookEntry entryGui = new GuiBookEntry(book, entry, finalPage);
+						gui.displayLexiconGui(entryGui, true);
 						GuiBook.playBookFlipSound(book);
 					};
 				} else {
