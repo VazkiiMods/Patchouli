@@ -28,7 +28,7 @@ ext.config = parseConfig(configFile)
 version = "${config.version}-${config.build_number}"
 
 if (System.getenv('BUILD_NUMBER') != null) {
-    version = "${config.version}-j"+ System.getenv('BUILD_NUMBER')
+    version += "." + System.getenv('BUILD_NUMBER')
 }
 
 group = "vazkii.patchouli" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
