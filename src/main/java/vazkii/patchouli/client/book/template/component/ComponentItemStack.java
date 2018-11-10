@@ -1,16 +1,13 @@
 package vazkii.patchouli.client.book.template.component;
 
-import org.lwjgl.opengl.GLSync;
-
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.gen.structure.template.Template;
+import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.template.TemplateComponent;
-import vazkii.patchouli.client.book.template.TemplateComponent.VariableHolder;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class ComponentItemStack extends TemplateComponent {

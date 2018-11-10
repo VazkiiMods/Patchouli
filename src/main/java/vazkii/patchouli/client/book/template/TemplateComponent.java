@@ -1,16 +1,13 @@
 package vazkii.patchouli.client.book.template;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
+import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -33,6 +30,11 @@ public abstract class TemplateComponent {
 
 	transient boolean isVisible = true;
 	transient boolean compiled = false;
+	
+	public transient JsonObject sourceObject;
+	protected transient IVariableProvider<String> variables;
+	protected transient IComponentProcessor processor;
+	protected transient TemplateInclusion encapsulation;
 
 	public final void compile(IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
 		if(compiled)
@@ -43,13 +45,22 @@ public abstract class TemplateComponent {
 			y += encapsulation.y;
 		}
 
-		Class<?> clazz = getClass();
+		this.variables = variables;
+		this.processor = processor;
+		this.encapsulation = encapsulation;
+		
+		compileVariableHolders(this, variables, processor, encapsulation);
+		compiled = true;
+	}
+	
+	public static void compileVariableHolders(Object o, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
+		Class<?> clazz = o.getClass();
 		Field[] fields = clazz.getFields();
 
 		for(Field f : fields) {
 			if(f.getType() == String.class && f.getAnnotation(VariableHolder.class) != null) try {
 				f.setAccessible(true);
-				String curr = (String) f.get(this);
+				String curr = (String) f.get(o);
 				String original = curr;
 
 				if(curr != null && !curr.isEmpty() && encapsulation != null)
@@ -58,8 +69,10 @@ public abstract class TemplateComponent {
 				if(curr != null) {
 					String val = curr;
 					if(curr.startsWith("#")) {
+						val = null;
 						String key = curr.substring(1);
 						String originalKey = original.substring(1);
+						
 						if(processor != null)
 							val = processor.process(originalKey);
 
@@ -70,14 +83,12 @@ public abstract class TemplateComponent {
 							val = "[FAILED TO LOAD " + key + "]";
 					}
 
-					f.set(this, val);
+					f.set(o, val);
 				}
 			} catch(IllegalAccessException e) {
 				throw new RuntimeException("Error compiling component", e);
 			}
 		}
-
-		compiled = true;
 	}
 
 	public boolean getVisibleStatus(IComponentProcessor processor) {
@@ -108,9 +119,5 @@ public abstract class TemplateComponent {
 	public void mouseClicked(BookPage page, int mouseX, int mouseY, int mouseButton) {
 		// NO-OP
 	}
-
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.FIELD)
-	public static @interface VariableHolder {}
 
 }

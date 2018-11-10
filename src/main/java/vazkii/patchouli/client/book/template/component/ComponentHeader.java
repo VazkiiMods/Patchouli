@@ -3,11 +3,11 @@ package vazkii.patchouli.client.book.template.component;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.renderer.GlStateManager;
+import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.template.TemplateComponent;
-import vazkii.patchouli.client.book.template.TemplateComponent.VariableHolder;
 
 public class ComponentHeader extends TemplateComponent {
 

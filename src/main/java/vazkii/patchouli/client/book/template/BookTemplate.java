@@ -13,6 +13,7 @@ import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
+import vazkii.patchouli.client.book.template.component.ComponentCustom;
 import vazkii.patchouli.client.book.template.component.ComponentEntity;
 import vazkii.patchouli.client.book.template.component.ComponentFrame;
 import vazkii.patchouli.client.book.template.component.ComponentHeader;
@@ -34,6 +35,7 @@ public class BookTemplate {
 		registerComponent("separator", ComponentSeparator.class);
 		registerComponent("frame", ComponentFrame.class);
 		registerComponent("entity", ComponentEntity.class);
+		registerComponent("custom", ComponentCustom.class);
 	}
 
 	@SerializedName("include")

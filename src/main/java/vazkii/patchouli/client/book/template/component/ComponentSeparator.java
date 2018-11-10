@@ -2,7 +2,6 @@ package vazkii.patchouli.client.book.template.component;
 
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
-import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 
 public class ComponentSeparator extends TemplateComponent {

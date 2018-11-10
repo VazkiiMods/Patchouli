@@ -218,7 +218,7 @@ public class BookContents {
 		// test supplier
 		BookTemplate template = supplier.get();
 		if(template == null)
-			throw new IllegalArgumentException(res + " does not exist.");
+			throw new IllegalArgumentException(res + " could not be instantiated by the supplier.");
 		
 		templates.put(key, supplier);
 	}

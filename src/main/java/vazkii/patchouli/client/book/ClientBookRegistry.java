@@ -129,7 +129,10 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 	        if(clazz == null)
 	        	return null;
 	        
-	        return SerializationUtil.RAW_GSON.fromJson(json, clazz);
+	        TemplateComponent component = SerializationUtil.RAW_GSON.fromJson(json, clazz);
+	        component.sourceObject = obj;
+
+	        return component;
 		}
 		
 	}	
