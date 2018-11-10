@@ -1,4 +1,4 @@
-package vazkii.patchouli.client.book.template.component.test;
+package vazkii.patchouli.client.book.template.test;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import vazkii.patchouli.api.ICustomComponent;
 import vazkii.patchouli.api.VariableHolder;
 
-public class TestCallback implements ICustomComponent {
+public class TestCustomComponent implements ICustomComponent {
 
 	int x, y;
 	
