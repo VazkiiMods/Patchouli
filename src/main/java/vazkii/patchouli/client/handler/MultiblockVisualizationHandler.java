@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.handler;
 
 import java.awt.Color;
+import java.lang.reflect.Field;
 import java.util.function.Function;
 
 import org.lwjgl.opengl.GL11;
@@ -35,11 +36,10 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
-import vazkii.patchouli.common.base.ObfuscationKeys;
+import vazkii.patchouli.common.util.ReflectionUtil;
 import vazkii.patchouli.common.multiblock.Multiblock;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
@@ -59,6 +59,20 @@ public class MultiblockVisualizationHandler {
 	private static int timeComplete;
 	private static IBlockState lookingState;
 	private static BlockPos lookingPos;
+
+	private static Field fieldRenderPosX;
+	private static Field fieldRenderPosY;
+	private static Field fieldRenderPosZ;
+
+	static {
+		try {
+			fieldRenderPosX = ReflectionUtil.accessField(RenderManager.class, "field_78725_b", "D");
+			fieldRenderPosY = ReflectionUtil.accessField(RenderManager.class, "field_78726_c", "D");
+			fieldRenderPosZ = ReflectionUtil.accessField(RenderManager.class, "field_78723_d", "D");
+		} catch (NoSuchFieldException e) {
+		    throw new RuntimeException("Unable to find necessary fields", e);
+		}
+	}
 
 	public static void setMultiblock(Multiblock multiblock, String name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos->pos);
@@ -203,9 +217,14 @@ public class MultiblockVisualizationHandler {
 
 		RenderManager manager = Minecraft.getMinecraft().getRenderManager();
 		BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
-		double posX = ReflectionHelper.getPrivateValue(RenderManager.class, manager, ObfuscationKeys.RenderManager.RENDER_POS_X);
-		double posY = ReflectionHelper.getPrivateValue(RenderManager.class, manager, ObfuscationKeys.RenderManager.RENDER_POS_Y);
-		double posZ = ReflectionHelper.getPrivateValue(RenderManager.class, manager, ObfuscationKeys.RenderManager.RENDER_POS_Z);
+		double posX = 0;
+		double posY = 0;
+		double posZ = 0;
+		try {
+			posX = (Double)fieldRenderPosX.get(manager);
+			posY = (Double)fieldRenderPosY.get(manager);
+			posZ = (Double)fieldRenderPosZ.get(manager);
+		} catch (IllegalAccessException ignored) { }
 
 		GlStateManager.pushMatrix();
 		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
