@@ -33,13 +33,6 @@ public class TextLayouter {
 	private int widthSoFar = 0;
 
 	public void layout(List<Span> spans) {
-		StringBuilder allText = new StringBuilder();
-		for (Span span : spans)
-			allText.append(span.text);
-
-		BreakIterator breakIterator = BreakIterator.getLineInstance();
-		breakIterator.setText(allText.toString());
-
 		List<Span> paragraph = new ArrayList<>();
 		for (Span span : spans) {
 			if (span.lineBreaks > 0) {
