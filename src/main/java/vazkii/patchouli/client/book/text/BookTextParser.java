@@ -27,15 +27,11 @@ public class BookTextParser {
 
 	static {
 		register(state -> {
-			state.length = 0;
-			state.x = state.pageX;
-			state.y += state.lineHeight;
+			state.lineBreaks = 1;
 			return "";
 		}, "br");
 		register(state -> {
-			state.length = 0;
-			state.x = state.pageX;
-			state.y += state.lineHeight * 2;
+			state.lineBreaks = 2;
 			return "";
 		}, "br2", "2br", "p");
 		register(state -> {
@@ -148,8 +144,6 @@ public class BookTextParser {
 		boolean wasUnicode = font.getUnicodeFlag();
 		font.setUnicodeFlag(true);
 
-		List<Word> words = new ArrayList<>();
-
 		String actualText = text;
 		if(actualText == null)
 			actualText = "[ERROR]";
@@ -157,76 +151,55 @@ public class BookTextParser {
 		for(String key : book.macros.keySet())
 			actualText = actualText.replace(key, book.macros.get(key));
 
-		SpanState state = new SpanState(gui, book, x, lineHeight, baseColor, font);
-		state.x = x;
-		state.y = y;
-		state.length = 0;
-		state.color = baseColor;
-		state.prevColor = baseColor;
+		List<Span> spans = processCommands(actualText);
+		List<Word> words = layout(spans);
 
+		font.setUnicodeFlag(wasUnicode);
+		return words;
+	}
+
+	private List<Word> layout(List<Span> spans) {
+		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width);
+		layouter.layout(spans);
+		return layouter.getWords();
+	}
+
+	private List<Span> processCommands(String text) {
+		SpanState state = new SpanState(gui, book, baseColor, font);
+		List<Span> spans = new ArrayList<>();
 		int from = 0;
-		char[] chars = actualText.toCharArray();
+		char[] chars = text.toCharArray();
 		for (int i = 0; i < chars.length; i++) {
-			if (chars[i] == ' ') {
-				processToken(words, state, actualText.substring(from, i), true);
-				from = i + 1;
-			} else if (chars[i] == '$' && i + 1 < chars.length && chars[i + 1] == '(') {
+			if (chars[i] == '$' && i + 1 < chars.length && chars[i + 1] == '(') {
 				if (i > from)
-					processToken(words, state, actualText.substring(from, i), false);
+					spans.add(new Span(state, text.substring(from, i)));
 
 				from = i;
 				while (i < chars.length && chars[i] != ')')
 					i++;
 
 				if (chars[i] != ')') {
-					processToken(words, state, "[ERROR: UNFINISHED COMMAND]", false);
+					spans.add(Span.error(state, "[ERROR: UNFINISHED COMMAND]"));
 					break;
 				}
 
 				try {
-					String word = processCommand(state, actualText.substring(from + 2, i));
-					if (!word.isEmpty())
-						processToken(words, state, word, false);
+					String processed = processCommand(state, text.substring(from + 2, i));
+					if (!processed.isEmpty()) {
+						spans.add(new Span(state, processed));
+
+						if (state.cluster == null)
+							state.tooltip = "";
+					}
 				} catch (Exception ex) {
-					processToken(words, state, "[ERROR]", false);
+					spans.add(Span.error(state, "[ERROR]"));
 				}
 
 				from = i + 1;
 			}
 		}
-		if (from < chars.length)
-			processToken(words, state, actualText.substring(from), false);
-
-		font.setUnicodeFlag(wasUnicode);
-		return words;
-	}
-
-	private void processToken(List<Word> words, SpanState state, String text, boolean space) {
-		if (text.isEmpty() && !space)
-			return;
-
-		int trimWidth = font.getStringWidth(state.codes + text);
-		int strWidth = trimWidth + (space ? spaceWidth : 0);
-
-		int newLen = state.length + strWidth;
-
-		if(newLen > width) {
-			int newTrimLen = state.length + trimWidth;
-			if(newTrimLen > width) {
-				state.length = strWidth;
-				state.x = x;
-				state.y += lineHeight;
-			} else state.length = newTrimLen;
-		} else state.length = newLen;
-
-		Word word = new Word(gui, font, state, text, strWidth);
-		words.add(word);
-		if(state.cluster != null)
-			state.cluster.add(word);
-		else
-			state.tooltip = "";
-
-		state.x += strWidth;
+		spans.add(new Span(state, text.substring(from)));
+		return spans;
 	}
 
 	private String processCommand(SpanState state, String cmd) {
@@ -253,12 +226,10 @@ public class BookTextParser {
 			int dist = Character.isDigit(c) ? Character.digit(c, 10) : 1;
 			int pad = dist * 4;
 			char bullet = dist % 2 == 0 ? '\u25E6' : '\u2022';
-			if(state.y > y || state.x > x)
-				state.y += lineHeight;
-			state.length = pad;
-			state.x = x + pad;
-
-			return TextFormatting.BLACK + "" + bullet + " ";
+			state.lineBreaks = 1;
+			state.spacingLeft = pad;
+			state.spacingRight = spaceWidth;
+			return TextFormatting.BLACK.toString() + bullet;
 		}
 
 		if (cmd.indexOf(':') > 0) {

@@ -18,20 +18,20 @@ public class Word {
 	private final String tooltip;
 	private final Runnable onClick;
 
-	public Word(GuiBook gui, FontRenderer font, SpanState state, String text, int strWidth) {
+	public Word(GuiBook gui, Span span, String text, int x, int y, int strWidth, List<Word> cluster) {
 		this.book = gui.book;
 		this.gui = gui;
-		this.font = font;
-		this.x = state.x;
-		this.y = state.y;
+		this.font = span.font;
+		this.x = x;
+		this.y = y;
 		this.width = strWidth;
 		this.height = 8;
 		this.text = text;
-		this.color = state.color;
-		this.codes = state.codes;
-		this.onClick = state.onClick;
-		this.linkCluster = state.cluster;
-		this.tooltip = state.tooltip;
+		this.color = span.color;
+		this.codes = span.codes;
+		this.onClick = span.onClick;
+		this.linkCluster = cluster;
+		this.tooltip = span.tooltip;
 	}
 
 	public void render(int mouseX, int mouseY) {
