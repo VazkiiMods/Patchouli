@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraftforge.client.MinecraftForgeClient;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 import java.text.BreakIterator;
@@ -58,7 +59,7 @@ public class TextLayouter {
 	// a paragraph is a series of spans without explicit line break
 	private void layoutParagraph(List<Span> paragraph) {
 		String text = toString(paragraph);
-		BreakIterator iterator = BreakIterator.getLineInstance();
+		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftForgeClient.getLocale());
 		iterator.setText(text);
 		lineStart = 0;
 
