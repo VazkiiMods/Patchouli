@@ -233,25 +233,22 @@ public class BookContents {
 		ResourceLocation localized = new ResourceLocation(res.getResourceDomain(),
 				res.getResourcePath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
 
-		return loadJson(localized, null);
+		return loadJson(localized, res);
 	}
 
 	protected InputStream loadJson(ResourceLocation resloc, ResourceLocation fallback) {
-		IResource res = null;
 		try {
-			res = Minecraft.getMinecraft().getResourceManager().getResource(resloc);
-		} catch (FileNotFoundException e) {
-			return null;
+			return Minecraft.getMinecraft().getResourceManager().getResource(resloc).getInputStream();
 		} catch (IOException e) {
-			e.printStackTrace();
+			//no-op
 		}
 
-		if(res == null && fallback != null) {
-			new RuntimeException("Patchouli failed to load " + resloc + ". Switching to fallback.").printStackTrace();
+		if(fallback != null) {
+			System.err.println("Patchouli failed to load " + resloc + ". Switching to fallback.");
 			return loadJson(fallback, null);
 		}
 
-		return res.getInputStream();
+		return null;
 	}
 
 	private static String numberToOrdinal(int i) {
