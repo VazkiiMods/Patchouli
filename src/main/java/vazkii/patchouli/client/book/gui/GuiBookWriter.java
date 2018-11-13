@@ -92,7 +92,8 @@ public class GuiBookWriter extends GuiBook {
 		} catch(Throwable e) {
 			editableText = new BookTextRenderer(this, "[ERROR]", RIGHT_PAGE_X, yPos);
 			e.printStackTrace();
+		} finally {
+			fontRenderer.setUnicodeFlag(unicode); // if there's an error the state might not be reset
 		}
-		fontRenderer.setUnicodeFlag(unicode); // if there's an error the state might not be reset
 	}
 }

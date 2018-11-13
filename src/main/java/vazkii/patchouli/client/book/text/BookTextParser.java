@@ -178,7 +178,7 @@ public class BookTextParser {
 				while (i < chars.length && chars[i] != ')')
 					i++;
 
-				if (chars[i] != ')') {
+				if (i == chars.length) {
 					spans.add(Span.error(state, "[ERROR: UNFINISHED COMMAND]"));
 					break;
 				}
