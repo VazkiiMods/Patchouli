@@ -32,6 +32,14 @@ public class ItemStackUtil {
 		}
 		
 		int meta = 0;
+		
+		String[] upper = res.split("#");
+		String count = "1";
+		if(upper.length > 1) {
+			res = upper[0];
+			count = upper[1];
+		}
+		
 		String[] tokens = res.split(":");
 		if(tokens.length < 2)
 			return ItemStack.EMPTY;
@@ -39,8 +47,9 @@ public class ItemStackUtil {
 		if(tokens.length == 3)
 			meta = Integer.parseInt(tokens[2]);
 		
+		int countn = Integer.parseInt(count);
 		Item item = Item.REGISTRY.getObject(new ResourceLocation(tokens[0], tokens[1]));
-		ItemStack stack = new ItemStack(item, 1, meta);
+		ItemStack stack = new ItemStack(item, countn, meta);
 		if(!nbt.isEmpty())
 			try {
 				stack.setTagCompound(JsonToNBT.getTagFromJson(nbt));
