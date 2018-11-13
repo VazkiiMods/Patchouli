@@ -91,6 +91,9 @@ public class Book {
 	public String openSound = "patchouli:book_open";
 	@SerializedName("flip_sound")
 	public String flipSound = "patchouli:book_flip";
+	
+	@SerializedName("show_progress")
+	public boolean showProgress = true;
 
 	public String version = "0";
 	public String subtitle = "";

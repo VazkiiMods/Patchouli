@@ -119,8 +119,7 @@ public class GuiBookLanding extends GuiBook {
 				makeErrorTooltip();
 		}
 		
-		if(!PatchouliConfig.disableAdvancementLocking)
-			drawProgressBar(book, mouseX, mouseY, (e) -> true);
+		drawProgressBar(book, mouseX, mouseY, (e) -> true);
 	}
 
 	void drawHeader() {

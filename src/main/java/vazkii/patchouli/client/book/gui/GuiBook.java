@@ -31,6 +31,7 @@ import vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBack;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
+import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 
@@ -334,6 +335,9 @@ public abstract class GuiBook extends GuiScreen {
 	}
 
 	public void drawProgressBar(Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
+		if(!book.showProgress || PatchouliConfig.disableAdvancementLocking)
+			return;
+		
 		int barLeft = 19;
 		int barTop = FULL_HEIGHT - 36;
 		int barWidth = PAGE_WIDTH - 10;
