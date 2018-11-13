@@ -48,6 +48,8 @@ public class BookContents {
 
 	public Stack<GuiBook> guiStack = new Stack();
 	public GuiBook currentGui;
+	
+	public BookIcon indexIcon;
 
 	public BookContents(Book book) {
 		this.book = book;
@@ -108,6 +110,10 @@ public class BookContents {
 			categories.clear();
 			entries.clear();
 			recipeMappings.clear();
+			
+			if(book.indexIconRaw == null || book.indexIconRaw.isEmpty())
+				indexIcon = new BookIcon(book.getBookItem());
+			else indexIcon = new BookIcon(book.indexIconRaw);
 		}
 
 		List<ResourceLocation> foundCategories = new ArrayList();

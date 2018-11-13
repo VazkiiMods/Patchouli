@@ -94,6 +94,9 @@ public class Book {
 	
 	@SerializedName("show_progress")
 	public boolean showProgress = true;
+	
+	@SerializedName("index_icon")
+	public String indexIconRaw = "";
 
 	public String version = "0";
 	public String subtitle = "";
