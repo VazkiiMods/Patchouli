@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
 import com.google.gson.Gson;
@@ -30,7 +31,7 @@ public class SerializationUtil {
 			}
 
 			FileInputStream in = new FileInputStream(f);
-			return gson.fromJson(new InputStreamReader(in), clazz);
+			return gson.fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), clazz);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,7 +77,7 @@ public class BookRegistry {
 	}
 	
 	public void loadBook(ModContainer mod, ResourceLocation res, InputStream stream, boolean external) {
-		Reader reader = new BufferedReader(new InputStreamReader(stream));
+		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		Book book = gson.fromJson(reader, Book.class);
 
 		books.put(res, book);

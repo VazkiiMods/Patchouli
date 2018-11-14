@@ -1,9 +1,13 @@
 package vazkii.patchouli.client.book;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,6 +28,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
+import sun.plugin.viewer.context.IExplorerAppletContext;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookLanding;
 import vazkii.patchouli.client.book.template.BookTemplate;
@@ -167,7 +172,7 @@ public class BookContents {
 		return (root, file) -> {
 			Path rel = root.relativize(file);
 			String relName = rel.toString();
-			if(relName.toString().endsWith(".json")) {
+			if(relName.endsWith(".json")) {
 				relName = FilenameUtils.removeExtension(FilenameUtils.separatorsToUnix(relName));
 				ResourceLocation res = new ResourceLocation(modId, relName);
 				list.add(res);
@@ -178,47 +183,47 @@ public class BookContents {
 	}
 
 	private void loadCategory(ResourceLocation key, ResourceLocation res, Book book) {
-		InputStream stream = loadLocalizedJson(res);
-		if(stream == null)
-			throw new IllegalArgumentException(res + " does not exist.");
+		try (Reader stream = loadLocalizedJson(res)) {
+			BookCategory category = ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookCategory.class);
+			if (category == null)
+				throw new IllegalArgumentException(res + " does not exist.");
 
-		BookCategory category = ClientBookRegistry.INSTANCE.gson.fromJson(new InputStreamReader(stream), BookCategory.class);
-		if(category == null)
-			throw new IllegalArgumentException(res + " does not exist.");
-
-		category.setBook(book);
-		if(category.canAdd())
-			categories.put(key, category);
+			category.setBook(book);
+			if (category.canAdd())
+				categories.put(key, category);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	private void loadEntry(ResourceLocation key, ResourceLocation res, Book book) {
-		InputStream stream = loadLocalizedJson(res);
-		if(stream == null)
-			throw new IllegalArgumentException(res + " does not exist.");
+		try (Reader stream = loadLocalizedJson(res)) {
+			BookEntry entry = ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookEntry.class);
+			if (entry == null)
+				throw new IllegalArgumentException(res + " does not exist.");
 
-		BookEntry entry = ClientBookRegistry.INSTANCE.gson.fromJson(new InputStreamReader(stream), BookEntry.class);
-		if(entry == null)
-			throw new IllegalArgumentException(res + " does not exist.");
+			entry.setBook(book);
+			if (entry.canAdd()) {
+				BookCategory category = entry.getCategory();
+				if (category != null)
+					category.addEntry(entry);
+				else
+					new RuntimeException("Entry " + key + " does not have a valid category.").printStackTrace();
 
-		entry.setBook(book);
-		if(entry.canAdd()) {
-			BookCategory category = entry.getCategory();
-			if(category != null)
-				category.addEntry(entry);
-			else
-				new RuntimeException("Entry " + key + " does not have a valid category.").printStackTrace();
-
-			entries.put(key, entry);
+				entries.put(key, entry);
+			}
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
 	}
 	
 	private void loadTemplate(ResourceLocation key, ResourceLocation res, Book book) {
 		Supplier<BookTemplate> supplier = () -> {
-			InputStream stream = loadLocalizedJson(res);
-			if(stream == null)
-				throw new IllegalArgumentException(res + " does not exist.");
-			
-			return ClientBookRegistry.INSTANCE.gson.fromJson(new InputStreamReader(stream), BookTemplate.class); 
+			try (Reader stream = loadLocalizedJson(res)) {
+				return ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookTemplate.class);
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
 		};
 		
 		// test supplier
@@ -229,11 +234,15 @@ public class BookContents {
 		templates.put(key, supplier);
 	}
 
-	private InputStream loadLocalizedJson(ResourceLocation res) {
+	private Reader loadLocalizedJson(ResourceLocation res) {
 		ResourceLocation localized = new ResourceLocation(res.getResourceDomain(),
 				res.getResourcePath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
 
-		return loadJson(localized, res);
+		InputStream input = loadJson(localized, res);
+		if (input == null)
+			throw new IllegalArgumentException(res + " does not exist.");
+
+		return new InputStreamReader(new BufferedInputStream(input), StandardCharsets.UTF_8);
 	}
 
 	protected InputStream loadJson(ResourceLocation resloc, ResourceLocation fallback) {

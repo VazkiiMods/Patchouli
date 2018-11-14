@@ -173,7 +173,7 @@ public class TextLayouter {
 		public SpanTail(Span span, int start, List<Word> cluster) {
 			this.span = span;
 			this.start = start;
-			this.width = span.font.getStringWidth(span.text.substring(start)) + span.spacingLeft + span.spacingRight;
+			this.width = span.font.getStringWidth(span.codes + span.text.substring(start)) + span.spacingLeft + span.spacingRight;
 			this.cluster = cluster;
 			this.length = span.text.length() - start;
 		}
