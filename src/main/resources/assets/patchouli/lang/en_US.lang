@@ -15,6 +15,13 @@ item.patchouli:intro_book.name=Patchouli
 item.patchouli:intro_book.subtitle=Documentation for everyone
 item.patchouli:intro_book.landing=With $(item)Patchouli$(), you can make easy to read, advancement unlockable $(thing)books$() for mods and modpacks!
 
+
+#Subtitles
+patchouli.subtitle.book_open=Book Opens
+patchouli.subtitle.book_flip=Page Turns
+
+
+
 # Gui Strings
 patchouli.gui.lexicon.landing_info=(Placeholder landing text, define your own in your book json file!)
 patchouli.gui.lexicon.progress_meter=Unlock Progress:
