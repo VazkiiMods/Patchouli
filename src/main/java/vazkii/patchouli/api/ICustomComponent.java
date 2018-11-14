@@ -27,7 +27,7 @@ public interface ICustomComponent {
 	 * Called every render tick. No special transformations are applied, so you're responsible
 	 * for putting everything in the right place.
 	 */
-	public void render(float pticks);
+	public void render(float pticks, int mouseX, int mouseY);
 	
 	/**
 	 * Called when this component first enters the screen. Good time to refresh anything that

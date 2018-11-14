@@ -30,7 +30,7 @@ public class ComponentCustom extends TemplateComponent {
 	
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
-		callbacks.render(pticks);
+		callbacks.render(pticks, mouseX, mouseY);
 	}
 	
 	@Override

@@ -22,7 +22,7 @@ public class TestCustomComponent implements ICustomComponent {
 	}
 
 	@Override
-	public void render(float pticks) {
+	public void render(float pticks, int mouseX, int mouseY) {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0);
 		GlStateManager.rotate(30F, 0F, 0F, 1F);
