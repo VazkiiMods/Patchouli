@@ -1,8 +1,5 @@
 package vazkii.patchouli.client.book.page;
 
-import java.util.function.Supplier;
-
-import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;

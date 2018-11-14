@@ -1,13 +1,8 @@
 package vazkii.patchouli.client.book.template.component;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.SerializedName;
 
 import vazkii.patchouli.api.ICustomComponent;
-import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;

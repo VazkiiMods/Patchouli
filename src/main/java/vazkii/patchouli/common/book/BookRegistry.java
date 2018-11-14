@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
@@ -31,7 +29,7 @@ public class BookRegistry {
 	public static final BookRegistry INSTANCE = new BookRegistry();
 	public static final String BOOKS_LOCATION = Patchouli.MOD_ID + "_books";
 
-	public final Map<ResourceLocation, Book> books = new HashMap();
+	public final Map<ResourceLocation, Book> books = new HashMap<>();
 	public Gson gson;
 
 	private BookRegistry() { 
@@ -40,7 +38,7 @@ public class BookRegistry {
 
 	public void init() {
 		List<ModContainer> mods = Loader.instance().getActiveModList();
-		Map<Pair<ModContainer, ResourceLocation>, String> foundBooks = new HashMap();
+		Map<Pair<ModContainer, ResourceLocation>, String> foundBooks = new HashMap<>();
 
 		mods.forEach((mod) -> {
 			String id = mod.getModId();
@@ -51,7 +49,7 @@ public class BookRegistry {
 							String relPath = fileStr.substring(fileStr.indexOf(BOOKS_LOCATION) + BOOKS_LOCATION.length() + 1);
 							String bookName = relPath.substring(0, relPath.indexOf("/"));
 
-							if(bookName.indexOf("/") > -1) {
+							if(bookName.contains("/")) {
 								(new IllegalArgumentException("Ignored book.json @ " + file)).printStackTrace();
 								return true;
 							}

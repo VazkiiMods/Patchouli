@@ -150,11 +150,11 @@ public class Multiblock implements IMultiblock {
 		if(targets.length % 2 == 1)
 			throw new IllegalArgumentException("Illegal argument length for targets array " + targets.length);
 
-		Map<Character, IStateMatcher> stateMap = new HashMap();
+		Map<Character, IStateMatcher> stateMap = new HashMap<>();
 		for(int i = 0; i < targets.length / 2; i++) {
 			char c = (Character) targets[i * 2];
 			Object o = targets[i * 2 + 1];
-			IStateMatcher state = null;
+			IStateMatcher state;
 
 			if(o instanceof Block)
 				state = StateMatcher.fromBlockLoose((Block) o);

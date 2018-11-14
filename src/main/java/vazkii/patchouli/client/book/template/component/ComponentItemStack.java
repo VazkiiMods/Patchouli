@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import vazkii.patchouli.api.VariableHolder;
@@ -37,7 +38,7 @@ public class ComponentItemStack extends TemplateComponent {
 			GlStateManager.enableBlend();
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			page.mc.renderEngine.bindTexture(page.book.craftingResource);
-			page.parent.drawModalRectWithCustomSizedTexture(x - 4, y - 4, 83, 71, 24, 24, 128, 128);
+			Gui.drawModalRectWithCustomSizedTexture(x - 4, y - 4, 83, 71, 24, 24, 128, 128);
 		}
 		
 		page.renderItem(x, y, mouseX, mouseY, stack);

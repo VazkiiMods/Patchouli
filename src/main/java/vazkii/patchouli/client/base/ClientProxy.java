@@ -8,7 +8,6 @@ import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.CommonProxy;
 import vazkii.patchouli.common.book.BookRegistry;
-import vazkii.patchouli.common.item.PatchouliItems;
 
 public class ClientProxy extends CommonProxy {
 

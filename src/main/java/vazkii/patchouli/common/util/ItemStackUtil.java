@@ -1,12 +1,9 @@
 package vazkii.patchouli.common.util;
 
-import java.util.HashMap;
-
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public class ItemStackUtil {

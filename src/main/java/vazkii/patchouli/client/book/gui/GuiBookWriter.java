@@ -6,7 +6,7 @@ import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
 import vazkii.patchouli.common.book.Book;
 
@@ -26,7 +26,7 @@ public class GuiBookWriter extends GuiBook {
 	public void initGui() {
 		super.initGui();
 		
-		text = new BookTextRenderer(this, I18n.translateToLocal("patchouli.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
+		text = new BookTextRenderer(this, I18n.format("patchouli.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
 		textfield = new GuiTextField(0, fontRenderer, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20);
 		textfield.setMaxStringLength(Integer.MAX_VALUE);
 		textfield.setText(savedText);
@@ -41,11 +41,11 @@ public class GuiBookWriter extends GuiBook {
 	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
 		super.drawForegroundElements(mouseX, mouseY, partialTicks);
 		
-		drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+		drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 		drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
 
 		if(drawHeader) {
-			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
 		}
 		

@@ -20,7 +20,7 @@ import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
 
 public final class AdvancementSyncHandler {
 
-	public static Set<String> trackedNamespaces = new HashSet();
+	public static Set<String> trackedNamespaces = new HashSet<>();
 	
 	public static List<ResourceLocation> syncedAdvancements = null;
 
@@ -49,7 +49,7 @@ public final class AdvancementSyncHandler {
 			AdvancementManager manager = player.getServer().getAdvancementManager();
 			Iterable<Advancement> allAdvancements = manager.getAdvancements();
 			
-			syncedAdvancements = new ArrayList();
+			syncedAdvancements = new ArrayList<>();
 			for(Advancement a : allAdvancements)
 				if(trackedNamespaces.contains(a.getId().getResourceDomain()))
 					syncedAdvancements.add(a.getId());
@@ -63,7 +63,7 @@ public final class AdvancementSyncHandler {
 		
 		AdvancementManager manager = player.getServer().getAdvancementManager();
 		
-		List<String> completed = new LinkedList();
+		List<String> completed = new LinkedList<>();
 		for(ResourceLocation res : syncedAdvancements) {
 			Advancement adv = manager.getAdvancement(res);
 			AdvancementProgress p = advancements.getProgress(adv);
@@ -71,7 +71,7 @@ public final class AdvancementSyncHandler {
 				completed.add(res.toString());
 		}
 		
-		String[] completedArr = completed.toArray(new String[completed.size()]);
+		String[] completedArr = completed.toArray(new String[0]);
 		NetworkHandler.INSTANCE.sendTo(new MessageSyncAdvancements(completedArr, showToast), player);
 	}
 	

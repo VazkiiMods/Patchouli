@@ -9,11 +9,10 @@ import java.util.List;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonEntry;
-import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
 public abstract class GuiBookEntryList extends GuiBook {
@@ -51,7 +50,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		searchField.setCanLoseFocus(false);
 		searchField.setFocused(true);
 		
-		dependentButtons = new ArrayList();
+		dependentButtons = new ArrayList<>();
 		buildEntryButtons();
 	}
 	
@@ -81,7 +80,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		
 		if(page == 0) {
 			drawCenteredStringNoShadow(getName(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
 			drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
 			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
@@ -102,9 +101,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 		}
 		
 		if(visibleEntries.isEmpty()) {
-			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
+			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
 			GlStateManager.scale(2F, 2F, 2F);
-			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
+			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 		}
 	}

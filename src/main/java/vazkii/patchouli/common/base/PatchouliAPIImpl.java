@@ -44,7 +44,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	@Override
 	public void openBookGUI(EntityPlayerMP player, ResourceLocation book) {
-		NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.toString()), (EntityPlayerMP) player);
+		NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.toString()), player);
 	}
 	
 	@Override

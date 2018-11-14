@@ -13,6 +13,8 @@ package vazkii.patchouli.common.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import vazkii.patchouli.common.base.Patchouli;
@@ -48,7 +50,7 @@ public class NetworkHandler {
 			ByteBufUtils.writeUTF8String(buf, arr[i]);
 	}
 	
-	public static void register(Class clazz, Side handlerSide) {
+	public static <T extends IMessage & IMessageHandler<T, IMessage>> void register(Class<T> clazz, Side handlerSide) {
 		INSTANCE.registerMessage(clazz, clazz, i++, handlerSide);
 	}
 	

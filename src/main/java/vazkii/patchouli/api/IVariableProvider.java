@@ -3,10 +3,10 @@ package vazkii.patchouli.api;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 /**
  * A provider of variables to a template. Usually from json.
  */
+@SideOnly(Side.CLIENT)
 public interface IVariableProvider<T> {
 
 	/**

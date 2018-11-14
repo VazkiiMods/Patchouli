@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.patchouli.client.book.BookContents;
+import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ExternalBookContents;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.handler.AdvancementSyncHandler;
@@ -26,7 +27,7 @@ public class Book {
 	public static final String DEFAULT_MODEL = Patchouli.PREFIX + "book_brown";
 	public static final ModelResourceLocation DEFAULT_MODEL_RES = new ModelResourceLocation(DEFAULT_MODEL, "inventory");
 	
-	private static final Map<String, String> DEFAULT_MACROS = new HashMap() {{
+	private static final Map<String, String> DEFAULT_MACROS = new HashMap<String, String>() {{
 		put("$(list", "$(li"); //  The lack of ) is intended
 		put("/$", "$()");
 		put("<br>", "$(br)");
@@ -48,7 +49,7 @@ public class Book {
 	public transient int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
 	
 	public transient boolean isExtension = false;
-	public transient List<Book> extensions = new LinkedList();
+	public transient List<Book> extensions = new LinkedList<>();
 	public transient Book extensionTarget;
 	
 	public transient boolean isExternal;
@@ -60,7 +61,7 @@ public class Book {
 	public String landingText = "patchouli.gui.lexicon.landing_info";
 
 	@SerializedName("advancement_namespaces")
-	public List<String> advancementNamespaces = new ArrayList();
+	public List<String> advancementNamespaces = new ArrayList<>();
 
 	@SerializedName("book_texture")
 	public String bookTexture = Patchouli.PREFIX + "textures/gui/book_brown.png";
@@ -119,7 +120,7 @@ public class Book {
 	@SerializedName("allow_extensions")
 	public boolean allowExtensions = true;
 	
-	public Map<String, String> macros = new HashMap();
+	public Map<String, String> macros = new HashMap<>();
 	
 	public void build(ModContainer owner, ResourceLocation resource, boolean external) {
 		this.owner = owner;
@@ -224,7 +225,7 @@ public class Book {
 	
 	@SideOnly(Side.CLIENT)
 	public void reloadLocks(boolean reset) {
-		contents.entries.values().forEach((e) -> e.updateLockStatus());
+		contents.entries.values().forEach(BookEntry::updateLockStatus);
 		contents.categories.values().forEach((c) -> c.updateLockStatus(true));
 		
 		if(reset)

@@ -4,12 +4,12 @@ import java.lang.reflect.Constructor;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import vazkii.patchouli.api.VariableHolder;
@@ -29,14 +29,14 @@ public class ComponentEntity extends TemplateComponent {
 	float renderSize = 100;
 	
 	transient boolean errored;
-	transient Constructor<Entity> constructor;
+	transient Constructor<? extends Entity> constructor;
 	transient Entity entity;
 	transient float renderScale, offset;
 	transient NBTTagCompound nbt;
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		String nbtStr = "";
+		String nbtStr;
 		int nbtStart = entityId.indexOf("{");
 		if(nbtStart > 0) {
 			nbtStr = entityId.substring(nbtStart).replaceAll("([^\\\\])'", "$1\"").replaceAll("\\\\'", "'");
@@ -49,7 +49,7 @@ public class ComponentEntity extends TemplateComponent {
 			}
 		}
 		
-		Class clazz = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityId)).getEntityClass();
+		Class<? extends Entity> clazz = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityId)).getEntityClass();
 		try {
 			constructor = clazz.getConstructor(World.class);
 		} catch(Exception e) {
@@ -65,7 +65,7 @@ public class ComponentEntity extends TemplateComponent {
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
 		if(errored)
-			page.fontRenderer.drawStringWithShadow(I18n.translateToLocal("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
+			page.fontRenderer.drawStringWithShadow(I18n.format("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
 		
 		if(entity != null)
 			renderEntity(page.mc.world, ClientTicker.total);
