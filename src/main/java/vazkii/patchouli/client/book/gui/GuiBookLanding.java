@@ -49,7 +49,8 @@ public class GuiBookLanding extends GuiBook {
 		int pos = 0;
 		
 		// Resize
-		buttonList.add(new GuiButtonBookResize(this, x + (pos++) * dist, y, true));
+		if (maxScale > 2)
+			buttonList.add(new GuiButtonBookResize(this, x + (pos++) * dist, y, true));
 		
 		// History
 		buttonList.add(new GuiButtonBookHistory(this, x + (pos++) * dist, y));
@@ -192,7 +193,7 @@ public class GuiBookLanding extends GuiBook {
 
 		else if(button instanceof GuiButtonBookResize) {
 			if(PersistentData.data.bookGuiScale >= maxScale)
-				PersistentData.data.bookGuiScale = 2;
+				PersistentData.data.bookGuiScale = 0;
 			else PersistentData.data.bookGuiScale = Math.max(2, PersistentData.data.bookGuiScale + 1);
 
 			PersistentData.save();
