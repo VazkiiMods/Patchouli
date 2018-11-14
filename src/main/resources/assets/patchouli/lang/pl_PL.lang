@@ -15,6 +15,10 @@ item.patchouli:intro_book.name=Patchouli
 item.patchouli:intro_book.subtitle=Dokumentacja dla wszystkich
 item.patchouli:intro_book.landing=Z $(item)Patchouli$(), możesz tworzyć łatwe do czytania, odblokowalne za pomocą postępów $(thing)książki$() dla modów i paczek modów!
 
+#Subtitles
+patchouli.subtitle.book_open=Otwarcie książki
+patchouli.subtitle.book_flip=Zmiana strony
+
 # Gui Strings
 patchouli.gui.lexicon.landing_info=(Symbol zastępczy osadzonego tekstu, zdefiniuj swój własny w pliku book.json!)
 patchouli.gui.lexicon.progress_meter=Progres odblokowania:
