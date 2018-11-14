@@ -1,0 +1,87 @@
+# Item Names
+item.patchouli:guide_book.name=Guida
+
+# Testing
+item.patchouli:test_book_1.name=Libro di test 1
+item.patchouli:test_book_1.landing=Non altrettanto divertente come introduzione, ma comunque presente.
+
+item.patchouli:test_book_2.name=Libro di test 2
+item.patchouli:test_book_2.landing=Testo introduttivo! Supporta perfino i $(2)colori$() e $(4)cose $(bold)simili$()!
+
+item.patchouli:test_completion.name=Libro di test ad avanzamenti
+item.patchouli:test_completion.landing=Questo libro cambia colore quando sblocchi le voci!
+
+item.patchouli:intro_book.name=Patchouli
+item.patchouli:intro_book.subtitle=Documentazione per tutti
+item.patchouli:intro_book.landing=Con $(item)Patchouli$(), puoi realizzare $(thing)libri$() facili da leggere e sbloccabili con avanzamenti per le mod e i modpack!
+
+
+#Subtitles
+patchouli.subtitle.book_open=Libro che si apre
+patchouli.subtitle.book_flip=Pagina che gira
+
+
+# Gui Strings
+patchouli.gui.lexicon.landing_info=(Testo introduttivo temporaneo, definisci il tuo nel file book.json!)
+patchouli.gui.lexicon.progress_meter=Progresso:
+patchouli.gui.lexicon.progress_tooltip=%d/%d Voci sbloccate
+patchouli.gui.lexicon.progress_tooltip.secret1=Più 1 Segreto
+patchouli.gui.lexicon.progress_tooltip.secret=Più %d Segreti
+patchouli.gui.lexicon.progress_tooltip.info=Completa avanzamenti per sbloccare nuove voci!
+patchouli.gui.lexicon.categories=Categorie
+patchouli.gui.lexicon.chapters=Capitoli
+patchouli.gui.lexicon.editor=Editor di libri
+patchouli.gui.lexicon.editor.mock_header=Prefazione temporanea
+patchouli.gui.lexicon.editor.info=Questo è un editor delle voci dei libri di Patchouli. È stato pensato per lo sviluppo e la traduzione. Non dovresti usarlo se sei un giocatore.$(br2)Per favore rimanda alla $(l:https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101)wiki di Patchouli$() per i codici di controllo utilizzabili.
+patchouli.gui.lexicon.shift_for_recipe=Shift-Click per la ricetta
+patchouli.gui.lexicon.index=Indice delle voci
+patchouli.gui.lexicon.index.info=Un indice di ogni capitolo disponibilie in questo libro.$(br2)Puoi effettuare una ricerca semplicemente digitando ciò che cerchi. Comparirà una barra di ricerca ad aiutarti.
+patchouli.gui.lexicon.shapeless=Senza forma
+patchouli.gui.lexicon.no_results=Nessun risultato
+patchouli.gui.lexicon.sad=:(
+patchouli.gui.lexicon.locked=(Bloccato)
+patchouli.gui.lexicon.reloaded=Libri ricaricati. Ci sono voluti %d ms.
+patchouli.gui.lexicon.add_bookmark=Aggiungi segnalibro
+patchouli.gui.lexicon.remove_bookmark=(Shift-Click per rimuovere)
+patchouli.gui.lexicon.multiblock_bookmark=Struttura visualizzata
+patchouli.gui.lexicon.relations=Capitoli collegati
+patchouli.gui.lexicon.not_anchored=Clicca col tasto destro su un blocco per ancorare la struttura
+patchouli.gui.lexicon.structure_complete=Struttura completata!
+patchouli.gui.lexicon.needs_air=(Rimuovi i blocchi evidenziati in rosso)
+patchouli.gui.lexicon.visualize_letter=V
+patchouli.gui.lexicon.seconds=%ss
+patchouli.gui.lexicon.history=Cronologia di lettura
+patchouli.gui.lexicon.history.info=Questa sezione memorizza le ultime voci lette.$(br2)Le voci si aggiornano automaticamente quando visiti le pagine del libro. Se vuoi memorizzare qualcosa più a lungo, puoi sempre aggiungere un segnalibro.$(br2)$(o)Suggerimento: Prova a fare shift-click su di una voce di un capitolo!$()
+patchouli.gui.lexicon.toast=Nuovi capitoli
+patchouli.gui.lexicon.toast.info=Nuovi capitoli sbloccati
+patchouli.gui.lexicon.external_link=(Collegamento esterno)
+patchouli.gui.lexicon.loading_error=Errore di caricamento!
+patchouli.gui.lexicon.loading_error_hover=(Sposta il cursore sopra pera avere più dettagli)
+patchouli.gui.lexicon.loading_error_log=Controlla i tuoi log per avere più informazioni
+patchouli.gui.lexicon.dev_edition=per scrittori
+patchouli.gui.lexicon.edition_str=Edizione %s
+patchouli.gui.lexicon.added_by=Aggiunto da %s
+patchouli.gui.lexicon.sneak=Accovacciati per visualizzare
+patchouli.gui.lexicon.view=Visualizza voce
+patchouli.gui.lexicon.keybind=Pulsante collegato: %s
+patchouli.gui.lexicon.keybind_missing=Nessun pulsante collegato: %s
+
+patchouli.gui.lexicon.button.prev_page=Precedente
+patchouli.gui.lexicon.button.next_page=Prossima
+patchouli.gui.lexicon.button.back=Indietro
+patchouli.gui.lexicon.button.back.info=Shift-Click per tornare alla home
+patchouli.gui.lexicon.button.resize=Ridimensiona grafica
+patchouli.gui.lexicon.button.resize.size0=Predefinita
+patchouli.gui.lexicon.button.resize.size1=Piccola
+patchouli.gui.lexicon.button.resize.size2=Media
+patchouli.gui.lexicon.button.resize.size3=Media-grande
+patchouli.gui.lexicon.button.resize.size4=Grande
+patchouli.gui.lexicon.button.resize.size5=Enorme
+patchouli.gui.lexicon.button.resize.size6=Quanto è largo il tuo monitor?!
+patchouli.gui.lexicon.button.editor=Editor
+patchouli.gui.lexicon.button.editor.info=(Shift-Click per ricaricare)
+patchouli.gui.lexicon.button.advancements=Avanzamenti
+patchouli.gui.lexicon.button.config=Configurazione
+patchouli.gui.lexicon.button.visualize=Visualizza
+patchouli.gui.lexicon.button.visualize.info=(Clicca di nuovo per rimuovere)
+patchouli.gui.lexicon.button.history=Cronologia
