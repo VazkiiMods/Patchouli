@@ -5,7 +5,7 @@ item.patchouli:guide_book.name=Guida
 item.patchouli:test_book_1.name=Libro di test 1
 item.patchouli:test_book_1.landing=Non altrettanto divertente come introduzione, ma comunque presente.
 
-item.patchouli:test_book_2.name=Test Book 2
+item.patchouli:test_book_2.name=Libro di test 2
 item.patchouli:test_book_2.landing=Testo introduttivo! Supporta perfino i $(2)colori$() e $(4)cose $(bold)simili$()!
 
 item.patchouli:test_completion.name=Libro di test ad avanzamenti
