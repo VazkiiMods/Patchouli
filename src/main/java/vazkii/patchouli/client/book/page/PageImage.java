@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -52,8 +53,8 @@ public class PageImage extends PageWithText {
 		if(images.length > 1 && border) {
 			int xs = x + 83;
 			int ys = y + 92;
-			parent.drawRect(xs, ys, xs + 20, ys + 11, 0x44000000);
-			parent.drawRect(xs - 1, ys - 1, xs + 20, ys + 11, 0x44000000);
+			Gui.drawRect(xs, ys, xs + 20, ys + 11, 0x44000000);
+			Gui.drawRect(xs - 1, ys - 1, xs + 20, ys + 11, 0x44000000);
 		}
 		
 		super.render(mouseX, mouseY, pticks);

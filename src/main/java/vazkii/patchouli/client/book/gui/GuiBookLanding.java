@@ -10,9 +10,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.IModGuiFactory;
 import vazkii.patchouli.client.base.PersistentData;
@@ -41,7 +41,7 @@ public class GuiBookLanding extends GuiBook {
 	public void initGui() {
 		super.initGui();
 
-		text = new BookTextRenderer(this, I18n.translateToLocal(book.landingText), LEFT_PAGE_X, TOP_PADDING + 25);
+		text = new BookTextRenderer(this, I18n.format(book.landingText), LEFT_PAGE_X, TOP_PADDING + 25);
 
 		int x = bookLeft + (PatchouliConfig.disableAdvancementLocking ? 25 : 20);
 		int y = bookTop + FULL_HEIGHT - (PatchouliConfig.disableAdvancementLocking ? 25 : 62);
@@ -70,7 +70,7 @@ public class GuiBookLanding extends GuiBook {
 			buttonList.add(new GuiButtonBookEdit(this, x + (pos++) * dist, y));
 		
 		int i = 0;
-		List<BookCategory> categories = new ArrayList(book.contents.categories.values());
+		List<BookCategory> categories = new ArrayList<>(book.contents.categories.values());
 		Collections.sort(categories);
 
 		for(BookCategory category : categories) {	
@@ -97,7 +97,7 @@ public class GuiBookLanding extends GuiBook {
 	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
 		text.render(mouseX, mouseY);
 
-		drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+		drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
 		int topSeparator = TOP_PADDING + 12;
 		int bottomSeparator = topSeparator + 25 + 24 * ((loadedCategories - 1) / 4 + 1);
@@ -110,8 +110,8 @@ public class GuiBookLanding extends GuiBook {
 			int x = RIGHT_PAGE_X  + PAGE_WIDTH / 2; 
 			int y = bottomSeparator + 12;
 			
-			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
-			drawCenteredStringNoShadow(I18n.translateToLocal("patchouli.gui.lexicon.loading_error_hover"), x, y + 10, 0x777777);
+			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
+			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.loading_error_hover"), x, y + 10, 0x777777);
 
 			x -= PAGE_WIDTH / 2;
 			y -= 4;
@@ -138,7 +138,7 @@ public class GuiBookLanding extends GuiBook {
 	
 	void makeErrorTooltip() {
 		Throwable e = book.contents.getException();
-		List<String> lines = new LinkedList();
+		List<String> lines = new LinkedList<>();
 		while(e != null) {
 			String msg = e.getMessage();
 			if(msg != null && !msg.isEmpty())
@@ -147,7 +147,7 @@ public class GuiBookLanding extends GuiBook {
 		}
 		
 		if(!lines.isEmpty()) {
-			lines.add(TextFormatting.GREEN + I18n.translateToLocal("patchouli.gui.lexicon.loading_error_log"));
+			lines.add(TextFormatting.GREEN + I18n.format("patchouli.gui.lexicon.loading_error_log"));
 			setTooltip(lines);
 		}
 	}

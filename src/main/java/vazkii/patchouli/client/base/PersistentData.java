@@ -9,7 +9,6 @@ import java.util.Map;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
 
 public final class PersistentData {
@@ -36,7 +35,7 @@ public final class PersistentData {
 		public int bookGuiScale = 0;
 		public boolean clickedVisualize = false;
 		
-		public Map<String, BookData> bookData = new HashMap();
+		public Map<String, BookData> bookData = new HashMap<>();
 		
 		public BookData getBookData(Book book) {
 			String res = book.resourceLoc.toString();
@@ -48,9 +47,9 @@ public final class PersistentData {
 		
 		public static final class BookData {
 			
-			public List<String> viewedEntries = new ArrayList();
-			public List<Bookmark> bookmarks = new ArrayList();
-			public List<String> history = new ArrayList();
+			public List<String> viewedEntries = new ArrayList<>();
+			public List<Bookmark> bookmarks = new ArrayList<>();
+			public List<String> history = new ArrayList<>();
 
 			public static final class Bookmark {
 				

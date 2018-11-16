@@ -18,10 +18,10 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
@@ -190,7 +190,7 @@ public abstract class GuiBook extends GuiScreen {
 
 			Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
 			if(provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getLeft())) {
-				tooltip.add(TextFormatting.GOLD + "(" + I18n.translateToLocal("patchouli.gui.lexicon.shift_for_recipe") + ')');
+				tooltip.add(TextFormatting.GOLD + "(" + I18n.format("patchouli.gui.lexicon.shift_for_recipe") + ')');
 				targetPage = provider;
 			}
 
@@ -368,21 +368,21 @@ public abstract class GuiBook extends GuiScreen {
 		drawGradient(barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, book.progressBarBackground);
 		drawGradient(barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, book.progressBarColor);
 
-		fontRenderer.drawString(I18n.translateToLocal("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
+		fontRenderer.drawString(I18n.format("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
 
 		if(isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
-			List<String> tooltip = new ArrayList();
-			String progressStr = I18n.translateToLocalFormatted("patchouli.gui.lexicon.progress_tooltip", unlockedEntries, totalEntries);
+			List<String> tooltip = new ArrayList<>();
+			String progressStr = I18n.format("patchouli.gui.lexicon.progress_tooltip", unlockedEntries, totalEntries);
 			tooltip.add(progressStr);
 			
 			if(unlockedSecretEntries > 0) {
 				if(unlockedSecretEntries == 1)
-					tooltip.add(TextFormatting.GRAY + I18n.translateToLocal("patchouli.gui.lexicon.progress_tooltip.secret1"));
-				else tooltip.add(TextFormatting.GRAY + I18n.translateToLocalFormatted("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries)); 
+					tooltip.add(TextFormatting.GRAY + I18n.format("patchouli.gui.lexicon.progress_tooltip.secret1"));
+				else tooltip.add(TextFormatting.GRAY + I18n.format("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries)); 
 			}
 			
 			if(unlockedEntries != totalEntries)
-				tooltip.add(TextFormatting.GRAY + I18n.translateToLocal("patchouli.gui.lexicon.progress_tooltip.info"));
+				tooltip.add(TextFormatting.GRAY + I18n.format("patchouli.gui.lexicon.progress_tooltip.info"));
 			
 			setTooltip(tooltip);
 		}

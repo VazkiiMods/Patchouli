@@ -5,11 +5,9 @@ import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class BookCategory implements Comparable<BookCategory> {
 

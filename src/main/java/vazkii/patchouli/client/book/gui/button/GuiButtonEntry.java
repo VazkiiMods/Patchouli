@@ -5,9 +5,8 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -40,7 +39,7 @@ public class GuiButtonEntry extends GuiButton {
 			else timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
 			
 			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (hovered ? partialTicks : -partialTicks)));
-			float widthFract = (float) time / ANIM_TIME;
+			float widthFract = time / ANIM_TIME;
 			boolean locked = entry.isLocked();
 			
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
@@ -58,7 +57,7 @@ public class GuiButtonEntry extends GuiButton {
 			int color = parent.book.textColor;
 			String name = (entry.isPriority() ? TextFormatting.ITALIC : "") + entry.getName();
 			if(locked) {
-				name = I18n.translateToLocal("patchouli.gui.lexicon.locked");
+				name = I18n.format("patchouli.gui.lexicon.locked");
 				color = 0x77000000 | (parent.book.textColor & 0x00FFFFFF);
 			}
 			if(entry.isSecret())
@@ -70,7 +69,7 @@ public class GuiButtonEntry extends GuiButton {
 			mc.fontRenderer.setUnicodeFlag(unicode);
 			
 			if(unread)
-				parent.drawWarning(parent.book, x + width - 5, y, entry.hashCode());
+				GuiBook.drawWarning(parent.book, x + width - 5, y, entry.hashCode());
 		}
 	}
 	

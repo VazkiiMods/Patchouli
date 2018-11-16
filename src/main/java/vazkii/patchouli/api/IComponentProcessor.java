@@ -4,7 +4,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 /**
  * Implement this on a class designed to process a template and the variables bound 
  * to the inside. This doesn't have to be registered anywhere, but any class implementing
@@ -13,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Instances of this class are created once for every usage of the template it's meant to 
  * process, so you can save data on a per-template basis.
  */
+@SideOnly(Side.CLIENT)
 public interface IComponentProcessor {
 
 	/**

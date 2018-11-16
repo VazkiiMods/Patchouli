@@ -37,7 +37,7 @@ import vazkii.patchouli.common.util.SerializationUtil;
 
 public class ClientBookRegistry implements IResourceManagerReloadListener {
 
-	public final Map<String, Class<? extends BookPage>> pageTypes = new HashMap();
+	public final Map<String, Class<? extends BookPage>> pageTypes = new HashMap<>();
 
 	private boolean firstLoad = true;
 

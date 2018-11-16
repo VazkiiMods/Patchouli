@@ -3,8 +3,6 @@ package vazkii.patchouli.common.multiblock;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.annotations.SerializedName;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -13,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 public class SerializedMultiblock {
 
 	String[][] pattern = new String[0][0];
-	Map<String, String> mapping = new HashMap();
+	Map<String, String> mapping = new HashMap<>();
 
 	boolean symmetrical = false;
 	int[] offset = new int[] { 0, 0, 0 };

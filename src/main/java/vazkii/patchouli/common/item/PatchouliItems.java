@@ -13,7 +13,6 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
@@ -39,9 +38,9 @@ public class PatchouliItems {
 	}
 
 	private static void bindBookModel() {
-		List<ModelResourceLocation> models = new LinkedList();
+		List<ModelResourceLocation> models = new LinkedList<>();
 		BookRegistry.INSTANCE.books.values().forEach(b -> models.add(new ModelResourceLocation(b.model, "inventory")));
-		ModelBakery.registerItemVariants(book, models.toArray(new ModelResourceLocation[models.size()]));
+		ModelBakery.registerItemVariants(book, models.toArray(new ModelResourceLocation[0]));
 
 		ModelLoader.setCustomMeshDefinition(book, (stack) -> {
 			Book book = ItemModBook.getBook(stack);

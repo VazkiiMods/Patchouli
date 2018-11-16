@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -15,7 +16,7 @@ public class PageSmelting extends PageDoubleRecipe<Tuple<ItemStack, ItemStack>> 
     protected void drawRecipe(Tuple<ItemStack, ItemStack> recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
         mc.renderEngine.bindTexture(book.craftingResource);
         GlStateManager.enableBlend();
-        parent.drawModalRectWithCustomSizedTexture(recipeX, recipeY, 11, 71, 96, 24, 128, 128);
+        Gui.drawModalRectWithCustomSizedTexture(recipeX, recipeY, 11, 71, 96, 24, 128, 128);
         parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
         renderItem(recipeX + 4, recipeY + 4, mouseX, mouseY, recipe.getFirst());

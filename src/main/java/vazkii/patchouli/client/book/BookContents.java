@@ -1,8 +1,6 @@
 package vazkii.patchouli.client.book;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,10 +19,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -43,14 +40,14 @@ public class BookContents {
 
 	public final Book book;
 
-	public Map<ResourceLocation, BookCategory> categories = new HashMap();
-	public Map<ResourceLocation, BookEntry> entries = new HashMap();
-	public Map<ResourceLocation, Supplier<BookTemplate>> templates = new HashMap();
-	public Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap();
+	public Map<ResourceLocation, BookCategory> categories = new HashMap<>();
+	public Map<ResourceLocation, BookEntry> entries = new HashMap<>();
+	public Map<ResourceLocation, Supplier<BookTemplate>> templates = new HashMap<>();
+	public Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap<>();
 	private boolean errored = false;
 	private Exception exception = null;
 
-	public Stack<GuiBook> guiStack = new Stack();
+	public Stack<GuiBook> guiStack = new Stack<>();
 	public GuiBook currentGui;
 	
 	public BookIcon indexIcon;
@@ -90,19 +87,19 @@ public class BookContents {
 	}
 
 	public String getSubtitle() {
-		String editionStr = "";
+		String editionStr;
 
 		try {
 			int ver = Integer.parseInt(book.version);
 			if(ver == 0)
-				return I18n.translateToLocal(book.subtitle);
+				return I18n.format(book.subtitle);
 
 			editionStr = numberToOrdinal(ver); 
 		} catch(NumberFormatException e) {
-			editionStr = I18n.translateToLocal("patchouli.gui.lexicon.dev_edition");
+			editionStr = I18n.format("patchouli.gui.lexicon.dev_edition");
 		}
 
-		return I18n.translateToLocalFormatted("patchouli.gui.lexicon.edition_str", editionStr);
+		return I18n.format("patchouli.gui.lexicon.edition_str", editionStr);
 	}
 
 	public void reload(boolean isOverride) {
@@ -120,9 +117,9 @@ public class BookContents {
 			else indexIcon = new BookIcon(book.indexIconRaw);
 		}
 
-		List<ResourceLocation> foundCategories = new ArrayList();
-		List<ResourceLocation> foundEntries = new ArrayList();
-		List<ResourceLocation> foundTemplates = new ArrayList();
+		List<ResourceLocation> foundCategories = new ArrayList<>();
+		List<ResourceLocation> foundEntries = new ArrayList<>();
+		List<ResourceLocation> foundTemplates = new ArrayList<>();
 		List<ModContainer> mods = Loader.instance().getActiveModList();
 
 		try { 
@@ -164,7 +161,7 @@ public class BookContents {
 	protected void findFiles(String dir, List<ResourceLocation> list) {
 		ModContainer mod = book.owner;
 		String id = mod.getModId();
-		CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getResourcePath(), DEFAULT_LANG, dir), null, pred(id, list));
+		CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getResourcePath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
 	}
 	
 	private BiFunction<Path, Path, Boolean> pred(String modId, List<ResourceLocation> list) {

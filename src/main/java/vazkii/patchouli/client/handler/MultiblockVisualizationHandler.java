@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
@@ -29,7 +30,6 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -40,9 +40,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
-import vazkii.patchouli.common.util.ReflectionUtil;
 import vazkii.patchouli.common.multiblock.Multiblock;
 import vazkii.patchouli.common.multiblock.StateMatcher;
+import vazkii.patchouli.common.util.ReflectionUtil;
 import vazkii.patchouli.common.util.RotationUtil;
 
 public class MultiblockVisualizationHandler {
@@ -121,7 +121,7 @@ public class MultiblockVisualizationHandler {
 			int top = y + 10;
 
 			if(timeComplete > 0) {
-				String s = I18n.translateToLocal("patchouli.gui.lexicon.structure_complete");
+				String s = I18n.format("patchouli.gui.lexicon.structure_complete");
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(0, Math.min(height + 5, animTime), 0);
 				mc.fontRenderer.drawStringWithShadow(s, x - mc.fontRenderer.getStringWidth(s) / 2, top + height - 10, 0x00FF00);
@@ -138,7 +138,7 @@ public class MultiblockVisualizationHandler {
 			drawGradientRect(left, top, left + progressWidth, top + height, color, color2);
 
 			if(!isAnchored) {
-				String s = I18n.translateToLocal("patchouli.gui.lexicon.not_anchored");
+				String s = I18n.format("patchouli.gui.lexicon.not_anchored");
 				mc.fontRenderer.drawStringWithShadow(s, x - mc.fontRenderer.getStringWidth(s) / 2, top + height + 8, 0xFFFFFF);
 			} else {
 				if(lookingState != null) {
@@ -160,7 +160,7 @@ public class MultiblockVisualizationHandler {
 					String progress = blocksDone + "/" + blocks;
 					
 					if(blocksDone == blocks && airFilled > 0) {
-						progress = I18n.translateToLocal("patchouli.gui.lexicon.needs_air");
+						progress = I18n.format("patchouli.gui.lexicon.needs_air");
 						color = 0xDA4E3F;
 						mult *= 2;
 						posx -= width / 2;

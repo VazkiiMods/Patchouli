@@ -4,9 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookIcon;
@@ -49,7 +48,7 @@ public class GuiButtonCategory extends GuiButton {
 			else timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
 			
 			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (hovered ? partialTicks : -partialTicks)));
-			float transparency = 0.5F - ((float) time / ANIM_TIME) * 0.5F;
+			float transparency = 0.5F - (time / ANIM_TIME) * 0.5F;
 			boolean locked = category != null && category.isLocked();
 
 			if(locked) {
@@ -66,11 +65,11 @@ public class GuiButtonCategory extends GuiButton {
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			
 			if(unread) 
-				parent.drawWarning(parent.book, x, y, 0);
+				GuiBook.drawWarning(parent.book, x, y, 0);
 			GlStateManager.popMatrix();
 			
 			if(hovered)
-				parent.setTooltip(locked ? (TextFormatting.GRAY + I18n.translateToLocal("patchouli.gui.lexicon.locked")) : name);		
+				parent.setTooltip(locked ? (TextFormatting.GRAY + I18n.format("patchouli.gui.lexicon.locked")) : name);		
 			}
 	}
 	

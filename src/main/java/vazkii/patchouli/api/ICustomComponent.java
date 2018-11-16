@@ -1,7 +1,5 @@
 package vazkii.patchouli.api;
 
-import com.google.gson.JsonPrimitive;
-
 import net.minecraft.client.gui.GuiScreen;
 
 /**
@@ -12,7 +10,7 @@ import net.minecraft.client.gui.GuiScreen;
  * the transient keyword. 
  * <br><br>
  * Non-transient String type fields you declare in instances of this may have the
- * @VariableHolder annotation associated to them, and as such, they'll load variables
+ * {@link VariableHolder} annotation associated to them, and as such, they'll load variables
  * the same way any built-in template would. Any fields with a @VariableHolder must be public.
  */
 public interface ICustomComponent {

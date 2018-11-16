@@ -1,13 +1,14 @@
 package vazkii.patchouli.client.book.page;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -19,15 +20,15 @@ public class PageCrafting extends PageDoubleRecipe<IRecipe> {
 	protected void drawRecipe(IRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		mc.renderEngine.bindTexture(book.craftingResource);
 		GlStateManager.enableBlend();
-		parent.drawModalRectWithCustomSizedTexture(recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 128);
+		Gui.drawModalRectWithCustomSizedTexture(recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 128);
 		
 		boolean shaped = recipe instanceof IShapedRecipe;
 		if(!shaped) {
 			int iconX = recipeX + 62;
 			int iconY = recipeY + 2;
-			parent.drawModalRectWithCustomSizedTexture(iconX, iconY, 0, 64, 11, 11, 128, 128);
+			Gui.drawModalRectWithCustomSizedTexture(iconX, iconY, 0, 64, 11, 11, 128, 128);
 			if(parent.isMouseInRelativeRange(mouseX, mouseY, iconX, iconY, 11, 11))
-				parent.setTooltip(I18n.translateToLocal("patchouli.gui.lexicon.shapeless"));
+				parent.setTooltip(I18n.format("patchouli.gui.lexicon.shapeless"));
 		}
 
 		parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);

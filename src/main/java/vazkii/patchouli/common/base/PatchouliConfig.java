@@ -26,7 +26,7 @@ public class PatchouliConfig {
 	@Comment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want.\nConfig Flag: testing_mode")
 	public static boolean testingMode = false;
 	
-	@Ignore private static Map<String, Boolean> configFlags = new HashMap();
+	@Ignore private static Map<String, Boolean> configFlags = new HashMap<>();
 	@Ignore private transient static boolean firstChange = true;
 	
 	public static void preInit() {
@@ -48,9 +48,9 @@ public class PatchouliConfig {
 	
 	public static boolean getConfigFlag(String name) {
 		if(name.startsWith("&"))
-			return getConfigFlagAND(name.replaceAll("\\&|\\|", "").split(","));
+			return getConfigFlagAND(name.replaceAll("[&|]", "").split(","));
 		if(name.startsWith("|"))
-			return getConfigFlagOR(name.replaceAll("\\&|\\|", "").split(","));
+			return getConfigFlagOR(name.replaceAll("[&|]", "").split(","));
 			
 		boolean target = true;
 		if(name.startsWith("!")) {
@@ -58,9 +58,8 @@ public class PatchouliConfig {
 			target = false;
 		}
 		name = name.trim().toLowerCase();
-		
-		boolean status = (configFlags.containsKey(name) && configFlags.get(name)) == target;
-		return status;
+
+		return (configFlags.containsKey(name) && configFlags.get(name)) == target;
 	}
 	
 	public static boolean getConfigFlagAND(String[] tokens) {

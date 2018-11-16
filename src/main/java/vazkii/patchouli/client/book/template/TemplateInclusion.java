@@ -8,7 +8,6 @@ import java.util.Set;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.world.gen.structure.template.ITemplateProcessor;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 
@@ -17,10 +16,10 @@ public class TemplateInclusion {
 	public String template;
 	public String as;
 	@SerializedName("using")
-	public Map<String, String> map = new HashMap();
+	public Map<String, String> map = new HashMap<>();
 	public int x, y;
 
-	transient List<String> visitedTemplates = new ArrayList();
+	transient List<String> visitedTemplates = new ArrayList<>();
 	
 	public void upperMerge(TemplateInclusion upper) {
 		if(upper == null)
@@ -29,7 +28,7 @@ public class TemplateInclusion {
 		if(upper.visitedTemplates.contains(template))
 			throw new IllegalArgumentException("Breaking when include template " + template + ", circular dependencies aren't allowed (stack = " + upper.visitedTemplates + ")");
 		
-		visitedTemplates = new ArrayList(upper.visitedTemplates);
+		visitedTemplates = new ArrayList<>(upper.visitedTemplates);
 		visitedTemplates.add(template);
 		as = upper.realName(as);
 		x += upper.x;
@@ -81,8 +80,8 @@ public class TemplateInclusion {
 		return var;
 	}
 	
-	public IVariableProvider wrapProvider(IVariableProvider<String> provider) {
-		return new IVariableProvider() {
+	public IVariableProvider<String> wrapProvider(IVariableProvider<String> provider) {
+		return new IVariableProvider<String>() {
 			
 			@Override
 			public boolean has(String key) {
