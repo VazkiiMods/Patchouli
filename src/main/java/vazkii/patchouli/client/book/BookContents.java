@@ -78,8 +78,10 @@ public class BookContents {
 	public void openLexiconGui(GuiBook gui, boolean push) {
 		if (!gui.canBeOpened()) {
 			gui = this.getCurrentGui();
-			if (!gui.canBeOpened())
+			if (!gui.canBeOpened()) {
 				gui = currentGui = new GuiBookLanding(book);
+				book.contents.guiStack.clear();
+			}
 		}
 		
 		Minecraft mc = Minecraft.getMinecraft();
