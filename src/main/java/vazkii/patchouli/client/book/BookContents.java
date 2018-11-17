@@ -76,20 +76,14 @@ public class BookContents {
 	}
 
 	public void openLexiconGui(GuiBook gui, boolean push) {
-		if (!gui.canBeOpened()) {
-			gui = this.getCurrentGui();
-			if (!gui.canBeOpened()) {
-				gui = currentGui = new GuiBookLanding(book);
-				book.contents.guiStack.clear();
-			}
-		}
-		
-		Minecraft mc = Minecraft.getMinecraft();
-		if(push && mc.currentScreen instanceof GuiBook && gui != mc.currentScreen)
-			guiStack.push((GuiBook) mc.currentScreen);
+		if(gui.canBeOpened()) {
+			Minecraft mc = Minecraft.getMinecraft();
+			if(push && mc.currentScreen instanceof GuiBook && gui != mc.currentScreen)
+				guiStack.push((GuiBook) mc.currentScreen);
 
-		mc.displayGuiScreen(gui);
-		gui.onFirstOpened();
+			mc.displayGuiScreen(gui);
+			gui.onFirstOpened();
+		}
 	}
 
 	public String getSubtitle() {
