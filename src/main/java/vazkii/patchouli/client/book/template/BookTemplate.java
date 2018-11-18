@@ -19,6 +19,7 @@ import vazkii.patchouli.client.book.template.component.ComponentEntity;
 import vazkii.patchouli.client.book.template.component.ComponentFrame;
 import vazkii.patchouli.client.book.template.component.ComponentHeader;
 import vazkii.patchouli.client.book.template.component.ComponentImage;
+import vazkii.patchouli.client.book.template.component.ComponentIngredient;
 import vazkii.patchouli.client.book.template.component.ComponentItemStack;
 import vazkii.patchouli.client.book.template.component.ComponentSeparator;
 import vazkii.patchouli.client.book.template.component.ComponentText;
@@ -31,6 +32,7 @@ public class BookTemplate {
 	static {
 		registerComponent("text", ComponentText.class);
 		registerComponent("item", ComponentItemStack.class);
+		registerComponent("ingredient", ComponentIngredient.class);
 		registerComponent("image", ComponentImage.class);
 		registerComponent("header", ComponentHeader.class);
 		registerComponent("separator", ComponentSeparator.class);

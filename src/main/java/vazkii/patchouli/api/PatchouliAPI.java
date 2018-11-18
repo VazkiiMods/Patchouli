@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -83,6 +84,20 @@ public class PatchouliAPI {
 		 * Serializes an ItemStack into its string correspondent.
 		 */
 		public String serializeItemStack(ItemStack stack);
+
+		// ================================================================================================
+		// Ingredient Serialization
+		// ================================================================================================
+		
+		/**
+		 * Deserializes an ingredient string into its Ingredient.
+		 */
+		public Ingredient deserializeIngredient(String str);
+		
+		/**
+		 * Serializes an Ingredient into its string correspondent.
+		 */
+		public String serializeIngredient(Ingredient ingredient);
 
 		// ================================================================================================
 		// Multiblocks

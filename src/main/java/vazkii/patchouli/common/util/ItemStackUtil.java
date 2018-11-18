@@ -1,7 +1,11 @@
 package vazkii.patchouli.common.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.util.ResourceLocation;
@@ -57,6 +61,26 @@ public class ItemStackUtil {
 		return stack;
 	}
 	
+	public static String serializeIngredient(Ingredient ingredient) {
+		ItemStack[] stacks = ingredient.getMatchingStacks();
+		String[] stacksSerialized = new String[stacks.length];
+		for (int i = 0; i < stacks.length; i++) {
+			stacksSerialized[i] = serializeStack(stacks[i]);
+		}
+
+		return String.join(",", stacksSerialized);
+	}
+	
+	public static Ingredient loadIngredientFromString(String ingredientString) {
+		String[] stacksSerialized = splitStacksFromSerializedIngredient(ingredientString);
+		ItemStack[] stacks = new ItemStack[stacksSerialized.length];
+		for (int i = 0; i < stacksSerialized.length; i++) {
+			stacks[i] = loadStackFromString(stacksSerialized[i]);
+		}
+
+		return Ingredient.fromStacks(stacks);
+	}
+	
 	public static StackWrapper wrapStack(ItemStack stack) {
 		return stack.isEmpty() ? StackWrapper.EMPTY_WRAPPER : new StackWrapper(stack);
 	}
@@ -86,6 +110,41 @@ public class ItemStackUtil {
 			return "Wrapper[" + stack.toString() + "]";
 		}
 		
+	}
+
+	private static String[] splitStacksFromSerializedIngredient (String ingredientSerialized) {
+		final List<String> result = new ArrayList<>();
+
+		int lastIndex = 0;
+		int braces = 0;
+		boolean insideString = false;
+		for (int i = 0; i < ingredientSerialized.length(); i++) {
+			switch (ingredientSerialized.charAt(i)) {
+				case '{': {
+					if (!insideString) braces++;
+					break;
+				}
+				case '}': {
+					if (!insideString) braces--;
+					break;
+				}
+				case '\'': {
+					insideString = !insideString;
+					break;
+				}
+				case ',': {
+					if (braces <= 0) {
+						result.add(ingredientSerialized.substring(lastIndex, i));
+						lastIndex = i + 1;
+						break;
+					}
+				}
+			}
+		}
+
+		result.add(ingredientSerialized.substring(lastIndex));
+
+		return result.toArray(new String[result.size()]);
 	}
 	
 }
