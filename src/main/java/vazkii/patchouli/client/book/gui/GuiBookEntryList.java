@@ -88,7 +88,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 			text.render(mouseX, mouseY);
 			if(shouldDrawProgressBar())
 				drawProgressBar(book, mouseX, mouseY, this::doesEntryCountForProgress);
-		} else if(page % 2 == 1 && page == maxpages - 1)
+		} else if(page % 2 == 1 && page == maxpages - 1 && dependentButtons.size() <= ENTRIES_PER_PAGE)
 			drawPageFiller(book);
 		
 		if(!searchField.getText().isEmpty()) {
