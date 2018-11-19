@@ -48,5 +48,10 @@ public class ComponentText extends TemplateComponent {
 	public void mouseClicked(BookPage page, int mouseX, int mouseY, int mouseButton) {
 		textRenderer.click(mouseX, mouseY, mouseButton);
 	}
+	
+	@Override
+	public boolean shouldShowTooltip(BookPage page, int mouseX, int mouseY) {
+		return textRenderer.shouldShowTooltip(mouseX, mouseY);
+	}
 
 }

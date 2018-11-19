@@ -1,5 +1,7 @@
 package vazkii.patchouli.api;
 
+import java.util.List;
+
 import net.minecraft.client.gui.GuiScreen;
 
 /**
@@ -41,6 +43,21 @@ public interface ICustomComponent {
 	 */
 	public default void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		// NO-OP
+	}
+
+	/**
+	 * Called every render tick. Should return whether this component's tooltip should be shown.
+	 */
+	public default boolean shouldShowTooltip(int mouseX, int mouseY) {
+		return false;
+	}
+
+	/**
+	 * Called every render tick, if {@link #shouldShowTooltip} returned true. Should return a
+	 * list of strings representing the tooltip.
+	 */
+	public default List<String> getTooltip(int mouseX, int mouseY) {
+		return null;
 	}
 	
 }

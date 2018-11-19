@@ -47,5 +47,10 @@ public class ComponentImage extends TemplateComponent {
 		Gui.drawModalRectWithCustomSizedTexture(0, 0, u, v, width, height, textureWidth, textureHeight);
 		GlStateManager.popMatrix();
 	}
+	
+	@Override
+	public boolean shouldShowTooltip(BookPage page, int mouseX, int mouseY) {
+		return isMouseInRelativeRange(page, mouseX, mouseY, x, y, width * scale, height * scale);
+	}
 
 }

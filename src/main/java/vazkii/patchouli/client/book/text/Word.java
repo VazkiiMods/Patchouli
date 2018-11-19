@@ -52,7 +52,11 @@ public class Word {
 			onClick.run();
 	}
 
-	private boolean isHovered(int mouseX, int mouseY) {
+	public boolean hasTooltip() {
+		return tooltip.length() > 0;
+	}
+
+	public boolean isHovered(int mouseX, int mouseY) {
 		return gui.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height);
 	}
 

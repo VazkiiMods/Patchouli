@@ -1,5 +1,7 @@
 package vazkii.patchouli.client.book.template.component;
 
+import java.util.List;
+
 import com.google.gson.annotations.SerializedName;
 
 import vazkii.patchouli.api.ICustomComponent;
@@ -36,6 +38,19 @@ public class ComponentCustom extends TemplateComponent {
 	@Override
 	public void mouseClicked(BookPage page, int mouseX, int mouseY, int mouseButton) {
 		callbacks.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+	
+	@Override
+	public boolean shouldShowTooltip(BookPage page, int mouseX, int mouseY) {
+		return callbacks.shouldShowTooltip(mouseX, mouseY);
+	}
+	
+	@Override
+	public List<String> getTooltip(BookPage page, int mouseX, int mouseY) {
+		List<String> tooltip = callbacks.getTooltip(mouseX, mouseY);
+		if (tooltip == null)
+			tooltip = super.getTooltip(page, mouseX, mouseY);
+		return tooltip;
 	}
 
 	private void createCallbackObj() {

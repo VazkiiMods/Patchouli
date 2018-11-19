@@ -54,4 +54,8 @@ public class BookTextRenderer {
 	public void click(int mouseX, int mouseY, int mouseButton) {
 		words.forEach(word -> word.click(mouseX, mouseY, mouseButton));
 	}
+
+	public boolean shouldShowTooltip(int mouseX, int mouseY) {
+		return words.stream().anyMatch(word -> !word.hasTooltip() && word.isHovered(mouseX, mouseY)); 
+	}
 }
