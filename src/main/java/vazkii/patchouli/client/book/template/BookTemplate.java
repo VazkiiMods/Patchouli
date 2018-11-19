@@ -124,7 +124,7 @@ public class BookTemplate {
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) { 
 		if(compiled)
 			components.forEach(c -> {
-				if(c.isVisible) {	
+				if(c.isVisible) {
 					c.render(page, mouseX, mouseY, pticks);
 					if (c.shouldShowTooltip(page, mouseX, mouseY)) {
 						List<String> tooltip = c.getTooltip(page, mouseX, mouseY);

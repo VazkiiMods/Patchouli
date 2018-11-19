@@ -1,9 +1,9 @@
 package vazkii.patchouli.client.book.template;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
@@ -130,9 +130,7 @@ public abstract class TemplateComponent {
 	}
 	
 	public List<String> getTooltip(BookPage page, int mouseX, int mouseY) {
-		List<String> tooltip = new ArrayList<>();
-		tooltip.add(this.tooltip);
-		return tooltip;
+		return Lists.newArrayList(tooltip);
 	}
 
 	protected boolean isMouseInRelativeRange(BookPage page, int absMx, int absMy, int x, int y, float w, float h) {

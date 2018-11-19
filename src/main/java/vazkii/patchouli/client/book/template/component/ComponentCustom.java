@@ -47,10 +47,8 @@ public class ComponentCustom extends TemplateComponent {
 	
 	@Override
 	public List<String> getTooltip(BookPage page, int mouseX, int mouseY) {
-		List<String> tooltip = callbacks.getTooltip(mouseX, mouseY);
-		if (tooltip == null)
-			tooltip = super.getTooltip(page, mouseX, mouseY);
-		return tooltip;
+		List<String> tooltip = super.getTooltip(page, mouseX, mouseY);
+		return callbacks.getTooltip(tooltip, mouseX, mouseY);
 	}
 
 	private void createCallbackObj() {

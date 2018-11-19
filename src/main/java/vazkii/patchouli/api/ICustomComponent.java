@@ -56,8 +56,8 @@ public interface ICustomComponent {
 	 * Called every render tick, if {@link #shouldShowTooltip} returned true. Should return a
 	 * list of strings representing the tooltip.
 	 */
-	public default List<String> getTooltip(int mouseX, int mouseY) {
-		return null;
+	public default List<String> getTooltip(List<String> tooltip, int mouseX, int mouseY) {
+		return tooltip;
 	}
 	
 }
