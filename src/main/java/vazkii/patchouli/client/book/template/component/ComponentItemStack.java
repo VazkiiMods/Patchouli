@@ -41,7 +41,7 @@ public class ComponentItemStack extends TemplateComponent {
 			Gui.drawModalRectWithCustomSizedTexture(x - 4, y - 4, 83, 71, 24, 24, 128, 128);
 		}
 		
-		page.renderItem(x, y, mouseX, mouseY, stack);
+		page.parent.renderItemStack(x, y, mouseX, mouseY, stack);
 	}
 	
 }

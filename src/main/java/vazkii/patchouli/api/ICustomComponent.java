@@ -1,7 +1,5 @@
 package vazkii.patchouli.api;
 
-import net.minecraft.client.gui.GuiScreen;
-
 /**
  * An interface for API level custom components for templates.
  * <br><br>
@@ -25,13 +23,13 @@ public interface ICustomComponent {
 	 * Called every render tick. No special transformations are applied, so you're responsible
 	 * for putting everything in the right place.
 	 */
-	public void render(float pticks, int mouseX, int mouseY);
+	public void render(IComponentRenderContext context, float pticks, int mouseX, int mouseY);
 	
 	/**
 	 * Called when this component first enters the screen. Good time to refresh anything that
 	 * can be dynamic.
 	 */
-	public default void onDisplayed(GuiScreen parent) {
+	public default void onDisplayed(IComponentRenderContext context) {
 		// NO-OP
 	}
 
@@ -39,7 +37,7 @@ public interface ICustomComponent {
 	 * Called on mouse click. Note that the click may not be inside your component, so
 	 * you need to validate the position.
 	 */
-	public default void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+	public default void mouseClicked(IComponentRenderContext context, int mouseX, int mouseY, int mouseButton) {
 		// NO-OP
 	}
 	

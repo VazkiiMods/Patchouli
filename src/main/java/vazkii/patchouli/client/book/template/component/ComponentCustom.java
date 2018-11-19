@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 
+import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.api.ICustomComponent;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -25,7 +26,7 @@ public class ComponentCustom extends TemplateComponent {
 	
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
-		callbacks.render(pticks, mouseX, mouseY);
+		callbacks.render(page.parent, pticks, mouseX, mouseY);
 	}
 	
 	@Override
@@ -35,7 +36,7 @@ public class ComponentCustom extends TemplateComponent {
 	
 	@Override
 	public void mouseClicked(BookPage page, int mouseX, int mouseY, int mouseButton) {
-		callbacks.mouseClicked(mouseX, mouseY, mouseButton);
+		callbacks.mouseClicked(page.parent, mouseX, mouseY, mouseButton);
 	}
 
 	private void createCallbackObj() {
