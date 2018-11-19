@@ -229,6 +229,10 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		if(stacks.length > 0)
 			renderItemStack(x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
 	}
-
+	
+	@Override
+	public void setHoverTooltip(List<String> tooltip) {
+		setTooltip(tooltip);
+	}
 
 }

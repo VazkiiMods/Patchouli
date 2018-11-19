@@ -20,6 +20,6 @@ public interface IComponentRenderContext {
 
 	public void renderIngredient(int x, int y, int mouseX, int mouseY, Ingredient ingredient);
 
-	public void setTooltip(List<String> tooltip);
+	public void setHoverTooltip(List<String> tooltip);
 
 }
