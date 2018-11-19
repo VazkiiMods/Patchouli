@@ -22,10 +22,12 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -185,7 +187,7 @@ public class MultiblockVisualizationHandler {
 	public static void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
 		if(hasMultiblock && !isAnchored) {
 			pos = event.getPos();
-			facingRotation = RotationUtil.rotationFromFacing(event.getEntityPlayer().getHorizontalFacing());
+			facingRotation = getRotation(event.getEntityPlayer());
 			isAnchored = true;
 		}
 	}
@@ -204,7 +206,7 @@ public class MultiblockVisualizationHandler {
 	public static void renderMultiblock(World world) {
 		Minecraft mc = Minecraft.getMinecraft();
 		if(!isAnchored) {
-			facingRotation = RotationUtil.rotationFromFacing(mc.player.getHorizontalFacing());
+			facingRotation = getRotation(mc.player);
 			if(mc.objectMouseOver != null)
 				pos = mc.objectMouseOver.getBlockPos();
 		}
@@ -346,5 +348,12 @@ public class MultiblockVisualizationHandler {
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
     }
+
+	/**
+	 * Returns the Rotation of a multiblock structure based on the given entity's facing direction.
+	 */
+	private static Rotation getRotation(Entity entity) {
+		return RotationUtil.rotationFromFacing(EnumFacing.getHorizontal(MathHelper.floor((double) (-entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3));
+	}
 	
 }
