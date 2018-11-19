@@ -93,8 +93,14 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 		ResourceLocation res = new ResourceLocation(bookStr);
 		Book book = BookRegistry.INSTANCE.books.get(res);
 		
-		if(book != null)
+		if(book != null) {
+			if (!book.contents.getCurrentGui().canBeOpened()) {
+				book.contents.currentGui = null;
+				book.contents.guiStack.clear();
+			}
+
 			book.contents.openLexiconGui(book.contents.getCurrentGui(), false);
+		}
 	}
 
 	public static class LexiconPageAdapter implements JsonDeserializer<BookPage> {
