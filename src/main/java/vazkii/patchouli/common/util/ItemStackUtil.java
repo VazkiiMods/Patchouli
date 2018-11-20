@@ -18,6 +18,12 @@ public class ItemStackUtil {
 		builder.append(":");
 		builder.append(stack.getItemDamage());
 		
+		int count = stack.getCount();
+		if (count > 1) {
+			builder.append("#");
+			builder.append(count);
+		}
+		
 		if(stack.hasTagCompound())
 			builder.append(stack.getTagCompound().toString());
 		

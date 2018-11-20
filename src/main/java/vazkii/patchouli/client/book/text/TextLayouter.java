@@ -97,6 +97,9 @@ public class TextLayouter {
 		FontRenderer font = last.span.font;
 		for (int i = last.start; i < characters.length; i++) {
 			width += font.getCharWidth(characters[i]);
+			if (last.span.bold)
+				width++;
+
 			if (width > pageWidth) {
 				int overflowOffset = lineStart + offset + i - last.start;
 				int breakOffset = overflowOffset + 1;

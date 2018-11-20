@@ -33,7 +33,7 @@ public class PageCrafting extends PageDoubleRecipe<IRecipe> {
 
 		parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 		
-		renderItem(recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getRecipeOutput());
+		parent.renderItemStack(recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getRecipeOutput());
 		
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		int wrap = 3;
@@ -41,7 +41,7 @@ public class PageCrafting extends PageDoubleRecipe<IRecipe> {
 			wrap = ((IShapedRecipe) recipe).getRecipeWidth();
 		
 		for(int i = 0; i < ingredients.size(); i++)
-			renderIngredient(recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
+			parent.renderIngredient(recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
 	}
 	
 	protected IRecipe loadRecipe(BookEntry entry, String loc) {

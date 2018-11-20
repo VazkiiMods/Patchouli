@@ -43,8 +43,10 @@ public class GuiBookLanding extends GuiBook {
 
 		text = new BookTextRenderer(this, I18n.format(book.landingText), LEFT_PAGE_X, TOP_PADDING + 25);
 
-		int x = bookLeft + (PatchouliConfig.disableAdvancementLocking ? 25 : 20);
-		int y = bookTop + FULL_HEIGHT - (PatchouliConfig.disableAdvancementLocking ? 25 : 62);
+		boolean disableBar = !book.showProgress || PatchouliConfig.disableAdvancementLocking;
+		
+		int x = bookLeft + (disableBar ? 25 : 20);
+		int y = bookTop + FULL_HEIGHT - (disableBar ? 25 : 62);
 		int dist = 15;
 		int pos = 0;
 		

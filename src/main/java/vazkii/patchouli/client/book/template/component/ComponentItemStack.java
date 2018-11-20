@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.oredict.OreIngredient;
 import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -20,14 +22,20 @@ public class ComponentItemStack extends TemplateComponent {
 	@SerializedName("link_recipe")
 	boolean linkedRecipe;
 	
-	transient ItemStack stack;
+	transient Ingredient ingredient;
 	
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		stack = ItemStackUtil.loadStackFromString(item);
-		
-		if(linkedRecipe && !stack.isEmpty())
-			entry.addRelevantStack(stack, pageNum);
+		if(item.startsWith("ore:")) {
+			String ore = item.substring(4);
+			ingredient = new OreIngredient(ore);
+		} else {
+			ItemStack stack = ItemStackUtil.loadStackFromString(item);
+			ingredient = Ingredient.fromStacks(stack);
+			
+			if(linkedRecipe && !stack.isEmpty())
+				entry.addRelevantStack(stack, pageNum);
+		}
 	}
 	
 	@Override
@@ -41,7 +49,7 @@ public class ComponentItemStack extends TemplateComponent {
 			Gui.drawModalRectWithCustomSizedTexture(x - 4, y - 4, 83, 71, 24, 24, 128, 128);
 		}
 		
-		page.renderItem(x, y, mouseX, mouseY, stack);
+		page.parent.renderIngredient(x, y, mouseX, mouseY, ingredient);
 	}
 	
 }

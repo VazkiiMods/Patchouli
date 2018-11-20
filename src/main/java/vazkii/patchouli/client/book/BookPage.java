@@ -75,24 +75,6 @@ public abstract class BookPage {
 		return false;
 	}
 	
-	public void renderItem(int x, int y, int mouseX, int mouseY, ItemStack stack) {
-		if(stack == null || stack.isEmpty())
-			return;
-		
-		RenderHelper.enableGUIStandardItemLighting();
-		mc.getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
-		mc.getRenderItem().renderItemOverlays(fontRenderer, stack, x, y);
-		
-		if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16))
-			parent.setTooltipStack(stack);
-	}
-	
-	public void renderIngredient(int x, int y, int mouseX, int mouseY, Ingredient ingr) {
-		ItemStack[] stacks = ingr.getMatchingStacks();
-		if(stacks.length > 0)
-			renderItem(x, y, mouseX, mouseY, stacks[(parent.ticksInBook / 20) % stacks.length]);
-	}
-	
 	public boolean canAdd(Book book) {
 		return flag == null || flag.isEmpty() || PatchouliConfig.getConfigFlag(flag);
 	}

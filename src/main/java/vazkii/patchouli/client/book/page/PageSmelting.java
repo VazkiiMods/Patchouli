@@ -19,8 +19,8 @@ public class PageSmelting extends PageDoubleRecipe<Tuple<ItemStack, ItemStack>> 
         Gui.drawModalRectWithCustomSizedTexture(recipeX, recipeY, 11, 71, 96, 24, 128, 128);
         parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-        renderItem(recipeX + 4, recipeY + 4, mouseX, mouseY, recipe.getFirst());
-        renderItem(recipeX + 76, recipeY + 4, mouseX, mouseY, recipe.getSecond());
+        parent.renderItemStack(recipeX + 4, recipeY + 4, mouseX, mouseY, recipe.getFirst());
+        parent.renderItemStack(recipeX + 76, recipeY + 4, mouseX, mouseY, recipe.getSecond());
     }
 
     @Override
