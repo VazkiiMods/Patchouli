@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -71,6 +72,16 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	public String serializeItemStack(ItemStack stack) {
 		return ItemStackUtil.serializeStack(stack);
+	}
+
+	@Override
+	public Ingredient deserializeIngredient(String str) {
+		return ItemStackUtil.loadIngredientFromString(str);
+	}
+
+	@Override
+	public String serializeIngredient(Ingredient ingredient) {
+		return ItemStackUtil.serializeIngredient(ingredient);
 	}
 
 	@Override

@@ -1,10 +1,17 @@
 package vazkii.patchouli.common.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.oredict.OreIngredient;
 
 public class ItemStackUtil {
 	
@@ -63,6 +70,32 @@ public class ItemStackUtil {
 		return stack;
 	}
 	
+	public static String serializeIngredient(Ingredient ingredient) {
+		ItemStack[] stacks = ingredient.getMatchingStacks();
+		String[] stacksSerialized = new String[stacks.length];
+		for (int i = 0; i < stacks.length; i++) {
+			stacksSerialized[i] = serializeStack(stacks[i]);
+		}
+
+		return String.join(",", stacksSerialized);
+	}
+	
+	public static Ingredient loadIngredientFromString(String ingredientString) {
+		String[] stacksSerialized = splitStacksFromSerializedIngredient(ingredientString);
+		List<ItemStack> stacks = Lists.newArrayList();
+		for (int i = 0; i < stacksSerialized.length; i++) {
+			if (stacksSerialized[i].startsWith("ore:")) {
+				OreIngredient ore = new OreIngredient(stacksSerialized[i].substring(4));
+				for (ItemStack stack : ore.getMatchingStacks())
+					stacks.add(stack);
+			}
+			
+			stacks.add(loadStackFromString(stacksSerialized[i]));
+		}
+
+		return Ingredient.fromStacks(stacks.toArray(new ItemStack[stacks.size()]));
+	}
+	
 	public static StackWrapper wrapStack(ItemStack stack) {
 		return stack.isEmpty() ? StackWrapper.EMPTY_WRAPPER : new StackWrapper(stack);
 	}
@@ -92,6 +125,41 @@ public class ItemStackUtil {
 			return "Wrapper[" + stack.toString() + "]";
 		}
 		
+	}
+
+	private static String[] splitStacksFromSerializedIngredient (String ingredientSerialized) {
+		final List<String> result = new ArrayList<>();
+
+		int lastIndex = 0;
+		int braces = 0;
+		Character insideString = null;
+		for (int i = 0; i < ingredientSerialized.length(); i++) {
+			switch (ingredientSerialized.charAt(i)) {
+				case '{':
+					if (insideString == null) braces++;
+					break;
+				case '}':
+					if (insideString == null)
+						braces--;
+					break;
+				case '\'':
+					insideString = insideString == null ? '\'' : null;
+					break;
+				case '"':
+					insideString = insideString == null ? '"' : null;
+					break;
+				case ',':
+					if (braces <= 0) {
+						result.add(ingredientSerialized.substring(lastIndex, i));
+						lastIndex = i + 1;
+						break;
+					}
+			}
+		}
+
+		result.add(ingredientSerialized.substring(lastIndex));
+
+		return result.toArray(new String[result.size()]);
 	}
 	
 }
