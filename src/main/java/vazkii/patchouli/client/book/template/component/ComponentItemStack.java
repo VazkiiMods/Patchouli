@@ -6,7 +6,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraftforge.oredict.OreIngredient;
 import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -26,16 +25,12 @@ public class ComponentItemStack extends TemplateComponent {
 	
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		if(item.startsWith("ore:")) {
-			String ore = item.substring(4);
-			ingredient = new OreIngredient(ore);
-		} else {
-			ItemStack stack = ItemStackUtil.loadStackFromString(item);
-			ingredient = Ingredient.fromStacks(stack);
-			
-			if(linkedRecipe && !stack.isEmpty())
-				entry.addRelevantStack(stack, pageNum);
-		}
+		ingredient = ItemStackUtil.loadIngredientFromString(item);
+		
+		ItemStack[] stacks = ingredient.getMatchingStacks();
+		
+		if(linkedRecipe && stacks.length == 1)
+			entry.addRelevantStack(stacks[0], pageNum);
 	}
 	
 	@Override
