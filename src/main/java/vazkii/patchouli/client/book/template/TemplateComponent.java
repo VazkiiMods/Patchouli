@@ -49,47 +49,10 @@ public abstract class TemplateComponent {
 		this.processor = processor;
 		this.encapsulation = encapsulation;
 		
-		compileVariableHolders(this, variables, processor, encapsulation);
+		VariableAssigner.assignVariableHolders(this, variables, processor, encapsulation);
 		compiled = true;
 	}
-	
-	public static void compileVariableHolders(Object o, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
-		Class<?> clazz = o.getClass();
-		Field[] fields = clazz.getFields();
 
-		for(Field f : fields) {
-			if(f.getType() == String.class && f.getAnnotation(VariableHolder.class) != null) try {
-				f.setAccessible(true);
-				String curr = (String) f.get(o);
-				String original = curr;
-
-				if(curr != null && !curr.isEmpty() && encapsulation != null)
-					curr = encapsulation.transform(curr, true);
-
-				if(curr != null) {
-					String val = curr;
-					if(curr.startsWith("#")) {
-						val = null;
-						String key = curr.substring(1);
-						String originalKey = original.substring(1);
-						
-						if(processor != null)
-							val = processor.process(originalKey);
-
-						if(val == null && variables.has(key))
-							val = variables.get(key);
-
-						if(val == null)
-							val = "[FAILED TO LOAD " + key + "]";
-					}
-
-					f.set(o, val);
-				}
-			} catch(IllegalAccessException e) {
-				throw new RuntimeException("Error compiling component", e);
-			}
-		}
-	}
 
 	public boolean getVisibleStatus(IComponentProcessor processor) {
 		if(processor != null && group != null && !group.isEmpty() && !processor.allowRender(group))
