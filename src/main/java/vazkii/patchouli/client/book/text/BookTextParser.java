@@ -25,6 +25,11 @@ public class BookTextParser {
 			COMMANDS.put(name, handler);
 	}
 
+	private static void register(FunctionProcessor function, String... names) {
+		for (String name : names)
+			FUNCTIONS.put(name, function);
+	}
+
 	static {
 		register(state -> {
 			state.lineBreaks = 1;
@@ -56,7 +61,7 @@ public class BookTextParser {
 		register(state -> { state.reset(); return ""; }, "", "reset", "clear");
 		register(state -> state.color(state.font.getColorCode('0')), "nocolor");
 
-		FUNCTIONS.put("k", (parameter, state) -> {
+		register((parameter, state) -> {
 			KeyBinding result = getKeybindKey(state, parameter);
 			if (result == null) {
 				state.tooltip = I18n.format("patchouli.gui.lexicon.keybind_missing", parameter);
@@ -65,8 +70,8 @@ public class BookTextParser {
 
 			state.tooltip = I18n.format("patchouli.gui.lexicon.keybind", I18n.format(result.getKeyDescription()));
 			return result.getDisplayName();
-		});
-		FUNCTIONS.put("l", (parameter, state) -> {
+		}, "k");
+		register((parameter, state) -> {
 			state.cluster = new LinkedList<>();
 
 			state.prevColor = state.color;
@@ -111,12 +116,12 @@ public class BookTextParser {
 				}
 			}
 			return "";
-		});
-		FUNCTIONS.put("tooltip", (parameter, state) -> {
+		}, "l");
+		register((parameter, state) -> {
 			state.tooltip = parameter;
 			state.cluster = new LinkedList<>();
 			return "";
-		});
+		}, "tooltip", "t");
 	}
 
 	private final GuiBook gui;
