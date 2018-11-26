@@ -46,6 +46,7 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 			if(multiblock)
 				s = I18n.format("patchouli.gui.lexicon.visualize_letter");
 			mc.fontRenderer.drawStringWithShadow(s, px + 12, py + 10, 0xFFFFFF);
+			GlStateManager.enableDepth();
 			GlStateManager.popMatrix();
 		}
 	}
