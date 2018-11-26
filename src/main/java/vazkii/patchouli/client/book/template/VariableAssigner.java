@@ -42,7 +42,7 @@ public class VariableAssigner {
 		try {
 			if(ASSIGNERS.containsKey(type)) {
 				ASSIGNERS.get(type).assign(f, c);
-			} else {
+			} else if(c.object != null) {
 				Object o = f.get(c.object);
 				assignVariableHolders(c.rewrap(o));
 			}
