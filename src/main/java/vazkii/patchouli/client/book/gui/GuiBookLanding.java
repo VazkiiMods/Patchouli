@@ -106,7 +106,9 @@ public class GuiBookLanding extends GuiBook {
 
 		drawHeader();
 		drawSeparator(book, RIGHT_PAGE_X, topSeparator);
-		drawSeparator(book, RIGHT_PAGE_X, bottomSeparator);
+		
+		if(loadedCategories <= 16)
+			drawSeparator(book, RIGHT_PAGE_X, bottomSeparator);
 
 		if(book.contents.isErrored()) {
 			int x = RIGHT_PAGE_X  + PAGE_WIDTH / 2; 
