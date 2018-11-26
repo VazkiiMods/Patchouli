@@ -235,4 +235,9 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		setTooltip(tooltip);
 	}
 
+	@Override
+	public boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h) {
+		return isMouseInRelativeRange(mouseX, mouseY, x, y, w, h);
+	}
+
 }

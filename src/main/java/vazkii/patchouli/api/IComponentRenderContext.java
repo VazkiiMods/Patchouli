@@ -20,6 +20,8 @@ public interface IComponentRenderContext {
 
 	public void renderIngredient(int x, int y, int mouseX, int mouseY, Ingredient ingredient);
 
+	public boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h);
+	
 	public void setHoverTooltip(List<String> tooltip);
 
 }
