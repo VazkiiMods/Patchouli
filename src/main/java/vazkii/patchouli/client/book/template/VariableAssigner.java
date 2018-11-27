@@ -37,8 +37,6 @@ public class VariableAssigner {
 		Class<?> type = f.getType();
 		f.setAccessible(true);
 		
-		System.out.println("Assigning: " + f.getName() + " as " + type.getName());
-
 		try {
 			if(ASSIGNERS.containsKey(type)) {
 				ASSIGNERS.get(type).assign(f, c);
@@ -85,16 +83,13 @@ public class VariableAssigner {
 	private static void assignMap(Field f, Context c)  throws IllegalAccessException {
 		Map map = (Map) f.get(c.object);
 		Collection<Entry> entries = map.entrySet();
-		System.out.println(map);
 
 		for(Entry e : entries) {
 			Object v = e.getValue();
-			System.out.println(v);
 
 			if(v instanceof String) {
 				Object k = e.getKey();
 				String res = resolveString((String) v, c);
-				System.out.println("Resolved " + v + " => " + res);
 				if(res != null)
 					e.setValue(res);
 			}
