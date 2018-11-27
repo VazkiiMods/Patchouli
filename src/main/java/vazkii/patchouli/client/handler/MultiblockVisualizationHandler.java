@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.handler;
 
 import java.awt.Color;
+import java.lang.reflect.Field;
 import java.util.function.Function;
 
 import org.lwjgl.opengl.GL11;
@@ -18,16 +19,19 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -35,13 +39,12 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
-import vazkii.patchouli.common.base.ObfuscationKeys;
 import vazkii.patchouli.common.multiblock.Multiblock;
 import vazkii.patchouli.common.multiblock.StateMatcher;
+import vazkii.patchouli.common.util.ReflectionUtil;
 import vazkii.patchouli.common.util.RotationUtil;
 
 public class MultiblockVisualizationHandler {
@@ -59,6 +62,20 @@ public class MultiblockVisualizationHandler {
 	private static int timeComplete;
 	private static IBlockState lookingState;
 	private static BlockPos lookingPos;
+
+	private static Field fieldRenderPosX;
+	private static Field fieldRenderPosY;
+	private static Field fieldRenderPosZ;
+
+	static {
+		try {
+			fieldRenderPosX = ReflectionUtil.accessField(RenderManager.class, "field_78725_b", "D");
+			fieldRenderPosY = ReflectionUtil.accessField(RenderManager.class, "field_78726_c", "D");
+			fieldRenderPosZ = ReflectionUtil.accessField(RenderManager.class, "field_78723_d", "D");
+		} catch (NoSuchFieldException e) {
+		    throw new RuntimeException("Unable to find necessary fields", e);
+		}
+	}
 
 	public static void setMultiblock(Multiblock multiblock, String name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos->pos);
@@ -106,7 +123,7 @@ public class MultiblockVisualizationHandler {
 			int top = y + 10;
 
 			if(timeComplete > 0) {
-				String s = I18n.translateToLocal("patchouli.gui.lexicon.structure_complete");
+				String s = I18n.format("patchouli.gui.lexicon.structure_complete");
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(0, Math.min(height + 5, animTime), 0);
 				mc.fontRenderer.drawStringWithShadow(s, x - mc.fontRenderer.getStringWidth(s) / 2, top + height - 10, 0x00FF00);
@@ -123,7 +140,7 @@ public class MultiblockVisualizationHandler {
 			drawGradientRect(left, top, left + progressWidth, top + height, color, color2);
 
 			if(!isAnchored) {
-				String s = I18n.translateToLocal("patchouli.gui.lexicon.not_anchored");
+				String s = I18n.format("patchouli.gui.lexicon.not_anchored");
 				mc.fontRenderer.drawStringWithShadow(s, x - mc.fontRenderer.getStringWidth(s) / 2, top + height + 8, 0xFFFFFF);
 			} else {
 				if(lookingState != null) {
@@ -145,7 +162,7 @@ public class MultiblockVisualizationHandler {
 					String progress = blocksDone + "/" + blocks;
 					
 					if(blocksDone == blocks && airFilled > 0) {
-						progress = I18n.translateToLocal("patchouli.gui.lexicon.needs_air");
+						progress = I18n.format("patchouli.gui.lexicon.needs_air");
 						color = 0xDA4E3F;
 						mult *= 2;
 						posx -= width / 2;
@@ -170,7 +187,7 @@ public class MultiblockVisualizationHandler {
 	public static void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
 		if(hasMultiblock && !isAnchored) {
 			pos = event.getPos();
-			facingRotation = RotationUtil.rotationFromFacing(event.getEntityPlayer().getHorizontalFacing());
+			facingRotation = getRotation(event.getEntityPlayer());
 			isAnchored = true;
 		}
 	}
@@ -189,7 +206,7 @@ public class MultiblockVisualizationHandler {
 	public static void renderMultiblock(World world) {
 		Minecraft mc = Minecraft.getMinecraft();
 		if(!isAnchored) {
-			facingRotation = RotationUtil.rotationFromFacing(mc.player.getHorizontalFacing());
+			facingRotation = getRotation(mc.player);
 			if(mc.objectMouseOver != null)
 				pos = mc.objectMouseOver.getBlockPos();
 		}
@@ -203,9 +220,14 @@ public class MultiblockVisualizationHandler {
 
 		RenderManager manager = Minecraft.getMinecraft().getRenderManager();
 		BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
-		double posX = ReflectionHelper.getPrivateValue(RenderManager.class, manager, ObfuscationKeys.RenderManager.RENDER_POS_X);
-		double posY = ReflectionHelper.getPrivateValue(RenderManager.class, manager, ObfuscationKeys.RenderManager.RENDER_POS_Y);
-		double posZ = ReflectionHelper.getPrivateValue(RenderManager.class, manager, ObfuscationKeys.RenderManager.RENDER_POS_Z);
+		double posX = 0;
+		double posY = 0;
+		double posZ = 0;
+		try {
+			posX = (Double)fieldRenderPosX.get(manager);
+			posY = (Double)fieldRenderPosY.get(manager);
+			posZ = (Double)fieldRenderPosZ.get(manager);
+		} catch (IllegalAccessException ignored) { }
 
 		GlStateManager.pushMatrix();
 		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
@@ -240,6 +262,7 @@ public class MultiblockVisualizationHandler {
 						
 						if(!multiblock.test(world, startPos, x, y, z, facingRotation)) {
 							IBlockState renderState = matcher.getDisplayedState().withRotation(facingRotation);
+							mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 							renderBlock(world, renderState, renderPos, alpha, dispatcher);
 
 							if(air)
@@ -325,5 +348,12 @@ public class MultiblockVisualizationHandler {
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
     }
+
+	/**
+	 * Returns the Rotation of a multiblock structure based on the given entity's facing direction.
+	 */
+	private static Rotation getRotation(Entity entity) {
+		return RotationUtil.rotationFromFacing(EnumFacing.getHorizontal(MathHelper.floor((double) (-entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3));
+	}
 	
 }

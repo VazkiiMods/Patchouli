@@ -25,17 +25,18 @@ public class BookTextParser {
 			COMMANDS.put(name, handler);
 	}
 
+	private static void register(FunctionProcessor function, String... names) {
+		for (String name : names)
+			FUNCTIONS.put(name, function);
+	}
+
 	static {
 		register(state -> {
-			state.length = 0;
-			state.x = state.pageX;
-			state.y += state.lineHeight;
+			state.lineBreaks = 1;
 			return "";
 		}, "br");
 		register(state -> {
-			state.length = 0;
-			state.x = state.pageX;
-			state.y += state.lineHeight * 2;
+			state.lineBreaks = 2;
 			return "";
 		}, "br2", "2br", "p");
 		register(state -> {
@@ -60,7 +61,7 @@ public class BookTextParser {
 		register(state -> { state.reset(); return ""; }, "", "reset", "clear");
 		register(state -> state.color(state.font.getColorCode('0')), "nocolor");
 
-		FUNCTIONS.put("k", (parameter, state) -> {
+		register((parameter, state) -> {
 			KeyBinding result = getKeybindKey(state, parameter);
 			if (result == null) {
 				state.tooltip = I18n.format("patchouli.gui.lexicon.keybind_missing", parameter);
@@ -69,8 +70,8 @@ public class BookTextParser {
 
 			state.tooltip = I18n.format("patchouli.gui.lexicon.keybind", I18n.format(result.getKeyDescription()));
 			return result.getDisplayName();
-		});
-		FUNCTIONS.put("l", (parameter, state) -> {
+		}, "k");
+		register((parameter, state) -> {
 			state.cluster = new LinkedList<>();
 
 			state.prevColor = state.color;
@@ -115,12 +116,12 @@ public class BookTextParser {
 				}
 			}
 			return "";
-		});
-		FUNCTIONS.put("tooltip", (parameter, state) -> {
+		}, "l");
+		register((parameter, state) -> {
 			state.tooltip = parameter;
 			state.cluster = new LinkedList<>();
 			return "";
-		});
+		}, "tooltip", "t");
 	}
 
 	private final GuiBook gui;
@@ -148,8 +149,6 @@ public class BookTextParser {
 		boolean wasUnicode = font.getUnicodeFlag();
 		font.setUnicodeFlag(true);
 
-		List<Word> words = new ArrayList<>();
-
 		String actualText = text;
 		if(actualText == null)
 			actualText = "[ERROR]";
@@ -157,76 +156,55 @@ public class BookTextParser {
 		for(String key : book.macros.keySet())
 			actualText = actualText.replace(key, book.macros.get(key));
 
-		SpanState state = new SpanState(gui, book, x, lineHeight, baseColor, font);
-		state.x = x;
-		state.y = y;
-		state.length = 0;
-		state.color = baseColor;
-		state.prevColor = baseColor;
-
-		int from = 0;
-		char[] chars = actualText.toCharArray();
-		for (int i = 0; i < chars.length; i++) {
-			if (chars[i] == ' ') {
-				processToken(words, state, actualText.substring(from, i), true);
-				from = i + 1;
-			} else if (chars[i] == '$' && i + 1 < chars.length && chars[i + 1] == '(') {
-				if (i > from)
-					processToken(words, state, actualText.substring(from, i), false);
-
-				from = i;
-				while (i < chars.length && chars[i] != ')')
-					i++;
-
-				if (chars[i] != ')') {
-					processToken(words, state, "[ERROR: UNFINISHED COMMAND]", false);
-					break;
-				}
-
-				try {
-					String word = processCommand(state, actualText.substring(from + 2, i));
-					if (!word.isEmpty())
-						processToken(words, state, word, false);
-				} catch (Exception ex) {
-					processToken(words, state, "[ERROR]", false);
-				}
-
-				from = i + 1;
-			}
-		}
-		if (from < chars.length)
-			processToken(words, state, actualText.substring(from), false);
+		List<Span> spans = processCommands(actualText);
+		List<Word> words = layout(spans);
 
 		font.setUnicodeFlag(wasUnicode);
 		return words;
 	}
 
-	private void processToken(List<Word> words, SpanState state, String text, boolean space) {
-		if (text.isEmpty() && !space)
-			return;
+	private List<Word> layout(List<Span> spans) {
+		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width);
+		layouter.layout(spans);
+		return layouter.getWords();
+	}
 
-		int trimWidth = font.getStringWidth(state.codes + text);
-		int strWidth = trimWidth + (space ? spaceWidth : 0);
+	private List<Span> processCommands(String text) {
+		SpanState state = new SpanState(gui, book, baseColor, font);
+		List<Span> spans = new ArrayList<>();
+		int from = 0;
+		char[] chars = text.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+			if (chars[i] == '$' && i + 1 < chars.length && chars[i + 1] == '(') {
+				if (i > from)
+					spans.add(new Span(state, text.substring(from, i)));
 
-		int newLen = state.length + strWidth;
+				from = i;
+				while (i < chars.length && chars[i] != ')')
+					i++;
 
-		if(newLen > width) {
-			int newTrimLen = state.length + trimWidth;
-			if(newTrimLen > width) {
-				state.length = strWidth;
-				state.x = x;
-				state.y += lineHeight;
-			} else state.length = newTrimLen;
-		} else state.length = newLen;
+				if (i == chars.length) {
+					spans.add(Span.error(state, "[ERROR: UNFINISHED COMMAND]"));
+					break;
+				}
 
-		Word word = new Word(gui, font, state, text, strWidth);
-		words.add(word);
-		if(state.cluster != null)
-			state.cluster.add(word);
-		else
-			state.tooltip = "";
+				try {
+					String processed = processCommand(state, text.substring(from + 2, i));
+					if (!processed.isEmpty()) {
+						spans.add(new Span(state, processed));
 
-		state.x += strWidth;
+						if (state.cluster == null)
+							state.tooltip = "";
+					}
+				} catch (Exception ex) {
+					spans.add(Span.error(state, "[ERROR]"));
+				}
+
+				from = i + 1;
+			}
+		}
+		spans.add(new Span(state, text.substring(from)));
+		return spans;
 	}
 
 	private String processCommand(SpanState state, String cmd) {
@@ -253,12 +231,10 @@ public class BookTextParser {
 			int dist = Character.isDigit(c) ? Character.digit(c, 10) : 1;
 			int pad = dist * 4;
 			char bullet = dist % 2 == 0 ? '\u25E6' : '\u2022';
-			if(state.y > y || state.x > x)
-				state.y += lineHeight;
-			state.length = pad;
-			state.x = x + pad;
-
-			return TextFormatting.BLACK + "" + bullet + " ";
+			state.lineBreaks = 1;
+			state.spacingLeft = pad;
+			state.spacingRight = spaceWidth;
+			return TextFormatting.BLACK.toString() + bullet;
 		}
 
 		if (cmd.indexOf(':') > 0) {

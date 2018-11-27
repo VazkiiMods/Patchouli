@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -11,8 +11,8 @@ public class GuiButtonBookEye extends GuiButtonBook {
 
 	public GuiButtonBookEye(GuiBook parent, int x, int y) {
 		super(parent, x, y, 308, 31, 11, 11,
-				I18n.translateToLocal("patchouli.gui.lexicon.button.visualize"),
-				TextFormatting.GRAY + I18n.translateToLocal("patchouli.gui.lexicon.button.visualize.info"));
+				I18n.format("patchouli.gui.lexicon.button.visualize"),
+				TextFormatting.GRAY + I18n.format("patchouli.gui.lexicon.button.visualize.info"));
 	}
 	
 	@Override

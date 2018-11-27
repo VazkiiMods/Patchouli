@@ -12,7 +12,6 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.common.book.BookRegistry;
 
 public class GuiBookCategory extends GuiBookEntryList {
 
@@ -41,7 +40,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 	@Override
 	protected void addSubcategoryButtons() {
 		int i = 0;
-		List<BookCategory> categories = new ArrayList(book.contents.categories.values());
+		List<BookCategory> categories = new ArrayList<>(book.contents.categories.values());
 		Collections.sort(categories);
 		
 		for(BookCategory ocategory : categories) {

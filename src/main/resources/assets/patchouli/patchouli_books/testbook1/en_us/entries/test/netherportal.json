@@ -29,7 +29,7 @@
       "type": "spotlight",
       "title": "Make it Lit!",
       "text": "Just set a top face of one of two bottom obsidian blocks on fire and BOOM! you got yourself a ticket to hell!",
-      "item": "minecraft:flint_and_steel"
+      "item": "minecraft:flint_and_steel#10"
     }, {
       "type": "multiblock",
       "name": "The Result!",

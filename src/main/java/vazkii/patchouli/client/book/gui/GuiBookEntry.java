@@ -4,9 +4,14 @@ import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
@@ -14,7 +19,7 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 
-public class GuiBookEntry extends GuiBook {
+public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	BookEntry entry;
 	BookPage leftPage, rightPage;
@@ -194,5 +199,45 @@ public class GuiBookEntry extends GuiBook {
 		
 		book.contents.openLexiconGui(gui, true);
 	}
+
+	@Override
+	public GuiScreen getGui() {
+		return this;
+	}
 	
+	@Override
+	public FontRenderer getFont() {
+		return fontRenderer;
+	}
+	
+	@Override
+	public void renderItemStack(int x, int y, int mouseX, int mouseY, ItemStack stack) {
+		if(stack == null || stack.isEmpty())
+			return;
+		
+		RenderHelper.enableGUIStandardItemLighting();
+		mc.getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
+		mc.getRenderItem().renderItemOverlays(fontRenderer, stack, x, y);
+		
+		if(isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16))
+			setTooltipStack(stack);
+	}
+	
+	@Override
+	public void renderIngredient(int x, int y, int mouseX, int mouseY, Ingredient ingr) {
+		ItemStack[] stacks = ingr.getMatchingStacks();
+		if(stacks.length > 0)
+			renderItemStack(x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
+	}
+	
+	@Override
+	public void setHoverTooltip(List<String> tooltip) {
+		setTooltip(tooltip);
+	}
+
+	@Override
+	public boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h) {
+		return isMouseInRelativeRange(mouseX, mouseY, x, y, w, h);
+	}
+
 }

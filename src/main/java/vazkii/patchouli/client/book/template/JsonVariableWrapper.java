@@ -5,7 +5,7 @@ import com.google.gson.JsonPrimitive;
 
 import vazkii.patchouli.api.IVariableProvider;
 
-public final class JsonVariableWrapper implements IVariableProvider {
+public final class JsonVariableWrapper implements IVariableProvider<String> {
 
 	private final JsonObject source;
 	

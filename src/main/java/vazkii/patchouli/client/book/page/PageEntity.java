@@ -8,12 +8,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -36,7 +36,7 @@ public class PageEntity extends PageWithText {
 	boolean rotate = true;
 	
 	transient boolean errored;
-	transient Constructor<Entity> constructor;
+	transient Constructor<? extends Entity> constructor;
 	transient Entity entity;
 	transient float renderScale, offset;
 	transient NBTTagCompound nbt;
@@ -45,7 +45,7 @@ public class PageEntity extends PageWithText {
 	public void build(BookEntry entry, int pageNum) {
 		super.build(entry, pageNum);
 		
-		String nbtStr = "";
+		String nbtStr;
 		int nbtStart = entityId.indexOf("{");
 		if(nbtStart > 0) {
 			nbtStr = entityId.substring(nbtStart).replaceAll("([^\\\\])'", "$1\"").replaceAll("\\\\'", "'");
@@ -62,7 +62,7 @@ public class PageEntity extends PageWithText {
 		if (entityEntry == null)
 			throw new RuntimeException("Could not find entity: " + entityId);
 
-		Class clazz = entityEntry.getEntityClass();
+		Class<? extends Entity> clazz = entityEntry.getEntityClass();
 		try {
 			constructor = clazz.getConstructor(World.class);
 		} catch(Exception e) {
@@ -93,7 +93,7 @@ public class PageEntity extends PageWithText {
 		parent.drawCenteredStringNoShadow(name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 
 		if(errored)
-			fontRenderer.drawStringWithShadow(I18n.translateToLocal("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
+			fontRenderer.drawStringWithShadow(I18n.format("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
 		
 		if(entity != null)
 			renderEntity(parent.mc.world, rotate ? ClientTicker.total : 0);

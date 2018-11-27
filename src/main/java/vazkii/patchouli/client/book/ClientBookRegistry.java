@@ -37,7 +37,7 @@ import vazkii.patchouli.common.util.SerializationUtil;
 
 public class ClientBookRegistry implements IResourceManagerReloadListener {
 
-	public final Map<String, Class<? extends BookPage>> pageTypes = new HashMap();
+	public final Map<String, Class<? extends BookPage>> pageTypes = new HashMap<>();
 
 	private boolean firstLoad = true;
 
@@ -80,10 +80,9 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 	public void onResourceManagerReload(IResourceManager resourceManager) {
 		currentLang = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
 		
-		if(!firstLoad) {
+		if(!firstLoad)
 			BookRegistry.INSTANCE.reload();
-			firstLoad = false;
-		}
+		firstLoad = false;
 	}
 	
 	public void reloadLocks(boolean reset) {
@@ -94,8 +93,14 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 		ResourceLocation res = new ResourceLocation(bookStr);
 		Book book = BookRegistry.INSTANCE.books.get(res);
 		
-		if(book != null)
+		if(book != null) {
+			if (!book.contents.getCurrentGui().canBeOpened()) {
+				book.contents.currentGui = null;
+				book.contents.guiStack.clear();
+			}
+
 			book.contents.openLexiconGui(book.contents.getCurrentGui(), false);
+		}
 	}
 
 	public static class LexiconPageAdapter implements JsonDeserializer<BookPage> {

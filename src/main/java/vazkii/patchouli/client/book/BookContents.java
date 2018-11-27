@@ -1,9 +1,11 @@
 package vazkii.patchouli.client.book;
 
-import java.io.FileNotFoundException;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,10 +19,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResource;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -39,15 +40,17 @@ public class BookContents {
 
 	public final Book book;
 
-	public Map<ResourceLocation, BookCategory> categories = new HashMap();
-	public Map<ResourceLocation, BookEntry> entries = new HashMap();
-	public Map<ResourceLocation, Supplier<BookTemplate>> templates = new HashMap();
-	public Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap();
+	public Map<ResourceLocation, BookCategory> categories = new HashMap<>();
+	public Map<ResourceLocation, BookEntry> entries = new HashMap<>();
+	public Map<ResourceLocation, Supplier<BookTemplate>> templates = new HashMap<>();
+	public Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap<>();
 	private boolean errored = false;
 	private Exception exception = null;
 
-	public Stack<GuiBook> guiStack = new Stack();
+	public Stack<GuiBook> guiStack = new Stack<>();
 	public GuiBook currentGui;
+	
+	public BookIcon indexIcon;
 
 	public BookContents(Book book) {
 		this.book = book;
@@ -84,19 +87,19 @@ public class BookContents {
 	}
 
 	public String getSubtitle() {
-		String editionStr = "";
+		String editionStr;
 
 		try {
 			int ver = Integer.parseInt(book.version);
 			if(ver == 0)
-				return I18n.translateToLocal(book.subtitle);
+				return I18n.format(book.subtitle);
 
 			editionStr = numberToOrdinal(ver); 
 		} catch(NumberFormatException e) {
-			editionStr = I18n.translateToLocal("patchouli.gui.lexicon.dev_edition");
+			editionStr = I18n.format("patchouli.gui.lexicon.dev_edition");
 		}
 
-		return I18n.translateToLocalFormatted("patchouli.gui.lexicon.edition_str", editionStr);
+		return I18n.format("patchouli.gui.lexicon.edition_str", editionStr);
 	}
 
 	public void reload(boolean isOverride) {
@@ -108,11 +111,15 @@ public class BookContents {
 			categories.clear();
 			entries.clear();
 			recipeMappings.clear();
+			
+			if(book.indexIconRaw == null || book.indexIconRaw.isEmpty())
+				indexIcon = new BookIcon(book.getBookItem());
+			else indexIcon = new BookIcon(book.indexIconRaw);
 		}
 
-		List<ResourceLocation> foundCategories = new ArrayList();
-		List<ResourceLocation> foundEntries = new ArrayList();
-		List<ResourceLocation> foundTemplates = new ArrayList();
+		List<ResourceLocation> foundCategories = new ArrayList<>();
+		List<ResourceLocation> foundEntries = new ArrayList<>();
+		List<ResourceLocation> foundTemplates = new ArrayList<>();
 		List<ModContainer> mods = Loader.instance().getActiveModList();
 
 		try { 
@@ -154,14 +161,14 @@ public class BookContents {
 	protected void findFiles(String dir, List<ResourceLocation> list) {
 		ModContainer mod = book.owner;
 		String id = mod.getModId();
-		CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getResourcePath(), DEFAULT_LANG, dir), null, pred(id, list));
+		CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getResourcePath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
 	}
 	
 	private BiFunction<Path, Path, Boolean> pred(String modId, List<ResourceLocation> list) {
 		return (root, file) -> {
 			Path rel = root.relativize(file);
 			String relName = rel.toString();
-			if(relName.toString().endsWith(".json")) {
+			if(relName.endsWith(".json")) {
 				relName = FilenameUtils.removeExtension(FilenameUtils.separatorsToUnix(relName));
 				ResourceLocation res = new ResourceLocation(modId, relName);
 				list.add(res);
@@ -172,47 +179,47 @@ public class BookContents {
 	}
 
 	private void loadCategory(ResourceLocation key, ResourceLocation res, Book book) {
-		InputStream stream = loadLocalizedJson(res);
-		if(stream == null)
-			throw new IllegalArgumentException(res + " does not exist.");
+		try (Reader stream = loadLocalizedJson(res)) {
+			BookCategory category = ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookCategory.class);
+			if (category == null)
+				throw new IllegalArgumentException(res + " does not exist.");
 
-		BookCategory category = ClientBookRegistry.INSTANCE.gson.fromJson(new InputStreamReader(stream), BookCategory.class);
-		if(category == null)
-			throw new IllegalArgumentException(res + " does not exist.");
-
-		category.setBook(book);
-		if(category.canAdd())
-			categories.put(key, category);
+			category.setBook(book);
+			if (category.canAdd())
+				categories.put(key, category);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	private void loadEntry(ResourceLocation key, ResourceLocation res, Book book) {
-		InputStream stream = loadLocalizedJson(res);
-		if(stream == null)
-			throw new IllegalArgumentException(res + " does not exist.");
+		try (Reader stream = loadLocalizedJson(res)) {
+			BookEntry entry = ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookEntry.class);
+			if (entry == null)
+				throw new IllegalArgumentException(res + " does not exist.");
 
-		BookEntry entry = ClientBookRegistry.INSTANCE.gson.fromJson(new InputStreamReader(stream), BookEntry.class);
-		if(entry == null)
-			throw new IllegalArgumentException(res + " does not exist.");
+			entry.setBook(book);
+			if (entry.canAdd()) {
+				BookCategory category = entry.getCategory();
+				if (category != null)
+					category.addEntry(entry);
+				else
+					new RuntimeException("Entry " + key + " does not have a valid category.").printStackTrace();
 
-		entry.setBook(book);
-		if(entry.canAdd()) {
-			BookCategory category = entry.getCategory();
-			if(category != null)
-				category.addEntry(entry);
-			else
-				new RuntimeException("Entry " + key + " does not have a valid category.").printStackTrace();
-
-			entries.put(key, entry);
+				entries.put(key, entry);
+			}
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
 	}
 	
 	private void loadTemplate(ResourceLocation key, ResourceLocation res, Book book) {
 		Supplier<BookTemplate> supplier = () -> {
-			InputStream stream = loadLocalizedJson(res);
-			if(stream == null)
-				throw new IllegalArgumentException(res + " does not exist.");
-			
-			return ClientBookRegistry.INSTANCE.gson.fromJson(new InputStreamReader(stream), BookTemplate.class); 
+			try (Reader stream = loadLocalizedJson(res)) {
+				return ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookTemplate.class);
+			} catch (IOException ex) {
+				throw new RuntimeException(ex);
+			}
 		};
 		
 		// test supplier
@@ -223,29 +230,30 @@ public class BookContents {
 		templates.put(key, supplier);
 	}
 
-	private InputStream loadLocalizedJson(ResourceLocation res) {
+	private Reader loadLocalizedJson(ResourceLocation res) {
 		ResourceLocation localized = new ResourceLocation(res.getResourceDomain(),
 				res.getResourcePath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
 
-		return loadJson(localized, null);
+		InputStream input = loadJson(localized, res);
+		if (input == null)
+			throw new IllegalArgumentException(res + " does not exist.");
+
+		return new InputStreamReader(new BufferedInputStream(input), StandardCharsets.UTF_8);
 	}
 
 	protected InputStream loadJson(ResourceLocation resloc, ResourceLocation fallback) {
-		IResource res = null;
 		try {
-			res = Minecraft.getMinecraft().getResourceManager().getResource(resloc);
-		} catch (FileNotFoundException e) {
-			return null;
+			return Minecraft.getMinecraft().getResourceManager().getResource(resloc).getInputStream();
 		} catch (IOException e) {
-			e.printStackTrace();
+			//no-op
 		}
 
-		if(res == null && fallback != null) {
-			new RuntimeException("Patchouli failed to load " + resloc + ". Switching to fallback.").printStackTrace();
+		if(fallback != null) {
+			System.err.println("Patchouli failed to load " + resloc + ". Switching to fallback.");
 			return loadJson(fallback, null);
 		}
 
-		return res.getInputStream();
+		return null;
 	}
 
 	private static String numberToOrdinal(int i) {

@@ -1,17 +1,14 @@
 package vazkii.patchouli.client.book.template.component;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.SerializedName;
 
+import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.api.ICustomComponent;
-import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.TemplateComponent;
+import vazkii.patchouli.client.book.template.VariableAssigner;
 import vazkii.patchouli.common.util.SerializationUtil;
 
 public class ComponentCustom extends TemplateComponent {
@@ -30,7 +27,7 @@ public class ComponentCustom extends TemplateComponent {
 	
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
-		callbacks.render(pticks);
+		callbacks.render(page.parent, pticks, mouseX, mouseY);
 	}
 	
 	@Override
@@ -40,7 +37,7 @@ public class ComponentCustom extends TemplateComponent {
 	
 	@Override
 	public void mouseClicked(BookPage page, int mouseX, int mouseY, int mouseButton) {
-		callbacks.mouseClicked(mouseX, mouseY, mouseButton);
+		callbacks.mouseClicked(page.parent, mouseX, mouseY, mouseButton);
 	}
 
 	private void createCallbackObj() {
@@ -48,7 +45,7 @@ public class ComponentCustom extends TemplateComponent {
 			Class<?> classObj = Class.forName(clazz);
 			if(classObj != null) {
 				callbacks = (ICustomComponent) SerializationUtil.RAW_GSON.fromJson(sourceObject, classObj);
-				compileVariableHolders(callbacks, variables, processor, encapsulation);
+				VariableAssigner.assignVariableHolders(callbacks, variables, processor, encapsulation);
 			}
 		} catch(Exception e) {
 			throw new RuntimeException("Failed to create custom component " + clazz, e);

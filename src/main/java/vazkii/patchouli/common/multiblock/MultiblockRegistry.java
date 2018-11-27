@@ -12,7 +12,7 @@ import vazkii.patchouli.common.base.Patchouli;
 
 public class MultiblockRegistry {
 
-	public static final HashMap<ResourceLocation, IMultiblock> MULTIBLOCKS = new HashMap();
+	public static final HashMap<ResourceLocation, IMultiblock> MULTIBLOCKS = new HashMap<>();
 
 	public static IMultiblock crucible;
 
@@ -29,7 +29,7 @@ public class MultiblockRegistry {
 					{ "SSS", "SFS", "SSS" }},
 						'0', Blocks.CAULDRON,
 						'F', Blocks.FIRE,
-						'S', api.predicateMatcher(Blocks.STONEBRICK, (state) -> state.getBlock().isOpaqueCube(state) && state.getMaterial() == Material.ROCK),
+						'S', api.predicateMatcher(Blocks.STONEBRICK, (state) -> state.isOpaqueCube() && state.getMaterial() == Material.ROCK),
 						' ', api.anyMatcher()))
 				.setSymmetrical(true);
 	}

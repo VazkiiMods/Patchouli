@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
 
-    compile "vazkii:patchouli:Patchouli:[VERSION]"
+    compile "vazkii.patchouli:Patchouli:[VERSION]"
 }
 ```
 

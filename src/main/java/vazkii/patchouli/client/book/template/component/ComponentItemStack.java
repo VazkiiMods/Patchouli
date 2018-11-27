@@ -2,8 +2,10 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -19,14 +21,16 @@ public class ComponentItemStack extends TemplateComponent {
 	@SerializedName("link_recipe")
 	boolean linkedRecipe;
 	
-	transient ItemStack stack;
+	transient Ingredient ingredient;
 	
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		stack = ItemStackUtil.loadStackFromString(item);
+		ingredient = ItemStackUtil.loadIngredientFromString(item);
 		
-		if(linkedRecipe && !stack.isEmpty())
-			entry.addRelevantStack(stack, pageNum);
+		ItemStack[] stacks = ingredient.getMatchingStacks();
+		
+		if(linkedRecipe && stacks.length == 1)
+			entry.addRelevantStack(stacks[0], pageNum);
 	}
 	
 	@Override
@@ -37,10 +41,10 @@ public class ComponentItemStack extends TemplateComponent {
 			GlStateManager.enableBlend();
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			page.mc.renderEngine.bindTexture(page.book.craftingResource);
-			page.parent.drawModalRectWithCustomSizedTexture(x - 4, y - 4, 83, 71, 24, 24, 128, 128);
+			Gui.drawModalRectWithCustomSizedTexture(x - 4, y - 4, 83, 71, 24, 24, 128, 128);
 		}
 		
-		page.renderItem(x, y, mouseX, mouseY, stack);
+		page.parent.renderIngredient(x, y, mouseX, mouseY, ingredient);
 	}
 	
 }

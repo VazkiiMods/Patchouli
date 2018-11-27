@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.template;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import com.google.gson.annotations.SerializedName;
@@ -21,11 +22,12 @@ import vazkii.patchouli.client.book.template.component.ComponentImage;
 import vazkii.patchouli.client.book.template.component.ComponentItemStack;
 import vazkii.patchouli.client.book.template.component.ComponentSeparator;
 import vazkii.patchouli.client.book.template.component.ComponentText;
+import vazkii.patchouli.client.book.template.component.ComponentTooltip;
 import vazkii.patchouli.common.book.Book;
 
 public class BookTemplate {
 	
-	public static final HashMap<String, Class<? extends TemplateComponent>> componentTypes = new HashMap();
+	public static final HashMap<String, Class<? extends TemplateComponent>> componentTypes = new HashMap<>();
 	
 	static {
 		registerComponent("text", ComponentText.class);
@@ -35,12 +37,13 @@ public class BookTemplate {
 		registerComponent("separator", ComponentSeparator.class);
 		registerComponent("frame", ComponentFrame.class);
 		registerComponent("entity", ComponentEntity.class);
+		registerComponent("tooltip", ComponentTooltip.class);
 		registerComponent("custom", ComponentCustom.class);
 	}
 
 	@SerializedName("include")
-	List<TemplateInclusion> inclusions = new ArrayList();
-	List<TemplateComponent> components = new ArrayList();
+	List<TemplateInclusion> inclusions = new ArrayList<>();
+	List<TemplateComponent> components = new ArrayList<>();
 	
 	@SerializedName("processor")
 	String processorClass;
@@ -73,7 +76,7 @@ public class BookTemplate {
 			return;
 		
 		createProcessor();
-		components.removeIf(c -> c == null);
+		components.removeIf(Objects::isNull);
 		
 		if(processor != null) {
 			IVariableProvider processorVars = variables;

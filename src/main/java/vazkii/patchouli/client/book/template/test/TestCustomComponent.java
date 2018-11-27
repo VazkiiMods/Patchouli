@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.api.ICustomComponent;
 import vazkii.patchouli.api.VariableHolder;
 
@@ -22,11 +23,11 @@ public class TestCustomComponent implements ICustomComponent {
 	}
 
 	@Override
-	public void render(float pticks) {
+	public void render(IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 0);
 		GlStateManager.rotate(30F, 0F, 0F, 1F);
-		Minecraft.getMinecraft().fontRenderer.drawString(potato, 0, 0, 0x555555);
+		context.getFont().drawString(potato, 0, 0, 0x555555);
 		
 		GlStateManager.popMatrix();
 	}

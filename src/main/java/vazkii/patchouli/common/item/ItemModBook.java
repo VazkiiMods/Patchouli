@@ -134,7 +134,7 @@ public class ItemModBook extends Item {
 		ItemStack stack = playerIn.getHeldItem(handIn);
 		Book book = getBook(stack);
 		if(book == null)
-			return new ActionResult<ItemStack>(EnumActionResult.FAIL, stack);
+			return new ActionResult<>(EnumActionResult.FAIL, stack);
 
 		if(playerIn instanceof EntityPlayerMP) {
 			NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.resourceLoc.toString()), (EntityPlayerMP) playerIn);
@@ -142,7 +142,7 @@ public class ItemModBook extends Item {
 			worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, sfx, SoundCategory.PLAYERS, 1F, (float) (0.7 + Math.random() * 0.4));
 		}
 
-		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, stack);
+		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 	}
 
 
