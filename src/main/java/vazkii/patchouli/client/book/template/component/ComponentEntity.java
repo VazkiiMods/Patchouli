@@ -28,6 +28,8 @@ public class ComponentEntity extends TemplateComponent {
 	@SerializedName("render_size")
 	float renderSize = 100;
 	
+	boolean rotate = true;
+	
 	transient boolean errored;
 	transient Constructor<Entity> constructor;
 	transient Entity entity;
@@ -68,7 +70,7 @@ public class ComponentEntity extends TemplateComponent {
 			page.fontRenderer.drawStringWithShadow(I18n.translateToLocal("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
 		
 		if(entity != null)
-			renderEntity(page.mc.world, ClientTicker.total);
+			renderEntity(page.mc.world, rotate ?  ClientTicker.total : 0);
 	}
 
 	private void renderEntity(World world, float rotation) {
