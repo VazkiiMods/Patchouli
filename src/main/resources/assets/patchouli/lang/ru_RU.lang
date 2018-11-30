@@ -1,0 +1,85 @@
+# Item Names
+item.patchouli:guide_book.name=Руководство
+
+# Testing
+item.patchouli:test_book_1.name=Тестовая книга 1
+item.patchouli:test_book_1.landing=Здесь можно разместить не только описание!
+
+item.patchouli:test_book_2.name=Тестовая книга 2
+item.patchouli:test_book_2.landing=Описание! Поддерживаются $(2)цвета$() и $(4)тому $(bold)подобное$()!
+
+item.patchouli:test_completion.name=Тестовая книга (Требует достижения для разблокировки статей)
+item.patchouli:test_completion.landing=Эта книга меняет цвета, когда Вы разблокируете статьи!
+
+item.patchouli:intro_book.name=Patchouli
+item.patchouli:intro_book.subtitle=Документация для всех
+item.patchouli:intro_book.landing=C $(item)Patchouli$() Вы можете создать $(thing)книги с документацией$() для модификаций и модпаков!
+
+#Subtitles
+patchouli.subtitle.book_open=Открыть книгу
+patchouli.subtitle.book_flip=Развороты страниц
+
+# Gui Strings
+patchouli.gui.lexicon.landing_info=(Добавьте описание в json файл книги)
+patchouli.gui.lexicon.progress_meter=Разблокированные элементы:
+patchouli.gui.lexicon.progress_tooltip=%d/%d Разблокировано
+patchouli.gui.lexicon.progress_tooltip.secret1=+ 1 секрет
+patchouli.gui.lexicon.progress_tooltip.secret=+ %d секретов
+patchouli.gui.lexicon.progress_tooltip.info=Получайте достижения для разблокировки новых статей и категорий!
+patchouli.gui.lexicon.categories=Категории
+patchouli.gui.lexicon.chapters=Статьи
+patchouli.gui.lexicon.editor=Редактор книг
+patchouli.gui.lexicon.editor.mock_header=Макет заголовка
+patchouli.gui.lexicon.editor.info=Это редактор для записей этой книги. Он предназначен для разработки или перевода. Это Вам не пригодится, если Вы обычный игрок.$(br2)Смотрите $(l:https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101)Patchouli wiki$() для использования специальных кодов.
+patchouli.gui.lexicon.shift_for_recipe=Shift+ЛКМ для просмотра рецепта
+patchouli.gui.lexicon.index=Все статьи
+patchouli.gui.lexicon.index.info=Здесь размещены все доступные в этой книге статьи.$(br2)Вы можете искать по названию статьи, предмета или блока. Для этого просто начните набирать запрос на клавиатуре.
+patchouli.gui.lexicon.shapeless=Бесформенный
+patchouli.gui.lexicon.no_results=Нет результатов
+patchouli.gui.lexicon.sad=:(
+patchouli.gui.lexicon.locked=(Заблокировано)
+patchouli.gui.lexicon.reloaded=Книги были перезагружены за %d мс.
+patchouli.gui.lexicon.add_bookmark=Добавить закладку
+patchouli.gui.lexicon.remove_bookmark=(Shift+ЛКМ для удаления)
+patchouli.gui.lexicon.multiblock_bookmark=Визуализировать структуру
+patchouli.gui.lexicon.relations=Связанные статьи
+patchouli.gui.lexicon.not_anchored=Щелкните ПКМ по любому блоку, чтобы визуализировать структуру
+patchouli.gui.lexicon.structure_complete=Структура построена!
+patchouli.gui.lexicon.needs_air=(Сломайте блоки, отмеченные красным)
+patchouli.gui.lexicon.visualize_letter=V
+patchouli.gui.lexicon.seconds=%sсек
+patchouli.gui.lexicon.history=История чтения
+patchouli.gui.lexicon.history.info=В этом разделе хранятся все статьи, которые Вы читали.$(br2)Статьи добавляются и удаляются автоматически при просмотре книги. Вы также можете добавить любую статью в закладки. $(br2)$(o)Совет: нажмите Shift+ЛКМ по любой статье.
+patchouli.gui.lexicon.toast=Новые статьи
+patchouli.gui.lexicon.toast.info=Новые статьи разблокированы
+patchouli.gui.lexicon.external_link=(Внешняя ссылка)
+patchouli.gui.lexicon.loading_error=Ошибка загрузки!
+patchouli.gui.lexicon.loading_error_hover=(Наведите курсор для подробной информации)
+patchouli.gui.lexicon.loading_error_log=Проверьте Ваш журнал (логи)
+patchouli.gui.lexicon.dev_edition=Писательское
+patchouli.gui.lexicon.edition_str=%s Издание
+patchouli.gui.lexicon.added_by=Добавлено %s
+patchouli.gui.lexicon.sneak=Нажмите Shift для просмотра
+patchouli.gui.lexicon.view=Просмотреть статью
+patchouli.gui.lexicon.keybind=Назначенная клавиша: %s
+patchouli.gui.lexicon.keybind_missing=Клавиша не назначена: %s
+
+patchouli.gui.lexicon.button.prev_page=Пред. страница
+patchouli.gui.lexicon.button.next_page=След. страница
+patchouli.gui.lexicon.button.back=Назад
+patchouli.gui.lexicon.button.back.info=Shift+ЛКМ для возврата на главную
+patchouli.gui.lexicon.button.resize=Изменить размер интерфейса
+patchouli.gui.lexicon.button.resize.size0=Стандартный
+patchouli.gui.lexicon.button.resize.size1=Маленький
+patchouli.gui.lexicon.button.resize.size2=Средний
+patchouli.gui.lexicon.button.resize.size3=Больше среднего
+patchouli.gui.lexicon.button.resize.size4=Большой
+patchouli.gui.lexicon.button.resize.size5=Огромный
+patchouli.gui.lexicon.button.resize.size6=Насколько большой у Вас монитор?
+patchouli.gui.lexicon.button.editor=Редактор
+patchouli.gui.lexicon.button.editor.info=(Shift+ЛКМ для обновления книг)
+patchouli.gui.lexicon.button.advancements=Достижения
+patchouli.gui.lexicon.button.config=Конфигурация
+patchouli.gui.lexicon.button.visualize=Визуализировать
+patchouli.gui.lexicon.button.visualize.info=(Повторное нажатие уберёт визуализацию)
+patchouli.gui.lexicon.button.history=История
