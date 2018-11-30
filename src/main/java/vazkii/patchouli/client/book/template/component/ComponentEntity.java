@@ -29,6 +29,7 @@ public class ComponentEntity extends TemplateComponent {
 	float renderSize = 100;
 	
 	boolean rotate = true;
+	@SerializedName("default_rotation")
 	float defaultRotation = -45f;
 	
 	transient boolean errored;

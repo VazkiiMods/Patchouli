@@ -34,6 +34,7 @@ public class PageEntity extends PageWithText {
 	String name;
 	
 	boolean rotate = true;
+	@SerializedName("default_rotation")
 	float defaultRotation = -45f;
 
 	transient boolean errored;
