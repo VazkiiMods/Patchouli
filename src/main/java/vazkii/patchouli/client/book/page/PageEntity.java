@@ -32,6 +32,10 @@ public class PageEntity extends PageWithText {
 	@SerializedName("offset")
 	float extraOffset = 0F;
 	String name;
+	
+	boolean rotate = true;
+	@SerializedName("default_rotation")
+	float defaultRotation = -45f;
 
 	transient boolean errored;
 	transient Constructor<? extends Entity> constructor;
@@ -94,7 +98,7 @@ public class PageEntity extends PageWithText {
 			fontRenderer.drawStringWithShadow(I18n.format("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
 		
 		if(entity != null)
-			renderEntity(parent.mc.world, ClientTicker.total);
+			renderEntity(parent.mc.world, rotate ? ClientTicker.total : defaultRotation);
 		
 		super.render(mouseX, mouseY, pticks);
 	}
