@@ -10,8 +10,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class SerializedMultiblock {
 
-	String[][] pattern = new String[0][0];
-	Map<String, String> mapping = new HashMap<>();
+	public String[][] pattern = new String[0][0];
+	public Map<String, String> mapping = new HashMap<>();
 
 	boolean symmetrical = false;
 	int[] offset = new int[] { 0, 0, 0 };
