@@ -11,7 +11,6 @@ import vazkii.patchouli.api.VariableHolder;
 
 public class SerializedMultiblock {
 
-	@VariableHolder
 	public String[][] pattern = new String[0][0];
 	@VariableHolder
 	public Map<String, String> mapping = new HashMap<>();
