@@ -1,6 +1,9 @@
 package vazkii.patchouli.client.book.page;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -10,8 +13,22 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityChest;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.ForgeHooksClient;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
@@ -148,15 +165,85 @@ public class PageMultiblock extends PageWithText {
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, z);
 		GlStateManager.color(1F, 1F, 1F, 1F);
+        GlStateManager.translate(x, y, z);
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		brd.renderBlockBrightness(state, 1.0F);
+        boolean errored = false;
+        Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
+        try {
+            switch (state.getRenderType()) {
+            case MODEL:
+                brd.renderBlock(state, BlockPos.ORIGIN.north(), mb, Tessellator.getInstance().getBuffer());
+                break;
+            }
+        } catch (Exception e) {
+            errored = true;
+            throw new RuntimeException(e); // temp
+        } finally {
+            if (!errored) {
+                Tessellator.getInstance().draw();
+            } else {
+                Tessellator.getInstance().getBuffer().finishDrawing();
+            }
+        }
 		
+        TileEntity te = state.getBlock().createTileEntity(mc.world, state);
+        if (te != null && TileEntityRendererDispatcher.instance.getRenderer(te.getClass()) != null) {
+            RenderHelper.enableStandardItemLighting();
+            GlStateManager.enableLighting();
+            TileEntityRendererDispatcher.instance.entityX = 0;
+            TileEntityRendererDispatcher.instance.entityY = 0;
+            TileEntityRendererDispatcher.instance.entityZ = 0;
+            TileEntityRendererDispatcher.staticPlayerX = 0;
+            TileEntityRendererDispatcher.staticPlayerY = 0;
+            TileEntityRendererDispatcher.staticPlayerZ = 0;
+
+            for (int pass = 0; pass < 2; pass++) {
+              ForgeHooksClient.setRenderPass(pass);
+              setGlStateForPass(pass, false);
+              doTileEntityRenderPass(te, pass);
+            }
+            ForgeHooksClient.setRenderPass(-1);
+            setGlStateForPass(0, false);
+            RenderHelper.disableStandardItemLighting();
+        }
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.enableDepth();
 		GlStateManager.popMatrix();
 	}
 
+    private void doTileEntityRenderPass(TileEntity tile, final int pass) {
+        if (tile != null) {
+            if (tile.shouldRenderInPass(pass)) {
+                TileEntityRendererDispatcher.instance.render(tile, 0,0,-1, 0);
+            }
+        }
+    }
+    
+    private void setGlStateForPass(int layer, boolean isNeighbour) {
+
+        GlStateManager.color(1, 1, 1);
+        if (isNeighbour) {
+
+            GlStateManager.enableDepth();
+            GlStateManager.enableBlend();
+            float alpha = 1f;
+            float col = 1f;
+
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_CONSTANT_COLOR);
+            GL14.glBlendColor(col, col, col, alpha);
+            return;
+        }
+
+        if (layer == 0) {
+            GlStateManager.enableDepth();
+            GlStateManager.disableBlend();
+            GlStateManager.depthMask(true);
+        } else {
+            GlStateManager.enableBlend();
+            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GlStateManager.depthMask(false);
+        }
+    }
 }
