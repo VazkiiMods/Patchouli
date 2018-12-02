@@ -15,6 +15,7 @@ import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.util.ValidationUtils;
 
 public abstract class BookPage {
 
@@ -35,6 +36,7 @@ public abstract class BookPage {
 		this.book = entry.book;
 		this.entry = entry;
 		this.pageNum = pageNum;
+		ValidationUtils.validateAdvancement(this.advancement);
 	}
 	
 	public void onDisplayed(GuiBookEntry parent, int left, int top) { 
