@@ -5,17 +5,27 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.init.Biomes;
+import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldType;
+import net.minecraft.world.biome.Biome;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
-public class Multiblock implements IMultiblock {
+public class Multiblock implements IMultiblock, IBlockAccess {
 
 	final String[][] pattern;
 
@@ -26,6 +36,8 @@ public class Multiblock implements IMultiblock {
 	public int viewOffX, viewOffY, viewOffZ;
 	int centerX, centerY, centerZ;
 	boolean symmetrical;
+	
+	private final transient Map<BlockPos, TileEntity> teCache = new HashMap<>();
 
 	public Multiblock(String[][] pattern, Object... targets) {
 		this.pattern = pattern;
@@ -229,5 +241,57 @@ public class Multiblock implements IMultiblock {
 	public boolean isSymmetrical() {
 		return symmetrical;
 	}
+
+    @Override
+    @Nullable
+    public TileEntity getTileEntity(BlockPos pos) {
+		IBlockState state = getBlockState(pos);
+		if (state.getBlock().hasTileEntity(state)) {
+			return teCache.computeIfAbsent(pos.toImmutable(), p -> state.getBlock().createTileEntity(Minecraft.getMinecraft().world, state));
+		}
+		return null;
+    }
+
+    @Override
+    public int getCombinedLight(BlockPos pos, int lightValue) {
+        return 0xF000F0;
+    }
+
+    @Override
+    public IBlockState getBlockState(BlockPos pos) {
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        if (x < 0 || y < 0 || z < 0 || x >= sizeX || y >= sizeY || z >= sizeZ) {
+            return Blocks.AIR.getDefaultState();
+        }
+        return stateTargets[x][y][z].getDisplayedState();
+    }
+
+    @Override
+    public boolean isAirBlock(BlockPos pos) {
+        IBlockState state = getBlockState(pos);
+        return state.getBlock().isAir(state, this, pos);
+    }
+
+    @Override
+    public Biome getBiome(BlockPos pos) {
+        return Biomes.PLAINS;
+    }
+
+    @Override
+    public int getStrongPower(BlockPos pos, EnumFacing direction) {
+        return 0;
+    }
+
+    @Override
+    public WorldType getWorldType() {
+        return WorldType.DEFAULT;
+    }
+
+    @Override
+    public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default) {
+        return getBlockState(pos).isSideSolid(this, pos, side);
+    }
 
 }
