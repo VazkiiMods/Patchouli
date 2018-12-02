@@ -1,34 +1,39 @@
 package vazkii.patchouli.client.book.page;
 
 import javax.annotation.Nonnull;
+import javax.vecmath.Matrix4d;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Vector3d;
+import javax.vecmath.Vector4d;
+import javax.vecmath.Vector4f;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.MinecraftForgeClient;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
@@ -135,8 +140,15 @@ public class PageMultiblock extends PageWithText {
 		GlStateManager.scale(scale, scale, scale);
 		GlStateManager.translate(-(float) multiblockObj.sizeX / 2, -(float) multiblockObj.sizeY / 2, 0);
 
+		// Initial eye pos somewhere off in the distance in the -Z direction
+		Vector4f eye = new Vector4f(0, 0, -100, 1);
+		Matrix4f rotMat = new Matrix4f();
+		rotMat.setIdentity();
+
+		// For each GL rotation done, track the opposite to keep the eye pos accurate
 		GlStateManager.rotate(-30F, 1F, 0F, 0F);
-		
+		rotMat.rotX((float) Math.toRadians(30F));
+
 		float offX = (float) -multiblockObj.sizeX / 2;
 		float offZ = (float) -multiblockObj.sizeZ / 2 + 1;
 
@@ -145,105 +157,139 @@ public class PageMultiblock extends PageWithText {
 			time += ClientTicker.partialTicks;
 		GlStateManager.translate(-offX, 0, -offZ);
 		GlStateManager.rotate(time, 0F, 1F, 0F);
+		rotMat.rotY((float) Math.toRadians(-time));
 		GlStateManager.rotate(45F, 0F, 1F, 0F);
+		rotMat.rotY((float) Math.toRadians(-45F));
 		GlStateManager.translate(offX, 0, offZ);
 		
-		for(int x = 0; x < multiblockObj.sizeX; x++)
-			for(int y = 0; y < multiblockObj.sizeY; y++)
-				for(int z = 0; z < multiblockObj.sizeZ; z++)
-					renderElement(multiblockObj, x, y, z);
+		// Finally apply the rotations
+		rotMat.transform(eye);
+		renderElements(multiblockObj, BlockPos.getAllInBoxMutable(BlockPos.ORIGIN, new BlockPos(multiblockObj.sizeX - 1, multiblockObj.sizeY - 1, multiblockObj.sizeZ - 1)), eye);
+
 		GlStateManager.popMatrix();
 	}
+	
+	private void renderElements(Multiblock mb, Iterable<? extends BlockPos> blocks, Vector4f eye) {
 
-	private void renderElement(Multiblock mb, int x, int y, int z) {
-		IStateMatcher matcher = mb.stateTargets[x][y][z];
-		IBlockState state = matcher.getDisplayedState();
-		if(state == null)
-			return;
-
-		BlockRendererDispatcher brd = Minecraft.getMinecraft().getBlockRendererDispatcher();
-		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		
 		GlStateManager.pushMatrix();
 		GlStateManager.color(1F, 1F, 1F, 1F);
-        GlStateManager.translate(x, y, z);
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        boolean errored = false;
-        Tessellator.getInstance().getBuffer().begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-        try {
-            switch (state.getRenderType()) {
-            case MODEL:
-                brd.renderBlock(state, BlockPos.ORIGIN.north(), mb, Tessellator.getInstance().getBuffer());
-                break;
-            }
-        } catch (Exception e) {
-            errored = true;
-            throw new RuntimeException(e); // temp
-        } finally {
-            if (!errored) {
-                Tessellator.getInstance().draw();
-            } else {
-                Tessellator.getInstance().getBuffer().finishDrawing();
-            }
-        }
+		GlStateManager.translate(0, 0, -1);
 		
-        TileEntity te = state.getBlock().createTileEntity(mc.world, state);
-        if (te != null && TileEntityRendererDispatcher.instance.getRenderer(te.getClass()) != null) {
-            RenderHelper.enableStandardItemLighting();
-            GlStateManager.enableLighting();
-            TileEntityRendererDispatcher.instance.entityX = 0;
-            TileEntityRendererDispatcher.instance.entityY = 0;
-            TileEntityRendererDispatcher.instance.entityZ = 0;
-            TileEntityRendererDispatcher.staticPlayerX = 0;
-            TileEntityRendererDispatcher.staticPlayerY = 0;
-            TileEntityRendererDispatcher.staticPlayerZ = 0;
+		TileEntityRendererDispatcher.instance.entityX = 0;
+		TileEntityRendererDispatcher.instance.entityY = 0;
+		TileEntityRendererDispatcher.instance.entityZ = 0;
+		TileEntityRendererDispatcher.staticPlayerX = 0;
+		TileEntityRendererDispatcher.staticPlayerY = 0;
+		TileEntityRendererDispatcher.staticPlayerZ = 0;
 
-            for (int pass = 0; pass < 2; pass++) {
-              ForgeHooksClient.setRenderPass(pass);
-              setGlStateForPass(pass, false);
-              doTileEntityRenderPass(te, pass);
-            }
-            ForgeHooksClient.setRenderPass(-1);
-            setGlStateForPass(0, false);
-            RenderHelper.disableStandardItemLighting();
-        }
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.enableDepth();
+		BlockRenderLayer oldRenderLayer = MinecraftForgeClient.getRenderLayer();
+		for (BlockRenderLayer layer : BlockRenderLayer.values()) {
+			if (layer == BlockRenderLayer.TRANSLUCENT) {
+				RenderHelper.enableStandardItemLighting();
+				GlStateManager.enableLighting();
+				
+				ForgeHooksClient.setRenderPass(0);
+				setGlStateForPass(0, false);
+				doTileEntityRenderPass(mb, blocks, 0);
+				
+				ForgeHooksClient.setRenderPass(-1);
+				RenderHelper.disableStandardItemLighting();
+			}
+			mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+			mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+			
+			ForgeHooksClient.setRenderLayer(layer);
+			setGlStateForPass(layer, true);
+			doWorldRenderPass(mb, blocks, layer, eye);
+			if (layer == BlockRenderLayer.TRANSLUCENT) {
+				RenderHelper.enableStandardItemLighting();
+				GlStateManager.enableLighting();
+				
+				ForgeHooksClient.setRenderPass(1);
+				setGlStateForPass(1, false);
+				doTileEntityRenderPass(mb, blocks, 1);
+				
+				ForgeHooksClient.setRenderPass(-1);
+				RenderHelper.disableStandardItemLighting();
+			}
+		}
+		ForgeHooksClient.setRenderLayer(oldRenderLayer);
+
+		ForgeHooksClient.setRenderPass(-1);
+		setGlStateForPass(0, false);
+		mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 		GlStateManager.popMatrix();
 	}
 
-    private void doTileEntityRenderPass(TileEntity tile, final int pass) {
-        if (tile != null) {
-            if (tile.shouldRenderInPass(pass)) {
-                TileEntityRendererDispatcher.instance.render(tile, 0,0,-1, 0);
-            }
-        }
-    }
-    
-    private void setGlStateForPass(int layer, boolean isNeighbour) {
+	private void doWorldRenderPass(Multiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull BlockRenderLayer layer, Vector4f eye) {
+		BufferBuilder wr = Tessellator.getInstance().getBuffer();
+		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 
-        GlStateManager.color(1, 1, 1);
-        if (isNeighbour) {
+		for (BlockPos pos : blocks) {
+			IBlockState bs = mb.getBlockState(pos);
+			Block block = bs.getBlock();
+			bs = bs.getActualState(mb, pos);
+			if (block.canRenderInLayer(bs, layer)) {
+				renderBlock(bs, pos, mb, Tessellator.getInstance().getBuffer());
+			}
+		}
 
-            GlStateManager.enableDepth();
-            GlStateManager.enableBlend();
-            float alpha = 1f;
-            float col = 1f;
+		if (layer == BlockRenderLayer.TRANSLUCENT) {
+			wr.sortVertexData(eye.x, eye.y, eye.z);
+		}
+		Tessellator.getInstance().draw();
+	}
 
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_CONSTANT_COLOR);
-            GL14.glBlendColor(col, col, col, alpha);
-            return;
-        }
+	public void renderBlock(@Nonnull IBlockState state, @Nonnull BlockPos pos, @Nonnull Multiblock mb, @Nonnull BufferBuilder worldRendererIn) {
 
-        if (layer == 0) {
-            GlStateManager.enableDepth();
-            GlStateManager.disableBlend();
-            GlStateManager.depthMask(true);
-        } else {
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GlStateManager.depthMask(false);
-        }
-    }
+		try {
+			BlockRendererDispatcher blockrendererdispatcher = mc.getBlockRendererDispatcher();
+			EnumBlockRenderType type = state.getRenderType();
+			if (type != EnumBlockRenderType.MODEL) {
+				blockrendererdispatcher.renderBlock(state, pos, mb, worldRendererIn);
+				return;
+			}
+
+			// We only want to change one param here, the check sides
+			IBakedModel ibakedmodel = blockrendererdispatcher.getModelForState(state);
+			state = state.getBlock().getExtendedState(state, mb, pos);
+			blockrendererdispatcher.getBlockModelRenderer().renderModel(mb, ibakedmodel, state, pos, worldRendererIn, false);
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void doTileEntityRenderPass(Multiblock mb, Iterable<? extends BlockPos> blocks, final int pass) {
+		for (BlockPos pos : blocks) {
+			IBlockState state = mb.getBlockState(pos);
+			if (state.getBlock().hasTileEntity(state)) {
+				TileEntity te = state.getBlock().createTileEntity(mc.world, state);
+				if (te != null && TileEntityRendererDispatcher.instance.getRenderer(te.getClass()) != null) {
+					if (te.shouldRenderInPass(pass)) {
+						TileEntityRendererDispatcher.instance.render(te, pos.getX(), pos.getY(), pos.getZ(), 0);
+					}
+				}
+			}
+		}
+	}
+
+	private void setGlStateForPass(@Nonnull BlockRenderLayer layer, boolean isNeighbour) {
+		int pass = layer == BlockRenderLayer.TRANSLUCENT ? 1 : 0;
+		setGlStateForPass(pass, isNeighbour);
+	}
+
+	private void setGlStateForPass(int layer, boolean isNeighbour) {
+		GlStateManager.color(1, 1, 1);
+
+		if (layer == 0) {
+			GlStateManager.enableDepth();
+			GlStateManager.disableBlend();
+			GlStateManager.depthMask(true);
+		} else {
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.depthMask(false);
+		}
+	}
 }
