@@ -180,53 +180,38 @@ public class PageMultiblock extends PageWithText {
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.translate(0, 0, -1);
 		
-		TileEntityRendererDispatcher.instance.entityX = 0;
-		TileEntityRendererDispatcher.instance.entityY = 0;
-		TileEntityRendererDispatcher.instance.entityZ = 0;
-		TileEntityRendererDispatcher.staticPlayerX = 0;
-		TileEntityRendererDispatcher.staticPlayerY = 0;
-		TileEntityRendererDispatcher.staticPlayerZ = 0;
+		TileEntityRendererDispatcher.instance.entityX = eye.x;
+		TileEntityRendererDispatcher.instance.entityY = eye.y;
+		TileEntityRendererDispatcher.instance.entityZ = eye.z;
+		TileEntityRendererDispatcher.staticPlayerX = eye.x;
+		TileEntityRendererDispatcher.staticPlayerY = eye.y;
+		TileEntityRendererDispatcher.staticPlayerZ = eye.z;
 
 		BlockRenderLayer oldRenderLayer = MinecraftForgeClient.getRenderLayer();
 		for (BlockRenderLayer layer : BlockRenderLayer.values()) {
 			if (layer == BlockRenderLayer.TRANSLUCENT) {
-				RenderHelper.enableStandardItemLighting();
-				GlStateManager.enableLighting();
-				
-				ForgeHooksClient.setRenderPass(0);
-				setGlStateForPass(0, false);
 				doTileEntityRenderPass(mb, blocks, 0);
-				
-				ForgeHooksClient.setRenderPass(-1);
-				RenderHelper.disableStandardItemLighting();
 			}
-			mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
-			
-			ForgeHooksClient.setRenderLayer(layer);
-			setGlStateForPass(layer, true);
 			doWorldRenderPass(mb, blocks, layer, eye);
 			if (layer == BlockRenderLayer.TRANSLUCENT) {
-				RenderHelper.enableStandardItemLighting();
-				GlStateManager.enableLighting();
-				
-				ForgeHooksClient.setRenderPass(1);
-				setGlStateForPass(1, false);
 				doTileEntityRenderPass(mb, blocks, 1);
-				
-				ForgeHooksClient.setRenderPass(-1);
-				RenderHelper.disableStandardItemLighting();
 			}
 		}
 		ForgeHooksClient.setRenderLayer(oldRenderLayer);
 
 		ForgeHooksClient.setRenderPass(-1);
-		setGlStateForPass(0, false);
+		setGlStateForPass(0);
 		mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 		GlStateManager.popMatrix();
 	}
 
 	private void doWorldRenderPass(Multiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull BlockRenderLayer layer, Vector4f eye) {
+		mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+		
+		ForgeHooksClient.setRenderLayer(layer);
+		setGlStateForPass(layer);
+		
 		BufferBuilder wr = Tessellator.getInstance().getBuffer();
 		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 
@@ -269,6 +254,12 @@ public class PageMultiblock extends PageWithText {
 	private final transient Set<TileEntity> erroredTiles = Collections.newSetFromMap(new WeakHashMap<>());
 
 	private void doTileEntityRenderPass(Multiblock mb, Iterable<? extends BlockPos> blocks, final int pass) {
+		RenderHelper.enableStandardItemLighting();
+		GlStateManager.enableLighting();
+		
+		ForgeHooksClient.setRenderPass(1);
+		setGlStateForPass(1);
+		
 		for (BlockPos pos : blocks) {
 			TileEntity te = mb.getTileEntity(pos);
 			BlockPos relPos = new BlockPos(mc.player);
@@ -277,22 +268,24 @@ public class PageMultiblock extends PageWithText {
 				te.setPos(relPos.add(pos));
 
 				try {
-					TileEntityRendererDispatcher.instance.render(te, pos.getX(), pos.getY(), pos.getZ(), 0);
-					throw new RuntimeException("Caught rendering crash!");
+					TileEntityRendererDispatcher.instance.render(te, pos.getX(), pos.getY(), pos.getZ(), ClientTicker.partialTicks);
 				} catch (Exception e) {
 					erroredTiles.add(te);
 					e.printStackTrace();
 				}
 			}
 		}
+		
+		ForgeHooksClient.setRenderPass(-1);
+		RenderHelper.disableStandardItemLighting();
 	}
 
-	private void setGlStateForPass(@Nonnull BlockRenderLayer layer, boolean isNeighbour) {
+	private void setGlStateForPass(@Nonnull BlockRenderLayer layer) {
 		int pass = layer == BlockRenderLayer.TRANSLUCENT ? 1 : 0;
-		setGlStateForPass(pass, isNeighbour);
+		setGlStateForPass(pass);
 	}
 
-	private void setGlStateForPass(int layer, boolean isNeighbour) {
+	private void setGlStateForPass(int layer) {
 		GlStateManager.color(1, 1, 1);
 
 		if (layer == 0) {
