@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.init.Biomes;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
@@ -35,6 +36,8 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 	public int viewOffX, viewOffY, viewOffZ;
 	int centerX, centerY, centerZ;
 	boolean symmetrical;
+	
+	private final transient Map<BlockPos, TileEntity> teCache = new HashMap<>();
 
 	public Multiblock(String[][] pattern, Object... targets) {
 		this.pattern = pattern;
@@ -242,7 +245,11 @@ public class Multiblock implements IMultiblock, IBlockAccess {
     @Override
     @Nullable
     public TileEntity getTileEntity(BlockPos pos) {
-        return null;
+		IBlockState state = getBlockState(pos);
+		if (state.getBlock().hasTileEntity(state)) {
+			return teCache.computeIfAbsent(pos.toImmutable(), p -> state.getBlock().createTileEntity(Minecraft.getMinecraft().world, state));
+		}
+		return null;
     }
 
     @Override

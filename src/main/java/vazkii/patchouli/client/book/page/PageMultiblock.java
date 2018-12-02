@@ -1,5 +1,10 @@
 package vazkii.patchouli.client.book.page;
 
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
+import java.util.WeakHashMap;
+
 import javax.annotation.Nonnull;
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Matrix4f;
@@ -259,16 +264,24 @@ public class PageMultiblock extends PageWithText {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	// Hold errored TEs weakly, this may cause some dupe errors but will prevent spamming it every frame
+	private final transient Set<TileEntity> erroredTiles = Collections.newSetFromMap(new WeakHashMap<>());
 
 	private void doTileEntityRenderPass(Multiblock mb, Iterable<? extends BlockPos> blocks, final int pass) {
 		for (BlockPos pos : blocks) {
-			IBlockState state = mb.getBlockState(pos);
-			if (state.getBlock().hasTileEntity(state)) {
-				TileEntity te = state.getBlock().createTileEntity(mc.world, state);
-				if (te != null && TileEntityRendererDispatcher.instance.getRenderer(te.getClass()) != null) {
-					if (te.shouldRenderInPass(pass)) {
-						TileEntityRendererDispatcher.instance.render(te, pos.getX(), pos.getY(), pos.getZ(), 0);
-					}
+			TileEntity te = mb.getTileEntity(pos);
+			BlockPos relPos = new BlockPos(mc.player);
+			if (te != null && !erroredTiles.contains(te) && te.shouldRenderInPass(pass)) {
+				te.setWorld(mc.world);
+				te.setPos(relPos.add(pos));
+
+				try {
+					TileEntityRendererDispatcher.instance.render(te, pos.getX(), pos.getY(), pos.getZ(), 0);
+					throw new RuntimeException("Caught rendering crash!");
+				} catch (Exception e) {
+					erroredTiles.add(te);
+					e.printStackTrace();
 				}
 			}
 		}
