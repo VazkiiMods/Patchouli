@@ -10,6 +10,7 @@ import net.minecraft.stats.RecipeBook;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.gui.GuiButtonInventoryBook;
@@ -22,7 +23,7 @@ public class InventoryBookButtonHandler {
 	static boolean recipeBookOpen;
 	static Book book;
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onGuiInitPre(InitGuiEvent.Pre event) {
 		book = null;
 		
@@ -45,7 +46,7 @@ public class InventoryBookButtonHandler {
 		}
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onGuiInitPost(InitGuiEvent.Post event) {
 		if(book == null)
 			return;
