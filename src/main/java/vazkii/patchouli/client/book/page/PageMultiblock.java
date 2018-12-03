@@ -254,6 +254,8 @@ public class PageMultiblock extends PageWithText {
 	private final transient Set<TileEntity> erroredTiles = Collections.newSetFromMap(new WeakHashMap<>());
 
 	private void doTileEntityRenderPass(Multiblock mb, Iterable<? extends BlockPos> blocks, final int pass) {
+		mb.setWorld(mc.world);
+		
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.enableLighting();
 		

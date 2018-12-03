@@ -21,6 +21,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
@@ -36,6 +38,7 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 	public int viewOffX, viewOffY, viewOffZ;
 	int centerX, centerY, centerZ;
 	boolean symmetrical;
+	World world;
 	
 	private final transient Map<BlockPos, TileEntity> teCache = new HashMap<>();
 
@@ -86,6 +89,7 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 
 	@Override
 	public void place(World world, BlockPos pos, Rotation rotation) {
+		setWorld(world);
 		BlockPos start = pos.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
 		for(int x = 0; x < sizeX; x++)
 			for(int y = 0; y < sizeY; y++)
@@ -100,6 +104,7 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 
 	@Override
 	public void forEach(World world, BlockPos pos, Rotation rotation, char c, Consumer<BlockPos> action) {
+		setWorld(world);
 		forEachMatcher(world, pos, rotation, c, (start, actionPos, x, y, z, ch, matcher) -> {
 		    action.accept(actionPos);
 		    return true;
@@ -107,7 +112,8 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 	}
 
 	@Override
-	public boolean forEachMatcher(World world, BlockPos pos, Rotation rotation, char c, MatcherAcceptor acceptor){
+	public boolean forEachMatcher(World world, BlockPos pos, Rotation rotation, char c, MatcherAcceptor acceptor) {
+		setWorld(world);
 		BlockPos start = pos.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
 		for(int x = 0; x < sizeX; x++)
 			for(int y = 0; y < sizeY; y++)
@@ -136,6 +142,7 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 
 
 	protected boolean validate(World world, BlockPos pos, Rotation rotation) {
+		setWorld(world);
 		BlockPos start = pos.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
 		if(!test(world, start, centerX, centerY, centerZ, rotation))
 			return false;
@@ -151,6 +158,7 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 
 	@Override
 	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
+		setWorld(world);
 		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
 		Predicate<IBlockState> pred = stateTargets[x][y][z].getStatePredicate();
 		IBlockState state = world.getBlockState(checkPos).withRotation(RotationUtil.fixHorizontal(rotation));
@@ -241,18 +249,23 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 	public boolean isSymmetrical() {
 		return symmetrical;
 	}
+	
+	public void setWorld(World world) {
+		this.world = world;
+	}
 
     @Override
     @Nullable
     public TileEntity getTileEntity(BlockPos pos) {
 		IBlockState state = getBlockState(pos);
 		if (state.getBlock().hasTileEntity(state)) {
-			return teCache.computeIfAbsent(pos.toImmutable(), p -> state.getBlock().createTileEntity(Minecraft.getMinecraft().world, state));
+			return teCache.computeIfAbsent(pos.toImmutable(), p -> state.getBlock().createTileEntity(world, state));
 		}
 		return null;
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public int getCombinedLight(BlockPos pos, int lightValue) {
         return 0xF000F0;
     }
@@ -275,6 +288,7 @@ public class Multiblock implements IMultiblock, IBlockAccess {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public Biome getBiome(BlockPos pos) {
         return Biomes.PLAINS;
     }
@@ -285,6 +299,7 @@ public class Multiblock implements IMultiblock, IBlockAccess {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public WorldType getWorldType() {
         return WorldType.DEFAULT;
     }
