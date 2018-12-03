@@ -110,6 +110,7 @@ public class BookContents {
 			guiStack.clear();
 			categories.clear();
 			entries.clear();
+			templates.clear();
 			recipeMappings.clear();
 			
 			if(book.indexIconRaw == null || book.indexIconRaw.isEmpty())

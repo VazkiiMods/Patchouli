@@ -216,6 +216,7 @@ public class Book {
 				
 				contents.categories = extensionTarget.contents.categories;
 				contents.entries = extensionTarget.contents.entries;
+				contents.templates = extensionTarget.contents.templates;
 				contents.recipeMappings = extensionTarget.contents.recipeMappings;
 			}
 			
