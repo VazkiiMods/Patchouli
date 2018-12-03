@@ -26,6 +26,10 @@ public class PatchouliConfig {
 	@Comment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want.\nConfig Flag: testing_mode")
 	public static boolean testingMode = false;
 	
+	@Name("Inventory Button Book")
+	@Comment("Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.")
+	public static String inventoryButtonBook = "";
+	
 	@Ignore private static Map<String, Boolean> configFlags = new HashMap<>();
 	@Ignore private transient static boolean firstChange = true;
 	

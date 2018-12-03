@@ -22,6 +22,7 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(ClientAdvancements.class);
 		MinecraftForge.EVENT_BUS.register(MultiblockVisualizationHandler.class);
 		MinecraftForge.EVENT_BUS.register(BookRightClickHandler.class);
+		MinecraftForge.EVENT_BUS.register(InventoryBookButtonHandler.class);
 	}
 	
 	@Override
