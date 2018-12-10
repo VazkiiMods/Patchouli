@@ -28,6 +28,7 @@ import net.minecraftforge.fml.client.config.GuiUtils;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
+import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBack;
@@ -356,6 +357,10 @@ public abstract class GuiBook extends GuiScreen {
 					if(!entry.isLocked())
 						unlockedSecretEntries++;
 				} else {
+					BookCategory category = entry.getCategory();
+					if(category.isSecret() && !category.isLocked())
+						continue;
+					
 					totalEntries++;
 					if(!entry.isLocked())
 						unlockedEntries++;
