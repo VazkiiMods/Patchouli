@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -33,7 +34,7 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
 
-public class BookContents {
+public class BookContents extends AbstractReadStateHolder {
 
 	private static final String[] ORDINAL_SUFFIXES = new String[]{ "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 	protected static final String DEFAULT_LANG = "en_us";
@@ -259,6 +260,12 @@ public class BookContents {
 
 	private static String numberToOrdinal(int i) {
 		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
+	}
+
+	@Override
+	protected ReadState computeReadState() {
+		Stream<ReadState> stream = categories.values().stream().filter(BookCategory::isRootCategory).map(BookCategory::getReadState);
+		return mostImportantState(stream);
 	}
 
 }

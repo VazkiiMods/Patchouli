@@ -55,6 +55,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		if(!data.viewedEntries.contains(key)) {
 			data.viewedEntries.add(key);
 			dirty = true;
+			entry.markReadStateDirty();
 		}
 		
 		int index = data.history.indexOf(key);

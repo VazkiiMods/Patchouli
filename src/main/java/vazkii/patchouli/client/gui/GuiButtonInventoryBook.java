@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import scala.actors.threadpool.Arrays;
+import vazkii.patchouli.client.book.ReadState;
+import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 
@@ -29,6 +31,11 @@ public class GuiButtonInventoryBook extends GuiButton {
 		
 		ItemStack stack = book.getBookItem();
 		mc.getRenderItem().renderItemAndEffectIntoGUI(stack, x + 2, y + 2);
+		
+		ReadState readState = book.contents.getReadState();
+		if(readState.hasIcon && readState.showInInventory) {
+			GuiBook.drawMarking(book, x, y, readState.u, 0);
+		}
 	}
 	
 	public Book getBook() {

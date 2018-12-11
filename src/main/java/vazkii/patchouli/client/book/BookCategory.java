@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -9,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
-public class BookCategory implements Comparable<BookCategory> {
+public class BookCategory extends AbstractReadStateHolder implements Comparable<BookCategory> {
 
 	String name, description, parent, flag;
 	@SerializedName("icon")
@@ -106,19 +107,7 @@ public class BookCategory implements Comparable<BookCategory> {
 	public boolean isLocked() {
 		return !PatchouliConfig.disableAdvancementLocking && locked;
 	}
-
-	public boolean isUnread() {
-		for(BookEntry e : entries)
-			if(e.isUnread())
-				return true;
-
-		for(BookCategory c : children)
-			if(c.isUnread())
-				return true;
-
-		return false;
-	}
-
+	
 	public boolean isRootCategory() {
 		return parent == null || parent.isEmpty();
 	}
@@ -168,6 +157,22 @@ public class BookCategory implements Comparable<BookCategory> {
 
 	public boolean isExtension() {
 		return getTrueProvider() != getBook();
+	}
+	
+	@Override
+	protected ReadState computeReadState() {
+		Stream<ReadState> entryStream = entries.stream().filter(e -> !e.isLocked()).map(BookEntry::getReadState);
+		Stream<ReadState> childrenStream = children.stream().map(BookCategory::getReadState);
+		return mostImportantState(entryStream, childrenStream);
+	}
+	
+	@Override
+	public void markReadStateDirty() {
+		super.markReadStateDirty();
+		
+		if(parentCategory != null)
+			parentCategory.markReadStateDirty();
+		else book.contents.markReadStateDirty();
 	}
 
 }

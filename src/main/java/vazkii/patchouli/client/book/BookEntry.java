@@ -22,7 +22,7 @@ import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
 
-public class BookEntry implements Comparable<BookEntry> {
+public class BookEntry extends AbstractReadStateHolder implements Comparable<BookEntry> {
 
 	String name, category, flag;
 
@@ -34,7 +34,7 @@ public class BookEntry implements Comparable<BookEntry> {
 	@SerializedName("read_by_default")
 	boolean readByDefault = false;
 	BookPage[] pages;
-	String advancement;
+	String advancement, turnin;
 	int sortnum;
 
 	transient ResourceLocation resource;
@@ -95,19 +95,23 @@ public class BookEntry implements Comparable<BookEntry> {
 		boolean currLocked = locked;
 		locked = advancement != null && !advancement.isEmpty() && !ClientAdvancements.hasDone(advancement);
 
-		if(!locked && currLocked != locked)
+		boolean dirty = false;
+		if(!locked && currLocked != locked) {
+			dirty = true;
 			book.markUpdated();
+		}
+		
+		if(!dirty && getReadState() == ReadState.PENDING && ClientAdvancements.hasDone(turnin))
+			dirty = true;
+		
+		if(dirty)
+			markReadStateDirty();
 	}
-
+	
 	public boolean isLocked() {
 		if(isSecret())
 			return locked;
 		return !PatchouliConfig.disableAdvancementLocking && locked;
-	}
-
-	public boolean isUnread() {
-		BookData data = PersistentData.data.getBookData(book);
-		return data != null && getResource() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getResource().toString());
 	}
 
 	public boolean isSecret() {
@@ -141,6 +145,12 @@ public class BookEntry implements Comparable<BookEntry> {
 	public int compareTo(BookEntry o) {
 		if(o.locked != this.locked)
 			return this.locked ? 1 : -1;
+		
+		ReadState ourState = getReadState();
+		ReadState otherState = o.getReadState();
+		
+		if(ourState != otherState)
+			return ourState.compareTo(otherState);
 
 		if(o.priority != this.priority)
 			return this.priority ? -1 : 1;
@@ -197,6 +207,24 @@ public class BookEntry implements Comparable<BookEntry> {
 
 	public boolean isExtension() {
 		return getTrueProvider() != null && getTrueProvider() != getBook();
+	}
+
+	@Override
+	protected ReadState computeReadState() {
+		BookData data = PersistentData.data.getBookData(book);
+		if(data != null && getResource() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getResource().toString()))
+			return ReadState.UNREAD;
+		
+		if(turnin != null && !turnin.isEmpty() && !ClientAdvancements.hasDone(turnin))
+			return ReadState.PENDING;
+		
+		return ReadState.DONE;
+	}
+	
+	@Override
+	public void markReadStateDirty() {
+		super.markReadStateDirty();
+		getCategory().markReadStateDirty();
 	}
 
 }

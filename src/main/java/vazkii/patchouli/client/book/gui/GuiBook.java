@@ -437,12 +437,14 @@ public abstract class GuiBook extends GuiScreen {
 		drawFromTexture(book, x, y, 250, 180, 16, 16);
 	}
 	
-	public static void drawWarning(Book book, int x, int y, int rand) {
+	
+	// 140
+	public static void drawMarking(Book book, int x, int y, int u, int rand) {
 		GlStateManager.enableBlend();
 		GlStateManager.disableAlpha();
 		float alpha = (float) Math.sin(ClientTicker.total * 0.2F) * 0.3F + 0.7F;
 		GlStateManager.color(1F, 1F, 1F, alpha);
-		drawFromTexture(book, x, y, 140, 197, 8, 8);
+		drawFromTexture(book, x, y, u, 197, 8, 8);
 		GlStateManager.enableAlpha();
 		GlStateManager.color(1F, 1F, 1F);
 	}
