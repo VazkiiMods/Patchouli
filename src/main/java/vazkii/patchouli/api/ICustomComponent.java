@@ -37,7 +37,7 @@ public interface ICustomComponent {
 	
 	/**
 	 * Called when this component first enters the screen. Good time to refresh anything that
-	 * can be dynamic.
+	 * can be dynamic. If you need to add buttons, you can add them here too.
 	 */
 	public default void onDisplayed(IComponentRenderContext context) {
 		// NO-OP

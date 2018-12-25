@@ -1,7 +1,9 @@
 package vazkii.patchouli.client.book.gui;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -23,6 +25,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	BookEntry entry;
 	BookPage leftPage, rightPage;
+	
+	Map<GuiButton, Runnable> customButtons = new HashMap();
 
 	public GuiBookEntry(Book book, BookEntry entry) {
 		this(book, entry, 0);
@@ -40,7 +44,6 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 		maxpages = (int) Math.ceil((float) entry.getPages().size() / 2);
 		setupPages();
-
 	}
 	
 	@Override
@@ -93,6 +96,11 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void actionPerformed(GuiButton button) throws IOException {
+		if(customButtons.containsKey(button)) {
+			customButtons.get(button).run();
+			return;
+		}
+		
 		if((leftPage != null && leftPage.interceptButton(button)) || (rightPage != null && rightPage.interceptButton(button)))
 			return;
 		
@@ -121,6 +129,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	void setupPages() {
+		customButtons.clear();
+		
 		if(leftPage != null)
 			leftPage.onHidden(this);
 		if(rightPage != null)
@@ -239,6 +249,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	@Override
 	public boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h) {
 		return isMouseInRelativeRange(mouseX, mouseY, x, y, w, h);
+	}
+	
+	@Override
+	public void registerButton(GuiButton button, Runnable onClick) {
+		customButtons.put(button, onClick);
+		buttonList.add(button);
 	}
 
 }
