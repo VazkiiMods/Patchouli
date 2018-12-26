@@ -35,7 +35,7 @@ public final class PersistentData {
 		public int bookGuiScale = 0;
 		public boolean clickedVisualize = false;
 		
-		public Map<String, BookData> bookData = new HashMap<>();
+		Map<String, BookData> bookData = new HashMap<>();
 		
 		public BookData getBookData(Book book) {
 			String res = book.resourceLoc.toString();
@@ -50,7 +50,8 @@ public final class PersistentData {
 			public List<String> viewedEntries = new ArrayList<>();
 			public List<Bookmark> bookmarks = new ArrayList<>();
 			public List<String> history = new ArrayList<>();
-
+			public List<String> completedManualQuests = new ArrayList();
+			
 			public static final class Bookmark {
 				
 				public String entry;

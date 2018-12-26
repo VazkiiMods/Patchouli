@@ -24,6 +24,7 @@ import vazkii.patchouli.client.book.page.PageEntity;
 import vazkii.patchouli.client.book.page.PageImage;
 import vazkii.patchouli.client.book.page.PageLink;
 import vazkii.patchouli.client.book.page.PageMultiblock;
+import vazkii.patchouli.client.book.page.PageQuest;
 import vazkii.patchouli.client.book.page.PageRelations;
 import vazkii.patchouli.client.book.page.PageSmelting;
 import vazkii.patchouli.client.book.page.PageSpotlight;
@@ -74,6 +75,7 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 		pageTypes.put("link", PageLink.class);
 		pageTypes.put("relations", PageRelations.class);
 		pageTypes.put("entity", PageEntity.class);
+		pageTypes.put("quest", PageQuest.class);
 	}
 
 	@Override

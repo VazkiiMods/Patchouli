@@ -17,6 +17,7 @@ import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
 import vazkii.patchouli.client.book.page.PageEmpty;
+import vazkii.patchouli.client.book.page.PageQuest;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -101,7 +102,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 			book.markUpdated();
 		}
 		
-		if(!dirty && getReadState() == EntryDisplayState.PENDING && ClientAdvancements.hasDone(turnin))
+		if(!dirty && !readStateDirty && getReadState() == EntryDisplayState.PENDING && ClientAdvancements.hasDone(turnin))
 			dirty = true;
 		
 		if(dirty)
@@ -214,12 +215,13 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		BookData data = PersistentData.data.getBookData(book);
 		if(data != null && getResource() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getResource().toString()))
 			return EntryDisplayState.UNREAD;
-		
-		if(turnin != null && !turnin.isEmpty()) {
-			if(!ClientAdvancements.hasDone(turnin))
-				return EntryDisplayState.PENDING;
-			else return EntryDisplayState.COMPLETED; // TODO move to its own thing
-		}
+
+		if(turnin != null && !turnin.isEmpty() && !ClientAdvancements.hasDone(turnin))
+			return EntryDisplayState.PENDING;
+
+		for(BookPage page : pages)
+			if(page instanceof PageQuest && ((PageQuest) page).isCompleted())
+				return EntryDisplayState.COMPLETED;
 		
 		return EntryDisplayState.NEUTRAL;
 	}

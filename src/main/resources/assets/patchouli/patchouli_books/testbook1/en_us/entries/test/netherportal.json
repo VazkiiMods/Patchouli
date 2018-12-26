@@ -1,5 +1,5 @@
 {
-  "name": "Building a Nether Portal",
+  "name": "Some Test Quests",
   "icon": "minecraft:obsidian",
   "category": "intro/butts",
   "pages": [
@@ -53,6 +53,18 @@
         "offset"     : [0, 0, 0],
         "view_offset": [0, 0, 0]
       }
+    },
+    {
+        "type": "empty"
+    },
+    {
+        "type": "quest",
+        "text": "This a quest to acquire some $(item)Magenta Wool!$().",
+        "trigger": "patchouli:mcp_035_2" 
+    },
+    {
+        "type": "quest",
+        "text": "Quests may also be manual like this one for build challenges.$(br2)Did you know you can automate a quarry using only Botania? Try it out!"
     }
   ]
 }

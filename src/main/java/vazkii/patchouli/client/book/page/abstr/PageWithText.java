@@ -1,8 +1,9 @@
 package vazkii.patchouli.client.book.page.abstr;
 
-import vazkii.patchouli.client.book.gui.GuiBookEntry;
+import net.minecraft.client.gui.GuiButton;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.BookTextRenderer;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
 
 public abstract class PageWithText extends BookPage {
 

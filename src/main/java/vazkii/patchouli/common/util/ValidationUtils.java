@@ -18,8 +18,6 @@ public class ValidationUtils {
         return ADVANCEMENT_LIST.getAdvancement(new ResourceLocation(advancement)) != null;
     }
 
-
-
     public static void validateAdvancement(String advancement) {
         if(advancement != null && !advancement.isEmpty()) {
             Set<Advancement> advancements = Sets.newHashSet(ADVANCEMENT_LIST.getAdvancements());
