@@ -9,7 +9,7 @@ import net.minecraft.util.text.TextFormatting;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookIcon;
-import vazkii.patchouli.client.book.ReadState;
+import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class GuiButtonCategory extends GuiButton {
@@ -63,11 +63,8 @@ public class GuiButtonCategory extends GuiButton {
 			GuiBook.drawFromTexture(parent.book, x, y, u, v, width, height);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
-			if(category != null && !category.isLocked()) {
-				ReadState readState = category.getReadState();
-				if(readState.hasIcon) 
-					GuiBook.drawMarking(parent.book, x, y, readState.u, 0);
-			}
+			if(category != null && !category.isLocked())
+				GuiBook.drawMarking(parent.book, x, y, 0, category.getReadState());
 			GlStateManager.popMatrix();
 
 			if(hovered)

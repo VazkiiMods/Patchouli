@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import vazkii.patchouli.client.book.ReadState;
+import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
@@ -32,9 +32,9 @@ public class GuiButtonInventoryBook extends GuiButton {
 		RenderHelper.enableGUIStandardItemLighting();
 		mc.getRenderItem().renderItemAndEffectIntoGUI(stack, x + 2, y + 2);
 		
-		ReadState readState = book.contents.getReadState();
+		EntryDisplayState readState = book.contents.getReadState();
 		if(readState.hasIcon && readState.showInInventory)
-			GuiBook.drawMarking(book, x, y, readState.u, 0);
+			GuiBook.drawMarking(book, x, y, 0, readState);
 	}
 	
 	public Book getBook() {

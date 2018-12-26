@@ -101,7 +101,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 			book.markUpdated();
 		}
 		
-		if(!dirty && getReadState() == ReadState.PENDING && ClientAdvancements.hasDone(turnin))
+		if(!dirty && getReadState() == EntryDisplayState.PENDING && ClientAdvancements.hasDone(turnin))
 			dirty = true;
 		
 		if(dirty)
@@ -146,8 +146,8 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		if(o.locked != this.locked)
 			return this.locked ? 1 : -1;
 		
-		ReadState ourState = getReadState();
-		ReadState otherState = o.getReadState();
+		EntryDisplayState ourState = getReadState();
+		EntryDisplayState otherState = o.getReadState();
 		
 		if(ourState != otherState)
 			return ourState.compareTo(otherState);
@@ -210,15 +210,18 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	@Override
-	protected ReadState computeReadState() {
+	protected EntryDisplayState computeReadState() {
 		BookData data = PersistentData.data.getBookData(book);
 		if(data != null && getResource() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getResource().toString()))
-			return ReadState.UNREAD;
+			return EntryDisplayState.UNREAD;
 		
-		if(turnin != null && !turnin.isEmpty() && !ClientAdvancements.hasDone(turnin))
-			return ReadState.PENDING;
+		if(turnin != null && !turnin.isEmpty()) {
+			if(!ClientAdvancements.hasDone(turnin))
+				return EntryDisplayState.PENDING;
+			else return EntryDisplayState.COMPLETED; // TODO move to its own thing
+		}
 		
-		return ReadState.DONE;
+		return EntryDisplayState.NEUTRAL;
 	}
 	
 	@Override

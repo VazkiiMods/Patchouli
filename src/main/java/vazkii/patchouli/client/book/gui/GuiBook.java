@@ -24,12 +24,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.gen.structure.StructureOceanMonumentPieces.EntryRoom;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookEntry;
+import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBack;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark;
@@ -438,13 +440,15 @@ public abstract class GuiBook extends GuiScreen {
 	}
 	
 	
-	// 140
-	public static void drawMarking(Book book, int x, int y, int u, int rand) {
+	public static void drawMarking(Book book, int x, int y, int rand, EntryDisplayState state) {
+		if(!state.hasIcon)
+			return;
+		
 		GlStateManager.enableBlend();
 		GlStateManager.disableAlpha();
-		float alpha = (float) Math.sin(ClientTicker.total * 0.2F) * 0.3F + 0.7F;
+		float alpha = state.hasAnimation ? ((float) Math.sin(ClientTicker.total * 0.2F) * 0.3F + 0.7F) : 1F;
 		GlStateManager.color(1F, 1F, 1F, alpha);
-		drawFromTexture(book, x, y, u, 197, 8, 8);
+		drawFromTexture(book, x, y, state.u, 197, 8, 8);
 		GlStateManager.enableAlpha();
 		GlStateManager.color(1F, 1F, 1F);
 	}

@@ -2,6 +2,7 @@
   "name": "MCP-035",
   "icon": "minecraft:command_block_minecart",
   "category": "test",
+  "turnin": "patchouli:mcp_035_1",
   "pages": [
     {
       "type": "text",

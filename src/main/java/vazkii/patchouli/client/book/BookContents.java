@@ -267,8 +267,8 @@ public class BookContents extends AbstractReadStateHolder {
 	}
 
 	@Override
-	protected ReadState computeReadState() {
-		Stream<ReadState> stream = categories.values().stream().filter(BookCategory::isRootCategory).map(BookCategory::getReadState);
+	protected EntryDisplayState computeReadState() {
+		Stream<EntryDisplayState> stream = categories.values().stream().filter(BookCategory::isRootCategory).map(BookCategory::getReadState);
 		return mostImportantState(stream);
 	}
 

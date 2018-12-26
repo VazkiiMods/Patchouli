@@ -9,10 +9,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class AbstractReadStateHolder {
 
-	transient ReadState readState;
+	transient EntryDisplayState readState;
 	transient boolean readStateDirty = true;
 	
-	public ReadState getReadState() {
+	public EntryDisplayState getReadState() {
 		if(readStateDirty) {
 			readState = computeReadState();
 			readStateDirty = false;
@@ -25,11 +25,11 @@ public abstract class AbstractReadStateHolder {
 		readStateDirty = true;
 	}
 	
-	protected abstract ReadState computeReadState();
+	protected abstract EntryDisplayState computeReadState();
 	
-	public static ReadState mostImportantState(Stream<ReadState>... streams) {
-		Stream<ReadState> stream = Streams.concat(streams);
-		return ReadState.fromOrdinal(stream.mapToInt(ReadState::ordinal).min().orElse(ReadState.LEAST_IMPORTANT.ordinal()));
+	public static EntryDisplayState mostImportantState(Stream<EntryDisplayState>... streams) {
+		Stream<EntryDisplayState> stream = Streams.concat(streams);
+		return EntryDisplayState.fromOrdinal(stream.mapToInt(EntryDisplayState::ordinal).min().orElse(EntryDisplayState.DEFAULT_TYPE.ordinal()));
 	}
 	
 }

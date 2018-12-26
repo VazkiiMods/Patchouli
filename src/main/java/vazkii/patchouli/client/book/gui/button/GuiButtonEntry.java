@@ -9,7 +9,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.ReadState;
+import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class GuiButtonEntry extends GuiButton {
@@ -67,11 +67,8 @@ public class GuiButtonEntry extends GuiButton {
 			mc.fontRenderer.drawString(name, x + 12, y, color);
 			mc.fontRenderer.setUnicodeFlag(unicode);
 			
-			if(!entry.isLocked()) {
-				ReadState readState = entry.getReadState();
-				if(readState.hasIcon)
-					GuiBook.drawMarking(parent.book, x + width - 5, y, readState.u, entry.hashCode());
-			}
+			if(!entry.isLocked())
+				GuiBook.drawMarking(parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());
 		}
 	}
 	
