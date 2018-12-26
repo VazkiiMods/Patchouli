@@ -38,6 +38,8 @@ public class BookContents extends AbstractReadStateHolder {
 
 	private static final String[] ORDINAL_SUFFIXES = new String[]{ "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 	protected static final String DEFAULT_LANG = "en_us";
+	
+	public static final HashMap<ResourceLocation, Supplier<BookTemplate>> addonTemplates = new HashMap();
 
 	public final Book book;
 
@@ -113,6 +115,8 @@ public class BookContents extends AbstractReadStateHolder {
 			entries.clear();
 			templates.clear();
 			recipeMappings.clear();
+			
+			templates.putAll(addonTemplates);
 			
 			if(book.indexIconRaw == null || book.indexIconRaw.isEmpty())
 				indexIcon = new BookIcon(book.getBookItem());

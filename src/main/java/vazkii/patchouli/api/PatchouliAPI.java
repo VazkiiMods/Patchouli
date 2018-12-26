@@ -1,6 +1,8 @@
 package vazkii.patchouli.api;
 
+import java.io.InputStream;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -70,6 +72,13 @@ public class PatchouliAPI {
 		 * Returns a book item with its NBT set to the book passed in.
 		 */
 		public ItemStack getBookStack(String book);
+		
+		/**
+		 * Register a template you made as a built in template to be used with all books
+		 * as the "res" resource location. The supplier should give an input stream that
+		 * reads a full json file, containing a template.
+		 */
+		@SideOnly(Side.CLIENT) public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider);
 
 		// ================================================================================================
 		// ItemStack Serialization

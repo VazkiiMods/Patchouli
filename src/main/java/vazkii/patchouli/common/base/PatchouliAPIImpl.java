@@ -1,6 +1,9 @@
 package vazkii.patchouli.common.base;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -13,7 +16,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
+import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.multiblock.Multiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
@@ -62,6 +67,22 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	public ItemStack getBookStack(String book) {
 		return ItemModBook.forBook(book);
+	}
+	
+	@Override
+	public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider) {
+		InputStream testStream = streamProvider.get();
+		if(testStream == null)
+			throw new NullPointerException("Stream provider can't return a null stream");
+		
+		if(BookContents.addonTemplates.containsKey(res))
+			throw new IllegalArgumentException("Template " + res + " is already registered");
+		
+		BookContents.addonTemplates.put(res, () -> {
+			InputStream stream = streamProvider.get();
+			InputStreamReader reader = new InputStreamReader(stream);
+			return ClientBookRegistry.INSTANCE.gson.fromJson(reader, BookTemplate.class);
+		});
 	}
 
 	@Override

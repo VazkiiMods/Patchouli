@@ -1,6 +1,8 @@
 package vazkii.patchouli.api.stub;
 
+import java.io.InputStream;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -54,6 +56,11 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	@Override
 	public ItemStack getBookStack(String book) {
 		return ItemStack.EMPTY;
+	}
+	
+	@Override
+	public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider) {
+		// NO-OP
 	}
 
 	@Override
