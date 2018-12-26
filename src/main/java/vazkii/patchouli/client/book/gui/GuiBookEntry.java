@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
@@ -255,6 +256,26 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	public void registerButton(GuiButton button, Runnable onClick) {
 		customButtons.put(button, onClick);
 		buttonList.add(button);
+	}
+
+	@Override
+	public ResourceLocation getBookTexture() {
+		return book.bookResource;
+	}
+
+	@Override
+	public ResourceLocation getCraftingTexture() {
+		return book.craftingResource;
+	}
+
+	@Override
+	public int getTextColor() {
+		return book.textColor;
+	}
+
+	@Override
+	public int getHeaderColor() {
+		return book.headerColor;
 	}
 
 }

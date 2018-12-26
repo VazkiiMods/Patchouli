@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * A context for a custom component's methods.
@@ -27,4 +28,12 @@ public interface IComponentRenderContext {
 	
 	public void registerButton(GuiButton button, Runnable onClick);
 
+	public ResourceLocation getBookTexture();
+	
+	public ResourceLocation getCraftingTexture();
+	
+	public int getTextColor();
+	
+	public int getHeaderColor();
+	
 }
