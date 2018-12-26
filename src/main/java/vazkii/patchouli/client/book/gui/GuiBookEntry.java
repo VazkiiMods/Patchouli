@@ -253,7 +253,10 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 	
 	@Override
-	public void registerButton(GuiButton button, Runnable onClick) {
+	public void registerButton(GuiButton button, int pageNum, Runnable onClick) {
+		button.x += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
+		button.y += bookTop;
+		
 		customButtons.put(button, onClick);
 		buttonList.add(button);
 	}

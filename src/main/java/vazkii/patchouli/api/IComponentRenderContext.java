@@ -26,7 +26,7 @@ public interface IComponentRenderContext {
 	
 	public void setHoverTooltip(List<String> tooltip);
 	
-	public void registerButton(GuiButton button, Runnable onClick);
+	public void registerButton(GuiButton button, int pageNum, Runnable onClick);
 
 	public ResourceLocation getBookTexture();
 	
