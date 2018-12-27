@@ -1,0 +1,93 @@
+# Item Names
+item.patchouli:guide_book.name=Reiseführer
+
+# Testing
+item.patchouli:test_book_1.name=Testbuch 1
+item.patchouli:test_book_1.landing=Nicht so toll wie eine Einführung, es ist aber trotzdem präsent.
+
+item.patchouli:test_book_2.name=Testbuch 2
+item.patchouli:test_book_2.landing=Einführungstext! Es unterstützt auch $(2)Farben$() und $(4)solche $(bold)Sachen$()!
+
+item.patchouli:test_completion.name=Fortschritts-Testbuch
+item.patchouli:test_completion.landing=Das Buch ändert die Farben, wenn du Einträge freischaltest!
+
+item.patchouli:intro_book.name=Patchouli
+item.patchouli:intro_book.subtitle=Dokumentation für jedermann
+item.patchouli:intro_book.landing=Mit $(item)Patchouli$() machst du es dir einfach, fortschrittliche freischaltbare $(thing)Bücher$(), zu lesen für Modifikationen und Modifikationenpakete!
+
+
+#Subtitles
+patchouli.subtitle.book_open=Buch, das geöffnet wird
+patchouli.subtitle.book_flip=Seitenumschläge
+
+
+
+# Gui Strings
+patchouli.gui.lexicon.landing_info=(Platzhalter für den Einführungstext, bestimme dein eigenes in der json-Datei deines Buches!)
+patchouli.gui.lexicon.progress_meter=Fortschritt freischalten:
+patchouli.gui.lexicon.progress_tooltip=%d/%d Freigeschaltet
+patchouli.gui.lexicon.progress_tooltip.secret1=Plus 1 Geheimnis
+patchouli.gui.lexicon.progress_tooltip.secret=Plus %d Geheimnisse
+patchouli.gui.lexicon.progress_tooltip.info=Mache Fortschritte um noch mehr freizuschalten!
+patchouli.gui.lexicon.categories=Kategorien
+patchouli.gui.lexicon.chapters=Kapitel
+patchouli.gui.lexicon.editor=Buch-Bearbeitungsprogramm
+patchouli.gui.lexicon.editor.mock_header=Kopfzeile der Nachbildung
+patchouli.gui.lexicon.editor.info=Dies ist ein Bearbeitungsprogramm für Patchouli's-Bucheinträge. Damit ist gemeint, dass es für die Entwicklung oder Übersetzung genutzt wird. Es gibt dafür kein Nutzen wenn du ein Spieler bist.$(br2)Bitte achte auf dem $(l:https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101)Patchouli Wiki$() für nützliche Steuercodes.
+patchouli.gui.lexicon.shift_for_recipe=Umschalttaste-klicken für Rezept
+patchouli.gui.lexicon.index=Eintragsverzeichnis
+patchouli.gui.lexicon.index.info=Ein Verzeichnis von jedem Kapitel ist Verfügbar in diesem Buch.$(br2)Du kannst den Verzeichnis durchsuchen oder irgendwelche andere Kategorie, ganz einfach durch das Eintippen der Anfrage. Die Suchleiste wird dann erscheinen um dich zu unterstützen.
+patchouli.gui.lexicon.shapeless=Formlos
+patchouli.gui.lexicon.no_results=Keine Ergebnisse
+patchouli.gui.lexicon.sad=:(
+patchouli.gui.lexicon.locked=(Gesperrt)
+patchouli.gui.lexicon.reloaded=Buch neugeladen. Dauerte %d ms.
+patchouli.gui.lexicon.add_bookmark=Lesezeichen hinzufügen
+patchouli.gui.lexicon.remove_bookmark=(Umschalttaste drücken und klicken zum entfernen)
+patchouli.gui.lexicon.multiblock_bookmark=Visualisierte Struktur
+patchouli.gui.lexicon.relations=Verwandte Kapitel
+patchouli.gui.lexicon.not_anchored=Rechts-klicken auf einen Block um die Struktur zu fixieren
+patchouli.gui.lexicon.structure_complete=Fertig!
+patchouli.gui.lexicon.needs_air=(Lösche Blöcke die rot markiert sind)
+patchouli.gui.lexicon.visualize_letter=V
+patchouli.gui.lexicon.seconds=%ss
+patchouli.gui.lexicon.history=Lese-Verlauf
+patchouli.gui.lexicon.history.info=Dieser Bereich speichert einige der vorherigen Kapiteln die du besucht hast.$(br2)Kapiteln werden automatisch hinzugefügt und entfernt während du das Buch durchblätterst. Willst du aber, dass sie länger referenziert bleiben, kannst du sie als Lesezeichen hinzufügen. $(br2)$(o)Nützlicher Hinweis: Versuche mal die Umschalttaste zu drücken und klicke auf der Kapitel-Schaltfläche!$()
+patchouli.gui.lexicon.toast=Neue Kapitel
+patchouli.gui.lexicon.toast.info=Neue Kapitel Freigeschaltet
+patchouli.gui.lexicon.external_link=(Externer Link)
+patchouli.gui.lexicon.loading_error=Lade Fehler!
+patchouli.gui.lexicon.loading_error_hover=(Schwebe für Info)
+patchouli.gui.lexicon.loading_error_log=Prüfe deinen Protokoll für mehr
+patchouli.gui.lexicon.dev_edition=Schreiber
+patchouli.gui.lexicon.edition_str=%s Edition
+patchouli.gui.lexicon.added_by=Hinzugefügt von %s
+patchouli.gui.lexicon.sneak=Schleiche zum anzeigen
+patchouli.gui.lexicon.view=Zeige Eintrag
+patchouli.gui.lexicon.keybind=Tastenbelegung: %s
+patchouli.gui.lexicon.keybind_missing=Keine solche Tastenbelegung: %s
+patchouli.gui.lexicon.objective=Zielsetzung
+patchouli.gui.lexicon.incomplete=Unvollständig
+patchouli.gui.lexicon.complete=Vollständig!
+patchouli.gui.lexicon.mark_complete=Markierung Vollständig
+patchouli.gui.lexicon.mark_incomplete=Markierung Unvollständig
+
+patchouli.gui.lexicon.button.prev_page=Vorher
+patchouli.gui.lexicon.button.next_page=Nächste
+patchouli.gui.lexicon.button.back=Zurück
+patchouli.gui.lexicon.button.back.info=Umschalttaste drücken und klicken um nach Hause zurückzukehren
+patchouli.gui.lexicon.button.resize=Größe ändern Benutzerschnittstelle
+patchouli.gui.lexicon.button.resize.size0=Standard
+patchouli.gui.lexicon.button.resize.size1=Klein
+patchouli.gui.lexicon.button.resize.size2=Mittel
+patchouli.gui.lexicon.button.resize.size3=Mittelgroß
+patchouli.gui.lexicon.button.resize.size4=Groß
+patchouli.gui.lexicon.button.resize.size5=Rießig
+patchouli.gui.lexicon.button.resize.size6=Wie groß ist denn dein Bildschirm?
+patchouli.gui.lexicon.button.editor=Bearbeitungsprogramm
+patchouli.gui.lexicon.button.editor.info=(Umschalttaste drücken und klicken zum neuladen)
+patchouli.gui.lexicon.button.advancements=Fortschritte
+patchouli.gui.lexicon.button.config=Konfiguration
+patchouli.gui.lexicon.button.visualize=Visualisieren
+patchouli.gui.lexicon.button.visualize.info=(Klicke nochmal zum zurücksetzen)
+patchouli.gui.lexicon.button.history=Verlauf
