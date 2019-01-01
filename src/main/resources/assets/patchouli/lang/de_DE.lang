@@ -17,7 +17,7 @@ item.patchouli:intro_book.landing=Mit $(item)Patchouli$() machst du es dir einfa
 
 
 #Subtitles
-patchouli.subtitle.book_open=Buch, das geöffnet wird
+patchouli.subtitle.book_open=Buch wird geöffnet
 patchouli.subtitle.book_flip=Seitenumschläge
 
 
