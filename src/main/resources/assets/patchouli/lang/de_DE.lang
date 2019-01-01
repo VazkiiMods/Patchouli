@@ -9,7 +9,7 @@ item.patchouli:test_book_2.name=Testbuch 2
 item.patchouli:test_book_2.landing=Einführungstext! Es unterstützt auch $(2)Farben$() und $(4)solche $(bold)Sachen$()!
 
 item.patchouli:test_completion.name=Fortschritts-Testbuch
-item.patchouli:test_completion.landing=Das Buch ändert die Farben, wenn du Einträge freischaltest!
+item.patchouli:test_completion.landing=Das Buch ändert seine Farben, wenn du Einträge freischaltest!
 
 item.patchouli:intro_book.name=Patchouli
 item.patchouli:intro_book.subtitle=Dokumentation für jedermann
