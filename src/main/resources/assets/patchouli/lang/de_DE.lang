@@ -69,7 +69,7 @@ patchouli.gui.lexicon.keybind_missing=Keine solche Tastenbelegung: %s
 patchouli.gui.lexicon.objective=Ziel
 patchouli.gui.lexicon.incomplete=Nicht erreicht
 patchouli.gui.lexicon.complete=Erreicht!
-patchouli.gui.lexicon.mark_complete=Markierung Vollständig
+patchouli.gui.lexicon.mark_complete=Als erreicht markieren
 patchouli.gui.lexicon.mark_incomplete=Markierung Unvollständig
 
 patchouli.gui.lexicon.button.prev_page=Vorher
