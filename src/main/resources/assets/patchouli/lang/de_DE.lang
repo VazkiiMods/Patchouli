@@ -13,7 +13,7 @@ item.patchouli:test_completion.landing=Das Buch ändert seine Farben, wenn du Ei
 
 item.patchouli:intro_book.name=Patchouli
 item.patchouli:intro_book.subtitle=Dokumentation für jedermann
-item.patchouli:intro_book.landing=Mit $(item)Patchouli$() machst du es dir einfach, fortschrittliche freischaltbare $(thing)Bücher$(), zu lesen für Modifikationen und Modifikationenpakete!
+item.patchouli:intro_book.landing=Mit $(item)Patchouli$() machst du es dir einfach, fortschrittliche freischaltbare $(thing)Bücher$() zu lesen, für Modifikationen und Modifikationenpakete!
 
 
 #Subtitles
