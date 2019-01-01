@@ -72,7 +72,7 @@ patchouli.gui.lexicon.complete=Erreicht!
 patchouli.gui.lexicon.mark_complete=Als erreicht markieren
 patchouli.gui.lexicon.mark_incomplete=Als nicht erreicht markieren
 
-patchouli.gui.lexicon.button.prev_page=Vorher
+patchouli.gui.lexicon.button.prev_page=Vorherig
 patchouli.gui.lexicon.button.next_page=Nächste
 patchouli.gui.lexicon.button.back=Zurück
 patchouli.gui.lexicon.button.back.info=Umschalttaste drücken und klicken um nach Hause zurückzukehren
