@@ -73,7 +73,7 @@ patchouli.gui.lexicon.mark_complete=Als erreicht markieren
 patchouli.gui.lexicon.mark_incomplete=Als nicht erreicht markieren
 
 patchouli.gui.lexicon.button.prev_page=Vorherig
-patchouli.gui.lexicon.button.next_page=Nächste
+patchouli.gui.lexicon.button.next_page=Weiter
 patchouli.gui.lexicon.button.back=Zurück
 patchouli.gui.lexicon.button.back.info=Umschalttaste drücken und klicken um nach Hause zurückzukehren
 patchouli.gui.lexicon.button.resize=Größe ändern Benutzerschnittstelle
