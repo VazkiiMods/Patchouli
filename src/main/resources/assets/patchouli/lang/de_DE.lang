@@ -23,7 +23,7 @@ patchouli.subtitle.book_flip=Umblättern
 
 
 # Gui Strings
-patchouli.gui.lexicon.landing_info=(Platzhalter für den Einführungstext, bestimme dein eigenes in der json-Datei deines Buches!)
+patchouli.gui.lexicon.landing_info=(Platzhalter für den Einführungstext, bestimme deinen eigenen in der json-Datei deines Buches!)
 patchouli.gui.lexicon.progress_meter=Fortschritt freischalten:
 patchouli.gui.lexicon.progress_tooltip=%d/%d Freigeschaltet
 patchouli.gui.lexicon.progress_tooltip.secret1=Plus 1 Geheimnis
