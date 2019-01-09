@@ -83,9 +83,9 @@ public class Book {
 	@SerializedName("link_hover_color")
 	public String linkHoverColorRaw = "8800EE";
 	
-	@SerializedName("proress_bar_color")
+	@SerializedName("progress_bar_color")
 	public String progressBarColorRaw = "FFFF55";
-	@SerializedName("proress_bar_background")
+	@SerializedName("progress_bar_background")
 	public String progressBarBackgroundRaw = "DDDDDD";
 	
 	@SerializedName("open_sound")
