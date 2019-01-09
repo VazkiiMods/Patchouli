@@ -220,7 +220,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 			return EntryDisplayState.PENDING;
 
 		for(BookPage page : pages)
-			if(page instanceof PageQuest && ((PageQuest) page).isCompleted())
+			if(page instanceof PageQuest && ((PageQuest) page).isCompleted(book))
 				return EntryDisplayState.COMPLETED;
 		
 		return EntryDisplayState.NEUTRAL;

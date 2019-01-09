@@ -10,6 +10,7 @@ import vazkii.patchouli.client.book.gui.BookTextRenderer;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
+import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ValidationUtils;
 
 public class PageQuest extends PageWithText {
@@ -36,9 +37,9 @@ public class PageQuest extends PageWithText {
 		} else isManual = true;
 	}
 	
-	public boolean isCompleted() {
+	public boolean isCompleted(Book book) {
 		return isManual 
-				? PersistentData.data.getBookData(parent.book).completedManualQuests.contains(entry.getResource().toString())
+				? PersistentData.data.getBookData(book).completedManualQuests.contains(entry.getResource().toString())
 				: trigger != null && !trigger.isEmpty() && ClientAdvancements.hasDone(trigger);
 	}
 
@@ -53,7 +54,7 @@ public class PageQuest extends PageWithText {
 	}
 	
 	private void updateButtonText() {
-		boolean completed = isCompleted();
+		boolean completed = isCompleted(parent.book);
 		String s = I18n.format(completed ? "patchouli.gui.lexicon.mark_incomplete" : "patchouli.gui.lexicon.mark_complete");
 		button.displayString = s;
 	}
@@ -84,7 +85,7 @@ public class PageQuest extends PageWithText {
 		if(!isManual) {
 			GuiBook.drawSeparator(book, 0, GuiBook.PAGE_HEIGHT - 25);
 			
-			boolean completed = isCompleted();
+			boolean completed = isCompleted(parent.book);
 			String s = I18n.format(completed ? "patchouli.gui.lexicon.complete" : "patchouli.gui.lexicon.incomplete");
 			int color = completed ? 0x008b1a : book.headerColor;
 			
