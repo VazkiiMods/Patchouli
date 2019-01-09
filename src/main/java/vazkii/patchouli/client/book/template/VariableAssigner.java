@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.VariableHolder;
+import vazkii.patchouli.common.util.EntityUtil;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class VariableAssigner {
@@ -199,7 +200,7 @@ public class VariableAssigner {
 	}
 	
 	private static String ename(String arg) {
-		return "NYI"; // TODO
+		return EntityUtil.getEntityName(arg);
 	}
 	
 	private static class Context {

@@ -1,17 +1,10 @@
 package vazkii.patchouli.client.book.template.component;
 
-import java.lang.reflect.Constructor;
-
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
@@ -19,6 +12,8 @@ import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.PageEntity;
 import vazkii.patchouli.client.book.template.TemplateComponent;
+import vazkii.patchouli.common.util.EntityUtil;
+import vazkii.patchouli.common.util.EntityUtil.EntityCreator;
 
 public class ComponentEntity extends TemplateComponent {
 
@@ -33,32 +28,13 @@ public class ComponentEntity extends TemplateComponent {
 	float defaultRotation = -45f;
 	
 	transient boolean errored;
-	transient Constructor<? extends Entity> constructor;
 	transient Entity entity;
+	transient EntityCreator creator;
 	transient float renderScale, offset;
-	transient NBTTagCompound nbt;
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		String nbtStr;
-		int nbtStart = entityId.indexOf("{");
-		if(nbtStart > 0) {
-			nbtStr = entityId.substring(nbtStart).replaceAll("([^\\\\])'", "$1\"").replaceAll("\\\\'", "'");
-			entityId = entityId.substring(0, nbtStart);
-			try {
-				nbt = JsonToNBT.getTagFromJson(nbtStr);
-			} catch(NBTException e) {
-				e.printStackTrace();
-				nbt = null;
-			}
-		}
-		
-		Class<? extends Entity> clazz = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityId)).getEntityClass();
-		try {
-			constructor = clazz.getConstructor(World.class);
-		} catch(Exception e) {
-			throw new RuntimeException("Could not find constructor for entity type " + entityId, e);
-		}
+		creator = EntityUtil.loadEntity(entityId);
 	}
 	
 	@Override
@@ -82,10 +58,7 @@ public class ComponentEntity extends TemplateComponent {
 	private void loadEntity(World world) {
 		if(!errored && (entity == null || entity.isDead)) {
 			try {
-				entity = constructor.newInstance(world);
-				
-				if(nbt != null)
-					entity.readFromNBT(nbt);
+				entity = creator.create(world);
 				
 				float entitySize = entity.width;
 				if(entity.width < entity.height)

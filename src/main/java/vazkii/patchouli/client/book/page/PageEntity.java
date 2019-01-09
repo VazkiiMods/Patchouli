@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.book.page;
 
-import java.lang.reflect.Constructor;
-
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.Minecraft;
@@ -10,18 +8,14 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
+import vazkii.patchouli.common.util.EntityUtil;
+import vazkii.patchouli.common.util.EntityUtil.EntityCreator;
 
 public class PageEntity extends PageWithText {
 
@@ -38,38 +32,15 @@ public class PageEntity extends PageWithText {
 	float defaultRotation = -45f;
 
 	transient boolean errored;
-	transient Constructor<? extends Entity> constructor;
 	transient Entity entity;
+	transient EntityCreator creator;
 	transient float renderScale, offset;
-	transient NBTTagCompound nbt;
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
 		super.build(entry, pageNum);
 		
-		String nbtStr;
-		int nbtStart = entityId.indexOf("{");
-		if(nbtStart > 0) {
-			nbtStr = entityId.substring(nbtStart).replaceAll("([^\\\\])'", "$1\"").replaceAll("\\\\'", "'");
-			entityId = entityId.substring(0, nbtStart);
-			try {
-				nbt = JsonToNBT.getTagFromJson(nbtStr);
-			} catch(NBTException e) {
-				e.printStackTrace();
-				nbt = null;
-			}
-		}
-
-		EntityEntry entityEntry = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityId));
-		if (entityEntry == null)
-			throw new RuntimeException("Could not find entity: " + entityId);
-
-		Class<? extends Entity> clazz = entityEntry.getEntityClass();
-		try {
-			constructor = clazz.getConstructor(World.class);
-		} catch(Exception e) {
-			throw new RuntimeException("Could not find constructor for entity type " + entityId, e);
-		}
+		creator = EntityUtil.loadEntity(entityId);
 	}
 	
 	@Override
@@ -132,10 +103,7 @@ public class PageEntity extends PageWithText {
 	private void loadEntity(World world) {
 		if(!errored && (entity == null || entity.isDead)) {
 			try {
-				entity = constructor.newInstance(world);
-				
-				if(nbt != null)
-					entity.readFromNBT(nbt);
+				entity = creator.create(world);
 				
 				float entitySize = entity.width;
 				if(entity.width < entity.height)
@@ -153,5 +121,7 @@ public class PageEntity extends PageWithText {
 			}
 		}
 	}
+	
+
 	
 }
