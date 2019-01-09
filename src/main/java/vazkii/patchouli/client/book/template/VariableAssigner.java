@@ -6,22 +6,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.text.WordUtils;
+
+import net.minecraft.item.ItemStack;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.VariableHolder;
+import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class VariableAssigner {
 	
 	private static final Pattern INLINE_VAR_PATTERN = Pattern.compile("([^#]*)(#[^#]+)#(.*)");
+	private static final Pattern FUNCTION_PATTERN = Pattern.compile("(.+)->(.+)");
 
 	private static final Map<Class<?>, Assigner> ASSIGNERS = new HashMap<Class<?>, Assigner>() {{
 		put(String.class, VariableAssigner::assignStringField);
 		put(String[].class, VariableAssigner::assignStringArrayField);
 		put(List.class, VariableAssigner::assignList);
 		put(Map.class, VariableAssigner::assignMap);
+	}};
+	
+	private static final Map<String, Function<String, String>> FUNCTIONS = new HashMap<String, Function<String, String>>() {{
+		put("iname", VariableAssigner::iname);
+		put("icount", VariableAssigner::icount);
+		put("ename", VariableAssigner::ename);
+		put("lower", String::toLowerCase);
+		put("upper", String::toUpperCase);
+		put("capital", WordUtils::capitalize);
+		put("fcapital", WordUtils::capitalizeFully);
 	}};
 
 	public static void assignVariableHolders(Object object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
@@ -111,15 +127,32 @@ public class VariableAssigner {
 			String var = m.group(2);
 			String after = m.group(3);
 		
-			String resolved = resolveStringVar(var, c);
+			String resolved = resolveStringFunctions(var, c);
 			
 			s = String.format("%s%s%s", before, resolved, after);
 			m = INLINE_VAR_PATTERN.matcher(s);
 		}
 
-		return resolveStringVar(s, c);
+		return resolveStringFunctions(s, c);
 	}
 
+	private static String resolveStringFunctions(String curr, Context c) {
+		Matcher m = FUNCTION_PATTERN.matcher(curr);
+		
+		if(m.matches()) {
+			String funcStr = m.group(2);
+			String arg = m.group(1);
+			
+			if(FUNCTIONS.containsKey(funcStr)) {
+				Function<String, String> func = FUNCTIONS.get(funcStr);
+				String parsedArg = resolveStringFunctions(arg, c);
+				return func.apply(parsedArg);
+			} else throw new IllegalArgumentException("Invalid Function " + funcStr);
+		} 
+		
+		return resolveStringVar(curr, c);
+	}
+	
 	private static String resolveStringVar(String curr, Context c) {
 
 		String cached = c.getCached(curr);
@@ -155,6 +188,20 @@ public class VariableAssigner {
 		return curr;
 	}
 
+	private static String iname(String arg) {
+		ItemStack stack = ItemStackUtil.loadStackFromString(arg);
+		return stack.getDisplayName();
+	}
+	
+	private static String icount(String arg) {
+		ItemStack stack = ItemStackUtil.loadStackFromString(arg);
+		return Integer.toString(stack.getCount());
+	}
+	
+	private static String ename(String arg) {
+		return "NYI"; // TODO
+	}
+	
 	private static class Context {
 
 		final Object object;
