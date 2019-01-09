@@ -6,12 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.VariableHolder;
 
 public class VariableAssigner {
+	
+	private static final Pattern INLINE_VAR_PATTERN = Pattern.compile("([^#]*)(#[^#]+)#(.*)");
 
 	private static final Map<Class<?>, Assigner> ASSIGNERS = new HashMap<Class<?>, Assigner>() {{
 		put(String.class, VariableAssigner::assignStringField);
@@ -95,10 +99,28 @@ public class VariableAssigner {
 			}
 		}
 	}
-
+	
 	private static String resolveString(String curr, Context c) {
 		if(curr == null || curr.isEmpty())
-			return curr;
+			return null;
+		
+		String s = curr;
+		Matcher m = INLINE_VAR_PATTERN.matcher(s);
+		while(m.matches()) {
+			String before = m.group(1);
+			String var = m.group(2);
+			String after = m.group(3);
+		
+			String resolved = resolveStringVar(var, c);
+			
+			s = String.format("%s%s%s", before, resolved, after);
+			m = INLINE_VAR_PATTERN.matcher(s);
+		}
+
+		return resolveStringVar(s, c);
+	}
+
+	private static String resolveStringVar(String curr, Context c) {
 
 		String cached = c.getCached(curr);
 		if(cached != null)
