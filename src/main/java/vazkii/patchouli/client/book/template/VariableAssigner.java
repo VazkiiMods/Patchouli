@@ -37,8 +37,12 @@ public class VariableAssigner {
 		put("ename", VariableAssigner::ename);
 		put("lower", String::toLowerCase);
 		put("upper", String::toUpperCase);
+		put("trim", String::trim);
 		put("capital", WordUtils::capitalize);
 		put("fcapital", WordUtils::capitalizeFully);
+		put("exists", VariableAssigner::exists);
+		put("iexists", VariableAssigner::iexists);
+		put("inv", VariableAssigner::inv);
 	}};
 
 	public static void assignVariableHolders(Object object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
@@ -138,6 +142,10 @@ public class VariableAssigner {
 	}
 
 	private static String resolveStringFunctions(String curr, Context c) {
+		String cached = c.getCached(curr);
+		if(cached != null)
+			return cached;
+		
 		Matcher m = FUNCTION_PATTERN.matcher(curr);
 		
 		if(m.matches()) {
@@ -151,15 +159,13 @@ public class VariableAssigner {
 			} else throw new IllegalArgumentException("Invalid Function " + funcStr);
 		} 
 		
-		return resolveStringVar(curr, c);
+		String ret = resolveStringVar(curr, c);
+		c.cache(curr, ret);
+		
+		return ret;
 	}
 	
 	private static String resolveStringVar(String curr, Context c) {
-
-		String cached = c.getCached(curr);
-		if(cached != null)
-			return cached;
-
 		String original = curr;
 
 		if(curr != null && !curr.isEmpty() && c.encapsulation != null)
@@ -201,6 +207,25 @@ public class VariableAssigner {
 	
 	private static String ename(String arg) {
 		return EntityUtil.getEntityName(arg);
+	}
+	
+	private static String exists(String arg) {
+		return arg.isEmpty() ? "false" : "true";
+	}
+	
+	private static String iexists(String arg) {
+		if(arg.isEmpty())
+			return "false";
+		
+		ItemStack stack = ItemStackUtil.loadStackFromString(arg);
+		if(stack.isEmpty())
+			return "false";
+		
+		return "true";
+	}
+	
+	private static String inv(String arg) {
+		return arg.equalsIgnoreCase("false") ? "true" : "false"; 
 	}
 	
 	private static class Context {

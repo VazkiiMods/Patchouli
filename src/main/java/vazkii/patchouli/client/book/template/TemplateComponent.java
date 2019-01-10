@@ -27,6 +27,9 @@ public abstract class TemplateComponent {
 	public String advancement = "";
 	@SerializedName("negate_advancement")
 	boolean negateAdvancement = false; 
+	
+	@VariableHolder
+	public String guard = null;
 
 	transient boolean isVisible = true;
 	transient boolean compiled = false;
@@ -56,6 +59,9 @@ public abstract class TemplateComponent {
 
 	public boolean getVisibleStatus(IComponentProcessor processor) {
 		if(processor != null && group != null && !group.isEmpty() && !processor.allowRender(group))
+			return false;
+		
+		if(guard != null && (guard.isEmpty() || guard.equalsIgnoreCase("false")))
 			return false;
 
 		if(!flag.isEmpty() && !PatchouliConfig.getConfigFlag(flag))
