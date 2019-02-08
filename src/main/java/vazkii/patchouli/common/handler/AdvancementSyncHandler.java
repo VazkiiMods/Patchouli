@@ -66,6 +66,8 @@ public final class AdvancementSyncHandler {
 		List<String> completed = new LinkedList<>();
 		for(ResourceLocation res : syncedAdvancements) {
 			Advancement adv = manager.getAdvancement(res);
+			if(adv == null)
+				continue;
 			AdvancementProgress p = advancements.getProgress(adv);
 			if(p.isDone())
 				completed.add(res.toString());
