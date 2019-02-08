@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -203,8 +204,12 @@ public abstract class GuiBook extends GuiScreen {
 			FontRenderer font = tooltipStack.getItem().getFontRenderer(tooltipStack);
 			this.drawHoveringText(tooltip, mouseX, mouseY, (font == null ? fontRenderer : font));
 			GuiUtils.postItemToolTip();
-		} else if(tooltip != null && !tooltip.isEmpty())
-			GuiUtils.drawHoveringText(tooltip, mouseX, mouseY, width, height, -1, fontRenderer);
+		} else if(tooltip != null && !tooltip.isEmpty()) {
+			List<String> wrappedTooltip = new ArrayList<>();
+			for (String s : tooltip)
+				Collections.addAll(wrappedTooltip, s.split("\n"));
+			GuiUtils.drawHoveringText(wrappedTooltip, mouseX, mouseY, width, height, -1, fontRenderer);
+		}
 	}
 
 	final void resetTooltip() {
