@@ -144,14 +144,18 @@ public class MultiblockVisualizationHandler {
 				mc.fontRenderer.drawStringWithShadow(s, x - mc.fontRenderer.getStringWidth(s) / 2, top + height + 8, 0xFFFFFF);
 			} else {
 				if(lookingState != null) {
-					Block block = lookingState.getBlock();
-					ItemStack stack = block.getPickBlock(lookingState, mc.objectMouseOver, mc.world, lookingPos, mc.player);
-
-					if(!stack.isEmpty()) {
-						mc.fontRenderer.drawStringWithShadow(stack.getDisplayName(), left + 20, top + height + 8, 0xFFFFFF);
-						RenderHelper.enableGUIStandardItemLighting();
-						mc.getRenderItem().renderItemIntoGUI(stack, left, top + height + 2);
-					}
+					// try-catch around here because the state isn't necessarily present in the world in this instance,
+					// which isn't really expected behavior for getPickBlock
+					try {
+						Block block = lookingState.getBlock();
+						ItemStack stack = block.getPickBlock(lookingState, mc.objectMouseOver, mc.world, lookingPos, mc.player);
+						
+						if (!stack.isEmpty()) {
+							mc.fontRenderer.drawStringWithShadow(stack.getDisplayName(), left + 20, top + height + 8, 0xFFFFFF);
+							RenderHelper.enableGUIStandardItemLighting();
+							mc.getRenderItem().renderItemIntoGUI(stack, left, top + height + 2);
+						}
+					} catch(Exception ignored) {}
 				}
 
 				if(timeComplete == 0) {
