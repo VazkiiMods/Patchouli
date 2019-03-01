@@ -49,6 +49,12 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 	
 	@Override
+	@SideOnly(Side.CLIENT)
+	public ResourceLocation getOpenBookGui() {
+		return null;
+	}
+	
+	@Override
 	public void reloadBookContents() {
 		// NO-OP
 	}

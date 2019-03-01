@@ -62,6 +62,8 @@ public class PatchouliAPI {
 		 */
 		@SideOnly(Side.CLIENT) public void openBookGUI(ResourceLocation book);
 		
+		@SideOnly(Side.CLIENT) public ResourceLocation getOpenBookGui();
+		
 		/**
 		 * Reloads the contents of all books. Call sparingly and only if you
 		 * really need it for whatever reason.
