@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Mouse;
 
@@ -27,6 +28,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.gen.structure.StructureOceanMonumentPieces.EntryRoom;
 import net.minecraftforge.fml.client.config.GuiUtils;
+import vazkii.patchouli.api.BookDrawScreenEvent;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
@@ -139,7 +141,9 @@ public abstract class GuiBook extends GuiScreen {
 		GlStateManager.popMatrix();
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
-
+		
+		MinecraftForge.EVENT_BUS.post(new BookDrawScreenEvent(this, this.book.resourceLoc, mouseX, mouseY, partialTicks));
+		
 		drawTooltip(mouseX, mouseY);
 	}
 
