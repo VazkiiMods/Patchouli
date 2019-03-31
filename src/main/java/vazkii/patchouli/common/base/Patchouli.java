@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
@@ -42,8 +43,8 @@ public class Patchouli {
 	}
 
 	@EventHandler
-	public void post(FMLPostInitializationEvent event) {
-		proxy.postInit(event);
+	public void loadComplete(FMLLoadCompleteEvent event) {
+		proxy.loadComplete(event);
 	}
 
 }

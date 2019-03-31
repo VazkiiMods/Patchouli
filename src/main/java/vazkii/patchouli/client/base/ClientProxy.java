@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.base;
 
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
@@ -26,8 +26,8 @@ public class ClientProxy extends CommonProxy {
 	}
 	
 	@Override
-	public void postInit(FMLPostInitializationEvent event) {
-		super.postInit(event);
+	public void loadComplete(FMLLoadCompleteEvent event) {
+		super.loadComplete(event);
 		
 		BookRegistry.INSTANCE.reload();
 	}
