@@ -63,7 +63,8 @@ public class GuiButtonEntry extends GuiButton {
 				color = 0xAA000000 | (parent.book.textColor & 0x00FFFFFF); 
 			
 			boolean unicode = mc.fontRenderer.getUnicodeFlag();
-			mc.fontRenderer.setUnicodeFlag(true);
+			if(!parent.book.useBlockyFont)
+				mc.fontRenderer.setUnicodeFlag(true);
 			mc.fontRenderer.drawString(name, x + 12, y, color);
 			mc.fontRenderer.setUnicodeFlag(unicode);
 			

@@ -83,6 +83,9 @@ public class Book {
 	@SerializedName("link_hover_color")
 	public String linkHoverColorRaw = "8800EE";
 	
+	@SerializedName("use_blocky_font")
+	public boolean useBlockyFont = false;
+	
 	@SerializedName("progress_bar_color")
 	public String progressBarColorRaw = "FFFF55";
 	@SerializedName("progress_bar_background")

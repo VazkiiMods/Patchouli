@@ -46,7 +46,8 @@ public class BookTextRenderer {
 	}
 	
 	public void render(int mouseX, int mouseY) {
-		font.setUnicodeFlag(true);
+		if(!book.useBlockyFont)
+			font.setUnicodeFlag(true);
 		words.forEach(word -> word.render(mouseX, mouseY));
 		font.setUnicodeFlag(defaultUnicode);
 	}

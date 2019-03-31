@@ -95,7 +95,8 @@ public abstract class GuiBookEntryList extends GuiBook {
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			drawFromTexture(book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
 			boolean unicode = fontRenderer.getUnicodeFlag();
-			fontRenderer.setUnicodeFlag(true);
+			if(!book.useBlockyFont)
+				fontRenderer.setUnicodeFlag(true);
 			fontRenderer.drawString(searchField.getText(), searchField.x + 7, searchField.y + 1, 0);
 			fontRenderer.setUnicodeFlag(unicode);
 		}

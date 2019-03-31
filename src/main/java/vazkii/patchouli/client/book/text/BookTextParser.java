@@ -147,7 +147,8 @@ public class BookTextParser {
 
 	public List<Word> parse(String text) {
 		boolean wasUnicode = font.getUnicodeFlag();
-		font.setUnicodeFlag(true);
+		if(!book.useBlockyFont)
+			font.setUnicodeFlag(true);
 
 		String actualText = text;
 		if(actualText == null)

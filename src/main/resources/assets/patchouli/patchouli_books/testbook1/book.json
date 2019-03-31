@@ -5,5 +5,6 @@
 	],
 	"book_texture": "patchouli:textures/gui/book_green.png",
 	"version": "GRADLE:VERSION",
-	"index_icon": "minecraft:diamond"
+	"index_icon": "minecraft:diamond",
+	"use_blocky_font": true
 }

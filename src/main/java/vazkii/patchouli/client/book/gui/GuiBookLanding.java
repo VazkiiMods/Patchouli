@@ -135,7 +135,8 @@ public class GuiBookLanding extends GuiBook {
 		boolean unicode = fontRenderer.getUnicodeFlag();
 		fontRenderer.drawString(book.getBookItem().getDisplayName(), 13, 16, color);
 
-		fontRenderer.setUnicodeFlag(true);
+		if(!book.useBlockyFont)
+			fontRenderer.setUnicodeFlag(true);
 		fontRenderer.drawString(book.contents.getSubtitle(), 24, 24, color); 
 		fontRenderer.setUnicodeFlag(unicode);
 	}
