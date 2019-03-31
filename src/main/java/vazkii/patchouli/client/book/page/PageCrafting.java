@@ -15,7 +15,6 @@ import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipe;
 
 public class PageCrafting extends PageDoubleRecipe<IRecipe> {
-	
 	@Override
 	protected void drawRecipe(IRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		mc.renderEngine.bindTexture(book.craftingResource);
@@ -48,7 +47,10 @@ public class PageCrafting extends PageDoubleRecipe<IRecipe> {
 		if(loc == null)
 			return null;
 		
-		IRecipe tempRecipe = CraftingManager.getRecipe(new ResourceLocation(loc));
+		ResourceLocation res = new ResourceLocation(loc);
+		IRecipe tempRecipe = CraftingManager.getRecipe(res);
+		if(tempRecipe == null) // this is hacky but it works around Forge requiring custom recipes to have the prefix of the adding mod
+			tempRecipe = CraftingManager.getRecipe(new ResourceLocation("crafttweaker", res.getResourcePath()));
 		if(tempRecipe != null)
 			entry.addRelevantStack(tempRecipe.getRecipeOutput(), pageNum);
 		return tempRecipe;
