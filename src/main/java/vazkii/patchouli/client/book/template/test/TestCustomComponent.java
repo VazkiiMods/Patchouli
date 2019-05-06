@@ -2,7 +2,6 @@ package vazkii.patchouli.client.book.template.test;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.api.ICustomComponent;

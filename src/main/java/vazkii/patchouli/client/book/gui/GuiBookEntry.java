@@ -27,7 +27,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	BookEntry entry;
 	BookPage leftPage, rightPage;
 	
-	Map<GuiButton, Runnable> customButtons = new HashMap();
+	Map<GuiButton, Runnable> customButtons = new HashMap<>();
 
 	public GuiBookEntry(Book book, BookEntry entry) {
 		this(book, entry, 0);

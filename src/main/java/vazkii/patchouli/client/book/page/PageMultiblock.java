@@ -1,25 +1,19 @@
 package vazkii.patchouli.client.book.page;
 
 import java.util.Collections;
-import java.util.IdentityHashMap;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.annotation.Nonnull;
-import javax.vecmath.Matrix4d;
 import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector3d;
-import javax.vecmath.Vector4d;
 import javax.vecmath.Vector4f;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
 
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -36,11 +30,9 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
 import vazkii.patchouli.api.IMultiblock;
-import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;

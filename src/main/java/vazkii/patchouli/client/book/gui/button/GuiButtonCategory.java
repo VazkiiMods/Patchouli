@@ -9,7 +9,6 @@ import net.minecraft.util.text.TextFormatting;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookIcon;
-import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class GuiButtonCategory extends GuiButton {

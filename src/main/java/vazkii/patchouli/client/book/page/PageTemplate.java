@@ -1,6 +1,5 @@
 package vazkii.patchouli.client.book.page;
 
-import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -18,7 +17,6 @@ public class PageTemplate extends BookPage {
 		super.build(entry, pageNum);
 		
 		JsonVariableWrapper wrapper = new JsonVariableWrapper(sourceObject);
-		IComponentProcessor processor = null;
 		
 		template.compile(wrapper);
 		template.build(this, entry, pageNum);

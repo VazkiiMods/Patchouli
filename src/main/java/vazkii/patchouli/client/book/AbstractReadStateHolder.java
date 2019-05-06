@@ -4,9 +4,6 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.Streams;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 public abstract class AbstractReadStateHolder {
 
 	transient EntryDisplayState readState;

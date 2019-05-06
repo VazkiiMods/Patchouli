@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
-import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Mouse;
 
@@ -20,13 +19,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.gen.structure.StructureOceanMonumentPieces.EntryRoom;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import vazkii.patchouli.api.BookDrawScreenEvent;
 import vazkii.patchouli.client.base.ClientTicker;
@@ -302,7 +299,6 @@ public abstract class GuiBook extends GuiScreen {
 
 	void changePage(boolean left, boolean sfx) {
 		if(canSeePageButton(left)) {
-			int oldpage = page;
 			if(left)
 				page--;
 			else page++;

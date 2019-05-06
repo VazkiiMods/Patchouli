@@ -50,7 +50,7 @@ public final class PersistentData {
 			public List<String> viewedEntries = new ArrayList<>();
 			public List<Bookmark> bookmarks = new ArrayList<>();
 			public List<String> history = new ArrayList<>();
-			public List<String> completedManualQuests = new ArrayList();
+			public List<String> completedManualQuests = new ArrayList<>();
 			
 			public static final class Bookmark {
 				

@@ -2,7 +2,6 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 
-import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.api.ICustomComponent;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;

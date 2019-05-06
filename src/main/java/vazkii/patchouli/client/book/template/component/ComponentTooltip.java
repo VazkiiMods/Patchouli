@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -23,10 +23,10 @@ public class ComponentTooltip extends TemplateComponent {
 	
 	@Override
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
-		tooltip = new ArrayList();
+		tooltip = new ArrayList<>();
 		
 		for(String s : tooltipRaw) {
-			s = I18n.translateToLocal(s).replaceAll("&", "\u00A7");
+			s = I18n.format(s).replaceAll("&", "\u00A7");
 			if(!s.isEmpty())
 				tooltip.add(s);
 		}

@@ -19,12 +19,13 @@ import java.util.stream.Stream;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.collect.Maps;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookLanding;
@@ -39,7 +40,7 @@ public class BookContents extends AbstractReadStateHolder {
 	private static final String[] ORDINAL_SUFFIXES = new String[]{ "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 	protected static final String DEFAULT_LANG = "en_us";
 	
-	public static final HashMap<ResourceLocation, Supplier<BookTemplate>> addonTemplates = new HashMap();
+	public static final HashMap<ResourceLocation, Supplier<BookTemplate>> addonTemplates = Maps.newHashMap();
 
 	public final Book book;
 
@@ -126,7 +127,6 @@ public class BookContents extends AbstractReadStateHolder {
 		List<ResourceLocation> foundCategories = new ArrayList<>();
 		List<ResourceLocation> foundEntries = new ArrayList<>();
 		List<ResourceLocation> foundTemplates = new ArrayList<>();
-		List<ModContainer> mods = Loader.instance().getActiveModList();
 
 		try { 
 			String bookName = book.resourceLoc.getPath();

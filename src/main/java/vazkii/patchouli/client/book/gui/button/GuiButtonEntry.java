@@ -9,7 +9,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class GuiButtonEntry extends GuiButton {

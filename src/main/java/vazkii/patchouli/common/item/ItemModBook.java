@@ -2,6 +2,9 @@ package vazkii.patchouli.common.item;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,7 +21,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,8 +31,6 @@ import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.network.NetworkHandler;
 import vazkii.patchouli.common.network.message.MessageOpenBookGui;
-
-import javax.annotation.Nullable;
 
 public class ItemModBook extends Item {
 
@@ -114,7 +114,7 @@ public class ItemModBook extends Item {
 	public String getItemStackDisplayName(ItemStack stack) {
 		Book book = getBook(stack);
 		if(book != null)
-			return I18n.translateToLocal(book.name).trim();
+			return I18n.format(book.name).trim();
 
 		return super.getItemStackDisplayName(stack);
 	}

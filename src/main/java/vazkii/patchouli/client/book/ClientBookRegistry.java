@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,8 +17,9 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.resource.IResourceType;
+import net.minecraftforge.client.resource.ISelectiveResourceReloadListener;
 import vazkii.patchouli.client.book.page.PageCrafting;
 import vazkii.patchouli.client.book.page.PageEmpty;
 import vazkii.patchouli.client.book.page.PageEntity;
@@ -36,7 +38,7 @@ import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
 
-public class ClientBookRegistry implements IResourceManagerReloadListener {
+public class ClientBookRegistry implements ISelectiveResourceReloadListener {
 
 	public final Map<String, Class<? extends BookPage>> pageTypes = new HashMap<>();
 
@@ -79,7 +81,7 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 	}
 
 	@Override
-	public void onResourceManagerReload(IResourceManager resourceManager) {
+	public void onResourceManagerReload(IResourceManager resourceManager, Predicate<IResourceType> resourcePredicate) {
 		currentLang = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
 		
 		if(!firstLoad)
@@ -142,5 +144,5 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 	        return component;
 		}
 		
-	}	
+	}
 }
