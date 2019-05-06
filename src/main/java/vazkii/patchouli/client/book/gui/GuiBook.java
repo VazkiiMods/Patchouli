@@ -32,6 +32,7 @@ import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.EntryDisplayState;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookAddBookmark;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBack;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark;
@@ -150,13 +151,20 @@ public abstract class GuiBook extends GuiScreen {
 		List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
 		for(int i = 0; i < bookmarks.size(); i++) {
 			Bookmark bookmark = bookmarks.get(i);
-			buttonList.add(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
-			y += 12;
+			if (bookmark != null) {
+				if (bookmark.getEntry(book) != null) {
+					buttonList.add(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
+					y += 12;
+				} else {
+					PersistentData.data.getBookData(book).bookmarks.remove(bookmark);
+					PersistentData.save();
+				}
+			}
 		}
-		
+
 		y += (y == 0 ? 0 : 2);
 		if(shouldAddAddBookmarkButton() && bookmarks.size() <= MAX_BOOKMARKS)
-			buttonList.add(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
+			buttonList.add(new GuiButtonBookAddBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y));
 
 		if(MultiblockVisualizationHandler.hasMultiblock && MultiblockVisualizationHandler.bookmark != null)
 			buttonList.add(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.bookmark, true));
@@ -235,12 +243,20 @@ public abstract class GuiBook extends GuiScreen {
 			back(false);
 		else if(button instanceof GuiButtonBookArrow)
 			changePage(((GuiButtonBookArrow) button).left, false);
+		else if (button instanceof GuiButtonBookAddBookmark)
+			bookmarkThis();
 		else if(button instanceof GuiButtonBookBookmark) {
 			GuiButtonBookBookmark bookmarkButton = (GuiButtonBookBookmark) button;
 			Bookmark bookmark = bookmarkButton.bookmark;
-			if(bookmark == null || bookmark.getEntry(book) == null)
-				bookmarkThis();
-			else {
+			if (!bookmarkButton.multiblock && bookmark == null) {
+				needsBookmarkUpdate = true;
+			}
+			if(!bookmarkButton.multiblock && bookmark.getEntry(book) == null) {
+				List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
+				bookmarks.remove(bookmark);
+				PersistentData.save();
+				needsBookmarkUpdate = true;
+			} else {
 				if(isShiftKeyDown() && !bookmarkButton.multiblock) {
 					List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
 					bookmarks.remove(bookmark);
