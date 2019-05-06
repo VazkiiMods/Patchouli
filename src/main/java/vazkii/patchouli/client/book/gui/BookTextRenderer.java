@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.gui;
 import java.util.List;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.RenderHelper;
 import vazkii.patchouli.client.book.text.BookTextParser;
 import vazkii.patchouli.client.book.text.Word;
 import vazkii.patchouli.common.book.Book;
@@ -46,6 +47,7 @@ public class BookTextRenderer {
 	}
 	
 	public void render(int mouseX, int mouseY) {
+		RenderHelper.disableStandardItemLighting();
 		if(!book.useBlockyFont)
 			font.setUnicodeFlag(true);
 		words.forEach(word -> word.render(mouseX, mouseY));
