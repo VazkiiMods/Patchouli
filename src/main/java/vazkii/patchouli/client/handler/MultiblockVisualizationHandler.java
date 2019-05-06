@@ -357,7 +357,7 @@ public class MultiblockVisualizationHandler {
 	 * Returns the Rotation of a multiblock structure based on the given entity's facing direction.
 	 */
 	private static Rotation getRotation(Entity entity) {
-		return RotationUtil.rotationFromFacing(EnumFacing.getHorizontal(MathHelper.floor((double) (-entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3));
+		return RotationUtil.rotationFromFacing(EnumFacing.byHorizontalIndex(MathHelper.floor((double) (-entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3));
 	}
 	
 }

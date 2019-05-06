@@ -129,18 +129,18 @@ public class BookContents extends AbstractReadStateHolder {
 		List<ModContainer> mods = Loader.instance().getActiveModList();
 
 		try { 
-			String bookName = book.resourceLoc.getResourcePath();
+			String bookName = book.resourceLoc.getPath();
 
 			findFiles("categories", foundCategories);
 			findFiles("entries", foundEntries);
 			findFiles("templates", foundTemplates);
 
-			foundCategories.forEach(c -> loadCategory(c, new ResourceLocation(c.getResourceDomain(),
-					String.format("%s/%s/%s/categories/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, c.getResourcePath())), book));
-			foundEntries.forEach(e -> loadEntry(e, new ResourceLocation(e.getResourceDomain(),
-					String.format("%s/%s/%s/entries/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getResourcePath())), book));
-			foundTemplates.forEach(e -> loadTemplate(e, new ResourceLocation(e.getResourceDomain(),
-					String.format("%s/%s/%s/templates/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getResourcePath())), book));
+			foundCategories.forEach(c -> loadCategory(c, new ResourceLocation(c.getNamespace(),
+					String.format("%s/%s/%s/categories/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, c.getPath())), book));
+			foundEntries.forEach(e -> loadEntry(e, new ResourceLocation(e.getNamespace(),
+					String.format("%s/%s/%s/entries/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath())), book));
+			foundTemplates.forEach(e -> loadTemplate(e, new ResourceLocation(e.getNamespace(),
+					String.format("%s/%s/%s/templates/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath())), book));
 
 			entries.forEach((res, entry) -> {
 				try {
@@ -167,7 +167,7 @@ public class BookContents extends AbstractReadStateHolder {
 	protected void findFiles(String dir, List<ResourceLocation> list) {
 		ModContainer mod = book.owner;
 		String id = mod.getModId();
-		CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getResourcePath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
+		CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getPath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
 	}
 	
 	private BiFunction<Path, Path, Boolean> pred(String modId, List<ResourceLocation> list) {
@@ -237,8 +237,8 @@ public class BookContents extends AbstractReadStateHolder {
 	}
 
 	private Reader loadLocalizedJson(ResourceLocation res) {
-		ResourceLocation localized = new ResourceLocation(res.getResourceDomain(),
-				res.getResourcePath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
+		ResourceLocation localized = new ResourceLocation(res.getNamespace(),
+				res.getPath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
 
 		InputStream input = loadJson(localized, res);
 		if (input == null)

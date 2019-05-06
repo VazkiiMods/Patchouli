@@ -51,7 +51,7 @@ public final class AdvancementSyncHandler {
 			
 			syncedAdvancements = new ArrayList<>();
 			for(Advancement a : allAdvancements)
-				if(a != null && trackedNamespaces.contains(a.getId().getResourceDomain()))
+				if(a != null && trackedNamespaces.contains(a.getId().getNamespace()))
 					syncedAdvancements.add(a.getId());
 		}
 	}
