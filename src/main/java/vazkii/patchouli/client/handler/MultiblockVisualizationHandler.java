@@ -51,7 +51,7 @@ public class MultiblockVisualizationHandler {
 
 	public static boolean hasMultiblock;
 	public static Bookmark bookmark;
-	
+
 	private static Multiblock multiblock;
 	private static String name;
 	private static BlockPos pos;
@@ -73,14 +73,14 @@ public class MultiblockVisualizationHandler {
 			fieldRenderPosY = ReflectionUtil.accessField(RenderManager.class, "field_78726_c", "D");
 			fieldRenderPosZ = ReflectionUtil.accessField(RenderManager.class, "field_78723_d", "D");
 		} catch (NoSuchFieldException e) {
-		    throw new RuntimeException("Unable to find necessary fields", e);
+			throw new RuntimeException("Unable to find necessary fields", e);
 		}
 	}
 
 	public static void setMultiblock(Multiblock multiblock, String name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos->pos);
 	}
-	
+
 	public static void setMultiblock(Multiblock multiblock, String name, Bookmark bookmark, boolean flip, Function<BlockPos, BlockPos> offsetApplier) {
 		if(flip && hasMultiblock)
 			hasMultiblock = false;
@@ -149,7 +149,7 @@ public class MultiblockVisualizationHandler {
 					try {
 						Block block = lookingState.getBlock();
 						ItemStack stack = block.getPickBlock(lookingState, mc.objectMouseOver, mc.world, lookingPos, mc.player);
-						
+
 						if (!stack.isEmpty()) {
 							mc.fontRenderer.drawStringWithShadow(stack.getDisplayName(), left + 20, top + height + 8, 0xFFFFFF);
 							RenderHelper.enableGUIStandardItemLighting();
@@ -164,7 +164,7 @@ public class MultiblockVisualizationHandler {
 					int posy = top + height + 2;
 					int mult = 1;
 					String progress = blocksDone + "/" + blocks;
-					
+
 					if(blocksDone == blocks && airFilled > 0) {
 						progress = I18n.format("patchouli.gui.lexicon.needs_air");
 						color = 0xDA4E3F;
@@ -172,7 +172,7 @@ public class MultiblockVisualizationHandler {
 						posx -= width / 2;
 						posy += 2;
 					}
-					
+
 					mc.fontRenderer.drawStringWithShadow(progress, posx - mc.fontRenderer.getStringWidth(progress) / mult, posy, color);
 				}
 			}
@@ -243,7 +243,7 @@ public class MultiblockVisualizationHandler {
 
 		BlockPos checkPos = mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == Type.BLOCK ? mc.objectMouseOver.getBlockPos().offset(mc.objectMouseOver.sideHit) : null;
 		BlockPos startPos = getStartPos();
-		
+
 		blocks = blocksDone = airFilled = 0;
 		lookingState = null;
 		lookingPos = checkPos;
@@ -263,7 +263,7 @@ public class MultiblockVisualizationHandler {
 						boolean air = matcher == StateMatcher.AIR;
 						if(!air)
 							blocks++;
-						
+
 						if(!multiblock.test(world, startPos, x, y, z, facingRotation)) {
 							IBlockState renderState = matcher.getDisplayedState().withRotation(facingRotation);
 							mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
@@ -293,19 +293,20 @@ public class MultiblockVisualizationHandler {
 			GlStateManager.rotate(-90F, 0F, 1F, 0F);
 			GL14.glBlendColor(1F, 1F, 1F, alpha);
 
-			if(state.getBlock() == Blocks.AIR) {
-				float scale = 0.3F;
-				float off = (1F - scale) / 2;
-				GlStateManager.translate(off, off, -off);
-				GlStateManager.scale(scale, scale, scale);
+			try {
+				if(state.getBlock() == Blocks.AIR) {
+					float scale = 0.3F;
+					float off = (1F - scale) / 2;
+					GlStateManager.translate(off, off, -off);
+					GlStateManager.scale(scale, scale, scale);
 
-				try {
 					brd.renderBlockBrightness(Blocks.CONCRETE.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.RED), 1.0F);
-				} catch(NullPointerException e) { //  This can crash for some reason and idk why so this is a bandaid fix
-					Tessellator.getInstance().getBuffer().reset();
-				}
-				
-			} else brd.renderBlockBrightness(state, 1.0F);
+
+
+				} else brd.renderBlockBrightness(state, 1.0F);
+			} catch(NullPointerException e) { //  This can crash for some reason and idk why so this is a bandaid fix
+				Tessellator.getInstance().getBuffer().reset();
+			}
 
 			GlStateManager.popMatrix();
 		}
@@ -314,49 +315,49 @@ public class MultiblockVisualizationHandler {
 	public static Multiblock getMultiblock() {
 		return multiblock;
 	}
-	
+
 	public static boolean isAnchored() {
 		return isAnchored;
 	}
-	
+
 	public static Rotation getFacingRotation() {
 		return multiblock.isSymmetrical() ? Rotation.NONE : facingRotation;
 	}
-	
+
 	public static BlockPos getStartPos() {
 		Rotation rot = getFacingRotation();
 		BlockPos startPos = offsetApplier.apply(pos);
 		startPos = startPos.add(-RotationUtil.x(rot, multiblock.viewOffX, multiblock.viewOffZ), -multiblock.viewOffY + 1, -RotationUtil.z(rot, multiblock.viewOffX, multiblock.viewOffZ));
 		return startPos;
 	}
-	
-    private static void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
-        float f = (float)(startColor >> 24 & 255) / 255.0F;
-        float f1 = (float)(startColor >> 16 & 255) / 255.0F;
-        float f2 = (float)(startColor >> 8 & 255) / 255.0F;
-        float f3 = (float)(startColor & 255) / 255.0F;
-        float f4 = (float)(endColor >> 24 & 255) / 255.0F;
-        float f5 = (float)(endColor >> 16 & 255) / 255.0F;
-        float f6 = (float)(endColor >> 8 & 255) / 255.0F;
-        float f7 = (float)(endColor & 255) / 255.0F;
-        GlStateManager.disableTexture2D();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        GlStateManager.shadeModel(7425);
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferbuilder = tessellator.getBuffer();
-        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-        bufferbuilder.pos((double)right, (double)top, 0).color(f1, f2, f3, f).endVertex();
-        bufferbuilder.pos((double)left, (double)top, 0).color(f1, f2, f3, f).endVertex();
-        bufferbuilder.pos((double)left, (double)bottom, 0).color(f5, f6, f7, f4).endVertex();
-        bufferbuilder.pos((double)right, (double)bottom, 0).color(f5, f6, f7, f4).endVertex();
-        tessellator.draw();
-        GlStateManager.shadeModel(7424);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-        GlStateManager.enableTexture2D();
-    }
+
+	private static void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+		float f = (float)(startColor >> 24 & 255) / 255.0F;
+		float f1 = (float)(startColor >> 16 & 255) / 255.0F;
+		float f2 = (float)(startColor >> 8 & 255) / 255.0F;
+		float f3 = (float)(startColor & 255) / 255.0F;
+		float f4 = (float)(endColor >> 24 & 255) / 255.0F;
+		float f5 = (float)(endColor >> 16 & 255) / 255.0F;
+		float f6 = (float)(endColor >> 8 & 255) / 255.0F;
+		float f7 = (float)(endColor & 255) / 255.0F;
+		GlStateManager.disableTexture2D();
+		GlStateManager.enableBlend();
+		GlStateManager.disableAlpha();
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.shadeModel(7425);
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuffer();
+		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
+		bufferbuilder.pos((double)right, (double)top, 0).color(f1, f2, f3, f).endVertex();
+		bufferbuilder.pos((double)left, (double)top, 0).color(f1, f2, f3, f).endVertex();
+		bufferbuilder.pos((double)left, (double)bottom, 0).color(f5, f6, f7, f4).endVertex();
+		bufferbuilder.pos((double)right, (double)bottom, 0).color(f5, f6, f7, f4).endVertex();
+		tessellator.draw();
+		GlStateManager.shadeModel(7424);
+		GlStateManager.disableBlend();
+		GlStateManager.enableAlpha();
+		GlStateManager.enableTexture2D();
+	}
 
 	/**
 	 * Returns the Rotation of a multiblock structure based on the given entity's facing direction.
@@ -364,5 +365,5 @@ public class MultiblockVisualizationHandler {
 	private static Rotation getRotation(Entity entity) {
 		return RotationUtil.rotationFromFacing(EnumFacing.byHorizontalIndex(MathHelper.floor((double) (-entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3));
 	}
-	
+
 }
