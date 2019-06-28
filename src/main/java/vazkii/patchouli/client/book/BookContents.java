@@ -129,18 +129,18 @@ public class BookContents extends AbstractReadStateHolder {
 		List<ModContainer> mods = Loader.instance().getActiveModList();
 
 		try { 
-			String bookName = book.resourceLoc.getNamespace();
+			String bookName = book.resourceLoc.getPath();
 
 			findFiles("categories", foundCategories);
 			findFiles("entries", foundEntries);
 			findFiles("templates", foundTemplates);
 
 			foundCategories.forEach(c -> loadCategory(c, new ResourceLocation(c.getNamespace(),
-					String.format("%s/%s/%s/categories/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, c.getNamespace())), book));
+					String.format("%s/%s/%s/categories/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, c.getPath())), book));
 			foundEntries.forEach(e -> loadEntry(e, new ResourceLocation(e.getNamespace(),
-					String.format("%s/%s/%s/entries/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getNamespace())), book));
+					String.format("%s/%s/%s/entries/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath())), book));
 			foundTemplates.forEach(e -> loadTemplate(e, new ResourceLocation(e.getNamespace(),
-					String.format("%s/%s/%s/templates/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getNamespace())), book));
+					String.format("%s/%s/%s/templates/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath())), book));
 
 			entries.forEach((res, entry) -> {
 				try {
