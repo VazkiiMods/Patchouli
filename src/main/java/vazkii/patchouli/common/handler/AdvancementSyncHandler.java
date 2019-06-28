@@ -1,10 +1,13 @@
 package vazkii.patchouli.common.handler;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.lang3.concurrent.ConcurrentException;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
@@ -45,14 +48,20 @@ public final class AdvancementSyncHandler {
 	}
 	
 	private static void buildSyncSet(EntityPlayerMP player) {
-		if(syncedAdvancements == null) {
-			AdvancementManager manager = player.getServer().getAdvancementManager();
-			Iterable<Advancement> allAdvancements = manager.getAdvancements();
-			
-			syncedAdvancements = new ArrayList<>();
-			for(Advancement a : allAdvancements)
-				if(a != null && trackedNamespaces.contains(a.getId().getNamespace()))
-					syncedAdvancements.add(a.getId());
+		try {
+			if(syncedAdvancements == null) {
+				AdvancementManager manager = player.getServer().getAdvancementManager();
+				Iterable<Advancement> allAdvancements = manager.getAdvancements();
+				
+				syncedAdvancements = new ArrayList<>();
+				for(Advancement a : allAdvancements)
+					if(a != null && trackedNamespaces.contains(a.getId().getNamespace()))
+						syncedAdvancements.add(a.getId());
+			}
+		} catch(ConcurrentModificationException e) {
+			// Some mods can mess with this in a bad time so in the case it happens we just try it again
+			syncedAdvancements = null;
+			buildSyncSet(player);
 		}
 	}
 	
