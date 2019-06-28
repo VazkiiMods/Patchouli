@@ -304,8 +304,11 @@ public class MultiblockVisualizationHandler {
 
 
 				} else brd.renderBlockBrightness(state, 1.0F);
-			} catch(NullPointerException e) { //  This can crash for some reason and idk why so this is a bandaid fix
-				Tessellator.getInstance().getBuffer().reset();
+			} catch(NullPointerException e) { 
+				//  This can crash for some reason and idk why so this is a bandaid fix
+				BufferBuilder builder = Tessellator.getInstance().getBuffer(); 
+				builder.reset();
+				builder.finishDrawing();
 			}
 
 			GlStateManager.popMatrix();
