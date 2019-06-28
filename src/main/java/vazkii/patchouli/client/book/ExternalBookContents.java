@@ -21,7 +21,7 @@ public class ExternalBookContents extends BookContents {
 
 	@Override
 	protected void findFiles(String dir, List<ResourceLocation> list) {
-		File root = new File(BookFolderLoader.loadDir, book.resourceLoc.getResourcePath());
+		File root = new File(BookFolderLoader.loadDir, book.resourceLoc.getPath());
 		File enUs = new File(root, DEFAULT_LANG);
 		if(enUs.exists()) {
 			File searchDir = new File(enUs, dir);
@@ -50,7 +50,7 @@ public class ExternalBookContents extends BookContents {
 	
 	@Override
 	protected InputStream loadJson(ResourceLocation resloc, ResourceLocation fallback) {
-		String realPath = resloc.getResourcePath().substring(BookFolderLoader.loadDir.getName().length());
+		String realPath = resloc.getPath().substring(BookFolderLoader.loadDir.getName().length());
 		File targetFile = new File(BookFolderLoader.loadDir, realPath);
 		
 		if(targetFile.exists()) {

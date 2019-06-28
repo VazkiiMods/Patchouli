@@ -40,7 +40,7 @@ public class ItemModBook extends Item {
 		setMaxStackSize(1);
 		setCreativeTab(CreativeTabs.MISC);
 		setRegistryName(new ResourceLocation(Patchouli.MOD_ID, "guide_book"));
-		setUnlocalizedName(getRegistryName().toString());
+		setTranslationKey(getRegistryName().toString());
 
 		this.addPropertyOverride(new ResourceLocation("completion"), new IItemPropertyGetter() {
 			@SideOnly(Side.CLIENT)

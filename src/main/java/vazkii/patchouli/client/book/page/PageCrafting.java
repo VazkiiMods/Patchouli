@@ -50,7 +50,7 @@ public class PageCrafting extends PageDoubleRecipe<IRecipe> {
 		ResourceLocation res = new ResourceLocation(loc);
 		IRecipe tempRecipe = CraftingManager.getRecipe(res);
 		if(tempRecipe == null) // this is hacky but it works around Forge requiring custom recipes to have the prefix of the adding mod
-			tempRecipe = CraftingManager.getRecipe(new ResourceLocation("crafttweaker", res.getResourcePath()));
+			tempRecipe = CraftingManager.getRecipe(new ResourceLocation("crafttweaker", res.getPath()));
 		if(tempRecipe != null)
 			entry.addRelevantStack(tempRecipe.getRecipeOutput(), pageNum);
 		return tempRecipe;

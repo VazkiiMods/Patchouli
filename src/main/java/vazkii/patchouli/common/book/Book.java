@@ -163,7 +163,7 @@ public class Book {
 	}
 	
 	public String getModNamespace() {
-		return resourceLoc.getResourceDomain();
+		return resourceLoc.getNamespace();
 	}
 	
 	public ItemStack getBookItem() {
