@@ -170,6 +170,9 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 	
 	boolean isBookmarkedAlready() {
+		if(entry == null || entry.getResource() == null)
+			return false;
+		
 		String entryKey = entry.getResource().toString();
 		BookData data = PersistentData.data.getBookData(book);
 		
