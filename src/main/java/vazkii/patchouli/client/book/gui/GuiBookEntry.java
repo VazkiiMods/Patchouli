@@ -233,6 +233,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		
 		if(isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16))
 			setTooltipStack(stack);
+		RenderHelper.disableStandardItemLighting();
 	}
 	
 	@Override
