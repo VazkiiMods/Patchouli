@@ -299,7 +299,12 @@ public class MultiblockVisualizationHandler {
 				GlStateManager.translate(off, off, -off);
 				GlStateManager.scale(scale, scale, scale);
 
-				brd.renderBlockBrightness(Blocks.CONCRETE.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.RED), 1.0F);
+				try {
+					brd.renderBlockBrightness(Blocks.CONCRETE.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.RED), 1.0F);
+				} catch(NullPointerException e) { //  This can crash for some reason and idk why so this is a bandaid fix
+					Tessellator.getInstance().getBuffer().reset();
+				}
+				
 			} else brd.renderBlockBrightness(state, 1.0F);
 
 			GlStateManager.popMatrix();
