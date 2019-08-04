@@ -11,7 +11,6 @@ import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.common.util.ValidationUtils;
 
 public class PageQuest extends PageWithText {
 
@@ -32,7 +31,6 @@ public class PageQuest extends PageWithText {
 		super.build(entry, pageNum);
 		
 		if(trigger != null && !trigger.isEmpty()) {
-			ValidationUtils.validateAdvancement(trigger);
 			isManual = false;
 		} else isManual = true;
 	}

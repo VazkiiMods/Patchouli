@@ -45,6 +45,7 @@ public class Book {
 	private transient boolean wasUpdated = false;
 	
 	public transient IModInfo owner;
+	public transient Class<?> ownerClass;
 	public transient ResourceLocation resourceLoc;
 	public transient ModelResourceLocation modelResourceLoc;
 	private transient ItemStack bookItem;
@@ -129,8 +130,9 @@ public class Book {
 	
 	public Map<String, String> macros = new HashMap<>();
 	
-	public void build(IModInfo owner, ResourceLocation resource, boolean external) {
+	public void build(IModInfo owner,  Class<?> ownerClass, ResourceLocation resource, boolean external) {
 		this.owner = owner;
+		this.ownerClass = ownerClass;
 		this.resourceLoc = resource;
 		this.isExternal = external;
 		

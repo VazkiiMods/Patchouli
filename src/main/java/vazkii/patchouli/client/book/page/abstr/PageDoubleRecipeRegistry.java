@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book.page.abstr;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
@@ -19,7 +20,7 @@ public abstract class PageDoubleRecipeRegistry<T extends IRecipe> extends PageDo
 			return null;
 		
 		ResourceLocation res = new ResourceLocation(loc);
-		RecipeManager manager = mc.world.getRecipeManager();
+		RecipeManager manager = Minecraft.getInstance().world.getRecipeManager();
 		IRecipe tempRecipe = manager.getRecipe(res).orElse(null);
 		if(tempRecipe == null) // this is hacky but it works around Forge requiring custom recipes to have the prefix of the adding mod
 			tempRecipe = manager.getRecipe(new ResourceLocation("crafttweaker", res.getPath())).orElse(null);

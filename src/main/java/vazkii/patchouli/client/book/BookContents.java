@@ -126,7 +126,6 @@ public class BookContents extends AbstractReadStateHolder {
 		List<ResourceLocation> foundCategories = new ArrayList<>();
 		List<ResourceLocation> foundEntries = new ArrayList<>();
 		List<ResourceLocation> foundTemplates = new ArrayList<>();
-		List<ModInfo> mods = ModList.get().getMods();
 
 		try { 
 			String bookName = book.resourceLoc.getPath();
@@ -134,7 +133,7 @@ public class BookContents extends AbstractReadStateHolder {
 			findFiles("categories", foundCategories);
 			findFiles("entries", foundEntries);
 			findFiles("templates", foundTemplates);
-
+			
 			foundCategories.forEach(c -> loadCategory(c, new ResourceLocation(c.getNamespace(),
 					String.format("%s/%s/%s/categories/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, c.getPath())), book));
 			foundEntries.forEach(e -> loadEntry(e, new ResourceLocation(e.getNamespace(),
@@ -168,7 +167,7 @@ public class BookContents extends AbstractReadStateHolder {
 		IModInfo mod = book.owner;
 		if(mod instanceof ModInfo) {
 			String id = mod.getModId();
-			BookRegistry.findFiles((ModInfo) mod, String.format("assets/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getPath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
+			BookRegistry.findFiles((ModInfo) mod, String.format("data/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getPath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
 		}
 	}
 	
@@ -250,11 +249,14 @@ public class BookContents extends AbstractReadStateHolder {
 	}
 
 	protected InputStream loadJson(ResourceLocation resloc, ResourceLocation fallback) {
-		try {
-			return Minecraft.getInstance().getResourceManager().getResource(resloc).getInputStream();
-		} catch (IOException e) {
-			//no-op
-		}
+		String path = "/data/" + resloc.getNamespace() + "/" + resloc.getPath();
+		System.out.println("Loading " + path);
+		
+		InputStream stream = book.ownerClass.getResourceAsStream(path);
+		System.out.println(book.ownerClass);
+		System.out.println(stream);
+		if(stream != null)
+			return stream;
 
 		if(fallback != null) {
 			System.err.println("Patchouli failed to load " + resloc + ". Switching to fallback.");

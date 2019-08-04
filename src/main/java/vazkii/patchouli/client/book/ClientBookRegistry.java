@@ -80,11 +80,14 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager) {
-		currentLang = Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getCode();
-		
 		if(!firstLoad)
-			BookRegistry.INSTANCE.reload();
+			reload();
 		firstLoad = false;
+	}
+	
+	public void reload() {
+		currentLang = Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getCode();
+		BookRegistry.INSTANCE.reload();
 	}
 	
 	public void reloadLocks(boolean reset) {
@@ -92,6 +95,8 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 	}
 	
 	public void displayBookGui(String bookStr) {
+		currentLang = Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getCode();
+		
 		ResourceLocation res = new ResourceLocation(bookStr);
 		Book book = BookRegistry.INSTANCE.books.get(res);
 		

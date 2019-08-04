@@ -173,10 +173,6 @@ public class PageMultiblock extends PageWithText {
 		GlStateManager.color4f(1F, 1F, 1F, 1F);
 		GlStateManager.translatef(0, 0, -1);
 
-		// TODO is this broken?
-//		TileEntityRendererDispatcher.instance.entityX = eye.x;
-//		TileEntityRendererDispatcher.instance.entityY = eye.y;
-//		TileEntityRendererDispatcher.instance.entityZ = eye.z;
 		TileEntityRendererDispatcher.staticPlayerX = eye.x;
 		TileEntityRendererDispatcher.staticPlayerY = eye.y;
 		TileEntityRendererDispatcher.staticPlayerZ = eye.z;

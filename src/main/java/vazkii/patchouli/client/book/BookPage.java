@@ -12,7 +12,6 @@ import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.common.util.ValidationUtils;
 
 public abstract class BookPage {
 
@@ -33,7 +32,6 @@ public abstract class BookPage {
 		this.book = entry.book;
 		this.entry = entry;
 		this.pageNum = pageNum;
-		ValidationUtils.validateAdvancement(this.advancement);
 	}
 	
 	public void onDisplayed(GuiBookEntry parent, int left, int top) { 
@@ -51,14 +49,14 @@ public abstract class BookPage {
 	}
 	
 	public void onHidden(GuiBookEntry parent) {
-		parent.getButtonList().removeAll(buttons);
+		parent.removeButtonsIn(buttons);
 	}
 	
 	protected void addButton(Button button) {
 		button.x += (parent.bookLeft + left);
 		button.y += (parent.bookTop + top);
 		buttons.add(button);
-		parent.getButtonList().add(button);
+		parent.addButton(button);
 	}
 	
 	public void render(int mouseX, int mouseY, float pticks) { }

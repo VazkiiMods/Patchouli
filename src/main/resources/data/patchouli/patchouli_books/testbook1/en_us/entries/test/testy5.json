@@ -1,6 +1,6 @@
 {
-	"name": "Test Entry 5",
-	"icon": "minecraft:textures/items/clock_06.png",
+	"name": "Test Entry FIX",
+	"icon": "minecraft:textures/item/clock_06.png",
 	"category": "test",
 	"priority": true,
 	"read_by_default": false,
@@ -24,7 +24,7 @@
 					" ": "ANY",
 					"0": "minecraft:cauldron",
 					"F": "minecraft:fire",
-					"S": "minecraft:stonebrick[variant=mossy_stonebrick]"
+					"S": "minecraft:stone_bricks"
 				},
 				"symmetrical": true,
 				"offset": [0, 0, 0],

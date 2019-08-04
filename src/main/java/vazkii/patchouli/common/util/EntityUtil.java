@@ -48,7 +48,7 @@ public class EntityUtil {
 					
 					return entity;
 				} catch (Exception e) {
-					throw new IllegalArgumentException("Can't load entity " + useId);
+					throw new IllegalArgumentException("Can't load entity " + useId, e);
 				}
 			};
 		} catch(Exception e) {

@@ -24,7 +24,6 @@ import vazkii.patchouli.client.book.template.component.ComponentSeparator;
 import vazkii.patchouli.client.book.template.component.ComponentText;
 import vazkii.patchouli.client.book.template.component.ComponentTooltip;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.common.util.ValidationUtils;
 
 public class BookTemplate {
 	
@@ -112,7 +111,6 @@ public class BookTemplate {
 	public void build(BookPage page, BookEntry entry, int pageNum) {
 		if(compiled)
 			components.forEach(c -> {
-				ValidationUtils.validateAdvancement(c.advancement);
 				c.build(page, entry, pageNum);
 			});
 	}

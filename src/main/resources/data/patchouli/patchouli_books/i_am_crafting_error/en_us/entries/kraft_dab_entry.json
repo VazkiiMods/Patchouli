@@ -6,7 +6,7 @@
     {
       "type": "crafting",
       "text": "Haha yes",
-      "recipe": "minecraft:i_am_error",
+      "recipe": "minecraft:furnace",
       "recipe2": "minecraft:i_very_erroring_right_now"
     }
   ]

@@ -37,6 +37,9 @@ public class ClientAdvancements {
 					Minecraft.getInstance().getToastGui().add(new LexiconToast(b));
 				}
 			});
+		
+		if(!BookRegistry.INSTANCE.isLoaded())
+			ClientBookRegistry.INSTANCE.reload();
 	}
 
 	public static void updateLockStatus(boolean reset) {

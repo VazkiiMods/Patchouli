@@ -6,10 +6,12 @@ import java.util.List;
 import com.google.common.collect.Lists;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -86,12 +88,14 @@ public class ItemStackUtil {
 	public static Ingredient loadIngredientFromString(String ingredientString) {
 		String[] stacksSerialized = splitStacksFromSerializedIngredient(ingredientString);
 		List<ItemStack> stacks = Lists.newArrayList();
-		for (int i = 0; i < stacksSerialized.length; i++) { // TODO allow for tags
-//			if (stacksSerialized[i].startsWith("ore:")) {
-//				OreIngredient ore = new OreIngredient(stacksSerialized[i].substring(4));
-//				for (ItemStack stack : ore.getMatchingStacks())
-//					stacks.add(stack);
-//			}
+		for (int i = 0; i < stacksSerialized.length; i++) {
+			if (stacksSerialized[i].startsWith("tag:")) {
+				Tag<Item> tag = Minecraft.getInstance().world.getTags().getItems().get(new ResourceLocation(stacksSerialized[i].substring(4)));
+				if(tag != null) {
+					for(Item item : tag.getAllElements())
+						stacks.add(new ItemStack(item));
+				}
+			}
 			
 			stacks.add(loadStackFromString(stacksSerialized[i]));
 		}
