@@ -1,6 +1,5 @@
 package vazkii.patchouli.client.book.page.abstr;
 
-import net.minecraft.client.gui.widget.button.Button;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.BookTextRenderer;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -30,9 +29,8 @@ public abstract class PageWithText extends BookPage {
 	}
 	
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		if(shouldRenderText())
-			textRender.click(mouseX, mouseY, mouseButton);
+	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		return shouldRenderText() && textRender.click(mouseX, mouseY, mouseButton);
 	}
 	
 	public boolean shouldRenderText() {

@@ -41,15 +41,13 @@ public class PageRelations extends PageWithText {
 		displayedEntries.removeIf(BookEntry::shouldHide);
 		Collections.sort(displayedEntries);
 		for(int i = 0; i < displayedEntries.size(); i++) {
-			Button button = new GuiButtonEntry(parent, 0, 20 + i * 11, displayedEntries.get(i), i);
+			Button button = new GuiButtonEntry(parent, 0, 20 + i * 11, displayedEntries.get(i), i, this::handleButtonEntry);
 			addButton(button);
 		}
 	}
 	
-	@Override
-	protected void onButtonClicked(Button button) {
-		if(button instanceof GuiButtonEntry)
-			GuiBookEntry.displayOrBookmark(parent, ((GuiButtonEntry) button).getEntry());
+	public void handleButtonEntry(Button button) {
+		GuiBookEntry.displayOrBookmark(parent, ((GuiButtonEntry) button).getEntry());
 	}
 	
 	@Override

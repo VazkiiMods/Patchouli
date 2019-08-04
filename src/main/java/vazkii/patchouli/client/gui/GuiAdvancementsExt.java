@@ -1,10 +1,8 @@
 package vazkii.patchouli.client.gui;
 
-import java.io.IOException;
-
 import net.minecraft.advancements.Advancement;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.advancements.AdvancementsScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.multiplayer.ClientAdvancementManager;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.base.ClientAdvancements;
@@ -23,10 +21,12 @@ public class GuiAdvancementsExt extends AdvancementsScreen {
 	}
 
 	@Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if(keyCode == mc.gameSettings.keyBindAdvancements.getKeyCode() || keyCode == 1)
-            mc.displayGuiScreen(parent);
-        else super.keyTyped(typedChar, keyCode);
+    public boolean keyPressed(int key, int scanCode, int modifiers) {
+        if(key == minecraft.gameSettings.keyBindAdvancements.getKey().getKeyCode() || scanCode == 1) {
+        	minecraft.displayGuiScreen(parent);
+            return true;
+        }
+        else return super.keyPressed(key, scanCode, modifiers);
     }
 	
 }

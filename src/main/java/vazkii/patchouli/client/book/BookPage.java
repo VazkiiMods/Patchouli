@@ -8,9 +8,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
@@ -40,7 +37,7 @@ public abstract class BookPage {
 	}
 	
 	public void onDisplayed(GuiBookEntry parent, int left, int top) { 
-		mc = parent.mc;
+		mc = parent.getMinecraft();
 		book = parent.book;
 		fontRenderer = mc.fontRenderer;
 		this.parent = parent;
@@ -65,15 +62,7 @@ public abstract class BookPage {
 	}
 	
 	public void render(int mouseX, int mouseY, float pticks) { }
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) { }
-	protected void onButtonClicked(Button button) { }
-	
-	public final boolean interceptButton(Button button) {
-		if(buttons.contains(button)) {
-			onButtonClicked(button);
-			return true;
-		}
-		
+	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) { 
 		return false;
 	}
 	

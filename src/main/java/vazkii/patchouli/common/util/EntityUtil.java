@@ -1,24 +1,24 @@
 package vazkii.patchouli.common.util;
 
-import java.lang.reflect.Constructor;
-
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.command.EntityNotFoundException;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTException;
+import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class EntityUtil {
 
 	public static String getEntityName(String entityId) {
 		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
-		return EntityList.getTranslationName(new ResourceLocation(nameAndNbt.getLeft()));
+		EntityType<?> type = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(nameAndNbt.getLeft()));
+
+		return type.getTranslationKey();
 	}
 	
 	public static EntityCreator loadEntity(String entityId) {
@@ -30,27 +30,25 @@ public class EntityUtil {
 		if(!nbtStr.isEmpty()) {
 			try {
 				nbt = JsonToNBT.getTagFromJson(nbtStr);
-			} catch(NBTException e) {
+			} catch(CommandSyntaxException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		final Class<? extends Entity> clazz = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityId)).getEntityClass();
+		EntityType<?> type = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityId));
 		final CompoundNBT useNbt = nbt;
 		final String useId = entityId;
 		try {
-			final Constructor<? extends Entity> constructor = clazz.getConstructor(World.class);
-			
 			return (world) -> {
 				Entity entity;
 				try {
-					entity = constructor.newInstance(world);
+					entity = type.create(world);
 					if(useNbt != null)
-						entity.readFromNBT(useNbt);
+						entity.read(useNbt);
 					
 					return entity;
 				} catch (Exception e) {
-					throw new EntityNotFoundException("Can't load entity " + useId);
+					throw new IllegalArgumentException("Can't load entity " + useId);
 				}
 			};
 		} catch(Exception e) {
@@ -71,7 +69,7 @@ public class EntityUtil {
 	
 	public static interface EntityCreator {
 		
-		Entity create(World world) throws EntityNotFoundException;
+		Entity create(World world) throws IllegalArgumentException;
 		
 	}
 	

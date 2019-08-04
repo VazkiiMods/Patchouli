@@ -56,17 +56,19 @@ public class ComponentEntity extends TemplateComponent {
 	}
 	
 	private void loadEntity(World world) {
-		if(!errored && (entity == null || entity.isDead)) {
+		if(!errored && (entity == null || !entity.isAlive())) {
 			try {
 				entity = creator.create(world);
+				float width = entity.getWidth();
+				float height = entity.getHeight();
 				
-				float entitySize = entity.width;
-				if(entity.width < entity.height)
-					entitySize = entity.height;
+				float entitySize = width;
+				if(width < height)
+					entitySize = height;
 				entitySize = Math.max(1F, entitySize);
 				
 				renderScale = renderSize / entitySize * 0.8F;
-				offset = Math.max(entity.height, entitySize) * 0.5F;
+				offset = Math.max(height, entitySize) * 0.5F;
 			} catch(Exception e) {
 				errored = true;
 				e.printStackTrace();

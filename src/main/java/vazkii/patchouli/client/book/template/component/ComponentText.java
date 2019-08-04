@@ -45,8 +45,8 @@ public class ComponentText extends TemplateComponent {
 	}
 	
 	@Override
-	public void mouseClicked(BookPage page, int mouseX, int mouseY, int mouseButton) {
-		textRenderer.click(mouseX, mouseY, mouseButton);
+	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
+		return textRenderer.click(mouseX, mouseY, mouseButton);
 	}
 
 }

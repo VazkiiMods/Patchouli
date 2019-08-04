@@ -4,58 +4,70 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.Config.Comment;
-import net.minecraftforge.common.config.Config.Ignore;
-import net.minecraftforge.common.config.Config.Name;
-import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.tuple.Pair;
 
-@Config(modid = Patchouli.MOD_ID)
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
+
 public class PatchouliConfig {
 
-	@Name("Disable Advancement Locking")
-	@Comment("Set this to true to disable advancement locking and make all entries visible at all times\nConfig Flag: advancements_disabled")
-	public static boolean disableAdvancementLocking = false;
-	
-	@Name("Testing Mode")
-	@Comment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want.\nConfig Flag: testing_mode")
-	public static boolean testingMode = false;
-	
-	@Name("Inventory Button Book")
-	@Comment("Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.")
-	public static String inventoryButtonBook = "";
-	
-	@Ignore private static Map<String, Boolean> configFlags = new HashMap<>();
-	@Ignore private transient static boolean firstChange = true;
-	
-	public static void preInit() {
-		MinecraftForge.EVENT_BUS.register(ChangeListener.class);
+	public static ForgeConfigSpec.ConfigValue<Boolean> disableAdvancementLocking;
+	public static ForgeConfigSpec.ConfigValue<Boolean> testingMode;
+	public static ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
 
-		List<ModContainer> mods = Loader.instance().getActiveModList();
-		for(ModContainer container : mods)
-			setFlag("mod:" + container.getModId(), true);
-		
+	private static Map<String, Boolean> configFlags = new HashMap<>();
+
+	public static void setup() {
+		Pair<Loader, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Loader::new);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, specPair.getRight());
+	}
+
+	public static void load() {
+		List<ModInfo> mods = ModList.get().getMods();
+		for(ModInfo info : mods)
+			setFlag("mod:" + info.getModId(), true);
+
 		setFlag("debug", Patchouli.debug);
-		
+
 		updateFlags();
 	}
 	
-	private static void updateFlags() {
-		setFlag("advancements_disabled", disableAdvancementLocking);
-		setFlag("testing_mode", testingMode);
+	static class Loader {
+
+		public Loader(ForgeConfigSpec.Builder builder) {
+			builder.push("general");
+
+			disableAdvancementLocking = builder
+					.comment("Set this to true to disable advancement locking and make all entries visible at all times\\nConfig Flag: advancements_disabled")
+					.define("Disable Advancement Locking", false);
+
+			testingMode = builder
+					.comment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want.\\nConfig Flag: testing_mode")
+					.define("Testing Mode", false);
+
+			inventoryButtonBook = builder
+					.comment("Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.")
+					.define("Inventory Button Book", "");
+
+			builder.pop();
+		}
+
 	}
-	
+
+	private static void updateFlags() {
+		setFlag("advancements_disabled", disableAdvancementLocking.get());
+		setFlag("testing_mode", testingMode.get());
+	}
+
 	public static boolean getConfigFlag(String name) {
 		if(name.startsWith("&"))
 			return getConfigFlagAND(name.replaceAll("[&|]", "").split(","));
 		if(name.startsWith("|"))
 			return getConfigFlagOR(name.replaceAll("[&|]", "").split(","));
-			
+
 		boolean target = true;
 		if(name.startsWith("!")) {
 			name = name.substring(1);
@@ -65,39 +77,26 @@ public class PatchouliConfig {
 
 		return (configFlags.containsKey(name) && configFlags.get(name)) == target;
 	}
-	
+
 	public static boolean getConfigFlagAND(String[] tokens) {
 		for(String s : tokens)
 			if(!getConfigFlag(s))
 				return false;
-		
+
 		return true;
 	}
-	
+
 	public static boolean getConfigFlagOR(String[] tokens) {
 		for(String s : tokens)
 			if(getConfigFlag(s))
 				return true;
-		
+
 		return false;
 	}
-	
+
 	public static void setFlag(String flag, boolean value) {
 		configFlags.put(flag.trim().toLowerCase(), value);
 	}
 
-	public static class ChangeListener {
 
-		@SubscribeEvent
-		public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
-			if(eventArgs.getModID().equals(Patchouli.MOD_ID)) {
-	            ConfigManager.sync(Patchouli.MOD_ID, Config.Type.INSTANCE);
-	            updateFlags();
-	            Patchouli.proxy.requestBookReload();
-			}
-		}
-
-	}
-	
-	
 }

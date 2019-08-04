@@ -19,8 +19,8 @@ public class PageQuest extends PageWithText {
 	
 	transient BookTextRenderer infoText;
 	transient boolean isManual;
-	transient Button button;
 	transient int footerY;
+	transient Button button;
 	
 	@Override
 	public int getTextHeight() {
@@ -48,7 +48,7 @@ public class PageQuest extends PageWithText {
 		super.onDisplayed(parent, left, top);
 		
 		if(isManual) {
-			addButton(button = new Button(0, GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, ""));
+			addButton(button = new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, "", this::questButtonClicked));
 			updateButtonText();
 		}
 	}
@@ -56,23 +56,20 @@ public class PageQuest extends PageWithText {
 	private void updateButtonText() {
 		boolean completed = isCompleted(parent.book);
 		String s = I18n.format(completed ? "patchouli.gui.lexicon.mark_incomplete" : "patchouli.gui.lexicon.mark_complete");
-		button.displayString = s;
+		button.setMessage(s);
 	}
 	
-	@Override
-	protected void onButtonClicked(Button button) {
-		if(button == this.button) {
-			String res = entry.getResource().toString();
-			BookData data = PersistentData.data.getBookData(parent.book);
-			
-			if(data.completedManualQuests.contains(res))
-				data.completedManualQuests.remove(res);
-			else data.completedManualQuests.add(res);
-			PersistentData.save();
-			
-			updateButtonText();
-			entry.markReadStateDirty();
-		}
+	protected void questButtonClicked(Button button) {
+		String res = entry.getResource().toString();
+		BookData data = PersistentData.data.getBookData(parent.book);
+		
+		if(data.completedManualQuests.contains(res))
+			data.completedManualQuests.remove(res);
+		else data.completedManualQuests.add(res);
+		PersistentData.save();
+		
+		updateButtonText();
+		entry.markReadStateDirty();
 	}
 	
 	@Override

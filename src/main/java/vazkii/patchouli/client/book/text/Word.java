@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.text;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import net.minecraft.client.gui.FontRenderer;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -16,7 +17,7 @@ public class Word {
 	private final String codes;
 	private final List<Word> linkCluster;
 	private final String tooltip;
-	private final Runnable onClick;
+	private final Supplier<Boolean> onClick;
 
 	public Word(GuiBook gui, Span span, String text, int x, int y, int strWidth, List<Word> cluster) {
 		this.book = gui.book;
@@ -47,16 +48,18 @@ public class Word {
 		font.drawString(renderTarget, x, y, renderColor);
 	}
 
-	public void click(int mouseX, int mouseY, int mouseButton) {
+	public boolean click(double mouseX, double mouseY, int mouseButton) {
 		if(onClick != null && mouseButton == 0 && isHovered(mouseX, mouseY))
-			onClick.run();
+			return onClick.get();
+		
+		return false;
 	}
 
-	private boolean isHovered(int mouseX, int mouseY) {
+	private boolean isHovered(double mouseX, double mouseY) {
 		return gui.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height);
 	}
 
-	private boolean isClusterHovered(int mouseX, int mouseY) {
+	private boolean isClusterHovered(double mouseX, double mouseY) {
 		if(linkCluster == null)
 			return isHovered(mouseX, mouseY);
 

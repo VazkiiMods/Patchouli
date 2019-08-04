@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.BlockState;
+import net.minecraft.state.IProperty;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.patchouli.api.VariableHolder;
 
 public class SerializedMultiblock {
@@ -62,13 +63,13 @@ public class SerializedMultiblock {
 			return StateMatcher.AIR;
 
 		String[] split = s.split("\\[");
-		Block block = Block.REGISTRY.getObject(new ResourceLocation(split[0]));
+		Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(split[0]));
 		if (block != null) {
 			if (split.length > 1) {
 				BlockState state = block.getDefaultState();
 				for (String part : split[1].replace("]", "").split(",")) {
 					String[] keyValue = part.split("=");
-					for (IProperty<?> prop : state.getProperties().keySet()) {
+					for (IProperty<?> prop : state.getProperties()) {
 						BlockState changed = findProperty(state, prop, keyValue[0], keyValue[1]);
 						if (changed != null) {
 							state = changed;
@@ -88,7 +89,7 @@ public class SerializedMultiblock {
 		if (key.equals(prop.getName())) {
 			for (T value : prop.getAllowedValues()) {
 				if (prop.getName(value).equals(newValue)) {
-					return state.withProperty(prop, value);
+					return state.with(prop, value);
 				}
 			}
 		}

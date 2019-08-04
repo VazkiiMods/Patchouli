@@ -197,7 +197,7 @@ public class VariableAssigner {
 
 	private static String iname(String arg) {
 		ItemStack stack = ItemStackUtil.loadStackFromString(arg);
-		return stack.getDisplayName();
+		return stack.getDisplayName().getFormattedText();
 	}
 	
 	private static String icount(String arg) {

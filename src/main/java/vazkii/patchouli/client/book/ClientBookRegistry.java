@@ -14,9 +14,9 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.page.PageCrafting;
 import vazkii.patchouli.client.book.page.PageEmpty;
@@ -57,9 +57,9 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 	public void init() {
 		addPageTypes();
 
-		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+		IResourceManager manager = Minecraft.getInstance().getResourceManager();
 		if (manager instanceof IReloadableResourceManager)
-			((IReloadableResourceManager) manager).registerReloadListener(this);
+			((IReloadableResourceManager) manager).addReloadListener(this);
 		else
 			throw new RuntimeException("Minecraft's resource manager is not reloadable. Something went way wrong.");
 	}
@@ -80,7 +80,7 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager) {
-		currentLang = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
+		currentLang = Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getCode();
 		
 		if(!firstLoad)
 			BookRegistry.INSTANCE.reload();

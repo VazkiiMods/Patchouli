@@ -23,9 +23,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
+import net.minecraftforge.forgespi.language.IModInfo;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookLanding;
 import vazkii.patchouli.client.book.template.BookTemplate;
@@ -80,7 +80,7 @@ public class BookContents extends AbstractReadStateHolder {
 
 	public void openLexiconGui(GuiBook gui, boolean push) {
 		if(gui.canBeOpened()) {
-			Minecraft mc = Minecraft.getMinecraft();
+			Minecraft mc = Minecraft.getInstance();
 			if(push && mc.currentScreen instanceof GuiBook && gui != mc.currentScreen)
 				guiStack.push((GuiBook) mc.currentScreen);
 
@@ -126,7 +126,7 @@ public class BookContents extends AbstractReadStateHolder {
 		List<ResourceLocation> foundCategories = new ArrayList<>();
 		List<ResourceLocation> foundEntries = new ArrayList<>();
 		List<ResourceLocation> foundTemplates = new ArrayList<>();
-		List<ModContainer> mods = Loader.instance().getActiveModList();
+		List<ModInfo> mods = ModList.get().getMods();
 
 		try { 
 			String bookName = book.resourceLoc.getPath();
@@ -165,9 +165,11 @@ public class BookContents extends AbstractReadStateHolder {
 	}
 
 	protected void findFiles(String dir, List<ResourceLocation> list) {
-		ModContainer mod = book.owner;
-		String id = mod.getModId();
-		CraftingHelper.findFiles(mod, String.format("assets/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getPath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
+		IModInfo mod = book.owner;
+		if(mod instanceof ModInfo) {
+			String id = mod.getModId();
+			BookRegistry.findFiles((ModInfo) mod, String.format("assets/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getPath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
+		}
 	}
 	
 	private BiFunction<Path, Path, Boolean> pred(String modId, List<ResourceLocation> list) {
@@ -249,7 +251,7 @@ public class BookContents extends AbstractReadStateHolder {
 
 	protected InputStream loadJson(ResourceLocation resloc, ResourceLocation fallback) {
 		try {
-			return Minecraft.getMinecraft().getResourceManager().getResource(resloc).getInputStream();
+			return Minecraft.getInstance().getResourceManager().getResource(resloc).getInputStream();
 		} catch (IOException e) {
 			//no-op
 		}

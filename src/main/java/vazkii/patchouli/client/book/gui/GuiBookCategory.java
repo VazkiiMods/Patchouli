@@ -48,10 +48,10 @@ public class GuiBookCategory extends GuiBookEntryList {
 				continue;
 			
 			int x = LEFT_PAGE_X + 10 + (i % 4) * 24;
-			int y = TOP_PADDING + PAGE_HEIGHT - (PatchouliConfig.disableAdvancementLocking ? 46 : 68);
+			int y = TOP_PADDING + PAGE_HEIGHT - (PatchouliConfig.disableAdvancementLocking.get() ? 46 : 68);
 			
-			Button button = new GuiButtonCategory(this, x, y, ocategory);
-			buttonList.add(button);
+			Button button = new GuiButtonCategory(this, x, y, ocategory, this::handleButtonCategory);
+			buttons.add(button);
 			dependentButtons.add(button);
 			
 			i++;
@@ -70,7 +70,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 	
 	@Override
 	public boolean canBeOpened() {
-		return !category.isLocked() && !equals(Minecraft.getMinecraft().currentScreen);
+		return !category.isLocked() && !equals(Minecraft.getInstance().currentScreen);
 	}
 	
 }

@@ -5,26 +5,24 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.forgespi.language.IModInfo;
 import vazkii.patchouli.common.base.Patchouli;
 
 public class BookFolderLoader {
 
 	public static File loadDir;
 	
-	public static void setup(File instanceDir) {
-		loadDir = new File(instanceDir, BookRegistry.BOOKS_LOCATION);
+	public static void setup() {
+		loadDir = new File(BookRegistry.BOOKS_LOCATION);
 		if(!loadDir.exists())
 			loadDir.mkdir();
 		else if(!loadDir.isDirectory())
 			throw new RuntimeException(loadDir.getAbsolutePath() + " is a file, not a folder, aborting. Please delete this file or move it elsewhere if it has important contents.");
-		
-		
 	}
 	
 	public static void findBooks() {
-		ModContainer mod = Loader.instance().activeModContainer();
+		IModInfo mod = ModLoadingContext.get().getActiveContainer().getModInfo();
 		File[] subdirs = loadDir.listFiles(File::isDirectory);
 		for(File dir : subdirs) {
 			File bookJson = new File(dir, "book.json");

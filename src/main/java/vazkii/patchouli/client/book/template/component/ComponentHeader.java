@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
-
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -38,8 +38,8 @@ public class ComponentHeader extends TemplateComponent {
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, 0);
-		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.translatef(x, y, 0);
+		GlStateManager.scalef(scale, scale, scale);
 		
 		if(centered)
 			page.parent.drawCenteredStringNoShadow(text, 0, 0, color);

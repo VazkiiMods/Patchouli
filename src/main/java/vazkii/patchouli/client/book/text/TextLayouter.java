@@ -1,12 +1,12 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraftforge.client.MinecraftForgeClient;
-import vazkii.patchouli.client.book.gui.GuiBook;
-
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraftforge.client.MinecraftForgeClient;
+import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class TextLayouter {
 	private final List<Word> words = new ArrayList<>();

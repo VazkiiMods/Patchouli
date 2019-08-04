@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import net.minecraft.client.Minecraft;
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
@@ -22,31 +22,31 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	}
 
 	public GuiButtonBookBookmark(GuiBook parent, int x, int y, Bookmark bookmark, boolean multiblock) {
-		super(parent, x, y, 272, bookmark == null ? 170 : 160, 13, 10, getTooltip(parent.book, bookmark, multiblock));
+		super(parent, x, y, 272, bookmark == null ? 170 : 160, 13, 10, parent::handleButtonBookmark, getTooltip(parent.book, bookmark, multiblock));
 		this.book = parent.book;
 		this.bookmark = bookmark;
 		this.multiblock = multiblock;
 	}
 
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-		super.drawButton(mc, mouseX, mouseY, partialTicks);
+	public void render(int mouseX, int mouseY, float partialTicks) {
+		super.render(mouseX, mouseY, partialTicks);
 
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 		if(visible && bookmark != null && entry != null) {
 			GlStateManager.pushMatrix();
-			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+			GlStateManager.scalef(0.5F, 0.5F, 0.5F);
 			RenderHelper.enableGUIStandardItemLighting();
-			int px = x * 2 + (hovered ? 6 : 2);
+			int px = x * 2 + (isHovered ? 6 : 2);
 			int py = y * 2 + 2;
 			entry.getIcon().render(px, py);
 
-			GlStateManager.disableDepth();
+			GlStateManager.disableDepthTest();
 			String s = Integer.toString(bookmark.page + 1);
 			if(multiblock)
 				s = I18n.format("patchouli.gui.lexicon.visualize_letter");
-			mc.fontRenderer.drawStringWithShadow(s, px + 12, py + 10, 0xFFFFFF);
-			GlStateManager.enableDepth();
+			parent.getMinecraft().fontRenderer.drawStringWithShadow(s, px + 12, py + 10, 0xFFFFFF);
+			GlStateManager.enableDepthTest();
 			GlStateManager.popMatrix();
 		}
 	}

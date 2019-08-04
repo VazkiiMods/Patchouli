@@ -11,9 +11,9 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.forgespi.language.IModInfo;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ExternalBookContents;
@@ -27,6 +27,7 @@ public class Book {
 	public static final String DEFAULT_MODEL = Patchouli.PREFIX + "book_brown";
 	public static final ModelResourceLocation DEFAULT_MODEL_RES = new ModelResourceLocation(DEFAULT_MODEL, "inventory");
 	
+	@SuppressWarnings("serial")
 	private static final Map<String, String> DEFAULT_MACROS = new HashMap<String, String>() {{
 		put("$(list", "$(li"); //  The lack of ) is intended
 		put("/$", "$()");
@@ -40,7 +41,7 @@ public class Book {
 
 	private transient boolean wasUpdated = false;
 	
-	public transient ModContainer owner;
+	public transient IModInfo owner;
 	public transient ResourceLocation resourceLoc;
 	public transient ModelResourceLocation modelResourceLoc;
 	private transient ItemStack bookItem;
@@ -125,7 +126,7 @@ public class Book {
 	
 	public Map<String, String> macros = new HashMap<>();
 	
-	public void build(ModContainer owner, ResourceLocation resource, boolean external) {
+	public void build(IModInfo owner, ResourceLocation resource, boolean external) {
 		this.owner = owner;
 		this.resourceLoc = resource;
 		this.isExternal = external;
@@ -237,7 +238,7 @@ public class Book {
 	}
 	
 	public String getOwnerName() {
-		return owner.getName();
+		return owner.getDisplayName();
 	}
 	
 }

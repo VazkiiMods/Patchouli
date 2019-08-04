@@ -9,25 +9,28 @@ import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.biome.Biomes;
 import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.IFluidState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
-public class Multiblock implements IMultiblock, IBlockAccess {
+public class Multiblock implements IMultiblock, IEnviromentBlockReader {
 
 	final String[][] pattern;
 
@@ -87,6 +90,7 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 		return this;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void place(World world, BlockPos pos, Rotation rotation) {
 		setWorld(world);
@@ -95,9 +99,10 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 			for(int y = 0; y < sizeY; y++)
 				for(int z = 0; z < sizeZ; z++) {
 					BlockPos placePos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-					BlockState targetState = stateTargets[x][y][z].getDisplayedState().withRotation(rotation);
+					BlockState targetState = stateTargets[x][y][z].getDisplayedState().rotate(rotation);
 					Block targetBlock = targetState.getBlock();
-					if(!targetBlock.isAir(targetState, world, placePos) && targetBlock.canPlaceBlockAt(world, placePos) && world.getBlockState(placePos).getBlock().isReplaceable(world, placePos))
+					
+					if(!targetBlock.isAir(targetState, world, placePos) && targetBlock.isValidPosition(targetState, world, placePos) && world.getBlockState(placePos).getMaterial().isReplaceable())
 						world.setBlockState(placePos, targetState);
 				}
 	}
@@ -161,7 +166,7 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 		setWorld(world);
 		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
 		Predicate<BlockState> pred = stateTargets[x][y][z].getStatePredicate();
-		BlockState state = world.getBlockState(checkPos).withRotation(RotationUtil.fixHorizontal(rotation));
+		BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
 
 		return pred.test(state);
 	}
@@ -259,15 +264,9 @@ public class Multiblock implements IMultiblock, IBlockAccess {
     public TileEntity getTileEntity(BlockPos pos) {
 		BlockState state = getBlockState(pos);
 		if (state.getBlock().hasTileEntity(state)) {
-			return teCache.computeIfAbsent(pos.toImmutable(), p -> state.getBlock().createTileEntity(world, state));
+			return teCache.computeIfAbsent(pos.toImmutable(), p -> state.getBlock().createTileEntity(state, world));
 		}
 		return null;
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public int getCombinedLight(BlockPos pos, int lightValue) {
-        return 0xF000F0;
     }
 
     @Override
@@ -281,32 +280,19 @@ public class Multiblock implements IMultiblock, IBlockAccess {
         return stateTargets[x][y][z].getDisplayedState();
     }
 
+	@Override
+	public IFluidState getFluidState(BlockPos pos) {
+		return Fluids.EMPTY.getDefaultState();
+	}
+	
     @Override
-    public boolean isAirBlock(BlockPos pos) {
-        BlockState state = getBlockState(pos);
-        return state.getBlock().isAir(state, this, pos);
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
     public Biome getBiome(BlockPos pos) {
         return Biomes.PLAINS;
     }
 
-    @Override
-    public int getStrongPower(BlockPos pos, Direction direction) {
-        return 0;
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public WorldType getWorldType() {
-        return WorldType.DEFAULT;
-    }
-
-    @Override
-    public boolean isSideSolid(BlockPos pos, Direction side, boolean _default) {
-        return getBlockState(pos).isSideSolid(this, pos, side);
-    }
+	@Override
+	public int getLightFor(LightType type, BlockPos pos) {
+		return 0xF000F0;
+	}
 
 }

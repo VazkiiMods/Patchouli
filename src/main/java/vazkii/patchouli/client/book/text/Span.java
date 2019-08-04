@@ -1,8 +1,9 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.client.gui.FontRenderer;
-
 import java.util.List;
+import java.util.function.Supplier;
+
+import net.minecraft.client.gui.FontRenderer;
 
 public class Span {
 	public static Span error(SpanState state, String message) {
@@ -15,7 +16,7 @@ public class Span {
 	public final String codes;
 	public final List<Span> linkCluster;
 	public final String tooltip;
-	public final Runnable onClick;
+	public final Supplier<Boolean> onClick;
 	public final int lineBreaks;
 	public final int spacingLeft;
 	public final int spacingRight;

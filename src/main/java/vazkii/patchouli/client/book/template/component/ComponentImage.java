@@ -1,9 +1,9 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
+import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.gui.AbstractGui;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.book.BookEntry;
@@ -38,13 +38,13 @@ public class ComponentImage extends TemplateComponent {
 		if(scale == 0F)
 			return;
 		
-		page.mc.renderEngine.bindTexture(resource);
+		page.mc.textureManager.bindTexture(resource);
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, 0);
-		GlStateManager.scale(scale, scale, scale);
-		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.translatef(x, y, 0);
+		GlStateManager.scalef(scale, scale, scale);
+		GlStateManager.color4f(1F, 1F, 1F, 1F);
 		GlStateManager.enableBlend();
-		AbstractGui.drawModalRectWithCustomSizedTexture(0, 0, u, v, width, height, textureWidth, textureHeight);
+		AbstractGui.blit(0, 0, u, v, width, height, textureWidth, textureHeight);
 		GlStateManager.popMatrix();
 	}
 

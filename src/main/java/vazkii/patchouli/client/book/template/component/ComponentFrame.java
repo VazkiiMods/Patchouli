@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -19,7 +20,7 @@ public class ComponentFrame extends TemplateComponent {
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
 		GlStateManager.enableBlend();
-		GlStateManager.color(1F, 1F, 1F);
+		GlStateManager.color3f(1F, 1F, 1F);
 		GuiBook.drawFromTexture(page.book, x, y, 405, 149, 106, 106);
 	}
 	

@@ -27,14 +27,14 @@ public class BookTextRenderer {
 	public BookTextRenderer(GuiBook gui, String text, int x, int y, int width, int lineHeight, int baseColor) {
 		this.book = gui.book;
 		this.gui = gui;
-		this.font = gui.mc.fontRenderer;
+		this.font = gui.getMinecraft().fontRenderer;
 		this.text = text;
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.spaceWidth = font.getStringWidth(" ");
 		this.lineHeight = lineHeight;
-		this.defaultUnicode = font.getUnicodeFlag();
+		this.defaultUnicode = false; //font.getUnicodeFlag(); TODO figure unicode out
 		this.baseColor = baseColor;
 		
 		build();
@@ -46,13 +46,17 @@ public class BookTextRenderer {
 	}
 	
 	public void render(int mouseX, int mouseY) {
-		if(!book.useBlockyFont)
-			font.setUnicodeFlag(true);
+//		if(!book.useBlockyFont) TODO yep unicode
+//			font.setUnicodeFlag(true);
 		words.forEach(word -> word.render(mouseX, mouseY));
-		font.setUnicodeFlag(defaultUnicode);
+//		font.setUnicodeFlag(defaultUnicode);
 	}
 	
-	public void click(int mouseX, int mouseY, int mouseButton) {
-		words.forEach(word -> word.click(mouseX, mouseY, mouseButton));
+	public boolean click(double mouseX, double mouseY, int mouseButton) {
+		for(Word word : words)
+			if(word.click(mouseX, mouseY, mouseButton))
+				return true;
+		
+		return false;
 	}
 }

@@ -1,8 +1,9 @@
 package vazkii.patchouli.client.book;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -39,17 +40,17 @@ public class BookIcon {
 	}
 	
 	public void render(int x, int y) {
-		Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = Minecraft.getInstance();
 		switch(type) {
 		case STACK:
 			RenderHelper.enableGUIStandardItemLighting();
-			mc.getRenderItem().renderItemIntoGUI(stack, x, y);	
+			mc.getItemRenderer().renderItemIntoGUI(stack, x, y);	
 			break;
 			
 		case RESOURCE:
-			GlStateManager.color(1F, 1F, 1F, 1F);
-			mc.renderEngine.bindTexture(res);
-			AbstractGui.drawScaledCustomSizeModalRect(x, y, 0, 0, 16, 16, 16, 16, 16, 16);
+			GlStateManager.color4f(1F, 1F, 1F, 1F);
+			mc.textureManager.bindTexture(res);
+			AbstractGui.blit(x, y, 0, 0, 16, 16, 16, 16, 16, 16);
 			break;
 		}
 	}

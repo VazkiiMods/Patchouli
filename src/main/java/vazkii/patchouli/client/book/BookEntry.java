@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.item.ItemStack;
@@ -53,7 +53,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public List<BookPage> getPages() {
-		List<BookPage> pages = PatchouliConfig.disableAdvancementLocking ? realPages : realPages.stream().filter(BookPage::isPageUnlocked).collect(Collectors.toList());
+		List<BookPage> pages = PatchouliConfig.disableAdvancementLocking.get() ? realPages : realPages.stream().filter(BookPage::isPageUnlocked).collect(Collectors.toList());
 
 		return pages.isEmpty() ? NO_PAGE : pages;
 	}
@@ -112,7 +112,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	public boolean isLocked() {
 		if(isSecret())
 			return locked;
-		return !PatchouliConfig.disableAdvancementLocking && locked;
+		return !PatchouliConfig.disableAdvancementLocking.get() && locked;
 	}
 
 	public boolean isSecret() {
@@ -136,7 +136,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 			return true;
 		
 		for(StackWrapper wrapper : relevantStacks)
-			if(StringUtils.stripControlCodes(wrapper.stack.getDisplayName()).toLowerCase().contains(query))
+			if(StringUtils.stripControlCodes(wrapper.stack.getDisplayName().getFormattedText()).toLowerCase().contains(query))
 				return true;
 		
 		return false;

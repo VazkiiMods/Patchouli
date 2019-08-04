@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.page.abstr;
 
 import com.google.gson.annotations.SerializedName;
+
 import net.minecraft.item.ItemStack;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -29,10 +30,10 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 		}
 		
 		boolean customTitle = title != null && !title.isEmpty();
-		title1 = !customTitle ? getRecipeOutput(recipe1).getDisplayName() : title;
+		title1 = !customTitle ? getRecipeOutput(recipe1).getDisplayName().getFormattedText() : title;
 		title2 = "-";
 		if(recipe2 != null) {
-			title2 = !customTitle ? getRecipeOutput(recipe2).getDisplayName() : "";
+			title2 = !customTitle ? getRecipeOutput(recipe2).getDisplayName().getFormattedText() : "";
 			if(title1.equals(title2))
 				title2 = "";
 		}

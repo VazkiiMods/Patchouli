@@ -10,49 +10,40 @@
  */
 package vazkii.patchouli.common.network;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.api.distmarker.Dist;
-import vazkii.patchouli.common.base.Patchouli;
-import vazkii.patchouli.common.network.message.MessageOpenBookGui;
-import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
-
 // Basically a copy of the ARL one but I want to avoid the dep so hey it's here too
 public class NetworkHandler {
 
-	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Patchouli.MOD_ID);
-
-	private static int i = 0;
-
-	public static void registerMessages() {
-		register(MessageSyncAdvancements.class, Dist.CLIENT);
-		register(MessageOpenBookGui.class, Dist.CLIENT);
-
-		NetworkMessage.mapHandler(String[].class, NetworkHandler::readStringArray, NetworkHandler::writeStringArray);
-	}
+// TODO Rewrite
 	
-	public static String[] readStringArray(ByteBuf buf) {
-		int len = buf.readInt();
-		String[] strs = new String[len];
-		for(int i = 0; i < len; i++)
-			strs[i] = ByteBufUtils.readUTF8String(buf);
-		
-		return strs;
-	}
-	
-	public static void writeStringArray(String[] arr, ByteBuf buf) {
-		buf.writeInt(arr.length);
-		for(int i = 0; i < arr.length; i++)
-			ByteBufUtils.writeUTF8String(buf, arr[i]);
-	}
-	
-	public static <T extends IMessage & IMessageHandler<T, IMessage>> void register(Class<T> clazz, Dist handlerSide) {
-		INSTANCE.registerMessage(clazz, clazz, i++, handlerSide);
-	}
-	
+//	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Patchouli.MOD_ID);
+//
+//	private static int i = 0;
+//
+//	public static void registerMessages() {
+//		register(MessageSyncAdvancements.class, Dist.CLIENT);
+//		register(MessageOpenBookGui.class, Dist.CLIENT);
+//
+//		NetworkMessage.mapHandler(String[].class, NetworkHandler::readStringArray, NetworkHandler::writeStringArray);
+//	}
+//	
+//	public static String[] readStringArray(ByteBuf buf) {
+//		int len = buf.readInt();
+//		String[] strs = new String[len];
+//		for(int i = 0; i < len; i++)
+//			strs[i] = ByteBufUtils.readUTF8String(buf);
+//		
+//		return strs;
+//	}
+//	
+//	public static void writeStringArray(String[] arr, ByteBuf buf) {
+//		buf.writeInt(arr.length);
+//		for(int i = 0; i < arr.length; i++)
+//			ByteBufUtils.writeUTF8String(buf, arr[i]);
+//	}
+//	
+//	public static <T extends IMessage & IMessageHandler<T, IMessage>> void register(Class<T> clazz, Dist handlerSide) {
+//		INSTANCE.registerMessage(clazz, clazz, i++, handlerSide);
+//	}
+//	
 
 }

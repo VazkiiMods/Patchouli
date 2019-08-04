@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.concurrent.ConcurrentException;
-
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.AdvancementProgress;
@@ -17,10 +15,10 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import vazkii.patchouli.common.network.NetworkHandler;
-import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
 
+@EventBusSubscriber
 public final class AdvancementSyncHandler {
 
 	public static Set<String> trackedNamespaces = new HashSet<>();
@@ -40,8 +38,8 @@ public final class AdvancementSyncHandler {
 	
 	@SubscribeEvent
 	public static void onLogin(PlayerLoggedInEvent event) {
-		if(event.player instanceof ServerPlayerEntity) {
-			ServerPlayerEntity player = (ServerPlayerEntity) event.player;
+		if(event.getPlayer() instanceof ServerPlayerEntity) {
+			ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
 			buildSyncSet(player);
 			syncPlayer(player, false);
 		}
@@ -51,7 +49,7 @@ public final class AdvancementSyncHandler {
 		try {
 			if(syncedAdvancements == null) {
 				AdvancementManager manager = player.getServer().getAdvancementManager();
-				Iterable<Advancement> allAdvancements = manager.getAdvancements();
+				Iterable<Advancement> allAdvancements = manager.getAllAdvancements();
 				
 				syncedAdvancements = new ArrayList<>();
 				for(Advancement a : allAdvancements)
@@ -83,7 +81,7 @@ public final class AdvancementSyncHandler {
 		}
 		
 		String[] completedArr = completed.toArray(new String[0]);
-		NetworkHandler.INSTANCE.sendTo(new MessageSyncAdvancements(completedArr, showToast), player);
+//		NetworkHandler.INSTANCE.sendTo(new MessageSyncAdvancements(completedArr, showToast), player); TODO networking
 	}
 	
 	

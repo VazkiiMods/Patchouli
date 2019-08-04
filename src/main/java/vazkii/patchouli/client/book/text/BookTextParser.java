@@ -53,13 +53,13 @@ public class BookTextParser {
 			state.tooltip = "";
 			return "";
 		}, "/t");
-		register(state -> state.gui.mc.player.getDisplayNameString(), "playername");
+		register(state -> state.gui.getMinecraft().player.getDisplayName().getFormattedText(), "playername");
 		register(state -> state.codes( "\u00A7k"), "k", "obf");
 		register(state -> state.codes("\u00A7l"), "l", "bold");
 		register(state -> state.codes("\u00A7m"), "m", "strike");
 		register(state -> state.codes("\u00A7o"), "o", "italic", "italics");
 		register(state -> { state.reset(); return ""; }, "", "reset", "clear");
-		register(state -> state.color(state.font.getColorCode('0')), "nocolor");
+		register(state -> state.color(state.baseColor), "nocolor");
 
 		register((parameter, state) -> {
 			KeyBinding result = getKeybindKey(state, parameter);
@@ -69,7 +69,7 @@ public class BookTextParser {
 			}
 
 			state.tooltip = I18n.format("patchouli.gui.lexicon.keybind", I18n.format(result.getKeyDescription()));
-			return result.getDisplayName();
+			return result.getLocalizedName();
 		}, "k");
 		register((parameter, state) -> {
 			state.cluster = new LinkedList<>();
@@ -82,7 +82,10 @@ public class BookTextParser {
 				String url = parameter;
 				state.tooltip = I18n.format("patchouli.gui.lexicon.external_link");
 				state.isExternalLink = true;
-				state.onClick = () -> GuiBook.openWebLink(url);
+				state.onClick = () -> {
+					GuiBook.openWebLink(url);
+					return true;
+				};
 			} else {
 				int hash = parameter.indexOf('#');
 				String anchor = null;
@@ -110,6 +113,7 @@ public class BookTextParser {
 						GuiBookEntry entryGui = new GuiBookEntry(book, entry, finalPage);
 						gui.displayLexiconGui(entryGui, true);
 						GuiBook.playBookFlipSound(book);
+						return true;
 					};
 				} else {
 					state.tooltip = "BAD LINK: " + parameter;
@@ -141,14 +145,14 @@ public class BookTextParser {
 		this.lineHeight = lineHeight;
 		this.baseColor = baseColor;
 
-		this.font = gui.mc.fontRenderer;
+		this.font = gui.getMinecraft().fontRenderer;
 		this.spaceWidth = font.getStringWidth(" ");
 	}
 
 	public List<Word> parse(String text) {
-		boolean wasUnicode = font.getUnicodeFlag();
-		if(!book.useBlockyFont)
-			font.setUnicodeFlag(true);
+//		boolean wasUnicode = font.getUnicodeFlag(); TODO figure this shit out
+//		if(!book.useBlockyFont)
+//			font.setUnicodeFlag(true);
 
 		String actualText = text;
 		if(actualText == null)
@@ -160,7 +164,7 @@ public class BookTextParser {
 		List<Span> spans = processCommands(actualText);
 		List<Word> words = layout(spans);
 
-		font.setUnicodeFlag(wasUnicode);
+//		font.setUnicodeFlag(wasUnicode);
 		return words;
 	}
 
@@ -213,7 +217,7 @@ public class BookTextParser {
 		String result = "";
 
 		if (cmd.length() == 1 && cmd.matches("^[0123456789abcdef]$")) { // Vanilla colors
-			state.color = font.getColorCode(cmd.charAt(0));
+			state.color = TextFormatting.fromFormattingCode(cmd.charAt(0)).getColor();
 			return "";
 		}
 		else if(cmd.startsWith("#") && (cmd.length() == 4 || cmd.length() == 7)) { // Hex colors
@@ -261,7 +265,7 @@ public class BookTextParser {
 	private static KeyBinding getKeybindKey(SpanState state, String keybind) {
 		String alt = "key." + keybind;
 
-		KeyBinding[] keys = state.gui.mc.gameSettings.keyBindings;
+		KeyBinding[] keys = state.gui.getMinecraft().gameSettings.keyBindings;
 		for(KeyBinding k : keys) {
 			String name = k.getKeyDescription();
 			if(name.equals(keybind) || name.equals(alt))

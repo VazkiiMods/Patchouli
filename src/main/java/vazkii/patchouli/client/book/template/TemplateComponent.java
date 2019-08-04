@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.book.template;
 
-import java.lang.reflect.Field;
-
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
@@ -85,8 +83,8 @@ public abstract class TemplateComponent {
 		// NO-OP
 	}
 
-	public void mouseClicked(BookPage page, int mouseX, int mouseY, int mouseButton) {
-		// NO-OP
+	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
+		return false;
 	}
 
 }

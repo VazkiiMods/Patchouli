@@ -3,8 +3,8 @@ package vazkii.patchouli.api;
 import java.util.List;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;

@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.gui.button;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import vazkii.patchouli.client.base.PersistentData;
@@ -12,8 +13,8 @@ public class GuiButtonBookResize extends GuiButtonBook {
 
 	final boolean uiscale;
 	
-	public GuiButtonBookResize(GuiBook parent, int x, int y, boolean uiscale) {
-		super(parent, x, y, 330, 9, 11, 11,
+	public GuiButtonBookResize(GuiBook parent, int x, int y, boolean uiscale, Button.IPressable onPress) {
+		super(parent, x, y, 330, 9, 11, 11, onPress,
 				I18n.format("patchouli.gui.lexicon.button.resize"));
 		this.uiscale = uiscale;
 	}

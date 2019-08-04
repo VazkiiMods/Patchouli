@@ -37,8 +37,8 @@ public class PageTemplate extends BookPage {
 	}
 	
 	@Override
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
-		template.mouseClicked(this, mouseX, mouseY, mouseButton);
+	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		return template.mouseClicked(this, mouseX, mouseY, mouseButton);
 	}
 	
 	@Override

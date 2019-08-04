@@ -4,9 +4,6 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.Streams;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
 public abstract class AbstractReadStateHolder {
 
 	transient EntryDisplayState readState;

@@ -26,7 +26,7 @@ public class ComponentTooltip extends TemplateComponent {
 		tooltip = new ArrayList();
 		
 		for(String s : tooltipRaw) {
-			s = I18n.translateToLocal(s).replaceAll("&", "\u00A7");
+			s = I18n.format(s).replaceAll("&", "\u00A7");
 			if(!s.isEmpty())
 				tooltip.add(s);
 		}

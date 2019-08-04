@@ -4,20 +4,26 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
+import net.minecraft.client.gui.widget.Widget;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.button.ImageButton;
 import net.minecraft.item.crafting.RecipeBook;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.gui.GuiButtonInventoryBook;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
+@EventBusSubscriber(Dist.CLIENT)
 public class InventoryBookButtonHandler {
 
 	static boolean recipeBookOpen;
@@ -27,13 +33,13 @@ public class InventoryBookButtonHandler {
 	public static void onGuiInitPre(InitGuiEvent.Pre event) {
 		book = null;
 		
-		ClientPlayerEntity player = Minecraft.getMinecraft().player;
+		ClientPlayerEntity player = Minecraft.getInstance().player;
 		if(player == null)
 			return;
 		
 		RecipeBook recipeBook = player.getRecipeBook();
 		if(event.getGui() instanceof InventoryScreen) {
-			String bookID = PatchouliConfig.inventoryButtonBook;
+			String bookID = PatchouliConfig.inventoryButtonBook.get();
 			book = BookRegistry.INSTANCE.books.get(new ResourceLocation(bookID));
 			
 			if(recipeBook.isGuiOpen())
@@ -48,14 +54,15 @@ public class InventoryBookButtonHandler {
 
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onGuiInitPost(InitGuiEvent.Post event) {
-		if(book == null)
+		Screen gui = event.getGui();
+		if(book == null || !(gui instanceof InventoryScreen))
 			return;
 
-		List<Button> buttons = event.getButtonList();
+		List<Widget> buttons = event.getWidgetList();
 		for(int i = 0; i < buttons.size(); i++) {
-			Button button = buttons.get(i);
-			if(button.id == 10) {
-				Button newButton = new GuiButtonInventoryBook(book, button.id, button.x, button.y - 1);
+			Widget button = buttons.get(i);
+			if(button instanceof ImageButton) {
+				Button newButton = new GuiButtonInventoryBook(book, button.x, button.y - 1);
 				buttons.set(i, newButton);
 				return;
 			}
@@ -69,9 +76,8 @@ public class InventoryBookButtonHandler {
 			GuiButtonInventoryBook bookButton = (GuiButtonInventoryBook) button;
 			BookContents contents = bookButton.getBook().contents;
 			contents.openLexiconGui(contents.getCurrentGui(), false);
-			button.playPressSound(Minecraft.getMinecraft().getSoundHandler());
+			button.playDownSound(Minecraft.getInstance().getSoundHandler());
 			event.setCanceled(true);
 		}
 	}
-
 }

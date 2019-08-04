@@ -1,26 +1,37 @@
 package vazkii.patchouli.common.book;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiFunction;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import com.google.common.base.Function;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
+import net.minecraftforge.forgespi.language.IModInfo;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.common.base.Patchouli;
 
@@ -37,12 +48,12 @@ public class BookRegistry {
 	}
 
 	public void init() {
-		List<ModContainer> mods = Loader.instance().getActiveModList();
-		Map<Pair<ModContainer, ResourceLocation>, String> foundBooks = new HashMap<>();
+		List<ModInfo> mods = ModList.get().getMods();
+		Map<Pair<ModInfo, ResourceLocation>, String> foundBooks = new HashMap<>();
 
-		mods.forEach((mod) -> {
+		mods.forEach(mod -> {
 			String id = mod.getModId();
-			CraftingHelper.findFiles(mod, String.format("assets/%s/%s", id, BOOKS_LOCATION), (path) -> Files.exists(path),
+			findFiles(mod, String.format("data/%s/%s", id, BOOKS_LOCATION), (path) -> Files.exists(path),
 					(path, file) -> {
 						if(file.toString().endsWith("book.json")) {
 							String fileStr = file.toString().replaceAll("\\\\", "/");
@@ -64,17 +75,20 @@ public class BookRegistry {
 		});
 
 		foundBooks.forEach((pair, file) -> {
-			ModContainer mod = pair.getLeft();
-			ResourceLocation res = pair.getRight();
+			ModInfo mod = pair.getLeft();
+			Optional<? extends ModContainer> container = ModList.get().getModContainerById(mod.getModId());
+			container.ifPresent(c -> {
+				ResourceLocation res = pair.getRight();
 
-			InputStream stream = mod.getMod().getClass().getResourceAsStream(file);
-			loadBook(mod, res, stream, false);
+				InputStream stream = c.getMod().getClass().getResourceAsStream(file);
+				loadBook(mod, res, stream, false);
+			});
 		});
 		
 		BookFolderLoader.findBooks();
 	}
 	
-	public void loadBook(ModContainer mod, ResourceLocation res, InputStream stream, boolean external) {
+	public void loadBook(IModInfo mod, ResourceLocation res, InputStream stream, boolean external) {
 		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		Book book = gson.fromJson(reader, Book.class);
 
@@ -88,5 +102,79 @@ public class BookRegistry {
 		books.values().forEach(Book::reloadExtensionContents);
 		ClientAdvancements.updateLockStatus(false);
 	}
+	
+	// HELPER
+	
+    public static boolean findFiles(ModInfo mod, String base, Function<Path, Boolean> preprocessor, BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
+        File source = mod.getOwningFile().getFile().getFilePath().toFile();
+
+        FileSystem fs = null;
+        boolean success = true;
+
+        try
+        {
+            Path root = null;
+
+            if (source.isFile())
+            {
+                try
+                {
+                    fs = FileSystems.newFileSystem(source.toPath(), null);
+                    root = fs.getPath("/" + base);
+                }
+                catch (IOException e)
+                {
+                    return false;
+                }
+            }
+            else if (source.isDirectory())
+            {
+                root = source.toPath().resolve(base);
+            }
+    
+            if (root == null || !Files.exists(root))
+                return defaultUnfoundRoot;
+    
+            if (preprocessor != null)
+            {
+                Boolean cont = preprocessor.apply(root);
+                if (cont == null || !cont.booleanValue())
+                    return false;
+            }
+        
+            if (processor != null)
+            {
+                Iterator<Path> itr = null;
+                try
+                {
+                    itr = Files.walk(root).iterator();
+                }
+                catch (IOException e)
+                {
+                    return false;
+                }
+    
+                while (itr != null && itr.hasNext())
+                {
+                    Boolean cont = processor.apply(root, itr.next());
+    
+                    if (visitAllFiles)
+                    {
+                        success &= cont != null && cont;
+                    }
+                    else if (cont == null || !cont)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        finally
+        {
+            IOUtils.closeQuietly(fs);
+        }
+
+        return success;
+    }
 
 }

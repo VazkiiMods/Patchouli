@@ -47,8 +47,8 @@ public interface ICustomComponent {
 	 * Called on mouse click. Note that the click may not be inside your component, so
 	 * you need to validate the position.
 	 */
-	public default void mouseClicked(IComponentRenderContext context, int mouseX, int mouseY, int mouseButton) {
-		// NO-OP
+	public default boolean mouseClicked(IComponentRenderContext context, double mouseX, double mouseY, int mouseButton) {
+		return false;
 	}
 	
 }

@@ -6,9 +6,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import com.mojang.blaze3d.platform.GlStateManager;
+
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
@@ -33,8 +34,8 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 	
 	@Override
-	public void initGui() {
-		super.initGui();
+	public void init() {
+		super.init();
 		
 		text = new BookTextRenderer(this, getDescriptionText(), LEFT_PAGE_X, TOP_PADDING + 22);
 		
@@ -44,11 +45,11 @@ public abstract class GuiBookEntryList extends GuiBook {
 		if(shouldSortEntryList())
 			Collections.sort(allEntries);
 		
-		searchField = new TextFieldWidget(0, fontRenderer, 160, 170, 90, 12);
+		searchField = new TextFieldWidget(font, 160, 170, 90, 12, "");
 		searchField.setMaxStringLength(32);
 		searchField.setEnableBackgroundDrawing(false);
 		searchField.setCanLoseFocus(false);
-		searchField.setFocused(true);
+		searchField.changeFocus(true);
 		
 		dependentButtons = new ArrayList<>();
 		buildEntryButtons();
@@ -92,54 +93,56 @@ public abstract class GuiBookEntryList extends GuiBook {
 			drawPageFiller(book);
 		
 		if(!searchField.getText().isEmpty()) {
-			GlStateManager.color(1F, 1F, 1F, 1F);
+			GlStateManager.color4f(1F, 1F, 1F, 1F);
 			drawFromTexture(book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
-			boolean unicode = fontRenderer.getUnicodeFlag();
-			if(!book.useBlockyFont)
-				fontRenderer.setUnicodeFlag(true);
-			fontRenderer.drawString(searchField.getText(), searchField.x + 7, searchField.y + 1, 0);
-			fontRenderer.setUnicodeFlag(unicode);
+//			boolean unicode = font.getUnicodeFlag(); TODO unicode
+//			if(!book.useBlockyFont)
+//				font.setUnicodeFlag(true);
+			font.drawString(searchField.getText(), searchField.x + 7, searchField.y + 1, 0);
+//			fontRenderer.setUnicodeFlag(unicode);
 		}
 		
 		if(visibleEntries.isEmpty()) {
 			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
-			GlStateManager.scale(2F, 2F, 2F);
+			GlStateManager.scalef(2F, 2F, 2F);
 			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
-			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+			GlStateManager.scalef(0.5F, 0.5F, 0.5F);
 		}
 	}
 	
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-		
-		text.click(mouseX, mouseY, mouseButton);
-		searchField.mouseClicked(mouseX - bookLeft, mouseY - bookTop, mouseButton);
+	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		return text.click(mouseX, mouseY, mouseButton)
+			|| searchField.mouseClicked(mouseX - bookLeft, mouseY - bookTop, mouseButton)
+			|| super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 	
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		super.keyTyped(typedChar, keyCode);
-		
-		if(keyCode == 28) { // Enter
-			if(visibleEntries.size() == 1)
+    public boolean keyPressed(int key, int scanCode, int modifiers) {
+		if(key == 28) { // Enter
+			if(visibleEntries.size() == 1) {
 				displayLexiconGui(new GuiBookEntry(book, visibleEntries.get(0)), true);
+				return true;
+			}
 		} else {
 			String currQuery = searchField.getText();
-			searchField.textboxKeyTyped(typedChar, keyCode);
+			boolean ret = searchField.keyPressed(key, scanCode, modifiers);
 			if(!searchField.getText().equals(currQuery))
 				buildEntryButtons();
+			
+			if(ret)
+				return true;
 		}
+		
+		return super.keyPressed(key, scanCode, modifiers);
 	}
 	
-	@Override
-	public void actionPerformed(Button button) throws IOException {
-		super.actionPerformed(button);
-		
-		if(button instanceof GuiButtonCategory)
-			displayLexiconGui(new GuiBookCategory(book, ((GuiButtonCategory) button).getCategory()), true);
-		else if(button instanceof GuiButtonEntry)
-			GuiBookEntry.displayOrBookmark(this, ((GuiButtonEntry) button).getEntry());
+	public void handleButtonCategory(Button button) {
+		displayLexiconGui(new GuiBookCategory(book, ((GuiButtonCategory) button).getCategory()), true);
+	}
+	
+	public void handleButtonEntry(Button button) {
+		GuiBookEntry.displayOrBookmark(this, ((GuiButtonEntry) button).getEntry());
 	}
 	
 	@Override
@@ -148,7 +151,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 	
 	void buildEntryButtons() {
-		buttonList.removeAll(dependentButtons);
+		buttons.removeAll(dependentButtons);
 		dependentButtons.clear();
 		visibleEntries.clear();
 		
@@ -185,8 +188,8 @@ public abstract class GuiBookEntryList extends GuiBook {
 	
 	void addEntryButtons(int x, int y, int start, int count) {
 		for(int i = 0; i < count && (i + start) < visibleEntries.size(); i++) {
-			Button button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, visibleEntries.get(start + i), start + i);
-			buttonList.add(button);
+			Button button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, visibleEntries.get(start + i), start + i, this::handleButtonEntry);
+			buttons.add(button);
 			dependentButtons.add(button);
 		}
 	}

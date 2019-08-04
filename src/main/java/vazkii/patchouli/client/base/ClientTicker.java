@@ -5,11 +5,14 @@ import java.util.Queue;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 
+@EventBusSubscriber(Dist.CLIENT)
 public final class ClientTicker {
 
 	public static int ticksInGame = 0;
@@ -39,8 +42,8 @@ public final class ClientTicker {
 	@SubscribeEvent
 	public static void clientTickEnd(ClientTickEvent event) {
 		if(event.phase == Phase.END) {
-			Screen gui = Minecraft.getMinecraft().currentScreen;
-			if(gui == null || !gui.doesGuiPauseGame()) {
+			Screen gui = Minecraft.getInstance().currentScreen;
+			if(gui == null || !gui.isPauseScreen()) {
 				ticksInGame++;
 				partialTicks = 0;
 			}

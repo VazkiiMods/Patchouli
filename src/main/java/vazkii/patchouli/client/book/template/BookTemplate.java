@@ -135,12 +135,14 @@ public class BookTemplate {
 			});
 	}
 	
-	public void mouseClicked(BookPage page, int mouseX, int mouseY, int mouseButton) {
-		if(compiled)
-			components.forEach(c -> {
-				if(c.isVisible)
-					c.mouseClicked(page, mouseX, mouseY, mouseButton);
-			});
+	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
+		if(compiled) {
+			for(TemplateComponent c : components)
+				if(c.isVisible && c.mouseClicked(page, mouseX, mouseY, mouseButton))
+					return true;
+		}
+		
+		return false;
 	}
 	
 	public static void registerComponent(String name, Class<? extends TemplateComponent> clazz) {

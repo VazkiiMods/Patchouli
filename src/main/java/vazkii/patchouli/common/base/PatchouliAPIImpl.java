@@ -26,8 +26,6 @@ import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.multiblock.Multiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.StateMatcher;
-import vazkii.patchouli.common.network.NetworkHandler;
-import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class PatchouliAPIImpl implements IPatchouliAPI {
@@ -54,7 +52,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	
 	@Override
 	public void openBookGUI(ServerPlayerEntity player, ResourceLocation book) {
-		NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.toString()), player);
+//		NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.toString()), player); TODO add back
 	}
 	
 	@Override
@@ -66,7 +64,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ResourceLocation getOpenBookGui() {
-		Screen gui = Minecraft.getMinecraft().currentScreen;
+		Screen gui = Minecraft.getInstance().currentScreen;
 		if (gui instanceof GuiBook)
 			return ((GuiBook) gui).book.resourceLoc;
 		return null;
