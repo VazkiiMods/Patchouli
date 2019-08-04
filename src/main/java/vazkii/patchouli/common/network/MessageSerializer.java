@@ -40,7 +40,6 @@ public class MessageSerializer {
 
 		mapHandler(BlockPos.class, PacketBuffer::readBlockPos, PacketBuffer::writeBlockPos);
 		mapHandler(ITextComponent.class, PacketBuffer::readTextComponent, PacketBuffer::writeTextComponent);
-		mapHandler(Enum.class, MessageSerializer::readEnumValue, PacketBuffer::writeEnumValue);
 		mapHandler(UUID.class, PacketBuffer::readUniqueId, PacketBuffer::writeUniqueId);
 		mapHandler(CompoundNBT.class, PacketBuffer::readCompoundTag, PacketBuffer::writeCompoundTag);
 		mapHandler(ItemStack.class, PacketBuffer::readItemStack, MessageSerializer::writeItemStack);
@@ -158,16 +157,6 @@ public class MessageSerializer {
 	// ================================================================
 	// Auxiliary I/O
 	// ================================================================
-
-	// Needed because we need the class type
-
-	private static <T extends Enum<T>> T readEnumValue(PacketBuffer buf, Field f) {
-		Class<?> clazz = f.getType();
-		if(clazz.isArray())
-			clazz = clazz.getComponentType();
-
-		return buf.readEnumValue((Class<T>) clazz);
-	}
 
 	// Needed because the methods are overloaded
 
