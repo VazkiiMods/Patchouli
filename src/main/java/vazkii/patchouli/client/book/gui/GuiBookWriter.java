@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resources.I18n;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
 import vazkii.patchouli.common.book.Book;
@@ -13,7 +13,7 @@ import vazkii.patchouli.common.book.Book;
 public class GuiBookWriter extends GuiBook {
 
 	BookTextRenderer text, editableText;
-	GuiTextField textfield;
+	TextFieldWidget textfield;
 	
 	private static String savedText = "";
 	private static boolean drawHeader;
@@ -27,7 +27,7 @@ public class GuiBookWriter extends GuiBook {
 		super.initGui();
 		
 		text = new BookTextRenderer(this, I18n.format("patchouli.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
-		textfield = new GuiTextField(0, fontRenderer, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20);
+		textfield = new TextFieldWidget(0, fontRenderer, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20);
 		textfield.setMaxStringLength(Integer.MAX_VALUE);
 		textfield.setText(savedText);
 		
@@ -73,7 +73,7 @@ public class GuiBookWriter extends GuiBook {
 	}
 	
 	@Override
-	public void actionPerformed(GuiButton button) throws IOException {
+	public void actionPerformed(Button button) throws IOException {
 		super.actionPerformed(button);
 		
 		if(button instanceof GuiButtonBookResize) {

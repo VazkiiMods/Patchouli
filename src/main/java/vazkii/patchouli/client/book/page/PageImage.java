@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -53,15 +53,15 @@ public class PageImage extends PageWithText {
 		if(images.length > 1 && border) {
 			int xs = x + 83;
 			int ys = y + 92;
-			Gui.drawRect(xs, ys, xs + 20, ys + 11, 0x44000000);
-			Gui.drawRect(xs - 1, ys - 1, xs + 20, ys + 11, 0x44000000);
+			AbstractGui.drawRect(xs, ys, xs + 20, ys + 11, 0x44000000);
+			AbstractGui.drawRect(xs - 1, ys - 1, xs + 20, ys + 11, 0x44000000);
 		}
 		
 		super.render(mouseX, mouseY, pticks);
 	}
 	
 	@Override
-	protected void onButtonClicked(GuiButton button) {
+	protected void onButtonClicked(Button button) {
 		if(button instanceof GuiButtonBookArrowSmall) {
 			boolean left = ((GuiButtonBookArrowSmall) button).left;
 			if(left)

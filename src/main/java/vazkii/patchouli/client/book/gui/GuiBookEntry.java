@@ -7,9 +7,9 @@ import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.screen.Screen;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -27,7 +27,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	BookEntry entry;
 	BookPage leftPage, rightPage;
 	
-	Map<GuiButton, Runnable> customButtons = new HashMap();
+	Map<Button, Runnable> customButtons = new HashMap();
 
 	public GuiBookEntry(Book book, BookEntry entry) {
 		this(book, entry, 0);
@@ -96,7 +96,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public void actionPerformed(GuiButton button) throws IOException {
+	public void actionPerformed(Button button) throws IOException {
 		if(customButtons.containsKey(button)) {
 			customButtons.get(button).run();
 			return;
@@ -196,7 +196,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		Book book = currGui.book;
 		GuiBookEntry gui = new GuiBookEntry(currGui.book, entry);
 		
-		if(GuiScreen.isShiftKeyDown()) {
+		if(Screen.isShiftKeyDown()) {
 			BookData data = PersistentData.data.getBookData(book);
 
 			if(gui.isBookmarkedAlready()) {
@@ -216,7 +216,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public GuiScreen getGui() {
+	public Screen getGui() {
 		return this;
 	}
 	
@@ -257,7 +257,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 	
 	@Override
-	public void registerButton(GuiButton button, int pageNum, Runnable onClick) {
+	public void registerButton(Button button, int pageNum, Runnable onClick) {
 		button.x += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
 		button.y += bookTop;
 		

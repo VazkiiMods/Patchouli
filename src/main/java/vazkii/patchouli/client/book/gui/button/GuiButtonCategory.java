@@ -2,8 +2,8 @@ package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import vazkii.patchouli.client.base.ClientTicker;
@@ -12,7 +12,7 @@ import vazkii.patchouli.client.book.BookIcon;
 import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
-public class GuiButtonCategory extends GuiButton {
+public class GuiButtonCategory extends Button {
 
 	private static final int ANIM_TIME = 5;
 

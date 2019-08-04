@@ -6,9 +6,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
@@ -22,11 +22,11 @@ public abstract class GuiBookEntryList extends GuiBook {
 	
 	BookTextRenderer text;
 	
-	List<GuiButton> dependentButtons;
+	List<Button> dependentButtons;
 	List<BookEntry> allEntries;
 	List<BookEntry> visibleEntries;
 	
-	GuiTextField searchField;
+	TextFieldWidget searchField;
 
 	public GuiBookEntryList(Book book) {
 		super(book);
@@ -44,7 +44,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		if(shouldSortEntryList())
 			Collections.sort(allEntries);
 		
-		searchField = new GuiTextField(0, fontRenderer, 160, 170, 90, 12);
+		searchField = new TextFieldWidget(0, fontRenderer, 160, 170, 90, 12);
 		searchField.setMaxStringLength(32);
 		searchField.setEnableBackgroundDrawing(false);
 		searchField.setCanLoseFocus(false);
@@ -133,7 +133,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 	
 	@Override
-	public void actionPerformed(GuiButton button) throws IOException {
+	public void actionPerformed(Button button) throws IOException {
 		super.actionPerformed(button);
 		
 		if(button instanceof GuiButtonCategory)
@@ -185,7 +185,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	
 	void addEntryButtons(int x, int y, int start, int count) {
 		for(int i = 0; i < count && (i + start) < visibleEntries.size(); i++) {
-			GuiButton button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, visibleEntries.get(start + i), start + i);
+			Button button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, visibleEntries.get(start + i), start + i);
 			buttonList.add(button);
 			dependentButtons.add(button);
 		}

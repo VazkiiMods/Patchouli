@@ -3,15 +3,15 @@ package vazkii.patchouli.client.base;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.stats.RecipeBook;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
+import net.minecraft.item.crafting.RecipeBook;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.gui.GuiButtonInventoryBook;
 import vazkii.patchouli.common.base.PatchouliConfig;
@@ -27,12 +27,12 @@ public class InventoryBookButtonHandler {
 	public static void onGuiInitPre(InitGuiEvent.Pre event) {
 		book = null;
 		
-		EntityPlayerSP player = Minecraft.getMinecraft().player;
+		ClientPlayerEntity player = Minecraft.getMinecraft().player;
 		if(player == null)
 			return;
 		
 		RecipeBook recipeBook = player.getRecipeBook();
-		if(event.getGui() instanceof GuiInventory) {
+		if(event.getGui() instanceof InventoryScreen) {
 			String bookID = PatchouliConfig.inventoryButtonBook;
 			book = BookRegistry.INSTANCE.books.get(new ResourceLocation(bookID));
 			
@@ -51,11 +51,11 @@ public class InventoryBookButtonHandler {
 		if(book == null)
 			return;
 
-		List<GuiButton> buttons = event.getButtonList();
+		List<Button> buttons = event.getButtonList();
 		for(int i = 0; i < buttons.size(); i++) {
-			GuiButton button = buttons.get(i);
+			Button button = buttons.get(i);
 			if(button.id == 10) {
-				GuiButton newButton = new GuiButtonInventoryBook(book, button.id, button.x, button.y - 1);
+				Button newButton = new GuiButtonInventoryBook(book, button.id, button.x, button.y - 1);
 				buttons.set(i, newButton);
 				return;
 			}
@@ -64,7 +64,7 @@ public class InventoryBookButtonHandler {
 
 	@SubscribeEvent
 	public static void onActionPressed(ActionPerformedEvent.Pre event) {
-		GuiButton button = event.getButton();
+		Button button = event.getButton();
 		if(button instanceof GuiButtonInventoryBook) {
 			GuiButtonInventoryBook bookButton = (GuiButtonInventoryBook) button;
 			BookContents contents = bookButton.getBook().contents;

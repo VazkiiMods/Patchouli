@@ -1,6 +1,6 @@
 package vazkii.patchouli.common.util;
 
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 
 public class RotationUtil {
@@ -23,7 +23,7 @@ public class RotationUtil {
 		}
 	}
 	
-	public static Rotation rotationFromFacing(EnumFacing facing) {
+	public static Rotation rotationFromFacing(Direction facing) {
 		switch(facing) {
 		case EAST: return Rotation.CLOCKWISE_90;
 		case SOUTH: return Rotation.CLOCKWISE_180;

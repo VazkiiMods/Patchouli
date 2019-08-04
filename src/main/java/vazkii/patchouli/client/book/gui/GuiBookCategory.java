@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.widget.button.Button;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
@@ -50,7 +50,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 			int x = LEFT_PAGE_X + 10 + (i % 4) * 24;
 			int y = TOP_PADDING + PAGE_HEIGHT - (PatchouliConfig.disableAdvancementLocking ? 46 : 68);
 			
-			GuiButton button = new GuiButtonCategory(this, x, y, ocategory);
+			Button button = new GuiButtonCategory(this, x, y, ocategory);
 			buttonList.add(button);
 			dependentButtons.add(button);
 			

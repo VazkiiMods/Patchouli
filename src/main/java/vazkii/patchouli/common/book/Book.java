@@ -8,12 +8,12 @@ import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ExternalBookContents;
@@ -176,7 +176,7 @@ public class Book {
 		return bookItem;
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void markUpdated() {
 		wasUpdated = true;
 	}
@@ -187,7 +187,7 @@ public class Book {
 		return updated;
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void reloadContentsAndExtensions() {
 		reloadContents();
 
@@ -195,7 +195,7 @@ public class Book {
 			b.reloadExtensionContents();
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void reloadContents() {
 		if(contents == null)
 			contents = isExternal ? new ExternalBookContents(this) : new BookContents(this);
@@ -204,7 +204,7 @@ public class Book {
 			contents.reload(false);
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void reloadExtensionContents() {
 		if(isExtension) {
 			if(extensionTarget == null) {
@@ -227,7 +227,7 @@ public class Book {
 		}
 	}
 	
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void reloadLocks(boolean reset) {
 		contents.entries.values().forEach(BookEntry::updateLockStatus);
 		contents.categories.values().forEach((c) -> c.updateLockStatus(true));

@@ -9,25 +9,25 @@ import org.lwjgl.opengl.GL14;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockColored;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumDyeColor;
+import net.minecraft.block.Blocks;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -37,7 +37,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
@@ -60,7 +60,7 @@ public class MultiblockVisualizationHandler {
 	private static Function<BlockPos, BlockPos> offsetApplier;
 	private static int blocks, blocksDone, airFilled;
 	private static int timeComplete;
-	private static IBlockState lookingState;
+	private static BlockState lookingState;
 	private static BlockPos lookingPos;
 
 	private static Field fieldRenderPosX;
@@ -69,9 +69,9 @@ public class MultiblockVisualizationHandler {
 
 	static {
 		try {
-			fieldRenderPosX = ReflectionUtil.accessField(RenderManager.class, "field_78725_b", "D");
-			fieldRenderPosY = ReflectionUtil.accessField(RenderManager.class, "field_78726_c", "D");
-			fieldRenderPosZ = ReflectionUtil.accessField(RenderManager.class, "field_78723_d", "D");
+			fieldRenderPosX = ReflectionUtil.accessField(EntityRendererManager.class, "field_78725_b", "D");
+			fieldRenderPosY = ReflectionUtil.accessField(EntityRendererManager.class, "field_78726_c", "D");
+			fieldRenderPosZ = ReflectionUtil.accessField(EntityRendererManager.class, "field_78723_d", "D");
 		} catch (NoSuchFieldException e) {
 			throw new RuntimeException("Unable to find necessary fields", e);
 		}
@@ -130,7 +130,7 @@ public class MultiblockVisualizationHandler {
 				GlStateManager.popMatrix();
 			}
 
-			Gui.drawRect(left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
+			AbstractGui.drawRect(left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
 			drawGradientRect(left, top, left + width, top + height, 0xFF666666, 0xFF555555);
 
 			float fract = (float) blocksDone / Math.max(1, blocks);
@@ -203,7 +203,7 @@ public class MultiblockVisualizationHandler {
 		else if(isAnchored && blocks == blocksDone && airFilled == 0) {
 			timeComplete++;
 			if(timeComplete == 14)
-				Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F));
+				Minecraft.getMinecraft().getSoundHandler().playSound(SimpleSound.getMasterRecord(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F));
 		} else timeComplete = 0;
 	}
 
@@ -222,7 +222,7 @@ public class MultiblockVisualizationHandler {
 		if(multiblock.isSymmetrical())
 			facingRotation = Rotation.NONE;
 
-		RenderManager manager = Minecraft.getMinecraft().getRenderManager();
+		EntityRendererManager manager = Minecraft.getMinecraft().getRenderManager();
 		BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
 		double posX = 0;
 		double posY = 0;
@@ -265,8 +265,8 @@ public class MultiblockVisualizationHandler {
 							blocks++;
 
 						if(!multiblock.test(world, startPos, x, y, z, facingRotation)) {
-							IBlockState renderState = matcher.getDisplayedState().withRotation(facingRotation);
-							mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+							BlockState renderState = matcher.getDisplayedState().withRotation(facingRotation);
+							mc.renderEngine.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 							renderBlock(world, renderState, renderPos, alpha, dispatcher);
 
 							if(air)
@@ -285,7 +285,7 @@ public class MultiblockVisualizationHandler {
 		GlStateManager.popMatrix();
 	}
 
-	public static void renderBlock(World world, IBlockState state, BlockPos pos, float alpha, BlockRendererDispatcher brd) {
+	public static void renderBlock(World world, BlockState state, BlockPos pos, float alpha, BlockRendererDispatcher brd) {
 		if(pos != null) {
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(pos.getX(), pos.getY(), pos.getZ());
@@ -300,7 +300,7 @@ public class MultiblockVisualizationHandler {
 					GlStateManager.translate(off, off, -off);
 					GlStateManager.scale(scale, scale, scale);
 
-					brd.renderBlockBrightness(Blocks.CONCRETE.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.RED), 1.0F);
+					brd.renderBlockBrightness(Blocks.CONCRETE.getDefaultState().withProperty(BlockColored.COLOR, DyeColor.RED), 1.0F);
 
 
 				} else brd.renderBlockBrightness(state, 1.0F);
@@ -366,7 +366,7 @@ public class MultiblockVisualizationHandler {
 	 * Returns the Rotation of a multiblock structure based on the given entity's facing direction.
 	 */
 	private static Rotation getRotation(Entity entity) {
-		return RotationUtil.rotationFromFacing(EnumFacing.byHorizontalIndex(MathHelper.floor((double) (-entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3));
+		return RotationUtil.rotationFromFacing(Direction.byHorizontalIndex(MathHelper.floor((double) (-entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3));
 	}
 
 }

@@ -3,8 +3,8 @@ package vazkii.patchouli.api;
 import java.util.List;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public interface IComponentRenderContext {
 
-	public GuiScreen getGui();
+	public Screen getGui();
 
 	public FontRenderer getFont();
 
@@ -26,7 +26,7 @@ public interface IComponentRenderContext {
 	
 	public void setHoverTooltip(List<String> tooltip);
 	
-	public void registerButton(GuiButton button, int pageNum, Runnable onClick);
+	public void registerButton(Button button, int pageNum, Runnable onClick);
 
 	public ResourceLocation getBookTexture();
 	

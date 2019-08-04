@@ -18,22 +18,22 @@ import org.lwjgl.opengl.GL14;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -67,7 +67,7 @@ public class PageMultiblock extends PageWithText {
 	boolean showVisualizeButton = true;
 	
 	transient Multiblock multiblockObj;
-	transient GuiButton visualizeButton;
+	transient Button visualizeButton;
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
@@ -115,7 +115,7 @@ public class PageMultiblock extends PageWithText {
 	}
 
 	@Override
-	protected void onButtonClicked(GuiButton button) {
+	protected void onButtonClicked(Button button) {
 		if(button == visualizeButton) {
 			String entryKey = parent.getEntry().getResource().toString();
 			Bookmark bookmark = new Bookmark(entryKey, pageNum / 2);
@@ -158,7 +158,7 @@ public class PageMultiblock extends PageWithText {
 		float offZ = (float) -multiblockObj.sizeZ / 2 + 1;
 
 		float time = parent.ticksInBook * 0.5F;
-		if(!GuiScreen.isShiftKeyDown())
+		if(!Screen.isShiftKeyDown())
 			time += ClientTicker.partialTicks;
 		GlStateManager.translate(-offX, 0, -offZ);
 		GlStateManager.rotate(time, 0F, 1F, 0F);
@@ -201,13 +201,13 @@ public class PageMultiblock extends PageWithText {
 
 		ForgeHooksClient.setRenderPass(-1);
 		setGlStateForPass(0);
-		mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+		mc.getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 		GlStateManager.popMatrix();
 	}
 
 	private void doWorldRenderPass(Multiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull BlockRenderLayer layer, Vector4f eye) {
-		mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+		mc.renderEngine.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+		mc.getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 		
 		ForgeHooksClient.setRenderLayer(layer);
 		setGlStateForPass(layer);
@@ -216,7 +216,7 @@ public class PageMultiblock extends PageWithText {
 		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
 
 		for (BlockPos pos : blocks) {
-			IBlockState bs = mb.getBlockState(pos);
+			BlockState bs = mb.getBlockState(pos);
 			Block block = bs.getBlock();
 			bs = bs.getActualState(mb, pos);
 			if (block.canRenderInLayer(bs, layer)) {
@@ -230,12 +230,12 @@ public class PageMultiblock extends PageWithText {
 		Tessellator.getInstance().draw();
 	}
 
-	public void renderBlock(@Nonnull IBlockState state, @Nonnull BlockPos pos, @Nonnull Multiblock mb, @Nonnull BufferBuilder worldRendererIn) {
+	public void renderBlock(@Nonnull BlockState state, @Nonnull BlockPos pos, @Nonnull Multiblock mb, @Nonnull BufferBuilder worldRendererIn) {
 
 		try {
 			BlockRendererDispatcher blockrendererdispatcher = mc.getBlockRendererDispatcher();
-			EnumBlockRenderType type = state.getRenderType();
-			if (type != EnumBlockRenderType.MODEL) {
+			BlockRenderType type = state.getRenderType();
+			if (type != BlockRenderType.MODEL) {
 				blockrendererdispatcher.renderBlock(state, pos, mb, worldRendererIn);
 				return;
 			}

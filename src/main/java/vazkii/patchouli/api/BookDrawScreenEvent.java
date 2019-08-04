@@ -1,9 +1,9 @@
 package vazkii.patchouli.api;
 
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 /**
  * This event is fired on the {@link MinecraftForge#EVENT_BUS} after any
@@ -14,13 +14,13 @@ import net.minecraftforge.fml.common.eventhandler.Event;
  */
 public class BookDrawScreenEvent extends Event {
 	
-	public final GuiScreen gui;
+	public final Screen gui;
 	public final ResourceLocation book;
 	public final int mouseX;
 	public final int mouseY;
 	public final float partialTicks;
 	
-	public BookDrawScreenEvent(GuiScreen gui, ResourceLocation book, int mouseX, int mouseY, float partialTicks) {
+	public BookDrawScreenEvent(Screen gui, ResourceLocation book, int mouseX, int mouseY, float partialTicks) {
 		this.gui = gui;
 		this.book = book;
 		this.mouseX = mouseX;

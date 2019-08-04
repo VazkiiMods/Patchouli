@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
@@ -19,7 +19,7 @@ public class PageQuest extends PageWithText {
 	
 	transient BookTextRenderer infoText;
 	transient boolean isManual;
-	transient GuiButton button;
+	transient Button button;
 	transient int footerY;
 	
 	@Override
@@ -48,7 +48,7 @@ public class PageQuest extends PageWithText {
 		super.onDisplayed(parent, left, top);
 		
 		if(isManual) {
-			addButton(button = new GuiButton(0, GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, ""));
+			addButton(button = new Button(0, GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, ""));
 			updateButtonText();
 		}
 	}
@@ -60,7 +60,7 @@ public class PageQuest extends PageWithText {
 	}
 	
 	@Override
-	protected void onButtonClicked(GuiButton button) {
+	protected void onButtonClicked(Button button) {
 		if(button == this.button) {
 			String res = entry.getResource().toString();
 			BookData data = PersistentData.data.getBookData(parent.book);

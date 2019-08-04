@@ -2,8 +2,8 @@ package vazkii.patchouli.common.network.message;
 
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.common.network.NetworkMessage;
@@ -21,7 +21,7 @@ public class MessageSyncAdvancements extends NetworkMessage<MessageSyncAdvanceme
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public IMessage handleMessage(MessageContext context) {
 		ClientTicker.addAction(() -> {
 			ClientAdvancements.setDoneAdvancements(done, showToast, false);

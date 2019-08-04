@@ -1,8 +1,8 @@
 package vazkii.patchouli.api;
 
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Implement this on a class designed to process a template and the variables bound 
@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Instances of this class are created once for every usage of the template it's meant to 
  * process, so you can save data on a per-template basis.
  */
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public interface IComponentProcessor {
 
 	/**
@@ -38,7 +38,7 @@ public interface IComponentProcessor {
 	/**
 	 * Called when a book GUI containing this page is showed (by guiInit).
 	 */
-	public default void refresh(GuiScreen parent, int left, int top) {
+	public default void refresh(Screen parent, int left, int top) {
 		// NO-OP
 	}
 

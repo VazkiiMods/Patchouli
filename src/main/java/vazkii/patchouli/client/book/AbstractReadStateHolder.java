@@ -4,8 +4,8 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.Streams;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public abstract class AbstractReadStateHolder {
 

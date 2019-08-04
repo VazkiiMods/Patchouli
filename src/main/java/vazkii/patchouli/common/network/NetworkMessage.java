@@ -21,7 +21,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -43,7 +43,7 @@ public abstract class NetworkMessage<REQ extends NetworkMessage<REQ>> implements
 		mapHandler(boolean.class, NetworkMessage::readBoolean, NetworkMessage::writeBoolean);
 		mapHandler(char.class, NetworkMessage::readChar, NetworkMessage::writeChar);
 		mapHandler(String.class, NetworkMessage::readString, NetworkMessage::writeString);
-		mapHandler(NBTTagCompound.class, NetworkMessage::readNBT, NetworkMessage::writeNBT);
+		mapHandler(CompoundNBT.class, NetworkMessage::readNBT, NetworkMessage::writeNBT);
 		mapHandler(ItemStack.class, NetworkMessage::readItemStack, NetworkMessage::writeItemStack);
 		mapHandler(BlockPos.class, NetworkMessage::readBlockPos, NetworkMessage::writeBlockPos);
 	}
@@ -201,11 +201,11 @@ public abstract class NetworkMessage<REQ extends NetworkMessage<REQ>> implements
 		ByteBufUtils.writeUTF8String(buf, s);
 	}
 
-	private static NBTTagCompound readNBT(ByteBuf buf) {
+	private static CompoundNBT readNBT(ByteBuf buf) {
 		return ByteBufUtils.readTag(buf);
 	}
 
-	private static void writeNBT(NBTTagCompound cmp, ByteBuf buf) {
+	private static void writeNBT(CompoundNBT cmp, ByteBuf buf) {
 		ByteBufUtils.writeTag(buf, cmp);
 	}
 

@@ -2,8 +2,8 @@ package vazkii.patchouli.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.AbstractGui;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.item.ItemStack;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -33,7 +33,7 @@ public class PageSpotlight extends PageWithText {
 		
 		mc.renderEngine.bindTexture(book.craftingResource);
 		GlStateManager.enableBlend();
-		Gui.drawModalRectWithCustomSizedTexture(GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 128);
+		AbstractGui.drawModalRectWithCustomSizedTexture(GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 128);
 		
 		parent.drawCenteredStringNoShadow(title != null && !title.isEmpty() ? title : itemStack.getDisplayName(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		parent.renderItemStack(GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, itemStack);

@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.api.distmarker.Dist;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
@@ -29,8 +29,8 @@ public class NetworkHandler {
 	private static int i = 0;
 
 	public static void registerMessages() {
-		register(MessageSyncAdvancements.class, Side.CLIENT);
-		register(MessageOpenBookGui.class, Side.CLIENT);
+		register(MessageSyncAdvancements.class, Dist.CLIENT);
+		register(MessageOpenBookGui.class, Dist.CLIENT);
 
 		NetworkMessage.mapHandler(String[].class, NetworkHandler::readStringArray, NetworkHandler::writeStringArray);
 	}
@@ -50,7 +50,7 @@ public class NetworkHandler {
 			ByteBufUtils.writeUTF8String(buf, arr[i]);
 	}
 	
-	public static <T extends IMessage & IMessageHandler<T, IMessage>> void register(Class<T> clazz, Side handlerSide) {
+	public static <T extends IMessage & IMessageHandler<T, IMessage>> void register(Class<T> clazz, Dist handlerSide) {
 		INSTANCE.registerMessage(clazz, clazz, i++, handlerSide);
 	}
 	

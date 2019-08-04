@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -26,7 +26,7 @@ public abstract class BookPage {
 	public transient Book book;
 	protected transient BookEntry entry;
 	protected transient int pageNum;
-	private transient List<GuiButton> buttons;
+	private transient List<Button> buttons;
 	public transient int left, top;
 	public transient JsonObject sourceObject;
 	
@@ -57,7 +57,7 @@ public abstract class BookPage {
 		parent.getButtonList().removeAll(buttons);
 	}
 	
-	protected void addButton(GuiButton button) {
+	protected void addButton(Button button) {
 		button.x += (parent.bookLeft + left);
 		button.y += (parent.bookTop + top);
 		buttons.add(button);
@@ -66,9 +66,9 @@ public abstract class BookPage {
 	
 	public void render(int mouseX, int mouseY, float pticks) { }
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) { }
-	protected void onButtonClicked(GuiButton button) { }
+	protected void onButtonClicked(Button button) { }
 	
-	public final boolean interceptButton(GuiButton button) {
+	public final boolean interceptButton(Button button) {
 		if(buttons.contains(button)) {
 			onButtonClicked(button);
 			return true;

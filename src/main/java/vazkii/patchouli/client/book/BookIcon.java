@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.AbstractGui;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -49,7 +49,7 @@ public class BookIcon {
 		case RESOURCE:
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			mc.renderEngine.bindTexture(res);
-			Gui.drawScaledCustomSizeModalRect(x, y, 0, 0, 16, 16, 16, 16, 16, 16);
+			AbstractGui.drawScaledCustomSizeModalRect(x, y, 0, 0, 16, 16, 16, 16, 16, 16);
 			break;
 		}
 	}

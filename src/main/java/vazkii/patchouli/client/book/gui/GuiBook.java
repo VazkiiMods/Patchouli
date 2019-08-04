@@ -14,12 +14,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.input.Mouse;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -43,7 +43,7 @@ import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 
-public abstract class GuiBook extends GuiScreen {
+public abstract class GuiBook extends Screen {
 
 	public static final int FULL_WIDTH = 272;
 	public static final int FULL_HEIGHT = 180;
@@ -233,7 +233,7 @@ public abstract class GuiBook extends GuiScreen {
 	}
 
 	@Override
-	public void actionPerformed(GuiButton button) throws IOException {
+	public void actionPerformed(Button button) throws IOException {
 		if(button instanceof GuiButtonBookBack)
 			back(false);
 		else if(button instanceof GuiButtonBookArrow)
@@ -425,7 +425,7 @@ public abstract class GuiBook extends GuiScreen {
 		return res.getScaleFactor();
 	}
 	
-	public List<GuiButton> getButtonList() {
+	public List<Button> getButtonList() {
 		return buttonList;
 	}
 
@@ -476,7 +476,7 @@ public abstract class GuiBook extends GuiScreen {
 	public static void playBookFlipSound(Book book) {
 		if(ClientTicker.ticksInGame - lastSound > 6) {
 			SoundEvent sfx = PatchouliSounds.getSound(book.flipSound, PatchouliSounds.book_flip);
-			Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(sfx, (float) (0.7 + Math.random() * 0.3)));
+			Minecraft.getMinecraft().getSoundHandler().playSound(SimpleSound.getMasterRecord(sfx, (float) (0.7 + Math.random() * 0.3)));
 			lastSound = ClientTicker.ticksInGame;
 		}
 	}

@@ -2,9 +2,9 @@ package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 import vazkii.patchouli.client.base.ClientTicker;
@@ -12,7 +12,7 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
-public class GuiButtonEntry extends GuiButton {
+public class GuiButtonEntry extends Button {
 	
 	private static final int ANIM_TIME = 5;
 
@@ -42,7 +42,7 @@ public class GuiButtonEntry extends GuiButton {
 			boolean locked = entry.isLocked();
 			
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
-			Gui.drawRect(x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
+			AbstractGui.drawRect(x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
 			GlStateManager.enableBlend();
 
 			if(locked) {

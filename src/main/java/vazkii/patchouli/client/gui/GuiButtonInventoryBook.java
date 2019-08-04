@@ -1,9 +1,9 @@
 package vazkii.patchouli.client.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -12,7 +12,7 @@ import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 
-public class GuiButtonInventoryBook extends GuiButton {
+public class GuiButtonInventoryBook extends Button {
 
 	Book book;
 	
@@ -26,7 +26,7 @@ public class GuiButtonInventoryBook extends GuiButton {
 		mc.renderEngine.bindTexture(new ResourceLocation(Patchouli.MOD_ID, "textures/gui/inventory_button.png"));
 		GlStateManager.color(1F, 1F, 1F);
 		hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
-		Gui.drawModalRectWithCustomSizedTexture(x, y, (hovered ? 20 : 0), 0, width, height, 64, 64);
+		AbstractGui.drawModalRectWithCustomSizedTexture(x, y, (hovered ? 20 : 0), 0, width, height, 64, 64);
 		
 		ItemStack stack = book.getBookItem();
 		RenderHelper.enableGUIStandardItemLighting();

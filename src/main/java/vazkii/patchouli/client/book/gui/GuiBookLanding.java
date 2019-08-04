@@ -7,11 +7,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.gui.screen.Screen;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.IModGuiFactory;
@@ -165,7 +165,7 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	@Override
-	public void actionPerformed(GuiButton button) throws IOException {
+	public void actionPerformed(Button button) throws IOException {
 		super.actionPerformed(button);
 
 		if(button instanceof GuiButtonIndex)
@@ -179,7 +179,7 @@ public class GuiBookLanding extends GuiBook {
 
 		else if(button instanceof GuiButtonBookConfig) {
 			IModGuiFactory guiFactory = FMLClientHandler.instance().getGuiFactoryFor(book.owner);
-			GuiScreen configGui = guiFactory.createConfigGui(this);
+			Screen configGui = guiFactory.createConfigGui(this);
 			mc.displayGuiScreen(configGui);
 		}
 
@@ -192,7 +192,7 @@ public class GuiBookLanding extends GuiBook {
 				book.reloadContentsAndExtensions();
 				book.reloadLocks(false);
 				displayLexiconGui(new GuiBookLanding(book), false);
-				mc.player.sendMessage(new TextComponentTranslation("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)));
+				mc.player.sendMessage(new TranslationTextComponent("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)));
 			} else displayLexiconGui(new GuiBookWriter(book), true);
 		}
 

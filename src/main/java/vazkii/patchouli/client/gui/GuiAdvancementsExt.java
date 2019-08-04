@@ -3,17 +3,17 @@ package vazkii.patchouli.client.gui;
 import java.io.IOException;
 
 import net.minecraft.advancements.Advancement;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.advancements.GuiScreenAdvancements;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.advancements.AdvancementsScreen;
 import net.minecraft.client.multiplayer.ClientAdvancementManager;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.base.ClientAdvancements;
 
-public class GuiAdvancementsExt extends GuiScreenAdvancements {
+public class GuiAdvancementsExt extends AdvancementsScreen {
 
-	GuiScreen parent;
+	Screen parent;
 	
-	public GuiAdvancementsExt(ClientAdvancementManager manager, GuiScreen parent, String tab) {
+	public GuiAdvancementsExt(ClientAdvancementManager manager, Screen parent, String tab) {
 		super(manager);
 		this.parent = parent;
 		

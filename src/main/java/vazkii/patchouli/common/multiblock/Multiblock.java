@@ -8,12 +8,12 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.init.Biomes;
-import net.minecraft.init.Blocks;
+import net.minecraft.world.biome.Biomes;
+import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -21,8 +21,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
@@ -95,7 +95,7 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 			for(int y = 0; y < sizeY; y++)
 				for(int z = 0; z < sizeZ; z++) {
 					BlockPos placePos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-					IBlockState targetState = stateTargets[x][y][z].getDisplayedState().withRotation(rotation);
+					BlockState targetState = stateTargets[x][y][z].getDisplayedState().withRotation(rotation);
 					Block targetBlock = targetState.getBlock();
 					if(!targetBlock.isAir(targetState, world, placePos) && targetBlock.canPlaceBlockAt(world, placePos) && world.getBlockState(placePos).getBlock().isReplaceable(world, placePos))
 						world.setBlockState(placePos, targetState);
@@ -160,8 +160,8 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
 		setWorld(world);
 		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-		Predicate<IBlockState> pred = stateTargets[x][y][z].getStatePredicate();
-		IBlockState state = world.getBlockState(checkPos).withRotation(RotationUtil.fixHorizontal(rotation));
+		Predicate<BlockState> pred = stateTargets[x][y][z].getStatePredicate();
+		BlockState state = world.getBlockState(checkPos).withRotation(RotationUtil.fixHorizontal(rotation));
 
 		return pred.test(state);
 	}
@@ -178,8 +178,8 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 
 			if(o instanceof Block)
 				state = StateMatcher.fromBlockLoose((Block) o);
-			else if(o instanceof IBlockState)
-				state = StateMatcher.fromState((IBlockState) o);
+			else if(o instanceof BlockState)
+				state = StateMatcher.fromState((BlockState) o);
 			else if(o instanceof IStateMatcher)
 				state = (IStateMatcher) o;
 			else throw new IllegalArgumentException("Invalid target " + o);
@@ -257,7 +257,7 @@ public class Multiblock implements IMultiblock, IBlockAccess {
     @Override
     @Nullable
     public TileEntity getTileEntity(BlockPos pos) {
-		IBlockState state = getBlockState(pos);
+		BlockState state = getBlockState(pos);
 		if (state.getBlock().hasTileEntity(state)) {
 			return teCache.computeIfAbsent(pos.toImmutable(), p -> state.getBlock().createTileEntity(world, state));
 		}
@@ -265,13 +265,13 @@ public class Multiblock implements IMultiblock, IBlockAccess {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public int getCombinedLight(BlockPos pos, int lightValue) {
         return 0xF000F0;
     }
 
     @Override
-    public IBlockState getBlockState(BlockPos pos) {
+    public BlockState getBlockState(BlockPos pos) {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
@@ -283,29 +283,29 @@ public class Multiblock implements IMultiblock, IBlockAccess {
 
     @Override
     public boolean isAirBlock(BlockPos pos) {
-        IBlockState state = getBlockState(pos);
+        BlockState state = getBlockState(pos);
         return state.getBlock().isAir(state, this, pos);
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public Biome getBiome(BlockPos pos) {
         return Biomes.PLAINS;
     }
 
     @Override
-    public int getStrongPower(BlockPos pos, EnumFacing direction) {
+    public int getStrongPower(BlockPos pos, Direction direction) {
         return 0;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public WorldType getWorldType() {
         return WorldType.DEFAULT;
     }
 
     @Override
-    public boolean isSideSolid(BlockPos pos, EnumFacing side, boolean _default) {
+    public boolean isSideSolid(BlockPos pos, Direction side, boolean _default) {
         return getBlockState(pos).isSideSolid(this, pos, side);
     }
 

@@ -3,7 +3,7 @@ package vazkii.patchouli.common.multiblock;
 import java.util.HashMap;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.PatchouliAPI;

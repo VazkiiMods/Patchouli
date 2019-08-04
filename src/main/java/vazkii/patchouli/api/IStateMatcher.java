@@ -2,9 +2,9 @@ package vazkii.patchouli.api;
 
 import java.util.function.Predicate;
 
-import net.minecraft.block.state.IBlockState;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.block.BlockState;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * A composite element of a rendering block state, and a predicate
@@ -17,13 +17,13 @@ public interface IStateMatcher {
 	 * Gets the state displayed by this state matcher for rendering
 	 * the multiblock page type and the in-world preview.
 	 */
-	@SideOnly(Side.CLIENT)
-	public IBlockState getDisplayedState();
+	@OnlyIn(Dist.CLIENT)
+	public BlockState getDisplayedState();
 	
 	/**
 	 * Returns a predicate that validates whether the given state is 
 	 * acceptable.
 	 */
-	public Predicate<IBlockState> getStatePredicate();
+	public Predicate<BlockState> getStatePredicate();
 
 }

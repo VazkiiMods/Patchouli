@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.toasts.GuiToast;
+import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.client.gui.toasts.IToast;
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -63,7 +63,7 @@ public class ClientAdvancements {
 		}
 
 		@Override
-		public Visibility draw(GuiToast toastGui, long delta) {
+		public Visibility draw(ToastGui toastGui, long delta) {
 			Minecraft mc = Minecraft.getMinecraft();
 			mc.getTextureManager().bindTexture(TEXTURE_TOASTS);
 			GlStateManager.color(1.0F, 1.0F, 1.0F);

@@ -13,10 +13,10 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import vazkii.patchouli.common.network.NetworkHandler;
 import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
@@ -29,8 +29,8 @@ public final class AdvancementSyncHandler {
 
 	@SubscribeEvent
 	public static void onAdvancement(AdvancementEvent event) {
-		if(event.getEntityPlayer() instanceof EntityPlayerMP) {
-			EntityPlayerMP player = (EntityPlayerMP) event.getEntityPlayer();
+		if(event.getEntityPlayer() instanceof ServerPlayerEntity) {
+			ServerPlayerEntity player = (ServerPlayerEntity) event.getEntityPlayer();
 			buildSyncSet(player);
 			
 			if(syncedAdvancements.contains(event.getAdvancement().getId()))
@@ -40,14 +40,14 @@ public final class AdvancementSyncHandler {
 	
 	@SubscribeEvent
 	public static void onLogin(PlayerLoggedInEvent event) {
-		if(event.player instanceof EntityPlayerMP) {
-			EntityPlayerMP player = (EntityPlayerMP) event.player;
+		if(event.player instanceof ServerPlayerEntity) {
+			ServerPlayerEntity player = (ServerPlayerEntity) event.player;
 			buildSyncSet(player);
 			syncPlayer(player, false);
 		}
 	}
 	
-	private static void buildSyncSet(EntityPlayerMP player) {
+	private static void buildSyncSet(ServerPlayerEntity player) {
 		try {
 			if(syncedAdvancements == null) {
 				AdvancementManager manager = player.getServer().getAdvancementManager();
@@ -65,7 +65,7 @@ public final class AdvancementSyncHandler {
 		}
 	}
 	
-	public static void syncPlayer(EntityPlayerMP player, boolean showToast) {
+	public static void syncPlayer(ServerPlayerEntity player, boolean showToast) {
 		PlayerAdvancements advancements = player.getAdvancements();
 		if(advancements == null)
 			return;

@@ -19,8 +19,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.common.base.Patchouli;
 
@@ -82,7 +82,7 @@ public class BookRegistry {
 		book.build(mod, res, external);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void reload() {
 		books.values().forEach(Book::reloadContents);
 		books.values().forEach(Book::reloadExtensionContents);

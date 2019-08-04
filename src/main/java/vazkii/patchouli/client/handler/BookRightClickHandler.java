@@ -3,16 +3,16 @@ package vazkii.patchouli.client.handler;
 import java.util.Collection;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.Hand;
 import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -20,7 +20,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -34,7 +34,7 @@ public class BookRightClickHandler {
 	@SubscribeEvent
 	public static void onRenderHUD(RenderGameOverlayEvent.Post event) {
 		Minecraft mc = Minecraft.getMinecraft();
-		EntityPlayer player = mc.player;
+		PlayerEntity player = mc.player;
 		ItemStack bookStack = player.getHeldItemMainhand();
 		if(event.getType() == ElementType.ALL && mc.currentScreen == null) {
 			Book book = getBookFromStack(bookStack);
@@ -67,7 +67,7 @@ public class BookRightClickHandler {
 
 	@SubscribeEvent
 	public static void onRightClick(RightClickBlock event) {
-		EntityPlayer player = event.getEntityPlayer();
+		PlayerEntity player = event.getEntityPlayer();
 		ItemStack bookStack = player.getHeldItemMainhand();
 
 		if(event.getWorld().isRemote && player.isSneaking()) {
@@ -82,7 +82,7 @@ public class BookRightClickHandler {
 						int page = hover.getRight();
 						GuiBook curr = book.contents.getCurrentGui();
 						book.contents.currentGui = new GuiBookEntry(book, entry, page);
-						player.swingArm(EnumHand.MAIN_HAND);
+						player.swingArm(Hand.MAIN_HAND);
 
 						if(curr instanceof GuiBookEntry) {
 							GuiBookEntry currEntry = (GuiBookEntry) curr;
@@ -114,7 +114,7 @@ public class BookRightClickHandler {
 		RayTraceResult res = mc.objectMouseOver;
 		if(res != null && res.typeOfHit == Type.BLOCK) {
 			BlockPos pos = res.getBlockPos();
-			IBlockState state = mc.world.getBlockState(pos);
+			BlockState state = mc.world.getBlockState(pos);
 			Block block = state.getBlock();
 			ItemStack picked = block.getPickBlock(state, res, mc.world, pos, mc.player);
 

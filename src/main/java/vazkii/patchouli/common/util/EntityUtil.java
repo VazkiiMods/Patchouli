@@ -9,7 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -25,7 +25,7 @@ public class EntityUtil {
 		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
 		entityId = nameAndNbt.getLeft();
 		String nbtStr = nameAndNbt.getRight();
-		NBTTagCompound nbt = null;
+		CompoundNBT nbt = null;
 		
 		if(!nbtStr.isEmpty()) {
 			try {
@@ -36,7 +36,7 @@ public class EntityUtil {
 		}
 		
 		final Class<? extends Entity> clazz = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityId)).getEntityClass();
-		final NBTTagCompound useNbt = nbt;
+		final CompoundNBT useNbt = nbt;
 		final String useId = entityId;
 		try {
 			final Constructor<? extends Entity> constructor = clazz.getConstructor(World.class);

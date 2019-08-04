@@ -6,15 +6,15 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
@@ -53,20 +53,20 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 	
 	@Override
-	public void openBookGUI(EntityPlayerMP player, ResourceLocation book) {
+	public void openBookGUI(ServerPlayerEntity player, ResourceLocation book) {
 		NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.toString()), player);
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void openBookGUI(ResourceLocation book) {
 		ClientBookRegistry.INSTANCE.displayBookGui(book.toString());
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public ResourceLocation getOpenBookGui() {
-		GuiScreen gui = Minecraft.getMinecraft().currentScreen;
+		Screen gui = Minecraft.getMinecraft().currentScreen;
 		if (gui instanceof GuiBook)
 			return ((GuiBook) gui).book.resourceLoc;
 		return null;
@@ -134,17 +134,17 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 	
 	@Override
-	public IStateMatcher predicateMatcher(IBlockState display, Predicate<IBlockState> predicate) {
+	public IStateMatcher predicateMatcher(BlockState display, Predicate<BlockState> predicate) {
 		return StateMatcher.fromPredicate(display, predicate);
 	}
 	
 	@Override
-	public IStateMatcher predicateMatcher(Block display, Predicate<IBlockState> predicate) {
+	public IStateMatcher predicateMatcher(Block display, Predicate<BlockState> predicate) {
 		return StateMatcher.fromPredicate(display, predicate);
 	}
 	
 	@Override
-	public IStateMatcher stateMatcher(IBlockState state) {
+	public IStateMatcher stateMatcher(BlockState state) {
 		return StateMatcher.fromState(state);
 	}
 	
@@ -159,7 +159,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 	
 	@Override
-	public IStateMatcher displayOnlyMatcher(IBlockState state) {
+	public IStateMatcher displayOnlyMatcher(BlockState state) {
 		return StateMatcher.displayOnly(state);
 	}
 	

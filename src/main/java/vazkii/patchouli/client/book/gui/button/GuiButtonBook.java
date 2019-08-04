@@ -7,11 +7,11 @@ import com.google.common.base.Supplier;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.widget.button.Button;
+import com.mojang.blaze3d.platform.GlStateManager;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
-public class GuiButtonBook extends GuiButton {
+public class GuiButtonBook extends Button {
 
 	GuiBook parent;
 	int u, v;

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.VariableHolder;
 
@@ -65,11 +65,11 @@ public class SerializedMultiblock {
 		Block block = Block.REGISTRY.getObject(new ResourceLocation(split[0]));
 		if (block != null) {
 			if (split.length > 1) {
-				IBlockState state = block.getDefaultState();
+				BlockState state = block.getDefaultState();
 				for (String part : split[1].replace("]", "").split(",")) {
 					String[] keyValue = part.split("=");
 					for (IProperty<?> prop : state.getProperties().keySet()) {
-						IBlockState changed = findProperty(state, prop, keyValue[0], keyValue[1]);
+						BlockState changed = findProperty(state, prop, keyValue[0], keyValue[1]);
 						if (changed != null) {
 							state = changed;
 							break;
@@ -84,7 +84,7 @@ public class SerializedMultiblock {
 		return null;
 	}
 
-	private <T extends Comparable<T>> IBlockState findProperty(IBlockState state, IProperty<T> prop, String key, String newValue) {
+	private <T extends Comparable<T>> BlockState findProperty(BlockState state, IProperty<T> prop, String key, String newValue) {
 		if (key.equals(prop.getName())) {
 			for (T value : prop.getAllowedValues()) {
 				if (prop.getName(value).equals(newValue)) {

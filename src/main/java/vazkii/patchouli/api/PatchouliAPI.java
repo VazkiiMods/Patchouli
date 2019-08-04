@@ -5,13 +5,13 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.stub.StubPatchouliAPI;
 
 public class PatchouliAPI {
@@ -55,14 +55,14 @@ public class PatchouliAPI {
 		/**
 		 * Opens a book GUI for the given player (server version).
 		 */
-		public void openBookGUI(EntityPlayerMP player, ResourceLocation book);
+		public void openBookGUI(ServerPlayerEntity player, ResourceLocation book);
 		
 		/**
 		 * Opens a book GUI. (client version)
 		 */
-		@SideOnly(Side.CLIENT) public void openBookGUI(ResourceLocation book);
+		@OnlyIn(Dist.CLIENT) public void openBookGUI(ResourceLocation book);
 		
-		@SideOnly(Side.CLIENT) public ResourceLocation getOpenBookGui();
+		@OnlyIn(Dist.CLIENT) public ResourceLocation getOpenBookGui();
 		
 		/**
 		 * Reloads the contents of all books. Call sparingly and only if you
@@ -80,7 +80,7 @@ public class PatchouliAPI {
 		 * as the "res" resource location. The supplier should give an input stream that
 		 * reads a full json file, containing a template.
 		 */
-		@SideOnly(Side.CLIENT) public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider);
+		@OnlyIn(Dist.CLIENT) public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider);
 
 		// ================================================================================================
 		// ItemStack Serialization
@@ -133,27 +133,27 @@ public class PatchouliAPI {
 		 * <br><br>
 		 * As for the target array, it's in also in the same format as recipes. One char followed
 		 * by one Object, so on and so forth, defining each type. The Object can be a Block, an
-		 * IBlockState, or an IStateMatcher.
+		 * BlockState, or an IStateMatcher.
 		 */
 		public IMultiblock makeMultiblock(String[][] pattern, Object... targets);
 		
 		/**
-		 * Gets an IStateMatcher with the passed in IBlockState for display and the passed in
+		 * Gets an IStateMatcher with the passed in BlockState for display and the passed in
 		 * predicate for validation.
 		 */
-		public IStateMatcher predicateMatcher(IBlockState display, Predicate<IBlockState> predicate);
+		public IStateMatcher predicateMatcher(BlockState display, Predicate<BlockState> predicate);
 		
 		/**
 		 * Gets an IStateMatcher with the passed in Block's default state for display and the
 		 * passed in predicate for validation.
 		 */
-		public IStateMatcher predicateMatcher(Block display, Predicate<IBlockState> predicate);
+		public IStateMatcher predicateMatcher(Block display, Predicate<BlockState> predicate);
 		
 		/**
-		 * Gets an IStateMatcher with the passed in IBlockState for display and validation, 
+		 * Gets an IStateMatcher with the passed in BlockState for display and validation, 
 		 * requiring that the state in world be exactly the same.
 		 */
-		public IStateMatcher stateMatcher(IBlockState state);
+		public IStateMatcher stateMatcher(BlockState state);
 		
 		/**
 		 * Gets an IStateMatcher with the passed in Block's default state for display and 
@@ -168,10 +168,10 @@ public class PatchouliAPI {
 		public IStateMatcher strictBlockMatcher(Block block);
 		
 		/**
-		 * Gets an IStateMatcher that always validates to true, and shows the IBlockState
+		 * Gets an IStateMatcher that always validates to true, and shows the BlockState
 		 * passed when displayed.
 		 */
-		public IStateMatcher displayOnlyMatcher(IBlockState state);
+		public IStateMatcher displayOnlyMatcher(BlockState state);
 		
 		/**
 		 * Gets an IStateMatcher that always validates to true, and shows the passed in
