@@ -4,7 +4,7 @@ issueTrackerURL="https://github.com/Vazkii/Patchouli"
 
 [[mods]]
 modId="patchouli"
-displayName="NeaPatchouli"
+displayName="Patchouli"
 version="${version}"
 authors="Vazkii"
 description='''

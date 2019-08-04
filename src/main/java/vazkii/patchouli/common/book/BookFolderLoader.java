@@ -13,7 +13,7 @@ public class BookFolderLoader {
 
 	public static File loadDir;
 	
-	public static void setup() {
+	private static void setup() {
 		loadDir = new File(BookRegistry.BOOKS_LOCATION);
 		if(!loadDir.exists())
 			loadDir.mkdir();
@@ -22,6 +22,9 @@ public class BookFolderLoader {
 	}
 	
 	public static void findBooks() {
+		if(loadDir == null)
+			setup();
+		
 		IModInfo mod = ModLoadingContext.get().getActiveContainer().getModInfo();
 		File[] subdirs = loadDir.listFiles(File::isDirectory);
 		for(File dir : subdirs) {

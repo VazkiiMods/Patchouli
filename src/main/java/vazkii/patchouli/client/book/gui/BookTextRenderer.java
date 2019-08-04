@@ -34,7 +34,7 @@ public class BookTextRenderer {
 		this.width = width;
 		this.spaceWidth = font.getStringWidth(" ");
 		this.lineHeight = lineHeight;
-		this.defaultUnicode = false; //font.getUnicodeFlag(); TODO figure unicode out
+		this.defaultUnicode = false; //font.getUnicodeFlag(); TODO unicode
 		this.baseColor = baseColor;
 		
 		build();
@@ -46,7 +46,7 @@ public class BookTextRenderer {
 	}
 	
 	public void render(int mouseX, int mouseY) {
-//		if(!book.useBlockyFont) TODO yep unicode
+//		if(!book.useBlockyFont) TODO unicode
 //			font.setUnicodeFlag(true);
 		words.forEach(word -> word.render(mouseX, mouseY));
 //		font.setUnicodeFlag(defaultUnicode);

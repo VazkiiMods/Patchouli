@@ -35,7 +35,7 @@ public class PatchouliItems {
 		List<ModelResourceLocation> models = new LinkedList<>();
 		BookRegistry.INSTANCE.books.values().forEach(b -> models.add(new ModelResourceLocation(b.model, "inventory")));
 
-		// TODO figure this out
+		// TODO model mapping
 //		ModelBakery.registerItemVariants(book, models.toArray(new ModelResourceLocation[0]));
 //
 //		ModelLoader.setCustomMeshDefinition(book, (stack) -> {

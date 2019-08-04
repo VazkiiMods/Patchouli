@@ -138,7 +138,7 @@ public class ItemModBook extends Item {
 		if(book == null)
 			return new ActionResult<>(ActionResultType.FAIL, stack);
 
-		if(playerIn instanceof ServerPlayerEntity) { // TODO network
+		if(playerIn instanceof ServerPlayerEntity) { // TODO networking
 //			NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.resourceLoc.toString()), (ServerPlayerEntity) playerIn);
 			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open); 
 			worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, sfx, SoundCategory.PLAYERS, 1F, (float) (0.7 + Math.random() * 0.4));

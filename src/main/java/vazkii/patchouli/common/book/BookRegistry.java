@@ -65,7 +65,7 @@ public class BookRegistry {
 								return true;
 							}
 
-							String assetPath = fileStr.substring(fileStr.indexOf("/assets"));
+							String assetPath = fileStr.substring(fileStr.indexOf("/data"));
 							ResourceLocation bookId = new ResourceLocation(id, bookName);
 							foundBooks.put(Pair.of(mod, bookId), assetPath);
 						}
@@ -84,10 +84,10 @@ public class BookRegistry {
 				loadBook(mod, res, stream, false);
 			});
 		});
-		
+
 		BookFolderLoader.findBooks();
 	}
-	
+
 	public void loadBook(IModInfo mod, ResourceLocation res, InputStream stream, boolean external) {
 		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		Book book = gson.fromJson(reader, Book.class);
@@ -102,79 +102,64 @@ public class BookRegistry {
 		books.values().forEach(Book::reloadExtensionContents);
 		ClientAdvancements.updateLockStatus(false);
 	}
-	
+
 	// HELPER
-	
-    public static boolean findFiles(ModInfo mod, String base, Function<Path, Boolean> preprocessor, BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
-        File source = mod.getOwningFile().getFile().getFilePath().toFile();
 
-        FileSystem fs = null;
-        boolean success = true;
+	public static boolean findFiles(ModInfo mod, String base, Function<Path, Boolean> preprocessor, BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
+		if(mod.getModId().equals("minecraft") || mod.getModId().equals("forge"))
+			return false;
 
-        try
-        {
-            Path root = null;
+		File source = mod.getOwningFile().getFile().getFilePath().toFile();
 
-            if (source.isFile())
-            {
-                try
-                {
-                    fs = FileSystems.newFileSystem(source.toPath(), null);
-                    root = fs.getPath("/" + base);
-                }
-                catch (IOException e)
-                {
-                    return false;
-                }
-            }
-            else if (source.isDirectory())
-            {
-                root = source.toPath().resolve(base);
-            }
-    
-            if (root == null || !Files.exists(root))
-                return defaultUnfoundRoot;
-    
-            if (preprocessor != null)
-            {
-                Boolean cont = preprocessor.apply(root);
-                if (cont == null || !cont.booleanValue())
-                    return false;
-            }
-        
-            if (processor != null)
-            {
-                Iterator<Path> itr = null;
-                try
-                {
-                    itr = Files.walk(root).iterator();
-                }
-                catch (IOException e)
-                {
-                    return false;
-                }
-    
-                while (itr != null && itr.hasNext())
-                {
-                    Boolean cont = processor.apply(root, itr.next());
-    
-                    if (visitAllFiles)
-                    {
-                        success &= cont != null && cont;
-                    }
-                    else if (cont == null || !cont)
-                    {
-                        return false;
-                    }
-                }
-            }
-        }
-        finally
-        {
-            IOUtils.closeQuietly(fs);
-        }
+		FileSystem fs = null;
+		boolean success = true;
 
-        return success;
-    }
+		try {
+			Path root = null;
+
+			if(source.isFile()) {
+				try {
+					fs = FileSystems.newFileSystem(source.toPath(), null);
+					root = fs.getPath("/" + base);
+				} catch(IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			else if(source.isDirectory())
+				root = source.toPath().resolve(base);
+
+			if(root == null || !Files.exists(root))
+				return defaultUnfoundRoot;
+
+			if(preprocessor != null) {
+				Boolean cont = preprocessor.apply(root);
+				if (cont == null || !cont.booleanValue())
+					return false;
+			}
+
+			if(processor != null) {
+				Iterator<Path> itr = null;
+				try {
+					itr = Files.walk(root).iterator();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+
+				while(itr != null && itr.hasNext()) {
+					Boolean cont = processor.apply(root, itr.next());
+
+					if(visitAllFiles)
+						success &= cont != null && cont;
+					else if(cont == null || !cont)
+						return false;
+				}
+			}
+		}
+		finally {
+			IOUtils.closeQuietly(fs);
+		}
+
+		return success;
+	}
 
 }

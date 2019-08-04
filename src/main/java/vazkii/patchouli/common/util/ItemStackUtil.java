@@ -86,7 +86,7 @@ public class ItemStackUtil {
 	public static Ingredient loadIngredientFromString(String ingredientString) {
 		String[] stacksSerialized = splitStacksFromSerializedIngredient(ingredientString);
 		List<ItemStack> stacks = Lists.newArrayList();
-		for (int i = 0; i < stacksSerialized.length; i++) { // TODO use tags
+		for (int i = 0; i < stacksSerialized.length; i++) { // TODO allow for tags
 //			if (stacksSerialized[i].startsWith("ore:")) {
 //				OreIngredient ore = new OreIngredient(stacksSerialized[i].substring(4));
 //				for (ItemStack stack : ore.getMatchingStacks())

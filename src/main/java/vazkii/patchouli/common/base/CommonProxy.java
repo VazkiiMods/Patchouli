@@ -26,7 +26,7 @@ public class CommonProxy {
 
 		BookRegistry.INSTANCE.init();
 
-//		NetworkHandler.registerMessages(); TODO add back
+//		NetworkHandler.registerMessages(); TODO networking
 	}
 
 	public void requestBookReload() {

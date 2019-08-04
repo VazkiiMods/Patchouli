@@ -12,6 +12,8 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void start() {
+		super.start();
+		
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		bus.addListener(this::setupClient);
 		bus.addListener(this::loadComplete);

@@ -13,7 +13,7 @@ package vazkii.patchouli.common.network;
 // Basically a copy of the ARL one but I want to avoid the dep so hey it's here too
 public class NetworkHandler {
 
-// TODO Rewrite
+// TODO networking
 	
 //	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Patchouli.MOD_ID);
 //

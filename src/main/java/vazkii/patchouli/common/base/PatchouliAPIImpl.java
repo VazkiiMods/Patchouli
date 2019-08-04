@@ -52,7 +52,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	
 	@Override
 	public void openBookGUI(ServerPlayerEntity player, ResourceLocation book) {
-//		NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.toString()), player); TODO add back
+//		NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.toString()), player); TODO networking
 	}
 	
 	@Override
