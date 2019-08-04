@@ -49,24 +49,24 @@ public class GuiBookLanding extends GuiBook {
 
 		// Resize
 		if (maxScale > 2)
-			buttons.add(new GuiButtonBookResize(this, x + (pos++) * dist, y, true, this::handleButtonResize));
+			addButton(new GuiButtonBookResize(this, x + (pos++) * dist, y, true, this::handleButtonResize));
 
 		// History
-		buttons.add(new GuiButtonBookHistory(this, x + (pos++) * dist, y, this::handleButtonHistory));
+		addButton(new GuiButtonBookHistory(this, x + (pos++) * dist, y, this::handleButtonHistory));
 
 		// Advancements
 		if(!book.advancementsTab.isEmpty())
-			buttons.add(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y, this::handleButtonAdvancements));
+			addButton(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y, this::handleButtonAdvancements));
 
 		// Config
 		//		if(!book.isExternal) {
 		//			IModGuiFactory guiFactory = FMLClientHandler.instance().getGuiFactoryFor(book.owner);
 		//			if(guiFactory != null && guiFactory.hasConfigGui())
-		//				buttons.add(new GuiButtonBookConfig(this, x + (pos++) * dist, y));
+		//				addButton(new GuiButtonBookConfig(this, x + (pos++) * dist, y));
 		//		}
 
 		if(Minecraft.getInstance().player.isCreative())
-			buttons.add(new GuiButtonBookEdit(this, x + (pos++) * dist, y, this::handleButtonEdit));
+			addButton(new GuiButtonBookEdit(this, x + (pos++) * dist, y, this::handleButtonEdit));
 
 		int i = 0;
 		List<BookCategory> categories = new ArrayList<>(book.contents.categories.values());
@@ -88,8 +88,8 @@ public class GuiBookLanding extends GuiBook {
 		int y = TOP_PADDING + 25 + (i /4) * 24;
 
 		if(category == null)
-			buttons.add(new GuiButtonIndex(this, x, y, this::handleButtonIndex));	
-		else buttons.add(new GuiButtonCategory(this, x, y, category, this::handleButtonCategory));
+			addButton(new GuiButtonIndex(this, x, y, this::handleButtonIndex));	
+		else addButton(new GuiButtonCategory(this, x, y, category, this::handleButtonCategory));
 	}
 
 	@Override
@@ -150,9 +150,9 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
 		return text.click(mouseX, mouseY, mouseButton)
-				|| super.mouseClicked(mouseX, mouseY, mouseButton);
+				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 	
 	public void handleButtonIndex(Button button) {

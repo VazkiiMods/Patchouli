@@ -107,27 +107,39 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 	
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
 		return text.click(mouseX, mouseY, mouseButton)
 			|| searchField.mouseClicked(mouseX - bookLeft, mouseY - bookTop, mouseButton)
-			|| super.mouseClicked(mouseX, mouseY, mouseButton);
+			|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 	
 	@Override
+	public boolean charTyped(char c, int i) {
+		String currQuery = searchField.getText();
+		if(searchField.charTyped(c, i)) {
+			if(!searchField.getText().equals(currQuery))
+				buildEntryButtons();
+			
+			return true;
+		}
+		
+		return super.charTyped(c, i);
+ 	}
+	
+	@Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
+		String currQuery = searchField.getText();
+		
 		if(key == 28) { // Enter
 			if(visibleEntries.size() == 1) {
 				displayLexiconGui(new GuiBookEntry(book, visibleEntries.get(0)), true);
 				return true;
 			}
-		} else {
-			String currQuery = searchField.getText();
-			boolean ret = searchField.keyPressed(key, scanCode, modifiers);
+		} else if(searchField.keyPressed(key, scanCode, modifiers)) {
 			if(!searchField.getText().equals(currQuery))
 				buildEntryButtons();
 			
-			if(ret)
-				return true;
+			return true;
 		}
 		
 		return super.keyPressed(key, scanCode, modifiers);
@@ -147,7 +159,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 	
 	void buildEntryButtons() {
-		buttons.removeAll(dependentButtons);
+		removeButtonsIn(dependentButtons);
 		dependentButtons.clear();
 		visibleEntries.clear();
 		
@@ -185,7 +197,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	void addEntryButtons(int x, int y, int start, int count) {
 		for(int i = 0; i < count && (i + start) < visibleEntries.size(); i++) {
 			Button button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, visibleEntries.get(start + i), start + i, this::handleButtonEntry);
-			buttons.add(button);
+			addButton(button);
 			dependentButtons.add(button);
 		}
 	}

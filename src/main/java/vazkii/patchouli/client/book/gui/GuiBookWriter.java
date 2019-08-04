@@ -27,7 +27,7 @@ public class GuiBookWriter extends GuiBook {
 		textfield.setMaxStringLength(Integer.MAX_VALUE);
 		textfield.setText(savedText);
 
-		buttons.add(new GuiButtonBookResize(this, bookLeft + 115, bookTop + PAGE_HEIGHT - 36, false, this::handleButtonResize));
+		addButton(new GuiButtonBookResize(this, bookLeft + 115, bookTop + PAGE_HEIGHT - 36, false, this::handleButtonResize));
 		refreshText();
 	}
 
@@ -49,19 +49,32 @@ public class GuiBookWriter extends GuiBook {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton){
+	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton){
 		return textfield.mouseClicked(mouseX - bookLeft, mouseY - bookTop, mouseButton)
 				|| text.click(mouseX, mouseY, mouseButton)
 				|| editableText.click(mouseX, mouseY, mouseButton)
-				|| super.mouseClicked(mouseX, mouseY, mouseButton);
+				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
-		refreshText();
-
-		return textfield.keyPressed(key, scanCode, modifiers) || super.keyPressed(key, scanCode, modifiers);
+		if(textfield.keyPressed(key, scanCode, modifiers)) {
+			refreshText();
+			return true;
+		}
+		
+		return super.keyPressed(key, scanCode, modifiers);
 	}
+	
+	@Override
+	public boolean charTyped(char c, int i) {
+		if(textfield.charTyped(c, i)) {
+			refreshText();
+			return true;
+		}
+		
+		return super.charTyped(c, i);
+ 	}
 
 	public void handleButtonResize(Button button) {
 		drawHeader = !drawHeader;

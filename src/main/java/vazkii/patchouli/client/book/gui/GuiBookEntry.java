@@ -89,10 +89,10 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
 		return clickPage(leftPage, mouseX, mouseY, mouseButton) 
 				|| clickPage(rightPage, mouseX, mouseY, mouseButton)
-				|| super.mouseClicked(mouseX, mouseY, mouseButton);
+				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 
 	void drawPage(BookPage page, int mouseX, int mouseY, float pticks) {
@@ -251,7 +251,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		button.y += bookTop;
 
 		customButtons.put(button, onClick);
-		buttons.add(button);
+		addButton(button);
 	}
 
 	@Override

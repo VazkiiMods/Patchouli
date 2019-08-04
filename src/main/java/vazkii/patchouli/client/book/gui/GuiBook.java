@@ -1,9 +1,9 @@
 package vazkii.patchouli.client.book.gui;
 
 import java.awt.Color;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -16,12 +16,14 @@ import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -57,6 +59,7 @@ public abstract class GuiBook extends Screen {
 	
 	private static int lastSound;
 	public int bookLeft, bookTop;
+	private float scaleFactor;
 
 	private List<String> tooltip;
 	private ItemStack tooltipStack;
@@ -80,52 +83,40 @@ public abstract class GuiBook extends Screen {
 		int persistentScale = Math.min(PersistentData.data.bookGuiScale, maxScale);
 
 		if(persistentScale > 0 && persistentScale != guiScale) {
-			minecraft.gameSettings.guiScale = persistentScale;
 			MainWindow res = minecraft.mainWindow;
+			scaleFactor = (float) persistentScale / (float) res.getGuiScaleFactor();
+
+			res.setGuiScale(persistentScale);
 			width = res.getScaledWidth();
 			height = res.getScaledHeight();
-			minecraft.gameSettings.guiScale = guiScale;
-		}
+			res.setGuiScale(guiScale);
+		} else scaleFactor = 1;
 		
 		bookLeft = width / 2 - FULL_WIDTH / 2;
 		bookTop = height / 2 - FULL_HEIGHT / 2;
 
 		book.contents.currentGui = this;
 
-		buttons.clear();
+		clearButtons();
 
-		buttons.add(new GuiButtonBookBack(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5));
-		buttons.add(new GuiButtonBookArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
-		buttons.add(new GuiButtonBookArrow(this, bookLeft + FULL_WIDTH - 14, bookTop + FULL_HEIGHT - 6, false));
+		addButton(new GuiButtonBookBack(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5));
+		addButton(new GuiButtonBookArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
+		addButton(new GuiButtonBookArrow(this, bookLeft + FULL_WIDTH - 14, bookTop + FULL_HEIGHT - 6, false));
 		
 		addBookmarkButtons();
 	}
 
 	@Override
 	public final void render(int mouseX, int mouseY, float partialTicks) {
-		MainWindow res = minecraft.mainWindow;
-		int guiScale = minecraft.gameSettings.guiScale;
-
 		GlStateManager.pushMatrix();
-		int persistentScale = Math.min(PersistentData.data.bookGuiScale, maxScale);
+		if(scaleFactor != 1) {
+			GlStateManager.scalef(scaleFactor, scaleFactor, scaleFactor);
 
-		if(persistentScale > 0 && persistentScale != guiScale) {
-			minecraft.gameSettings.guiScale = persistentScale;
-			float s = (float) persistentScale / (float) res.getGuiScaleFactor();
-
-			GlStateManager.scalef(s, s, s);
-
-			res.setGuiScale(persistentScale);
-			int sw = res.getScaledWidth();
-			int sh = res.getScaledHeight();
-			mouseX = (int) minecraft.mouseHelper.getMouseX() * sw / res.getWidth();
-			mouseY = sh - (int) minecraft.mouseHelper.getMouseY() * sh / res.getHeight() - 1;
+			mouseX /= scaleFactor;
+			mouseY /= scaleFactor;
 		}
 
 		drawScreenAfterScale(mouseX, mouseY, partialTicks);
-
-		res.setGuiScale(guiScale);
-		minecraft.gameSettings.guiScale = guiScale;
 		GlStateManager.popMatrix();
 	}
 
@@ -148,21 +139,36 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public void addBookmarkButtons() {
-		buttons.removeIf((b) -> b instanceof GuiButtonBookBookmark);
+		removeButtonsIf((b) -> b instanceof GuiButtonBookBookmark);
+		
 		int y = 0;
 		List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
 		for(int i = 0; i < bookmarks.size(); i++) {
 			Bookmark bookmark = bookmarks.get(i);
-			buttons.add(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
+			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
 			y += 12;
 		}
 		
 		y += (y == 0 ? 0 : 2);
 		if(shouldAddAddBookmarkButton() && bookmarks.size() <= MAX_BOOKMARKS)
-			buttons.add(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
+			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
 
 		if(MultiblockVisualizationHandler.hasMultiblock && MultiblockVisualizationHandler.bookmark != null)
-			buttons.add(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.bookmark, true));
+			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.bookmark, true));
+	}
+	
+	protected void removeButtonsIf(Predicate<IGuiEventListener> pred) {
+		buttons.removeIf(pred);
+		children.removeIf(pred);
+	}
+	
+	protected void removeButtonsIn(Collection<?> coll) {
+		removeButtonsIf(e -> coll.contains(e));
+	}
+	
+	protected void clearButtons() {
+		buttons.clear();
+		children.clear();
 	}
 	
 	protected boolean shouldAddAddBookmarkButton() {
@@ -256,7 +262,11 @@ public abstract class GuiBook extends Screen {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public final boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+		return mouseClickedScaled(mouseX / scaleFactor, mouseY / scaleFactor, mouseButton);
+	}
+	
+	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
 		switch(mouseButton) {
 		case 0:
 			if(targetPage != null && hasShiftDown()) {
@@ -478,14 +488,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public static void openWebLink(String address) {
-		try {
-			Class<?> oclass = Class.forName("java.awt.Desktop");
-			Object object = oclass.getMethod("getDesktop").invoke(null);
-			oclass.getMethod("browse", URI.class).invoke(object, new URI(address));
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-		}
+		 Util.getOSType().openURI(address);
 	}
 	
 	public void displayLexiconGui(GuiBook gui, boolean push) {
