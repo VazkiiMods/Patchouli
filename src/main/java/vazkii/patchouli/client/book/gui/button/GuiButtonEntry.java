@@ -62,12 +62,7 @@ public class GuiButtonEntry extends Button {
 			if(entry.isSecret())
 				color = 0xAA000000 | (parent.book.textColor & 0x00FFFFFF); 
 			
-			Minecraft mc = parent.getMinecraft();
-//			boolean unicode = mc.fontRenderer.getUnicodeFlag(); TODO unicode
-//			if(!parent.book.useBlockyFont)
-//				mc.fontRenderer.setUnicodeFlag(true);
-			mc.fontRenderer.drawString(name, x + 12, y, color);
-//			mc.fontRenderer.setUnicodeFlag(unicode);
+			entry.getBook().getFont().drawString(name, x + 12, y, color);
 			
 			if(!entry.isLocked())
 				GuiBook.drawMarking(parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());

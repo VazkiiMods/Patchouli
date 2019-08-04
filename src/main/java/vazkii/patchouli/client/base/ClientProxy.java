@@ -5,6 +5,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.client.book.template.BookTemplate;
+import vazkii.patchouli.client.handler.UnicodeFontHandler;
 import vazkii.patchouli.common.base.CommonProxy;
 import vazkii.patchouli.common.book.BookRegistry;
 
@@ -26,6 +28,8 @@ public class ClientProxy extends CommonProxy {
 	
 	public void loadComplete(FMLLoadCompleteEvent event) {
 		BookRegistry.INSTANCE.reload();
+		
+		UnicodeFontHandler.makeUnicodeFont();
 	}
 	
 	@Override

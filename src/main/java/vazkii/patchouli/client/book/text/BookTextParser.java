@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
@@ -14,6 +15,7 @@ import net.minecraft.util.text.TextFormatting;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
+import vazkii.patchouli.client.handler.UnicodeFontHandler;
 import vazkii.patchouli.common.book.Book;
 
 public class BookTextParser {
@@ -145,15 +147,11 @@ public class BookTextParser {
 		this.lineHeight = lineHeight;
 		this.baseColor = baseColor;
 
-		this.font = gui.getMinecraft().fontRenderer;
+		this.font = book.getFont();
 		this.spaceWidth = font.getStringWidth(" ");
 	}
 
 	public List<Word> parse(String text) {
-//		boolean wasUnicode = font.getUnicodeFlag(); TODO unicode
-//		if(!book.useBlockyFont)
-//			font.setUnicodeFlag(true);
-
 		String actualText = text;
 		if(actualText == null)
 			actualText = "[ERROR]";
@@ -164,19 +162,19 @@ public class BookTextParser {
 		List<Span> spans = processCommands(actualText);
 		List<Word> words = layout(spans);
 
-//		font.setUnicodeFlag(wasUnicode);
 		return words;
 	}
 
 	private List<Word> layout(List<Span> spans) {
 		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width);
-		layouter.layout(spans);
+		layouter.layout(font, spans);
 		return layouter.getWords();
 	}
 
 	private List<Span> processCommands(String text) {
 		SpanState state = new SpanState(gui, book, baseColor, font);
 		List<Span> spans = new ArrayList<>();
+		
 		int from = 0;
 		char[] chars = text.toCharArray();
 		for (int i = 0; i < chars.length; i++) {

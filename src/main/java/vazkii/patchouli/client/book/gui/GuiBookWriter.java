@@ -71,15 +71,12 @@ public class GuiBookWriter extends GuiBook {
 	public void refreshText() {
 		int yPos = TOP_PADDING + (drawHeader ? 22 : -4);
 
-//		boolean unicode = font.getUnicodeFlag(); TODO unicode
 		savedText = textfield.getText();
 		try {
 			editableText = new BookTextRenderer(this, savedText, RIGHT_PAGE_X, yPos);
 		} catch(Throwable e) {
 			editableText = new BookTextRenderer(this, "[ERROR]", RIGHT_PAGE_X, yPos);
 			e.printStackTrace();
-		} finally {
-//			font.setUnicodeFlag(unicode); // if there's an error the state might not be reset
 		}
 	}
 }

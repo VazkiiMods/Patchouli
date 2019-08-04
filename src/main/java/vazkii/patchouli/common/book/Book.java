@@ -8,6 +8,8 @@ import java.util.Map;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -17,6 +19,7 @@ import net.minecraftforge.forgespi.language.IModInfo;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ExternalBookContents;
+import vazkii.patchouli.client.handler.UnicodeFontHandler;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.handler.AdvancementSyncHandler;
 import vazkii.patchouli.common.item.ItemModBook;
@@ -239,6 +242,11 @@ public class Book {
 	
 	public String getOwnerName() {
 		return owner.getDisplayName();
+	}
+	
+	@OnlyIn(Dist.CLIENT)
+	public FontRenderer getFont() {
+		return useBlockyFont ? Minecraft.getInstance().fontRenderer : UnicodeFontHandler.getUnicodeFont();
 	}
 	
 }

@@ -129,13 +129,8 @@ public class GuiBookLanding extends GuiBook {
 		drawFromTexture(book, -8, 12, 0, 180, 140, 31);
 
 		int color = book.nameplateColor;
-		//		boolean unicode = font.getUnicodeFlag(); TODO unicode
 		font.drawString(book.getBookItem().getDisplayName().getFormattedText(), 13, 16, color);
-
-		//		if(!book.useBlockyFont)
-		//			font.setUnicodeFlag(true);
-		font.drawString(book.contents.getSubtitle(), 24, 24, color); 
-		//		font.setUnicodeFlag(unicode);
+		book.getFont().drawString(book.contents.getSubtitle(), 24, 24, color); 
 	}
 
 	void makeErrorTooltip() {

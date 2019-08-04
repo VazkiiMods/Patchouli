@@ -131,8 +131,8 @@ public abstract class GuiBook extends Screen {
 
 	final void drawScreenAfterScale(int mouseX, int mouseY, float partialTicks) {
 		resetTooltip();
-//		drawDefaultBackground(); TODO: background?
-
+		renderBackground();
+		
 		GlStateManager.pushMatrix();
 		GlStateManager.translatef(bookLeft, bookTop, 0);
 		GlStateManager.color3f(1F, 1F, 1F);

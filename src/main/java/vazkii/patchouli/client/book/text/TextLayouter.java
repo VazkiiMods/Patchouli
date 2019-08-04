@@ -31,8 +31,12 @@ public class TextLayouter {
 	private List<SpanTail> pending = new ArrayList<>();
 	private int lineStart = 0;
 	private int widthSoFar = 0;
+	
+	private FontRenderer font;
 
-	public void layout(List<Span> spans) {
+	public void layout(FontRenderer font, List<Span> spans) {
+		this.font = font;
+		
 		List<Span> paragraph = new ArrayList<>();
 		for (Span span : spans) {
 			if (span.lineBreaks > 0) {
@@ -94,7 +98,6 @@ public class TextLayouter {
 		offset -= last.length;
 
 		char[] characters = last.span.text.toCharArray();
-		FontRenderer font = last.span.font;
 		for (int i = last.start; i < characters.length; i++) {
 			width += font.getCharWidth(characters[i]);
 			if (last.span.bold)
@@ -166,7 +169,8 @@ public class TextLayouter {
 		return words;
 	}
 
-	private static class SpanTail {
+	private class SpanTail {
+		
 		private final Span span;
 		private final int start;
 		private final int width;
@@ -176,7 +180,7 @@ public class TextLayouter {
 		public SpanTail(Span span, int start, List<Word> cluster) {
 			this.span = span;
 			this.start = start;
-			this.width = span.font.getStringWidth(span.codes + span.text.substring(start)) + span.spacingLeft + span.spacingRight;
+			this.width = font.getStringWidth(span.codes + span.text.substring(start)) + span.spacingLeft + span.spacingRight;
 			this.cluster = cluster;
 			this.length = span.text.length() - start;
 		}

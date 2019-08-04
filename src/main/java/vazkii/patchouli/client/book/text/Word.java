@@ -10,7 +10,6 @@ import vazkii.patchouli.common.book.Book;
 public class Word {
 	private final Book book;
 	private final GuiBook gui;
-	private final FontRenderer font;
 	private final int x, y, width, height;
 	private final String text;
 	private final int color;
@@ -22,7 +21,6 @@ public class Word {
 	public Word(GuiBook gui, Span span, String text, int x, int y, int strWidth, List<Word> cluster) {
 		this.book = gui.book;
 		this.gui = gui;
-		this.font = span.font;
 		this.x = x;
 		this.y = y;
 		this.width = strWidth;
@@ -35,7 +33,7 @@ public class Word {
 		this.tooltip = span.tooltip;
 	}
 
-	public void render(int mouseX, int mouseY) {
+	public void render(FontRenderer font, int mouseX, int mouseY) {
 		String renderTarget = codes + text;
 		int renderColor = color;
 		if(isClusterHovered(mouseX, mouseY)) {

@@ -10,7 +10,6 @@ public class Span {
 		return new Span(state, message, 0xFF0000, "");
 	}
 
-	public final FontRenderer font;
 	public final String text;
 	public final int color;
 	public final String codes;
@@ -23,7 +22,6 @@ public class Span {
 	public final boolean bold;
 
 	public Span(SpanState state, String text) {
-		this.font = state.font;
 		this.text = text;
 		this.color = state.color;
 		this.codes = state.codes;
@@ -41,7 +39,6 @@ public class Span {
 	}
 
 	private Span(SpanState state, String text, int color, String codes) {
-		this.font = state.font;
 		this.text = text;
 		this.color = color;
 		this.codes = codes;

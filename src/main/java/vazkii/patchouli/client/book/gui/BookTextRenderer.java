@@ -15,7 +15,6 @@ public class BookTextRenderer {
 	final int x, y, width;
 	final int spaceWidth;
 	final int lineHeight;
-	final boolean defaultUnicode;
 	final int baseColor;
 
 	List<Word> words;
@@ -34,7 +33,6 @@ public class BookTextRenderer {
 		this.width = width;
 		this.spaceWidth = font.getStringWidth(" ");
 		this.lineHeight = lineHeight;
-		this.defaultUnicode = false; //font.getUnicodeFlag(); TODO unicode
 		this.baseColor = baseColor;
 		
 		build();
@@ -46,10 +44,8 @@ public class BookTextRenderer {
 	}
 	
 	public void render(int mouseX, int mouseY) {
-//		if(!book.useBlockyFont) TODO unicode
-//			font.setUnicodeFlag(true);
-		words.forEach(word -> word.render(mouseX, mouseY));
-//		font.setUnicodeFlag(defaultUnicode);
+		FontRenderer font = book.getFont();
+		words.forEach(word -> word.render(font, mouseX, mouseY));
 	}
 	
 	public boolean click(double mouseX, double mouseY, int mouseButton) {

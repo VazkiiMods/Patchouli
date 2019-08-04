@@ -95,11 +95,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		if(!searchField.getText().isEmpty()) {
 			GlStateManager.color4f(1F, 1F, 1F, 1F);
 			drawFromTexture(book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
-//			boolean unicode = font.getUnicodeFlag(); TODO unicode
-//			if(!book.useBlockyFont)
-//				font.setUnicodeFlag(true);
-			font.drawString(searchField.getText(), searchField.x + 7, searchField.y + 1, 0);
-//			fontRenderer.setUnicodeFlag(unicode);
+			book.getFont().drawString(searchField.getText(), searchField.x + 7, searchField.y + 1, 0);
 		}
 		
 		if(visibleEntries.isEmpty()) {
