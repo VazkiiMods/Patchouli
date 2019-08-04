@@ -135,7 +135,7 @@ public class MessageSerializer {
 
 		Reader<T[]> arrayReader = (buf, field) -> {
 			int count = buf.readInt();
-			T[] arr = (T[]) new Object[count];
+			T[] arr = (T[]) Array.newInstance(type, count);
 
 			for(int i = 0; i < count; i++)
 				arr[i] = reader.read(buf, field);

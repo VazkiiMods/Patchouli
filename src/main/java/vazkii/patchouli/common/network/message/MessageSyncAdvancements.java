@@ -20,7 +20,9 @@ public class MessageSyncAdvancements implements IMessage {
 	
 	@Override
 	public boolean receive(NetworkEvent.Context context) {
-		context.enqueueWork(() -> ClientAdvancements.setDoneAdvancements(done, showToast, false));
+		context.enqueueWork(() -> {
+			ClientAdvancements.setDoneAdvancements(done, showToast, false);
+		});
 		
 		return true;
 	}

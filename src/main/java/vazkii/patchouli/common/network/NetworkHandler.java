@@ -27,7 +27,15 @@ import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
 
 public class NetworkHandler {
 	
-	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(Patchouli.MOD_ID, "main")).simpleChannel();
+	private static final String PROTOCOL_VERSION = "1";
+	
+	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
+			.named(new ResourceLocation(Patchouli.MOD_ID, "main"))
+			.networkProtocolVersion(() -> PROTOCOL_VERSION)
+			.clientAcceptedVersions(PROTOCOL_VERSION::equals)
+			.serverAcceptedVersions(PROTOCOL_VERSION::equals)
+			.simpleChannel();
+	
 	private static int i = 0;
 	
 	public static void registerMessages() {

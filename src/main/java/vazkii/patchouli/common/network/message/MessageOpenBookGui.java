@@ -18,7 +18,9 @@ public class MessageOpenBookGui implements IMessage {
 	
 	@Override
 	public boolean receive(Context context) {
-		context.enqueueWork(() -> ClientBookRegistry.INSTANCE.displayBookGui(book));
+		context.enqueueWork(() -> {
+			ClientBookRegistry.INSTANCE.displayBookGui(book);
+		});
 		
 		return true;
 	}
