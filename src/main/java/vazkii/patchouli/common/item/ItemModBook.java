@@ -22,6 +22,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -31,6 +32,8 @@ import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
+import vazkii.patchouli.common.network.NetworkHandler;
+import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 
 public class ItemModBook extends Item {
 
@@ -128,7 +131,7 @@ public class ItemModBook extends Item {
 
 		Book book = getBook(stack);
 		if(book != null && book.contents != null)
-			tooltip.add(new StringTextComponent(book.contents.getSubtitle()));
+			tooltip.add(new StringTextComponent(book.contents.getSubtitle()).applyTextStyle(TextFormatting.GRAY));
 	}
 
 	@Override
@@ -138,8 +141,8 @@ public class ItemModBook extends Item {
 		if(book == null)
 			return new ActionResult<>(ActionResultType.FAIL, stack);
 
-		if(playerIn instanceof ServerPlayerEntity) { // TODO networking
-//			NetworkHandler.INSTANCE.sendTo(new MessageOpenBookGui(book.resourceLoc.toString()), (ServerPlayerEntity) playerIn);
+		if(playerIn instanceof ServerPlayerEntity) {
+			NetworkHandler.sendToPlayer(new MessageOpenBookGui(book.resourceLoc.toString()), (ServerPlayerEntity) playerIn);
 			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open); 
 			worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, sfx, SoundCategory.PLAYERS, 1F, (float) (0.7 + Math.random() * 0.4));
 		}

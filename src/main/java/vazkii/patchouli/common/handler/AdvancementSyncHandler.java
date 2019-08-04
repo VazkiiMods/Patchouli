@@ -17,6 +17,8 @@ import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import vazkii.patchouli.common.network.NetworkHandler;
+import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
 
 @EventBusSubscriber
 public final class AdvancementSyncHandler {
@@ -81,7 +83,7 @@ public final class AdvancementSyncHandler {
 		}
 		
 		String[] completedArr = completed.toArray(new String[0]);
-//		NetworkHandler.INSTANCE.sendTo(new MessageSyncAdvancements(completedArr, showToast), player); TODO networking
+		NetworkHandler.sendToPlayer(new MessageSyncAdvancements(completedArr, showToast), player);
 	}
 	
 	

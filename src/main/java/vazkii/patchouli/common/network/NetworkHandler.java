@@ -10,40 +10,58 @@
  */
 package vazkii.patchouli.common.network;
 
-// Basically a copy of the ARL one but I want to avoid the dep so hey it's here too
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
+import vazkii.patchouli.common.base.Patchouli;
+import vazkii.patchouli.common.network.message.MessageOpenBookGui;
+import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
+
 public class NetworkHandler {
-
-// TODO networking
 	
-//	public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(Patchouli.MOD_ID);
-//
-//	private static int i = 0;
-//
-//	public static void registerMessages() {
-//		register(MessageSyncAdvancements.class, Dist.CLIENT);
-//		register(MessageOpenBookGui.class, Dist.CLIENT);
-//
-//		NetworkMessage.mapHandler(String[].class, NetworkHandler::readStringArray, NetworkHandler::writeStringArray);
-//	}
-//	
-//	public static String[] readStringArray(ByteBuf buf) {
-//		int len = buf.readInt();
-//		String[] strs = new String[len];
-//		for(int i = 0; i < len; i++)
-//			strs[i] = ByteBufUtils.readUTF8String(buf);
-//		
-//		return strs;
-//	}
-//	
-//	public static void writeStringArray(String[] arr, ByteBuf buf) {
-//		buf.writeInt(arr.length);
-//		for(int i = 0; i < arr.length; i++)
-//			ByteBufUtils.writeUTF8String(buf, arr[i]);
-//	}
-//	
-//	public static <T extends IMessage & IMessageHandler<T, IMessage>> void register(Class<T> clazz, Dist handlerSide) {
-//		INSTANCE.registerMessage(clazz, clazz, i++, handlerSide);
-//	}
-//	
+	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(Patchouli.MOD_ID, "main")).simpleChannel();
+	private static int i = 0;
+	
+	public static void registerMessages() {
+		register(MessageSyncAdvancements.class, NetworkDirection.PLAY_TO_CLIENT);
+		register(MessageOpenBookGui.class, NetworkDirection.PLAY_TO_CLIENT);
+	}
+	
+	public static <T extends IMessage> void register(Class<T> clazz, NetworkDirection dir) {
+		BiConsumer<T, PacketBuffer> encoder = (msg, buf) -> MessageSerializer.writeObject(msg, buf);
+		
+		Function<PacketBuffer, T> decoder = (buf) -> {
+			try {
+				T msg = clazz.newInstance();
+				MessageSerializer.readObject(msg, buf);
+				return msg;
+			} catch (InstantiationException | IllegalAccessException e) {
+				throw new RuntimeException(e);
+			} 
+		};
+		
+		BiConsumer<T, Supplier<NetworkEvent.Context>> consumer = (msg, supp) -> {
+			NetworkEvent.Context context = supp.get();
+			if(context.getDirection() != dir)
+				return;
+			
+			context.setPacketHandled(msg.receive(context));
+		};
+		
+		CHANNEL.registerMessage(i, clazz, encoder, decoder, consumer);
+		i++;
+	}
 
+	public static void sendToPlayer(IMessage msg, ServerPlayerEntity player) {
+		CHANNEL.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+	}
+	
 }

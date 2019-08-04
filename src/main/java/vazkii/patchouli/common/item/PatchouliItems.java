@@ -11,10 +11,11 @@ import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.ObjectHolder;
 import vazkii.patchouli.common.book.BookRegistry;
 
-@EventBusSubscriber
+@EventBusSubscriber(bus = Bus.MOD)
 public class PatchouliItems {
 
 	@ObjectHolder("patchouli:guide_book")

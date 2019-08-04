@@ -20,12 +20,6 @@ public final class ClientTicker {
 	public static float delta = 0;
 	public static float total = 0;
 	
-	private static Queue<Runnable> pendingActions = new ArrayDeque<>();
-
-	public static void addAction(Runnable action) {
-		pendingActions.add(action);
-	}
-	
 	private static void calcDelta() {
 		float oldTotal = total;
 		total = ticksInGame + partialTicks;
@@ -47,9 +41,6 @@ public final class ClientTicker {
 				ticksInGame++;
 				partialTicks = 0;
 			}
-			
-			while(!pendingActions.isEmpty())
-				pendingActions.poll().run();
 
 			calcDelta();
 		}

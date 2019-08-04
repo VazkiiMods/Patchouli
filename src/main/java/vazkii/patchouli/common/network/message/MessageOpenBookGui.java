@@ -1,29 +1,26 @@
-//package vazkii.patchouli.common.network.message;
-//
-//import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-//import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-//import net.minecraftforge.api.distmarker.Dist;
-//import net.minecraftforge.api.distmarker.OnlyIn;
-//import vazkii.patchouli.client.base.ClientTicker;
-//import vazkii.patchouli.client.book.ClientBookRegistry;
-//import vazkii.patchouli.common.network.NetworkMessage;
-//
-//public class MessageOpenBookGui extends NetworkMessage<MessageOpenBookGui> {
-//
-//	public String book;
-//	
-//	public MessageOpenBookGui() { }
-//	
-//	public MessageOpenBookGui(String book) { 
-//		this.book = book;
-//	}
-//	
-//	@Override
-//	@OnlyIn(Dist.CLIENT)
-//	public IMessage handleMessage(MessageContext context) {
-//		ClientTicker.addAction(() -> ClientBookRegistry.INSTANCE.displayBookGui(book));
-//		
-//		return null;
-//	}
-//
-//}
+package vazkii.patchouli.common.network.message;
+
+import net.minecraftforge.fml.network.NetworkEvent.Context;
+import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.common.network.IMessage;
+
+public class MessageOpenBookGui implements IMessage {
+
+	private static final long serialVersionUID = -8413856876282832583L;
+	
+	public String book;
+	
+	public MessageOpenBookGui() { }
+	
+	public MessageOpenBookGui(String book) { 
+		this.book = book;
+	}
+	
+	@Override
+	public boolean receive(Context context) {
+		context.enqueueWork(() -> ClientBookRegistry.INSTANCE.displayBookGui(book));
+		
+		return true;
+	}
+
+}
