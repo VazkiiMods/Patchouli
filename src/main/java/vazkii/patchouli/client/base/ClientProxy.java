@@ -28,8 +28,6 @@ public class ClientProxy extends CommonProxy {
 	
 	public void loadComplete(FMLLoadCompleteEvent event) {
 		BookRegistry.INSTANCE.reload();
-		
-		UnicodeFontHandler.makeUnicodeFont();
 	}
 	
 	@Override

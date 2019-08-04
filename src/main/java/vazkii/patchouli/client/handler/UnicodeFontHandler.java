@@ -14,7 +14,7 @@ public final class UnicodeFontHandler {
 
 	private static FontRenderer unicodeFont;
 	
-	public static void makeUnicodeFont() {
+	private static void makeUnicodeFont() {
 		Minecraft mc = Minecraft.getInstance();
 		unicodeFont = new FontRenderer(mc.textureManager, new Font(mc.textureManager, new ResourceLocation(Patchouli.MOD_ID, "unicode")));
 			
