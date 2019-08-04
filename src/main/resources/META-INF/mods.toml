@@ -1,0 +1,12 @@
+modLoader="javafml"
+loaderVersion="[25,)"
+issueTrackerURL="https://github.com/Vazkii/Patchouli"
+
+[[mods]]
+modId="patchouli"
+displayName="NeaPatchouli"
+version="${version}"
+authors="Vazkii"
+description='''
+Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers
+'''
