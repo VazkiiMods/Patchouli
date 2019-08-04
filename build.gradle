@@ -158,9 +158,9 @@ jar {
     exclude "**/assets/patchouli/advancements/**"
 }
 
-artifacts {
-    archives deobfJar
-}
+//artifacts {
+//    archives deobfJar
+//}
 
 publishing {
     publications {
@@ -170,9 +170,9 @@ publishing {
             version project.version
             from components.java
 
-            artifact deobfJar {
-                classifier 'deobf'
-            }
+//            artifact deobfJar {
+//                classifier 'deobf'
+//            }
         }
     }
 
