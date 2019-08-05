@@ -1,6 +1,32 @@
 {
 	"parent": "item/generated",
 	"textures": { 
-		"layer0": "patchouli:items/book_cyan"
-	}
+		"layer0": "patchouli:items/book_brown"
+	},
+	"overrides": [
+		{
+			"predicate": { "temp_color": 0.1 },
+			"model": "patchouli:item/book_blue"
+		},
+		{
+			"predicate": { "temp_color": 0.2 },
+			"model": "patchouli:item/book_cyan"
+		},
+		{
+			"predicate": { "temp_color": 0.3 },
+			"model": "patchouli:item/book_gray"
+		},
+		{
+			"predicate": { "temp_color": 0.4 },
+			"model": "patchouli:item/book_green"
+		},
+		{
+			"predicate": { "temp_color": 0.5 },
+			"model": "patchouli:item/book_purple"
+		},
+		{
+			"predicate": { "temp_color": 0.6 },
+			"model": "patchouli:item/book_red"
+		}
+	]
 }
