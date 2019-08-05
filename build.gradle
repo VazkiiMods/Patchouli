@@ -153,9 +153,9 @@ jar {
     exclude "**/*.exe"
     exclude "**/unused"
     
-    // exclude test assets
-    exclude "**/assets/patchouli/patchouli_books/**"
-    exclude "**/assets/patchouli/advancements/**"
+    // exclude test data
+    exclude "**/data/patchouli/patchouli_books/**"
+    exclude "**/data/patchouli/advancements/**"
 }
 
 //artifacts {
