@@ -3,6 +3,7 @@ package vazkii.patchouli.client.handler;
 import java.awt.Color;
 import java.util.function.Function;
 
+import net.minecraftforge.event.TickEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
@@ -39,7 +40,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
@@ -184,7 +184,7 @@ public class MultiblockVisualizationHandler {
 	}
 
 	@SubscribeEvent
-	public static void onClientTick(ClientTickEvent event) {
+	public static void onClientTick(TickEvent.ClientTickEvent event) {
 		if(Minecraft.getInstance().world == null)
 			hasMultiblock = false;
 		else if(isAnchored && blocks == blocksDone && airFilled == 0) {

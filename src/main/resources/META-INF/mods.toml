@@ -10,3 +10,8 @@ authors="Vazkii"
 description='''
 Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers
 '''
+
+[[dependencies.patchouli]]
+    modId="forge"
+    mandatory=true
+    versionRange="[28.0.49,)"
