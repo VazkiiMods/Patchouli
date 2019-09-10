@@ -11,10 +11,9 @@ import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
@@ -56,8 +55,8 @@ public class ClientAdvancements {
 	}
 
 	@SubscribeEvent
-	public static void onTick(ClientTickEvent event) {
-		if(event.phase == Phase.END && Minecraft.getInstance().player == null)
+	public static void onTick(TickEvent.ClientTickEvent event) {
+		if(event.phase == TickEvent.Phase.END && Minecraft.getInstance().player == null)
 			resetIfNeeded();
 	}
 

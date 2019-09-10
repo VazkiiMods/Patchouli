@@ -14,9 +14,9 @@ import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import vazkii.patchouli.common.network.NetworkHandler;
 import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
 
@@ -39,7 +39,7 @@ public final class AdvancementSyncHandler {
 	}
 	
 	@SubscribeEvent
-	public static void onLogin(PlayerLoggedInEvent event) {
+	public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
 		if(event.getPlayer() instanceof ServerPlayerEntity) {
 			ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
 			buildSyncSet(player);

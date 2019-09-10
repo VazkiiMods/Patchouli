@@ -72,41 +72,6 @@ public class ItemModBook extends Item {
 			}
 			
 		});
-		
-		// Temporary but needed for 1.14 until forge adds the hook
-		addPropertyOverride(new ResourceLocation("temp_color"), new IItemPropertyGetter() {
-			
-			@OnlyIn(Dist.CLIENT)
-			public float call(ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entityIn) {
-				Book book = getBook(stack);
-				
-				if(book != null) {
-					String bookTexture = book.bookTexture;
-					if(bookTexture != null && bookTexture.endsWith(".png")) {
-						bookTexture = bookTexture.replaceAll(".png$", "");
-						bookTexture = bookTexture.substring(bookTexture.indexOf("_") + 1);
-						
-						switch(bookTexture) {
-						case "blue":
-							return 0.11F;
-						case "cyan":
-							return 0.21F;
-						case "gray":
-							return 0.31F;
-						case "green":
-							return 0.41F;
-						case "purple":
-							return 0.51F;
-						case "red":
-							return 0.61F;
-						}
-					}
-				}
-				
-				return 0F;
-			}
-			
-		});
 	}
 
 	public static ItemStack forBook(Book book) {
