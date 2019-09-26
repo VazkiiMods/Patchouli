@@ -1,6 +1,8 @@
 package vazkii.patchouli.api.stub;
 
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -79,6 +81,16 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 		return "";
 	}
 
+	@Override
+	public List<ItemStack> deserializeItemStackList(String str) {
+		return Collections.emptyList();
+	}
+
+	@Override
+	public String serializeItemStackList(List<ItemStack> stacks) {
+		return "";
+	}
+	
 	@Override
 	public Ingredient deserializeIngredient(String str) {
 		return Ingredient.EMPTY;

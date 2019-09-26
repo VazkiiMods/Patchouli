@@ -1,6 +1,7 @@
 package vazkii.patchouli.api;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -95,6 +96,16 @@ public class PatchouliAPI {
 		 * Serializes an ItemStack into its string correspondent.
 		 */
 		public String serializeItemStack(ItemStack stack);
+		
+		/**
+		 * Serializes an ingredient string into a list of ItemStacks.
+		 */
+		public List<ItemStack> deserializeItemStackList(String str);
+		
+		/**
+		 * Serializes a list of ItemStacks into its string correspondent.
+		 */
+		public String serializeItemStackList(List<ItemStack> stacks);
 
 		// ================================================================================================
 		// Ingredient Serialization

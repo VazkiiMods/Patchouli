@@ -2,8 +2,8 @@ package vazkii.patchouli.common.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
-import com.google.common.collect.Lists;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.client.Minecraft;
@@ -84,10 +84,22 @@ public class ItemStackUtil {
 
 		return String.join(",", stacksSerialized);
 	}
-	
+
 	public static Ingredient loadIngredientFromString(String ingredientString) {
+		return Ingredient.fromStacks(loadStackListFromString(ingredientString).toArray(new ItemStack[0]));
+	}
+
+	public static String serializeStackList(List<ItemStack> stacks) {
+		StringJoiner joiner = new StringJoiner(",");
+		for (ItemStack stack : stacks) {
+			joiner.add(serializeStack(stack));
+		}
+		return joiner.toString();
+	}
+	
+	public static List<ItemStack> loadStackListFromString(String ingredientString) {
 		String[] stacksSerialized = splitStacksFromSerializedIngredient(ingredientString);
-		List<ItemStack> stacks = Lists.newArrayList();
+		List<ItemStack> stacks = new ArrayList<>();
 		for (int i = 0; i < stacksSerialized.length; i++) {
 			if (stacksSerialized[i].startsWith("tag:")) {
 				Tag<Item> tag = Minecraft.getInstance().world.getTags().getItems().get(new ResourceLocation(stacksSerialized[i].substring(4)));
@@ -96,11 +108,10 @@ public class ItemStackUtil {
 						stacks.add(new ItemStack(item));
 				}
 			}
-			
+
 			stacks.add(loadStackFromString(stacksSerialized[i]));
 		}
-
-		return Ingredient.fromStacks(stacks.toArray(new ItemStack[stacks.size()]));
+		return stacks;
 	}
 	
 	public static StackWrapper wrapStack(ItemStack stack) {
@@ -166,7 +177,7 @@ public class ItemStackUtil {
 
 		result.add(ingredientSerialized.substring(lastIndex));
 
-		return result.toArray(new String[result.size()]);
+		return result.toArray(new String[0]);
 	}
 	
 }

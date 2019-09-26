@@ -2,6 +2,7 @@ package vazkii.patchouli.common.base;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -107,7 +108,17 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	public String serializeItemStack(ItemStack stack) {
 		return ItemStackUtil.serializeStack(stack);
 	}
-	
+
+	@Override
+	public List<ItemStack> deserializeItemStackList(String str) {
+		return ItemStackUtil.loadStackListFromString(str);
+	}
+
+	@Override
+	public String serializeItemStackList(List<ItemStack> stacks) {
+		return ItemStackUtil.serializeStackList(stacks);
+	}
+
 	@Override
 	public Ingredient deserializeIngredient(String str) {
 		return ItemStackUtil.loadIngredientFromString(str);
