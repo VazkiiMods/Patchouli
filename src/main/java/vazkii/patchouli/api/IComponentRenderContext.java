@@ -36,4 +36,5 @@ public interface IComponentRenderContext {
 	
 	public int getHeaderColor();
 	
+	public int getTicksInBook();
 }

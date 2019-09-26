@@ -274,4 +274,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		return book.headerColor;
 	}
 
+	@Override
+	public int getTicksInBook() {
+		return ticksInBook;
+	}
 }
