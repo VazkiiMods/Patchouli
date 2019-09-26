@@ -24,26 +24,28 @@ public class VariableAssigner {
 	private static final Pattern INLINE_VAR_PATTERN = Pattern.compile("([^#]*)(#[^#]+)#(.*)");
 	private static final Pattern FUNCTION_PATTERN = Pattern.compile("(.+)->(.+)");
 
-	private static final Map<Class<?>, Assigner> ASSIGNERS = new HashMap<Class<?>, Assigner>() {{
-		put(String.class, VariableAssigner::assignStringField);
-		put(String[].class, VariableAssigner::assignStringArrayField);
-		put(List.class, VariableAssigner::assignList);
-		put(Map.class, VariableAssigner::assignMap);
-	}};
+	private static final Map<Class<?>, Assigner> ASSIGNERS = new HashMap<>();
+	static {
+		ASSIGNERS.put(String.class, VariableAssigner::assignStringField);
+		ASSIGNERS.put(String[].class, VariableAssigner::assignStringArrayField);
+		ASSIGNERS.put(List.class, VariableAssigner::assignList);
+		ASSIGNERS.put(Map.class, VariableAssigner::assignMap);
+	}
 	
-	private static final Map<String, Function<String, String>> FUNCTIONS = new HashMap<String, Function<String, String>>() {{
-		put("iname", VariableAssigner::iname);
-		put("icount", VariableAssigner::icount);
-		put("ename", VariableAssigner::ename);
-		put("lower", String::toLowerCase);
-		put("upper", String::toUpperCase);
-		put("trim", String::trim);
-		put("capital", WordUtils::capitalize);
-		put("fcapital", WordUtils::capitalizeFully);
-		put("exists", VariableAssigner::exists);
-		put("iexists", VariableAssigner::iexists);
-		put("inv", VariableAssigner::inv);
-	}};
+	private static final Map<String, Function<String, String>> FUNCTIONS = new HashMap<>();
+	static {
+		FUNCTIONS.put("iname", VariableAssigner::iname);
+		FUNCTIONS.put("icount", VariableAssigner::icount);
+		FUNCTIONS.put("ename", VariableAssigner::ename);
+		FUNCTIONS.put("lower", String::toLowerCase);
+		FUNCTIONS.put("upper", String::toUpperCase);
+		FUNCTIONS.put("trim", String::trim);
+		FUNCTIONS.put("capital", WordUtils::capitalize);
+		FUNCTIONS.put("fcapital", WordUtils::capitalizeFully);
+		FUNCTIONS.put("exists", VariableAssigner::exists);
+		FUNCTIONS.put("iexists", VariableAssigner::iexists);
+		FUNCTIONS.put("inv", VariableAssigner::inv);
+	}
 
 	public static void assignVariableHolders(Object object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
 		assignVariableHolders(new Context(object, variables, processor, encapsulation));
@@ -238,7 +240,7 @@ public class VariableAssigner {
 		final Map<String, String> cachedVars;
 
 		Context(Object object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
-			this(object, variables, processor, encapsulation, new HashMap());
+			this(object, variables, processor, encapsulation, new HashMap<>());
 		}
 
 		Context(Object object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation, Map<String, String> cachedVars) {

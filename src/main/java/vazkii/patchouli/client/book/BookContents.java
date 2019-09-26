@@ -23,12 +23,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import net.minecraftforge.forgespi.language.IModInfo;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookLanding;
 import vazkii.patchouli.client.book.template.BookTemplate;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -39,7 +39,7 @@ public class BookContents extends AbstractReadStateHolder {
 	private static final String[] ORDINAL_SUFFIXES = new String[]{ "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 	protected static final String DEFAULT_LANG = "en_us";
 	
-	public static final HashMap<ResourceLocation, Supplier<BookTemplate>> addonTemplates = new HashMap();
+	public static final HashMap<ResourceLocation, Supplier<BookTemplate>> addonTemplates = new HashMap<>();
 
 	public final Book book;
 
@@ -159,7 +159,7 @@ public class BookContents extends AbstractReadStateHolder {
 		} catch (Exception e) {
 			exception = e;
 			errored = true;
-			e.printStackTrace();
+			Patchouli.LOGGER.error("Error while loading book {}", book.resourceLoc, e);
 		}
 	}
 
@@ -195,7 +195,7 @@ public class BookContents extends AbstractReadStateHolder {
 			if (category.canAdd())
 				categories.put(key, category);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			Patchouli.LOGGER.error("Exception reading category {}", res);
 		}
 	}
 
@@ -211,12 +211,12 @@ public class BookContents extends AbstractReadStateHolder {
 				if (category != null)
 					category.addEntry(entry);
 				else
-					new RuntimeException("Entry " + key + " does not have a valid category.").printStackTrace();
+					Patchouli.LOGGER.error("Entry {} in {} does not have a valid category.", key, res);
 
 				entries.put(key, entry);
 			}
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			Patchouli.LOGGER.error("Exception reading entry {}", res);
 		}
 	}
 	
@@ -250,16 +250,14 @@ public class BookContents extends AbstractReadStateHolder {
 
 	protected InputStream loadJson(ResourceLocation resloc, ResourceLocation fallback) {
 		String path = "/data/" + resloc.getNamespace() + "/" + resloc.getPath();
-		System.out.println("Loading " + path);
+		Patchouli.LOGGER.debug("Loading {}", path);
 		
 		InputStream stream = book.ownerClass.getResourceAsStream(path);
-		System.out.println(book.ownerClass);
-		System.out.println(stream);
 		if(stream != null)
 			return stream;
 
 		if(fallback != null) {
-			System.err.println("Patchouli failed to load " + resloc + ". Switching to fallback.");
+			Patchouli.LOGGER.warn("Failed to load " + resloc + ". Switching to fallback.");
 			return loadJson(fallback, null);
 		}
 

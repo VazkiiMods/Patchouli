@@ -11,6 +11,7 @@ import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
+import vazkii.patchouli.common.base.Patchouli;
 
 public class EntityUtil {
 
@@ -31,7 +32,7 @@ public class EntityUtil {
 			try {
 				nbt = JsonToNBT.getTagFromJson(nbtStr);
 			} catch(CommandSyntaxException e) {
-				e.printStackTrace();
+				Patchouli.LOGGER.error("Failed to load entity data", e);
 			}
 		}
 		

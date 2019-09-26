@@ -4,6 +4,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 
 public class GuiBookWriter extends GuiBook {
@@ -89,7 +90,7 @@ public class GuiBookWriter extends GuiBook {
 			editableText = new BookTextRenderer(this, savedText, RIGHT_PAGE_X, yPos);
 		} catch(Throwable e) {
 			editableText = new BookTextRenderer(this, "[ERROR]", RIGHT_PAGE_X, yPos);
-			e.printStackTrace();
+			Patchouli.LOGGER.catching(e);
 		}
 	}
 }

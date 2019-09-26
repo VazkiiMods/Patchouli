@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import vazkii.patchouli.common.base.Patchouli;
 
 public class SerializationUtil {
 
@@ -33,7 +34,7 @@ public class SerializationUtil {
 			FileInputStream in = new FileInputStream(f);
 			return gson.fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), clazz);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Patchouli.LOGGER.error("Failed to load file", e);
 			return null;
 		}
 	}
@@ -52,7 +53,7 @@ public class SerializationUtil {
 			writer.write(json);
 			writer.close();
 		} catch(IOException e) {
-			e.printStackTrace();
+			Patchouli.LOGGER.error("Failed to save file", e);
 		}
 	}
 

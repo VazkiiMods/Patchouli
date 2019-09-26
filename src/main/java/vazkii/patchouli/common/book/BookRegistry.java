@@ -64,7 +64,7 @@ public class BookRegistry {
 							String bookName = relPath.substring(0, relPath.indexOf("/"));
 
 							if (bookName.contains("/")) {
-								(new IllegalArgumentException("Ignored book.json @ " + file)).printStackTrace();
+								Patchouli.LOGGER.warn("Ignored book.json @ {}", file);
 								return true;
 							}
 

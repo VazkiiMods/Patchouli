@@ -14,6 +14,7 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.util.EntityUtil;
 import vazkii.patchouli.common.util.EntityUtil.EntityCreator;
 
@@ -120,7 +121,7 @@ public class PageEntity extends PageWithText {
 					name = entity.getName().getFormattedText();
 			} catch(Exception e) {
 				errored = true;
-				e.printStackTrace();
+				Patchouli.LOGGER.error("Failed to load entity", e);
 			}
 		}
 	}

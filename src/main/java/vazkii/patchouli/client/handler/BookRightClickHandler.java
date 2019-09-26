@@ -71,7 +71,7 @@ public class BookRightClickHandler {
 
 	@SubscribeEvent
 	public static void onRightClick(RightClickBlock event) {
-		PlayerEntity player = event.getEntityPlayer();
+		PlayerEntity player = event.getPlayer();
 		ItemStack bookStack = player.getHeldItemMainhand();
 
 		if(event.getWorld().isRemote && player.isSneaking()) {

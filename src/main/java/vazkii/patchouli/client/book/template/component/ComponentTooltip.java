@@ -23,7 +23,7 @@ public class ComponentTooltip extends TemplateComponent {
 	
 	@Override
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
-		tooltip = new ArrayList();
+		tooltip = new ArrayList<>();
 		
 		for(String s : tooltipRaw) {
 			s = I18n.format(s).replaceAll("&", "\u00A7");
