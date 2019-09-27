@@ -1,6 +1,6 @@
 {
 	"name": "Test Entry 6",
-	"icon": "minecraft:textures/items/clock_06.png",
+	"icon": "minecraft:textures/item/clock_06.png",
 	"category": "test",
 	"priority": true,
 	"read_by_default": false,

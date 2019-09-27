@@ -1,6 +1,6 @@
 {
 	"name": "Very large multiblock",
-	"icon": "minecraft:textures/items/dye_powder_blue.png",
+	"icon": "minecraft:textures/item/lapis_lazuli.png",
 	"category": "intro/butts",
 	"priority": true,
 	"read_by_default": false,

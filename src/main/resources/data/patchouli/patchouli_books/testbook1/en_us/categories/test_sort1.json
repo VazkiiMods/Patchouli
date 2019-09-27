@@ -2,6 +2,6 @@
   "name": "Sortnum 2",
   "parent": "sortnum",
   "description": "Testing Sortnum - Entries without Sortnum vs Entries with Sortnum",
-  "icon": "minecraft:textures/items/arrow.png",
+  "icon": "minecraft:textures/item/arrow.png",
   "sortnum": 20000
 }

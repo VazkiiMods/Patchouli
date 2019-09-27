@@ -1,6 +1,6 @@
 {
   "name": "1 - Pig?",
-  "icon": "minecraft:spawn_egg:0{EntityTag:{id:\"minecraft:pig\"}}",
+  "icon": "minecraft:pig_spawn_egg",
   "category": "why_tho",
   "advancement": "patchouli:discover_pig",
   "pages": [
