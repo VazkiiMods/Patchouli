@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[25,)"
+loaderVersion="[28,)"
 issueTrackerURL="https://github.com/Vazkii/Patchouli"
 
 [[mods]]
@@ -14,4 +14,4 @@ Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and
 [[dependencies.patchouli]]
     modId="forge"
     mandatory=true
-    versionRange="[28.0.49,)"
+    versionRange="[28.1.0,)"
