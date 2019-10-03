@@ -1,6 +1,6 @@
 {
   "name": "aEntry",
-  "icon": "minecraft:textures/items/clock_02.png",
+  "icon": "minecraft:textures/item/clock_02.png",
   "category": "test_sort0",
   "sortnum": 1,
   "pages": [

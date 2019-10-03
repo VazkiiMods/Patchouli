@@ -1,6 +1,6 @@
 {
   "name": "zEntry",
-  "icon": "minecraft:textures/items/clock_00.png",
+  "icon": "minecraft:textures/item/clock_00.png",
   "category": "test_sort0",
   "sortnum": 0,
   "pages": [

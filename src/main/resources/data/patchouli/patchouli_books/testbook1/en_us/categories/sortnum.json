@@ -1,6 +1,6 @@
 {
   "name": "Sortnum Testing",
   "description": "Testing Sortnum! The entries are sorted by the Sortnum first, and then sorted alphabetically. Entries without sortnum are assumed 0.",
-  "icon": "minecraft:textures/items/end_crystal.png",
+  "icon": "minecraft:textures/item/end_crystal.png",
   "sortnum": 10000
 }

@@ -35,7 +35,7 @@ public class BookFolderLoader {
 					FileInputStream stream = new FileInputStream(bookJson);
 					BookRegistry.INSTANCE.loadBook(mod, Patchouli.class, res, stream, true);
 				} catch (IOException e) {
-					e.printStackTrace();
+					Patchouli.LOGGER.error("Failed to load book.json", e);
 				}
 			}
 		}

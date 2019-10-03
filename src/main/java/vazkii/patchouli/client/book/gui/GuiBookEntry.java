@@ -28,7 +28,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	BookEntry entry;
 	BookPage leftPage, rightPage;
 
-	Map<Button, Runnable> customButtons = new HashMap();
+	Map<Button, Runnable> customButtons = new HashMap<>();
 
 	public GuiBookEntry(Book book, BookEntry entry) {
 		this(book, entry, 0);
@@ -211,7 +211,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public FontRenderer getFont() {
-		return font;
+		return book.getFont();
 	}
 
 	@Override
@@ -274,4 +274,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		return book.headerColor;
 	}
 
+	@Override
+	public int getTicksInBook() {
+		return ticksInBook;
+	}
 }

@@ -4,6 +4,8 @@ import java.lang.management.ManagementFactory;
 
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import vazkii.patchouli.client.base.ClientProxy;
 
 @Mod(Patchouli.MOD_ID)
@@ -14,6 +16,8 @@ public class Patchouli {
 	// Mod Constants
 	public static final String MOD_ID = "patchouli";
 	public static final String PREFIX = MOD_ID + ":";
+
+	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
 	public static Patchouli instance;
 	public static CommonProxy proxy;

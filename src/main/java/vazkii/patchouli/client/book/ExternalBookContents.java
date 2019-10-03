@@ -59,12 +59,12 @@ public class ExternalBookContents extends BookContents {
 				stream = new FileInputStream(targetFile);
 				return stream;
 			} catch (IOException e) {
-				e.printStackTrace();
+				Patchouli.LOGGER.catching(e);
 			}
 		}
 		
 		if(fallback != null) {
-			new RuntimeException("Patchouli failed to load " + resloc + ". Switching to fallback.").printStackTrace();
+			Patchouli.LOGGER.warn("Failed to load " + resloc + ". Switching to fallback.");
 			return loadJson(fallback, null);
 		}
 		

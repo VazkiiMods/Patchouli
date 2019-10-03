@@ -44,6 +44,7 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookEye;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.Multiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
@@ -261,7 +262,7 @@ public class PageMultiblock extends PageWithText {
 					TileEntityRendererDispatcher.instance.render(te, pos.getX(), pos.getY(), pos.getZ(), ClientTicker.partialTicks);
 				} catch (Exception e) {
 					erroredTiles.add(te);
-					e.printStackTrace();
+					Patchouli.LOGGER.error("An exception occured rendering tile entity", e);
 				}
 			}
 		}

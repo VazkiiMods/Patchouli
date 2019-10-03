@@ -12,6 +12,7 @@ import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.PageEntity;
 import vazkii.patchouli.client.book.template.TemplateComponent;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.util.EntityUtil;
 import vazkii.patchouli.common.util.EntityUtil.EntityCreator;
 
@@ -71,7 +72,7 @@ public class ComponentEntity extends TemplateComponent {
 				offset = Math.max(height, entitySize) * 0.5F;
 			} catch(Exception e) {
 				errored = true;
-				e.printStackTrace();
+				Patchouli.LOGGER.error("Failed to load entity", e);
 			}
 		}
 	}

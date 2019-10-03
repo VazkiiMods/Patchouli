@@ -1,6 +1,6 @@
 {
   "name": "Entry with Sortnum",
-  "icon": "minecraft:textures/items/clock_63.png",
+  "icon": "minecraft:textures/item/clock_63.png",
   "category": "test_sort1",
   "sortnum": -100,
   "pages": [

@@ -1,6 +1,6 @@
 {
   "name": "Empty Entry Test",
-  "icon": "minecraft:textures/items/carrot.png",
+  "icon": "minecraft:textures/item/carrot.png",
   "category": "test",
   "pages": [],
   "__info": "This entry is a test! It intentionally has no pages!"

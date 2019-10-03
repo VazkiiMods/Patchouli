@@ -29,8 +29,8 @@ public final class AdvancementSyncHandler {
 
 	@SubscribeEvent
 	public static void onAdvancement(AdvancementEvent event) {
-		if(event.getEntityPlayer() instanceof ServerPlayerEntity) {
-			ServerPlayerEntity player = (ServerPlayerEntity) event.getEntityPlayer();
+		if(event.getPlayer() instanceof ServerPlayerEntity) {
+			ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
 			buildSyncSet(player);
 			
 			if(syncedAdvancements.contains(event.getAdvancement().getId()))

@@ -1,6 +1,6 @@
 {
   "display": {
-    "icon": { "item": "minecraft:wool", "data": 15 },
+    "icon": { "item": "minecraft:black_wool" },
     "title": { "translate": "Black Wool" },
     "description": { "translate": "The MCP Foundation requires you to obtain this." }
   },
@@ -8,7 +8,7 @@
   "criteria": {
     "wool": {
       "trigger": "minecraft:inventory_changed",
-      "conditions": { "items": [{ "item": "minecraft:wool", "data": 15 }] }
+      "conditions": { "items": [{ "item": "minecraft:black_wool" }] }
     }
   }
 }

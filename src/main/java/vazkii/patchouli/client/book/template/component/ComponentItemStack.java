@@ -12,30 +12,30 @@ import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
+import java.util.List;
+
 public class ComponentItemStack extends TemplateComponent {
 
 	@VariableHolder 
 	public String item;
 	
-	boolean framed;
+	private boolean framed;
 	@SerializedName("link_recipe")
-	boolean linkedRecipe;
+	private boolean linkedRecipe;
 	
-	transient Ingredient ingredient;
+	private transient List<ItemStack> items;
 	
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		ingredient = ItemStackUtil.loadIngredientFromString(item);
-		
-		ItemStack[] stacks = ingredient.getMatchingStacks();
-		
-		if(linkedRecipe && stacks.length == 1)
-			entry.addRelevantStack(stacks[0], pageNum);
+		items = ItemStackUtil.loadStackListFromString(item);
+		if(linkedRecipe && items.size() == 1)
+			entry.addRelevantStack(items.get(0), pageNum);
 	}
 	
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
-		super.render(page, mouseX, mouseY, pticks);
+		if(items.isEmpty()) 
+			return;
 		
 		if(framed) {
 			GlStateManager.enableBlend();
@@ -44,7 +44,7 @@ public class ComponentItemStack extends TemplateComponent {
 			AbstractGui.blit(x - 4, y - 4, 83, 71, 24, 24, 128, 128);
 		}
 		
-		page.parent.renderIngredient(x, y, mouseX, mouseY, ingredient);
+		page.parent.renderItemStack(x, y, mouseX, mouseY, items.get((page.parent.ticksInBook / 20) % items.size()));
 	}
 	
 }

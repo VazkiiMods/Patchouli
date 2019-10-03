@@ -1,6 +1,6 @@
 {
 	"name": "The Ropes",
 	"description": "The preface, and introductory steps, to alchemical artisanship.$(br2)Beginners may start their journey into this wonderful topic through the knowledge here contained.",
-	"icon": "minecraft:textures/items/brick.png",
+	"icon": "minecraft:textures/item/brick.png",
 	"sortnum": 0
 }
