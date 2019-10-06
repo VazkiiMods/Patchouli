@@ -5,31 +5,42 @@ import java.util.function.Predicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.common.util.TriPredicate;
 import vazkii.patchouli.api.IStateMatcher;
 
 public class StateMatcher implements IStateMatcher {
 
 	public static final StateMatcher ANY = displayOnly(Blocks.AIR.getDefaultState());
-	public static final StateMatcher AIR = fromState(Blocks.AIR.getDefaultState());
+	public static final StateMatcher AIR = fromPredicate(Blocks.AIR.getDefaultState(), (w, p, s) -> s.isAir(w, p));
 
 	private final BlockState displayState;
-	private final Predicate<BlockState> statePredicate;
+	private final TriPredicate<IBlockReader, BlockPos, BlockState> statePredicate;
 
-	private StateMatcher(BlockState displayState, Predicate<BlockState> statePredicate) {
+	private StateMatcher(BlockState displayState, TriPredicate<IBlockReader, BlockPos, BlockState> statePredicate) {
 		this.displayState = displayState;
 		this.statePredicate = statePredicate;
 	}
 
 	public static StateMatcher fromPredicate(BlockState display, Predicate<BlockState> predicate) {
-		return new StateMatcher(display, predicate);
+		return new StateMatcher(display, (world, pos, state) -> predicate.test(state));
 	}
 
 	public static StateMatcher fromPredicate(Block display, Predicate<BlockState> predicate) {
 		return fromPredicate(display.getDefaultState(), predicate);
 	}
 
+	public static StateMatcher fromPredicate(BlockState display, TriPredicate<IBlockReader, BlockPos, BlockState> predicate) {
+		return new StateMatcher(display, predicate);
+	}
+
+	public static StateMatcher fromPredicate(Block display, TriPredicate<IBlockReader, BlockPos, BlockState> predicate) {
+		return new StateMatcher(display.getDefaultState(), predicate);
+	}
+
 	public static StateMatcher fromState(BlockState displayState, boolean strict) {
-		return new StateMatcher(displayState,
+		return fromPredicate(displayState,
 				strict ? ((state) -> state.getBlock() == displayState.getBlock() && state.getProperties().equals(displayState.getProperties()))
 						: ((state) -> state.getBlock() == displayState.getBlock()));
 	}
@@ -47,7 +58,7 @@ public class StateMatcher implements IStateMatcher {
 	}
 
 	public static StateMatcher displayOnly(BlockState state) {
-		return new StateMatcher(state, (s) -> true);
+		return new StateMatcher(state, (w, p, s) -> true);
 	}
 
 	public static StateMatcher displayOnly(Block block) {
@@ -60,7 +71,7 @@ public class StateMatcher implements IStateMatcher {
 	}
 
 	@Override
-	public Predicate<BlockState> getStatePredicate() {
+	public TriPredicate<IBlockReader, BlockPos, BlockState> getStatePredicate() {
 		return statePredicate;
 	}
 

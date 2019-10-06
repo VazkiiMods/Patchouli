@@ -3,8 +3,11 @@ package vazkii.patchouli.api;
 import java.util.function.Predicate;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.TriPredicate;
 
 /**
  * A composite element of a rendering block state, and a predicate
@@ -24,6 +27,6 @@ public interface IStateMatcher {
 	 * Returns a predicate that validates whether the given state is 
 	 * acceptable.
 	 */
-	public Predicate<BlockState> getStatePredicate();
+	public TriPredicate<IBlockReader, BlockPos, BlockState> getStatePredicate();
 
 }
