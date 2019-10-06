@@ -4,6 +4,9 @@ import java.util.function.Predicate;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
+import net.minecraftforge.common.util.TriPredicate;
 import vazkii.patchouli.api.IStateMatcher;
 
 public class StubMatcher implements IStateMatcher {
@@ -20,8 +23,8 @@ public class StubMatcher implements IStateMatcher {
 	}
 
 	@Override
-	public Predicate<BlockState> getStatePredicate() {
-		return s -> false;
+	public TriPredicate<IBlockReader, BlockPos, BlockState> getStatePredicate() {
+		return (w, p, s) -> false;
 	}
 
 }

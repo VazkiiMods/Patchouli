@@ -26,6 +26,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.TriPredicate;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
@@ -165,10 +166,10 @@ public class Multiblock implements IMultiblock, IEnviromentBlockReader {
 	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
 		setWorld(world);
 		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-		Predicate<BlockState> pred = stateTargets[x][y][z].getStatePredicate();
+		TriPredicate<IBlockReader, BlockPos, BlockState> pred = stateTargets[x][y][z].getStatePredicate();
 		BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
 
-		return pred.test(state);
+		return pred.test(world, checkPos, state);
 	}
 
 	void build(Object[] targets, int[] dimensions) {
