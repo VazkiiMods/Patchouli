@@ -20,9 +20,7 @@ public class ItemStackUtil {
 	public static String serializeStack(ItemStack stack) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(stack.getItem().getRegistryName().toString());
-		builder.append(":");
-		builder.append(stack.getDamage());
-		
+
 		int count = stack.getCount();
 		if (count > 1) {
 			builder.append("#");
@@ -43,8 +41,6 @@ public class ItemStackUtil {
 			res = res.substring(0, nbtStart);
 		}
 		
-		int meta = 0;
-		
 		String[] upper = res.split("#");
 		String count = "1";
 		if(upper.length > 1) {
@@ -56,15 +52,10 @@ public class ItemStackUtil {
 		if(tokens.length < 2)
 			return ItemStack.EMPTY;
 		
-		if(tokens.length == 3)
-			meta = Integer.parseInt(tokens[2]);
-		
 		int countn = Integer.parseInt(count);
 		Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(tokens[0], tokens[1]));
 		ItemStack stack = new ItemStack(item, countn);
-		if(meta != 0)
-			stack.setDamage(meta);
-		
+
 		if(!nbt.isEmpty())
 			try {
 				stack.setTag(JsonToNBT.getTagFromJson(nbt));
@@ -135,7 +126,7 @@ public class ItemStackUtil {
 		
 		@Override
 		public int hashCode() {
-			return stack.getItem().hashCode() ^ stack.getDamage() * 31;
+			return stack.getItem().hashCode();
 		}
 		
 		@Override
