@@ -11,9 +11,11 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import vazkii.patchouli.api.BookContentsReloadEvent;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ExternalBookContents;
@@ -200,8 +202,10 @@ public class Book {
 		if(contents == null)
 			contents = isExternal ? new ExternalBookContents(this) : new BookContents(this);
 	
-		if(!isExtension)
+		if(!isExtension) {
 			contents.reload(false);
+			MinecraftForge.EVENT_BUS.post(new BookContentsReloadEvent(this.bookResource));
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -224,6 +228,7 @@ public class Book {
 			}
 			
 			contents.reload(true);
+			MinecraftForge.EVENT_BUS.post(new BookContentsReloadEvent(this.bookResource));
 		}
 	}
 	
