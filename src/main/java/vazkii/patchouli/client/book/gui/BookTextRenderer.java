@@ -3,21 +3,20 @@ package vazkii.patchouli.client.book.gui;
 import java.util.List;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.resources.I18n;
 import vazkii.patchouli.client.book.text.BookTextParser;
 import vazkii.patchouli.client.book.text.Word;
 import vazkii.patchouli.common.book.Book;
 
 public class BookTextRenderer {
-	final Book book;
-	final GuiBook gui;
-	final FontRenderer font;
-	final String text;
-	final int x, y, width;
-	final int spaceWidth;
-	final int lineHeight;
-	final int baseColor;
+	private final Book book;
+	private final GuiBook gui;
+	private final String text;
+	private final int x, y, width;
+	private final int lineHeight;
+	private final int baseColor;
 
-	List<Word> words;
+	private List<Word> words;
 	
 	public BookTextRenderer(GuiBook gui, String text, int x, int y) {
 		this(gui, text, x, y, GuiBook.PAGE_WIDTH, GuiBook.TEXT_LINE_HEIGHT, gui.book.textColor);
@@ -26,12 +25,14 @@ public class BookTextRenderer {
 	public BookTextRenderer(GuiBook gui, String text, int x, int y, int width, int lineHeight, int baseColor) {
 		this.book = gui.book;
 		this.gui = gui;
-		this.font = gui.getMinecraft().fontRenderer;
-		this.text = text;
+		if (book.i18n) {
+			this.text = I18n.format(text);
+		} else {
+			this.text = text;
+		}
 		this.x = x;
 		this.y = y;
 		this.width = width;
-		this.spaceWidth = font.getStringWidth(" ");
 		this.lineHeight = lineHeight;
 		this.baseColor = baseColor;
 		

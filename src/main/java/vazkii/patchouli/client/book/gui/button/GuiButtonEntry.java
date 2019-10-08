@@ -17,9 +17,9 @@ public class GuiButtonEntry extends Button {
 	private static final int ANIM_TIME = 5;
 
 	GuiBook parent;
-	BookEntry entry;
-	int i;
-	float timeHovered;
+	private BookEntry entry;
+	private int i;
+	private float timeHovered;
 
 	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, int i, Button.IPressable onPress) {
 		super(x, y, GuiBook.PAGE_WIDTH, 10, "", onPress);
@@ -53,20 +53,24 @@ public class GuiButtonEntry extends Button {
 			
 			GlStateManager.scalef(2F, 2F, 2F);
 
-			int color = parent.book.textColor;
 			String name = (entry.isPriority() ? TextFormatting.ITALIC : "") + entry.getName();
 			if(locked) {
 				name = I18n.format("patchouli.gui.lexicon.locked");
-				color = 0x77000000 | (parent.book.textColor & 0x00FFFFFF);
 			}
-			if(entry.isSecret())
-				color = 0xAA000000 | (parent.book.textColor & 0x00FFFFFF); 
-			
+			int color = getColor();
 			entry.getBook().getFont().drawString(name, x + 12, y, color);
 			
 			if(!entry.isLocked())
 				GuiBook.drawMarking(parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());
 		}
+	}
+	
+	private int getColor() {
+		if (entry.isSecret()) 
+			return 0xAA000000 | (parent.book.textColor & 0x00FFFFFF);
+		if (entry.isLocked())
+			return 0x77000000 | (parent.book.textColor & 0x00FFFFFF);
+		return entry.getEntryColor();
 	}
 	
 	@Override

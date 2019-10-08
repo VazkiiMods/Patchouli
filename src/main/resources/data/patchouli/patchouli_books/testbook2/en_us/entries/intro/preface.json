@@ -4,10 +4,15 @@
 	"category": "intro",
 	"priority": true,
 	"read_by_default": false,
+	"entry_color": "8892c9",
 	"pages": [
 		{
 			"type": "text",
-			"text": "$(bold)\"$()$(italic)Humankind cannot gain anything without first giving something in return. To obtain, something of equal value must be lost. That is alchemy's first law of Equivalent Exchange.$(bold)\"$()$(br)...is what many authors would begin their textbooks with.$(br2)Fortunately for you, I am not \"many authors\"."
+			"text": "patchouli.gui.lexicon.index.info"
+		},
+		{
+			"type": "text",
+			"text": "advancements.nether.uneasy_alliance.description"
 		},
 		{
 			"type": "text",

@@ -3,6 +3,7 @@
     "icon": "minecraft:furnace",
     "category": "intro",
     "priority": true,
+    "entry_color": "114fbf",
     "pages": [
         {
             "type": "doublerecipe",
