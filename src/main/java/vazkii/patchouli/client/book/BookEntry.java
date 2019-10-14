@@ -25,28 +25,32 @@ import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
 
 public class BookEntry extends AbstractReadStateHolder implements Comparable<BookEntry> {
 
-	String name, category, flag;
+	private String name, category, flag;
 
 	@SerializedName("icon")
-	String iconRaw;
+	private String iconRaw;
 
-	boolean priority = false;
-	boolean secret = false;
+	private boolean priority = false;
+	private boolean secret = false;
 	@SerializedName("read_by_default")
-	boolean readByDefault = false;
-	BookPage[] pages;
-	String advancement, turnin;
-	int sortnum;
+	private boolean readByDefault = false;
+	private BookPage[] pages;
+	private String advancement, turnin;
+	private int sortnum;
+	@SerializedName("entry_color")
+	private String entryColorRaw;
 
-	transient ResourceLocation resource;
-	transient Book book, trueProvider;
-	transient BookCategory lcategory = null;
-	transient BookIcon icon = null;
-	transient List<BookPage> realPages = new ArrayList<>();
-	transient List<StackWrapper> relevantStacks = new LinkedList<>();
-	transient boolean locked;
+	private transient ResourceLocation resource;
+	transient Book book;
+	private transient Book trueProvider;
+	private transient BookCategory lcategory = null;
+	private transient BookIcon icon = null;
+	private transient List<BookPage> realPages = new ArrayList<>();
+	private transient List<StackWrapper> relevantStacks = new LinkedList<>();
+	private transient boolean locked;
+	private transient int entryColor;
 
-	transient boolean built;
+	private transient boolean built;
 
 	public String getName() {
 		return name;
@@ -62,7 +66,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		List<BookPage> pages = getPages();
 		for (int i = 0; i < pages.size(); i++) {
 			BookPage page = pages.get(i);
-			if (page.anchor != null && anchor.equals(page.anchor))
+			if (anchor.equals(page.anchor))
 				return i;
 		}
 
@@ -123,6 +127,10 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		return isSecret() && isLocked();
 	}
 
+	public int getEntryColor() {
+		return entryColor;
+	}
+
 	public ResourceLocation getResource() {
 		return resource;
 	}
@@ -173,6 +181,11 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 			return;
 
 		this.resource = resource;
+		if (entryColorRaw != null) {
+			this.entryColor = Integer.parseInt(entryColorRaw, 16);
+		} else {
+			this.entryColor = book.textColor;
+		}
 		for(int i = 0; i < pages.length; i++)
 			if(pages[i].canAdd(book)) {
 				realPages.add(pages[i]);

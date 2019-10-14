@@ -128,6 +128,8 @@ public class Book {
 	@SerializedName("allow_extensions")
 	public boolean allowExtensions = true;
 	
+	public boolean i18n = false;
+	
 	public Map<String, String> macros = new HashMap<>();
 	
 	public void build(IModInfo owner,  Class<?> ownerClass, ResourceLocation resource, boolean external) {
