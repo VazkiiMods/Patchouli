@@ -74,7 +74,7 @@ public class PageQuest extends PageWithText {
 	public void render(int mouseX, int mouseY, float pticks) {
 		super.render(mouseX, mouseY, pticks);
 		
-		parent.drawCenteredStringNoShadow(title == null || title.isEmpty() ? I18n.format("patchouli.gui.lexicon.objective") : title, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		parent.drawCenteredStringNoShadow(title == null || title.isEmpty() ? I18n.format("patchouli.gui.lexicon.objective") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		GuiBook.drawSeparator(book, 0, 12);
 		
 		if(!isManual) {

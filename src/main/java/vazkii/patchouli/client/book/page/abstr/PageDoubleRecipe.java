@@ -77,7 +77,7 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	}
 	
 	protected String getTitle(boolean second) {
-		return second ? title2 : title1;
+		return i18n(second ? title2 : title1);
 	}
 
 }

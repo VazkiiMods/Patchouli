@@ -35,7 +35,7 @@ public class PageSpotlight extends PageWithText {
 		GlStateManager.enableBlend();
 		AbstractGui.blit(GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 128);
 		
-		parent.drawCenteredStringNoShadow(title != null && !title.isEmpty() ? title : itemStack.getDisplayName().getFormattedText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		parent.drawCenteredStringNoShadow(title != null && !title.isEmpty() ? i18n(title) : itemStack.getDisplayName().getFormattedText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		parent.renderItemStack(GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, itemStack);
 		
 		super.render(mouseX, mouseY, pticks);

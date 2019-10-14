@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.minecraft.client.resources.I18n;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
@@ -53,7 +54,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	private transient boolean built;
 
 	public String getName() {
-		return name;
+		return book.i18n ? I18n.format(name) : name;
 	}
 
 	public List<BookPage> getPages() {
@@ -166,7 +167,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 
 		int sort = this.sortnum - o.sortnum;
 
-		return sort == 0 ? this.name.compareTo(o.name) : sort;
+		return sort == 0 ? this.getName().compareTo(o.getName()) : sort;
 	}
 
 	public void setBook(Book book) {

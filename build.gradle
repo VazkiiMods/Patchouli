@@ -133,9 +133,6 @@ def parseConfig(File config) {
 }
 
 jar {
-    //rename the default output, for some better... sanity with scipts
-    archiveName = "${baseName} ${version}.${extension}"
-
      manifest {
         attributes([
             "Specification-Title": "${config.mod_id}",
@@ -158,9 +155,14 @@ jar {
     exclude "**/data/patchouli/advancements/**"
 }
 
-//artifacts {
-//    archives deobfJar
-//}
+task srcJar (type: Jar) {
+    from sourceSets.main.java
+    classifier = 'sources'
+}
+
+artifacts {
+    archives srcJar
+}
 
 publishing {
     publications {
