@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
@@ -67,5 +68,8 @@ public abstract class BookPage {
 	public boolean canAdd(Book book) {
 		return flag == null || flag.isEmpty() || PatchouliConfig.getConfigFlag(flag);
 	}
-	
+
+	public String i18n(String text) {
+		return book.i18n ? I18n.format(text) : text;
+	}
 }

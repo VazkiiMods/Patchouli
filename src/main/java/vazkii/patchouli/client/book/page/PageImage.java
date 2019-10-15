@@ -49,7 +49,7 @@ public class PageImage extends PageWithText {
 			GuiBook.drawFromTexture(book, x, y, 405, 149, 106, 106);
 		
 		if(title != null && !title.isEmpty())
-			parent.drawCenteredStringNoShadow(title, GuiBook.PAGE_WIDTH / 2, -3, book.headerColor);
+			parent.drawCenteredStringNoShadow(i18n(title), GuiBook.PAGE_WIDTH / 2, -3, book.headerColor);
 		
 		if(images.length > 1 && border) {
 			int xs = x + 83;

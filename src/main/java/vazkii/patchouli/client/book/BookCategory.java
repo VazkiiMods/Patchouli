@@ -6,31 +6,32 @@ import java.util.stream.Stream;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
 public class BookCategory extends AbstractReadStateHolder implements Comparable<BookCategory> {
 
-	String name, description, parent, flag;
+	private String name, description, parent, flag;
 	@SerializedName("icon")
-	String iconRaw;
-	int sortnum;
-	boolean secret = false;
+	private String iconRaw;
+	private int sortnum;
+	private boolean secret = false;
 
-	transient Book book, trueProvider;
-	transient boolean checkedParent = false;
-	transient BookCategory parentCategory;
-	transient List<BookCategory> children = new ArrayList<>();
-	transient List<BookEntry> entries = new ArrayList<>();
-	transient boolean locked;
-	transient BookIcon icon = null;
-	transient ResourceLocation resource;
+	private transient Book book, trueProvider;
+	private transient boolean checkedParent = false;
+	private transient BookCategory parentCategory;
+	private transient List<BookCategory> children = new ArrayList<>();
+	private transient List<BookEntry> entries = new ArrayList<>();
+	private transient boolean locked;
+	private transient BookIcon icon = null;
+	private transient ResourceLocation resource;
 	
-	transient boolean built;
+	private transient boolean built;
 
 	public String getName() {
-		return name;
+		return book.i18n ? I18n.format(name) : name;
 	}
 
 	public String getDescription() {

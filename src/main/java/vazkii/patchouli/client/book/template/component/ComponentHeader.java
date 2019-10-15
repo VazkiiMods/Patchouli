@@ -42,8 +42,8 @@ public class ComponentHeader extends TemplateComponent {
 		GlStateManager.scalef(scale, scale, scale);
 		
 		if(centered)
-			page.parent.drawCenteredStringNoShadow(text, 0, 0, color);
-		else page.fontRenderer.drawString(text, 0, 0, color);
+			page.parent.drawCenteredStringNoShadow(page.i18n(text), 0, 0, color);
+		else page.fontRenderer.drawString(page.i18n(text), 0, 0, color);
 		GlStateManager.popMatrix();
 	}
 	

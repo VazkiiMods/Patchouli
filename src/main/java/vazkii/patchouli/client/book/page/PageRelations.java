@@ -52,7 +52,7 @@ public class PageRelations extends PageWithText {
 	
 	@Override
 	public void render(int mouseX, int mouseY, float pticks) {
-		parent.drawCenteredStringNoShadow(title == null || title.isEmpty() ? I18n.format("patchouli.gui.lexicon.relations") : title, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		parent.drawCenteredStringNoShadow(title == null || title.isEmpty() ? I18n.format("patchouli.gui.lexicon.relations") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		GuiBook.drawSeparator(book, 0, 12);
 		
 		super.render(mouseX, mouseY, pticks);
