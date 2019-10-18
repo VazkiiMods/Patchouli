@@ -22,7 +22,7 @@
                     [
                         " GRG ",
                         "GGRGG",
-                        "RRRRR",
+                        "RRNRR",
                         "GGRGG",
                         " GRG "
                     ], [
@@ -53,8 +53,9 @@
                 ],
                 "mapping": {
                     "G": "minecraft:gold_block",
-                    "W": "minecraft:wool",
-                    "R": "minecraft:red_terracotta"
+                    "W": "#minecraft:wool",
+                    "R": "minecraft:red_terracotta",
+                    "N": "minecraft:note_block[note=4]"
                 }
             }
         }

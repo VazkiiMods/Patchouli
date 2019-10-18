@@ -47,7 +47,7 @@
           " ": "ANY",
           "0": "minecraft:obsidian",
           "O": "minecraft:obsidian",
-          "P": "minecraft:nether_portal"
+          "P": "minecraft:nether_portal[axis=z]"
         },
         "symmetrical": true,
         "offset"     : [0, 0, 0],

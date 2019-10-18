@@ -1,7 +1,5 @@
 package vazkii.patchouli.api;
 
-import java.util.function.Predicate;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
@@ -25,7 +23,8 @@ public interface IStateMatcher {
 	
 	/**
 	 * Returns a predicate that validates whether the given state is 
-	 * acceptable.
+	 * acceptable. This should check the passed in blockstate instead of requerying it from the world,
+	 * for both performance and correctness reasons -- the state may be rotated for multiblock matching.
 	 */
 	public TriPredicate<IBlockReader, BlockPos, BlockState> getStatePredicate();
 

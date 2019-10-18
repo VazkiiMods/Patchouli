@@ -61,7 +61,7 @@
 					"G": "minecraft:glass",
 					"R": "minecraft:stone",
 					"S": "minecraft:sponge",
-					"W": "minecraft:wool",
+					"W": "#minecraft:wool",
 					"P": "minecraft:pumpkin"
 				},
 				"symmetrical": true,
