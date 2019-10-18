@@ -42,17 +42,15 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 
 	private boolean firstLoad = true;
 
-	public Gson gson;
+	public final Gson gson = new GsonBuilder()
+			.registerTypeHierarchyAdapter(BookPage.class, new LexiconPageAdapter())
+			.registerTypeHierarchyAdapter(TemplateComponent.class, new TemplateComponentAdapter())
+			.create();
 	public String currentLang;
 
 	public static final ClientBookRegistry INSTANCE = new ClientBookRegistry();
 	
-	private ClientBookRegistry() { 
-		gson = new GsonBuilder()
-				.registerTypeHierarchyAdapter(BookPage.class, new LexiconPageAdapter())
-				.registerTypeHierarchyAdapter(TemplateComponent.class, new TemplateComponentAdapter())
-				.create();
-	}
+	private ClientBookRegistry() {}
 	
 	public void init() {
 		addPageTypes();

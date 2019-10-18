@@ -3,10 +3,9 @@ package vazkii.patchouli.common.util;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
@@ -46,12 +45,11 @@ public class SerializationUtil {
 	public static <T> void saveToFile(Gson gson, File f, Class<? extends T> clazz, T obj) {
 		String json = gson.toJson(obj, clazz);
 		try {
-			if(!f.exists())
-				f.createNewFile();
+			f.createNewFile();
 			
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f)));
-			writer.write(json);
-			writer.close();
+			try (BufferedWriter writer = new BufferedWriter(new FileWriter(f))) {
+				writer.write(json);
+			}
 		} catch(IOException e) {
 			Patchouli.LOGGER.error("Failed to save file", e);
 		}
