@@ -41,7 +41,7 @@ public class StateMatcher implements IStateMatcher {
 
 	public static StateMatcher fromState(BlockState displayState, boolean strict) {
 		return fromPredicate(displayState,
-				strict ? ((state) -> state.getBlock() == displayState.getBlock() && state.getProperties().equals(displayState.getProperties()))
+				strict ? ((state) -> state == displayState)
 						: ((state) -> state.getBlock() == displayState.getBlock()));
 	}
 
