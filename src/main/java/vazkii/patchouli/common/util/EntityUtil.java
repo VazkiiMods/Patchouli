@@ -35,26 +35,26 @@ public class EntityUtil {
 				Patchouli.LOGGER.error("Failed to load entity data", e);
 			}
 		}
-		
-		EntityType<?> type = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityId));
+
+		ResourceLocation key = new ResourceLocation(entityId);
+		if (!ForgeRegistries.ENTITIES.containsKey(key)) {
+			throw new RuntimeException("Unknown entity id: " + entityId);
+		}
+		EntityType<?> type = ForgeRegistries.ENTITIES.getValue(key);
 		final CompoundNBT useNbt = nbt;
 		final String useId = entityId;
-		try {
-			return (world) -> {
-				Entity entity;
-				try {
-					entity = type.create(world);
-					if(useNbt != null)
-						entity.read(useNbt);
-					
-					return entity;
-				} catch (Exception e) {
-					throw new IllegalArgumentException("Can't load entity " + useId, e);
-				}
-			};
-		} catch(Exception e) {
-			throw new RuntimeException("Could not find constructor for entity type " + entityId, e);
-		}
+		return (world) -> {
+			Entity entity;
+			try {
+				entity = type.create(world);
+				if(useNbt != null)
+					entity.read(useNbt);
+
+				return entity;
+			} catch (Exception e) {
+				throw new IllegalArgumentException("Can't load entity " + useId, e);
+			}
+		};
 	}
 	
 	private static Pair<String, String> splitNameAndNBT(String entityId) {

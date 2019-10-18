@@ -34,8 +34,10 @@ public class PatchouliSounds {
 	}
 	
 	public static SoundEvent getSound(String sound, SoundEvent fallback) {
-		SoundEvent attempt = ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(sound));
-		return attempt == null ? fallback : attempt; 
+		ResourceLocation key = new ResourceLocation(sound);
+		return ForgeRegistries.SOUND_EVENTS.containsKey(key)
+				? ForgeRegistries.SOUND_EVENTS.getValue(key)
+				: fallback;
 	}
 	
 }

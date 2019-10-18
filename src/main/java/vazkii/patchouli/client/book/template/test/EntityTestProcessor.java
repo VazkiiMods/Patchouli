@@ -17,9 +17,9 @@ public class EntityTestProcessor implements IComponentProcessor {
 			entityType = entityType.substring(0, entityType.indexOf("{"));
 
 
-		EntityType<?> type = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entityType));
-		if (type != null) {
-			entityName = type.getName().getString();
+		ResourceLocation key = new ResourceLocation(entityType);
+		if (ForgeRegistries.ENTITIES.containsKey(key)) {
+			entityName = ForgeRegistries.ENTITIES.getValue(key).getName().getString();
 		}
 	}
 

@@ -63,26 +63,26 @@ public class SerializedMultiblock {
 			return StateMatcher.AIR;
 
 		String[] split = s.split("\\[");
-		Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(split[0]));
-		if (block != null) {
-			if (split.length > 1) {
-				BlockState state = block.getDefaultState();
-				for (String part : split[1].replace("]", "").split(",")) {
-					String[] keyValue = part.split("=");
-					for (IProperty<?> prop : state.getProperties()) {
-						BlockState changed = findProperty(state, prop, keyValue[0], keyValue[1]);
-						if (changed != null) {
-							state = changed;
-							break;
-						}
+		ResourceLocation blockId = new ResourceLocation(split[0]);
+		if (!ForgeRegistries.BLOCKS.containsKey(blockId)) {
+			throw new RuntimeException("Unknown block ID: " + blockId);
+		}
+		Block block = ForgeRegistries.BLOCKS.getValue(blockId);
+		if (split.length > 1) {
+			BlockState state = block.getDefaultState();
+			for (String part : split[1].replace("]", "").split(",")) {
+				String[] keyValue = part.split("=");
+				for (IProperty<?> prop : state.getProperties()) {
+					BlockState changed = findProperty(state, prop, keyValue[0], keyValue[1]);
+					if (changed != null) {
+						state = changed;
+						break;
 					}
 				}
-				return StateMatcher.fromState(state);
-			} else
-				return StateMatcher.fromBlockLoose(block);
-		}
-
-		return null;
+			}
+			return StateMatcher.fromState(state);
+		} else
+			return StateMatcher.fromBlockLoose(block);
 	}
 
 	private <T extends Comparable<T>> BlockState findProperty(BlockState state, IProperty<T> prop, String key, String newValue) {

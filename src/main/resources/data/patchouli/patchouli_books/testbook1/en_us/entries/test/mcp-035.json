@@ -29,97 +29,97 @@
       "title": "MCP-035-0",
       "advancement": "patchouli:mcp_035_0",
       "text": "White variant of MCP-035, designated MCP-035-0.",
-      "item": "minecraft:wool:0"
+      "item": "minecraft:white_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-1",
       "advancement": "patchouli:mcp_035_1",
       "text": "Orange variant of MCP-035, designated MCP-035-1.",
-      "item": "minecraft:wool:1"
+      "item": "minecraft:orange_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-2",
       "advancement": "patchouli:mcp_035_2",
       "text": "Magenta variant of MCP-035, designated MCP-035-2.",
-      "item": "minecraft:wool:2"
+      "item": "minecraft:magenta_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-3",
       "advancement": "patchouli:mcp_035_3",
       "text": "Light-blue variant of MCP-035, designated MCP-035-3.",
-      "item": "minecraft:wool:3"
+      "item": "minecraft:light_blue_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-4",
       "advancement": "patchouli:mcp_035_4",
       "text": "Yellow variant of MCP-035, designated MCP-035-4.",
-      "item": "minecraft:wool:4"
+      "item": "minecraft:yellow_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-5",
       "advancement": "patchouli:mcp_035_5",
       "text": "Lime variant of MCP-035, designated MCP-035-5.",
-      "item": "minecraft:wool:5"
+      "item": "minecraft:lime_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-6",
       "advancement": "patchouli:mcp_035_6",
       "text": "Pink variant of MCP-035, designated MCP-035-6.",
-      "item": "minecraft:wool:6"
+      "item": "minecraft:pink_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-7",
       "advancement": "patchouli:mcp_035_7",
       "text": "Gray variant of MCP-035, designated MCP-035-7.",
-      "item": "minecraft:wool:7"
+      "item": "minecraft:gray_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-8",
       "advancement": "patchouli:mcp_035_8",
       "text": "Light-gray variant of MCP-035, designated MCP-035-8.",
-      "item": "minecraft:wool:8"
+      "item": "minecraft:light_gray_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-9",
       "advancement": "patchouli:mcp_035_9",
       "text": "Cyan variant of MCP-035, designated MCP-035-9.",
-      "item": "minecraft:wool:9"
+      "item": "minecraft:cyan_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-10",
       "advancement": "patchouli:mcp_035_10",
       "text": "Purple variant of MCP-035, designated MCP-035-10.",
-      "item": "minecraft:wool:10"
+      "item": "minecraft:purple_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-11",
       "advancement": "patchouli:mcp_035_11",
       "text": "Blue variant of MCP-035, designated MCP-035-11.",
-      "item": "minecraft:wool:11"
+      "item": "minecraft:blue_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-12",
       "advancement": "patchouli:mcp_035_12",
       "text": "Brown variant of MCP-035, designated MCP-035-12.",
-      "item": "minecraft:wool:12"
+      "item": "minecraft:brown_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-13",
       "advancement": "patchouli:mcp_035_13",
       "text": "Green variant of MCP-035, designated MCP-035-13.",
-      "item": "minecraft:wool:13"
+      "item": "minecraft:green_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-14",
       "advancement": "patchouli:mcp_035_14",
       "text": "Red variant of MCP-035, designated MCP-035-14.",
-      "item": "minecraft:wool:14"
+      "item": "minecraft:red_wool"
     }, {
       "type": "spotlight",
       "title": "MCP-035-15",
       "advancement": "patchouli:mcp_035_15",
       "text": "Black variant of MCP-035, designated MCP-035-15.",
-      "item": "minecraft:wool:15"
+      "item": "minecraft:black_wool"
     }
   ]
 }

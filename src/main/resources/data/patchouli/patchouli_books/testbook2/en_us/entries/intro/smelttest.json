@@ -54,7 +54,7 @@
                 "mapping": {
                     "G": "minecraft:gold_block",
                     "W": "minecraft:wool",
-                    "R": "minecraft:stained_hardened_clay[color=red]"
+                    "R": "minecraft:red_terracotta"
                 }
             }
         }

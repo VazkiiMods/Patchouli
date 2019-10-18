@@ -53,7 +53,11 @@ public class ItemStackUtil {
 			return ItemStack.EMPTY;
 		
 		int countn = Integer.parseInt(count);
-		Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(tokens[0], tokens[1]));
+		ResourceLocation key = new ResourceLocation(tokens[0], tokens[1]);
+		if (!ForgeRegistries.ITEMS.containsKey(key)) {
+			throw new RuntimeException("Unknown item ID: " + key);
+		}
+		Item item = ForgeRegistries.ITEMS.getValue(key);
 		ItemStack stack = new ItemStack(item, countn);
 
 		if(!nbt.isEmpty())

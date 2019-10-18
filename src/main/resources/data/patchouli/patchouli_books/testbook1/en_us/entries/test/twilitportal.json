@@ -1,6 +1,6 @@
 {
   "name": "Building a Twilight Portal",
-  "icon": "minecraft:grass",
+  "icon": "minecraft:grass_block",
   "category": "intro/butts",
   "pages": [
     {
@@ -15,8 +15,8 @@
         ],
         "mapping": {
           " ": "ANY",
-          "F": "minecraft:red_flower",
-          "G": "minecraft:grass",
+          "F": "minecraft:poppy",
+          "G": "minecraft:grass_block",
           "P": "minecraft:water",
           "D": "minecraft:dirt",
           "0": "minecraft:dirt"
