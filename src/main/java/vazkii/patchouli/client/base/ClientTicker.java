@@ -20,8 +20,6 @@ public final class ClientTicker {
 	public static float delta = 0;
 	public static float total = 0;
 	
-	private static boolean requiresBookReload = false;
-	
 	private static void calcDelta() {
 		float oldTotal = total;
 		total = ticksInGame + partialTicks;
@@ -45,14 +43,6 @@ public final class ClientTicker {
 				partialTicks = 0;
 			}
 
-			if(mc.world == null)
-				requiresBookReload = true;
-			else if(requiresBookReload && mc.world.getRecipeManager() != null && mc.world.getRecipeManager().getRecipes().size() > 10) {
-				ClientBookRegistry.INSTANCE.reload();
-				UnicodeFontHandler.getUnicodeFont(); // early load to prevent visible lag spike
-				requiresBookReload = false;
-			}
-			
 			calcDelta();
 		}
 	}

@@ -3,6 +3,7 @@ package vazkii.patchouli.client.base;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
@@ -25,10 +26,11 @@ public class ClientAdvancements {
 	static List<String> doneAdvancements;
 
 	public static void setDoneAdvancements(String[] done, boolean showToast, boolean reset) {
+		Preconditions.checkState(BookRegistry.INSTANCE.isLoaded(), "Advancement packet when books aren't loaded");
 		showToast &= !PatchouliConfig.disableAdvancementLocking.get();
 
 		doneAdvancements = Arrays.asList(done);
-		updateLockStatus(reset);
+		ClientBookRegistry.INSTANCE.reloadLocks(reset);
 
 		if(showToast)
 			BookRegistry.INSTANCE.books.values().forEach(b -> {
@@ -36,13 +38,6 @@ public class ClientAdvancements {
 					Minecraft.getInstance().getToastGui().add(new LexiconToast(b));
 				}
 			});
-		
-		if(!BookRegistry.INSTANCE.isLoaded())
-			ClientBookRegistry.INSTANCE.reload();
-	}
-
-	public static void updateLockStatus(boolean reset) {
-		ClientBookRegistry.INSTANCE.reloadLocks(reset);
 	}
 
 	public static void resetIfNeeded() {

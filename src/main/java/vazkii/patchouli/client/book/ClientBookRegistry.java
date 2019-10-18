@@ -14,9 +14,6 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.page.PageCrafting;
 import vazkii.patchouli.client.book.page.PageEmpty;
@@ -32,11 +29,12 @@ import vazkii.patchouli.client.book.page.PageTemplate;
 import vazkii.patchouli.client.book.page.PageText;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.TemplateComponent;
+import vazkii.patchouli.client.handler.UnicodeFontHandler;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
 
-public class ClientBookRegistry implements IResourceManagerReloadListener {
+public class ClientBookRegistry {
 
 	public final Map<String, Class<? extends BookPage>> pageTypes = new HashMap<>();
 
@@ -54,12 +52,6 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 	
 	public void init() {
 		addPageTypes();
-
-		IResourceManager manager = Minecraft.getInstance().getResourceManager();
-		if (manager instanceof IReloadableResourceManager)
-			((IReloadableResourceManager) manager).addReloadListener(this);
-		else
-			throw new RuntimeException("Minecraft's resource manager is not reloadable. Something went way wrong.");
 	}
 
 	private void addPageTypes() {
@@ -76,16 +68,14 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 		pageTypes.put("quest", PageQuest.class);
 	}
 
-	@Override
-	public void onResourceManagerReload(IResourceManager resourceManager) {
-		if(!firstLoad)
-			reload();
-		firstLoad = false;
-	}
-	
 	public void reload() {
 		currentLang = Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getCode();
-		BookRegistry.INSTANCE.reload();
+		if(firstLoad)
+			/* preload to avoid lag spike when opening book. This happens in the first reload when logging
+			   in, so the user shouldn't notice it as much. */
+			UnicodeFontHandler.getUnicodeFont();
+		firstLoad = false;
+		BookRegistry.INSTANCE.reloadContents();
 	}
 	
 	public void reloadLocks(boolean reset) {

@@ -32,7 +32,7 @@ import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import net.minecraftforge.forgespi.language.IModInfo;
-import vazkii.patchouli.client.base.ClientAdvancements;
+import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.Patchouli;
 
 public class BookRegistry {
@@ -102,10 +102,10 @@ public class BookRegistry {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void reload() {
+	public void reloadContents() {
 		books.values().forEach(Book::reloadContents);
 		books.values().forEach(Book::reloadExtensionContents);
-		ClientAdvancements.updateLockStatus(false);
+		ClientBookRegistry.INSTANCE.reloadLocks(false);
 		loaded = true;
 	}
 

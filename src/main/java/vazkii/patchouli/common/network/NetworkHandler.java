@@ -20,9 +20,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.network.message.MessageOpenBookGui;
+import vazkii.patchouli.common.network.message.MessageReloadBookContents;
 import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
 
 public class NetworkHandler {
@@ -41,6 +43,7 @@ public class NetworkHandler {
 	public static void registerMessages() {
 		register(MessageSyncAdvancements.class, NetworkDirection.PLAY_TO_CLIENT);
 		register(MessageOpenBookGui.class, NetworkDirection.PLAY_TO_CLIENT);
+		register(MessageReloadBookContents.class, NetworkDirection.PLAY_TO_CLIENT);
 	}
 	
 	public static <T extends IMessage> void register(Class<T> clazz, NetworkDirection dir) {
@@ -69,7 +72,11 @@ public class NetworkHandler {
 	}
 
 	public static void sendToPlayer(IMessage msg, ServerPlayerEntity player) {
-		CHANNEL.sendTo(msg, player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), msg);
+	}
+
+	public static void sendToAll(IMessage msg) {
+		CHANNEL.send(PacketDistributor.ALL.noArg(), msg);
 	}
 	
 }
