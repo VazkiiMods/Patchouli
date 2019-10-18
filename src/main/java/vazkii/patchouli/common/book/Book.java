@@ -13,6 +13,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.forgespi.language.IModInfo;
@@ -30,15 +31,16 @@ public class Book {
 	public static final String DEFAULT_MODEL = Patchouli.PREFIX + "book_brown";
 	public static final ModelResourceLocation DEFAULT_MODEL_RES = new ModelResourceLocation(DEFAULT_MODEL, "inventory");
 	
-	@SuppressWarnings("serial")
-	private static final Map<String, String> DEFAULT_MACROS = new HashMap<String, String>() {{
-		put("$(list", "$(li"); //  The lack of ) is intended
-		put("/$", "$()");
-		put("<br>", "$(br)");
+	private static final Map<String, String> DEFAULT_MACROS = Util.make(() -> {
+		Map<String, String> ret = new HashMap<>();
+		ret.put("$(list", "$(li"); //  The lack of ) is intended
+		ret.put("/$", "$()");
+		ret.put("<br>", "$(br)");
 
-		put("$(item)", "$(#b0b)");
-		put("$(thing)", "$(#490)");
-	}};
+		ret.put("$(item)", "$(#b0b)");
+		ret.put("$(thing)", "$(#490)");
+		return ret;
+	});
 
 	public transient BookContents contents;
 
