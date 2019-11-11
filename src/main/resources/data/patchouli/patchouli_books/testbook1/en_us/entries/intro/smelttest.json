@@ -33,5 +33,11 @@
             "type": "text",
             "text": "This book is dedicated all the people around me who strive to have a positive impact on others' lives, especially $(bold)Knoll$(), $(bold)Rosalino$(), and $(bold)Kaizer$(). It's been a long journey, and you made me able to get through it.$(br2)Last but not least, you, the reader, player of mods. This book would not exist without your devotion, and you are to be thanked for that as well. I hope you enjoy it."
         }
-    ]
+    ],
+    "extra_recipe_mappings": {
+        "minecraft:dirt": 1,
+        "minecraft:stone": 3,
+        "minecraft:diamond_ore": 5,
+        "minecraft:diamond": 888
+    }
 }
