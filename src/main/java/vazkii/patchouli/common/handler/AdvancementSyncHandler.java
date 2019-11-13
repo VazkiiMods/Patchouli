@@ -12,6 +12,7 @@ import net.minecraft.advancements.AdvancementManager;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.entity.player.AdvancementEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -30,7 +31,11 @@ public final class AdvancementSyncHandler {
 
 	@SubscribeEvent
 	public static void serverStartedEvent(FMLServerStartedEvent evt) {
-		AdvancementManager manager = evt.getServer().getAdvancementManager();
+		recomputeSyncedAdvancements(evt.getServer());
+	}
+
+	public static void recomputeSyncedAdvancements(MinecraftServer server) {
+		AdvancementManager manager = server.getAdvancementManager();
 		syncedAdvancements = manager.getAllAdvancements().stream()
 				.filter(a -> trackedNamespaces.contains(a.getId().getNamespace()))
 				.map(Advancement::getId)

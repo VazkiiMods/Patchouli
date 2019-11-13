@@ -25,11 +25,16 @@ public class ReloadContentsHandler {
         AdvancementSyncHandler.loginSync((ServerPlayerEntity) evt.getPlayer());
     }
 
-    // Also reload contents when someone types /reload
     @SubscribeEvent
     public static void serverStart(FMLServerStartingEvent evt) {
+        // Also reload contents when someone types /reload
         @SuppressWarnings("deprecation")
         IResourceManagerReloadListener listener = m -> NetworkHandler.sendToAll(new MessageReloadBookContents());
         evt.getServer().getResourceManager().addReloadListener(listener);
+
+        // New advancements could show up, so recompute synced advancements each /reload too
+        @SuppressWarnings("deprecation")
+        IResourceManagerReloadListener advListener = m -> AdvancementSyncHandler.recomputeSyncedAdvancements(evt.getServer());
+        evt.getServer().getResourceManager().addReloadListener(advListener);
     }
 }
