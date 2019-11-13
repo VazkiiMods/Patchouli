@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.Patchouli;
@@ -15,10 +16,13 @@ import vazkii.patchouli.common.book.Book;
 
 public class GuiButtonInventoryBook extends Button {
 
-	Book book;
+	private Book book;
 	
 	public GuiButtonInventoryBook(Book book, int x, int y) {
-		super(x, y, 20, 20, "", (b) -> {});
+		super(x, y, 20, 20, "", (b) -> {
+			BookContents contents = book.contents;
+			contents.openLexiconGui(contents.getCurrentGui(), false);
+		});
 		this.book = book;
 	}
 	

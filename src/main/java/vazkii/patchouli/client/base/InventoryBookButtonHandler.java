@@ -59,25 +59,13 @@ public class InventoryBookButtonHandler {
 			return;
 
 		List<Widget> buttons = event.getWidgetList();
-		for(int i = 0; i < buttons.size(); i++) {
-			Widget button = buttons.get(i);
-			if(button instanceof ImageButton) {
+		for (Widget button : buttons) {
+			if (button instanceof ImageButton) {
 				Button newButton = new GuiButtonInventoryBook(book, button.x, button.y - 1);
-				buttons.set(i, newButton);
+				event.removeWidget(button);
+				event.addWidget(newButton);
 				return;
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onActionPressed(ActionPerformedEvent.Pre event) {
-		Button button = event.getButton();
-		if(button instanceof GuiButtonInventoryBook) {
-			GuiButtonInventoryBook bookButton = (GuiButtonInventoryBook) button;
-			BookContents contents = bookButton.getBook().contents;
-			contents.openLexiconGui(contents.getCurrentGui(), false);
-			button.playDownSound(Minecraft.getInstance().getSoundHandler());
-			event.setCanceled(true);
 		}
 	}
 }
