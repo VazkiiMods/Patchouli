@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.minecraft.client.resources.I18n;
@@ -14,11 +15,13 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
 import vazkii.patchouli.client.book.page.PageEmpty;
 import vazkii.patchouli.client.book.page.PageQuest;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -40,6 +43,9 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	private int sortnum;
 	@SerializedName("entry_color")
 	private String entryColorRaw;
+	
+	@SerializedName("extra_recipe_mappings")
+	private Map<String, Integer> extraRecipeMappings;
 
 	private transient ResourceLocation resource;
 	transient Book book;
@@ -196,6 +202,18 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 					throw new RuntimeException("Error while loading entry " + resource + " page " + i, e);
 				}
 			}
+
+		if(extraRecipeMappings != null) {
+			for (Map.Entry<String, Integer> entry : extraRecipeMappings.entrySet()) {
+				ItemStack stack = ItemStackUtil.loadStackFromString(entry.getKey());
+				int pageNumber = entry.getValue();
+				if (!stack.isEmpty() && pageNumber < pages.length) {
+					addRelevantStack(stack, pageNumber);
+				} else {
+					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}", entry.getKey(), pageNumber, resource);
+				} 
+			}
+		}
 
 		built = true;
 	}
