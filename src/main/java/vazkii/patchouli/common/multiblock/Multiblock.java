@@ -136,18 +136,19 @@ public class Multiblock implements IMultiblock, IEnviromentBlockReader {
 	}
 
 	@Override
-	public boolean validate(World world, BlockPos pos) {
-		if(symmetrical)
-			return validate(world, pos, Rotation.NONE);
-
-		else return validate(world, pos, Rotation.NONE)
-			|| validate(world, pos, Rotation.CLOCKWISE_90)
-			|| validate(world, pos, Rotation.CLOCKWISE_180)
-			|| validate(world, pos, Rotation.COUNTERCLOCKWISE_90);
+	public Rotation validate(World world, BlockPos pos) {
+		if (isSymmetrical() && validate(world, pos, Rotation.NONE))
+		    return Rotation.NONE;
+		else for (Rotation rot : Rotation.values()) {
+			if(validate(world, pos, rot)) {
+				return rot;
+			}
+		}
+		return null;
 	}
 
-
-	protected boolean validate(World world, BlockPos pos, Rotation rotation) {
+	@Override
+	public boolean validate(World world, BlockPos pos, Rotation rotation) {
 		setWorld(world);
 		BlockPos start = pos.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
 		if(!test(world, start, centerX, centerY, centerZ, rotation))

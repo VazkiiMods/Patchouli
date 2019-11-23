@@ -7,6 +7,8 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 /**
  * An instance of a multiblock.
  * <br><br>
@@ -89,11 +91,17 @@ public interface IMultiblock {
 	
 	/**
 	 * Validates if the multiblock exists at the given position. Will check all 4
-	 * rotations if the multiblock is not symmetrical. 
+	 * rotations if the multiblock is not symmetrical.
+     * @return The rotation that worked, null if no match
 	 */
-	
-	public boolean validate(World world, BlockPos pos);
-	
+	@Nullable
+	public Rotation validate(World world, BlockPos pos);
+
+	/**
+	 * Validates the multiblock for a specific rotation
+	 */
+	public boolean validate(World world, BlockPos pos, Rotation rotation);
+
 	/**
 	 * Tests if any one given block of the multiblock exists at the given position
 	 * with the given rotation. x, y, and z must be constrained within the multiblock's
