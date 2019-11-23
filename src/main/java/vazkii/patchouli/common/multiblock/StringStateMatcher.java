@@ -14,7 +14,9 @@ import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.util.TriPredicate;
 import vazkii.patchouli.api.IStateMatcher;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -48,7 +50,7 @@ public class StringStateMatcher {
         }
 
         @Override
-        public BlockState getDisplayedState() {
+        public BlockState getDisplayedState(int ticks) {
             return state;
         }
 
@@ -77,12 +79,13 @@ public class StringStateMatcher {
         }
 
         @Override
-        public BlockState getDisplayedState() {
-            Collection<Block> all = tag.getAllElements();
+        public BlockState getDisplayedState(int ticks) {
+            List<Block> all = new ArrayList<>(tag.getAllElements());
             if (all.isEmpty()) {
                 return Blocks.BEDROCK.getDefaultState(); // show something impossible
             } else {
-                return all.iterator().next().getDefaultState();
+                int idx = (ticks / 20) % all.size();
+                return all.get(idx).getDefaultState();
             }
         }
 

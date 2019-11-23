@@ -100,7 +100,7 @@ public class Multiblock implements IMultiblock, IEnviromentBlockReader {
 			for(int y = 0; y < sizeY; y++)
 				for(int z = 0; z < sizeZ; z++) {
 					BlockPos placePos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-					BlockState targetState = stateTargets[x][y][z].getDisplayedState().rotate(rotation);
+					BlockState targetState = stateTargets[x][y][z].getDisplayedState((int) world.getDayTime()).rotate(rotation);
 					Block targetBlock = targetState.getBlock();
 					
 					if(!targetBlock.isAir(targetState, world, placePos) && targetBlock.isValidPosition(targetState, world, placePos) && world.getBlockState(placePos).getMaterial().isReplaceable())
@@ -278,7 +278,8 @@ public class Multiblock implements IMultiblock, IEnviromentBlockReader {
         if (x < 0 || y < 0 || z < 0 || x >= sizeX || y >= sizeY || z >= sizeZ) {
             return Blocks.AIR.getDefaultState();
         }
-        return stateTargets[x][y][z].getDisplayedState();
+        int ticks = world != null ? (int) world.getDayTime() : 0;
+        return stateTargets[x][y][z].getDisplayedState(ticks);
     }
 
 	@Override

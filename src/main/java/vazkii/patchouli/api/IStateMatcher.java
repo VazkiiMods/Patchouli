@@ -17,9 +17,9 @@ public interface IStateMatcher {
 	/**
 	 * Gets the state displayed by this state matcher for rendering
 	 * the multiblock page type and the in-world preview.
+	 * @param ticks World ticks, to allow cycling the state shown.
 	 */
-	@OnlyIn(Dist.CLIENT)
-	public BlockState getDisplayedState();
+	public BlockState getDisplayedState(int ticks);
 	
 	/**
 	 * Returns a predicate that validates whether the given state is 

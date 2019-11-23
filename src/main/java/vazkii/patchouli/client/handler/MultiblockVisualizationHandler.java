@@ -198,7 +198,7 @@ public class MultiblockVisualizationHandler {
 		Minecraft mc = Minecraft.getInstance();
 		if(!isAnchored) {
 			facingRotation = getRotation(mc.player);
-			if(mc.objectMouseOver != null && mc.objectMouseOver instanceof BlockRayTraceResult)
+			if(mc.objectMouseOver instanceof BlockRayTraceResult)
 				pos = ((BlockRayTraceResult) mc.objectMouseOver).getPos();
 		}
 		else if(pos.distanceSq(mc.player.getPosition()) > 64 * 64)
@@ -242,7 +242,7 @@ public class MultiblockVisualizationHandler {
 					BlockPos renderPos = startPos.add(RotationUtil.x(facingRotation, x, z) , y, RotationUtil.z(facingRotation, x, z));
 					IStateMatcher matcher = multiblock.stateTargets[x][y][z];
 					if(renderPos.equals(checkPos)) {
-						lookingState = matcher.getDisplayedState();
+						lookingState = matcher.getDisplayedState(ClientTicker.ticksInGame);
 						alpha = 0.6F + (float) (Math.sin(ClientTicker.total * 0.3F) + 1F) * 0.1F;
 					}
 
@@ -252,7 +252,7 @@ public class MultiblockVisualizationHandler {
 							blocks++;
 
 						if(!multiblock.test(world, startPos, x, y, z, facingRotation)) {
-							BlockState renderState = matcher.getDisplayedState().rotate(facingRotation);
+							BlockState renderState = matcher.getDisplayedState(ClientTicker.ticksInGame).rotate(facingRotation);
 							mc.textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 							renderBlock(world, renderState, renderPos, alpha, dispatcher);
 
