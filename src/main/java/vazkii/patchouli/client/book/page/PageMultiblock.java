@@ -208,7 +208,6 @@ public class PageMultiblock extends PageWithText {
 		for (BlockPos pos : blocks) {
 			BlockState bs = mb.getBlockState(pos);
 			Block block = bs.getBlock();
-			bs = bs.getExtendedState(mb, pos);
 			if (block.canRenderInLayer(bs, layer)) {
 				renderBlock(bs, pos, mb, Tessellator.getInstance().getBuffer());
 			}
@@ -226,14 +225,12 @@ public class PageMultiblock extends PageWithText {
 			BlockRendererDispatcher blockrendererdispatcher = mc.getBlockRendererDispatcher();
 			BlockRenderType type = state.getRenderType();
 			if (type != BlockRenderType.MODEL) {
-				blockrendererdispatcher.renderBlock(state, pos, mb, bufferBuilder, random, EmptyModelData.INSTANCE);
 				return;
 			}
 
 			// We only want to change one param here, the check sides
 			IBakedModel ibakedmodel = blockrendererdispatcher.getModelForState(state);
-			state = state.getBlock().getExtendedState(state, mb, pos);
-			blockrendererdispatcher.getBlockModelRenderer().renderModel(mb, ibakedmodel, state, pos, bufferBuilder, false, random,  state.getBlock().getPositionRandom(state, pos), EmptyModelData.INSTANCE);
+			blockrendererdispatcher.getBlockModelRenderer().renderModel(mb, ibakedmodel, state, pos, bufferBuilder, false, random,  state.getPositionRandom(pos), EmptyModelData.INSTANCE);
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
