@@ -10,12 +10,6 @@ pipeline {
                 sh './gradlew clean'
             }
         }
-        stage('Setup') {
-            steps {
-                echo 'Setting up Workspace'
-                sh './gradlew setupDecompWorkspace'
-            }
-        }
         stage('Build and Deploy') {
             steps {
                 echo 'Building and Deploying to Maven'
