@@ -28,8 +28,9 @@ public class ComponentItemStack extends TemplateComponent {
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
 		items = ItemStackUtil.loadStackListFromString(item);
-		if(linkedRecipe && items.size() == 1)
-			entry.addRelevantStack(items.get(0), pageNum);
+		if(linkedRecipe)
+			for (ItemStack stack : items)
+				entry.addRelevantStack(stack, pageNum);
 	}
 	
 	@Override

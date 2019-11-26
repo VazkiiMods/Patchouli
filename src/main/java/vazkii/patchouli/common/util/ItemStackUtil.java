@@ -102,9 +102,9 @@ public class ItemStackUtil {
 					for(Item item : tag.getAllElements())
 						stacks.add(new ItemStack(item));
 				}
+			} else {
+				stacks.add(loadStackFromString(stacksSerialized[i]));
 			}
-
-			stacks.add(loadStackFromString(stacksSerialized[i]));
 		}
 		return stacks;
 	}

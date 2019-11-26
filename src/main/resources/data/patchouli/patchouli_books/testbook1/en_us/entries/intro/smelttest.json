@@ -38,6 +38,7 @@
         "minecraft:dirt": 1,
         "minecraft:stone": 3,
         "minecraft:diamond_ore": 5,
+        "tag:minecraft:logs": 1,
         "minecraft:diamond": 888
     }
 }

@@ -15,7 +15,6 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
-import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
@@ -205,13 +204,16 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 
 		if(extraRecipeMappings != null) {
 			for (Map.Entry<String, Integer> entry : extraRecipeMappings.entrySet()) {
-				ItemStack stack = ItemStackUtil.loadStackFromString(entry.getKey());
+				String key = entry.getKey();
+				List<ItemStack> stacks = ItemStackUtil.loadStackListFromString(key);
 				int pageNumber = entry.getValue();
-				if (!stack.isEmpty() && pageNumber < pages.length) {
-					addRelevantStack(stack, pageNumber);
+				if (!stacks.isEmpty() && pageNumber < pages.length) {
+					for (ItemStack stack : stacks) {
+						addRelevantStack(stack, pageNumber);
+					}
 				} else {
-					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}", entry.getKey(), pageNumber, resource);
-				} 
+					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}", key, pageNumber, resource);
+				}
 			}
 		}
 
