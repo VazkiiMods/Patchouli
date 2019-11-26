@@ -55,7 +55,12 @@ public class StubMultiblock implements IMultiblock {
 	}
 
 	@Override
-	public boolean validate(World world, BlockPos pos) {
+	public Rotation validate(World world, BlockPos pos) {
+		return null;
+	}
+
+	@Override
+	public boolean validate(World world, BlockPos pos, Rotation rotation) {
 		return false;
 	}
 
