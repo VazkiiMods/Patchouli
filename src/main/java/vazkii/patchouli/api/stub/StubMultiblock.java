@@ -1,7 +1,10 @@
 package vazkii.patchouli.api.stub;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.function.Consumer;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -45,13 +48,8 @@ public class StubMultiblock implements IMultiblock {
 	}
 
 	@Override
-	public void forEach(World world, BlockPos pos, Rotation rotation, char c, Consumer<BlockPos> action) {
-		// NO-OP
-	}
-
-	@Override
-	public boolean forEachMatcher(World world, BlockPos pos, Rotation rotation, char c, MatcherAcceptor acceptor) {
-		return false;
+	public Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, Rotation rotation, boolean forView) {
+		return Pair.of(BlockPos.ZERO, Collections.emptyList());
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package vazkii.patchouli.common.base;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -14,6 +15,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.IMultiblock;
@@ -24,8 +26,9 @@ import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.common.item.ItemModBook;
-import vazkii.patchouli.common.multiblock.Multiblock;
+import vazkii.patchouli.common.multiblock.DenseMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
+import vazkii.patchouli.common.multiblock.SparseMultiblock;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.network.NetworkHandler;
 import vazkii.patchouli.common.network.message.MessageOpenBookGui;
@@ -141,9 +144,14 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	
 	@Override
 	public IMultiblock makeMultiblock(String[][] pattern, Object... targets) {
-		return new Multiblock(pattern, targets);
+		return new DenseMultiblock(pattern, targets);
 	}
-	
+
+	@Override
+	public IMultiblock makeSparseMultiblock(Map<BlockPos, IStateMatcher> positions) {
+		return new SparseMultiblock(positions);
+	}
+
 	@Override
 	public IStateMatcher predicateMatcher(BlockState display, Predicate<BlockState> predicate) {
 		return StateMatcher.fromPredicate(display, predicate);

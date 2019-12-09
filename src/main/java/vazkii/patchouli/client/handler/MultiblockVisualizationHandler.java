@@ -1,8 +1,10 @@
 package vazkii.patchouli.client.handler;
 
 import java.awt.Color;
+import java.util.Collection;
 import java.util.function.Function;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraftforge.event.TickEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
@@ -40,10 +42,11 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
-import vazkii.patchouli.common.multiblock.Multiblock;
+import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
@@ -53,7 +56,7 @@ public class MultiblockVisualizationHandler {
 	public static boolean hasMultiblock;
 	public static Bookmark bookmark;
 
-	private static Multiblock multiblock;
+	private static AbstractMultiblock multiblock;
 	private static String name;
 	private static BlockPos pos;
 	private static boolean isAnchored;
@@ -64,11 +67,11 @@ public class MultiblockVisualizationHandler {
 	private static BlockState lookingState;
 	private static BlockPos lookingPos;
 
-	public static void setMultiblock(Multiblock multiblock, String name, Bookmark bookmark, boolean flip) {
+	public static void setMultiblock(AbstractMultiblock multiblock, String name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos->pos);
 	}
 
-	public static void setMultiblock(Multiblock multiblock, String name, Bookmark bookmark, boolean flip, Function<BlockPos, BlockPos> offsetApplier) {
+	public static void setMultiblock(AbstractMultiblock multiblock, String name, Bookmark bookmark, boolean flip, Function<BlockPos, BlockPos> offsetApplier) {
 		if(flip && hasMultiblock)
 			hasMultiblock = false;
 		else {
@@ -229,39 +232,35 @@ public class MultiblockVisualizationHandler {
 			BlockRayTraceResult blockRes = (BlockRayTraceResult) mc.objectMouseOver;
 			checkPos = blockRes.getPos().offset(blockRes.getFace());
 		}
-		BlockPos startPos = getStartPos();
 
 		blocks = blocksDone = airFilled = 0;
 		lookingState = null;
 		lookingPos = checkPos;
 
-		for(int x = 0; x < multiblock.sizeX; x++)
-			for(int y = 0; y < multiblock.sizeY; y++)
-				for(int z = 0; z < multiblock.sizeZ; z++) {
-					float alpha = 0.3F;
-					BlockPos renderPos = startPos.add(RotationUtil.x(facingRotation, x, z) , y, RotationUtil.z(facingRotation, x, z));
-					IStateMatcher matcher = multiblock.stateTargets[x][y][z];
-					if(renderPos.equals(checkPos)) {
-						lookingState = matcher.getDisplayedState(ClientTicker.ticksInGame);
-						alpha = 0.6F + (float) (Math.sin(ClientTicker.total * 0.3F) + 1F) * 0.1F;
-					}
+		Pair<BlockPos, Collection<IMultiblock.SimulateResult>> sim = multiblock.simulate(world, getStartPos(), getFacingRotation(), true);
+		for (IMultiblock.SimulateResult r : sim.getSecond()) {
+			float alpha = 0.3F;
+			if(r.getWorldPosition().equals(checkPos)) {
+				lookingState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame);
+				alpha = 0.6F + (float) (Math.sin(ClientTicker.total * 0.3F) + 1F) * 0.1F;
+			}
 
-					if(matcher != StateMatcher.ANY) {
-						boolean air = matcher == StateMatcher.AIR;
-						if(!air)
-							blocks++;
+			if(r.getStateMatcher() != StateMatcher.ANY) {
+				boolean air = r.getStateMatcher() == StateMatcher.AIR;
+				if(!air)
+					blocks++;
 
-						if(!multiblock.test(world, startPos, x, y, z, facingRotation)) {
-							BlockState renderState = matcher.getDisplayedState(ClientTicker.ticksInGame).rotate(facingRotation);
-							mc.textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-							renderBlock(world, renderState, renderPos, alpha, dispatcher);
+				if(!r.test(world, facingRotation)) {
+					BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame).rotate(facingRotation);
+					mc.textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+					renderBlock(world, renderState, r.getWorldPosition(), alpha, dispatcher);
 
-							if(air)
-								airFilled++;
-						} else if(!air)
-							blocksDone++;
-					}
-				}
+					if(air)
+						airFilled++;
+				} else if(!air)
+					blocksDone++;
+			}
+		}
 
 		if(!isAnchored)
 			blocks = blocksDone = 0;
@@ -302,7 +301,7 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static Multiblock getMultiblock() {
+	public static AbstractMultiblock getMultiblock() {
 		return multiblock;
 	}
 
@@ -315,10 +314,7 @@ public class MultiblockVisualizationHandler {
 	}
 
 	public static BlockPos getStartPos() {
-		Rotation rot = getFacingRotation();
-		BlockPos startPos = offsetApplier.apply(pos);
-		startPos = startPos.add(-RotationUtil.x(rot, multiblock.viewOffX, multiblock.viewOffZ), -multiblock.viewOffY + 1, -RotationUtil.z(rot, multiblock.viewOffX, multiblock.viewOffZ));
-		return startPos;
+		return offsetApplier.apply(pos);
 	}
 
 	private static void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {

@@ -9,11 +9,11 @@ import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.util.TriPredicate;
 import vazkii.patchouli.api.IStateMatcher;
 
-public class StubMatcher implements IStateMatcher {
+public final class StubMatcher implements IStateMatcher {
 
 	public static final StubMatcher INSTANCE = new StubMatcher();
 
-	private BlockState state = Blocks.AIR.getDefaultState();
+	private final BlockState state = Blocks.AIR.getDefaultState();
 
 	private StubMatcher() { }
 

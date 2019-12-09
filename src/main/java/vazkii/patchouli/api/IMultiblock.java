@@ -1,7 +1,8 @@
 package vazkii.patchouli.api;
 
-import java.util.function.Consumer;
+import java.util.Collection;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -71,24 +72,17 @@ public interface IMultiblock {
 	 * Places the multiblock at the given position with the given rotation.
 	 */
 	public void place(World world, BlockPos pos, Rotation rotation);
-	
-	/**
-	 * Runs "action" at every instance of the character "c" in the multiblock 
-	 * at the given position with the given rotation. You can use this to
-	 * run actions on a few special blocks. "c" is a character corresponding
-	 * to one of the characters used when creating the multiblock.
-	 */
-	public void forEach(World world, BlockPos pos, Rotation rotation, char c, Consumer<BlockPos> action);
-	
-	/**
-	 * Partially validates a multiblock. Returns true when 'acceptor' returns
-	 * true for every instance of the character c in the multiblock at the
-	 * given position with the given rotation. "c" is a character corresponding
-	 * to one of the characters used when creating the multiblock.
 
+	/**
+	 * If this multiblock were anchored at world position {@code anchor} with rotation {@code rotation}, then
+	 * return a pair whose first element is the final center position (after rotation and {@link #offset}),
+	 * and whose second element describes each position of the multiblock.
+	 *
+	 * This is intended to be highly general, most of the other methods below are implemented in terms of this one.
+	 * See the main Patchouli code to see what can be done with this.
 	 */
-	public boolean forEachMatcher(World world, BlockPos pos, Rotation rotation, char c, MatcherAcceptor acceptor);
-	
+	Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, Rotation rotation, boolean forView);
+
 	/**
 	 * Validates if the multiblock exists at the given position. Will check all 4
 	 * rotations if the multiblock is not symmetrical.
@@ -103,16 +97,33 @@ public interface IMultiblock {
 	public boolean validate(World world, BlockPos pos, Rotation rotation);
 
 	/**
-	 * Tests if any one given block of the multiblock exists at the given position
-	 * with the given rotation. x, y, and z must be constrained within the multiblock's
-	 * sizes.
+	 * Fine-grained check for whether any one given block of the multiblock exists at the given position
+	 * with the given rotation.
+	 * @param start The anchor position. The multiblock's {@link #offset} is not applied to this.
 	 */
 	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation);
 
-	// Functional Interfaces
+	interface SimulateResult {
+		/**
+		 * Final world position this block will be matched or placed at
+		 */
+		public BlockPos getWorldPosition();
 
-	public interface MatcherAcceptor {
-		boolean accepts(BlockPos start, BlockPos actionPos, int x, int y, int z, char c, IStateMatcher matcher);
+		/**
+		 * The matcher used at this position
+		 */
+		public IStateMatcher getStateMatcher();
+
+		/**
+		 * The character used to express the state matcher, if this is a dense multiblock.
+		 */
+		@Nullable
+		public Character getCharacter();
+
+		/**
+		 * @return Whether the multiblock is fulfilled at this position
+		 */
+		public boolean test(World world, Rotation rotation);
 	}
 
 }

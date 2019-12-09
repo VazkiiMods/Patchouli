@@ -16,7 +16,7 @@ public class SerializedMultiblock {
 	boolean symmetrical = false;
 	int[] offset = new int[] { 0, 0, 0 };
 	
-	public Multiblock toMultiblock() {
+	public DenseMultiblock toMultiblock() {
 		final String allowed = "0_ ";
 		
 		for(String[] line : pattern)
@@ -48,7 +48,7 @@ public class SerializedMultiblock {
 			i += 2;
 		}
 
-		Multiblock mb = new Multiblock(pattern, targets);
+		DenseMultiblock mb = new DenseMultiblock(pattern, targets);
 		mb.setSymmetrical(symmetrical);
 		mb.offset(offset[0], offset[1], offset[2]);
 		return mb;

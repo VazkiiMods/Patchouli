@@ -2,6 +2,7 @@ package vazkii.patchouli.api;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -11,6 +12,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.stub.StubPatchouliAPI;
@@ -147,6 +149,13 @@ public class PatchouliAPI {
 		 * BlockState, or an IStateMatcher.
 		 */
 		public IMultiblock makeMultiblock(String[][] pattern, Object... targets);
+
+		/**
+		 * Create a sparse multiblock. This is useful in situations where the multiblock is large and unwieldy
+		 * to specify in a 2D grid. The center of a sparse multiblock is always (0, 0, 0), and the keys
+		 * of {@code positions} are relative to that space.
+		 */
+		public IMultiblock makeSparseMultiblock(Map<BlockPos, IStateMatcher> positions);
 		
 		/**
 		 * Gets an IStateMatcher with the passed in BlockState for display and the passed in

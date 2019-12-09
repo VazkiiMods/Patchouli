@@ -67,6 +67,20 @@ public class StringStateMatcher {
             }
             return true;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ExactMatcher that = (ExactMatcher) o;
+            return Objects.equals(state, that.state) &&
+                    Objects.equals(props, that.props);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(state, props);
+        }
     }
 
     private static class TagMatcher implements IStateMatcher {
@@ -111,6 +125,20 @@ public class StringStateMatcher {
                 }
             }
             return true;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            TagMatcher that = (TagMatcher) o;
+            return Objects.equals(tag.getId(), that.tag.getId()) &&
+                    Objects.equals(props, that.props);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(tag.getId(), props);
         }
     }
 }

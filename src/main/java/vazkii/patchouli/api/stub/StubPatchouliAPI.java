@@ -3,6 +3,7 @@ package vazkii.patchouli.api.stub;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -12,6 +13,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.IMultiblock;
@@ -113,6 +115,11 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 
 	@Override
 	public IMultiblock makeMultiblock(String[][] pattern, Object... targets) {
+		return StubMultiblock.INSTANCE;
+	}
+
+	@Override
+	public IMultiblock makeSparseMultiblock(Map<BlockPos, IStateMatcher> positions) {
 		return StubMultiblock.INSTANCE;
 	}
 

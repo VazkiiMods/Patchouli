@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Vector4f;
 
+import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.annotations.SerializedName;
@@ -45,7 +46,7 @@ import vazkii.patchouli.client.book.gui.button.GuiButtonBookEye;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.Patchouli;
-import vazkii.patchouli.common.multiblock.Multiblock;
+import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
 
@@ -61,17 +62,17 @@ public class PageMultiblock extends PageWithText {
 	@SerializedName("enable_visualize")
 	boolean showVisualizeButton = true;
 	
-	transient Multiblock multiblockObj;
-	transient Button visualizeButton;
-	transient Random random;
+	private transient AbstractMultiblock multiblockObj;
+	private transient Button visualizeButton;
+	private final transient Random random = new Random();
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
 		if(multiblockId != null && !multiblockId.isEmpty()) {
 			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(new ResourceLocation(multiblockId));
 			
-			if(mb instanceof Multiblock)
-				multiblockObj = (Multiblock) mb;
+			if(mb instanceof AbstractMultiblock)
+				multiblockObj = (AbstractMultiblock) mb;
 		}
 		
 		if(multiblockObj == null && serializedMultiblock != null)
@@ -79,8 +80,6 @@ public class PageMultiblock extends PageWithText {
 		
 		if(multiblockObj == null)
 			throw new IllegalArgumentException("No multiblock located for " + multiblockId);
-		
-		random = new Random();
 	}
 
 	@Override
@@ -125,12 +124,15 @@ public class PageMultiblock extends PageWithText {
 	}
 
 	private void renderMultiblock() {
+		Vec3i size = multiblockObj.getSize();
+		int sizeX = size.getX();
+		int sizeY = size.getY();
+		int sizeZ = size.getZ();
 		float maxX = 90;
 		float maxY = 90;
-		float diag = (float) Math.sqrt(multiblockObj.sizeX * multiblockObj.sizeX + multiblockObj.sizeZ * multiblockObj.sizeZ);
-		float height = multiblockObj.sizeY;
+		float diag = (float) Math.sqrt(sizeX * sizeX + sizeZ * sizeZ);
 		float scaleX = maxX / diag;
-		float scaleY = maxY / height;
+		float scaleY = maxY / sizeY;
 		float scale = -Math.min(scaleX, scaleY);
 		
 		int xPos = GuiBook.PAGE_WIDTH / 2;
@@ -138,7 +140,7 @@ public class PageMultiblock extends PageWithText {
 		GlStateManager.pushMatrix();
 		GlStateManager.translatef(xPos, yPos, 100);
 		GlStateManager.scalef(scale, scale, scale);
-		GlStateManager.translatef(-(float) multiblockObj.sizeX / 2, -(float) multiblockObj.sizeY / 2, 0);
+		GlStateManager.translatef(-(float) sizeX / 2, -(float) sizeY / 2, 0);
 
 		// Initial eye pos somewhere off in the distance in the -Z direction
 		Vector4f eye = new Vector4f(0, 0, -100, 1);
@@ -149,8 +151,8 @@ public class PageMultiblock extends PageWithText {
 		GlStateManager.rotatef(-30F, 1F, 0F, 0F);
 		rotMat.rotX((float) Math.toRadians(30F));
 
-		float offX = (float) -multiblockObj.sizeX / 2;
-		float offZ = (float) -multiblockObj.sizeZ / 2 + 1;
+		float offX = (float) -sizeX / 2;
+		float offZ = (float) -sizeZ / 2 + 1;
 
 		float time = parent.ticksInBook * 0.5F;
 		if(!Screen.hasShiftDown())
@@ -164,12 +166,12 @@ public class PageMultiblock extends PageWithText {
 		
 		// Finally apply the rotations
 		rotMat.transform(eye);
-		renderElements(multiblockObj, BlockPos.getAllInBoxMutable(BlockPos.ZERO, new BlockPos(multiblockObj.sizeX - 1, multiblockObj.sizeY - 1, multiblockObj.sizeZ - 1)), eye);
+		renderElements(multiblockObj, BlockPos.getAllInBoxMutable(BlockPos.ZERO, new BlockPos(sizeX - 1, sizeY - 1, sizeZ - 1)), eye);
 
 		GlStateManager.popMatrix();
 	}
 	
-	private void renderElements(Multiblock mb, Iterable<? extends BlockPos> blocks, Vector4f eye) {
+	private void renderElements(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, Vector4f eye) {
 		GlStateManager.pushMatrix();
 		GlStateManager.color4f(1F, 1F, 1F, 1F);
 		GlStateManager.translatef(0, 0, -1);
@@ -195,7 +197,7 @@ public class PageMultiblock extends PageWithText {
 		GlStateManager.popMatrix();
 	}
 
-	private void doWorldRenderPass(Multiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull BlockRenderLayer layer, Vector4f eye) {
+	private void doWorldRenderPass(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull BlockRenderLayer layer, Vector4f eye) {
 		mc.textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 		mc.getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 		
@@ -219,7 +221,7 @@ public class PageMultiblock extends PageWithText {
 		Tessellator.getInstance().draw();
 	}
 
-	public void renderBlock(@Nonnull BlockState state, @Nonnull BlockPos pos, @Nonnull Multiblock mb, @Nonnull BufferBuilder bufferBuilder) {
+	public void renderBlock(@Nonnull BlockState state, @Nonnull BlockPos pos, @Nonnull AbstractMultiblock mb, @Nonnull BufferBuilder bufferBuilder) {
 
 		try {
 			BlockRendererDispatcher blockrendererdispatcher = mc.getBlockRendererDispatcher();
@@ -240,7 +242,7 @@ public class PageMultiblock extends PageWithText {
 	// Hold errored TEs weakly, this may cause some dupe errors but will prevent spamming it every frame
 	private final transient Set<TileEntity> erroredTiles = Collections.newSetFromMap(new WeakHashMap<>());
 
-	private void doTileEntityRenderPass(Multiblock mb, Iterable<? extends BlockPos> blocks, final int pass) {
+	private void doTileEntityRenderPass(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final int pass) {
 		mb.setWorld(mc.world);
 		
 		RenderHelper.enableStandardItemLighting();
