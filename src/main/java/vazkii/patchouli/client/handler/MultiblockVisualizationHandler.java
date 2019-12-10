@@ -52,60 +52,48 @@ import vazkii.patchouli.common.util.RotationUtil;
 @EventBusSubscriber(Dist.CLIENT)
 public class MultiblockVisualizationHandler {
 
+	public static boolean hasMultiblock;
+	public static Bookmark bookmark;
+
 	private static IMultiblock multiblock;
 	private static String name;
-	public static Bookmark bookmark;
-	private static Function<BlockPos, BlockPos> offsetApplier;
-
 	private static BlockPos pos;
 	private static boolean isAnchored;
 	private static Rotation facingRotation;
-
+	private static Function<BlockPos, BlockPos> offsetApplier;
 	private static int blocks, blocksDone, airFilled;
 	private static int timeComplete;
 	private static BlockState lookingState;
 	private static BlockPos lookingPos;
-
-	public static void reset() {
-		multiblock = null;
-		name = null;
-		pos = null;
-		isAnchored = false;
-		facingRotation = null;
-		offsetApplier = null;
-		blocks = blocksDone = airFilled = 0;
-		timeComplete = 0;
-		lookingState = null;
-		lookingPos = null;
-	}
 
 	public static void setMultiblock(IMultiblock multiblock, String name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos->pos);
 	}
 
 	public static void setMultiblock(IMultiblock multiblock, String name, Bookmark bookmark, boolean flip, Function<BlockPos, BlockPos> offsetApplier) {
-		if(flip && MultiblockVisualizationHandler.multiblock != null)
-			reset();
+		if(flip && hasMultiblock)
+			hasMultiblock = false;
 		else {
 			MultiblockVisualizationHandler.multiblock = multiblock;
 			MultiblockVisualizationHandler.name = name;
 			MultiblockVisualizationHandler.bookmark = bookmark;
 			MultiblockVisualizationHandler.offsetApplier = offsetApplier;
 			pos = null;
+			hasMultiblock = true;
 			isAnchored = false;
 		}
 	}
 
 	@SubscribeEvent
 	public static void onRenderHUD(RenderGameOverlayEvent.Post event) {
-		if(event.getType() == ElementType.ALL && multiblock != null) {
+		if(event.getType() == ElementType.ALL && hasMultiblock) {
 			int waitTime = 40;
 			int fadeOutSpeed = 4;
 			int fullAnimTime = waitTime + 10;
 			float animTime = timeComplete + (timeComplete == 0 ? 0 : event.getPartialTicks());
 
 			if(animTime > fullAnimTime) {
-			    reset();
+				hasMultiblock = false;
 				return;
 			}
 
@@ -184,27 +172,23 @@ public class MultiblockVisualizationHandler {
 
 	@SubscribeEvent
 	public static void onWorldRenderLast(RenderWorldLastEvent event) {
-		if(multiblock != null)
+		if(hasMultiblock && multiblock != null)
 			renderMultiblock(Minecraft.getInstance().world);
-	}
-
-	public static void anchorTo(BlockPos target, Rotation rot) {
-		pos = target;
-		facingRotation = rot;
-		isAnchored = true;
 	}
 
 	@SubscribeEvent
 	public static void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
-		if(!isAnchored && event.getPlayer() == Minecraft.getInstance().player) {
-			anchorTo(event.getPos(), getRotation(event.getPlayer()));
+		if(hasMultiblock && !isAnchored && event.getPlayer() == Minecraft.getInstance().player) {
+			pos = event.getPos();
+			facingRotation = getRotation(event.getPlayer());
+			isAnchored = true;
 		}
 	}
 
 	@SubscribeEvent
 	public static void onClientTick(TickEvent.ClientTickEvent event) {
 		if(Minecraft.getInstance().world == null)
-		    reset();
+			hasMultiblock = false;
 		else if(isAnchored && blocks == blocksDone && airFilled == 0) {
 			timeComplete++;
 			if(timeComplete == 14)
