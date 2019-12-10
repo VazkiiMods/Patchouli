@@ -153,7 +153,7 @@ public abstract class GuiBook extends Screen {
 		if(shouldAddAddBookmarkButton() && bookmarks.size() <= MAX_BOOKMARKS)
 			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
 
-		if(MultiblockVisualizationHandler.hasMultiblock && MultiblockVisualizationHandler.bookmark != null)
+		if(MultiblockVisualizationHandler.bookmark != null)
 			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.bookmark, true));
 	}
 
