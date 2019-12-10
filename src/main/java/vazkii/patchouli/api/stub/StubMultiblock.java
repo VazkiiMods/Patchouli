@@ -31,7 +31,12 @@ public class StubMultiblock implements IMultiblock {
 	public IMultiblock setSymmetrical(boolean symmetrical) {
 		return this;
 	}
-	
+
+	@Override
+	public ResourceLocation getID() {
+		return new ResourceLocation("patchouli", "stub");
+	}
+
 	@Override
 	public IMultiblock setResourceLocation(ResourceLocation res) {
 		return this;
