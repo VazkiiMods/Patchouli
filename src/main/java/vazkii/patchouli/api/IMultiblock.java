@@ -42,6 +42,8 @@ public interface IMultiblock {
 	 * around the center axis, set this to true to prevent needless cycles.
 	 */
 	public IMultiblock setSymmetrical(boolean symmetrical);
+
+	public ResourceLocation getID();
 	
 	/**
 	 * Sets the multiblock's resource location. Not something you need to

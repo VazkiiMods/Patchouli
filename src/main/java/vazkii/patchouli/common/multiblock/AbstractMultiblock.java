@@ -69,6 +69,11 @@ public abstract class AbstractMultiblock implements IMultiblock, IEnviromentBloc
     }
 
     @Override
+    public ResourceLocation getID() {
+        return res;
+    }
+
+    @Override
     public IMultiblock setResourceLocation(ResourceLocation res) {
         this.res = res;
         return this;
