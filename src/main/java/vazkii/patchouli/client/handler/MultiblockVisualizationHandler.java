@@ -46,7 +46,6 @@ import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
-import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
@@ -56,7 +55,7 @@ public class MultiblockVisualizationHandler {
 	public static boolean hasMultiblock;
 	public static Bookmark bookmark;
 
-	private static AbstractMultiblock multiblock;
+	private static IMultiblock multiblock;
 	private static String name;
 	private static BlockPos pos;
 	private static boolean isAnchored;
@@ -67,11 +66,11 @@ public class MultiblockVisualizationHandler {
 	private static BlockState lookingState;
 	private static BlockPos lookingPos;
 
-	public static void setMultiblock(AbstractMultiblock multiblock, String name, Bookmark bookmark, boolean flip) {
+	public static void setMultiblock(IMultiblock multiblock, String name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos->pos);
 	}
 
-	public static void setMultiblock(AbstractMultiblock multiblock, String name, Bookmark bookmark, boolean flip, Function<BlockPos, BlockPos> offsetApplier) {
+	public static void setMultiblock(IMultiblock multiblock, String name, Bookmark bookmark, boolean flip, Function<BlockPos, BlockPos> offsetApplier) {
 		if(flip && hasMultiblock)
 			hasMultiblock = false;
 		else {
@@ -301,7 +300,7 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static AbstractMultiblock getMultiblock() {
+	public static IMultiblock getMultiblock() {
 		return multiblock;
 	}
 
