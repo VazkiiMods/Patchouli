@@ -176,12 +176,15 @@ public class MultiblockVisualizationHandler {
 			renderMultiblock(Minecraft.getInstance().world);
 	}
 
+	public static void anchorTo(BlockPos target, Rotation rot) {
+		pos = target;
+		facingRotation = rot;
+		isAnchored = true;
+	}
 	@SubscribeEvent
 	public static void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
 		if(hasMultiblock && !isAnchored && event.getPlayer() == Minecraft.getInstance().player) {
-			pos = event.getPos();
-			facingRotation = getRotation(event.getPlayer());
-			isAnchored = true;
+			anchorTo(event.getPos(), getRotation(event.getPlayer()));
 		}
 	}
 
