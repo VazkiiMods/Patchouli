@@ -153,6 +153,11 @@ publishing {
             version project.version
             from components.java
             artifact srcJar
+            pom.withXml {
+                def node = asNode()
+                if(node.dependencies.size() > 0)
+                    node.remove(node.dependencies) // Remove deps, as they are all mappings-dependent and/or forge
+            }
         }
     }
 
