@@ -87,7 +87,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 
 	public BookIcon getIcon() {
 		if(icon == null)
-			icon = new BookIcon(iconRaw); 
+			icon = BookIcon.from(iconRaw);
 
 		return icon;
 	}
@@ -142,7 +142,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public boolean canAdd() {
-		return (flag == null || flag.isEmpty() || PatchouliConfig.getConfigFlag(flag)) && getCategory() != null;
+		return (flag == null || flag.isEmpty() || PatchouliConfig.getConfigFlag(flag));
 	}
 
 	public boolean isFoundByQuery(String query) {
@@ -205,14 +205,20 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		if(extraRecipeMappings != null) {
 			for (Map.Entry<String, Integer> entry : extraRecipeMappings.entrySet()) {
 				String key = entry.getKey();
-				List<ItemStack> stacks = ItemStackUtil.loadStackListFromString(key);
+				List<ItemStack> stacks;
 				int pageNumber = entry.getValue();
+				try {
+					stacks = ItemStackUtil.loadStackListFromString(key);
+				} catch (Exception e) {
+					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: {}", key, pageNumber, resource, e.getMessage());
+					continue;
+				}
 				if (!stacks.isEmpty() && pageNumber < pages.length) {
 					for (ItemStack stack : stacks) {
 						addRelevantStack(stack, pageNumber);
 					}
 				} else {
-					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}", key, pageNumber, resource);
+					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: Empty entry or page out of bounds", key, pageNumber, resource);
 				}
 			}
 		}
