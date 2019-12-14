@@ -120,7 +120,7 @@ public class BookContents extends AbstractReadStateHolder {
 			
 			if(book.indexIconRaw == null || book.indexIconRaw.isEmpty())
 				indexIcon = new BookIcon(book.getBookItem());
-			else indexIcon = new BookIcon(book.indexIconRaw);
+			else indexIcon = BookIcon.from(book.indexIconRaw);
 		}
 
 		List<ResourceLocation> foundCategories = new ArrayList<>();

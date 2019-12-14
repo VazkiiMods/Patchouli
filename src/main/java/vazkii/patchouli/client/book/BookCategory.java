@@ -40,7 +40,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 	public BookIcon getIcon() {
 		if(icon == null)
-			icon = new BookIcon(iconRaw);
+			icon = BookIcon.from(iconRaw);
 
 		return icon;
 	}
