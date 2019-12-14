@@ -50,7 +50,7 @@ public class BookIcon {
 		case RESOURCE:
 			GlStateManager.color4f(1F, 1F, 1F, 1F);
 			mc.textureManager.bindTexture(res);
-			AbstractGui.blit(x, y, 0, 0, 16, 16, 16, 16, 16, 16);
+			AbstractGui.blit(x, y, 0, 0, 16, 16, 16, 16);
 			break;
 		}
 	}
