@@ -142,7 +142,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public boolean canAdd() {
-		return (flag == null || flag.isEmpty() || PatchouliConfig.getConfigFlag(flag)) && getCategory() != null;
+		return (flag == null || flag.isEmpty() || PatchouliConfig.getConfigFlag(flag));
 	}
 
 	public boolean isFoundByQuery(String query) {
