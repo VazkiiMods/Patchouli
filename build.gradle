@@ -56,9 +56,17 @@ minecraft {
         }
     }
 }
+repositories {
+    maven {
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+}
 
 dependencies {
     minecraft "net.minecraftforge:forge:${config.mc_version}-${config.forge_version}"
+
+    compileOnly fg.deobf("mezz.jei:jei-${config.mc_version}:${config.jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${config.mc_version}:${config.jei_version}")
 }
 
 processResources {
