@@ -78,26 +78,26 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public void init() {
-		int guiScale = minecraft.gameSettings.guiScale;
+		MainWindow res = minecraft.mainWindow;
+		double oldGuiScale = res.calcGuiScale(minecraft.gameSettings.guiScale, minecraft.getForceUnicodeFont());
+
 		maxScale = getMaxAllowedScale();
 		int persistentScale = Math.min(PersistentData.data.bookGuiScale, maxScale);
+		double newGuiScale = res.calcGuiScale(persistentScale, minecraft.getForceUnicodeFont());
 
-		if(persistentScale > 0 && persistentScale != guiScale) {
-			MainWindow res = minecraft.mainWindow;
-			scaleFactor = (float) persistentScale / (float) res.getGuiScaleFactor();
+		if(persistentScale > 0 && newGuiScale != oldGuiScale) {
+			scaleFactor = (float) newGuiScale / (float) res.getGuiScaleFactor();
 
-			res.setGuiScale(persistentScale);
+			res.setGuiScale(newGuiScale);
 			width = res.getScaledWidth();
 			height = res.getScaledHeight();
-			res.setGuiScale(guiScale);
+			res.setGuiScale(oldGuiScale);
 		} else scaleFactor = 1;
 
 		bookLeft = width / 2 - FULL_WIDTH / 2;
 		bookTop = height / 2 - FULL_HEIGHT / 2;
 
 		book.contents.currentGui = this;
-
-		clearButtons();
 
 		addButton(new GuiButtonBookBack(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5));
 		addButton(new GuiButtonBookArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
@@ -163,7 +163,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public void removeButtonsIn(Collection<?> coll) {
-		removeButtonsIf(e -> coll.contains(e));
+		removeButtonsIf(coll::contains);
 	}
 
 	@Override // make public
@@ -431,9 +431,8 @@ public abstract class GuiBook extends Screen {
 		font.drawString(s, x - font.getStringWidth(s) / 2, y, color);
 	}
 
-	int getMaxAllowedScale() {
-		Minecraft mc = Minecraft.getInstance();
-		return mc.mainWindow.calcGuiScale(0, mc.getForceUnicodeFont());
+	private int getMaxAllowedScale() {
+		return minecraft.mainWindow.calcGuiScale(0, minecraft.getForceUnicodeFont());
 	}
 
 	public int getPage() {
