@@ -1,10 +1,14 @@
 package vazkii.patchouli.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL13;
@@ -29,7 +33,7 @@ public class PageEntity extends PageWithText {
 
 	boolean rotate = true;
 	@SerializedName("default_rotation")
-	float defaultBlockRotation = -45f;
+	float defaultRotation = -45f;
 
 	transient boolean errored;
 	transient Entity entity;
@@ -69,36 +73,33 @@ public class PageEntity extends PageWithText {
 			fontRenderer.drawWithShadow(I18n.translate("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
 
 		if(entity != null)
-			renderEntity(parent.getMinecraft().world, rotate ? ClientTicker.total : defaultBlockRotation);
+			renderEntity(parent.getMinecraft().world, rotate ? ClientTicker.total : defaultRotation);
 
 		super.render(mouseX, mouseY, pticks);
 	}
 
-	private void renderEntity(World world, float BlockRotation) {
-		renderEntity(entity, world, 58, 60, BlockRotation, renderScale, offset);
+	private void renderEntity(World world, float rotation) {
+		renderEntity(entity, world, 58, 60, rotation, renderScale, offset);
 	}	
 
-	public static void renderEntity(Entity entity, World world, float x, float y, float BlockRotation, float renderScale, float offset) {
+	public static void renderEntity(Entity entity, World world, float x, float y, float rotation, float renderScale, float offset) {
 		entity.world = world;
 
-		RenderSystem.enableColorMaterial();
 		RenderSystem.pushMatrix();
 		RenderSystem.color3f(1F, 1F, 1F);
-		RenderSystem.translatef(x, y, 50.0F);
-		RenderSystem.scalef(-renderScale, renderScale, renderScale);
-		RenderSystem.translatef(0F, offset, 0F);
-		RenderSystem.rotatef(180.0F, 0.0F, 0.0F, 1.0F);
-		RenderSystem.rotatef(BlockRotation, 0.0F, 1.0F, 0.0F);
-		/* todo fabric render entity
-		RenderHelper.enableStandardItemLighting();
-		Minecraft.getInstance().getRenderManager().playerViewY = 180.0F;
-		Minecraft.getInstance().getRenderManager().renderEntity(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
-		 */
+		MatrixStack matrix = new MatrixStack();
+		matrix.translate(x, y, 50);
+		matrix.scale(-renderScale, renderScale, renderScale);
+		matrix.translate(0, offset, 0);
+		matrix.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
+		matrix.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(rotation));
+		EntityRenderDispatcher erd = MinecraftClient.getInstance().getEntityRenderManager();
+		VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+		erd.setRenderShadows(false);
+		erd.render(entity, 0, 0, 0, 0, 1, matrix, immediate, 0xF000F0);
+		erd.setRenderShadows(true);
+		immediate.draw();
 		RenderSystem.popMatrix();
-		RenderSystem.disableRescaleNormal();
-		RenderSystem.activeTexture(GL13.GL_TEXTURE1);
-		RenderSystem.disableTexture();
-		RenderSystem.activeTexture(GL13.GL_TEXTURE0);
 	}
 
 	private void loadEntity(World world) {
