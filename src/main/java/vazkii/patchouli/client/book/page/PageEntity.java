@@ -89,7 +89,7 @@ public class PageEntity extends PageWithText {
 		RenderSystem.color3f(1F, 1F, 1F);
 		MatrixStack matrix = new MatrixStack();
 		matrix.translate(x, y, 50);
-		matrix.scale(-renderScale, renderScale, renderScale);
+		matrix.scale(renderScale, renderScale, renderScale);
 		matrix.translate(0, offset, 0);
 		matrix.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
 		matrix.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(rotation));
