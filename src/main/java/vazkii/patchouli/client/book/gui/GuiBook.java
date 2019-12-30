@@ -75,26 +75,26 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public void init() {
-		int guiScale = minecraft.options.guiScale;
+		Window res = minecraft.getWindow();
+		double oldGuiScale = res.calculateScaleFactor(minecraft.options.guiScale, minecraft.forcesUnicodeFont());
+
 		maxScale = getMaxAllowedScale();
 		int persistentScale = Math.min(PersistentData.data.bookGuiScale, maxScale);
+		double newGuiScale = res.calculateScaleFactor(persistentScale, minecraft.forcesUnicodeFont());
 
-		if(persistentScale > 0 && persistentScale != guiScale) {
-			Window res = minecraft.getWindow();
-			scaleFactor = (float) persistentScale / (float) res.getScaleFactor();
+		if(persistentScale > 0 && newGuiScale != oldGuiScale) {
+			scaleFactor = (float) newGuiScale / (float) res.getScaleFactor();
 
-			res.setScaleFactor(persistentScale);
+			res.setScaleFactor(newGuiScale);
 			width = res.getScaledWidth();
 			height = res.getScaledHeight();
-			res.setScaleFactor(guiScale);
+			res.setScaleFactor(oldGuiScale);
 		} else scaleFactor = 1;
 
 		bookLeft = width / 2 - FULL_WIDTH / 2;
 		bookTop = height / 2 - FULL_HEIGHT / 2;
 
 		book.contents.currentGui = this;
-
-		clearButtons();
 
 		addButton(new GuiButtonBookBack(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5));
 		addButton(new GuiButtonBookArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
@@ -164,7 +164,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public void removeButtonsIn(Collection<?> coll) {
-		removeButtonsIf(e -> coll.contains(e));
+		removeButtonsIf(coll::contains);
 	}
 
 	@Override // make public
@@ -429,9 +429,8 @@ public abstract class GuiBook extends Screen {
 		font.draw(s, x - font.getStringWidth(s) / 2, y, color);
 	}
 
-	int getMaxAllowedScale() {
-		MinecraftClient mc = MinecraftClient.getInstance();
-		return mc.getWindow().calculateScaleFactor(0, mc.forcesUnicodeFont());
+	private int getMaxAllowedScale() {
+		return minecraft.getWindow().calculateScaleFactor(0, minecraft.forcesUnicodeFont());
 	}
 
 	public int getPage() {
