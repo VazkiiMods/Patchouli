@@ -3,6 +3,7 @@
   "package": "vazkii.patchouli.common.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinIngredient",
     "MixinPlayerAdvancementTracker",
     "MixinPlayerManager"
   ],

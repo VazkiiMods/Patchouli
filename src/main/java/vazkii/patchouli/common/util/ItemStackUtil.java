@@ -15,6 +15,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import vazkii.patchouli.common.mixin.MixinIngredient;
 
 public class ItemStackUtil {
 	
@@ -73,7 +74,7 @@ public class ItemStackUtil {
 	}
 	
 	public static String serializeIngredient(Ingredient ingredient) {
-		ItemStack[] stacks = ingredient.getMatchingStacksClient(); // todo fabric client-only
+		ItemStack[] stacks = ((MixinIngredient) (Object) ingredient).getMatchingStacks();
 		String[] stacksSerialized = new String[stacks.length];
 		for (int i = 0; i < stacks.length; i++) {
 			stacksSerialized[i] = serializeStack(stacks[i]);
