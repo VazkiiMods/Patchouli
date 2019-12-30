@@ -41,7 +41,7 @@
 						"GGG GGG",
 						"GG   GG",
 						"G     G",
-						"       ",
+						"   C   ",
 						"G     G",
 						"GG   GG",
 						"GGG GGG"
@@ -57,12 +57,12 @@
 				],
 				"mapping": {
 					" ": "ANY",
-					"0": "minecraft:chest",
+					"0": "minecraft:lapis_block",
 					"G": "minecraft:magenta_stained_glass",
 					"R": "minecraft:stone",
 					"S": "minecraft:sponge",
 					"W": "#minecraft:wool",
-					"P": "minecraft:pumpkin"
+					"C": "minecraft:chest"
 				},
 				"symmetrical": true,
 				"offset": [0, 0, 0],

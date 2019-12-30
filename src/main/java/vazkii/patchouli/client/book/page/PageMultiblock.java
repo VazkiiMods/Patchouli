@@ -10,10 +10,12 @@ import javax.annotation.Nonnull;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
+import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
@@ -38,6 +40,7 @@ import vazkii.patchouli.client.book.gui.button.GuiButtonBookEye;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.base.DrawWithCamera;
+import vazkii.patchouli.client.mixin.MixinBlockEntity;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
@@ -201,16 +204,24 @@ public class PageMultiblock extends PageWithText {
 		
 		for (BlockPos pos : blocks) {
 			BlockEntity te = mb.getBlockEntity(pos);
-			BlockPos relPos = new BlockPos(mc.player);
 			if (te != null && !erroredTiles.contains(te)) {
-				te.resetBlock();
-				te.setWorld(mc.world, relPos.add(pos));
+				te.setWorld(mc.world, pos);
 
+				// fake this in case the renderer checks it as we don't want to query the actual world
+				((MixinBlockEntity) te).setCachedState(mb.getBlockState(pos));
+
+				ms.push();
+				ms.translate(pos.getX(), pos.getY(), pos.getZ());
 				try {
-				    BlockEntityRenderDispatcher.INSTANCE.render(te, ClientTicker.partialTicks, ms, buffers);
+					BlockEntityRenderer<BlockEntity> renderer = BlockEntityRenderDispatcher.INSTANCE.get(te);
+					if (renderer != null) {
+						renderer.render(te, ClientTicker.partialTicks, ms, buffers, 0xF000F0, OverlayTexture.DEFAULT_UV);
+					}
 				} catch (Exception e) {
 					erroredTiles.add(te);
 					Patchouli.LOGGER.error("An exception occured rendering tile entity", e);
+				} finally {
+					ms.pop();
 				}
 			}
 		}
