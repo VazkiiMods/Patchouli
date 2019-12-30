@@ -57,8 +57,8 @@
 				],
 				"mapping": {
 					" ": "ANY",
-					"0": "minecraft:lapis_block",
-					"G": "minecraft:glass",
+					"0": "minecraft:chest",
+					"G": "minecraft:magenta_stained_glass",
 					"R": "minecraft:stone",
 					"S": "minecraft:sponge",
 					"W": "#minecraft:wool",

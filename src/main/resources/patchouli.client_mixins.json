@@ -7,7 +7,9 @@
   "client": [
     "MixinBakedModelManager",
     "MixinInGameHud",
-    "MixinInventoryScreen"
+    "MixinInventoryScreen",
+    "MixinRenderLayer",
+    "MixinVertexConsumerProviderImmediate"
   ],
   "injectors": {
     "defaultRequire": 1
