@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -43,12 +43,12 @@ public class SparseMultiblock extends AbstractMultiblock {
 
     @Override
     public BlockState getBlockState(BlockPos pos) {
-        int ticks = world != null ? (int) world.getDayTime() : 0;
+        int ticks = world != null ? (int) world.getTimeOfDay() : 0;
         return data.getOrDefault(pos, StateMatcher.AIR).getDisplayedState(ticks);
     }
 
     @Override
-    public Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, Rotation rotation, boolean forView) {
+    public Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, BlockRotation rotation, boolean forView) {
         BlockPos center = forView
                 ? anchor.add(RotationUtil.x(rotation, -viewOffX, -viewOffZ), -viewOffY + 1, RotationUtil.z(rotation, -viewOffX, -viewOffZ))
                 : anchor.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
@@ -61,7 +61,7 @@ public class SparseMultiblock extends AbstractMultiblock {
     }
 
     @Override
-    public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
+    public boolean test(World world, BlockPos start, int x, int y, int z, BlockRotation rotation) {
         setWorld(world);
         BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
         BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));

@@ -4,23 +4,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.base.Preconditions;
-import com.mojang.blaze3d.platform.GlStateManager;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.toasts.IToast;
-import net.minecraft.client.gui.toasts.ToastGui;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.fabric.api.event.client.ClientTickCallback;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.toast.Toast;
+import net.minecraft.client.toast.ToastManager;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
-@EventBusSubscriber(Dist.CLIENT)
 public class ClientAdvancements {
 
 	static List<String> doneAdvancements;
@@ -35,7 +30,7 @@ public class ClientAdvancements {
 		if(showToast)
 			BookRegistry.INSTANCE.books.values().forEach(b -> {
 				if(b.popUpdated() && b.showToasts) {
-					Minecraft.getInstance().getToastGui().add(new LexiconToast(b));
+					MinecraftClient.getInstance().getToastManager().add(new LexiconToast(b));
 				}
 			});
 	}
@@ -49,13 +44,14 @@ public class ClientAdvancements {
 		return doneAdvancements != null && doneAdvancements.contains(advancement);
 	}
 
-	@SubscribeEvent
-	public static void onTick(TickEvent.ClientTickEvent event) {
-		if(event.phase == TickEvent.Phase.END && Minecraft.getInstance().player == null)
-			resetIfNeeded();
+	public static void init() {
+		ClientTickCallback.EVENT.register(mc -> {
+			if(mc.player == null)
+				resetIfNeeded();
+		});
 	}
 
-	public static class LexiconToast implements IToast {
+	public static class LexiconToast implements Toast {
 
 		final Book book;
 
@@ -64,19 +60,17 @@ public class ClientAdvancements {
 		}
 
 		@Override
-		public Visibility draw(ToastGui toastGui, long delta) {
-			Minecraft mc = Minecraft.getInstance();
-			mc.getTextureManager().bindTexture(TEXTURE_TOASTS);
-			GlStateManager.color3f(1.0F, 1.0F, 1.0F);
+		public Visibility draw(ToastManager toastGui, long delta) {
+			toastGui.getGame().getTextureManager().bindTexture(TOASTS_TEX);
+			RenderSystem.color3f(1, 1, 1);
 			toastGui.blit(0, 0, 0, 32, 160, 32);
 
-			toastGui.getMinecraft().fontRenderer.drawString(I18n.format(book.name), 30, 7, -11534256);
-			toastGui.getMinecraft().fontRenderer.drawString(I18n.format("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
+			toastGui.getGame().textRenderer.draw(I18n.translate(book.name), 30, 7, -11534256);
+			toastGui.getGame().textRenderer.draw(I18n.translate("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
 
-			RenderHelper.enableGUIStandardItemLighting();
-			toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(null, book.getBookItem(), 8, 8);
+			toastGui.getGame().getItemRenderer().renderGuiItem(null, book.getBookItem(), 8, 8);
 
-			return delta >= 5000L ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
+			return delta >= 5000L ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
 		}
 
 	}

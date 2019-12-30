@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resource.language.I18n;
 import org.apache.commons.lang3.text.WordUtils;
 
 import net.minecraft.item.ItemStack;
@@ -46,7 +46,7 @@ public class VariableAssigner {
 		FUNCTIONS.put("exists", VariableAssigner::exists);
 		FUNCTIONS.put("iexists", VariableAssigner::iexists);
 		FUNCTIONS.put("inv", VariableAssigner::inv);
-		FUNCTIONS.put("i18n", I18n::format);
+		FUNCTIONS.put("i18n", I18n::translate);
 	}
 
 	public static void assignVariableHolders(Object object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
@@ -201,7 +201,7 @@ public class VariableAssigner {
 
 	private static String iname(String arg) {
 		ItemStack stack = ItemStackUtil.loadStackFromString(arg);
-		return stack.getDisplayName().getFormattedText();
+		return stack.getName().asFormattedString();
 	}
 	
 	private static String icount(String arg) {

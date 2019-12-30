@@ -3,8 +3,8 @@ package vazkii.patchouli.api;
 import java.util.Collection;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -43,13 +43,13 @@ public interface IMultiblock {
 	 */
 	public IMultiblock setSymmetrical(boolean symmetrical);
 
-	public ResourceLocation getID();
+	public Identifier getID();
 	
 	/**
 	 * Sets the multiblock's resource location. Not something you need to
 	 * call yourself as the register method in the main API class does it for you.
 	 */
-	public IMultiblock setResourceLocation(ResourceLocation res);
+	public IMultiblock setIdentifier(Identifier res);
 	
 	// ================================================================================================
 	// Getters
@@ -73,7 +73,7 @@ public interface IMultiblock {
 	/**
 	 * Places the multiblock at the given position with the given rotation.
 	 */
-	public void place(World world, BlockPos pos, Rotation rotation);
+	public void place(World world, BlockPos pos, BlockRotation rotation);
 
 	/**
 	 * If this multiblock were anchored at world position {@code anchor} with rotation {@code rotation}, then
@@ -83,7 +83,7 @@ public interface IMultiblock {
 	 * This is intended to be highly general, most of the other methods below are implemented in terms of this one.
 	 * See the main Patchouli code to see what can be done with this.
 	 */
-	Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, Rotation rotation, boolean forView);
+	Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, BlockRotation rotation, boolean forView);
 
 	/**
 	 * Validates if the multiblock exists at the given position. Will check all 4
@@ -91,19 +91,19 @@ public interface IMultiblock {
      * @return The rotation that worked, null if no match
 	 */
 	@Nullable
-	public Rotation validate(World world, BlockPos pos);
+	public BlockRotation validate(World world, BlockPos pos);
 
 	/**
 	 * Validates the multiblock for a specific rotation
 	 */
-	public boolean validate(World world, BlockPos pos, Rotation rotation);
+	public boolean validate(World world, BlockPos pos, BlockRotation rotation);
 
 	/**
 	 * Fine-grained check for whether any one given block of the multiblock exists at the given position
 	 * with the given rotation.
 	 * @param start The anchor position. The multiblock's {@link #offset} is not applied to this.
 	 */
-	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation);
+	public boolean test(World world, BlockPos start, int x, int y, int z, BlockRotation rotation);
 
 	interface SimulateResult {
 		/**
@@ -125,7 +125,7 @@ public interface IMultiblock {
 		/**
 		 * @return Whether the multiblock is fulfilled at this position
 		 */
-		public boolean test(World world, Rotation rotation);
+		public boolean test(World world, BlockRotation rotation);
 	}
 
 }

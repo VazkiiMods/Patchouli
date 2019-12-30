@@ -6,13 +6,13 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.TextFormat;
+import net.minecraft.text.TranslatableText;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookAdvancements;
@@ -38,7 +38,7 @@ public class GuiBookLanding extends GuiBook {
 	public void init() {
 		super.init();
 
-		text = new BookTextRenderer(this, I18n.format(book.landingText), LEFT_PAGE_X, TOP_PADDING + 25);
+		text = new BookTextRenderer(this, I18n.translate(book.landingText), LEFT_PAGE_X, TOP_PADDING + 25);
 
 		boolean disableBar = !book.showProgress || PatchouliConfig.disableAdvancementLocking.get();
 
@@ -65,7 +65,7 @@ public class GuiBookLanding extends GuiBook {
 		//				addButton(new GuiButtonBookConfig(this, x + (pos++) * dist, y));
 		//		}
 
-		if(Minecraft.getInstance().player.isCreative())
+		if(MinecraftClient.getInstance().player.isCreative())
 			addButton(new GuiButtonBookEdit(this, x + (pos++) * dist, y, this::handleButtonEdit));
 
 		int i = 0;
@@ -96,7 +96,7 @@ public class GuiBookLanding extends GuiBook {
 	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
 		text.render(mouseX, mouseY);
 
-		drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+		drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
 		int topSeparator = TOP_PADDING + 12;
 		int bottomSeparator = topSeparator + 25 + 24 * ((loadedCategories - 1) / 4 + 1);
@@ -111,8 +111,8 @@ public class GuiBookLanding extends GuiBook {
 			int x = RIGHT_PAGE_X  + PAGE_WIDTH / 2; 
 			int y = bottomSeparator + 12;
 
-			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
-			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.loading_error_hover"), x, y + 10, 0x777777);
+			drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
+			drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.loading_error_hover"), x, y + 10, 0x777777);
 
 			x -= PAGE_WIDTH / 2;
 			y -= 4;
@@ -125,12 +125,12 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	void drawHeader() {
-		GlStateManager.color4f(1F, 1F, 1F, 1F);
+		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		drawFromTexture(book, -8, 12, 0, 180, 140, 31);
 
 		int color = book.nameplateColor;
-		font.drawString(book.getBookItem().getDisplayName().getFormattedText(), 13, 16, color);
-		book.getFont().drawString(book.contents.getSubtitle(), 24, 24, color); 
+		font.draw(book.getBookItem().getName().asFormattedString(), 13, 16, color);
+		book.getFont().draw(book.contents.getSubtitle(), 24, 24, color);
 	}
 
 	void makeErrorTooltip() {
@@ -145,7 +145,7 @@ public class GuiBookLanding extends GuiBook {
 		}
 
 		if(!lines.isEmpty()) {
-			lines.add(TextFormatting.GREEN + I18n.format("patchouli.gui.lexicon.loading_error_log"));
+			lines.add(TextFormat.GREEN + I18n.translate("patchouli.gui.lexicon.loading_error_log"));
 			setTooltip(lines);
 		}
 	}
@@ -156,39 +156,39 @@ public class GuiBookLanding extends GuiBook {
 				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 	
-	public void handleButtonIndex(Button button) {
+	public void handleButtonIndex(ButtonWidget button) {
 		displayLexiconGui(new GuiBookIndex(book), true);
 	}
 	
-	public void handleButtonCategory(Button button) {
+	public void handleButtonCategory(ButtonWidget button) {
 		displayLexiconGui(new GuiBookCategory(book, ((GuiButtonCategory) button).getCategory()), true);
 	}
 	
-	public void handleButtonHistory(Button button) {
+	public void handleButtonHistory(ButtonWidget button) {
 		displayLexiconGui(new GuiBookHistory(book), true);
 	}
 	
-	public void handleButtonConfig(Button button) {
+	public void handleButtonConfig(ButtonWidget button) {
 //		IModGuiFactory guiFactory = FMLClientHandler.instance().getGuiFactoryFor(book.owner);
 //		Screen configGui = guiFactory.createConfigGui(this);
 //		mc.displayGuiScreen(configGui);
 	}
 	
-	public void handleButtonAdvancements(Button button) {
-		minecraft.displayGuiScreen(new GuiAdvancementsExt(minecraft.player.connection.getAdvancementManager(), this, book.advancementsTab));
+	public void handleButtonAdvancements(ButtonWidget button) {
+		minecraft.openScreen(new GuiAdvancementsExt(minecraft.player.networkHandler.getAdvancementHandler(), this, book.advancementsTab));
 	}
 
-	public void handleButtonEdit(Button button) {
+	public void handleButtonEdit(ButtonWidget button) {
 		if(hasShiftDown()) {
 			long time = System.currentTimeMillis();
 			book.reloadContentsAndExtensions();
 			book.reloadLocks(false);
 			displayLexiconGui(new GuiBookLanding(book), false);
-			minecraft.player.sendMessage(new TranslationTextComponent("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)));
+			minecraft.player.sendMessage(new TranslatableText("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)));
 		} else displayLexiconGui(new GuiBookWriter(book), true);
 	}
 	
-	public void handleButtonResize(Button button) {
+	public void handleButtonResize(ButtonWidget button) {
 		if(PersistentData.data.bookGuiScale >= maxScale)
 			PersistentData.data.bookGuiScale = 0;
 		else PersistentData.data.bookGuiScale = Math.max(2, PersistentData.data.bookGuiScale + 1);

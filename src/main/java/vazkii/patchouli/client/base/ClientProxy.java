@@ -1,31 +1,30 @@
 package vazkii.patchouli.client.base;
 
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.minecraft.client.util.ModelIdentifier;
 import vazkii.patchouli.client.book.ClientBookRegistry;
-import vazkii.patchouli.common.base.CommonProxy;
+import vazkii.patchouli.client.handler.BookRightClickHandler;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.BookRegistry;
+import vazkii.patchouli.common.network.NetworkHandler;
 
-public class ClientProxy extends CommonProxy {
-
+public class ClientProxy implements ClientModInitializer {
 	@Override
-	public void start() {
-		super.start();
-		
-		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-		bus.addListener(this::setupClient);
-	}
-	
-	public void setupClient(FMLClientSetupEvent event) {
+	public void onInitializeClient() {
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
+		ClientAdvancements.init();
+		ClientTicker.init();
+		BookRightClickHandler.init();
+		NetworkHandler.registerMessages();
+		Patchouli.reloadBookHandler = ClientBookRegistry.INSTANCE::reload;
+
+
+		ModelLoadingRegistry.INSTANCE.registerAppender((manager, register) -> {
+			BookRegistry.INSTANCE.books.values().stream()
+					.map(b -> new ModelIdentifier(b.model, "inventory"))
+					.forEach(register);
+		});
 	}
-	
-	@Override
-	public void requestBookReload() {
-		ClientBookRegistry.INSTANCE.reload();
-	}
-	
 }

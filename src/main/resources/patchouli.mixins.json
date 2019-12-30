@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "vazkii.patchouli.common.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinPlayerAdvancementTracker",
+    "MixinPlayerManager"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

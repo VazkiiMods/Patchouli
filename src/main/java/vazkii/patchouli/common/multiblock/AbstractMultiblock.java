@@ -2,22 +2,22 @@ package vazkii.patchouli.common.multiblock;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
-import net.minecraftforge.common.util.TriPredicate;
 import vazkii.patchouli.api.IMultiblock;
+import vazkii.patchouli.api.TriPredicate;
 import vazkii.patchouli.common.util.RotationUtil;
 
 import javax.annotation.Nullable;
@@ -25,14 +25,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractMultiblock implements IMultiblock, IEnviromentBlockReader {
-    public ResourceLocation res;
+public abstract class AbstractMultiblock implements IMultiblock, BlockView {
+    public Identifier res;
     protected int offX, offY, offZ;
     protected int viewOffX, viewOffY, viewOffZ;
     private boolean symmetrical;
     World world;
 
-    private final transient Map<BlockPos, TileEntity> teCache = new HashMap<>();
+    private final transient Map<BlockPos, BlockEntity> teCache = new HashMap<>();
 
     @Override
     public IMultiblock offset(int x, int y, int z) {
@@ -69,34 +69,34 @@ public abstract class AbstractMultiblock implements IMultiblock, IEnviromentBloc
     }
 
     @Override
-    public ResourceLocation getID() {
+    public Identifier getID() {
         return res;
     }
 
     @Override
-    public IMultiblock setResourceLocation(ResourceLocation res) {
+    public IMultiblock setIdentifier(Identifier res) {
         this.res = res;
         return this;
     }
 
     @Override
-    public void place(World world, BlockPos pos, Rotation rotation) {
+    public void place(World world, BlockPos pos, BlockRotation rotation) {
         setWorld(world);
         simulate(world, pos, rotation, false).getSecond().forEach(r -> {
             BlockPos placePos = r.getWorldPosition();
-            BlockState targetState = r.getStateMatcher().getDisplayedState((int) world.getDayTime()).rotate(rotation);
+            BlockState targetState = r.getStateMatcher().getDisplayedState((int) world.getTimeOfDay()).rotate(rotation);
             Block targetBlock = targetState.getBlock();
 
-            if(!targetBlock.isAir(targetState, world, placePos) && targetState.isValidPosition(world, placePos) && world.getBlockState(placePos).getMaterial().isReplaceable())
+            if(!targetState.isAir() && targetState.canPlaceAt(world, placePos) && world.getBlockState(placePos).getMaterial().isReplaceable())
                 world.setBlockState(placePos, targetState);
         });
     }
 
     @Override
-    public Rotation validate(World world, BlockPos pos) {
-        if (isSymmetrical() && validate(world, pos, Rotation.NONE))
-            return Rotation.NONE;
-        else for (Rotation rot : Rotation.values()) {
+    public BlockRotation validate(World world, BlockPos pos) {
+        if (isSymmetrical() && validate(world, pos, BlockRotation.NONE))
+            return BlockRotation.NONE;
+        else for (BlockRotation rot : BlockRotation.values()) {
             if(validate(world, pos, rot)) {
                 return rot;
             }
@@ -105,13 +105,13 @@ public abstract class AbstractMultiblock implements IMultiblock, IEnviromentBloc
     }
 
     @Override
-    public boolean validate(World world, BlockPos pos, Rotation rotation) {
+    public boolean validate(World world, BlockPos pos, BlockRotation rotation) {
         setWorld(world);
         Pair<BlockPos, Collection<SimulateResult>> sim = simulate(world, pos, rotation, false);
 
         return sim.getSecond().stream().allMatch(r -> {
             BlockPos checkPos = r.getWorldPosition();
-            TriPredicate<IBlockReader, BlockPos, BlockState> pred = r.getStateMatcher().getStatePredicate();
+            TriPredicate<BlockView, BlockPos, BlockState> pred = r.getStateMatcher().getStatePredicate();
             BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
 
             return pred.test(world, checkPos, state);
@@ -129,27 +129,17 @@ public abstract class AbstractMultiblock implements IMultiblock, IEnviromentBloc
 
     @Override
     @Nullable
-    public TileEntity getTileEntity(BlockPos pos) {
+    public BlockEntity getBlockEntity(BlockPos pos) {
         BlockState state = getBlockState(pos);
-        if (state.getBlock().hasTileEntity(state)) {
-            return teCache.computeIfAbsent(pos.toImmutable(), p -> state.getBlock().createTileEntity(state, world));
+        if (state.getBlock().hasBlockEntity()) {
+            return teCache.computeIfAbsent(pos.toImmutable(), p -> ((BlockEntityProvider) state.getBlock()).createBlockEntity(world));
         }
         return null;
     }
 
     @Override
-    public IFluidState getFluidState(BlockPos pos) {
+    public FluidState getFluidState(BlockPos pos) {
         return Fluids.EMPTY.getDefaultState();
-    }
-
-    @Override
-    public Biome getBiome(BlockPos pos) {
-        return Biomes.PLAINS;
-    }
-
-    @Override
-    public int getLightFor(LightType type, BlockPos pos) {
-        return 0xF000F0;
     }
 
     public abstract Vec3i getSize();

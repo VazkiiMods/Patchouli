@@ -6,15 +6,15 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.stub.StubPatchouliAPI;
 
 public class PatchouliAPI {
@@ -58,14 +58,14 @@ public class PatchouliAPI {
 		/**
 		 * Opens a book GUI for the given player (server version).
 		 */
-		public void openBookGUI(ServerPlayerEntity player, ResourceLocation book);
+		public void openBookGUI(ServerPlayerEntity player, Identifier book);
 		
 		/**
 		 * Opens a book GUI. (client version)
 		 */
-		@OnlyIn(Dist.CLIENT) public void openBookGUI(ResourceLocation book);
+		@Environment(EnvType.CLIENT) public void openBookGUI(Identifier book);
 		
-		@OnlyIn(Dist.CLIENT) public ResourceLocation getOpenBookGui();
+		@Environment(EnvType.CLIENT) public Identifier getOpenBookGui();
 		
 		/**
 		 * Reloads the contents of all books. Call sparingly and only if you
@@ -83,7 +83,7 @@ public class PatchouliAPI {
 		 * as the "res" resource location. The supplier should give an input stream that
 		 * reads a full json file, containing a template.
 		 */
-		@OnlyIn(Dist.CLIENT) public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider);
+		@Environment(EnvType.CLIENT) public void registerTemplateAsBuiltin(Identifier res, Supplier<InputStream> streamProvider);
 
 		// ================================================================================================
 		// ItemStack Serialization
@@ -130,13 +130,13 @@ public class PatchouliAPI {
 		/**
 		 * Gets a multiblock by its resource location, or null if none exists for it.
 		 */
-		public IMultiblock getMultiblock(ResourceLocation res);
+		public IMultiblock getMultiblock(Identifier res);
 		
 		/**
 		 * Registers a multiblock given its resource location. This takes care of both registering it
 		 * and setting its resource location to the one passed.
 		 */
-		public IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb);
+		public IMultiblock registerMultiblock(Identifier res, IMultiblock mb);
 		
 		/**
 		 * Creates a multiblock given the pattern and targets given. This works in the same way as 

@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import vazkii.patchouli.api.VariableHolder;
@@ -26,7 +26,7 @@ public class ComponentEntity extends TemplateComponent {
 	
 	boolean rotate = true;
 	@SerializedName("default_rotation")
-	float defaultRotation = -45f;
+	float defaultBlockRotation = -45f;
 	
 	transient boolean errored;
 	transient Entity entity;
@@ -46,14 +46,14 @@ public class ComponentEntity extends TemplateComponent {
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
 		if(errored)
-			page.fontRenderer.drawStringWithShadow(I18n.format("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
+			page.fontRenderer.drawWithShadow(I18n.translate("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
 		
 		if(entity != null)
-			renderEntity(page.mc.world, rotate ?  ClientTicker.total : defaultRotation);
+			renderEntity(page.mc.world, rotate ?  ClientTicker.total : defaultBlockRotation);
 	}
 
-	private void renderEntity(World world, float rotation) {
-		PageEntity.renderEntity(entity, world, x, y, rotation, renderScale, offset);
+	private void renderEntity(World world, float BlockRotation) {
+		PageEntity.renderEntity(entity, world, x, y, BlockRotation, renderScale, offset);
 	}
 	
 	private void loadEntity(World world) {

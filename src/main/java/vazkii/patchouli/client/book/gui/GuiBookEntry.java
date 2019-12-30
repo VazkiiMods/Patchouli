@@ -5,16 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.util.Identifier;
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
@@ -28,7 +27,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	BookEntry entry;
 	BookPage leftPage, rightPage;
 
-	Map<Button, Runnable> customButtons = new HashMap<>();
+	Map<ButtonWidget, Runnable> customButtons = new HashMap<>();
 
 	public GuiBookEntry(Book book, BookEntry entry) {
 		this(book, entry, 0);
@@ -99,10 +98,10 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		if(page == null)
 			return;
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef(page.left, page.top, 0);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(page.left, page.top, 0);
 		page.render(mouseX - page.left, mouseY - page.top, pticks);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	boolean clickPage(BookPage page, double mouseX, double mouseY, int mouseButton) {
@@ -150,7 +149,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public boolean canBeOpened() {
-		return !entry.isLocked() && !equals(Minecraft.getInstance().currentScreen);
+		return !entry.isLocked() && !equals(MinecraftClient.getInstance().currentScreen);
 	}
 
 	@Override
@@ -210,7 +209,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public FontRenderer getFont() {
+	public TextRenderer getFont() {
 		return book.getFont();
 	}
 
@@ -219,18 +218,16 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		if(stack == null || stack.isEmpty())
 			return;
 
-		RenderHelper.enableGUIStandardItemLighting();
-		minecraft.getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
-		minecraft.getItemRenderer().renderItemOverlays(font, stack, x, y);
+		minecraft.getItemRenderer().renderGuiItem(stack, x, y);
+		minecraft.getItemRenderer().renderGuiItemOverlay(font, stack, x, y);
 
 		if(isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16))
 			setTooltipStack(stack);
-		RenderHelper.disableStandardItemLighting();
 	}
 
 	@Override
 	public void renderIngredient(int x, int y, int mouseX, int mouseY, Ingredient ingr) {
-		ItemStack[] stacks = ingr.getMatchingStacks();
+		ItemStack[] stacks = ingr.getMatchingStacksClient();
 		if(stacks.length > 0)
 			renderItemStack(x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
 	}
@@ -246,7 +243,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public void registerButton(Button button, int pageNum, Runnable onClick) {
+	public void registerButton(ButtonWidget button, int pageNum, Runnable onClick) {
 		button.x += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
 		button.y += bookTop;
 
@@ -255,12 +252,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public ResourceLocation getBookTexture() {
+	public Identifier getBookTexture() {
 		return book.bookResource;
 	}
 
 	@Override
-	public ResourceLocation getCraftingTexture() {
+	public Identifier getCraftingTexture() {
 		return book.craftingResource;
 	}
 

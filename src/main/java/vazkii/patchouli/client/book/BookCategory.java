@@ -6,8 +6,8 @@ import java.util.stream.Stream;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.util.Identifier;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
@@ -26,12 +26,12 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	private transient List<BookEntry> entries = new ArrayList<>();
 	private transient boolean locked;
 	private transient BookIcon icon = null;
-	private transient ResourceLocation resource;
+	private transient Identifier resource;
 	
 	private transient boolean built;
 
 	public String getName() {
-		return book.i18n ? I18n.format(name) : name;
+		return book.i18n ? I18n.translate(name) : name;
 	}
 
 	public String getDescription() {
@@ -60,8 +60,8 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	public BookCategory getParentCategory() {
 		if(!checkedParent && !isRootCategory()) {
 			if(parent.contains(":"))
-				parentCategory = book.contents.categories.get(new ResourceLocation(parent));
-			else parentCategory = book.contents.categories.get(new ResourceLocation(book.getModNamespace(), parent));
+				parentCategory = book.contents.categories.get(new Identifier(parent));
+			else parentCategory = book.contents.categories.get(new Identifier(book.getModNamespace(), parent));
 
 			checkedParent = true;
 		}
@@ -113,7 +113,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 		return parent == null || parent.isEmpty();
 	}
 
-	public ResourceLocation getResource() {
+	public Identifier getResource() {
 		return resource;
 	}
 
@@ -136,7 +136,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 		} else this.book = book;	
 	}
 
-	public void build(ResourceLocation resource) {
+	public void build(Identifier resource) {
 		if(built)
 			return;
 		

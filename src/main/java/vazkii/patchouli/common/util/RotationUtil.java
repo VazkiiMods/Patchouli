@@ -1,11 +1,11 @@
 package vazkii.patchouli.common.util;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.math.Direction;
 
 public class RotationUtil {
 
-	public static int x(Rotation rot, int x, int z) {
+	public static int x(BlockRotation rot, int x, int z) {
 		switch(rot) {
 		case NONE: return x;
 		case CLOCKWISE_180: return -x;
@@ -14,7 +14,7 @@ public class RotationUtil {
 		}
 	}
 	
-	public static int z(Rotation rot, int x, int z) {
+	public static int z(BlockRotation rot, int x, int z) {
 		switch(rot) {
 		case NONE: return z;
 		case CLOCKWISE_180: return -z;
@@ -23,19 +23,19 @@ public class RotationUtil {
 		}
 	}
 	
-	public static Rotation rotationFromFacing(Direction facing) {
+	public static BlockRotation rotationFromFacing(Direction facing) {
 		switch(facing) {
-		case EAST: return Rotation.CLOCKWISE_90;
-		case SOUTH: return Rotation.CLOCKWISE_180;
-		case WEST: return Rotation.COUNTERCLOCKWISE_90;
-		default: return Rotation.NONE;
+		case EAST: return BlockRotation.CLOCKWISE_90;
+		case SOUTH: return BlockRotation.CLOCKWISE_180;
+		case WEST: return BlockRotation.COUNTERCLOCKWISE_90;
+		default: return BlockRotation.NONE;
 		}
 	}
 	
-	public static Rotation fixHorizontal(Rotation rot) {
+	public static BlockRotation fixHorizontal(BlockRotation rot) {
 		switch(rot) {
-		case CLOCKWISE_90: return Rotation.COUNTERCLOCKWISE_90;
-		case COUNTERCLOCKWISE_90: return Rotation.CLOCKWISE_90;
+		case CLOCKWISE_90: return BlockRotation.COUNTERCLOCKWISE_90;
+		case COUNTERCLOCKWISE_90: return BlockRotation.CLOCKWISE_90;
 		default: return rot;
 		}
 	}

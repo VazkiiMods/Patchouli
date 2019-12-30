@@ -7,19 +7,19 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraftforge.common.util.TriPredicate;
+import net.minecraft.world.BlockView;
 import vazkii.patchouli.api.IStateMatcher;
+import vazkii.patchouli.api.TriPredicate;
 
 public class StateMatcher implements IStateMatcher {
 
 	public static final StateMatcher ANY = displayOnly(Blocks.AIR.getDefaultState());
-	public static final StateMatcher AIR = fromPredicate(Blocks.AIR.getDefaultState(), (w, p, s) -> s.isAir(w, p));
+	public static final StateMatcher AIR = fromPredicate(Blocks.AIR.getDefaultState(), (w, p, s) -> s.isAir());
 
 	private final BlockState displayState;
-	private final TriPredicate<IBlockReader, BlockPos, BlockState> statePredicate;
+	private final TriPredicate<BlockView, BlockPos, BlockState> statePredicate;
 
-	private StateMatcher(BlockState displayState, TriPredicate<IBlockReader, BlockPos, BlockState> statePredicate) {
+	private StateMatcher(BlockState displayState, TriPredicate<BlockView, BlockPos, BlockState> statePredicate) {
 		this.displayState = displayState;
 		this.statePredicate = statePredicate;
 	}
@@ -32,11 +32,11 @@ public class StateMatcher implements IStateMatcher {
 		return fromPredicate(display.getDefaultState(), predicate);
 	}
 
-	public static StateMatcher fromPredicate(BlockState display, TriPredicate<IBlockReader, BlockPos, BlockState> predicate) {
+	public static StateMatcher fromPredicate(BlockState display, TriPredicate<BlockView, BlockPos, BlockState> predicate) {
 		return new StateMatcher(display, predicate);
 	}
 
-	public static StateMatcher fromPredicate(Block display, TriPredicate<IBlockReader, BlockPos, BlockState> predicate) {
+	public static StateMatcher fromPredicate(Block display, TriPredicate<BlockView, BlockPos, BlockState> predicate) {
 		return new StateMatcher(display.getDefaultState(), predicate);
 	}
 
@@ -72,7 +72,7 @@ public class StateMatcher implements IStateMatcher {
 	}
 
 	@Override
-	public TriPredicate<IBlockReader, BlockPos, BlockState> getStatePredicate() {
+	public TriPredicate<BlockView, BlockPos, BlockState> getStatePredicate() {
 		return statePredicate;
 	}
 

@@ -3,7 +3,7 @@ package vazkii.patchouli.client.book.text;
 import java.util.List;
 import java.util.function.Supplier;
 
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.font.TextRenderer;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
 
@@ -33,7 +33,7 @@ public class Word {
 		this.tooltip = span.tooltip;
 	}
 
-	public void render(FontRenderer font, int mouseX, int mouseY) {
+	public void render(TextRenderer font, int mouseX, int mouseY) {
 		String renderTarget = codes + text;
 		int renderColor = color;
 		if(isClusterHovered(mouseX, mouseY)) {
@@ -43,7 +43,7 @@ public class Word {
 				gui.setTooltip(tooltip);
 		}
 
-		font.drawString(renderTarget, x, y, renderColor);
+		font.draw(renderTarget, x, y, renderColor);
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {

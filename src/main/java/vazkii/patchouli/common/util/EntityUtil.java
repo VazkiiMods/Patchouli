@@ -1,23 +1,25 @@
 package vazkii.patchouli.common.util;
 
+import net.minecraft.nbt.StringNbtReader;
+import net.minecraft.util.registry.Registry;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
-import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.patchouli.common.base.Patchouli;
+
+import java.util.Optional;
 
 public class EntityUtil {
 
 	public static String getEntityName(String entityId) {
 		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
-		EntityType<?> type = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(nameAndNbt.getLeft()));
+		EntityType<?> type = Registry.ENTITY_TYPE.get(new Identifier(nameAndNbt.getLeft()));
 
 		return type.getTranslationKey();
 	}
@@ -26,29 +28,30 @@ public class EntityUtil {
 		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
 		entityId = nameAndNbt.getLeft();
 		String nbtStr = nameAndNbt.getRight();
-		CompoundNBT nbt = null;
+		CompoundTag nbt = null;
 		
 		if(!nbtStr.isEmpty()) {
 			try {
-				nbt = JsonToNBT.getTagFromJson(nbtStr);
+				nbt = StringNbtReader.parse(nbtStr);
 			} catch(CommandSyntaxException e) {
 				Patchouli.LOGGER.error("Failed to load entity data", e);
 			}
 		}
 
-		ResourceLocation key = new ResourceLocation(entityId);
-		if (!ForgeRegistries.ENTITIES.containsKey(key)) {
+		Identifier key = new Identifier(entityId);
+		Optional<EntityType<?>> maybeType = Registry.ENTITY_TYPE.getOrEmpty(key);
+		if (!maybeType.isPresent()) {
 			throw new RuntimeException("Unknown entity id: " + entityId);
 		}
-		EntityType<?> type = ForgeRegistries.ENTITIES.getValue(key);
-		final CompoundNBT useNbt = nbt;
+		EntityType<?> type = maybeType.get();
+		final CompoundTag useNbt = nbt;
 		final String useId = entityId;
 		return (world) -> {
 			Entity entity;
 			try {
 				entity = type.create(world);
 				if(useNbt != null)
-					entity.read(useNbt);
+					entity.fromTag(useNbt);
 
 				return entity;
 			} catch (Exception e) {

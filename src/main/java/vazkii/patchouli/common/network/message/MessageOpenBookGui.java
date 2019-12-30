@@ -1,28 +1,28 @@
 package vazkii.patchouli.common.network.message;
 
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.network.PacketContext;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 import vazkii.patchouli.client.book.ClientBookRegistry;
-import vazkii.patchouli.common.network.IMessage;
+import vazkii.patchouli.common.base.Patchouli;
 
-public class MessageOpenBookGui implements IMessage {
+public class MessageOpenBookGui {
+	public static final Identifier ID = new Identifier(Patchouli.MOD_ID, "open_book");
 
-	private static final long serialVersionUID = -8413856876282832583L;
-	
-	public String book;
-	
-	public MessageOpenBookGui() { }
-	
-	public MessageOpenBookGui(String book) { 
-		this.book = book;
+	public static void send(PlayerEntity player, String book) {
+		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+		buf.writeString(book);
+		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, ID, buf);
 	}
 	
-	@Override
-	public boolean receive(Context context) {
-		context.enqueueWork(() -> {
+	public static void handle(PacketContext context, PacketByteBuf buf) {
+		String book = buf.readString();
+		context.getTaskQueue().submit(() -> {
 			ClientBookRegistry.INSTANCE.displayBookGui(book);
 		});
-		
-		return true;
 	}
 
 }

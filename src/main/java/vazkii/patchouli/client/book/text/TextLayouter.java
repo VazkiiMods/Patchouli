@@ -3,9 +3,11 @@ package vazkii.patchouli.client.book.text;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.resource.language.LanguageDefinition;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class TextLayouter {
@@ -32,9 +34,9 @@ public class TextLayouter {
 	private int lineStart = 0;
 	private int widthSoFar = 0;
 	
-	private FontRenderer font;
+	private TextRenderer font;
 
-	public void layout(FontRenderer font, List<Span> spans) {
+	public void layout(TextRenderer font, List<Span> spans) {
 		this.font = font;
 		
 		List<Span> paragraph = new ArrayList<>();
@@ -56,7 +58,16 @@ public class TextLayouter {
 	// a paragraph is a series of spans without explicit line break
 	private void layoutParagraph(List<Span> paragraph) {
 		String text = toString(paragraph);
-		BreakIterator iterator = BreakIterator.getLineInstance(MinecraftForgeClient.getLocale());
+		// todo fabric is there a helper to do this?
+		LanguageDefinition language = MinecraftClient.getInstance().getLanguageManager().getLanguage();
+		Locale locale;
+		String[] splitLangCode = language.getName().split("_", 2);
+		if (splitLangCode.length == 1) {
+			locale = new Locale(language.getCode());
+		} else {
+			locale = new Locale(splitLangCode[0], splitLangCode[1]);
+		}
+		BreakIterator iterator = BreakIterator.getLineInstance(locale);
 		iterator.setText(text);
 		lineStart = 0;
 

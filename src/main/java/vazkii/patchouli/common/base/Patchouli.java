@@ -2,13 +2,9 @@ package vazkii.patchouli.common.base;
 
 import java.lang.management.ManagementFactory;
 
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import vazkii.patchouli.client.base.ClientProxy;
 
-@Mod(Patchouli.MOD_ID)
 public class Patchouli {
 
 	public static boolean debug = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
@@ -19,15 +15,7 @@ public class Patchouli {
 
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-	public static Patchouli instance;
-	public static CommonProxy proxy;
-
-	public Patchouli() {
-		instance = this;
-
-		proxy = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
-		proxy.start();
-	}
-
+	public static Runnable reloadBookHandler = () -> {
+	};
 }
 

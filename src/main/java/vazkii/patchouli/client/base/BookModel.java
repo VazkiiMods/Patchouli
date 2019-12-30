@@ -1,45 +1,46 @@
 package vazkii.patchouli.client.base;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
+import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class BookModel implements IBakedModel {
-    private final IBakedModel original;
+public class BookModel implements BakedModel {
+    private final BakedModel original;
 
-    public BookModel(IBakedModel original) {
+    public BookModel(BakedModel original) {
         this.original = original;
     }
 
-    private final ItemOverrideList itemHandler = new ItemOverrideList() {
+    private final ModelItemPropertyOverrideList itemHandler = new ModelItemPropertyOverrideList(null, null, null, Collections.emptyList()) {
         @Override
-        public IBakedModel getModelWithOverrides(@Nonnull IBakedModel original, @Nonnull ItemStack stack,
+        public BakedModel apply(@Nonnull BakedModel original, @Nonnull ItemStack stack,
                                                  @Nullable World world, @Nullable LivingEntity entity) {
             Book book = ItemModBook.getBook(stack);
             if (book != null)
-                return Minecraft.getInstance().getModelManager().getModel(book.modelResourceLoc);
+                return MinecraftClient.getInstance().getBakedModelManager().getModel(book.modelResourceLoc);
             return original;
         }
     };
 
     @Nonnull
     @Override
-    public ItemOverrideList getOverrides() {
+    public ModelItemPropertyOverrideList getItemPropertyOverrides() {
         return itemHandler;
     }
 
@@ -50,23 +51,28 @@ public class BookModel implements IBakedModel {
     }
 
     @Override
-    public boolean isAmbientOcclusion() {
-        return original.isAmbientOcclusion();
+    public boolean useAmbientOcclusion() {
+        return original.useAmbientOcclusion();
     }
 
     @Override
-    public boolean isGui3d() {
-        return original.isGui3d();
+    public boolean hasDepthInGui() {
+        return original.hasDepthInGui();
     }
 
     @Override
-    public boolean isBuiltInRenderer() {
-        return original.isBuiltInRenderer();
+    public boolean isBuiltin() {
+        return original.isBuiltin();
     }
 
     @Nonnull
     @Override
-    public TextureAtlasSprite getParticleTexture() {
-        return original.getParticleTexture();
+    public Sprite getSprite() {
+        return original.getSprite();
+    }
+
+    @Override
+    public ModelTransformation getTransformation() {
+        return original.getTransformation();
     }
 }

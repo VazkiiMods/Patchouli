@@ -2,17 +2,18 @@ package vazkii.patchouli.common.multiblock;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.fabricmc.fabric.impl.tag.extension.TagDelegate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.command.arguments.BlockStateParser;
-import net.minecraft.state.IProperty;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.command.arguments.BlockArgumentParser;
+import net.minecraft.state.property.Property;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraftforge.common.util.TriPredicate;
+import net.minecraft.world.BlockView;
 import vazkii.patchouli.api.IStateMatcher;
+import vazkii.patchouli.api.TriPredicate;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,23 +29,23 @@ public class StringStateMatcher {
         if(s.equals("AIR"))
             return StateMatcher.AIR;
 
-        // c.f. BlockPredicateArgument.parse. Similar, but doesn't use vanilla's weird CachedBlockInfo class.
-        BlockStateParser parser = new BlockStateParser(new StringReader(s), true).parse(false);
-        BlockState state = parser.getState();
+        // c.f. BlockPredicateArgumentType. Similar, but doesn't use vanilla's weird caching class.
+        BlockArgumentParser parser = new BlockArgumentParser(new StringReader(s), true).parse(false);
+        BlockState state = parser.getBlockState();
 
         if (state != null) {
-            return new ExactMatcher(state, parser.getProperties());
+            return new ExactMatcher(state, parser.getBlockProperties());
         } else {
-            Tag<Block> tag = new BlockTags.Wrapper(Objects.requireNonNull(parser.getTag()));
-            return new TagMatcher(tag, parser.getStringProperties());
+            Tag<Block> tag = new TagDelegate<>(Objects.requireNonNull(parser.getTagId()), BlockTags::getContainer);
+            return new TagMatcher(tag, parser.getProperties());
         }
     }
 
     private static class ExactMatcher implements IStateMatcher {
         private final BlockState state;
-        private final Map<IProperty<?>, Comparable<?>> props;
+        private final Map<Property<?>, Comparable<?>> props;
 
-        private ExactMatcher(BlockState state, Map<IProperty<?>, Comparable<?>> props) {
+        private ExactMatcher(BlockState state, Map<Property<?>, Comparable<?>> props) {
             this.state = state;
             this.props = props;
         }
@@ -55,12 +56,12 @@ public class StringStateMatcher {
         }
 
         @Override
-        public TriPredicate<IBlockReader, BlockPos, BlockState> getStatePredicate() {
+        public TriPredicate<BlockView, BlockPos, BlockState> getStatePredicate() {
             return (w, p, s) -> state.getBlock() == s.getBlock() && checkProps(s);
         }
 
         private boolean checkProps(BlockState state) {
-            for (Map.Entry<IProperty<?>, Comparable<?>> e : props.entrySet()) {
+            for (Map.Entry<Property<?>, Comparable<?>> e : props.entrySet()) {
                 if (!state.get(e.getKey()).equals(e.getValue())) {
                     return false;
                 }
@@ -94,7 +95,7 @@ public class StringStateMatcher {
 
         @Override
         public BlockState getDisplayedState(int ticks) {
-            List<Block> all = new ArrayList<>(tag.getAllElements());
+            List<Block> all = new ArrayList<>(tag.values());
             if (all.isEmpty()) {
                 return Blocks.BEDROCK.getDefaultState(); // show something impossible
             } else {
@@ -104,18 +105,18 @@ public class StringStateMatcher {
         }
 
         @Override
-        public TriPredicate<IBlockReader, BlockPos, BlockState> getStatePredicate() {
+        public TriPredicate<BlockView, BlockPos, BlockState> getStatePredicate() {
             return (w, p, s) -> tag.contains(s.getBlock()) && checkProps(s);
         }
 
         private boolean checkProps(BlockState state) {
             for(Map.Entry<String, String> entry : props.entrySet()) {
-                IProperty<?> prop = state.getBlock().getStateContainer().getProperty(entry.getKey());
+                Property<?> prop = state.getBlock().getStateManager().getProperty(entry.getKey());
                 if (prop == null) {
                     return false;
                 }
 
-                Comparable<?> value = prop.parseValue(entry.getValue()).orElse(null);
+                Comparable<?> value = prop.parse(entry.getValue()).orElse(null);
                 if (value == null) {
                     return false;
                 }

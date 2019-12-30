@@ -1,7 +1,7 @@
 package vazkii.patchouli.common.multiblock;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import vazkii.patchouli.api.IMultiblock;
@@ -39,7 +39,7 @@ public class SimulateResultImpl implements IMultiblock.SimulateResult {
     }
 
     @Override
-    public boolean test(World world, Rotation rotation) {
+    public boolean test(World world, BlockRotation rotation) {
         BlockState state = world.getBlockState(getWorldPosition()).rotate(RotationUtil.fixHorizontal(rotation));
         return getStateMatcher().getStatePredicate().test(world, getWorldPosition(), state);
     }

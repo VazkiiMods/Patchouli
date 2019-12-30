@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book.gui;
 
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resource.language.I18n;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
@@ -23,9 +23,9 @@ public class GuiBookWriter extends GuiBook {
 	public void init() {
 		super.init();
 
-		text = new BookTextRenderer(this, I18n.format("patchouli.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
+		text = new BookTextRenderer(this, I18n.translate("patchouli.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
 		textfield = new TextFieldWidget(font, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20, "");
-		textfield.setMaxStringLength(Integer.MAX_VALUE);
+		textfield.setMaxLength(Integer.MAX_VALUE);
 		textfield.setText(savedText);
 
 		addButton(new GuiButtonBookResize(this, bookLeft + 115, bookTop + PAGE_HEIGHT - 36, false, this::handleButtonResize));
@@ -36,11 +36,11 @@ public class GuiBookWriter extends GuiBook {
 	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
 		super.drawForegroundElements(mouseX, mouseY, partialTicks);
 
-		drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+		drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 		drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
 
 		if(drawHeader) {
-			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
 		}
 
@@ -77,7 +77,7 @@ public class GuiBookWriter extends GuiBook {
 		return super.charTyped(c, i);
  	}
 
-	public void handleButtonResize(Button button) {
+	public void handleButtonResize(ButtonWidget button) {
 		drawHeader = !drawHeader;
 		refreshText();
 	}

@@ -6,35 +6,22 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.annotation.Nonnull;
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector4f;
 
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.Matrix4f;
+import net.minecraft.client.util.math.Vector4f;
 import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.client.model.data.EmptyModelData;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
@@ -63,13 +50,13 @@ public class PageMultiblock extends PageWithText {
 	boolean showVisualizeButton = true;
 	
 	private transient AbstractMultiblock multiblockObj;
-	private transient Button visualizeButton;
+	private transient ButtonWidget visualizeButton;
 	private final transient Random random = new Random();
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
 		if(multiblockId != null && !multiblockId.isEmpty()) {
-			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(new ResourceLocation(multiblockId));
+			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(new Identifier(multiblockId));
 			
 			if(mb instanceof AbstractMultiblock)
 				multiblockObj = (AbstractMultiblock) mb;
@@ -99,19 +86,19 @@ public class PageMultiblock extends PageWithText {
 	public void render(int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
-		GlStateManager.enableBlend();
-		GlStateManager.color3f(1F, 1F, 1F);
+		RenderSystem.enableBlend();
+		RenderSystem.color3f(1F, 1F, 1F);
 		GuiBook.drawFromTexture(book, x, y, 405, 149, 106, 106);
 		
 		parent.drawCenteredStringNoShadow(name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 
-		if(multiblockObj != null)
-			renderMultiblock();
+		// todo fabric/1.15 if(multiblockObj != null)
+			// renderMultiblock();
 		
 		super.render(mouseX, mouseY, pticks);
 	}
 	
-	public void handleButtonVisualize(Button button) {
+	public void handleButtonVisualize(ButtonWidget button) {
 		String entryKey = parent.getEntry().getResource().toString();
 		Bookmark bookmark = new Bookmark(entryKey, pageNum / 2);
 		MultiblockVisualizationHandler.setMultiblock(multiblockObj, name, bookmark, true);
@@ -123,6 +110,7 @@ public class PageMultiblock extends PageWithText {
 		}
 	}
 
+	/* todo fabric/1.15
 	private void renderMultiblock() {
 		Vec3i size = multiblockObj.getSize();
 		int sizeX = size.getX();
@@ -137,18 +125,18 @@ public class PageMultiblock extends PageWithText {
 		
 		int xPos = GuiBook.PAGE_WIDTH / 2;
 		int yPos = 60;
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef(xPos, yPos, 100);
-		GlStateManager.scalef(scale, scale, scale);
-		GlStateManager.translatef(-(float) sizeX / 2, -(float) sizeY / 2, 0);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(xPos, yPos, 100);
+		RenderSystem.scalef(scale, scale, scale);
+		RenderSystem.translatef(-(float) sizeX / 2, -(float) sizeY / 2, 0);
 
 		// Initial eye pos somewhere off in the distance in the -Z direction
 		Vector4f eye = new Vector4f(0, 0, -100, 1);
 		Matrix4f rotMat = new Matrix4f();
-		rotMat.setIdentity();
+		rotMat.loadIdentity();
 
 		// For each GL rotation done, track the opposite to keep the eye pos accurate
-		GlStateManager.rotatef(-30F, 1F, 0F, 0F);
+		RenderSystem.rotatef(-30F, 1F, 0F, 0F);
 		rotMat.rotX((float) Math.toRadians(30F));
 
 		float offX = (float) -sizeX / 2;
@@ -157,24 +145,24 @@ public class PageMultiblock extends PageWithText {
 		float time = parent.ticksInBook * 0.5F;
 		if(!Screen.hasShiftDown())
 			time += ClientTicker.partialTicks;
-		GlStateManager.translatef(-offX, 0, -offZ);
-		GlStateManager.rotatef(time, 0F, 1F, 0F);
+		RenderSystem.translatef(-offX, 0, -offZ);
+		RenderSystem.rotatef(time, 0F, 1F, 0F);
 		rotMat.rotY((float) Math.toRadians(-time));
-		GlStateManager.rotatef(45F, 0F, 1F, 0F);
+		RenderSystem.rotatef(45F, 0F, 1F, 0F);
 		rotMat.rotY((float) Math.toRadians(-45F));
-		GlStateManager.translatef(offX, 0, offZ);
+		RenderSystem.translatef(offX, 0, offZ);
 		
 		// Finally apply the rotations
 		rotMat.transform(eye);
-		renderElements(multiblockObj, BlockPos.getAllInBoxMutable(BlockPos.ZERO, new BlockPos(sizeX - 1, sizeY - 1, sizeZ - 1)), eye);
+		renderElements(multiblockObj, BlockPos.iterate(BlockPos.ORIGIN, new BlockPos(sizeX - 1, sizeY - 1, sizeZ - 1)), eye);
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 	
 	private void renderElements(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, Vector4f eye) {
-		GlStateManager.pushMatrix();
-		GlStateManager.color4f(1F, 1F, 1F, 1F);
-		GlStateManager.translatef(0, 0, -1);
+		RenderSystem.pushMatrix();
+		RenderSystem.color4f(1F, 1F, 1F, 1F);
+		RenderSystem.translatef(0, 0, -1);
 
 		TileEntityRendererDispatcher.staticPlayerX = eye.x;
 		TileEntityRendererDispatcher.staticPlayerY = eye.y;
@@ -194,7 +182,7 @@ public class PageMultiblock extends PageWithText {
 
 		setGlStateForPass(0);
 		mc.getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	private void doWorldRenderPass(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull BlockRenderLayer layer, Vector4f eye) {
@@ -246,7 +234,7 @@ public class PageMultiblock extends PageWithText {
 		mb.setWorld(mc.world);
 		
 		RenderHelper.enableStandardItemLighting();
-		GlStateManager.enableLighting();
+		RenderSystem.enableLighting();
 		
 		setGlStateForPass(1);
 		
@@ -275,16 +263,17 @@ public class PageMultiblock extends PageWithText {
 	}
 
 	private void setGlStateForPass(int layer) {
-		GlStateManager.color3f(1, 1, 1);
+		RenderSystem.color3f(1, 1, 1);
 
 		if (layer == 0) {
-			GlStateManager.enableDepthTest();
-			GlStateManager.disableBlend();
-			GlStateManager.depthMask(true);
+			RenderSystem.enableDepthTest();
+			RenderSystem.disableBlend();
+			RenderSystem.depthMask(true);
 		} else {
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GlStateManager.depthMask(false);
+			RenderSystem.enableBlend();
+			RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			RenderSystem.depthMask(false);
 		}
 	}
+	 */
 }

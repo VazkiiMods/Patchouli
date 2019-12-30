@@ -30,10 +30,10 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 		}
 		
 		boolean customTitle = title != null && !title.isEmpty();
-		title1 = !customTitle ? getRecipeOutput(recipe1).getDisplayName().getFormattedText() : title;
+		title1 = !customTitle ? getRecipeOutput(recipe1).getName().asFormattedString() : title;
 		title2 = "-";
 		if(recipe2 != null) {
-			title2 = !customTitle ? getRecipeOutput(recipe2).getDisplayName().getFormattedText() : "";
+			title2 = !customTitle ? getRecipeOutput(recipe2).getName().asFormattedString() : "";
 			if(title1.equals(title2))
 				title2 = "";
 		}

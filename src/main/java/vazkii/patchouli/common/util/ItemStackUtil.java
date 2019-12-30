@@ -2,24 +2,25 @@ package vazkii.patchouli.common.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringJoiner;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.tags.Tag;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.nbt.StringNbtReader;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.tag.Tag;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class ItemStackUtil {
 	
 	public static String serializeStack(ItemStack stack) {
 		StringBuilder builder = new StringBuilder();
-		builder.append(stack.getItem().getRegistryName().toString());
+		builder.append(Registry.ITEM.getId(stack.getItem()).toString());
 
 		int count = stack.getCount();
 		if (count > 1) {
@@ -53,16 +54,17 @@ public class ItemStackUtil {
 			return ItemStack.EMPTY;
 		
 		int countn = Integer.parseInt(count);
-		ResourceLocation key = new ResourceLocation(tokens[0], tokens[1]);
-		if (!ForgeRegistries.ITEMS.containsKey(key)) {
+		Identifier key = new Identifier(tokens[0], tokens[1]);
+		Optional<Item> maybeItem = Registry.ITEM.getOrEmpty(key);
+		if (!maybeItem.isPresent()) {
 			throw new RuntimeException("Unknown item ID: " + key);
 		}
-		Item item = ForgeRegistries.ITEMS.getValue(key);
+		Item item = maybeItem.get();
 		ItemStack stack = new ItemStack(item, countn);
 
 		if(!nbt.isEmpty())
 			try {
-				stack.setTag(JsonToNBT.getTagFromJson(nbt));
+				stack.setTag(StringNbtReader.parse(nbt));
 			} catch (CommandSyntaxException e) {
 				throw new RuntimeException("Failed to parse ItemStack JSON" , e);
 			}
@@ -71,7 +73,7 @@ public class ItemStackUtil {
 	}
 	
 	public static String serializeIngredient(Ingredient ingredient) {
-		ItemStack[] stacks = ingredient.getMatchingStacks();
+		ItemStack[] stacks = ingredient.getMatchingStacksClient(); // todo fabric client-only
 		String[] stacksSerialized = new String[stacks.length];
 		for (int i = 0; i < stacks.length; i++) {
 			stacksSerialized[i] = serializeStack(stacks[i]);
@@ -81,7 +83,7 @@ public class ItemStackUtil {
 	}
 
 	public static Ingredient loadIngredientFromString(String ingredientString) {
-		return Ingredient.fromStacks(loadStackListFromString(ingredientString).toArray(new ItemStack[0]));
+		return Ingredient.ofStacks(loadStackListFromString(ingredientString).toArray(new ItemStack[0]));
 	}
 
 	public static String serializeStackList(List<ItemStack> stacks) {
@@ -97,9 +99,9 @@ public class ItemStackUtil {
 		List<ItemStack> stacks = new ArrayList<>();
 		for (int i = 0; i < stacksSerialized.length; i++) {
 			if (stacksSerialized[i].startsWith("tag:")) {
-				Tag<Item> tag = Minecraft.getInstance().world.getTags().getItems().get(new ResourceLocation(stacksSerialized[i].substring(4)));
+				Tag<Item> tag = MinecraftClient.getInstance().world.getTagManager().items().get(new Identifier(stacksSerialized[i].substring(4)));
 				if(tag != null) {
-					for(Item item : tag.getAllElements())
+					for(Item item : tag.values())
 						stacks.add(new ItemStack(item));
 				}
 			} else {

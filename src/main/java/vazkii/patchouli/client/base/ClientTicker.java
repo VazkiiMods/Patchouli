@@ -3,16 +3,11 @@ package vazkii.patchouli.client.base;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import net.minecraft.client.Minecraft;
+import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.UnicodeFontHandler;
 
-@EventBusSubscriber(Dist.CLIENT)
 public final class ClientTicker {
 
 	public static int ticksInGame = 0;
@@ -26,17 +21,17 @@ public final class ClientTicker {
 		delta = total - oldTotal;
 	}
 
+	/* todo fabric
 	@SubscribeEvent
 	public static void renderTick(TickEvent.RenderTickEvent event) {
 		if(event.phase == TickEvent.Phase.START)
 			partialTicks = event.renderTickTime;
 		else calcDelta();
 	}
+	*/
 
-	@SubscribeEvent
-	public static void clientTickEnd(TickEvent.ClientTickEvent event) {
-		if(event.phase == TickEvent.Phase.END) {
-			Minecraft mc = Minecraft.getInstance();
+	public static void init() {
+		ClientTickCallback.EVENT.register(mc -> {
 			Screen gui = mc.currentScreen;
 			if(gui == null || !gui.isPauseScreen()) {
 				ticksInGame++;
@@ -44,7 +39,7 @@ public final class ClientTicker {
 			}
 
 			calcDelta();
-		}
+		});
 	}
 
 }

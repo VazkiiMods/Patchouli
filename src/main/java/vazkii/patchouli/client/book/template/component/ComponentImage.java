@@ -1,10 +1,10 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.util.Identifier;
 import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -24,13 +24,13 @@ public class ComponentImage extends TemplateComponent {
 
 	public float scale = 1F;
 
-	transient ResourceLocation resource;
+	transient Identifier resource;
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
 		if(image.contains(":"))
-			resource = new ResourceLocation(image);
-		else resource = new ResourceLocation(page.book.getModNamespace(), image);
+			resource = new Identifier(image);
+		else resource = new Identifier(page.book.getModNamespace(), image);
 	}
 	
 	@Override
@@ -38,14 +38,14 @@ public class ComponentImage extends TemplateComponent {
 		if(scale == 0F)
 			return;
 		
-		page.mc.textureManager.bindTexture(resource);
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef(x, y, 0);
-		GlStateManager.scalef(scale, scale, scale);
-		GlStateManager.color4f(1F, 1F, 1F, 1F);
-		GlStateManager.enableBlend();
-		AbstractGui.blit(0, 0, u, v, width, height, textureWidth, textureHeight);
-		GlStateManager.popMatrix();
+		page.mc.getTextureManager().bindTexture(resource);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(x, y, 0);
+		RenderSystem.scalef(scale, scale, scale);
+		RenderSystem.color4f(1F, 1F, 1F, 1F);
+		RenderSystem.enableBlend();
+		DrawableHelper.blit(0, 0, u, v, width, height, textureWidth, textureHeight);
+		RenderSystem.popMatrix();
 	}
 
 }

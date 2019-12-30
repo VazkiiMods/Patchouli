@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.SerializationUtil;
@@ -63,7 +63,7 @@ public final class PersistentData {
 				}
 				
 				public BookEntry getEntry(Book book) {
-					ResourceLocation res = new ResourceLocation(entry);
+					Identifier res = new Identifier(entry);
 					return book.contents.entries.get(res);
 				}
 				

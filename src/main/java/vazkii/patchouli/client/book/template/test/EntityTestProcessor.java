@@ -1,8 +1,9 @@
 package vazkii.patchouli.client.book.template.test;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 
@@ -17,10 +18,10 @@ public class EntityTestProcessor implements IComponentProcessor {
 			entityType = entityType.substring(0, entityType.indexOf("{"));
 
 
-		ResourceLocation key = new ResourceLocation(entityType);
-		if (ForgeRegistries.ENTITIES.containsKey(key)) {
-			entityName = ForgeRegistries.ENTITIES.getValue(key).getName().getString();
-		}
+		Identifier key = new Identifier(entityType);
+		entityName = Registry.ENTITY_TYPE.getOrEmpty(key)
+				.map(EntityType::getName).map(Text::getString)
+				.orElse(null);
 	}
 
 	@Override

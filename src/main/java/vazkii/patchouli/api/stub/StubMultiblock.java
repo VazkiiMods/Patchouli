@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.function.Consumer;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import vazkii.patchouli.api.IMultiblock;
@@ -33,12 +33,12 @@ public class StubMultiblock implements IMultiblock {
 	}
 
 	@Override
-	public ResourceLocation getID() {
-		return new ResourceLocation("patchouli", "stub");
+	public Identifier getID() {
+		return new Identifier("patchouli", "stub");
 	}
 
 	@Override
-	public IMultiblock setResourceLocation(ResourceLocation res) {
+	public IMultiblock setIdentifier(Identifier res) {
 		return this;
 	}
 	
@@ -48,27 +48,27 @@ public class StubMultiblock implements IMultiblock {
 	}
 
 	@Override
-	public void place(World world, BlockPos pos, Rotation rotation) {
+	public void place(World world, BlockPos pos, BlockRotation rotation) {
 		// NO-OP
 	}
 
 	@Override
-	public Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, Rotation rotation, boolean forView) {
-		return Pair.of(BlockPos.ZERO, Collections.emptyList());
+	public Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, BlockRotation rotation, boolean forView) {
+		return Pair.of(BlockPos.ORIGIN, Collections.emptyList());
 	}
 
 	@Override
-	public Rotation validate(World world, BlockPos pos) {
+	public BlockRotation validate(World world, BlockPos pos) {
 		return null;
 	}
 
 	@Override
-	public boolean validate(World world, BlockPos pos, Rotation rotation) {
+	public boolean validate(World world, BlockPos pos, BlockRotation rotation) {
 		return false;
 	}
 
 	@Override
-	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
+	public boolean test(World world, BlockPos start, int x, int y, int z, BlockRotation rotation) {
 		return false;
 	}
 

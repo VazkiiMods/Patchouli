@@ -3,14 +3,14 @@ package vazkii.patchouli.client.book.text;
 import java.util.List;
 import java.util.function.Supplier;
 
-import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.font.TextRenderer;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
 
 public class SpanState {
 	public final GuiBook gui;
 	public final Book book;
-	public final FontRenderer font;
+	public final TextRenderer font;
 	public final int baseColor;
 
 	public int color;
@@ -25,7 +25,7 @@ public class SpanState {
 	public int spacingLeft = 0; // add extra spacing
 	public int spacingRight = 0;
 
-	public SpanState(GuiBook gui, Book book, int baseColor, FontRenderer font) {
+	public SpanState(GuiBook gui, Book book, int baseColor, TextRenderer font) {
 		this.gui = gui;
 		this.book = book;
 		this.baseColor = baseColor;

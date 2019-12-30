@@ -7,15 +7,15 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
@@ -42,19 +42,19 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 
 	@Override
-	public void openBookGUI(ServerPlayerEntity player, ResourceLocation book) {
+	public void openBookGUI(ServerPlayerEntity player, Identifier book) {
 		// NO-OP
 	}
 	
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void openBookGUI(ResourceLocation book) {
+	@Environment(EnvType.CLIENT)
+	public void openBookGUI(Identifier book) {
 		// NO-OP
 	}
 	
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ResourceLocation getOpenBookGui() {
+	@Environment(EnvType.CLIENT)
+	public Identifier getOpenBookGui() {
 		return null;
 	}
 	
@@ -69,7 +69,7 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 	
 	@Override
-	public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider) {
+	public void registerTemplateAsBuiltin(Identifier res, Supplier<InputStream> streamProvider) {
 		// NO-OP
 	}
 
@@ -104,12 +104,12 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 
 	@Override
-	public IMultiblock getMultiblock(ResourceLocation res) {
+	public IMultiblock getMultiblock(Identifier res) {
 		return null;
 	}
 	
 	@Override
-	public IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb) {
+	public IMultiblock registerMultiblock(Identifier res, IMultiblock mb) {
 		return mb;
 	}
 

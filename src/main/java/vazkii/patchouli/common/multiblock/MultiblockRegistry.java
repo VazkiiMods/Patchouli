@@ -2,17 +2,12 @@ package vazkii.patchouli.common.multiblock;
 
 import java.util.HashMap;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import vazkii.patchouli.api.IMultiblock;
-import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
-import vazkii.patchouli.common.base.Patchouli;
 
 public class MultiblockRegistry {
 
-	public static final HashMap<ResourceLocation, IMultiblock> MULTIBLOCKS = new HashMap<>();
+	public static final HashMap<Identifier, IMultiblock> MULTIBLOCKS = new HashMap<>();
 
 	public static void preInit() {
 		// This serves as an example for creating multiblocks in code
@@ -21,7 +16,7 @@ public class MultiblockRegistry {
 		// "multiblock_id": "patchouli:crucible"
 //		
 //		IPatchouliAPI api = PatchouliAPI.instance;
-//		crucible = api.registerMultiblock(new ResourceLocation(Patchouli.MOD_ID, "crucible"), 	
+//		crucible = api.registerMultiblock(new Identifier(Patchouli.MOD_ID, "crucible"),
 //				api.makeMultiblock(new String[][] {
 //					{ "   ", " 0 ", "   " },
 //					{ "SSS", "SFS", "SSS" }},
@@ -32,9 +27,9 @@ public class MultiblockRegistry {
 //				.setSymmetrical(true);
 	}
 
-	public static IMultiblock registerMultiblock(ResourceLocation location, IMultiblock multiblock) {
+	public static IMultiblock registerMultiblock(Identifier location, IMultiblock multiblock) {
 		MULTIBLOCKS.put(location, multiblock);
-		return multiblock.setResourceLocation(location);
+		return multiblock.setIdentifier(location);
 	}
 
 }

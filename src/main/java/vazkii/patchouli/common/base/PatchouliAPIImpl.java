@@ -7,17 +7,17 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
@@ -57,20 +57,20 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 	
 	@Override
-	public void openBookGUI(ServerPlayerEntity player, ResourceLocation book) {
-		NetworkHandler.sendToPlayer(new MessageOpenBookGui(book.toString()), player); 
+	public void openBookGUI(ServerPlayerEntity player, Identifier book) {
+		MessageOpenBookGui.send(player, book.toString());
 	}
 	
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void openBookGUI(ResourceLocation book) {
+	@Environment(EnvType.CLIENT)
+	public void openBookGUI(Identifier book) {
 		ClientBookRegistry.INSTANCE.displayBookGui(book.toString());
 	}
 	
 	@Override
-	@OnlyIn(Dist.CLIENT)
-	public ResourceLocation getOpenBookGui() {
-		Screen gui = Minecraft.getInstance().currentScreen;
+	@Environment(EnvType.CLIENT)
+	public Identifier getOpenBookGui() {
+		Screen gui = MinecraftClient.getInstance().currentScreen;
 		if (gui instanceof GuiBook)
 			return ((GuiBook) gui).book.resourceLoc;
 		return null;
@@ -78,7 +78,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	
 	@Override
 	public void reloadBookContents() {
-		Patchouli.proxy.requestBookReload();
+		Patchouli.reloadBookHandler.run();
 	}
 	
 	@Override
@@ -87,7 +87,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 	
 	@Override
-	public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider) {
+	public void registerTemplateAsBuiltin(Identifier res, Supplier<InputStream> streamProvider) {
 		InputStream testStream = streamProvider.get();
 		if (testStream == null)
 			throw new NullPointerException("Stream provider can't return a null stream");
@@ -133,12 +133,12 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 	
 	@Override
-	public IMultiblock getMultiblock(ResourceLocation res) {
+	public IMultiblock getMultiblock(Identifier res) {
 		return MultiblockRegistry.MULTIBLOCKS.get(res);
 	}
 	
 	@Override
-	public IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb) {
+	public IMultiblock registerMultiblock(Identifier res, IMultiblock mb) {
 		return MultiblockRegistry.registerMultiblock(res, mb);
 	}
 	

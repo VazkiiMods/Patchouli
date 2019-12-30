@@ -10,73 +10,17 @@
  */
 package vazkii.patchouli.common.network;
 
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
-import vazkii.patchouli.common.base.Patchouli;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 import vazkii.patchouli.common.network.message.MessageReloadBookContents;
 import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
 
 public class NetworkHandler {
-	
-	private static final String PROTOCOL_VERSION = "1";
-	
-	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
-			.named(new ResourceLocation(Patchouli.MOD_ID, "main"))
-			.networkProtocolVersion(() -> PROTOCOL_VERSION)
-			.clientAcceptedVersions(PROTOCOL_VERSION::equals)
-			.serverAcceptedVersions(PROTOCOL_VERSION::equals)
-			.simpleChannel();
-	
-	private static int i = 0;
-	
+
 	public static void registerMessages() {
-		register(MessageSyncAdvancements.class, NetworkDirection.PLAY_TO_CLIENT);
-		register(MessageOpenBookGui.class, NetworkDirection.PLAY_TO_CLIENT);
-		register(MessageReloadBookContents.class, NetworkDirection.PLAY_TO_CLIENT);
-	}
-	
-	public static <T extends IMessage> void register(Class<T> clazz, NetworkDirection dir) {
-		BiConsumer<T, PacketBuffer> encoder = (msg, buf) -> MessageSerializer.writeObject(msg, buf);
-		
-		Function<PacketBuffer, T> decoder = (buf) -> {
-			try {
-				T msg = clazz.newInstance();
-				MessageSerializer.readObject(msg, buf);
-				return msg;
-			} catch (InstantiationException | IllegalAccessException e) {
-				throw new RuntimeException(e);
-			} 
-		};
-		
-		BiConsumer<T, Supplier<NetworkEvent.Context>> consumer = (msg, supp) -> {
-			NetworkEvent.Context context = supp.get();
-			if(context.getDirection() != dir)
-				return;
-			
-			context.setPacketHandled(msg.receive(context));
-		};
-		
-		CHANNEL.registerMessage(i, clazz, encoder, decoder, consumer);
-		i++;
+		ClientSidePacketRegistry.INSTANCE.register(MessageSyncAdvancements.ID, MessageSyncAdvancements::handle);
+		ClientSidePacketRegistry.INSTANCE.register(MessageOpenBookGui.ID, MessageOpenBookGui::handle);
+		ClientSidePacketRegistry.INSTANCE.register(MessageReloadBookContents.ID, MessageReloadBookContents::handle);
 	}
 
-	public static void sendToPlayer(IMessage msg, ServerPlayerEntity player) {
-		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), msg);
-	}
-
-	public static void sendToAll(IMessage msg) {
-		CHANNEL.send(PacketDistributor.ALL.noArg(), msg);
-	}
-	
 }

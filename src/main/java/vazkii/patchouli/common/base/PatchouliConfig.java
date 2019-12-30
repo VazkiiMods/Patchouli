@@ -1,40 +1,37 @@
 package vazkii.patchouli.common.base;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 
 public class PatchouliConfig {
-
-	public static ForgeConfigSpec.ConfigValue<Boolean> disableAdvancementLocking;
-	public static ForgeConfigSpec.ConfigValue<Boolean> testingMode;
-	public static ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
+	// TODO Optional only used to present same interface as forgeconfigvalue. Clean up later.
+    public static Optional<Boolean> disableAdvancementLocking = Optional.of(false);
+	public static Optional<Boolean> testingMode = Optional.of(false);
+	public static Optional<String> inventoryButtonBook = Optional.of("");
 
 	private static Map<String, Boolean> configFlags = new HashMap<>();
 
 	public static void setup() {
+	    /* TODO fabric load
 		Pair<Loader, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Loader::new);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, specPair.getRight());
+	     */
 	}
 
 	public static void load() {
-		List<ModInfo> mods = ModList.get().getMods();
-		for(ModInfo info : mods)
-			setFlag("mod:" + info.getModId(), true);
+		for(ModContainer info : FabricLoader.getInstance().getAllMods())
+			setFlag("mod:" + info.getMetadata().getId(), true);
 
 		setFlag("debug", Patchouli.debug);
 
 		updateFlags();
 	}
-	
+
+	/*
 	static class Loader {
 
 		public Loader(ForgeConfigSpec.Builder builder) {
@@ -56,6 +53,7 @@ public class PatchouliConfig {
 		}
 
 	}
+ 	*/
 
 	private static void updateFlags() {
 		setFlag("advancements_disabled", disableAdvancementLocking.get());

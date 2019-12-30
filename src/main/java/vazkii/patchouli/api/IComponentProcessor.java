@@ -1,8 +1,8 @@
 package vazkii.patchouli.api;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * Implement this on a class designed to process a template and the variables bound 
@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Instances of this class are created once for every usage of the template it's meant to 
  * process, so you can save data on a per-template basis.
  */
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public interface IComponentProcessor {
 
 	/**

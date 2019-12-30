@@ -8,7 +8,7 @@ import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookFolderLoader;
@@ -20,7 +20,7 @@ public class ExternalBookContents extends BookContents {
 	}
 
 	@Override
-	protected void findFiles(String dir, List<ResourceLocation> list) {
+	protected void findFiles(String dir, List<Identifier> list) {
 		File root = new File(BookFolderLoader.loadDir, book.resourceLoc.getPath());
 		File enUs = new File(root, DEFAULT_LANG);
 		if(enUs.exists()) {
@@ -30,7 +30,7 @@ public class ExternalBookContents extends BookContents {
 		}
 	}
 	
-	private void crawl(File realRoot, File root, List<ResourceLocation> list) {
+	private void crawl(File realRoot, File root, List<Identifier> list) {
 		File[] files = root.listFiles();
 		for(File f : files) {
 			if(f.isDirectory())
@@ -40,16 +40,16 @@ public class ExternalBookContents extends BookContents {
 		}
 	}
 	
-	private ResourceLocation relativize(File root, File f) {
+	private Identifier relativize(File root, File f) {
 		String rootPath = root.getAbsolutePath();
 		String filePath = f.getAbsolutePath().substring(rootPath.length() + 1);
 		String cleanPath = FilenameUtils.removeExtension(FilenameUtils.separatorsToUnix(filePath));
 		
-		return new ResourceLocation(Patchouli.MOD_ID, cleanPath);
+		return new Identifier(Patchouli.MOD_ID, cleanPath);
 	}
 	
 	@Override
-	protected InputStream loadJson(ResourceLocation resloc, ResourceLocation fallback) {
+	protected InputStream loadJson(Identifier resloc, Identifier fallback) {
 		String realPath = resloc.getPath().substring(BookFolderLoader.loadDir.getName().length());
 		File targetFile = new File(BookFolderLoader.loadDir, realPath);
 		

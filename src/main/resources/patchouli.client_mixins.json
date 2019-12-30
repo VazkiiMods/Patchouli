@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "vazkii.patchouli.client.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "MixinBakedModelManager",
+    "MixinInGameHud",
+    "MixinInventoryScreen"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

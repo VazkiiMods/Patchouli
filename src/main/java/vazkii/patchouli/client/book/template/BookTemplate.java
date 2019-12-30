@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Identifier;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.client.book.BookEntry;
@@ -55,10 +55,10 @@ public class BookTemplate {
 	transient boolean attemptedCreatingProcessor = false;
 	
 	public static BookTemplate createTemplate(Book book, String type, TemplateInclusion inclusion) {
-		ResourceLocation key;
+		Identifier key;
 		if(type.contains(":"))
-			key = new ResourceLocation(type);
-		else key = new ResourceLocation(book.getModNamespace(), type);
+			key = new Identifier(type);
+		else key = new Identifier(book.getModNamespace(), type);
 		
 		Supplier<BookTemplate> supplier = book.contents.templates.get(key);
 		if(supplier == null)

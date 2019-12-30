@@ -1,37 +1,30 @@
 package vazkii.patchouli.common.base;
 
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.fabricmc.api.ModInitializer;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.BookRegistry;
+import vazkii.patchouli.common.handler.AdvancementSyncHandler;
+import vazkii.patchouli.common.handler.ReloadContentsHandler;
+import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
-import vazkii.patchouli.common.network.NetworkHandler;
 
-public class CommonProxy {
+public class CommonProxy implements ModInitializer {
 
-	public void start() {
-		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-		bus.addListener(this::setup);
-
+	@Override
+	public void onInitialize() {
 		PatchouliConfig.setup();
-	}
-
-	public void setup(FMLCommonSetupEvent event) {
 		PatchouliAPI.instance = PatchouliAPIImpl.INSTANCE;
 		
 		PatchouliConfig.load();
-		
+
 		PatchouliSounds.preInit();
 		MultiblockRegistry.preInit();
 
 		BookRegistry.INSTANCE.init();
 
-		NetworkHandler.registerMessages();
-	}
-
-	public void requestBookReload() {
-		// NO-OP
+		PatchouliItems.init();
+		ReloadContentsHandler.init();
+		AdvancementSyncHandler.init();
 	}
 
 }

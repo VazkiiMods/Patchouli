@@ -1,3 +1,4 @@
+/*
 package vazkii.patchouli.client.jei;
 
 import mezz.jei.api.IModPlugin;
@@ -29,3 +30,4 @@ public class PatchouliJeiPlugin implements IModPlugin {
 		});
 	}
 }
+*/

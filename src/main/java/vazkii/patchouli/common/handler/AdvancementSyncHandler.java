@@ -7,49 +7,37 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementManager;
-import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.advancements.PlayerAdvancements;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.fabricmc.fabric.api.event.server.ServerStartCallback;
+import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.AdvancementProgress;
+import net.minecraft.advancement.PlayerAdvancementTracker;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.entity.player.AdvancementEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
-import vazkii.patchouli.common.network.NetworkHandler;
+import net.minecraft.server.ServerAdvancementLoader;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
 
-@EventBusSubscriber
 public final class AdvancementSyncHandler {
 
 	public static final Set<String> trackedNamespaces = new HashSet<>();
 
-	private static Set<ResourceLocation> syncedAdvancements = Collections.emptySet();
+	private static Set<Identifier> syncedAdvancements = Collections.emptySet();
 
-	@SubscribeEvent
-	public static void serverStartedEvent(FMLServerStartedEvent evt) {
-		recomputeSyncedAdvancements(evt.getServer());
+	public static void init() {
+		ServerStartCallback.EVENT.register(AdvancementSyncHandler::recomputeSyncedAdvancements);
 	}
 
 	public static void recomputeSyncedAdvancements(MinecraftServer server) {
-		AdvancementManager manager = server.getAdvancementManager();
-		syncedAdvancements = manager.getAllAdvancements().stream()
+		ServerAdvancementLoader manager = server.getAdvancementLoader();
+		syncedAdvancements = manager.getAdvancements().stream()
 				.filter(a -> trackedNamespaces.contains(a.getId().getNamespace()))
 				.map(Advancement::getId)
 				.collect(Collectors.toSet());
 	}
 
-	@SubscribeEvent
-	public static void onAdvancement(AdvancementEvent event) {
-		if(event.getPlayer() instanceof ServerPlayerEntity) {
-			ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
-
-			if(syncedAdvancements.contains(event.getAdvancement().getId()))
-				syncPlayer(player, true);
-		}
+	public static void onAdvancement(ServerPlayerEntity player, Advancement adv) {
+		if(syncedAdvancements.contains(adv.getId()))
+			syncPlayer(player, true);
 	}
 	
 	public static void loginSync(ServerPlayerEntity player) {
@@ -57,15 +45,15 @@ public final class AdvancementSyncHandler {
 	}
 
 	public static void syncPlayer(ServerPlayerEntity player, boolean showToast) {
-		PlayerAdvancements advancements = player.getAdvancements();
+		PlayerAdvancementTracker advancements = player.getAdvancementTracker();
 		if(advancements == null)
 			return;
 		
-		AdvancementManager manager = player.getServer().getAdvancementManager();
+		ServerAdvancementLoader manager = player.getServer().getAdvancementLoader();
 		
 		List<String> completed = new LinkedList<>();
-		for(ResourceLocation res : syncedAdvancements) {
-			Advancement adv = manager.getAdvancement(res);
+		for(Identifier res : syncedAdvancements) {
+			Advancement adv = manager.get(res);
 			if(adv == null)
 				continue;
 			AdvancementProgress p = advancements.getProgress(adv);
@@ -74,7 +62,7 @@ public final class AdvancementSyncHandler {
 		}
 		
 		String[] completedArr = completed.toArray(new String[0]);
-		NetworkHandler.sendToPlayer(new MessageSyncAdvancements(completedArr, showToast), player);
+		MessageSyncAdvancements.send(player, completedArr, showToast);
 	}
 	
 	

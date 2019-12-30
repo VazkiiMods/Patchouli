@@ -2,8 +2,8 @@ package vazkii.patchouli.client.book.gui;
 
 import java.util.List;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.resource.language.I18n;
 import vazkii.patchouli.client.book.text.BookTextParser;
 import vazkii.patchouli.client.book.text.Word;
 import vazkii.patchouli.common.book.Book;
@@ -26,7 +26,7 @@ public class BookTextRenderer {
 		this.book = gui.book;
 		this.gui = gui;
 		if (book.i18n) {
-			this.text = I18n.format(text);
+			this.text = I18n.translate(text);
 		} else {
 			this.text = text;
 		}
@@ -45,7 +45,7 @@ public class BookTextRenderer {
 	}
 	
 	public void render(int mouseX, int mouseY) {
-		FontRenderer font = book.getFont();
+		TextRenderer font = book.getFont();
 		words.forEach(word -> word.render(font, mouseX, mouseY));
 	}
 	

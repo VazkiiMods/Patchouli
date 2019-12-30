@@ -1,18 +1,17 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SoundHandler;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.util.TextFormat;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
-public class GuiButtonEntry extends Button {
+public class GuiButtonEntry extends ButtonWidget {
 	
 	private static final int ANIM_TIME = 5;
 
@@ -21,7 +20,7 @@ public class GuiButtonEntry extends Button {
 	private int i;
 	private float timeHovered;
 
-	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, int i, Button.IPressable onPress) {
+	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, int i, ButtonWidget.PressAction onPress) {
 		super(x, y, GuiBook.PAGE_WIDTH, 10, "", onPress);
 		this.parent = parent;
 		this.entry = entry;
@@ -41,24 +40,24 @@ public class GuiButtonEntry extends Button {
 			float widthFract = time / ANIM_TIME;
 			boolean locked = entry.isLocked();
 			
-			GlStateManager.scalef(0.5F, 0.5F, 0.5F);
-			AbstractGui.fill(x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
-			GlStateManager.enableBlend();
+			RenderSystem.scalef(0.5F, 0.5F, 0.5F);
+			DrawableHelper.fill(x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
+			RenderSystem.enableBlend();
 
 			if(locked) {
-				GlStateManager.color4f(1F, 1F, 1F, 0.7F);
+				RenderSystem.color4f(1F, 1F, 1F, 0.7F);
 				GuiBook.drawLock(parent.book, x * 2 + 2, y * 2 + 2); 
 			} else
 				entry.getIcon().render(x * 2 + 2, y * 2 + 2);
 			
-			GlStateManager.scalef(2F, 2F, 2F);
+			RenderSystem.scalef(2F, 2F, 2F);
 
-			String name = (entry.isPriority() ? TextFormatting.ITALIC : "") + entry.getName();
+			String name = (entry.isPriority() ? TextFormat.ITALIC : "") + entry.getName();
 			if(locked) {
-				name = I18n.format("patchouli.gui.lexicon.locked");
+				name = I18n.translate("patchouli.gui.lexicon.locked");
 			}
 			int color = getColor();
-			entry.getBook().getFont().drawString(name, x + 12, y, color);
+			entry.getBook().getFont().draw(name, x + 12, y, color);
 			
 			if(!entry.isLocked())
 				GuiBook.drawMarking(parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());
@@ -74,7 +73,7 @@ public class GuiButtonEntry extends Button {
 	}
 	
 	@Override
-    public void playDownSound(SoundHandler soundHandlerIn) {
+    public void playDownSound(SoundManager soundHandlerIn) {
 		if(entry != null && !entry.isLocked())
 			GuiBook.playBookFlipSound(parent.book);
 	}
