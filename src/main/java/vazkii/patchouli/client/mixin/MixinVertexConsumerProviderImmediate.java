@@ -8,7 +8,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import vazkii.patchouli.client.base.DrawWithCamera;
+import vazkii.patchouli.client.base.CustomVertexConsumer;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Mixin(VertexConsumerProvider.Immediate.class)
-public abstract class MixinVertexConsumerProviderImmediate implements VertexConsumerProvider, DrawWithCamera {
+public abstract class MixinVertexConsumerProviderImmediate implements VertexConsumerProvider, CustomVertexConsumer {
     @Shadow protected Optional<RenderLayer> currentLayer;
     @Shadow @Final protected BufferBuilder fallbackBuffer;
     @Shadow @Final protected Map<RenderLayer, BufferBuilder> layerBuffers;
@@ -62,6 +62,51 @@ public abstract class MixinVertexConsumerProviderImmediate implements VertexCons
                     layer.endDrawing();
                 }
                 // end inline
+                if (bl) {
+                    this.currentLayer = Optional.empty();
+                }
+
+            }
+        }
+    }
+
+    // Same as draw() and draw(RenderLayer), except takes additional callback to alter the GL state before rendering
+    @Override
+    public void patchouli_drawWithCustomState(Runnable custom) {
+        this.currentLayer.ifPresent((renderLayerx) -> {
+            VertexConsumer vertexConsumer = this.getBuffer(renderLayerx);
+            if (vertexConsumer == this.fallbackBuffer) {
+                this.patchouli_drawWithCustomState(renderLayerx, custom);
+            }
+
+        });
+        Iterator var1 = this.layerBuffers.keySet().iterator();
+
+        while(var1.hasNext()) {
+            RenderLayer renderLayer = (RenderLayer)var1.next();
+            this.patchouli_drawWithCustomState(renderLayer, custom);
+        }
+    }
+
+    private void patchouli_drawWithCustomState(RenderLayer layer, Runnable custom) {
+        BufferBuilder bufferBuilder = this.getBufferInternal(layer);
+        boolean bl = Objects.equals(this.currentLayer, Optional.of(layer));
+        if (bl || bufferBuilder != this.fallbackBuffer) {
+            if (this.activeConsumers.remove(bufferBuilder)) {
+                // Inline layer.draw so we can call custom
+                if (bufferBuilder.isBuilding()) {
+                    if (((MixinRenderLayer) layer).getTranslucent()) {
+                        bufferBuilder.sortQuads(0, 0, 0);
+                    }
+
+                    bufferBuilder.end();
+                    layer.startDrawing();
+                    custom.run();
+                    BufferRenderer.draw(bufferBuilder);
+                    layer.endDrawing();
+                }
+                // end inline
+
                 if (bl) {
                     this.currentLayer = Optional.empty();
                 }

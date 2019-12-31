@@ -39,7 +39,7 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookEye;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
-import vazkii.patchouli.client.base.DrawWithCamera;
+import vazkii.patchouli.client.base.CustomVertexConsumer;
 import vazkii.patchouli.client.mixin.MixinBlockEntity;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.AbstractMultiblock;
@@ -179,7 +179,7 @@ public class PageMultiblock extends PageWithText {
 		doWorldRenderPass(mb, blocks, buffers, eye);
 		doTileEntityRenderPass(mb, blocks, buffers, eye);
 
-		((DrawWithCamera) buffers).patchouli_drawWithCamera(eye.getX(), eye.getY(), eye.getZ());
+		((CustomVertexConsumer) buffers).patchouli_drawWithCamera(eye.getX(), eye.getY(), eye.getZ());
 		RenderSystem.popMatrix();
 	}
 

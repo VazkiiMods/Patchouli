@@ -9,6 +9,8 @@ import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.GlProgramManager;
+import net.minecraft.client.gl.GlShader;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.OverlayTexture;
@@ -42,8 +44,11 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
+import vazkii.patchouli.client.base.CustomVertexConsumer;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.client.book.page.PageMultiblock;
+import vazkii.patchouli.client.shader.ShaderHelper;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
@@ -258,7 +263,16 @@ public class MultiblockVisualizationHandler {
 		}
 
 		if(blocks > 0) {
-			buffers.draw();
+			GlProgramManager.useProgram(ShaderHelper.INSTANCE.alpha.getProgramRef());
+			ShaderHelper.INSTANCE.alphaUniform.set(0.3F);
+			ShaderHelper.INSTANCE.alphaUniform.upload();
+			((CustomVertexConsumer) buffers).patchouli_drawWithCustomState(() -> {
+				RenderSystem.enableBlend();
+				RenderSystem.defaultBlendFunc();
+				RenderSystem.disableDepthTest();
+			});
+			RenderSystem.enableDepthTest();
+			GlProgramManager.useProgram(0);
 		}
 
 		if(!isAnchored)
