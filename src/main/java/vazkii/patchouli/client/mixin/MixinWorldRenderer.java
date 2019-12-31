@@ -16,6 +16,6 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 public class MixinWorldRenderer {
     @Inject(at = @At("RETURN"), method = "render(Lnet/minecraft/client/util/math/MatrixStack;FJZLnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/GameRenderer;Lnet/minecraft/client/render/LightmapTextureManager;Lnet/minecraft/client/util/math/Matrix4f;)V")
     public void onRender(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f matrix4f, CallbackInfo info) {
-        MultiblockVisualizationHandler.onWorldRenderLast();
+        MultiblockVisualizationHandler.onWorldRenderLast(matrices);
     }
 }

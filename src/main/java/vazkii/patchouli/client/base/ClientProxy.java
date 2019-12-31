@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.minecraft.client.util.ModelIdentifier;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
+import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.network.NetworkHandler;
@@ -17,6 +18,7 @@ public class ClientProxy implements ClientModInitializer {
 		ClientAdvancements.init();
 		ClientTicker.init();
 		BookRightClickHandler.init();
+		MultiblockVisualizationHandler.init();
 		NetworkHandler.registerMessages();
 		Patchouli.reloadBookHandler = ClientBookRegistry.INSTANCE::reload;
 

@@ -195,12 +195,12 @@ public class MultiblockVisualizationHandler {
 		} else timeComplete = 0;
 	}
 
-	public static void onWorldRenderLast() {
+	public static void onWorldRenderLast(MatrixStack ms) {
 		if(hasMultiblock && multiblock != null)
-			renderMultiblock(MinecraftClient.getInstance().world);
+			renderMultiblock(MinecraftClient.getInstance().world, ms);
 	}
 
-	public static void renderMultiblock(World world) {
+	public static void renderMultiblock(World world, MatrixStack ms) {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		if(!isAnchored) {
 			facingBlockRotation = getBlockRotation(mc.player);
@@ -219,10 +219,9 @@ public class MultiblockVisualizationHandler {
 		double renderPosX = erd.camera.getPos().getX();
 		double renderPosY = erd.camera.getPos().getY();
 		double renderPosZ = erd.camera.getPos().getZ();
-		RenderSystem.translated(-renderPosX, -renderPosY, -renderPosZ);
+		ms.translate(-renderPosX, -renderPosY, -renderPosZ);
 
 		VertexConsumerProvider.Immediate buffers = mc.getBufferBuilders().getEntityVertexConsumers();
-		MatrixStack ms = new MatrixStack();
 
 		BlockPos checkPos = null;
 		if(mc.crosshairTarget instanceof BlockHitResult) {
@@ -270,7 +269,6 @@ public class MultiblockVisualizationHandler {
 		if(pos != null) {
 			ms.push();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
-			ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90));
 
 			if(state.getBlock() == Blocks.AIR) {
 				float scale = 0.3F;
