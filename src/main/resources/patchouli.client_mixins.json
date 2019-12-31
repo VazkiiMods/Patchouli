@@ -10,7 +10,8 @@
     "MixinInGameHud",
     "MixinInventoryScreen",
     "MixinRenderLayer",
-    "MixinVertexConsumerProviderImmediate"
+    "MixinVertexConsumerProviderImmediate",
+    "MixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

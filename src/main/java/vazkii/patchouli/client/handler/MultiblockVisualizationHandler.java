@@ -11,10 +11,15 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -38,6 +43,7 @@ import net.minecraft.world.World;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
+import vazkii.patchouli.client.book.page.PageMultiblock;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
@@ -189,8 +195,7 @@ public class MultiblockVisualizationHandler {
 		} else timeComplete = 0;
 	}
 
-	/*  todo 1.15/fabric
-	public static void onWorldRenderLast(RenderWorldLastEvent event) {
+	public static void onWorldRenderLast() {
 		if(hasMultiblock && multiblock != null)
 			renderMultiblock(MinecraftClient.getInstance().world);
 	}
@@ -199,10 +204,10 @@ public class MultiblockVisualizationHandler {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		if(!isAnchored) {
 			facingBlockRotation = getBlockRotation(mc.player);
-			if(mc.objectMouseOver instanceof BlockRayTraceResult)
-				pos = ((BlockRayTraceResult) mc.objectMouseOver).getPos();
+			if(mc.crosshairTarget instanceof BlockHitResult)
+				pos = ((BlockHitResult) mc.crosshairTarget).getBlockPos();
 		}
-		else if(pos.distanceSq(mc.player.getPosition()) > 64 * 64)
+		else if(pos.getSquaredDistance(mc.player.getPos(), false) > 64 * 64)
 			return;
 
 		if(pos == null)
@@ -210,25 +215,19 @@ public class MultiblockVisualizationHandler {
 		if(multiblock.isSymmetrical())
 			facingBlockRotation = BlockRotation.NONE;
 
-		EntityRendererManager manager = Minecraft.getInstance().getRenderManager();
-		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-		
-		double renderPosX = ObfuscationReflectionHelper.getPrivateValue(EntityRendererManager.class, manager, "field_78725_b");
-		double renderPosY = ObfuscationReflectionHelper.getPrivateValue(EntityRendererManager.class, manager, "field_78726_c");
-		double renderPosZ = ObfuscationReflectionHelper.getPrivateValue(EntityRendererManager.class, manager, "field_78723_d");
-
-		RenderSystem.pushMatrix();
-		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-		RenderSystem.enableBlend();
-		RenderSystem.blendFunc(RenderSystem.SourceFactor.CONSTANT_ALPHA, RenderSystem.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
-		RenderSystem.disableDepthTest();
-		RenderSystem.disableLighting();
+		EntityRenderDispatcher erd = mc.getEntityRenderManager();
+		double renderPosX = erd.camera.getPos().getX();
+		double renderPosY = erd.camera.getPos().getY();
+		double renderPosZ = erd.camera.getPos().getZ();
 		RenderSystem.translated(-renderPosX, -renderPosY, -renderPosZ);
 
+		VertexConsumerProvider.Immediate buffers = mc.getBufferBuilders().getEntityVertexConsumers();
+		MatrixStack ms = new MatrixStack();
+
 		BlockPos checkPos = null;
-		if(mc.objectMouseOver instanceof BlockRayTraceResult) {
-			BlockRayTraceResult blockRes = (BlockRayTraceResult) mc.objectMouseOver;
-			checkPos = blockRes.getPos().offset(blockRes.getFace());
+		if(mc.crosshairTarget instanceof BlockHitResult) {
+			BlockHitResult blockRes = (BlockHitResult) mc.crosshairTarget;
+			checkPos = blockRes.getBlockPos().offset(blockRes.getSide());
 		}
 
 		blocks = blocksDone = airFilled = 0;
@@ -250,8 +249,7 @@ public class MultiblockVisualizationHandler {
 
 				if(!r.test(world, facingBlockRotation)) {
 					BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame).rotate(facingBlockRotation);
-					mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-					renderBlock(world, renderState, r.getWorldPosition(), alpha, dispatcher);
+					renderBlock(world, renderState, r.getWorldPosition(), alpha, ms, buffers);
 
 					if(air)
 						airFilled++;
@@ -260,45 +258,34 @@ public class MultiblockVisualizationHandler {
 			}
 		}
 
+		if(blocks > 0) {
+			buffers.draw();
+		}
+
 		if(!isAnchored)
 			blocks = blocksDone = 0;
-
-		GL11.glPopAttrib();
-		GL14.glBlendColor(1F, 1F, 1F, 1F);
-		RenderSystem.enableDepthTest();
-		RenderSystem.popMatrix();
 	}
 
-	public static void renderBlock(World world, BlockState state, BlockPos pos, float alpha, BlockRendererDispatcher brd) {
+	public static void renderBlock(World world, BlockState state, BlockPos pos, float alpha, MatrixStack ms, VertexConsumerProvider buffers) {
 		if(pos != null) {
-			RenderSystem.pushMatrix();
-			RenderSystem.translatef(pos.getX(), pos.getY(), pos.getZ());
-			RenderSystem.color4f(1F, 1F, 1F, 1F);
-			RenderSystem.rotatef(-90F, 0F, 1F, 0F);
-			GL14.glBlendColor(1F, 1F, 1F, alpha);
+			ms.push();
+			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90));
 
-			try {
-				if(state.getBlock() == Blocks.AIR) {
-					float scale = 0.3F;
-					float off = (1F - scale) / 2;
-					RenderSystem.translatef(off, off, -off);
-					RenderSystem.scalef(scale, scale, scale);
+			if(state.getBlock() == Blocks.AIR) {
+				float scale = 0.3F;
+				float off = (1F - scale) / 2;
+				ms.translate(off, off, -off);
+				ms.scale(scale, scale, scale);
 
-					brd.renderBlockBrightness(Blocks.RED_CONCRETE.getDefaultState(), 1.0F);
-
-
-				} else brd.renderBlockBrightness(state, 1.0F);
-			} catch(NullPointerException e) { 
-				//  This can crash for some reason and idk why so this is a bandaid fix
-				BufferBuilder builder = Tessellator.getInstance().getBuffer(); 
-				builder.reset();
-				builder.finishDrawing();
+				state = Blocks.RED_CONCRETE.getDefaultState();
 			}
 
-			RenderSystem.popMatrix();
+			MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(state, ms, buffers, 0xF000F0, OverlayTexture.DEFAULT_UV);
+
+			ms.pop();
 		}
 	}
-	 */
 
 	public static IMultiblock getMultiblock() {
 		return multiblock;

@@ -47,7 +47,7 @@ import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
 
 public class PageMultiblock extends PageWithText {
-	private static final Random RAND = new Random();
+	public static final Random RAND = new Random();
 
 	String name;
 	@SerializedName("multiblock_id")
