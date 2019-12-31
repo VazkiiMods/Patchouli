@@ -31,8 +31,7 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 public class Book {
 	
 	public static final String DEFAULT_MODEL = Patchouli.PREFIX + "book_brown";
-	public static final ModelIdentifier DEFAULT_MODEL_RES = new ModelIdentifier(DEFAULT_MODEL, "inventory");
-	
+
 	private static final Map<String, String> DEFAULT_MACROS = Util.make(() -> {
 		Map<String, String> ret = new HashMap<>();
 		ret.put("$(list", "$(li"); //  The lack of ) is intended
@@ -50,7 +49,6 @@ public class Book {
 	
 	public transient ModContainer owner;
 	public transient Identifier resourceLoc;
-	public transient ModelIdentifier modelResourceLoc;
 	private transient ItemStack bookItem;
 	
 	public transient Identifier bookResource, fillerResource, craftingResource;
@@ -148,8 +146,6 @@ public class Book {
 		AdvancementSyncHandler.trackedNamespaces.addAll(advancementNamespaces);
 		
 		if(!isExtension) {
-			modelResourceLoc = new ModelIdentifier(model, "inventory");
-			
 			bookResource = new Identifier(bookTexture);
 			fillerResource = new Identifier(fillerTexture);
 			craftingResource = new Identifier(craftingTexture);

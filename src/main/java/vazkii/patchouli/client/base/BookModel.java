@@ -7,6 +7,7 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
@@ -32,8 +33,10 @@ public class BookModel implements BakedModel {
         public BakedModel apply(@Nonnull BakedModel original, @Nonnull ItemStack stack,
                                                  @Nullable World world, @Nullable LivingEntity entity) {
             Book book = ItemModBook.getBook(stack);
-            if (book != null)
-                return MinecraftClient.getInstance().getBakedModelManager().getModel(book.modelResourceLoc);
+            if (book != null) {
+                ModelIdentifier path = new ModelIdentifier(book.model, "inventory");
+                return MinecraftClient.getInstance().getBakedModelManager().getModel(path);
+            }
             return original;
         }
     };
