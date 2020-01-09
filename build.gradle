@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
     }
@@ -58,7 +58,11 @@ minecraft {
 }
 repositories {
     maven {
-        url = "https://dvs1.progwml6.com/files/maven/"
+        url "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        name "yarn2mcp"
+        url "https://maven.tterrag.com/"
     }
 }
 
