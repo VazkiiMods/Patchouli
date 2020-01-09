@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.RenderHelper;
@@ -51,7 +52,7 @@ public class BookIcon {
 			break;
 
 		case RESOURCE:
-			GlStateManager.color4f(1F, 1F, 1F, 1F);
+			RenderSystem.color4f(1F, 1F, 1F, 1F);
 			mc.textureManager.bindTexture(res);
 			AbstractGui.blit(x, y, 0, 0, 16, 16, 16, 16);
 			break;

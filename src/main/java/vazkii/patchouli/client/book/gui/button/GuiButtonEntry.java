@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.AbstractGui;
@@ -41,17 +42,17 @@ public class GuiButtonEntry extends Button {
 			float widthFract = time / ANIM_TIME;
 			boolean locked = entry.isLocked();
 			
-			GlStateManager.scalef(0.5F, 0.5F, 0.5F);
+			RenderSystem.scalef(0.5F, 0.5F, 0.5F);
 			AbstractGui.fill(x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
-			GlStateManager.enableBlend();
+			RenderSystem.enableBlend();
 
 			if(locked) {
-				GlStateManager.color4f(1F, 1F, 1F, 0.7F);
+				RenderSystem.color4f(1F, 1F, 1F, 0.7F);
 				GuiBook.drawLock(parent.book, x * 2 + 2, y * 2 + 2); 
 			} else
 				entry.getIcon().render(x * 2 + 2, y * 2 + 2);
 			
-			GlStateManager.scalef(2F, 2F, 2F);
+			RenderSystem.scalef(2F, 2F, 2F);
 
 			String name = (entry.isPriority() ? TextFormatting.ITALIC : "") + entry.getName();
 			if(locked) {

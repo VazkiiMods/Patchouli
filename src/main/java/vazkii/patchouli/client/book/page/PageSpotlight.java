@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.page;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;
 import vazkii.patchouli.client.book.BookEntry;
@@ -32,7 +33,7 @@ public class PageSpotlight extends PageWithText {
 		int h = 26;
 		
 		mc.textureManager.bindTexture(book.craftingResource);
-		GlStateManager.enableBlend();
+		RenderSystem.enableBlend();
 		AbstractGui.blit(GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 128);
 		
 		parent.drawCenteredStringNoShadow(title != null && !title.isEmpty() ? i18n(title) : itemStack.getDisplayName().getFormattedText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);

@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
@@ -34,19 +35,19 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 		if(visible && bookmark != null && entry != null) {
-			GlStateManager.pushMatrix();
-			GlStateManager.scalef(0.5F, 0.5F, 0.5F);
+			RenderSystem.pushMatrix();
+			RenderSystem.scalef(0.5F, 0.5F, 0.5F);
 			int px = x * 2 + (isHovered ? 6 : 2);
 			int py = y * 2 + 2;
 			entry.getIcon().render(px, py);
 
-			GlStateManager.disableDepthTest();
+			RenderSystem.disableDepthTest();
 			String s = Integer.toString(bookmark.page + 1);
 			if(multiblock)
 				s = I18n.format("patchouli.gui.lexicon.visualize_letter");
 			parent.getMinecraft().fontRenderer.drawStringWithShadow(s, px + 12, py + 10, 0xFFFFFF);
-			GlStateManager.enableDepthTest();
-			GlStateManager.popMatrix();
+			RenderSystem.enableDepthTest();
+			RenderSystem.popMatrix();
 		}
 	}
 

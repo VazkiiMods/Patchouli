@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.button.Button;
@@ -51,21 +52,21 @@ public class GuiButtonCategory extends Button {
 			boolean locked = category != null && category.isLocked();
 
 			if(locked) {
-				GlStateManager.color4f(1F, 1F, 1F, 0.7F);
+				RenderSystem.color4f(1F, 1F, 1F, 0.7F);
 				GuiBook.drawLock(parent.book, x + 2, y + 2); 
 			} else
 				icon.render(x + 2, y + 2);
 
-			GlStateManager.pushMatrix();
-			GlStateManager.enableBlend();
-			GlStateManager.color4f(1F, 1F, 1F, transparency);
-			GlStateManager.translatef(0, 0, 200);
+			RenderSystem.pushMatrix();
+			RenderSystem.enableBlend();
+			RenderSystem.color4f(1F, 1F, 1F, transparency);
+			RenderSystem.translatef(0, 0, 200);
 			GuiBook.drawFromTexture(parent.book, x, y, u, v, width, height);
-			GlStateManager.color4f(1F, 1F, 1F, 1F);
+			RenderSystem.color4f(1F, 1F, 1F, 1F);
 
 			if(category != null && !category.isLocked())
 				GuiBook.drawMarking(parent.book, x, y, 0, category.getReadState());
-			GlStateManager.popMatrix();
+			RenderSystem.popMatrix();
 
 			if(isHovered)
 				parent.setTooltip(locked ? (TextFormatting.GRAY + I18n.format("patchouli.gui.lexicon.locked")) : name);		

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -99,10 +100,10 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		if(page == null)
 			return;
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef(page.left, page.top, 0);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(page.left, page.top, 0);
 		page.render(mouseX - page.left, mouseY - page.top, pticks);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	boolean clickPage(BookPage page, double mouseX, double mouseY, int mouseButton) {

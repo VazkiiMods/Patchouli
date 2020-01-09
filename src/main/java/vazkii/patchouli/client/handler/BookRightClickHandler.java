@@ -2,6 +2,7 @@ package vazkii.patchouli.client.handler;
 
 import java.util.Collection;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -52,17 +53,17 @@ public class BookRightClickHandler {
 						int x = window.getScaledWidth() / 2 + 3;
 						int y = window.getScaledHeight() / 2 + 3;
 						entry.getIcon().render(x, y);
-						GlStateManager.scalef(0.5F, 0.5F, 1F);
+						RenderSystem.scalef(0.5F, 0.5F, 1F);
 						mc.getItemRenderer().renderItemAndEffectIntoGUI(bookStack, (x + 8) * 2, (y + 8) * 2);
-						GlStateManager.scalef(2F, 2F, 1F);
+						RenderSystem.scalef(2F, 2F, 1F);
 
 						mc.fontRenderer.drawStringWithShadow(entry.getName(), x + 18, y + 3, 0xFFFFFF);
 
-						GlStateManager.pushMatrix();
-						GlStateManager.scalef(0.75F, 0.75F, 1F);
+						RenderSystem.pushMatrix();
+						RenderSystem.scalef(0.75F, 0.75F, 1F);
 						String s = I18n.format("patchouli.gui.lexicon."+(player.isSneaking() ? "view" : "sneak"));
                         mc.fontRenderer.drawStringWithShadow(TextFormatting.ITALIC + s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
-                        GlStateManager.popMatrix();
+                        RenderSystem.popMatrix();
 					}
 				}
 			}

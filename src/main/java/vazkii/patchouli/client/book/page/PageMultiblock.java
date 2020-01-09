@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.lwjgl.opengl.GL11;
 
 import com.google.gson.annotations.SerializedName;
@@ -108,8 +109,8 @@ public class PageMultiblock extends PageWithText {
 	public void render(int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
-		GlStateManager.enableBlend();
-		GlStateManager.color3f(1F, 1F, 1F);
+		RenderSystem.enableBlend();
+		RenderSystem.color3f(1F, 1F, 1F);
 		GuiBook.drawFromTexture(book, x, y, 405, 149, 106, 106);
 		
 		parent.drawCenteredStringNoShadow(name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
@@ -220,8 +221,8 @@ public class PageMultiblock extends PageWithText {
 			if (te != null && !erroredTiles.contains(te)) {
 				te.setWorld(mc.world, pos);
 
-				// fake this in case the renderer checks it as we don't want to query the actual world
-				((MixinBlockEntity) te).setCachedState(mb.getBlockState(pos));
+				// fake cached state in case the renderer checks it as we don't want to query the actual world
+				ObfuscationReflectionHelper.setPrivateValue(TileEntity.class, te, mb.getBlockState(pos), "field_195045_e");
 
 				ms.push();
 				ms.translate(pos.getX(), pos.getY(), pos.getZ());

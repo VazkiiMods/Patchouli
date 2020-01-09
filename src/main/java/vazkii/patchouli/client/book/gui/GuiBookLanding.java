@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
@@ -125,7 +126,7 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	void drawHeader() {
-		GlStateManager.color4f(1F, 1F, 1F, 1F);
+		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		drawFromTexture(book, -8, 12, 0, 180, 140, 31);
 
 		int color = book.nameplateColor;

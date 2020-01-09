@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.page;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -26,7 +27,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<ICraftingRecipe> {
 	@Override
 	protected void drawRecipe(ICraftingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		mc.textureManager.bindTexture(book.craftingResource);
-		GlStateManager.enableBlend();
+		RenderSystem.enableBlend();
 		AbstractGui.blit(recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 128);
 		
 		boolean shaped = recipe instanceof IShapedRecipe;

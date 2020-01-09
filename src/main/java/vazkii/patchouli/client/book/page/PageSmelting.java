@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.page;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.AbstractCookingRecipe;
@@ -17,7 +18,7 @@ public class PageSmelting extends PageDoubleRecipeRegistry<AbstractCookingRecipe
     @Override
     protected void drawRecipe(AbstractCookingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
         mc.textureManager.bindTexture(book.craftingResource);
-        GlStateManager.enableBlend();
+        RenderSystem.enableBlend();
         AbstractGui.blit(recipeX, recipeY, 11, 71, 96, 24, 128, 128);
         parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 

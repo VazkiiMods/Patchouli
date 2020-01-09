@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.template.component;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -39,8 +40,8 @@ public class ComponentItemStack extends TemplateComponent {
 			return;
 		
 		if(framed) {
-			GlStateManager.enableBlend();
-			GlStateManager.color4f(1F, 1F, 1F, 1F);
+			RenderSystem.enableBlend();
+			RenderSystem.color4f(1F, 1F, 1F, 1F);
 			page.mc.textureManager.bindTexture(page.book.craftingResource);
 			AbstractGui.blit(x - 4, y - 4, 83, 71, 24, 24, 128, 128);
 		}

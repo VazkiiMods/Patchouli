@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -108,28 +109,28 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public final void render(int mouseX, int mouseY, float partialTicks) {
-		GlStateManager.pushMatrix();
+		RenderSystem.pushMatrix();
 		if(scaleFactor != 1) {
-			GlStateManager.scalef(scaleFactor, scaleFactor, scaleFactor);
+			RenderSystem.scalef(scaleFactor, scaleFactor, scaleFactor);
 
 			mouseX /= scaleFactor;
 			mouseY /= scaleFactor;
 		}
 
 		drawScreenAfterScale(mouseX, mouseY, partialTicks);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
 
 	final void drawScreenAfterScale(int mouseX, int mouseY, float partialTicks) {
 		resetTooltip();
 		renderBackground();
 
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef(bookLeft, bookTop, 0);
-		GlStateManager.color3f(1F, 1F, 1F);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(bookLeft, bookTop, 0);
+		RenderSystem.color3f(1F, 1F, 1F);
 		drawBackgroundElements(mouseX, mouseY, partialTicks);
 		drawForegroundElements(mouseX, mouseY, partialTicks);
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 
 		super.render(mouseX, mouseY, partialTicks);
 
@@ -432,7 +433,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	private int getMaxAllowedScale() {
-		return minecraft.mainWindow.calcGuiScale(0, minecraft.getForceUnicodeFont());
+		return minecraft.getWindow().calcGuiScale(0, minecraft.getForceUnicodeFont());
 	}
 
 	public int getPage() {
@@ -444,10 +445,10 @@ public abstract class GuiBook extends Screen {
 		int h = 3;
 		int rx = x + PAGE_WIDTH / 2 - w / 2;
 
-		GlStateManager.enableBlend();
-		GlStateManager.color4f(1F, 1F, 1F, 0.8F);
+		RenderSystem.enableBlend();
+		RenderSystem.color4f(1F, 1F, 1F, 0.8F);
 		drawFromTexture(book, rx, y, 140, 180, w, h);
-		GlStateManager.color4f(1F, 1F, 1F, 1F);
+		RenderSystem.color4f(1F, 1F, 1F, 1F);
 	}
 
 	public static void drawLock(Book book, int x, int y) {
@@ -459,13 +460,13 @@ public abstract class GuiBook extends Screen {
 		if(!state.hasIcon)
 			return;
 
-		GlStateManager.enableBlend();
-		GlStateManager.disableAlphaTest();
+		RenderSystem.enableBlend();
+		RenderSystem.disableAlphaTest();
 		float alpha = state.hasAnimation ? ((float) Math.sin(ClientTicker.total * 0.2F) * 0.3F + 0.7F) : 1F;
-		GlStateManager.color4f(1F, 1F, 1F, alpha);
+		RenderSystem.color4f(1F, 1F, 1F, alpha);
 		drawFromTexture(book, x, y, state.u, 197, 8, 8);
-		GlStateManager.enableAlphaTest();
-		GlStateManager.color3f(1F, 1F, 1F);
+		RenderSystem.enableAlphaTest();
+		RenderSystem.color3f(1F, 1F, 1F);
 	}
 
 	public static void drawPageFiller(Book book) {
@@ -473,8 +474,8 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public static void drawPageFiller(Book book, int x, int y) {
-		GlStateManager.enableBlend();
-		GlStateManager.color4f(1F, 1F, 1F, 1F);
+		RenderSystem.enableBlend();
+		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		Minecraft.getInstance().textureManager.bindTexture(book.fillerResource);
 		blit(x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}

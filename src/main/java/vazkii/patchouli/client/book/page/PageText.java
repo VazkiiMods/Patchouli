@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.page;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -39,9 +40,9 @@ public class PageText extends PageWithText {
 			}
 
 			if(!smolText.isEmpty()) {
-				GlStateManager.scalef(0.5F, 0.5F, 1F);
+				RenderSystem.scalef(0.5F, 0.5F, 1F);
 				parent.drawCenteredStringNoShadow(smolText, GuiBook.PAGE_WIDTH, 12, book.headerColor);
-				GlStateManager.scalef(2F, 2F, 1F);
+				RenderSystem.scalef(2F, 2F, 1F);
 				renderedSmol = true;
 			}
 			

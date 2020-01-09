@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
@@ -93,16 +94,16 @@ public abstract class GuiBookEntryList extends GuiBook {
 			drawPageFiller(book);
 		
 		if(!searchField.getText().isEmpty()) {
-			GlStateManager.color4f(1F, 1F, 1F, 1F);
+			RenderSystem.color4f(1F, 1F, 1F, 1F);
 			drawFromTexture(book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
 			book.getFont().drawString(searchField.getText(), searchField.x + 7, searchField.y + 1, 0);
 		}
 		
 		if(visibleEntries.isEmpty()) {
 			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
-			GlStateManager.scalef(2F, 2F, 2F);
+			RenderSystem.scalef(2F, 2F, 2F);
 			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
-			GlStateManager.scalef(0.5F, 0.5F, 0.5F);
+			RenderSystem.scalef(0.5F, 0.5F, 0.5F);
 		}
 	}
 	

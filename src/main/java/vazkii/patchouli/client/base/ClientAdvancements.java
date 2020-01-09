@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.toasts.IToast;
 import net.minecraft.client.gui.toasts.ToastGui;
@@ -67,13 +68,12 @@ public class ClientAdvancements {
 		public Visibility draw(ToastGui toastGui, long delta) {
 			Minecraft mc = Minecraft.getInstance();
 			mc.getTextureManager().bindTexture(TEXTURE_TOASTS);
-			GlStateManager.color3f(1.0F, 1.0F, 1.0F);
+			RenderSystem.color3f(1.0F, 1.0F, 1.0F);
 			toastGui.blit(0, 0, 0, 32, 160, 32);
 
 			toastGui.getMinecraft().fontRenderer.drawString(I18n.format(book.name), 30, 7, -11534256);
 			toastGui.getMinecraft().fontRenderer.drawString(I18n.format("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
 
-			RenderHelper.enableGUIStandardItemLighting();
 			toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(null, book.getBookItem(), 8, 8);
 
 			return delta >= 5000L ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;

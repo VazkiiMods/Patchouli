@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.common.base.Supplier;
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.button.Button;
@@ -33,7 +34,7 @@ public class GuiButtonBook extends Button {
 	
 	@Override
 	public void render(int mouseX, int mouseY, float partialTicks) {
-		GlStateManager.color3f(1F, 1F, 1F);
+		RenderSystem.color3f(1F, 1F, 1F);
 		active = visible = displayCondition.get();
 		isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 		

@@ -101,8 +101,8 @@ public class MultiblockVisualizationHandler {
 				return;
 			}
 
-			GlStateManager.pushMatrix();
-			GlStateManager.translatef(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed, 0);
+			RenderSystem.pushMatrix();
+			RenderSystem.translatef(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed, 0);
 
 			int x = event.getWindow().getScaledWidth() / 2;
 			int y = 12;
@@ -117,10 +117,10 @@ public class MultiblockVisualizationHandler {
 
 			if(timeComplete > 0) {
 				String s = I18n.format("patchouli.gui.lexicon.structure_complete");
-				GlStateManager.pushMatrix();
-				GlStateManager.translatef(0, Math.min(height + 5, animTime), 0);
+				RenderSystem.pushMatrix();
+				RenderSystem.translatef(0, Math.min(height + 5, animTime), 0);
 				mc.fontRenderer.drawStringWithShadow(s, x - mc.fontRenderer.getStringWidth(s) / 2, top + height - 10, 0x00FF00);
-				GlStateManager.popMatrix();
+				RenderSystem.popMatrix();
 			}
 
 			AbstractGui.fill(left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
@@ -169,7 +169,7 @@ public class MultiblockVisualizationHandler {
 				}
 			}
 
-			GlStateManager.popMatrix();
+			RenderSystem.popMatrix();
 		}
 	}
 

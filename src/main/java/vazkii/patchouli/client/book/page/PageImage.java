@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.page;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
@@ -39,11 +40,11 @@ public class PageImage extends PageWithText {
 		
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
-		GlStateManager.color3f(1F, 1F, 1F);
-		GlStateManager.enableBlend();
-		GlStateManager.scalef(0.5F, 0.5F, 0.5F);
+		RenderSystem.color3f(1F, 1F, 1F);
+		RenderSystem.enableBlend();
+		RenderSystem.scalef(0.5F, 0.5F, 0.5F);
 		parent.blit(x * 2 + 6, y * 2 + 6, 0, 0, 200, 200);
-		GlStateManager.scalef(2F, 2F, 2F);
+		RenderSystem.scalef(2F, 2F, 2F);
 
 		if(border)
 			GuiBook.drawFromTexture(book, x, y, 405, 149, 106, 106);
