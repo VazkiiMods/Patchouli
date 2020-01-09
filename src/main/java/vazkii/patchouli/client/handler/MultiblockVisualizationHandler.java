@@ -374,9 +374,12 @@ public class MultiblockVisualizationHandler {
 				RenderSystem.blendFunc(GlStateManager.SourceFactor.CONSTANT_ALPHA, GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
 				RenderSystem.blendColor(1, 1, 1, 0.4F);
 			}, () -> {
-				original.endDrawing();
-				RenderSystem.enableDepthTest();
+				RenderSystem.blendColor(1, 1, 1, 1);
+				RenderSystem.defaultBlendFunc();
 				RenderSystem.disableBlend();
+				RenderSystem.enableDepthTest();
+
+				original.endDrawing();
 			});
 		}
 
