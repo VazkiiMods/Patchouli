@@ -36,7 +36,6 @@ public class GuiButtonInventoryBook extends Button {
 		AbstractGui.blit(x, y, (hovered ? 20 : 0), 0, width, height, 64, 64);
 		
 		ItemStack stack = book.getBookItem();
-		RenderHelper.enableGUIStandardItemLighting();
 		mc.getItemRenderer().renderItemAndEffectIntoGUI(stack, x + 2, y + 2);
 		
 		EntryDisplayState readState = book.contents.getReadState();

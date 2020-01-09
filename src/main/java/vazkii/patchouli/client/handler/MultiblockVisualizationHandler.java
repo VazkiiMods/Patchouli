@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.util.Collection;
 import java.util.function.Function;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraftforge.event.TickEvent;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
@@ -141,7 +145,6 @@ public class MultiblockVisualizationHandler {
 
 						if (!stack.isEmpty()) {
 							mc.fontRenderer.drawStringWithShadow(stack.getDisplayName().getFormattedText(), left + 20, top + height + 8, 0xFFFFFF);
-							RenderHelper.enableGUIStandardItemLighting();
 							mc.getItemRenderer().renderItemIntoGUI(stack, left, top + height + 2);
 						}
 					} catch(Exception ignored) {}
@@ -173,7 +176,7 @@ public class MultiblockVisualizationHandler {
 	@SubscribeEvent
 	public static void onWorldRenderLast(RenderWorldLastEvent event) {
 		if(hasMultiblock && multiblock != null)
-			renderMultiblock(Minecraft.getInstance().world);
+			renderMultiblock(Minecraft.getInstance().world, event.getMatrixStack());
 	}
 
 	public static void anchorTo(BlockPos target, Rotation rot) {
@@ -199,14 +202,14 @@ public class MultiblockVisualizationHandler {
 		} else timeComplete = 0;
 	}
 
-	public static void renderMultiblock(World world) {
+	public static void renderMultiblock(World world, MatrixStack ms) {
 		Minecraft mc = Minecraft.getInstance();
 		if(!isAnchored) {
 			facingRotation = getRotation(mc.player);
 			if(mc.objectMouseOver instanceof BlockRayTraceResult)
 				pos = ((BlockRayTraceResult) mc.objectMouseOver).getPos();
 		}
-		else if(pos.distanceSq(mc.player.getPosition()) > 64 * 64)
+		else if(pos.distanceSq(mc.player.getPositionVec(), false) > 64 * 64)
 			return;
 
 		if(pos == null)
@@ -214,20 +217,13 @@ public class MultiblockVisualizationHandler {
 		if(multiblock.isSymmetrical())
 			facingRotation = Rotation.NONE;
 
-		EntityRendererManager manager = Minecraft.getInstance().getRenderManager();
-		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-		
-		double renderPosX = ObfuscationReflectionHelper.getPrivateValue(EntityRendererManager.class, manager, "field_78725_b");
-		double renderPosY = ObfuscationReflectionHelper.getPrivateValue(EntityRendererManager.class, manager, "field_78726_c");
-		double renderPosZ = ObfuscationReflectionHelper.getPrivateValue(EntityRendererManager.class, manager, "field_78723_d");
+		EntityRendererManager erd = mc.getRenderManager();
+		double renderPosX = erd.info.getProjectedView().getX();
+		double renderPosY = erd.info.getProjectedView().getY();
+		double renderPosZ = erd.info.getProjectedView().getZ();
+		ms.translate(-renderPosX, -renderPosY, -renderPosZ);
 
-		GlStateManager.pushMatrix();
-		GL11.glPushAttrib(GL11.GL_LIGHTING_BIT);
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GlStateManager.SourceFactor.CONSTANT_ALPHA, GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
-		GlStateManager.disableDepthTest();
-		GlStateManager.disableLighting();
-		GlStateManager.translated(-renderPosX, -renderPosY, -renderPosZ);
+		IRenderTypeBuffer.Impl buffers = mc.getBufferBuilders().getEntityVertexConsumers();
 
 		BlockPos checkPos = null;
 		if(mc.objectMouseOver instanceof BlockRayTraceResult) {
@@ -254,8 +250,7 @@ public class MultiblockVisualizationHandler {
 
 				if(!r.test(world, facingRotation)) {
 					BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame).rotate(facingRotation);
-					mc.textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-					renderBlock(world, renderState, r.getWorldPosition(), alpha, dispatcher);
+					renderBlock(world, renderState, r.getWorldPosition(), alpha, ms, buffers);
 
 					if(air)
 						airFilled++;
@@ -264,42 +259,32 @@ public class MultiblockVisualizationHandler {
 			}
 		}
 
+		if(blocks > 0) {
+			// todo 1.15 transparency
+			buffers.draw();
+		}
+
 		if(!isAnchored)
 			blocks = blocksDone = 0;
-
-		GL11.glPopAttrib();
-		GL14.glBlendColor(1F, 1F, 1F, 1F);
-		GlStateManager.enableDepthTest();
-		GlStateManager.popMatrix();
 	}
 
-	public static void renderBlock(World world, BlockState state, BlockPos pos, float alpha, BlockRendererDispatcher brd) {
+	public static void renderBlock(World world, BlockState state, BlockPos pos, float alpha, MatrixStack ms, IRenderTypeBuffer.Impl buffers) {
 		if(pos != null) {
-			GlStateManager.pushMatrix();
-			GlStateManager.translatef(pos.getX(), pos.getY(), pos.getZ());
-			GlStateManager.color4f(1F, 1F, 1F, 1F);
-			GlStateManager.rotatef(-90F, 0F, 1F, 0F);
-			GL14.glBlendColor(1F, 1F, 1F, alpha);
+			ms.push();
+			ms.translate(pos.getX(), pos.getY(), pos.getZ());
 
-			try {
-				if(state.getBlock() == Blocks.AIR) {
-					float scale = 0.3F;
-					float off = (1F - scale) / 2;
-					GlStateManager.translatef(off, off, -off);
-					GlStateManager.scalef(scale, scale, scale);
+			if(state.getBlock() == Blocks.AIR) {
+				float scale = 0.3F;
+				float off = (1F - scale) / 2;
+				ms.translate(off, off, -off);
+				ms.scale(scale, scale, scale);
 
-					brd.renderBlockBrightness(Blocks.RED_CONCRETE.getDefaultState(), 1.0F);
-
-
-				} else brd.renderBlockBrightness(state, 1.0F);
-			} catch(NullPointerException e) { 
-				//  This can crash for some reason and idk why so this is a bandaid fix
-				BufferBuilder builder = Tessellator.getInstance().getBuffer(); 
-				builder.reset();
-				builder.finishDrawing();
+				state = Blocks.RED_CONCRETE.getDefaultState();
 			}
 
-			GlStateManager.popMatrix();
+			Minecraft.getInstance().getBlockRendererDispatcher().renderBlockAsEntity(state, ms, buffers, 0xF000F0, OverlayTexture.DEFAULT_UV);
+
+			ms.pop();
 		}
 	}
 
@@ -328,23 +313,23 @@ public class MultiblockVisualizationHandler {
 		float f5 = (float)(endColor >> 16 & 255) / 255.0F;
 		float f6 = (float)(endColor >> 8 & 255) / 255.0F;
 		float f7 = (float)(endColor & 255) / 255.0F;
-		GlStateManager.disableTexture();
-		GlStateManager.enableBlend();
-		GlStateManager.disableAlphaTest();
-		GlStateManager.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		GlStateManager.shadeModel(7425);
+		RenderSystem.disableTexture();
+		RenderSystem.enableBlend();
+		RenderSystem.disableAlphaTest();
+		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		RenderSystem.shadeModel(7425);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-		bufferbuilder.pos((double)right, (double)top, 0).color(f1, f2, f3, f).endVertex();
-		bufferbuilder.pos((double)left, (double)top, 0).color(f1, f2, f3, f).endVertex();
-		bufferbuilder.pos((double)left, (double)bottom, 0).color(f5, f6, f7, f4).endVertex();
-		bufferbuilder.pos((double)right, (double)bottom, 0).color(f5, f6, f7, f4).endVertex();
+		bufferbuilder.vertex((double)right, (double)top, 0).color(f1, f2, f3, f).endVertex();
+		bufferbuilder.vertex((double)left, (double)top, 0).color(f1, f2, f3, f).endVertex();
+		bufferbuilder.vertex((double)left, (double)bottom, 0).color(f5, f6, f7, f4).endVertex();
+		bufferbuilder.vertex((double)right, (double)bottom, 0).color(f5, f6, f7, f4).endVertex();
 		tessellator.draw();
-		GlStateManager.shadeModel(7424);
-		GlStateManager.disableBlend();
-		GlStateManager.enableAlphaTest();
-		GlStateManager.enableTexture();
+		RenderSystem.shadeModel(7424);
+		RenderSystem.disableBlend();
+		RenderSystem.enableAlphaTest();
+		RenderSystem.enableTexture();
 	}
 
 	/**

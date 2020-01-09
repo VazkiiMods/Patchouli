@@ -6,9 +6,18 @@ import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.annotation.Nonnull;
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Vector4f;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.Vector4f;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.util.math.Vec3i;
 import org.lwjgl.opengl.GL11;
 
@@ -29,7 +38,6 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -51,6 +59,7 @@ import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
 
 public class PageMultiblock extends PageWithText {
+	private static final Random RAND = new Random();
 
 	String name;
 	@SerializedName("multiblock_id")
@@ -124,6 +133,7 @@ public class PageMultiblock extends PageWithText {
 	}
 
 	private void renderMultiblock() {
+		multiblockObj.setWorld(mc.world);
 		Vec3i size = multiblockObj.getSize();
 		int sizeX = size.getX();
 		int sizeY = size.getY();
@@ -134,22 +144,22 @@ public class PageMultiblock extends PageWithText {
 		float scaleX = maxX / diag;
 		float scaleY = maxY / sizeY;
 		float scale = -Math.min(scaleX, scaleY);
-		
+
 		int xPos = GuiBook.PAGE_WIDTH / 2;
 		int yPos = 60;
-		GlStateManager.pushMatrix();
-		GlStateManager.translatef(xPos, yPos, 100);
-		GlStateManager.scalef(scale, scale, scale);
-		GlStateManager.translatef(-(float) sizeX / 2, -(float) sizeY / 2, 0);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef(xPos, yPos, 100);
+		RenderSystem.scalef(scale, scale, scale);
+		RenderSystem.translatef(-(float) sizeX / 2, -(float) sizeY / 2, 0);
 
 		// Initial eye pos somewhere off in the distance in the -Z direction
 		Vector4f eye = new Vector4f(0, 0, -100, 1);
 		Matrix4f rotMat = new Matrix4f();
-		rotMat.setIdentity();
+		rotMat.loadIdentity();
 
 		// For each GL rotation done, track the opposite to keep the eye pos accurate
-		GlStateManager.rotatef(-30F, 1F, 0F, 0F);
-		rotMat.rotX((float) Math.toRadians(30F));
+		RenderSystem.rotatef(-30F, 1F, 0F, 0F);
+		rotMat.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(30));
 
 		float offX = (float) -sizeX / 2;
 		float offZ = (float) -sizeZ / 2 + 1;
@@ -157,134 +167,76 @@ public class PageMultiblock extends PageWithText {
 		float time = parent.ticksInBook * 0.5F;
 		if(!Screen.hasShiftDown())
 			time += ClientTicker.partialTicks;
-		GlStateManager.translatef(-offX, 0, -offZ);
-		GlStateManager.rotatef(time, 0F, 1F, 0F);
-		rotMat.rotY((float) Math.toRadians(-time));
-		GlStateManager.rotatef(45F, 0F, 1F, 0F);
-		rotMat.rotY((float) Math.toRadians(-45F));
-		GlStateManager.translatef(offX, 0, offZ);
-		
+		RenderSystem.translatef(-offX, 0, -offZ);
+		RenderSystem.rotatef(time, 0F, 1F, 0F);
+		rotMat.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-time));
+		RenderSystem.rotatef(45F, 0F, 1F, 0F);
+		rotMat.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-45));
+		RenderSystem.translatef(offX, 0, offZ);
+
 		// Finally apply the rotations
-		rotMat.transform(eye);
+		eye.transform(rotMat);
+		eye.normalizeProjectiveCoordinates();
 		renderElements(multiblockObj, BlockPos.getAllInBoxMutable(BlockPos.ZERO, new BlockPos(sizeX - 1, sizeY - 1, sizeZ - 1)), eye);
 
-		GlStateManager.popMatrix();
+		RenderSystem.popMatrix();
 	}
-	
+
 	private void renderElements(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, Vector4f eye) {
-		GlStateManager.pushMatrix();
-		GlStateManager.color4f(1F, 1F, 1F, 1F);
-		GlStateManager.translatef(0, 0, -1);
+		RenderSystem.pushMatrix();
+		RenderSystem.color4f(1F, 1F, 1F, 1F);
+		RenderSystem.translatef(0, 0, -1);
 
-		TileEntityRendererDispatcher.staticPlayerX = eye.x;
-		TileEntityRendererDispatcher.staticPlayerY = eye.y;
-		TileEntityRendererDispatcher.staticPlayerZ = eye.z;
+		IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
+		doWorldRenderPass(mb, blocks, buffers, eye);
+		doTileEntityRenderPass(mb, blocks, buffers, eye);
 
-		BlockRenderLayer oldRenderLayer = MinecraftForgeClient.getRenderLayer();
-		for (BlockRenderLayer layer : BlockRenderLayer.values()) {
-			if (layer == BlockRenderLayer.TRANSLUCENT) {
-				doTileEntityRenderPass(mb, blocks, 0);
-			}
-			doWorldRenderPass(mb, blocks, layer, eye);
-			if (layer == BlockRenderLayer.TRANSLUCENT) {
-				doTileEntityRenderPass(mb, blocks, 1);
-			}
-		}
-		ForgeHooksClient.setRenderLayer(oldRenderLayer);
-
-		setGlStateForPass(0);
-		mc.getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
-		GlStateManager.popMatrix();
+		// todo 1.15 transparency sorting
+		buffers.draw();
+		RenderSystem.popMatrix();
 	}
 
-	private void doWorldRenderPass(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull BlockRenderLayer layer, Vector4f eye) {
-		mc.textureManager.bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-		mc.getTextureManager().getTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
-		
-		ForgeHooksClient.setRenderLayer(layer);
-		setGlStateForPass(layer);
-		
-		BufferBuilder wr = Tessellator.getInstance().getBuffer();
-		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-
+	private void doWorldRenderPass(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull IRenderTypeBuffer.Impl buffers, Vector4f eye) {
+		MatrixStack ms = new MatrixStack();
 		for (BlockPos pos : blocks) {
 			BlockState bs = mb.getBlockState(pos);
-			Block block = bs.getBlock();
-			if (block.canRenderInLayer(bs, layer)) {
-				renderBlock(bs, pos, mb, Tessellator.getInstance().getBuffer());
-			}
-		}
+			IVertexBuilder buffer = buffers.getBuffer(RenderTypeLookup.getBlockLayer(bs));
 
-		if (layer == BlockRenderLayer.TRANSLUCENT) {
-			wr.sortVertexData(eye.x, eye.y, eye.z);
-		}
-		Tessellator.getInstance().draw();
-	}
-
-	public void renderBlock(@Nonnull BlockState state, @Nonnull BlockPos pos, @Nonnull AbstractMultiblock mb, @Nonnull BufferBuilder bufferBuilder) {
-
-		try {
-			BlockRendererDispatcher blockrendererdispatcher = mc.getBlockRendererDispatcher();
-			BlockRenderType type = state.getRenderType();
-			if (type != BlockRenderType.MODEL) {
-				return;
-			}
-
-			// We only want to change one param here, the check sides
-			IBakedModel ibakedmodel = blockrendererdispatcher.getModelForState(state);
-			blockrendererdispatcher.getBlockModelRenderer().renderModel(mb, ibakedmodel, state, pos, bufferBuilder, false, random,  state.getPositionRandom(pos), EmptyModelData.INSTANCE);
-
-		} catch (Exception e) {
-			throw new RuntimeException(e);
+			ms.push();
+			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+			Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(bs, pos, mb, ms, buffer, false, RAND);
+			ms.pop();
 		}
 	}
-	
+
 	// Hold errored TEs weakly, this may cause some dupe errors but will prevent spamming it every frame
 	private final transient Set<TileEntity> erroredTiles = Collections.newSetFromMap(new WeakHashMap<>());
 
-	private void doTileEntityRenderPass(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final int pass) {
-		mb.setWorld(mc.world);
-		
-		RenderHelper.enableStandardItemLighting();
-		GlStateManager.enableLighting();
-		
-		setGlStateForPass(1);
-		
+	private void doTileEntityRenderPass(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, IRenderTypeBuffer buffers, Vector4f eye) {
+		MatrixStack ms = new MatrixStack();
+
 		for (BlockPos pos : blocks) {
 			TileEntity te = mb.getTileEntity(pos);
-			BlockPos relPos = new BlockPos(mc.player);
 			if (te != null && !erroredTiles.contains(te)) {
-				te.setWorld(mc.world);
-				te.setPos(relPos.add(pos));
+				te.setWorld(mc.world, pos);
 
+				// fake this in case the renderer checks it as we don't want to query the actual world
+				((MixinBlockEntity) te).setCachedState(mb.getBlockState(pos));
+
+				ms.push();
+				ms.translate(pos.getX(), pos.getY(), pos.getZ());
 				try {
-					TileEntityRendererDispatcher.instance.render(te, pos.getX(), pos.getY(), pos.getZ(), ClientTicker.partialTicks);
+					TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(te);
+					if (renderer != null) {
+						renderer.render(te, ClientTicker.partialTicks, ms, buffers, 0xF000F0, OverlayTexture.DEFAULT_UV);
+					}
 				} catch (Exception e) {
 					erroredTiles.add(te);
 					Patchouli.LOGGER.error("An exception occured rendering tile entity", e);
+				} finally {
+					ms.pop();
 				}
 			}
-		}
-		
-		RenderHelper.disableStandardItemLighting();
-	}
-
-	private void setGlStateForPass(@Nonnull BlockRenderLayer layer) {
-		int pass = layer == BlockRenderLayer.TRANSLUCENT ? 1 : 0;
-		setGlStateForPass(pass);
-	}
-
-	private void setGlStateForPass(int layer) {
-		GlStateManager.color3f(1, 1, 1);
-
-		if (layer == 0) {
-			GlStateManager.enableDepthTest();
-			GlStateManager.disableBlend();
-			GlStateManager.depthMask(true);
-		} else {
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GlStateManager.depthMask(false);
 		}
 	}
 }

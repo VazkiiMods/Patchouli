@@ -47,7 +47,6 @@ public class BookIcon {
 		Minecraft mc = Minecraft.getInstance();
 		switch(type) {
 		case STACK:
-			RenderHelper.enableGUIStandardItemLighting();
 			mc.getItemRenderer().renderItemIntoGUI(stack, x, y);
 			break;
 

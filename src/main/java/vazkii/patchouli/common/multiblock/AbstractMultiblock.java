@@ -11,11 +11,13 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IEnviromentBlockReader;
+import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.level.ColorResolver;
+import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraftforge.common.util.TriPredicate;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.common.util.RotationUtil;
@@ -25,7 +27,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractMultiblock implements IMultiblock, IEnviromentBlockReader {
+public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
     public ResourceLocation res;
     protected int offX, offY, offZ;
     protected int viewOffX, viewOffY, viewOffZ;
@@ -143,13 +145,23 @@ public abstract class AbstractMultiblock implements IMultiblock, IEnviromentBloc
     }
 
     @Override
-    public Biome getBiome(BlockPos pos) {
-        return Biomes.PLAINS;
+    public WorldLightManager getLightingProvider() {
+        return null;
     }
 
     @Override
-    public int getLightFor(LightType type, BlockPos pos) {
-        return 0xF000F0;
+    public int getColor(BlockPos pos, ColorResolver color) {
+        return color.getColor(Biomes.PLAINS, pos.getX(), pos.getZ());
+    }
+
+    @Override
+    public int getLightLevel(LightType type, BlockPos pos) {
+        return 15;
+    }
+
+    @Override
+    public int getBaseLightLevel(BlockPos pos, int ambientDarkening) {
+        return 15 - ambientDarkening;
     }
 
     public abstract Vec3i getSize();

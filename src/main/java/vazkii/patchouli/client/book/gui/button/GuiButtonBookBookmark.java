@@ -36,7 +36,6 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 		if(visible && bookmark != null && entry != null) {
 			GlStateManager.pushMatrix();
 			GlStateManager.scalef(0.5F, 0.5F, 0.5F);
-			RenderHelper.enableGUIStandardItemLighting();
 			int px = x * 2 + (isHovered ? 6 : 2);
 			int py = y * 2 + 2;
 			entry.getIcon().render(px, py);

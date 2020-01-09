@@ -219,7 +219,6 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		if(stack == null || stack.isEmpty())
 			return;
 
-		RenderHelper.enableGUIStandardItemLighting();
 		minecraft.getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
 		minecraft.getItemRenderer().renderItemOverlays(font, stack, x, y);
 
