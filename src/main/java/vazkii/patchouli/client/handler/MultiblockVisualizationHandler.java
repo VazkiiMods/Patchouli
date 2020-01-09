@@ -6,12 +6,12 @@ import java.util.function.Function;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraftforge.event.TickEvent;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 
@@ -21,12 +21,9 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -45,9 +42,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.patchouli.api.IMultiblock;
-import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.common.multiblock.StateMatcher;
@@ -223,7 +218,7 @@ public class MultiblockVisualizationHandler {
 		double renderPosZ = erd.info.getProjectedView().getZ();
 		ms.translate(-renderPosX, -renderPosY, -renderPosZ);
 
-		IRenderTypeBuffer.Impl buffers = mc.getBufferBuilders().getEntityVertexConsumers();
+		IRenderTypeBuffer.Impl buffers = new GhostBuffers(mc.getBufferBuilders().getEntityVertexConsumers());
 
 		BlockPos checkPos = null;
 		if(mc.objectMouseOver instanceof BlockRayTraceResult) {
@@ -337,6 +332,45 @@ public class MultiblockVisualizationHandler {
 	 */
 	private static Rotation getRotation(Entity entity) {
 		return RotationUtil.rotationFromFacing(Direction.byHorizontalIndex(MathHelper.floor((double) (-entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3));
+	}
+
+	private static class GhostBuffers extends IRenderTypeBuffer.Impl {
+		private final IRenderTypeBuffer.Impl original;
+
+		protected GhostBuffers(IRenderTypeBuffer.Impl original) {
+			super(null, null);
+			this.original = original;
+		}
+
+		@Override
+		public IVertexBuilder getBuffer(RenderType type) {
+			return original.getBuffer(new GhostRenderType(type));
+		}
+
+		@Override
+		public void draw() {
+			original.draw();
+		}
+
+		@Override
+		public void draw(RenderType type) {
+			original.draw(type);
+		}
+	}
+
+	private static class GhostRenderType extends RenderType {
+
+		public GhostRenderType(RenderType original) {
+			super(original.toString() + "_patchouli_ghost", original.getVertexFormat(), original.getDrawMode(), original.getExpectedBufferSize(), original.func_228665_s_(), true, () -> {
+				original.startDrawing();
+
+				// Alter GL state
+				RenderSystem.disableDepthTest();
+				RenderSystem.enableBlend();
+				RenderSystem.blendFunc(GlStateManager.SourceFactor.CONSTANT_ALPHA, GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
+				RenderSystem.blendColor(1, 1, 1, 0.4F);
+			}, original::endDrawing);
+		}
 	}
 
 }
