@@ -2,12 +2,16 @@ package vazkii.patchouli.client.handler;
 
 import java.awt.Color;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -42,11 +46,14 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
+
+import javax.annotation.Nullable;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class MultiblockVisualizationHandler {
@@ -64,6 +71,7 @@ public class MultiblockVisualizationHandler {
 	private static int timeComplete;
 	private static BlockState lookingState;
 	private static BlockPos lookingPos;
+	private static IRenderTypeBuffer.Impl buffers = null;
 
 	public static void setMultiblock(IMultiblock multiblock, String name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos->pos);
@@ -218,7 +226,8 @@ public class MultiblockVisualizationHandler {
 		double renderPosZ = erd.info.getProjectedView().getZ();
 		ms.translate(-renderPosX, -renderPosY, -renderPosZ);
 
-		IRenderTypeBuffer.Impl buffers = new GhostBuffers(mc.getBufferBuilders().getEntityVertexConsumers());
+		if (buffers == null)
+			buffers = initBuffers(mc.getBufferBuilders().getEntityVertexConsumers());
 
 		BlockPos checkPos = null;
 		if(mc.objectMouseOver instanceof BlockRayTraceResult) {
@@ -245,7 +254,7 @@ public class MultiblockVisualizationHandler {
 
 				if(!r.test(world, facingRotation)) {
 					BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame).rotate(facingRotation);
-					renderBlock(world, renderState, r.getWorldPosition(), alpha, ms, buffers);
+					renderBlock(world, renderState, r.getWorldPosition(), alpha, ms);
 
 					if(air)
 						airFilled++;
@@ -254,16 +263,13 @@ public class MultiblockVisualizationHandler {
 			}
 		}
 
-		if(blocks > 0) {
-			// todo 1.15 transparency
-			buffers.draw();
-		}
+		buffers.draw();
 
 		if(!isAnchored)
 			blocks = blocksDone = 0;
 	}
 
-	public static void renderBlock(World world, BlockState state, BlockPos pos, float alpha, MatrixStack ms, IRenderTypeBuffer.Impl buffers) {
+	public static void renderBlock(World world, BlockState state, BlockPos pos, float alpha, MatrixStack ms) {
 		if(pos != null) {
 			ms.push();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
@@ -334,33 +340,31 @@ public class MultiblockVisualizationHandler {
 		return RotationUtil.rotationFromFacing(Direction.byHorizontalIndex(MathHelper.floor((double) (-entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3));
 	}
 
-	private static class GhostBuffers extends IRenderTypeBuffer.Impl {
-		private final IRenderTypeBuffer.Impl original;
+	private static IRenderTypeBuffer.Impl initBuffers(IRenderTypeBuffer.Impl original) {
+		BufferBuilder fallback = ObfuscationReflectionHelper.getPrivateValue(IRenderTypeBuffer.Impl.class, original, "field_228457_a_");
+		Map<RenderType, BufferBuilder> layerBuffers = ObfuscationReflectionHelper.getPrivateValue(IRenderTypeBuffer.Impl.class, original, "field_228458_b_");
+		Map<RenderType, BufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
+		for (Map.Entry<RenderType, BufferBuilder> e : layerBuffers.entrySet()) {
+			remapped.put(GhostRenderType.remap(e.getKey()), e.getValue());
+		}
+		return new GhostBuffers(fallback, remapped);
+	}
 
-		protected GhostBuffers(IRenderTypeBuffer.Impl original) {
-			super(null, null);
-			this.original = original;
+	private static class GhostBuffers extends IRenderTypeBuffer.Impl {
+		protected GhostBuffers(BufferBuilder fallback, Map<RenderType, BufferBuilder> layerBuffers) {
+			super(fallback, layerBuffers);
 		}
 
 		@Override
 		public IVertexBuilder getBuffer(RenderType type) {
-			return original.getBuffer(new GhostRenderType(type));
-		}
-
-		@Override
-		public void draw() {
-			original.draw();
-		}
-
-		@Override
-		public void draw(RenderType type) {
-			original.draw(type);
+			return super.getBuffer(GhostRenderType.remap(type));
 		}
 	}
 
 	private static class GhostRenderType extends RenderType {
+		private static Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
 
-		public GhostRenderType(RenderType original) {
+		private GhostRenderType(RenderType original) {
 			super(original.toString() + "_patchouli_ghost", original.getVertexFormat(), original.getDrawMode(), original.getExpectedBufferSize(), original.func_228665_s_(), true, () -> {
 				original.startDrawing();
 
@@ -369,7 +373,29 @@ public class MultiblockVisualizationHandler {
 				RenderSystem.enableBlend();
 				RenderSystem.blendFunc(GlStateManager.SourceFactor.CONSTANT_ALPHA, GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
 				RenderSystem.blendColor(1, 1, 1, 0.4F);
-			}, original::endDrawing);
+			}, () -> {
+				original.endDrawing();
+				RenderSystem.enableDepthTest();
+				RenderSystem.disableBlend();
+			});
+		}
+
+		@Override
+		public boolean equals(@Nullable Object other) {
+			return this == other;
+		}
+
+		@Override
+		public int hashCode() {
+			return System.identityHashCode(this);
+		}
+
+		public static RenderType remap(RenderType in) {
+			if (in instanceof GhostRenderType) {
+				return in;
+			} else {
+				return remappedTypes.computeIfAbsent(in, GhostRenderType::new);
+			}
 		}
 	}
 
