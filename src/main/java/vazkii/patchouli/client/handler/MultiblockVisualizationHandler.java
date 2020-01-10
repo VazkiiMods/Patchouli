@@ -50,6 +50,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
@@ -365,7 +366,7 @@ public class MultiblockVisualizationHandler {
 		private static Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
 
 		private GhostRenderType(RenderType original) {
-			super(original.toString() + "_patchouli_ghost", original.getVertexFormat(), original.getDrawMode(), original.getExpectedBufferSize(), original.func_228665_s_(), true, () -> {
+			super(String.format("%s_%s_ghost", original.toString(), Patchouli.MOD_ID), original.getVertexFormat(), original.getDrawMode(), original.getExpectedBufferSize(), original.func_228665_s_(), true, () -> {
 				original.startDrawing();
 
 				// Alter GL state
