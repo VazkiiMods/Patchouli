@@ -1,5 +1,6 @@
 package vazkii.patchouli.common.multiblock;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -73,6 +74,12 @@ public class DenseMultiblock extends AbstractMultiblock {
 				state = StateMatcher.fromBlockLoose((Block) o);
 			else if(o instanceof BlockState)
 				state = StateMatcher.fromState((BlockState) o);
+			else if(o instanceof String)
+				try {
+					state = StringStateMatcher.fromString((String) o);
+				} catch (CommandSyntaxException e) {
+					throw new RuntimeException(e);
+				}
 			else if(o instanceof IStateMatcher)
 				state = (IStateMatcher) o;
 			else throw new IllegalArgumentException("Invalid target " + o);
