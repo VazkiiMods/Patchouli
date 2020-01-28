@@ -1,15 +1,13 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import java.util.Arrays;
-import java.util.List;
-
-import com.google.common.base.Supplier;
 import com.mojang.blaze3d.platform.GlStateManager;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.button.Button;
 import vazkii.patchouli.client.book.gui.GuiBook;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Supplier;
 
 public class GuiButtonBook extends Button {
 
@@ -18,11 +16,11 @@ public class GuiButtonBook extends Button {
 	Supplier<Boolean> displayCondition;
 	List<String> tooltip;
 	
-	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, Button.IPressable onPress, String... tooltip) {
+	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, IPressable onPress, String... tooltip) {
 		this(parent, x, y, u, v, w, h, ()->true, onPress, tooltip);
 	}
 	
-	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, Supplier<Boolean> displayCondition, Button.IPressable onPress, String... tooltip) {
+	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, Supplier<Boolean> displayCondition, IPressable onPress, String... tooltip) {
 		super(x, y, w, h, "", onPress);
 		this.parent = parent;
 		this.u = u;
