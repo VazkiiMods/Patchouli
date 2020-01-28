@@ -1,6 +1,5 @@
 package vazkii.patchouli.client.book.gui;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,6 +10,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonEntry;
@@ -29,8 +30,8 @@ public abstract class GuiBookEntryList extends GuiBook {
 	
 	TextFieldWidget searchField;
 
-	public GuiBookEntryList(Book book) {
-		super(book);
+	public GuiBookEntryList(Book book, ITextComponent title) {
+		super(book, title);
 	}
 	
 	@Override
@@ -55,7 +56,6 @@ public abstract class GuiBookEntryList extends GuiBook {
 		buildEntryButtons();
 	}
 	
-	protected abstract String getName();
 	protected abstract String getDescriptionText();
 	protected abstract Collection<BookEntry> getEntries();
 	
@@ -80,7 +80,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		super.drawForegroundElements(mouseX, mouseY, partialTicks);
 		
 		if(page == 0) {
-			drawCenteredStringNoShadow(getName(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawCenteredStringNoShadow(getTitle().getFormattedText(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
 			drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
@@ -196,7 +196,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	
 	void addEntryButtons(int x, int y, int start, int count) {
 		for(int i = 0; i < count && (i + start) < visibleEntries.size(); i++) {
-			Button button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, visibleEntries.get(start + i), start + i, this::handleButtonEntry);
+			Button button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, visibleEntries.get(start + i), this::handleButtonEntry);
 			addButton(button);
 			dependentButtons.add(button);
 		}

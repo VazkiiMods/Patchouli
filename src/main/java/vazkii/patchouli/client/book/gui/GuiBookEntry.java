@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
@@ -35,7 +36,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	public GuiBookEntry(Book book, BookEntry entry, int page) {
-		super(book);
+		super(book, new StringTextComponent(entry.getName()));
 		this.entry = entry;
 		this.page = page; 
 	}

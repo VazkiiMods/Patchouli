@@ -16,11 +16,11 @@ public class GuiButtonCategory extends Button {
 
 	private static final int ANIM_TIME = 5;
 
-	GuiBook parent;
+	final GuiBook parent;
 	BookCategory category;
-	BookIcon icon;
-	String name;
-	int u, v;
+	final BookIcon icon;
+	final String name;
+	final int u, v;
 	float timeHovered;
 
 	public GuiButtonCategory(GuiBook parent, int x, int y, BookCategory category, Button.IPressable onPress) {

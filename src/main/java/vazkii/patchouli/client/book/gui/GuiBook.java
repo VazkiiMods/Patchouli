@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
+import net.minecraft.util.text.ITextComponent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -71,12 +72,13 @@ public abstract class GuiBook extends Screen {
 
 	boolean needsBookmarkUpdate = false;
 
-	public GuiBook(Book book) {
-		super(new StringTextComponent(""));
+	public GuiBook(Book book, ITextComponent title) {
+		super(title);
 
 		this.book = book;
 	}
 
+	@Override
 	public void init() {
 		MainWindow res = minecraft.mainWindow;
 		double oldGuiScale = res.calcGuiScale(minecraft.gameSettings.guiScale, minecraft.getForceUnicodeFont());
@@ -143,8 +145,7 @@ public abstract class GuiBook extends Screen {
 
 		int y = 0;
 		List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
-		for(int i = 0; i < bookmarks.size(); i++) {
-			Bookmark bookmark = bookmarks.get(i);
+		for (Bookmark bookmark : bookmarks) {
 			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
 			y += 12;
 		}
@@ -169,11 +170,6 @@ public abstract class GuiBook extends Screen {
 	@Override // make public
 	public <T extends Widget> T addButton(T p_addButton_1_) { 
 		return super.addButton(p_addButton_1_);
-	}
-
-	protected void clearButtons() {
-		buttons.clear();
-		children.clear();
 	}
 
 	protected boolean shouldAddAddBookmarkButton() {
