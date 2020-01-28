@@ -32,7 +32,7 @@ public class GuiBookLanding extends GuiBook {
 	int loadedCategories = 0;
 
 	public GuiBookLanding(Book book) {
-		super(book);
+		super(book, new TranslationTextComponent(book.name));
 	}
 
 	@Override

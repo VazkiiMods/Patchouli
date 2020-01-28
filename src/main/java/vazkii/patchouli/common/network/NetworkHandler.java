@@ -38,44 +38,29 @@ public class NetworkHandler {
 			.serverAcceptedVersions(PROTOCOL_VERSION::equals)
 			.simpleChannel();
 	
-	private static int i = 0;
-	
 	public static void registerMessages() {
-		register(MessageSyncAdvancements.class, NetworkDirection.PLAY_TO_CLIENT);
-		register(MessageOpenBookGui.class, NetworkDirection.PLAY_TO_CLIENT);
-		register(MessageReloadBookContents.class, NetworkDirection.PLAY_TO_CLIENT);
-	}
-	
-	public static <T extends IMessage> void register(Class<T> clazz, NetworkDirection dir) {
-		BiConsumer<T, PacketBuffer> encoder = (msg, buf) -> MessageSerializer.writeObject(msg, buf);
-		
-		Function<PacketBuffer, T> decoder = (buf) -> {
-			try {
-				T msg = clazz.newInstance();
-				MessageSerializer.readObject(msg, buf);
-				return msg;
-			} catch (InstantiationException | IllegalAccessException e) {
-				throw new RuntimeException(e);
-			} 
-		};
-		
-		BiConsumer<T, Supplier<NetworkEvent.Context>> consumer = (msg, supp) -> {
-			NetworkEvent.Context context = supp.get();
-			if(context.getDirection() != dir)
-				return;
-			
-			context.setPacketHandled(msg.receive(context));
-		};
-		
-		CHANNEL.registerMessage(i, clazz, encoder, decoder, consumer);
-		i++;
+		CHANNEL.messageBuilder(MessageSyncAdvancements.class, 0)
+				.encoder(MessageSyncAdvancements::encode)
+				.decoder(MessageSyncAdvancements::new)
+				.consumer(MessageSyncAdvancements::receive)
+				.add();
+		CHANNEL.messageBuilder(MessageOpenBookGui.class, 1)
+				.encoder(MessageOpenBookGui::encode)
+				.decoder(MessageOpenBookGui::new)
+				.consumer(MessageOpenBookGui::receive)
+				.add();
+		CHANNEL.messageBuilder(MessageReloadBookContents.class, 2)
+				.encoder(MessageReloadBookContents::encode)
+				.decoder(MessageReloadBookContents::new)
+				.consumer(MessageReloadBookContents::receive)
+				.add();
 	}
 
-	public static void sendToPlayer(IMessage msg, ServerPlayerEntity player) {
+	public static void sendToPlayer(Object msg, ServerPlayerEntity player) {
 		CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), msg);
 	}
 
-	public static void sendToAll(IMessage msg) {
+	public static void sendToAll(Object msg) {
 		CHANNEL.send(PacketDistributor.ALL.noArg(), msg);
 	}
 	

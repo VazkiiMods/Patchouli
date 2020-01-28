@@ -1,5 +1,19 @@
 package vazkii.patchouli.common.book;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
+import net.minecraftforge.forgespi.language.IModInfo;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.common.base.Patchouli;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -17,23 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.base.Function;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.ModContainer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
-import net.minecraftforge.forgespi.language.IModInfo;
-import vazkii.patchouli.client.book.ClientBookRegistry;
-import vazkii.patchouli.common.base.Patchouli;
+import java.util.function.Function;
 
 public class BookRegistry {
 
@@ -116,7 +114,7 @@ public class BookRegistry {
 	// HELPER
 
 	public static boolean findFiles(ModInfo mod, String base, Function<Path, Boolean> preprocessor,
-			BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
+	                                BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
 		if (mod.getModId().equals("minecraft") || mod.getModId().equals("forge"))
 			return false;
 

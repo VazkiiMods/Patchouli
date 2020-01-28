@@ -156,8 +156,8 @@ public class BookTextParser {
 		if(actualText == null)
 			actualText = "[ERROR]";
 
-		for(String key : book.macros.keySet())
-			actualText = actualText.replace(key, book.macros.get(key));
+		for (Map.Entry<String, String> e : book.macros.entrySet())
+			actualText = actualText.replace(e.getKey(), e.getValue());
 
 		List<Span> spans = processCommands(actualText);
 		List<Word> words = layout(spans);

@@ -19,14 +19,12 @@ public class GuiButtonEntry extends Button {
 
 	GuiBook parent;
 	private BookEntry entry;
-	private int i;
 	private float timeHovered;
 
-	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, int i, Button.IPressable onPress) {
+	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, Button.IPressable onPress) {
 		super(x, y, GuiBook.PAGE_WIDTH, 10, "", onPress);
 		this.parent = parent;
 		this.entry = entry;
-		this.i = i;
 	}
 	
 	@Override

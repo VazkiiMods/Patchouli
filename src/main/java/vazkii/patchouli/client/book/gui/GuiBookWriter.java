@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.gui;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
@@ -16,7 +17,7 @@ public class GuiBookWriter extends GuiBook {
 	private static boolean drawHeader;
 
 	public GuiBookWriter(Book book) {
-		super(book);
+		super(book, new StringTextComponent(""));
 	}
 
 	@Override
