@@ -12,7 +12,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Instances of this class are created once for every usage of the template it's meant to 
  * process, so you can save data on a per-template basis.
  */
-@OnlyIn(Dist.CLIENT)
 public interface IComponentProcessor {
 
 	/**
