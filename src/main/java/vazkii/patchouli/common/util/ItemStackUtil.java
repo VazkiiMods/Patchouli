@@ -4,18 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import com.mojang.datafixers.Dynamic;
+import com.mojang.datafixers.types.JsonOps;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTDynamicOps;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ItemStackUtil {
+	private static final Gson GSON = new GsonBuilder().create();
 	
 	public static String serializeStack(ItemStack stack) {
 		StringBuilder builder = new StringBuilder();
@@ -27,9 +34,12 @@ public class ItemStackUtil {
 			builder.append(count);
 		}
 		
-		if(stack.hasTag())
-			builder.append(stack.getTag().toString());
-		
+		if(stack.hasTag()) {
+			Dynamic<?> dyn = new Dynamic<>(NBTDynamicOps.INSTANCE, stack.getTag());
+			JsonElement j = dyn.convert(JsonOps.INSTANCE).getValue();
+			builder.append(GSON.toJson(j));
+		}
+
 		return builder.toString();
 	}
 
