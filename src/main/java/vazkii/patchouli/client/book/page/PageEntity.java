@@ -16,7 +16,8 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.util.EntityUtil;
-import vazkii.patchouli.common.util.EntityUtil.EntityCreator;
+
+import java.util.function.Function;
 
 public class PageEntity extends PageWithText {
 
@@ -34,7 +35,7 @@ public class PageEntity extends PageWithText {
 
 	transient boolean errored;
 	transient Entity entity;
-	transient EntityCreator creator;
+	transient Function<World, Entity> creator;
 	transient float renderScale, offset;
 
 	@Override
@@ -104,7 +105,7 @@ public class PageEntity extends PageWithText {
 	private void loadEntity(World world) {
 		if(!errored && (entity == null || !entity.isAlive())) {
 			try {
-				entity = creator.create(world);
+				entity = creator.apply(world);
 
 				float width = entity.getWidth();
 				float height = entity.getHeight();

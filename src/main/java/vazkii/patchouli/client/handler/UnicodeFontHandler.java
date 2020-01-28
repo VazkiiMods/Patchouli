@@ -7,26 +7,23 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.fonts.Font;
 import net.minecraft.client.gui.fonts.providers.IGlyphProvider;
 import net.minecraft.client.gui.fonts.providers.UnicodeTextureGlyphProvider;
+import net.minecraft.util.LazyLoadBase;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.common.base.Patchouli;
 
 public final class UnicodeFontHandler {
 
-	private static FontRenderer unicodeFont;
-	
-	private static void makeUnicodeFont() {
+	private static LazyLoadBase<FontRenderer> unicodeFont = new LazyLoadBase<>(() -> {
 		Minecraft mc = Minecraft.getInstance();
-		unicodeFont = new FontRenderer(mc.textureManager, new Font(mc.textureManager, new ResourceLocation(Patchouli.MOD_ID, "unicode")));
-			
+		FontRenderer ret = new FontRenderer(mc.textureManager, new Font(mc.textureManager, new ResourceLocation(Patchouli.MOD_ID, "unicode")));
+
 		IGlyphProvider provider = new UnicodeTextureGlyphProvider.Factory(new ResourceLocation("font/glyph_sizes.bin"), "minecraft:font/unicode_page_%s.png").create(mc.getResourceManager());
-		unicodeFont.setGlyphProviders(Lists.newArrayList(provider));
-	}
+		ret.setGlyphProviders(Lists.newArrayList(provider));
+		return ret;
+	});
 	
 	public static FontRenderer getUnicodeFont() {
-		if(unicodeFont == null)
-			makeUnicodeFont();
-		
-		return unicodeFont;
+		return unicodeFont.getValue();
 	}
 	
 }
