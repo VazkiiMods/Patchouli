@@ -15,9 +15,10 @@ apply plugin: 'maven-publish'
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
 
+def mc_version = '1.14.4'
 version = "${config.version}-${config.build_number}"
 group = "vazkii.${config.mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = config.mod_name
+archivesBaseName = "${config.mod_name}-${mc_version}"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -26,7 +27,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 }
 
 minecraft {
-    mappings channel: "${config.mapping_channel}", version: "${config.mapping_version}"
+    mappings channel: "snapshot", version: "20191122-1.14.3"
 
     runs {
         client {
@@ -63,10 +64,10 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${config.mc_version}-${config.forge_version}"
+    minecraft "net.minecraftforge:forge:${mc_version}-28.1.92"
 
-    compileOnly fg.deobf("mezz.jei:jei-${config.mc_version}:${config.jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${config.mc_version}:${config.jei_version}")
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:6.0.0.26:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:6.0.0.26")
 }
 
 processResources {
@@ -121,7 +122,7 @@ def parseConfig(File config) {
 }
 
 jar {
-     manifest {
+    manifest {
         attributes([
             "Specification-Title": "${config.mod_id}",
             "Specification-Vendor": "vazkii",
