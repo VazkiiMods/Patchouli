@@ -12,6 +12,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import org.lwjgl.glfw.GLFW;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonEntry;
@@ -130,7 +131,7 @@ public abstract class GuiBookEntryList extends GuiBook {
     public boolean keyPressed(int key, int scanCode, int modifiers) {
 		String currQuery = searchField.getText();
 		
-		if(key == 28) { // Enter
+		if(key == GLFW.GLFW_KEY_ENTER) {
 			if(visibleEntries.size() == 1) {
 				displayLexiconGui(new GuiBookEntry(book, visibleEntries.get(0)), true);
 				return true;
