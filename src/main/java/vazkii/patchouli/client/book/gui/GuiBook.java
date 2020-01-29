@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -29,7 +30,6 @@ import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.config.GuiUtils;
 import vazkii.patchouli.api.BookDrawScreenEvent;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;

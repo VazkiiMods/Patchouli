@@ -219,7 +219,7 @@ public class PageMultiblock extends PageWithText {
 		for (BlockPos pos : blocks) {
 			TileEntity te = mb.getTileEntity(pos);
 			if (te != null && !erroredTiles.contains(te)) {
-				te.setWorld(mc.world, pos);
+				te.setLocation(mc.world, pos);
 
 				// fake cached state in case the renderer checks it as we don't want to query the actual world
 				ObfuscationReflectionHelper.setPrivateValue(TileEntity.class, te, mb.getBlockState(pos), "field_195045_e");
