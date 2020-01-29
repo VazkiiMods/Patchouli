@@ -16,9 +16,9 @@ ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
 
 def mc_version = '1.15.1'
-version = "${config.version}-${config.build_number}"
+version = "${mc_version}-${config.version}-${config.build_number}"
 group = "vazkii.${config.mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "${config.mod_name}-${mc_version}"
+archivesBaseName = "${config.mod_name}"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
