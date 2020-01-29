@@ -74,7 +74,6 @@ public class PageMultiblock extends PageWithText {
 	
 	private transient AbstractMultiblock multiblockObj;
 	private transient Button visualizeButton;
-	private final transient Random random = new Random();
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
