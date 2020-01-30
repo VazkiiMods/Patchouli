@@ -128,6 +128,28 @@ public class BookTextParser {
 			state.cluster = new LinkedList<>();
 			return "";
 		}, "tooltip", "t");
+		register((parameter, state) -> {
+			state.prevColor = state.color;
+			state.color = state.book.linkColor;
+			state.cluster = new LinkedList<>();
+			if (!parameter.startsWith("/")) {
+				state.tooltip = "INVALID COMMAND (must begin with /)";
+			} else {
+				state.tooltip = parameter.length() < 20 ? parameter : parameter.substring(0, 20) + "...";
+			}
+			state.onClick = () -> {
+				state.gui.getMinecraft().player.sendChatMessage(parameter);
+				return true;
+			};
+			return "";
+		}, "command", "c");
+		register(state -> {
+			state.color = state.prevColor;
+			state.cluster = null;
+			state.tooltip = "";
+			state.onClick = null;
+			return "";
+		}, "/c");
 	}
 
 	private final GuiBook gui;
