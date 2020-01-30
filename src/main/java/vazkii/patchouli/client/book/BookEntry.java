@@ -194,9 +194,9 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		}
 		for(int i = 0; i < pages.length; i++)
 			if(pages[i].canAdd(book)) {
-				realPages.add(pages[i]);
 				try {
 					pages[i].build(this, i);
+					realPages.add(pages[i]);
 				} catch(Exception e) {
 					throw new RuntimeException("Error while loading entry " + resource + " page " + i, e);
 				}

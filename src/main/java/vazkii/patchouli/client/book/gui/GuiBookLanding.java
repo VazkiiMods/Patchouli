@@ -136,7 +136,7 @@ public class GuiBookLanding extends GuiBook {
 	void makeErrorTooltip() {
 		Throwable e = book.contents.getException();
 		
-		List<String> lines = new LinkedList<>();
+		List<String> lines = new ArrayList<>();
 		while(e != null) {
 			String msg = e.getMessage();
 			if(msg != null && !msg.isEmpty())

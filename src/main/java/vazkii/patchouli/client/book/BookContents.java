@@ -160,7 +160,7 @@ public class BookContents extends AbstractReadStateHolder {
 		} catch (Exception e) {
 			exception = e;
 			errored = true;
-			Patchouli.LOGGER.error("Error while loading book {}", book.resourceLoc, e);
+			Patchouli.LOGGER.error("Error while loading contents for book {}", book.resourceLoc, e);
 		}
 	}
 
