@@ -10,7 +10,6 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
@@ -31,8 +30,7 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 public class Book {
 	
 	public static final String DEFAULT_MODEL = Patchouli.PREFIX + "book_brown";
-	public static final ModelResourceLocation DEFAULT_MODEL_RES = new ModelResourceLocation(DEFAULT_MODEL, "inventory");
-	
+
 	private static final Map<String, String> DEFAULT_MACROS = Util.make(() -> {
 		Map<String, String> ret = new HashMap<>();
 		ret.put("$(list", "$(li"); //  The lack of ) is intended
@@ -51,7 +49,7 @@ public class Book {
 	public transient IModInfo owner;
 	public transient Class<?> ownerClass;
 	public transient ResourceLocation resourceLoc;
-	public transient ModelResourceLocation modelResourceLoc;
+	public transient ResourceLocation modelResourceLoc;
 	private transient ItemStack bookItem;
 	
 	public transient ResourceLocation bookResource, fillerResource, craftingResource;
@@ -150,8 +148,8 @@ public class Book {
 		AdvancementSyncHandler.trackedNamespaces.addAll(advancementNamespaces);
 		
 		if(!isExtension) {
-			modelResourceLoc = new ModelResourceLocation(model, "inventory");
-			
+			modelResourceLoc = new ResourceLocation(model);
+
 			bookResource = new ResourceLocation(bookTexture);
 			fillerResource = new ResourceLocation(fillerTexture);
 			craftingResource = new ResourceLocation(craftingTexture);
