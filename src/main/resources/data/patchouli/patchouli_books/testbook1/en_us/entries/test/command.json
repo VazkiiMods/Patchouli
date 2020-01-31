@@ -1,0 +1,11 @@
+{
+  "name": "Command test",
+  "icon": "minecraft:command_block",
+  "category": "test",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Click $(c:/tell @s hi, me!)this$(/l) to say hi to yourself."
+    }
+  ]
+}

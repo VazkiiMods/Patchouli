@@ -30,6 +30,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.glfw.GLFW;
 import vazkii.patchouli.api.BookDrawScreenEvent;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
@@ -270,25 +271,35 @@ public abstract class GuiBook extends Screen {
 
 	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
 		switch(mouseButton) {
-		case 0:
+		case GLFW.GLFW_MOUSE_BUTTON_LEFT:
 			if(targetPage != null && hasShiftDown()) {
 				displayLexiconGui(new GuiBookEntry(book, targetPage.getLeft(), targetPage.getRight()), true);
 				playBookFlipSound(book);
 				return true;
 			}
 			break;
-		case 1: 
+		case GLFW.GLFW_MOUSE_BUTTON_RIGHT:
 			back(true);
 			return true;
-		case 3:  
+		case GLFW.GLFW_MOUSE_BUTTON_4:
 			changePage(true, true);
 			return true;
-		case 4:
+		case GLFW.GLFW_MOUSE_BUTTON_5:
 			changePage(false, true);
 			return true;
 		}
 
 		return super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
+			back(true);
+			return true;
+		} else {
+			return super.keyPressed(keyCode, scanCode, modifiers);
+		}
 	}
 
 	@Override

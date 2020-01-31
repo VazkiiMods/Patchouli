@@ -7,11 +7,12 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -50,7 +51,7 @@ public class BookContents extends AbstractReadStateHolder {
 	private boolean errored = false;
 	private Exception exception = null;
 
-	public Stack<GuiBook> guiStack = new Stack<>();
+	public Deque<GuiBook> guiStack = new ArrayDeque<>();
 	public GuiBook currentGui;
 	
 	public BookIcon indexIcon;
@@ -159,7 +160,7 @@ public class BookContents extends AbstractReadStateHolder {
 		} catch (Exception e) {
 			exception = e;
 			errored = true;
-			Patchouli.LOGGER.error("Error while loading book {}", book.resourceLoc, e);
+			Patchouli.LOGGER.error("Error while loading contents for book {}", book.resourceLoc, e);
 		}
 	}
 

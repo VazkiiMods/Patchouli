@@ -11,12 +11,12 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.JsonOps;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTDynamicOps;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -107,7 +107,7 @@ public class ItemStackUtil {
 		List<ItemStack> stacks = new ArrayList<>();
 		for (int i = 0; i < stacksSerialized.length; i++) {
 			if (stacksSerialized[i].startsWith("tag:")) {
-				Tag<Item> tag = Minecraft.getInstance().world.getTags().getItems().get(new ResourceLocation(stacksSerialized[i].substring(4)));
+				Tag<Item> tag = ItemTags.getCollection().get(new ResourceLocation(stacksSerialized[i].substring(4)));
 				if(tag != null) {
 					for(Item item : tag.getAllElements())
 						stacks.add(new ItemStack(item));

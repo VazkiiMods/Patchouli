@@ -3,6 +3,7 @@ package vazkii.patchouli.client.base;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -23,8 +24,10 @@ public class BookModel extends BakedModelWrapper<IBakedModel> {
         public IBakedModel getModelWithOverrides(@Nonnull IBakedModel original, @Nonnull ItemStack stack,
                                                  @Nullable World world, @Nullable LivingEntity entity) {
             Book book = ItemModBook.getBook(stack);
-            if (book != null)
-                return Minecraft.getInstance().getModelManager().getModel(book.modelResourceLoc);
+            if (book != null) {
+                ModelResourceLocation modelPath = new ModelResourceLocation(book.modelResourceLoc, "inventory");
+                return Minecraft.getInstance().getModelManager().getModel(modelPath);
+            }
             return original;
         }
     };

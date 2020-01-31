@@ -82,8 +82,12 @@ public class BookRegistry {
 				ResourceLocation res = pair.getRight();
 
 				Class<?> ownerClass = c.getMod().getClass();
-				InputStream stream = ownerClass.getResourceAsStream(file);
-				loadBook(mod, ownerClass, res, stream, false);
+				try (InputStream stream = ownerClass.getResourceAsStream(file)) {
+					loadBook(mod, ownerClass, res, stream, false);
+				} catch (Exception e) {
+					Patchouli.LOGGER.error("Failed to load book {} defined by mod {}, skipping",
+							res, c.getModInfo().getModId(), e);
+				}
 			});
 		});
 
@@ -94,9 +98,8 @@ public class BookRegistry {
 			boolean external) {
 		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		Book book = gson.fromJson(reader, Book.class);
-
-		books.put(res, book);
 		book.build(mod, ownerClass, res, external);
+		books.put(res, book);
 	}
 
 	@OnlyIn(Dist.CLIENT)
