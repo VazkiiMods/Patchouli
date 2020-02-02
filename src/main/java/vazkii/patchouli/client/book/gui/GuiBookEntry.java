@@ -257,12 +257,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public ResourceLocation getBookTexture() {
-		return book.bookResource;
+		return book.bookTexture;
 	}
 
 	@Override
 	public ResourceLocation getCraftingTexture() {
-		return book.craftingResource;
+		return book.craftingTexture;
 	}
 
 	@Override

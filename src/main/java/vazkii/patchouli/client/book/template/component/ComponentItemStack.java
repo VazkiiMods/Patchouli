@@ -42,7 +42,7 @@ public class ComponentItemStack extends TemplateComponent {
 		if(framed) {
 			RenderSystem.enableBlend();
 			RenderSystem.color4f(1F, 1F, 1F, 1F);
-			page.mc.textureManager.bindTexture(page.book.craftingResource);
+			page.mc.textureManager.bindTexture(page.book.craftingTexture);
 			AbstractGui.blit(x - 4, y - 4, 83, 71, 24, 24, 128, 128);
 		}
 		

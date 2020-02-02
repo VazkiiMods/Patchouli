@@ -21,7 +21,7 @@ public class ExternalBookContents extends BookContents {
 
 	@Override
 	protected void findFiles(String dir, List<ResourceLocation> list) {
-		File root = new File(BookFolderLoader.loadDir, book.resourceLoc.getPath());
+		File root = new File(BookFolderLoader.loadDir, book.id.getPath());
 		File enUs = new File(root, DEFAULT_LANG);
 		if(enUs.exists()) {
 			File searchDir = new File(enUs, dir);

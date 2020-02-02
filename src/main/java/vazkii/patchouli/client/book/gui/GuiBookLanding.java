@@ -56,7 +56,7 @@ public class GuiBookLanding extends GuiBook {
 		addButton(new GuiButtonBookHistory(this, x + (pos++) * dist, y, this::handleButtonHistory));
 
 		// Advancements
-		if(!book.advancementsTab.isEmpty())
+		if(book.advancementsTab != null)
 			addButton(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y, this::handleButtonAdvancements));
 
 		// Config

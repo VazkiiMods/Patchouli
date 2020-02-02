@@ -75,7 +75,7 @@ public class ItemModBook extends Item {
 	}
 
 	public static ItemStack forBook(Book book) {
-		return forBook(book.resourceLoc.toString());
+		return forBook(book.id.toString());
 	}
 	
 	public static ItemStack forBook(String book) {
@@ -142,7 +142,7 @@ public class ItemModBook extends Item {
 			return new ActionResult<>(ActionResultType.FAIL, stack);
 
 		if(playerIn instanceof ServerPlayerEntity) {
-			NetworkHandler.sendToPlayer(new MessageOpenBookGui(book.resourceLoc.toString()), (ServerPlayerEntity) playerIn);
+			NetworkHandler.sendToPlayer(new MessageOpenBookGui(book.id.toString()), (ServerPlayerEntity) playerIn);
 			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open); 
 			worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), sfx, SoundCategory.PLAYERS, 1F, (float) (0.7 + Math.random() * 0.4));
 		}

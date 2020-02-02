@@ -25,7 +25,7 @@ public class BookModel extends BakedModelWrapper<IBakedModel> {
                                                  @Nullable World world, @Nullable LivingEntity entity) {
             Book book = ItemModBook.getBook(stack);
             if (book != null) {
-                ModelResourceLocation modelPath = new ModelResourceLocation(book.modelResourceLoc, "inventory");
+                ModelResourceLocation modelPath = new ModelResourceLocation(book.model, "inventory");
                 return Minecraft.getInstance().getModelManager().getModel(modelPath);
             }
             return original;

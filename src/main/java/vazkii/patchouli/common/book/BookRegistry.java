@@ -39,13 +39,13 @@ public class BookRegistry {
 	public static final String BOOKS_LOCATION = Patchouli.MOD_ID + "_books";
 
 	public final Map<ResourceLocation, Book> books = new HashMap<>();
-	public Gson gson;
+	public static final Gson GSON = new GsonBuilder()
+			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+			.create();
 
 	private boolean loaded = false;
 
-	private BookRegistry() {
-		gson = new GsonBuilder().create();
-	}
+	private BookRegistry() {}
 
 	public void init() {
 		List<ModInfo> mods = ModList.get().getMods();
@@ -97,7 +97,7 @@ public class BookRegistry {
 	public void loadBook(IModInfo mod, Class<?> ownerClass, ResourceLocation res, InputStream stream,
 			boolean external) {
 		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-		Book book = gson.fromJson(reader, Book.class);
+		Book book = GSON.fromJson(reader, Book.class);
 		book.build(mod, ownerClass, res, external);
 		books.put(res, book);
 	}

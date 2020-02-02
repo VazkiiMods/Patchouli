@@ -27,7 +27,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<ICraftingRecipe> {
 	
 	@Override
 	protected void drawRecipe(ICraftingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-		mc.textureManager.bindTexture(book.craftingResource);
+		mc.textureManager.bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
 		AbstractGui.blit(recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 128);
 		

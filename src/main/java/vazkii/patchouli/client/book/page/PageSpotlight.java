@@ -32,7 +32,7 @@ public class PageSpotlight extends PageWithText {
 		int w = 66;
 		int h = 26;
 		
-		mc.textureManager.bindTexture(book.craftingResource);
+		mc.textureManager.bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
 		AbstractGui.blit(GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 128);
 		

@@ -11,11 +11,11 @@ public class GuiAdvancementsExt extends AdvancementsScreen {
 
 	Screen parent;
 	
-	public GuiAdvancementsExt(ClientAdvancementManager manager, Screen parent, String tab) {
+	public GuiAdvancementsExt(ClientAdvancementManager manager, Screen parent, ResourceLocation tab) {
 		super(manager);
 		this.parent = parent;
 		
-		Advancement start = manager.getAdvancementList().getAdvancement(new ResourceLocation(tab));
+		Advancement start = manager.getAdvancementList().getAdvancement(tab);
 		if(start != null && ClientAdvancements.hasDone(start.getId().toString()))
 			manager.setSelectedTab(start, false);
 	}

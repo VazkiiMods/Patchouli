@@ -13,8 +13,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
@@ -27,7 +25,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Util;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.glfw.GLFW;
@@ -137,7 +134,7 @@ public abstract class GuiBook extends Screen {
 
 		super.render(mouseX, mouseY, partialTicks);
 
-		MinecraftForge.EVENT_BUS.post(new BookDrawScreenEvent(this, this.book.resourceLoc, mouseX, mouseY, partialTicks));
+		MinecraftForge.EVENT_BUS.post(new BookDrawScreenEvent(this, this.book.id, mouseX, mouseY, partialTicks));
 
 		drawTooltip(mouseX, mouseY);
 	}
@@ -232,7 +229,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public static void drawFromTexture(Book book, int x, int y, int u, int v, int w, int h) {
-		Minecraft.getInstance().textureManager.bindTexture(book.bookResource);
+		Minecraft.getInstance().textureManager.bindTexture(book.bookTexture);
 		blit(x, y, u, v, w, h, 512, 256);
 	}
 
@@ -483,7 +480,7 @@ public abstract class GuiBook extends Screen {
 	public static void drawPageFiller(Book book, int x, int y) {
 		RenderSystem.enableBlend();
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
-		Minecraft.getInstance().textureManager.bindTexture(book.fillerResource);
+		Minecraft.getInstance().textureManager.bindTexture(book.fillerTexture);
 		blit(x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 

@@ -19,7 +19,7 @@ public class PageSmelting extends PageDoubleRecipeRegistry<FurnaceRecipe> {
 	
     @Override
     protected void drawRecipe(FurnaceRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-        mc.textureManager.bindTexture(book.craftingResource);
+        mc.textureManager.bindTexture(book.craftingTexture);
         RenderSystem.enableBlend();
         AbstractGui.blit(recipeX, recipeY, 11, 71, 96, 24, 128, 128);
         parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);

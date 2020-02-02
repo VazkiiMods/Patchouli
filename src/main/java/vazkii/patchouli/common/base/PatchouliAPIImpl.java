@@ -72,7 +72,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	public ResourceLocation getOpenBookGui() {
 		Screen gui = Minecraft.getInstance().currentScreen;
 		if (gui instanceof GuiBook)
-			return ((GuiBook) gui).book.resourceLoc;
+			return ((GuiBook) gui).book.id;
 		return null;
 	}
 	

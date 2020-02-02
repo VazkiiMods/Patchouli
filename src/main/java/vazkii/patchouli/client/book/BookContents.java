@@ -130,7 +130,7 @@ public class BookContents extends AbstractReadStateHolder {
 		List<ResourceLocation> foundTemplates = new ArrayList<>();
 
 		try { 
-			String bookName = book.resourceLoc.getPath();
+			String bookName = book.id.getPath();
 
 			findFiles("categories", foundCategories);
 			findFiles("entries", foundEntries);
@@ -161,7 +161,7 @@ public class BookContents extends AbstractReadStateHolder {
 		} catch (Exception e) {
 			exception = e;
 			errored = true;
-			Patchouli.LOGGER.error("Error while loading contents for book {}", book.resourceLoc, e);
+			Patchouli.LOGGER.error("Error while loading contents for book {}", book.id, e);
 		}
 	}
 
@@ -169,7 +169,7 @@ public class BookContents extends AbstractReadStateHolder {
 		IModInfo mod = book.owner;
 		if(mod instanceof ModInfo) {
 			String id = mod.getModId();
-			BookRegistry.findFiles((ModInfo) mod, String.format("data/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getPath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
+			BookRegistry.findFiles((ModInfo) mod, String.format("data/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.id.getPath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
 		}
 	}
 	

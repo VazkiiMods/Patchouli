@@ -33,8 +33,7 @@ public class PatchouliSounds {
 		event.getRegistry().register(book_flip);
 	}
 	
-	public static SoundEvent getSound(String sound, SoundEvent fallback) {
-		ResourceLocation key = new ResourceLocation(sound);
+	public static SoundEvent getSound(ResourceLocation key, SoundEvent fallback) {
 		return ForgeRegistries.SOUND_EVENTS.containsKey(key)
 				? ForgeRegistries.SOUND_EVENTS.getValue(key)
 				: fallback;
