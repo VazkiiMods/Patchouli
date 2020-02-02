@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.page;
 
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
@@ -14,7 +15,8 @@ import vazkii.patchouli.common.book.Book;
 
 public class PageQuest extends PageWithText {
 
-	String trigger, title;
+	ResourceLocation trigger;
+	String title;
 	
 	transient BookTextRenderer infoText;
 	transient boolean isManual;
@@ -30,7 +32,7 @@ public class PageQuest extends PageWithText {
 	public void build(BookEntry entry, int pageNum) {
 		super.build(entry, pageNum);
 		
-		if(trigger != null && !trigger.isEmpty()) {
+		if(trigger != null) {
 			isManual = false;
 		} else isManual = true;
 	}
@@ -38,7 +40,7 @@ public class PageQuest extends PageWithText {
 	public boolean isCompleted(Book book) {
 		return isManual 
 				? PersistentData.data.getBookData(book).completedManualQuests.contains(entry.getResource().toString())
-				: trigger != null && !trigger.isEmpty() && ClientAdvancements.hasDone(trigger);
+				: trigger != null && ClientAdvancements.hasDone(trigger.toString());
 	}
 
 	@Override

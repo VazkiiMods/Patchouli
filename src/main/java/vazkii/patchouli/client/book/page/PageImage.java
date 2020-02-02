@@ -13,20 +13,15 @@ import vazkii.patchouli.client.book.page.abstr.PageWithText;
 
 public class PageImage extends PageWithText {
 
-	String images[];
+	ResourceLocation[] images;
 	String title;
 	boolean border;
 
-	transient ResourceLocation[] imageRes;
 	transient int index;
 	
 	@Override
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
-		
-		imageRes = new ResourceLocation[images.length];
-		for(int i = 0; i < images.length; i++)
-			imageRes[i] = new ResourceLocation(images[i]);
 		
 		int x = 90;
 		int y = 100;
@@ -36,7 +31,7 @@ public class PageImage extends PageWithText {
 	
 	@Override
 	public void render(int mouseX, int mouseY, float pticks) {
-		mc.textureManager.bindTexture(imageRes[index]);
+		mc.textureManager.bindTexture(images[index]);
 		
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;

@@ -64,7 +64,7 @@ public class PageMultiblock extends PageWithText {
 
 	String name;
 	@SerializedName("multiblock_id")
-	String multiblockId;
+	ResourceLocation multiblockId;
 	
 	@SerializedName("multiblock")
 	SerializedMultiblock serializedMultiblock;
@@ -77,8 +77,8 @@ public class PageMultiblock extends PageWithText {
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
-		if(multiblockId != null && !multiblockId.isEmpty()) {
-			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(new ResourceLocation(multiblockId));
+		if(multiblockId != null) {
+			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(multiblockId);
 			
 			if(mb instanceof AbstractMultiblock)
 				multiblockObj = (AbstractMultiblock) mb;

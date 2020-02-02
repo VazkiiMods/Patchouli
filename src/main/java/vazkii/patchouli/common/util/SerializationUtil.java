@@ -11,11 +11,14 @@ import java.util.function.Supplier;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.common.base.Patchouli;
 
 public class SerializationUtil {
 
-	public static final Gson RAW_GSON = new Gson();
+	public static final Gson RAW_GSON = new GsonBuilder()
+			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+			.create();
 	public static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	public static <T> T loadFromFile(File f, Class<? extends T> clazz, Supplier<T> baseCase) {

@@ -15,11 +15,10 @@ public abstract class PageDoubleRecipeRegistry<T extends IRecipe<?>> extends Pag
 	}
 	
 	@Override
-	protected T loadRecipe(BookEntry entry, String loc) {
-		if(loc == null)
+	protected T loadRecipe(BookEntry entry, ResourceLocation res) {
+		if(res == null)
 			return null;
 		
-		ResourceLocation res = new ResourceLocation(loc);
 		RecipeManager manager = Minecraft.getInstance().world.getRecipeManager();
 		IRecipe<?> tempRecipe = manager.getRecipe(res).orElse(null);
 		if(tempRecipe == null) // this is hacky but it works around Forge requiring custom recipes to have the prefix of the adding mod
