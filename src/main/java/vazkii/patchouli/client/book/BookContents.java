@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FilenameUtils;
@@ -140,7 +141,7 @@ public class BookContents extends AbstractReadStateHolder {
 			foundEntries.forEach(e -> loadEntry(e, new ResourceLocation(e.getNamespace(),
 					String.format("%s/%s/%s/entries/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath())), book));
 			foundTemplates.forEach(e -> loadTemplate(e, new ResourceLocation(e.getNamespace(),
-					String.format("%s/%s/%s/templates/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath())), book));
+					String.format("%s/%s/%s/templates/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath()))));
 
 			entries.forEach((res, entry) -> {
 				try {
@@ -221,14 +222,15 @@ public class BookContents extends AbstractReadStateHolder {
 		}
 	}
 	
-	private void loadTemplate(ResourceLocation key, ResourceLocation res, Book book) {
-		Supplier<BookTemplate> supplier = () -> {
-			try (Reader stream = loadLocalizedJson(res)) {
-				return ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookTemplate.class);
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
-			}
-		};
+	private void loadTemplate(ResourceLocation key, ResourceLocation res) {
+		String json;
+		try (BufferedReader stream = loadLocalizedJson(res)) {
+			json = stream.lines().collect(Collectors.joining("\n"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		Supplier<BookTemplate> supplier = () -> ClientBookRegistry.INSTANCE.gson.fromJson(json, BookTemplate.class);
 		
 		// test supplier
 		BookTemplate template = supplier.get();
@@ -238,7 +240,7 @@ public class BookContents extends AbstractReadStateHolder {
 		templates.put(key, supplier);
 	}
 
-	private Reader loadLocalizedJson(ResourceLocation res) {
+	private BufferedReader loadLocalizedJson(ResourceLocation res) {
 		ResourceLocation localized = new ResourceLocation(res.getNamespace(),
 				res.getPath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
 
@@ -246,7 +248,7 @@ public class BookContents extends AbstractReadStateHolder {
 		if (input == null)
 			throw new IllegalArgumentException(res + " does not exist.");
 
-		return new InputStreamReader(new BufferedInputStream(input), StandardCharsets.UTF_8);
+		return new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
 	}
 
 	protected InputStream loadJson(ResourceLocation resloc, ResourceLocation fallback) {
