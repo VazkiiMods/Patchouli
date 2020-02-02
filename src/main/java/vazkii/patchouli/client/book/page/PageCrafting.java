@@ -8,6 +8,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ICraftingRecipe;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.NonNullList;
@@ -21,7 +22,7 @@ import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 public class PageCrafting extends PageDoubleRecipeRegistry<ICraftingRecipe> {
 	
 	public PageCrafting() {
-		super(ICraftingRecipe.class);
+		super(IRecipeType.CRAFTING);
 	}
 	
 	@Override

@@ -6,17 +6,19 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.AbstractCookingRecipe;
+import net.minecraft.item.crafting.FurnaceRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 
-public class PageSmelting extends PageDoubleRecipeRegistry<AbstractCookingRecipe> {
+public class PageSmelting extends PageDoubleRecipeRegistry<FurnaceRecipe> {
 
 	public PageSmelting() {
-		super(AbstractCookingRecipe.class);
+		super(IRecipeType.SMELTING);
 	}
 	
     @Override
-    protected void drawRecipe(AbstractCookingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
+    protected void drawRecipe(FurnaceRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
         mc.textureManager.bindTexture(book.craftingResource);
         RenderSystem.enableBlend();
         AbstractGui.blit(recipeX, recipeY, 11, 71, 96, 24, 128, 128);
@@ -28,7 +30,7 @@ public class PageSmelting extends PageDoubleRecipeRegistry<AbstractCookingRecipe
 
 
     @Override
-    protected ItemStack getRecipeOutput(AbstractCookingRecipe recipe) {
+    protected ItemStack getRecipeOutput(FurnaceRecipe recipe) {
         if (recipe == null)
             return ItemStack.EMPTY;
         

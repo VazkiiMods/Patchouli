@@ -8,8 +8,8 @@
         {
             "type": "smelting",
             "text": "Haha yes",
-            "recipe": "minecraft:cobblestone",
-            "recipe2": "minecraft:iron_ore"
+            "recipe": "minecraft:stone",
+            "recipe2": "minecraft:iron_ingot"
         },
         {
             "type": "spotlight",
