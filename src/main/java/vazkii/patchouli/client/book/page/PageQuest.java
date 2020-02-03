@@ -18,11 +18,8 @@ public class PageQuest extends PageWithText {
 	ResourceLocation trigger;
 	String title;
 	
-	transient BookTextRenderer infoText;
 	transient boolean isManual;
-	transient int footerY;
-	transient Button button;
-	
+
 	@Override
 	public int getTextHeight() {
 		return 22;
@@ -31,10 +28,8 @@ public class PageQuest extends PageWithText {
 	@Override
 	public void build(BookEntry entry, int pageNum) {
 		super.build(entry, pageNum);
-		
-		if(trigger != null) {
-			isManual = false;
-		} else isManual = true;
+
+		isManual = trigger == null;
 	}
 	
 	public boolean isCompleted(Book book) {
@@ -48,12 +43,13 @@ public class PageQuest extends PageWithText {
 		super.onDisplayed(parent, left, top);
 		
 		if(isManual) {
-			addButton(button = new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, "", this::questButtonClicked));
-			updateButtonText();
+			Button button = new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, "", this::questButtonClicked);
+			addButton(button);
+			updateButtonText(button);
 		}
 	}
 	
-	private void updateButtonText() {
+	private void updateButtonText(Button button) {
 		boolean completed = isCompleted(parent.book);
 		String s = I18n.format(completed ? "patchouli.gui.lexicon.mark_incomplete" : "patchouli.gui.lexicon.mark_complete");
 		button.setMessage(s);
@@ -68,7 +64,7 @@ public class PageQuest extends PageWithText {
 		else data.completedManualQuests.add(res);
 		PersistentData.save();
 		
-		updateButtonText();
+		updateButtonText(button);
 		entry.markReadStateDirty();
 	}
 	

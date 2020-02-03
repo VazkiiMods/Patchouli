@@ -1,6 +1,7 @@
 package vazkii.patchouli.common.network.message;
 
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 
@@ -8,18 +9,18 @@ import java.util.function.Supplier;
 
 public class MessageOpenBookGui {
 
-	public final String book;
+	public final ResourceLocation book;
 	
 	public MessageOpenBookGui(PacketBuffer buf) {
-		book = buf.readString();
+		book = buf.readResourceLocation();
 	}
 	
-	public MessageOpenBookGui(String book) { 
+	public MessageOpenBookGui(ResourceLocation book) {
 		this.book = book;
 	}
 
 	public void encode(PacketBuffer buf) {
-		buf.writeString(book);
+		buf.writeResourceLocation(book);
 	}
 	
 	public boolean receive(Supplier<Context> context) {

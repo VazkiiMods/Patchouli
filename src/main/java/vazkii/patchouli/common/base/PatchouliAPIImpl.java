@@ -58,13 +58,13 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	
 	@Override
 	public void openBookGUI(ServerPlayerEntity player, ResourceLocation book) {
-		NetworkHandler.sendToPlayer(new MessageOpenBookGui(book.toString()), player); 
+		NetworkHandler.sendToPlayer(new MessageOpenBookGui(book), player);
 	}
 	
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void openBookGUI(ResourceLocation book) {
-		ClientBookRegistry.INSTANCE.displayBookGui(book.toString());
+		ClientBookRegistry.INSTANCE.displayBookGui(book);
 	}
 	
 	@Override

@@ -11,36 +11,52 @@ import com.google.gson.annotations.SerializedName;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 
-public class TemplateInclusion {
+import javax.annotation.Nullable;
 
+public class TemplateInclusion {
+	/**
+	 * The template to include.
+	 */
 	public String template;
+
+	/**
+	 * The scope under which the included template's variables are exposed to the including template.
+	 * Modified on load to become absolute, i.e. the full path from the top level page to the
+	 * included template's variables.
+	 */
 	public String as;
+
+	/**
+	 * Bindings to perform on the included template.
+	 * Right hand side can reference variables in the including template.
+	 */
 	@SerializedName("using")
-	public Map<String, String> map = new HashMap<>();
+	public Map<String, String> localBindings = new HashMap<>();
+
 	public int x, y;
 
 	transient List<String> visitedTemplates = new ArrayList<>();
 	
-	public void upperMerge(TemplateInclusion upper) {
-		if(upper == null)
+	public void upperMerge(@Nullable TemplateInclusion parent) {
+		if(parent == null)
 			return;
 		
-		if(upper.visitedTemplates.contains(template))
-			throw new IllegalArgumentException("Breaking when include template " + template + ", circular dependencies aren't allowed (stack = " + upper.visitedTemplates + ")");
+		if(parent.visitedTemplates.contains(template))
+			throw new IllegalArgumentException("Breaking when include template " + template + ", circular dependencies aren't allowed (stack = " + parent.visitedTemplates + ")");
 		
-		visitedTemplates = new ArrayList<>(upper.visitedTemplates);
+		visitedTemplates = new ArrayList<>(parent.visitedTemplates);
 		visitedTemplates.add(template);
-		as = upper.realName(as);
-		x += upper.x;
-		y += upper.y;
+		as = parent.realName(as);
+		x += parent.x;
+		y += parent.y;
 		
-		Set<String> keys = map.keySet();
+		Set<String> keys = localBindings.keySet();
 		for(String key : keys) {
-			String val = map.get(key);
+			String val = localBindings.get(key);
 			if(val.startsWith("#")) {
 				String realVal = val.substring(1);
-				if(upper.map.containsKey(realVal))
-					map.put(key, upper.map.get(realVal));
+				if(parent.localBindings.containsKey(realVal))
+					localBindings.put(key, parent.localBindings.get(realVal));
 			}
 		}
 	}
@@ -49,14 +65,14 @@ public class TemplateInclusion {
 		if(processor == null)
 			return;
 		
-		Set<String> keys = map.keySet();
+		Set<String> keys = localBindings.keySet();
 		for(String key : keys) {
-			String val = map.get(key);
+			String val = localBindings.get(key);
 			if(val.startsWith("#")) {
 				String realVal = val.substring(1);
 				String res = processor.process(realVal);
 				if(res != null)
-					map.put(key, res);
+					localBindings.put(key, res);
 			}
 		}
 	}
@@ -71,8 +87,8 @@ public class TemplateInclusion {
 		boolean isPrefixed = var.startsWith("#");
 		if(!prefixedOnly || isPrefixed) {
 			String key = isPrefixed ? var.substring(1) : var;
-			if(map.containsKey(key))
-				return map.get(key);
+			if(localBindings.containsKey(key))
+				return localBindings.get(key);
 			
 			return (isPrefixed ? "#" : "") + realName(key);
 		}

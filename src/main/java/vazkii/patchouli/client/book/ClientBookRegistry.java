@@ -82,11 +82,10 @@ public class ClientBookRegistry {
 		BookRegistry.INSTANCE.books.values().forEach(b -> b.reloadLocks(reset));
 	}
 	
-	public void displayBookGui(String bookStr) {
+	public void displayBookGui(ResourceLocation bookStr) {
 		currentLang = Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getCode();
 		
-		ResourceLocation res = new ResourceLocation(bookStr);
-		Book book = BookRegistry.INSTANCE.books.get(res);
+		Book book = BookRegistry.INSTANCE.books.get(bookStr);
 		
 		if(book != null) {
 			if (!book.contents.getCurrentGui().canBeOpened()) {

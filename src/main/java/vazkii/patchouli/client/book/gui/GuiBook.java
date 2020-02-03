@@ -433,7 +433,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public void drawCenteredStringNoShadow(String s, int x, int y, int color) {
-		font.drawString(s, x - font.getStringWidth(s) / 2, y, color);
+		font.drawString(s, x - font.getStringWidth(s) / 2.0F, y, color);
 	}
 
 	private int getMaxAllowedScale() {
