@@ -7,7 +7,7 @@ package vazkii.patchouli.api;
  * gson. Any fields that you don't want to be read from the json should have
  * the transient keyword. 
  */
-public interface ICustomComponent extends IVariableAvailableCallback {
+public interface ICustomComponent extends IVariablesAvailableCallback {
 
 	/**
 	 * Called when this component is built, after variables have been resolved with {@link #onVariablesAvailable}.

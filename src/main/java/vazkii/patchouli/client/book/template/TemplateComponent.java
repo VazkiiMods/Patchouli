@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import vazkii.patchouli.api.IComponentProcessor;
-import vazkii.patchouli.api.IVariableAvailableCallback;
+import vazkii.patchouli.api.IVariablesAvailableCallback;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.BookEntry;
@@ -15,7 +15,7 @@ import vazkii.patchouli.common.base.PatchouliConfig;
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
-public abstract class TemplateComponent implements IVariableAvailableCallback {
+public abstract class TemplateComponent implements IVariablesAvailableCallback {
 
 	public String group = "";
 	public int x, y;

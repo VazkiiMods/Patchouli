@@ -12,7 +12,7 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import net.minecraft.item.ItemStack;
 import vazkii.patchouli.api.IComponentProcessor;
-import vazkii.patchouli.api.IVariableAvailableCallback;
+import vazkii.patchouli.api.IVariablesAvailableCallback;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.common.util.EntityUtil;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -40,7 +40,7 @@ public class VariableAssigner {
 		FUNCTIONS.put("i18n", I18n::format);
 	}
 
-	public static void assignVariableHolders(IVariableAvailableCallback object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
+	public static void assignVariableHolders(IVariablesAvailableCallback object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
 		Context c = new Context(object, variables, processor, encapsulation);
 		object.onVariablesAvailable(key -> resolveString(key, c));
 	}
