@@ -2,7 +2,6 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 
-import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.BookTextRenderer;
@@ -10,11 +9,13 @@ import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 
+import java.util.function.Function;
+
 public class ComponentText extends TemplateComponent {
 
-	@VariableHolder
 	public String text;
-	@VariableHolder @SerializedName("color")
+
+	@SerializedName("color")
 	public String colorStr;
 	
 	@SerializedName("max_width")
@@ -33,7 +34,14 @@ public class ComponentText extends TemplateComponent {
 			color = page.book.textColor;
 		}
 	}
-	
+
+	@Override
+	public void onVariablesAvailable(Function<String, String> lookup) {
+		super.onVariablesAvailable(lookup);
+		text = lookup.apply(text);
+		colorStr = lookup.apply(colorStr);
+	}
+
 	@Override
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
 		textRenderer = new BookTextRenderer(parent, text, x, y, maxWidth, lineHeight, color);

@@ -1,11 +1,8 @@
 package vazkii.patchouli.client.book.template;
 
 import java.lang.reflect.Field;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,24 +12,18 @@ import org.apache.commons.lang3.text.WordUtils;
 
 import net.minecraft.item.ItemStack;
 import vazkii.patchouli.api.IComponentProcessor;
+import vazkii.patchouli.api.IVariableAvailableCallback;
 import vazkii.patchouli.api.IVariableProvider;
-import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.common.util.EntityUtil;
 import vazkii.patchouli.common.util.ItemStackUtil;
+
+import javax.annotation.Nullable;
 
 public class VariableAssigner {
 	
 	private static final Pattern INLINE_VAR_PATTERN = Pattern.compile("([^#]*)(#[^#]+)#(.*)");
 	private static final Pattern FUNCTION_PATTERN = Pattern.compile("(.+)->(.+)");
 
-	private static final Map<Class<?>, Assigner> ASSIGNERS = new HashMap<>();
-	static {
-		ASSIGNERS.put(String.class, VariableAssigner::assignStringField);
-		ASSIGNERS.put(String[].class, VariableAssigner::assignStringArrayField);
-		ASSIGNERS.put(List.class, VariableAssigner::assignList);
-		ASSIGNERS.put(Map.class, VariableAssigner::assignMap);
-	}
-	
 	private static final Map<String, Function<String, String>> FUNCTIONS = new HashMap<>();
 	static {
 		FUNCTIONS.put("iname", VariableAssigner::iname);
@@ -49,83 +40,12 @@ public class VariableAssigner {
 		FUNCTIONS.put("i18n", I18n::format);
 	}
 
-	public static void assignVariableHolders(Object object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
-		assignVariableHolders(new Context(object, variables, processor, encapsulation));
+	public static void assignVariableHolders(IVariableAvailableCallback object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
+		Context c = new Context(object, variables, processor, encapsulation);
+		object.onVariablesAvailable(key -> resolveString(key, c));
 	}
 
-	public static void assignVariableHolders(Context context) {
-		Class<?> clazz = context.object.getClass();
-		Field[] fields = clazz.getFields();
-
-		for(Field f : fields)
-			if(f.getAnnotation(VariableHolder.class) != null)
-				assignField(f, context);
-	}
-
-	private static void assignField(Field f, Context c) {
-		Class<?> type = f.getType();
-		f.setAccessible(true);
-		
-		try {
-			if(ASSIGNERS.containsKey(type)) {
-				ASSIGNERS.get(type).assign(f, c);
-			} else if(c.object != null) {
-				Object o = f.get(c.object);
-				assignVariableHolders(c.rewrap(o));
-			}
-		} catch(IllegalAccessException e) {
-			throw new RuntimeException("Error assigning variables to component", e);
-		}
-	}
-
-	private static void assignStringField(Field f, Context c) throws IllegalAccessException {
-		String s = (String) f.get(c.object);
-		String res = resolveString(s, c);
-		if(res != null)
-			f.set(c.object, res);
-	}
-
-	private static void assignStringArrayField(Field f, Context c)  throws IllegalAccessException {
-		String[] arr = (String[]) f.get(c.object);
-
-		for(int i = 0; i < arr.length; i++) {
-			String s = arr[i];
-			String res = resolveString(s, c); 
-			if(res != null)
-				arr[i] = res;
-		}
-	}
-	
-	private static void assignList(Field f, Context c) throws IllegalAccessException {
-		List list = (List) f.get(c.object);
-		
-		for(int i = 0; i < list.size(); i++) {
-			Object o = list.get(i);
-			
-			if(o instanceof String) {
-				String res = resolveString((String) o, c);
-				list.set(i, res);
-			}
-		}
-	}
-
-	private static void assignMap(Field f, Context c)  throws IllegalAccessException {
-		Map map = (Map) f.get(c.object);
-		Collection<Entry> entries = map.entrySet();
-
-		for(Entry e : entries) {
-			Object v = e.getValue();
-
-			if(v instanceof String) {
-				Object k = e.getKey();
-				String res = resolveString((String) v, c);
-				if(res != null)
-					e.setValue(res);
-			}
-		}
-	}
-	
-	private static String resolveString(String curr, Context c) {
+	private static String resolveString(@Nullable String curr, Context c) {
 		if(curr == null || curr.isEmpty())
 			return null;
 		

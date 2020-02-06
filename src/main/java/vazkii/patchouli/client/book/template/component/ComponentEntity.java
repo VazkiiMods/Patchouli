@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -19,7 +18,7 @@ import java.util.function.Function;
 
 public class ComponentEntity extends TemplateComponent {
 
-	@VariableHolder @SerializedName("entity")
+	@SerializedName("entity")
 	public String entityId;
 	
 	@SerializedName("render_size")
@@ -51,6 +50,12 @@ public class ComponentEntity extends TemplateComponent {
 		
 		if(entity != null)
 			renderEntity(page.mc.world, rotate ?  ClientTicker.total : defaultRotation);
+	}
+
+	@Override
+	public void onVariablesAvailable(Function<String, String> lookup) {
+		super.onVariablesAvailable(lookup);
+		entityId = lookup.apply(entityId);
 	}
 
 	private void renderEntity(World world, float rotation) {

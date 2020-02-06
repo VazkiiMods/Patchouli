@@ -1,20 +1,20 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.platform.GlStateManager;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 
+import java.util.function.Function;
+
 public class ComponentHeader extends TemplateComponent {
 
-	@VariableHolder
 	public String text;
-	@VariableHolder @SerializedName("color")
+
+	@SerializedName("color")
 	public String colorStr;
 	
 	boolean centered = true;
@@ -47,5 +47,11 @@ public class ComponentHeader extends TemplateComponent {
 		else page.fontRenderer.drawString(page.i18n(text), 0, 0, color);
 		RenderSystem.popMatrix();
 	}
-	
+
+	@Override
+	public void onVariablesAvailable(Function<String, String> lookup) {
+		super.onVariablesAvailable(lookup);
+		text = lookup.apply(text);
+		colorStr = lookup.apply(colorStr);
+	}
 }

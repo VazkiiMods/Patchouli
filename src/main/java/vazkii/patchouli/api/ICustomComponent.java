@@ -6,26 +6,12 @@ package vazkii.patchouli.api;
  * <b>WARNING:</b> Any fields you declare in instances of this will be deserialized from
  * gson. Any fields that you don't want to be read from the json should have
  * the transient keyword. 
- * <br><br>
- * Non-transient fields you declare in instances of this may have the
- * {@link VariableHolder} annotation associated to them, and as such, they'll load variables
- * the same way any built-in template would. Any fields with a @VariableHolder must be public.
- * <br><br>
- * The following types may be variable holders:
- * <ul>
- * <li> String </li>
- * <li> String[] </li>
- * <li> List (as String list)</li>
- * <li> Map (as String -> String map)</li>
- * <li> Object (any object can be VariableHolder, causing the variable assigner to deepen its
- * search into the VariableHolder fields that it contains) </li>
- * </ul>
  */
-public interface ICustomComponent {
+public interface ICustomComponent extends IVariableAvailableCallback {
 
 	/**
-	 * Called when this component is built. Take the chance to read variables and set
-	 * any local positions here.
+	 * Called when this component is built, after variables have been resolved with {@link #onVariablesAvailable}.
+	 * Take the chance to parse String variables into game objects, perform error checking, and setup any local positions here.
 	 */
 	public void build(int componentX, int componentY, int pageNum);
 
