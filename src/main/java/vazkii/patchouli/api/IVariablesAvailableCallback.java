@@ -9,8 +9,7 @@ public interface IVariablesAvailableCallback {
 	 *               first expanding all inline variables,
 	 *               then attempting to apply "->" derivations if possible, otherwise looking up the string as a
 	 *               plain variable from the template environment<br />
-	 *               <b>May return null</b> if the queried variable couldn't be found.
-	 *               Gracefully handles nulls given as input.
+	 *               Gracefully handles nulls given as input, but will never return null itself.
 	 */
 	void onVariablesAvailable(Function<String, String> lookup);
 

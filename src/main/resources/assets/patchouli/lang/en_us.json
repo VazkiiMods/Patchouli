@@ -1,6 +1,9 @@
 {
 	"item.patchouli:guide_book.name": "Guide Book",
-	
+
+	"item.patchouli.comprehensive_test_book.name": "Comprehensive Test Book",
+	"item.patchouli.comprehensive_test_book.landing": "What will hopefully become a comprehensive test book for all of Patchouli, instead of the mishmash of random spaghetti we have right now.",
+
 	"item.patchouli:test_book_1.name": "Test Book 1",
 	"item.patchouli:test_book_1.landing": "Not as fun landing text but still here.",
 	

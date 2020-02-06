@@ -1,0 +1,13 @@
+{
+  "name": "Template Nesting",
+  "category": "templates",
+  "icon": "minecraft:written_book",
+  "pages": [
+    {
+      "type": "nesting",
+      "texttext": "Text component text defined in entry json",
+      "child1.item": "minecraft:melon_slice",
+      "child1.image": "minecraft:textures/item/end_crystal.png"
+    }
+  ]
+}

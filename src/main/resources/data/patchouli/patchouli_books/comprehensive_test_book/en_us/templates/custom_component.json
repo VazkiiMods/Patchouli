@@ -1,0 +1,10 @@
+{
+  "components": [
+    {
+      "type": "custom",
+      "class": "vazkii.patchouli.client.book.template.test.ComponentCustomTest",
+      "x": 10,
+      "y": 40
+    }
+  ]
+}

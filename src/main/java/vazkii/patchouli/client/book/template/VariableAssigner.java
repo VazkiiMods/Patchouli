@@ -42,7 +42,10 @@ public class VariableAssigner {
 
 	public static void assignVariableHolders(IVariablesAvailableCallback object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
 		Context c = new Context(object, variables, processor, encapsulation);
-		object.onVariablesAvailable(key -> resolveString(key, c));
+		object.onVariablesAvailable(key -> {
+			String resolved = resolveString(key, c);
+			return resolved != null ? resolved : key;
+		});
 	}
 
 	private static String resolveString(@Nullable String curr, Context c) {
