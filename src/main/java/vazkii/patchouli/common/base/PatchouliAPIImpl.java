@@ -18,6 +18,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.apache.commons.io.IOUtils;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
@@ -82,7 +83,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 	
 	@Override
-	public ItemStack getBookStack(String book) {
+	public ItemStack getBookStack(ResourceLocation book) {
 		return ItemModBook.forBook(book);
 	}
 	
@@ -91,6 +92,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 		InputStream testStream = streamProvider.get();
 		if (testStream == null)
 			throw new NullPointerException("Stream provider can't return a null stream");
+		IOUtils.closeQuietly(testStream);
 		
 		if (BookContents.addonTemplates.containsKey(res))
 			throw new IllegalArgumentException("Template " + res + " is already registered");

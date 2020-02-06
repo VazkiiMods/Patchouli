@@ -15,11 +15,11 @@ public class CommonProxy {
 		bus.addListener(this::setup);
 
 		PatchouliConfig.setup();
+		PatchouliAPI.instance = PatchouliAPIImpl.INSTANCE;
 	}
 
 	public void setup(FMLCommonSetupEvent event) {
-		PatchouliAPI.instance = PatchouliAPIImpl.INSTANCE;
-		
+
 		PatchouliConfig.load();
 		
 		PatchouliSounds.preInit();

@@ -75,14 +75,14 @@ public class ItemModBook extends Item {
 	}
 
 	public static ItemStack forBook(Book book) {
-		return forBook(book.id.toString());
+		return forBook(book.id);
 	}
 	
-	public static ItemStack forBook(String book) {
+	public static ItemStack forBook(ResourceLocation book) {
 		ItemStack stack = new ItemStack(PatchouliItems.book);
 
 		CompoundNBT cmp = new CompoundNBT();
-		cmp.putString(TAG_BOOK, book);
+		cmp.putString(TAG_BOOK, book.toString());
 		stack.setTag(cmp);
 
 		return stack;
@@ -102,8 +102,8 @@ public class ItemModBook extends Item {
 			return null;
 
 		String bookStr = stack.getTag().getString(TAG_BOOK);
-		ResourceLocation res = new ResourceLocation(bookStr);
-		return BookRegistry.INSTANCE.books.get(res);
+		ResourceLocation res = ResourceLocation.tryCreate(bookStr);
+		return res == null ? null : BookRegistry.INSTANCE.books.get(res);
 	}
 
 	@Override

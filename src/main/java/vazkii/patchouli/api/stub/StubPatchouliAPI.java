@@ -61,7 +61,7 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 	
 	@Override
-	public ItemStack getBookStack(String book) {
+	public ItemStack getBookStack(ResourceLocation book) {
 		return ItemStack.EMPTY;
 	}
 	
