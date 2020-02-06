@@ -9,12 +9,9 @@ import net.minecraftforge.eventbus.api.Event;
  * book is reloaded.
  */
 public class BookContentsReloadEvent
-    extends Event {
-
-  public final ResourceLocation book;
+    extends BookEvent {
 
   public BookContentsReloadEvent(ResourceLocation book) {
-
-    this.book = book;
+    super(book);
   }
 }
