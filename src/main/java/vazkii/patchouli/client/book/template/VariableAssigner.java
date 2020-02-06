@@ -1,6 +1,5 @@
 package vazkii.patchouli.client.book.template;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -41,7 +40,7 @@ public class VariableAssigner {
 	}
 
 	public static void assignVariableHolders(IVariablesAvailableCallback object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
-		Context c = new Context(object, variables, processor, encapsulation);
+		Context c = new Context(variables, processor, encapsulation);
 		object.onVariablesAvailable(key -> {
 			String resolved = resolveString(key, c);
 			return resolved != null ? resolved : key;
@@ -157,23 +156,15 @@ public class VariableAssigner {
 	
 	private static class Context {
 
-		final Object object;
 		final IVariableProvider<String> variables;
 		final IComponentProcessor processor;
 		final TemplateInclusion encapsulation;
+		final Map<String, String> cachedVars = new HashMap<>();
 
-		final Map<String, String> cachedVars;
-
-		Context(Object object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
-			this(object, variables, processor, encapsulation, new HashMap<>());
-		}
-
-		Context(Object object, IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation, Map<String, String> cachedVars) {
-			this.object = object;
+		Context(IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
 			this.variables = variables;
 			this.processor = processor;
 			this.encapsulation = encapsulation;
-			this.cachedVars = cachedVars;
 		}
 
 		String getCached(String s) {
@@ -184,14 +175,6 @@ public class VariableAssigner {
 			cachedVars.put(k, v);
 		}
 
-		Context rewrap(Object object) {
-			return new Context(object, variables, processor, encapsulation, cachedVars);
-		}
-
-	}
-
-	private static interface Assigner {
-		void assign(Field f, Context c) throws IllegalAccessException;
 	}
 
 }
