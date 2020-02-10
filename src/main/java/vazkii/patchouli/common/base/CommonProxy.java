@@ -23,8 +23,6 @@ public class CommonProxy {
 		PatchouliConfig.load();
 		
 		PatchouliSounds.preInit();
-		MultiblockRegistry.preInit();
-
 		BookRegistry.INSTANCE.init();
 
 		NetworkHandler.registerMessages();
