@@ -94,14 +94,15 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 			throw new NullPointerException("Stream provider can't return a null stream");
 		IOUtils.closeQuietly(testStream);
 		
-		if (BookContents.addonTemplates.containsKey(res))
-			throw new IllegalArgumentException("Template " + res + " is already registered");
-		
-		BookContents.addonTemplates.put(res, () -> {
+		Supplier<BookTemplate> prev = BookContents.addonTemplates.put(res, () -> {
 			InputStream stream = streamProvider.get();
 			InputStreamReader reader = new InputStreamReader(stream);
 			return ClientBookRegistry.INSTANCE.gson.fromJson(reader, BookTemplate.class);
 		});
+
+		if (prev != null) {
+			throw new IllegalArgumentException("Template " + res + " is already registered");
+		}
 	}
 	
 	@Override

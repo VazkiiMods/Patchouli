@@ -1,8 +1,8 @@
 package vazkii.patchouli.common.base;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -18,7 +18,7 @@ public class PatchouliConfig {
 	public static ForgeConfigSpec.ConfigValue<Boolean> testingMode;
 	public static ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
 
-	private static Map<String, Boolean> configFlags = new HashMap<>();
+	private static Map<String, Boolean> configFlags = new ConcurrentHashMap<>();
 
 	public static void setup() {
 		Pair<Loader, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Loader::new);
