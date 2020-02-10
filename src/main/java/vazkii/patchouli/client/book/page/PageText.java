@@ -50,7 +50,7 @@ public class PageText extends PageWithText {
 		}
 
 		else if(title != null && !title.isEmpty())
-			parent.drawCenteredStringNoShadow(title, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+			parent.drawCenteredStringNoShadow(i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 	}
 
 }
