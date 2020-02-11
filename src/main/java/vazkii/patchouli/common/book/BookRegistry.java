@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -121,7 +122,7 @@ public class BookRegistry {
 		if (mod.getModId().equals("minecraft") || mod.getModId().equals("forge"))
 			return false;
 
-		File source = mod.getOwningFile().getFile().getFilePath().toFile();
+		Path source = mod.getOwningFile().getFile().getFilePath();
 
 		FileSystem fs = null;
 		boolean success = true;
@@ -129,34 +130,25 @@ public class BookRegistry {
 		try {
 			Path root = null;
 
-			if (source.isFile()) {
-				try {
-					fs = FileSystems.newFileSystem(source.toPath(), null);
-					root = fs.getPath("/" + base);
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			} else if (source.isDirectory())
-				root = source.toPath().resolve(base);
+			if (Files.isRegularFile(source)) {
+				fs = FileSystems.newFileSystem(source, null);
+				root = fs.getPath("/" + base);
+			} else if (Files.isDirectory(source))
+				root = source.resolve(base);
 
 			if (root == null || !Files.exists(root))
 				return defaultUnfoundRoot;
 
 			if (preprocessor != null) {
 				Boolean cont = preprocessor.apply(root);
-				if (cont == null || !cont.booleanValue())
+				if (cont == null || !cont)
 					return false;
 			}
 
 			if (processor != null) {
-				Iterator<Path> itr = null;
-				try {
-					itr = Files.walk(root).iterator();
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
+				Iterator<Path> itr = Files.walk(root).iterator();
 
-				while (itr != null && itr.hasNext()) {
+				while (itr.hasNext()) {
 					Boolean cont = processor.apply(root, itr.next());
 
 					if (visitAllFiles)
@@ -165,6 +157,8 @@ public class BookRegistry {
 						return false;
 				}
 			}
+		} catch(IOException ex) {
+			throw new UncheckedIOException(ex);
 		} finally {
 			IOUtils.closeQuietly(fs);
 		}

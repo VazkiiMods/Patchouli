@@ -17,26 +17,24 @@ public class GuiButtonEntry extends Button {
 	
 	private static final int ANIM_TIME = 5;
 
-	GuiBook parent;
-	private BookEntry entry;
+	private final GuiBook parent;
+	private final BookEntry entry;
 	private float timeHovered;
 
 	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, Button.IPressable onPress) {
-		super(x, y, GuiBook.PAGE_WIDTH, 10, "", onPress);
+		super(x, y, GuiBook.PAGE_WIDTH, 10, entry.getName(), onPress);
 		this.parent = parent;
 		this.entry = entry;
 	}
 	
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-		if(active && visible) {
-			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
-			
-			if(isHovered)
+	public void renderButton(int mouseX, int mouseY, float partialTicks) {
+		if(active) {
+			if(isHovered())
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
 			else timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
 			
-			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHovered ? partialTicks : -partialTicks)));
+			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHovered() ? partialTicks : -partialTicks)));
 			float widthFract = time / ANIM_TIME;
 			boolean locked = entry.isLocked();
 			

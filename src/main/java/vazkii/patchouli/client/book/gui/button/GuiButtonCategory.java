@@ -30,7 +30,7 @@ public class GuiButtonCategory extends Button {
 	}	
 
 	public GuiButtonCategory(GuiBook parent, int x, int y, BookIcon icon, String name, Button.IPressable onPress) {
-		super(parent.bookLeft + x, parent.bookTop + y, 20, 20, "", onPress);
+		super(parent.bookLeft + x, parent.bookTop + y, 20, 20, name, onPress);
 		this.parent = parent;
 		this.u = x;
 		this.v = y;
@@ -39,15 +39,13 @@ public class GuiButtonCategory extends Button {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-		if(active && visible) {
-			isHovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
-
-			if(isHovered)
+	public void renderButton(int mouseX, int mouseY, float partialTicks) {
+		if(active) {
+			if(isHovered())
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
 			else timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
 
-			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHovered ? partialTicks : -partialTicks)));
+			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHovered() ? partialTicks : -partialTicks)));
 			float transparency = 0.5F - (time / ANIM_TIME) * 0.5F;
 			boolean locked = category != null && category.isLocked();
 

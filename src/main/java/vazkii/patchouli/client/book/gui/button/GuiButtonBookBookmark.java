@@ -30,14 +30,14 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-		super.render(mouseX, mouseY, partialTicks);
+	public void renderButton(int mouseX, int mouseY, float partialTicks) {
+		super.renderButton(mouseX, mouseY, partialTicks);
 
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
-		if(visible && bookmark != null && entry != null) {
+		if(bookmark != null && entry != null) {
 			RenderSystem.pushMatrix();
 			RenderSystem.scalef(0.5F, 0.5F, 0.5F);
-			int px = x * 2 + (isHovered ? 6 : 2);
+			int px = x * 2 + (isHovered() ? 6 : 2);
 			int py = y * 2 + 2;
 			entry.getIcon().render(px, py);
 

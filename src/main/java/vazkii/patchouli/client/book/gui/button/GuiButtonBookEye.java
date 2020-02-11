@@ -17,10 +17,10 @@ public class GuiButtonBookEye extends GuiButtonBook {
 	}
 	
 	@Override
-	public void render(int mouseX, int mouseY, float partialTicks) {
-		super.render(mouseX, mouseY, partialTicks);
+	public void renderButton(int mouseX, int mouseY, float partialTicks) {
+		super.renderButton(mouseX, mouseY, partialTicks);
 		
-		if(visible && !PersistentData.data.clickedVisualize && (ClientTicker.ticksInGame) % 20 < 10)
+		if(!PersistentData.data.clickedVisualize && (ClientTicker.ticksInGame) % 20 < 10)
 			parent.getMinecraft().fontRenderer.drawStringWithShadow("!", x, y, 0xFF3333);
 	}
 
