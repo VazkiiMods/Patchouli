@@ -31,7 +31,7 @@ public class PageText extends PageWithText {
 			String smolText = "";
 			
 			if(mc.gameSettings.advancedItemTooltips) {
-				ResourceLocation res = parent.getEntry().getResource();
+				ResourceLocation res = parent.getEntry().getId();
 				smolText = res.toString();
 			} else if(entry.isExtension()) {
 				String name = entry.getTrueProvider().getOwnerName();

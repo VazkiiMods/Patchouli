@@ -16,8 +16,8 @@ public class GuiButtonEntry extends Button {
 	
 	private static final int ANIM_TIME = 5;
 
-	GuiBook parent;
-	private BookEntry entry;
+	private final GuiBook parent;
+	private final BookEntry entry;
 	private float timeHovered;
 
 	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, Button.IPressable onPress) {

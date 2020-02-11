@@ -46,7 +46,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	@SerializedName("extra_recipe_mappings")
 	private Map<String, Integer> extraRecipeMappings;
 
-	private transient ResourceLocation resource;
+	private transient ResourceLocation id;
 	transient Book book;
 	private transient Book trueProvider;
 	private transient BookCategory lcategory = null;
@@ -137,8 +137,8 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		return entryColor;
 	}
 
-	public ResourceLocation getResource() {
-		return resource;
+	public ResourceLocation getId() {
+		return id;
 	}
 
 	public boolean canAdd() {
@@ -182,11 +182,14 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		} else this.book = book;
 	}
 
-	public void build(ResourceLocation resource) {
+	public void setId(ResourceLocation id) {
+		this.id = id;
+	}
+
+	public void build() {
 		if(built)
 			return;
 
-		this.resource = resource;
 		if (entryColorRaw != null) {
 			this.entryColor = Integer.parseInt(entryColorRaw, 16);
 		} else {
@@ -198,7 +201,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 					pages[i].build(this, i);
 					realPages.add(pages[i]);
 				} catch(Exception e) {
-					throw new RuntimeException("Error while loading entry " + resource + " page " + i, e);
+					throw new RuntimeException("Error while loading entry " + id + " page " + i, e);
 				}
 			}
 
@@ -210,7 +213,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 				try {
 					stacks = ItemStackUtil.loadStackListFromString(key);
 				} catch (Exception e) {
-					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: {}", key, pageNumber, resource, e.getMessage());
+					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: {}", key, pageNumber, id, e.getMessage());
 					continue;
 				}
 				if (!stacks.isEmpty() && pageNumber < pages.length) {
@@ -218,7 +221,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 						addRelevantStack(stack, pageNumber);
 					}
 				} else {
-					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: Empty entry or page out of bounds", key, pageNumber, resource);
+					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: Empty entry or page out of bounds", key, pageNumber, id);
 				}
 			}
 		}
@@ -253,7 +256,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	@Override
 	protected EntryDisplayState computeReadState() {
 		BookData data = PersistentData.data.getBookData(book);
-		if(data != null && getResource() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getResource().toString()))
+		if(data != null && getId() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getId().toString()))
 			return EntryDisplayState.UNREAD;
 
 		if(turnin != null && !turnin.isEmpty() && !ClientAdvancements.hasDone(turnin))

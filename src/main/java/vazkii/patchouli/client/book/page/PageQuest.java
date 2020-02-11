@@ -37,7 +37,7 @@ public class PageQuest extends PageWithText {
 	
 	public boolean isCompleted(Book book) {
 		return isManual 
-				? PersistentData.data.getBookData(book).completedManualQuests.contains(entry.getResource().toString())
+				? PersistentData.data.getBookData(book).completedManualQuests.contains(entry.getId().toString())
 				: trigger != null && !trigger.isEmpty() && ClientAdvancements.hasDone(trigger);
 	}
 
@@ -58,7 +58,7 @@ public class PageQuest extends PageWithText {
 	}
 	
 	protected void questButtonClicked(Button button) {
-		String res = entry.getResource().toString();
+		String res = entry.getId().toString();
 		BookData data = PersistentData.data.getBookData(parent.book);
 		
 		if(data.completedManualQuests.contains(res))

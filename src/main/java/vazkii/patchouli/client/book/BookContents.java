@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayDeque;
@@ -13,9 +14,12 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FilenameUtils;
@@ -138,16 +142,19 @@ public class BookContents extends AbstractReadStateHolder {
 			
 			foundCategories.forEach(c -> loadCategory(c, new ResourceLocation(c.getNamespace(),
 					String.format("%s/%s/%s/categories/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, c.getPath())), book));
-			foundEntries.forEach(e -> loadEntry(e, new ResourceLocation(e.getNamespace(),
-					String.format("%s/%s/%s/entries/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath())), book));
+			foundEntries.stream().map(id -> loadEntry(id, new ResourceLocation(id.getNamespace(),
+						String.format("%s/%s/%s/entries/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, id.getPath())), book))
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.forEach(b -> entries.put(b.getId(), b));
 			foundTemplates.forEach(e -> loadTemplate(e, new ResourceLocation(e.getNamespace(),
 					String.format("%s/%s/%s/templates/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath())), book));
 
-			entries.forEach((res, entry) -> {
+			entries.values().forEach(entry -> {
 				try {
-					entry.build(res);
+					entry.build();
 				} catch(Exception e) {
-					throw new RuntimeException("Error while loading entry " + res, e);
+					throw new RuntimeException("Error building entry " + entry.getId(), e);
 				}
 			});
 
@@ -201,25 +208,29 @@ public class BookContents extends AbstractReadStateHolder {
 		}
 	}
 
-	private void loadEntry(ResourceLocation key, ResourceLocation res, Book book) {
-		try (Reader stream = loadLocalizedJson(res)) {
+	private Optional<BookEntry> loadEntry(ResourceLocation id, ResourceLocation file, Book book) {
+		try (Reader stream = loadLocalizedJson(file)) {
 			BookEntry entry = ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookEntry.class);
 			if (entry == null)
-				throw new IllegalArgumentException(res + " does not exist.");
+				throw new IllegalArgumentException(file + " does not exist.");
 
 			entry.setBook(book);
 			if (entry.canAdd()) {
 				BookCategory category = entry.getCategory();
 				if (category != null)
 					category.addEntry(entry);
-				else
-					Patchouli.LOGGER.error("Entry {} in {} does not have a valid category.", key, res);
+				else {
+					String msg = String.format("Entry in file %s does not have a valid category.", file);
+					throw new RuntimeException(msg);
+				}
 
-				entries.put(key, entry);
+				entry.setId(id);
+				return Optional.of(entry);
 			}
 		} catch (IOException ex) {
-			Patchouli.LOGGER.error("Exception reading entry {}", res);
+			throw new UncheckedIOException(ex);
 		}
+		return Optional.empty();
 	}
 	
 	private void loadTemplate(ResourceLocation key, ResourceLocation res, Book book) {
