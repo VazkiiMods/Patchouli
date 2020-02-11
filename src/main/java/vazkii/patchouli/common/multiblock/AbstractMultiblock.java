@@ -14,7 +14,6 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.lighting.WorldLightManager;
@@ -28,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
-    public ResourceLocation res;
+    public ResourceLocation id;
     protected int offX, offY, offZ;
     protected int viewOffX, viewOffY, viewOffZ;
     private boolean symmetrical;
@@ -72,12 +71,12 @@ public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
 
     @Override
     public ResourceLocation getID() {
-        return res;
+        return id;
     }
 
     @Override
-    public IMultiblock setResourceLocation(ResourceLocation res) {
-        this.res = res;
+    public IMultiblock setId(ResourceLocation res) {
+        this.id = res;
         return this;
     }
 

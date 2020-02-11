@@ -38,7 +38,7 @@ public class StubMultiblock implements IMultiblock {
 	}
 
 	@Override
-	public IMultiblock setResourceLocation(ResourceLocation res) {
+	public IMultiblock setId(ResourceLocation res) {
 		return this;
 	}
 	

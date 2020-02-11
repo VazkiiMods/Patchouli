@@ -16,7 +16,7 @@ public class ComponentCustom extends TemplateComponent {
 	@SerializedName("class")
 	String clazz;
 
-	transient ICustomComponent callbacks;
+	private transient ICustomComponent callbacks;
 
 	@Override
 	public void onVariablesAvailable(Function<String, String> lookup) {

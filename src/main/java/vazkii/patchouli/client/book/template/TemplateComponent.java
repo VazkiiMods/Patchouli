@@ -29,7 +29,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 	public String guard = null;
 
 	transient boolean isVisible = true;
-	transient boolean compiled = false;
+	private transient boolean compiled = false;
 	
 	public transient JsonObject sourceObject;
 
