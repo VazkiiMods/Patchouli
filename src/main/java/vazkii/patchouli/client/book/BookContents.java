@@ -150,19 +150,19 @@ public class BookContents extends AbstractReadStateHolder {
 			foundTemplates.forEach(e -> loadTemplate(e, new ResourceLocation(e.getNamespace(),
 					String.format("%s/%s/%s/templates/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath())), book));
 
+			categories.forEach((id, category) -> {
+				try {
+					category.build(id);
+				} catch(Exception e) {
+					throw new RuntimeException("Error while building category " + id, e);
+				}
+			});
+
 			entries.values().forEach(entry -> {
 				try {
 					entry.build();
 				} catch(Exception e) {
 					throw new RuntimeException("Error building entry " + entry.getId(), e);
-				}
-			});
-
-			categories.forEach((res, category) -> {
-				try {
-					category.build(res);
-				} catch(Exception e) {
-					throw new RuntimeException("Error while loading category " + res, e);
 				}
 			});
 		} catch (Exception e) {
@@ -204,7 +204,7 @@ public class BookContents extends AbstractReadStateHolder {
 			if (category.canAdd())
 				categories.put(key, category);
 		} catch (IOException ex) {
-			Patchouli.LOGGER.error("Exception reading category {}", res);
+			throw new UncheckedIOException(ex);
 		}
 	}
 
@@ -238,7 +238,7 @@ public class BookContents extends AbstractReadStateHolder {
 			try (Reader stream = loadLocalizedJson(res)) {
 				return ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookTemplate.class);
 			} catch (IOException ex) {
-				throw new RuntimeException(ex);
+				throw new UncheckedIOException(ex);
 			}
 		};
 		
