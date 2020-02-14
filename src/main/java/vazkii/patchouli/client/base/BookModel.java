@@ -59,8 +59,13 @@ public class BookModel implements BakedModel {
     }
 
     @Override
-    public boolean hasDepthInGui() {
-        return original.hasDepthInGui();
+    public boolean hasDepth() {
+        return original.hasDepth();
+    }
+
+    @Override
+    public boolean isSideLit() {
+        return original.isSideLit();
     }
 
     @Override

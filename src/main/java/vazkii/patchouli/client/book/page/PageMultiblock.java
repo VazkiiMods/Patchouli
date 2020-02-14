@@ -204,7 +204,7 @@ public class PageMultiblock extends PageWithText {
 		for (BlockPos pos : blocks) {
 			BlockEntity te = mb.getBlockEntity(pos);
 			if (te != null && !erroredTiles.contains(te)) {
-				te.setWorld(mc.world, pos);
+				te.setLocation(mc.world, pos);
 
 				// fake cached state in case the renderer checks it as we don't want to query the actual world
 				((MixinBlockEntity) te).setCachedState(mb.getBlockState(pos));
