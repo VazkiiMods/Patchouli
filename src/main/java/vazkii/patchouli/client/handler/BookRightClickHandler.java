@@ -2,6 +2,7 @@ package vazkii.patchouli.client.handler;
 
 import java.util.Collection;
 
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
@@ -31,7 +32,7 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class BookRightClickHandler {
 
-	public static void onRenderHUD() {
+	private static void onRenderHUD(float partialTicks) {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		PlayerEntity player = mc.player;
 		ItemStack bookStack = player.getMainHandStack();
@@ -65,6 +66,7 @@ public class BookRightClickHandler {
 	}
 
 	public static void init() {
+		HudRenderCallback.EVENT.register(BookRightClickHandler::onRenderHUD);
 		UseBlockCallback.EVENT.register(BookRightClickHandler::onRightClick);
 	}
 

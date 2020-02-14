@@ -6,6 +6,7 @@ import java.util.function.Function;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.datafixers.util.Pair;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.client.MinecraftClient;
@@ -86,7 +87,7 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static void onRenderHUD(float partialTicks) {
+	private static void onRenderHUD(float partialTicks) {
 		if(hasMultiblock) {
 			int waitTime = 40;
 			int fadeOutSpeed = 4;
@@ -186,6 +187,7 @@ public class MultiblockVisualizationHandler {
 	}
 
 	public static void init() {
+		HudRenderCallback.EVENT.register(MultiblockVisualizationHandler::onRenderHUD);
 		UseBlockCallback.EVENT.register(MultiblockVisualizationHandler::onPlayerInteract);
 		ClientTickCallback.EVENT.register(MultiblockVisualizationHandler::onClientTick);
 	}

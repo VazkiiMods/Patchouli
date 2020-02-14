@@ -7,7 +7,6 @@
   "client": [
     "MixinBakedModelManager",
     "MixinBlockEntity",
-    "MixinInGameHud",
     "MixinInventoryScreen",
     "MixinRenderLayer",
     "MixinVertexConsumerProviderImmediate",
