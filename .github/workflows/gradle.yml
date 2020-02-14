@@ -17,6 +17,6 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/.gradle/caches
-        key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle') }}
+        key: ${{ runner.os }}-gradle-${{ hashFiles('build.gradle') }}-${{ hashFiles('gradle.properties') }}
     - name: Build with Gradle
       run: ./gradlew build

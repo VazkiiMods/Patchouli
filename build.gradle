@@ -6,9 +6,17 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group
+
+ext.configFile = file('build.properties')
+ext.config = configFile.withReader {
+	def prop = new Properties()
+	prop.load(it)
+	return (new ConfigSlurper().parse(prop))
+}
+
+version = "${project.minecraft_version}-${config.version}-${config.build_number}-FABRIC"
+group = "vazkii.${config.mod_id}"
+archivesBaseName = "${config.mod_name}"
 
 minecraft {
 }
@@ -58,6 +66,15 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 jar {
 	from "LICENSE"
+
+	exclude "**/*.bat"
+	exclude "**/*.psd"
+	exclude "**/*.exe"
+	exclude "**/unused"
+
+	// exclude test data
+	exclude "**/data/patchouli/patchouli_books/**"
+	exclude "**/data/patchouli/advancements/**"
 }
 
 // configure the maven publication
