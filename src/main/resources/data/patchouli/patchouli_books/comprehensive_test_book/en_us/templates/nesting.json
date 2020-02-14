@@ -1,0 +1,13 @@
+{
+  "include": [
+    {
+      "template": "builtin_components_1",
+      "as": "child1",
+      "using": {
+        "headertext": "Header text from using block",
+        "texttext": "#texttext"
+      }
+    }
+  ],
+  "components": []
+}

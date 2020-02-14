@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -14,11 +13,12 @@ import vazkii.patchouli.client.book.page.PageEntity;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.util.EntityUtil;
-import vazkii.patchouli.common.util.EntityUtil.EntityCreator;
+
+import java.util.function.Function;
 
 public class ComponentEntity extends TemplateComponent {
 
-	@VariableHolder @SerializedName("entity")
+	@SerializedName("entity")
 	public String entityId;
 	
 	@SerializedName("render_size")
@@ -30,7 +30,7 @@ public class ComponentEntity extends TemplateComponent {
 	
 	transient boolean errored;
 	transient Entity entity;
-	transient EntityCreator creator;
+	transient Function<World, Entity> creator;
 	transient float renderScale, offset;
 
 	@Override
@@ -52,14 +52,20 @@ public class ComponentEntity extends TemplateComponent {
 			renderEntity(page.mc.world, rotate ?  ClientTicker.total : defaultBlockRotation);
 	}
 
-	private void renderEntity(World world, float BlockRotation) {
-		PageEntity.renderEntity(entity, world, x, y, BlockRotation, renderScale, offset);
+	@Override
+	public void onVariablesAvailable(Function<String, String> lookup) {
+		super.onVariablesAvailable(lookup);
+		entityId = lookup.apply(entityId);
+	}
+
+	private void renderEntity(World world, float rotation) {
+		PageEntity.renderEntity(entity, world, x, y, rotation, renderScale, offset);
 	}
 	
 	private void loadEntity(World world) {
 		if(!errored && (entity == null || !entity.isAlive())) {
 			try {
-				entity = creator.create(world);
+				entity = creator.apply(world);
 				float width = entity.getWidth();
 				float height = entity.getHeight();
 				

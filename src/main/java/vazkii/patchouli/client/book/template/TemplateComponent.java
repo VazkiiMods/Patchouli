@@ -4,40 +4,36 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import vazkii.patchouli.api.IComponentProcessor;
+import vazkii.patchouli.api.IVariablesAvailableCallback;
 import vazkii.patchouli.api.IVariableProvider;
-import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
 
-public abstract class TemplateComponent {
+import javax.annotation.Nullable;
+import java.util.function.Function;
 
-	@VariableHolder
+public abstract class TemplateComponent implements IVariablesAvailableCallback {
+
 	public String group = "";
 	public int x, y;
 
-	@VariableHolder
 	public String flag = "";
 
-	@VariableHolder
 	public String advancement = "";
 	@SerializedName("negate_advancement")
 	boolean negateAdvancement = false; 
 	
-	@VariableHolder
 	public String guard = null;
 
 	transient boolean isVisible = true;
-	transient boolean compiled = false;
+	private transient boolean compiled = false;
 	
 	public transient JsonObject sourceObject;
-	protected transient IVariableProvider<String> variables;
-	protected transient IComponentProcessor processor;
-	protected transient TemplateInclusion encapsulation;
 
-	public final void compile(IVariableProvider<String> variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
+	public final void compile(IVariableProvider<String> variables, IComponentProcessor processor, @Nullable TemplateInclusion encapsulation) {
 		if(compiled)
 			return;
 
@@ -46,10 +42,6 @@ public abstract class TemplateComponent {
 			y += encapsulation.y;
 		}
 
-		this.variables = variables;
-		this.processor = processor;
-		this.encapsulation = encapsulation;
-		
 		VariableAssigner.assignVariableHolders(this, variables, processor, encapsulation);
 		compiled = true;
 	}
@@ -87,4 +79,11 @@ public abstract class TemplateComponent {
 		return false;
 	}
 
+	@Override
+	public void onVariablesAvailable(Function<String, String> lookup) {
+		group = lookup.apply(group);
+		flag = lookup.apply(flag);
+		advancement = lookup.apply(advancement);
+		guard = lookup.apply(guard);
+	}
 }

@@ -1,20 +1,26 @@
 package vazkii.patchouli.client.book;
 
-import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.fabricmc.loader.api.ModContainer;
@@ -39,7 +45,7 @@ public class BookContents extends AbstractReadStateHolder {
 	private static final String[] ORDINAL_SUFFIXES = new String[]{ "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 	protected static final String DEFAULT_LANG = "en_us";
 	
-	public static final HashMap<Identifier, Supplier<BookTemplate>> addonTemplates = new HashMap<>();
+	public static final Map<Identifier, Supplier<BookTemplate>> addonTemplates = new ConcurrentHashMap<>();
 
 	public final Book book;
 
@@ -50,7 +56,7 @@ public class BookContents extends AbstractReadStateHolder {
 	private boolean errored = false;
 	private Exception exception = null;
 
-	public Stack<GuiBook> guiStack = new Stack<>();
+	public Deque<GuiBook> guiStack = new ArrayDeque<>();
 	public GuiBook currentGui;
 	
 	public BookIcon indexIcon;
@@ -128,7 +134,7 @@ public class BookContents extends AbstractReadStateHolder {
 		List<Identifier> foundTemplates = new ArrayList<>();
 
 		try { 
-			String bookName = book.resourceLoc.getPath();
+			String bookName = book.id.getPath();
 
 			findFiles("categories", foundCategories);
 			findFiles("entries", foundEntries);
@@ -136,37 +142,40 @@ public class BookContents extends AbstractReadStateHolder {
 			
 			foundCategories.forEach(c -> loadCategory(c, new Identifier(c.getNamespace(),
 					String.format("%s/%s/%s/categories/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, c.getPath())), book));
-			foundEntries.forEach(e -> loadEntry(e, new Identifier(e.getNamespace(),
-					String.format("%s/%s/%s/entries/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath())), book));
+			foundEntries.stream().map(id -> loadEntry(id, new Identifier(id.getNamespace(),
+						String.format("%s/%s/%s/entries/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, id.getPath())), book))
+					.filter(Optional::isPresent)
+					.map(Optional::get)
+					.forEach(b -> entries.put(b.getId(), b));
 			foundTemplates.forEach(e -> loadTemplate(e, new Identifier(e.getNamespace(),
-					String.format("%s/%s/%s/templates/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath())), book));
+					String.format("%s/%s/%s/templates/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, e.getPath()))));
 
-			entries.forEach((res, entry) -> {
+			categories.forEach((id, category) -> {
 				try {
-					entry.build(res);
+					category.build(id);
 				} catch(Exception e) {
-					throw new RuntimeException("Error while loading entry " + res, e);
+					throw new RuntimeException("Error while building category " + id, e);
 				}
 			});
 
-			categories.forEach((res, category) -> {
+			entries.values().forEach(entry -> {
 				try {
-					category.build(res);
+					entry.build();
 				} catch(Exception e) {
-					throw new RuntimeException("Error while loading category " + res, e);
+					throw new RuntimeException("Error building entry " + entry.getId(), e);
 				}
 			});
 		} catch (Exception e) {
 			exception = e;
 			errored = true;
-			Patchouli.LOGGER.error("Error while loading book {}", book.resourceLoc, e);
+			Patchouli.LOGGER.error("Error while loading contents for book {}", book.id, e);
 		}
 	}
 
 	protected void findFiles(String dir, List<Identifier> list) {
 		ModContainer mod = book.owner;
 		String id = mod.getMetadata().getId();
-		BookRegistry.findFiles(mod, String.format("data/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.resourceLoc.getPath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
+		BookRegistry.findFiles(mod, String.format("data/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.id.getPath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
 	}
 	
 	private BiFunction<Path, Path, Boolean> pred(String modId, List<Identifier> list) {
@@ -193,40 +202,45 @@ public class BookContents extends AbstractReadStateHolder {
 			if (category.canAdd())
 				categories.put(key, category);
 		} catch (IOException ex) {
-			Patchouli.LOGGER.error("Exception reading category {}", res);
+			throw new UncheckedIOException(ex);
 		}
 	}
 
-	private void loadEntry(Identifier key, Identifier res, Book book) {
-		try (Reader stream = loadLocalizedJson(res)) {
+	private Optional<BookEntry> loadEntry(Identifier id, Identifier file, Book book) {
+		try (Reader stream = loadLocalizedJson(file)) {
 			BookEntry entry = ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookEntry.class);
 			if (entry == null)
-				throw new IllegalArgumentException(res + " does not exist.");
+				throw new IllegalArgumentException(file + " does not exist.");
 
 			entry.setBook(book);
 			if (entry.canAdd()) {
 				BookCategory category = entry.getCategory();
 				if (category != null)
 					category.addEntry(entry);
-				else
-					Patchouli.LOGGER.error("Entry {} in {} does not have a valid category.", key, res);
+				else {
+					String msg = String.format("Entry in file %s does not have a valid category.", file);
+					throw new RuntimeException(msg);
+				}
 
-				entries.put(key, entry);
+				entry.setId(id);
+				return Optional.of(entry);
 			}
 		} catch (IOException ex) {
-			Patchouli.LOGGER.error("Exception reading entry {}", res);
+			throw new UncheckedIOException(ex);
 		}
+		return Optional.empty();
 	}
 	
-	private void loadTemplate(Identifier key, Identifier res, Book book) {
-		Supplier<BookTemplate> supplier = () -> {
-			try (Reader stream = loadLocalizedJson(res)) {
-				return ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookTemplate.class);
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
-			}
-		};
-		
+	private void loadTemplate(Identifier key, Identifier res) {
+		String json;
+		try (BufferedReader stream = loadLocalizedJson(res)) {
+			json = stream.lines().collect(Collectors.joining("\n"));
+		} catch (IOException e) {
+			throw new UncheckedIOException(e);
+		}
+
+		Supplier<BookTemplate> supplier = () -> ClientBookRegistry.INSTANCE.gson.fromJson(json, BookTemplate.class);
+
 		// test supplier
 		BookTemplate template = supplier.get();
 		if(template == null)
@@ -235,7 +249,7 @@ public class BookContents extends AbstractReadStateHolder {
 		templates.put(key, supplier);
 	}
 
-	private Reader loadLocalizedJson(Identifier res) {
+	private BufferedReader loadLocalizedJson(Identifier res) {
 		Identifier localized = new Identifier(res.getNamespace(),
 				res.getPath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
 
@@ -243,7 +257,7 @@ public class BookContents extends AbstractReadStateHolder {
 		if (input == null)
 			throw new IllegalArgumentException(res + " does not exist.");
 
-		return new InputStreamReader(new BufferedInputStream(input), StandardCharsets.UTF_8);
+		return new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
 	}
 
 	protected InputStream loadJson(Identifier resloc, Identifier fallback) {

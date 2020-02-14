@@ -7,20 +7,33 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.TemplateComponent;
-import vazkii.patchouli.client.book.template.VariableAssigner;
 import vazkii.patchouli.common.util.SerializationUtil;
+
+import java.util.function.Function;
 
 public class ComponentCustom extends TemplateComponent {
 
 	@SerializedName("class")
 	String clazz;
 
-	transient ICustomComponent callbacks;
+	private transient ICustomComponent callbacks;
+
+	@Override
+	public void onVariablesAvailable(Function<String, String> lookup) {
+		super.onVariablesAvailable(lookup);
+		try {
+			Class<?> classObj = Class.forName(clazz);
+			if(classObj != null) {
+				callbacks = (ICustomComponent) SerializationUtil.RAW_GSON.fromJson(sourceObject, classObj);
+				callbacks.onVariablesAvailable(lookup);
+			}
+		} catch(Exception e) {
+			throw new RuntimeException("Failed to create custom component " + clazz, e);
+		}
+	}
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		createCallbackObj();
-		
 		callbacks.build(x, y, pageNum);
 	}
 	
@@ -37,18 +50,6 @@ public class ComponentCustom extends TemplateComponent {
 	@Override
 	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
 		return callbacks.mouseClicked(page.parent, mouseX, mouseY, mouseButton);
-	}
-
-	private void createCallbackObj() {
-		try {
-			Class<?> classObj = Class.forName(clazz);
-			if(classObj != null) {
-				callbacks = (ICustomComponent) SerializationUtil.RAW_GSON.fromJson(sourceObject, classObj);
-				VariableAssigner.assignVariableHolders(callbacks, variables, processor, encapsulation);
-			}
-		} catch(Exception e) {
-			throw new RuntimeException("Failed to create custom component " + clazz, e);
-		}
 	}
 
 }

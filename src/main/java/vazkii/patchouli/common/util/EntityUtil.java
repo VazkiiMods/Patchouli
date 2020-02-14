@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import vazkii.patchouli.common.base.Patchouli;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 public class EntityUtil {
 
@@ -24,7 +25,7 @@ public class EntityUtil {
 		return type.getTranslationKey();
 	}
 	
-	public static EntityCreator loadEntity(String entityId) {
+	public static Function<World, Entity> loadEntity(String entityId) {
 		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
 		entityId = nameAndNbt.getLeft();
 		String nbtStr = nameAndNbt.getRight();
@@ -71,10 +72,5 @@ public class EntityUtil {
 		return Pair.of(entityId, nbtStr);
 	}
 	
-	public static interface EntityCreator {
-		
-		Entity create(World world) throws IllegalArgumentException;
-		
-	}
-	
+
 }

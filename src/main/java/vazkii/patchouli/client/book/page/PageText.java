@@ -31,7 +31,7 @@ public class PageText extends PageWithText {
 			String smolText = "";
 			
 			if(mc.options.advancedItemTooltips) {
-				Identifier res = parent.getEntry().getResource();
+				Identifier res = parent.getEntry().getId();
 				smolText = res.toString();
 			} else if(entry.isExtension()) {
 				String name = entry.getTrueProvider().getOwnerName();
@@ -50,7 +50,7 @@ public class PageText extends PageWithText {
 		}
 
 		else if(title != null && !title.isEmpty())
-			parent.drawCenteredStringNoShadow(title, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+			parent.drawCenteredStringNoShadow(i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 	}
 
 }

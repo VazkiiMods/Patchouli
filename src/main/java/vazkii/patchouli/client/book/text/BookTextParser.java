@@ -16,7 +16,10 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.handler.UnicodeFontHandler;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
+
+import javax.annotation.Nullable;
 
 public class BookTextParser {
 	private static final Map<String, CommandProcessor> COMMANDS = new HashMap<>();
@@ -128,6 +131,28 @@ public class BookTextParser {
 			state.cluster = new LinkedList<>();
 			return "";
 		}, "tooltip", "t");
+		register((parameter, state) -> {
+			state.prevColor = state.color;
+			state.color = state.book.linkColor;
+			state.cluster = new LinkedList<>();
+			if (!parameter.startsWith("/")) {
+				state.tooltip = "INVALID COMMAND (must begin with /)";
+			} else {
+				state.tooltip = parameter.length() < 20 ? parameter : parameter.substring(0, 20) + "...";
+			}
+			state.onClick = () -> {
+				state.gui.getMinecraft().player.sendChatMessage(parameter);
+				return true;
+			};
+			return "";
+		}, "command", "c");
+		register(state -> {
+			state.color = state.prevColor;
+			state.cluster = null;
+			state.tooltip = "";
+			state.onClick = null;
+			return "";
+		}, "/c");
 	}
 
 	private final GuiBook gui;
@@ -151,13 +176,29 @@ public class BookTextParser {
 		this.spaceWidth = font.getStringWidth(" ");
 	}
 
-	public List<Word> parse(String text) {
+	public List<Word> parse(@Nullable String text) {
 		String actualText = text;
 		if(actualText == null)
 			actualText = "[ERROR]";
 
-		for(String key : book.macros.keySet())
-			actualText = actualText.replace(key, book.macros.get(key));
+		int i = 0;
+		int expansionCap = 10;
+		for (; i < expansionCap; i++) {
+			String newText = actualText;
+			for (Map.Entry<String, String> e : book.macros.entrySet())
+				newText = newText.replace(e.getKey(), e.getValue());
+
+			if (newText.equals(actualText)) {
+				break;
+			} else {
+				actualText = newText;
+			}
+		}
+
+		if (i == expansionCap) {
+			Patchouli.LOGGER.warn("Expanded macros for {} iterations without reaching fixpoint, stopping. " +
+				"Make sure you don't have circular macro invocations", expansionCap);
+		}
 
 		List<Span> spans = processCommands(actualText);
 		List<Word> words = layout(spans);

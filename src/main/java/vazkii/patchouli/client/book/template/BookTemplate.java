@@ -25,6 +25,8 @@ import vazkii.patchouli.client.book.template.component.ComponentText;
 import vazkii.patchouli.client.book.template.component.ComponentTooltip;
 import vazkii.patchouli.common.book.Book;
 
+import javax.annotation.Nullable;
+
 public class BookTemplate {
 	
 	public static final HashMap<String, Class<? extends TemplateComponent>> componentTypes = new HashMap<>();
@@ -49,12 +51,19 @@ public class BookTemplate {
 	String processorClass;
 	
 	transient Book book;
+
+	/**
+	 * Information about how the parent template is including this one.
+	 * Can be null when there is no parent, e.g. the top template at the page level
+	 */
+	@Nullable
 	transient TemplateInclusion encapsulation;
+
 	transient IComponentProcessor processor;
 	transient boolean compiled = false;
 	transient boolean attemptedCreatingProcessor = false;
 	
-	public static BookTemplate createTemplate(Book book, String type, TemplateInclusion inclusion) {
+	public static BookTemplate createTemplate(Book book, String type, @Nullable TemplateInclusion inclusion) {
 		Identifier key;
 		if(type.contains(":"))
 			key = new Identifier(type);

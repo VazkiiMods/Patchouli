@@ -62,7 +62,7 @@ public class ClientAdvancements {
 		@Override
 		public Visibility draw(ToastManager toastGui, long delta) {
 			toastGui.getGame().getTextureManager().bindTexture(TOASTS_TEX);
-			RenderSystem.color3f(1, 1, 1);
+			RenderSystem.color3f(1.0F, 1.0F, 1.0F);
 			toastGui.blit(0, 0, 0, 32, 160, 32);
 
 			toastGui.getGame().textRenderer.draw(I18n.translate(book.name), 30, 7, -11534256);

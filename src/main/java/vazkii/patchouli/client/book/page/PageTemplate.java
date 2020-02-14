@@ -18,8 +18,7 @@ public class PageTemplate extends BookPage {
 		super.build(entry, pageNum);
 		
 		JsonVariableWrapper wrapper = new JsonVariableWrapper(sourceObject);
-		IComponentProcessor processor = null;
-		
+
 		template.compile(wrapper);
 		template.build(this, entry, pageNum);
 	}

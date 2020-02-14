@@ -21,8 +21,7 @@ public class PatchouliSounds {
 		return e;
 	}
 	
-	public static SoundEvent getSound(String sound, SoundEvent fallback) {
-		Identifier key = new Identifier(sound);
+	public static SoundEvent getSound(Identifier key, SoundEvent fallback) {
 		return Registry.SOUND_EVENT.getOrEmpty(key).orElse(fallback);
 	}
 	

@@ -38,7 +38,7 @@ public class StubMultiblock implements IMultiblock {
 	}
 
 	@Override
-	public IMultiblock setIdentifier(Identifier res) {
+	public IMultiblock setId(Identifier res) {
 		return this;
 	}
 	

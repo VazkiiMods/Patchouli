@@ -1,0 +1,12 @@
+{
+  "name": "Custom Template Components",
+  "category": "templates",
+  "icon": "minecraft:written_book",
+  "pages": [
+    {
+      "type": "custom_component",
+      "spaghet": "pasta",
+      "pop": "beer"
+    }
+  ]
+}

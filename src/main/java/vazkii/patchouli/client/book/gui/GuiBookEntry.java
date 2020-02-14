@@ -1,6 +1,5 @@
 package vazkii.patchouli.client.book.gui;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +12,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.client.base.PersistentData;
@@ -34,7 +34,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	public GuiBookEntry(Book book, BookEntry entry, int page) {
-		super(book);
+		super(book, new LiteralText(entry.getName()));
 		this.entry = entry;
 		this.page = page; 
 	}
@@ -52,7 +52,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		super.onFirstOpened();
 
 		boolean dirty = false;
-		String key = entry.getResource().toString();
+		String key = entry.getId().toString();
 
 		BookData data = PersistentData.data.getBookData(book);
 
@@ -158,10 +158,10 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	boolean isBookmarkedAlready() {
-		if(entry == null || entry.getResource() == null)
+		if(entry == null || entry.getId() == null)
 			return false;
 
-		String entryKey = entry.getResource().toString();
+		String entryKey = entry.getId().toString();
 		BookData data = PersistentData.data.getBookData(book);
 
 		for(Bookmark bookmark : data.bookmarks)
@@ -173,7 +173,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void bookmarkThis() {
-		String entryKey = entry.getResource().toString();
+		String entryKey = entry.getId().toString();
 		BookData data = PersistentData.data.getBookData(book);
 		data.bookmarks.add(new Bookmark(entryKey, page));
 		PersistentData.save();
@@ -188,7 +188,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 			BookData data = PersistentData.data.getBookData(book);
 
 			if(gui.isBookmarkedAlready()) {
-				String key = entry.getResource().toString();
+				String key = entry.getId().toString();
 				data.bookmarks.removeIf((bm) -> bm.entry.equals(key) && bm.page == 0);
 				PersistentData.save();
 				currGui.needsBookmarkUpdate = true;
@@ -253,12 +253,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public Identifier getBookTexture() {
-		return book.bookResource;
+		return book.bookTexture;
 	}
 
 	@Override
 	public Identifier getCraftingTexture() {
-		return book.craftingResource;
+		return book.craftingTexture;
 	}
 
 	@Override

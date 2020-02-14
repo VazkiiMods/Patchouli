@@ -26,8 +26,8 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	private transient List<BookEntry> entries = new ArrayList<>();
 	private transient boolean locked;
 	private transient BookIcon icon = null;
-	private transient Identifier resource;
-	
+	private transient Identifier id;
+
 	private transient boolean built;
 
 	public String getName() {
@@ -113,8 +113,8 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 		return parent == null || parent.isEmpty();
 	}
 
-	public Identifier getResource() {
-		return resource;
+	public Identifier getId() {
+		return id;
 	}
 
 	public boolean canAdd() {
@@ -136,11 +136,11 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 		} else this.book = book;	
 	}
 
-	public void build(Identifier resource) {
+	public void build(Identifier id) {
 		if(built)
 			return;
 		
-		this.resource = resource;
+		this.id = id;
 		BookCategory parent = getParentCategory();
 		if(parent != null)
 			parent.addChildCategory(this);

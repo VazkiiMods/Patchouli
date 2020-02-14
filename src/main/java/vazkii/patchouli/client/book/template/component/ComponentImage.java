@@ -5,14 +5,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.util.Identifier;
-import vazkii.patchouli.api.VariableHolder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 
+import java.util.function.Function;
+
 public class ComponentImage extends TemplateComponent {
 
-	@VariableHolder 
 	public String image;
 
 	public int u, v, width, height;
@@ -32,7 +32,13 @@ public class ComponentImage extends TemplateComponent {
 			resource = new Identifier(image);
 		else resource = new Identifier(page.book.getModNamespace(), image);
 	}
-	
+
+	@Override
+	public void onVariablesAvailable(Function<String, String> lookup) {
+		super.onVariablesAvailable(lookup);
+		image = lookup.apply(image);
+	}
+
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
 		if(scale == 0F)

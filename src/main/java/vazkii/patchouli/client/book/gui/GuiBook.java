@@ -18,6 +18,7 @@ import net.minecraft.client.util.TextFormat;
 import net.minecraft.client.util.Window;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import org.apache.commons.lang3.tuple.Pair;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -25,6 +26,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Util;
+import org.lwjgl.glfw.GLFW;
 import vazkii.patchouli.api.BookDrawScreenCallback;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
@@ -68,12 +70,13 @@ public abstract class GuiBook extends Screen {
 
 	boolean needsBookmarkUpdate = false;
 
-	public GuiBook(Book book) {
-		super(new LiteralText(""));
+	public GuiBook(Book book, Text title) {
+		super(title);
 
 		this.book = book;
 	}
 
+	@Override
 	public void init() {
 		Window res = minecraft.getWindow();
 		double oldGuiScale = res.calculateScaleFactor(minecraft.options.guiScale, minecraft.forcesUnicodeFont());
@@ -134,7 +137,7 @@ public abstract class GuiBook extends Screen {
 
 		super.render(mouseX, mouseY, partialTicks);
 
-		BookDrawScreenCallback.EVENT.invoker().trigger(this.book.resourceLoc, this, mouseX, mouseY, partialTicks);
+		BookDrawScreenCallback.EVENT.invoker().trigger(this.book.id, this, mouseX, mouseY, partialTicks);
 
 		drawTooltip(mouseX, mouseY);
 	}
@@ -144,8 +147,7 @@ public abstract class GuiBook extends Screen {
 
 		int y = 0;
 		List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
-		for(int i = 0; i < bookmarks.size(); i++) {
-			Bookmark bookmark = bookmarks.get(i);
+		for (Bookmark bookmark : bookmarks) {
 			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
 			y += 12;
 		}
@@ -170,11 +172,6 @@ public abstract class GuiBook extends Screen {
 	@Override // make public
 	public <T extends AbstractButtonWidget> T addButton(T p_addButton_1_) {
 		return super.addButton(p_addButton_1_);
-	}
-
-	protected void clearButtons() {
-		buttons.clear();
-		children.clear();
 	}
 
 	protected boolean shouldAddAddBookmarkButton() {
@@ -232,7 +229,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public static void drawFromTexture(Book book, int x, int y, int u, int v, int w, int h) {
-		MinecraftClient.getInstance().getTextureManager().bindTexture(book.bookResource);
+		MinecraftClient.getInstance().getTextureManager().bindTexture(book.bookTexture);
 		blit(x, y, u, v, w, h, 512, 256);
 	}
 
@@ -271,25 +268,35 @@ public abstract class GuiBook extends Screen {
 
 	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
 		switch(mouseButton) {
-		case 0:
+		case GLFW.GLFW_MOUSE_BUTTON_LEFT:
 			if(targetPage != null && hasShiftDown()) {
 				displayLexiconGui(new GuiBookEntry(book, targetPage.getLeft(), targetPage.getRight()), true);
 				playBookFlipSound(book);
 				return true;
 			}
 			break;
-		case 1: 
+		case GLFW.GLFW_MOUSE_BUTTON_RIGHT:
 			back(true);
 			return true;
-		case 3:  
+		case GLFW.GLFW_MOUSE_BUTTON_4:
 			changePage(true, true);
 			return true;
-		case 4:
+		case GLFW.GLFW_MOUSE_BUTTON_5:
 			changePage(false, true);
 			return true;
 		}
 
 		return super.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	@Override
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
+			back(true);
+			return true;
+		} else {
+			return super.keyPressed(keyCode, scanCode, modifiers);
+		}
 	}
 
 	@Override
@@ -426,7 +433,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public void drawCenteredStringNoShadow(String s, int x, int y, int color) {
-		font.draw(s, x - font.getStringWidth(s) / 2, y, color);
+		font.draw(s, x - font.getStringWidth(s) / 2.0F, y, color);
 	}
 
 	private int getMaxAllowedScale() {
@@ -473,7 +480,7 @@ public abstract class GuiBook extends Screen {
 	public static void drawPageFiller(Book book, int x, int y) {
 		RenderSystem.enableBlend();
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
-		MinecraftClient.getInstance().getTextureManager().bindTexture(book.fillerResource);
+		MinecraftClient.getInstance().getTextureManager().bindTexture(book.fillerTexture);
 		blit(x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 

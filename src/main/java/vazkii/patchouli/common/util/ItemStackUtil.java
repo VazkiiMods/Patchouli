@@ -5,19 +5,27 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.datafixer.NbtOps;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.tag.ItemTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import vazkii.patchouli.common.mixin.MixinIngredient;
+import com.mojang.datafixers.Dynamic;
+import com.mojang.datafixers.types.JsonOps;
 
 public class ItemStackUtil {
+	private static final Gson GSON = new GsonBuilder().create();
 	
 	public static String serializeStack(ItemStack stack) {
 		StringBuilder builder = new StringBuilder();
@@ -29,9 +37,12 @@ public class ItemStackUtil {
 			builder.append(count);
 		}
 		
-		if(stack.hasTag())
-			builder.append(stack.getTag().toString());
-		
+		if(stack.hasTag()) {
+			Dynamic<?> dyn = new Dynamic<>(NbtOps.INSTANCE, stack.getTag());
+			JsonElement j = dyn.convert(JsonOps.INSTANCE).getValue();
+			builder.append(GSON.toJson(j));
+		}
+
 		return builder.toString();
 	}
 
@@ -100,7 +111,7 @@ public class ItemStackUtil {
 		List<ItemStack> stacks = new ArrayList<>();
 		for (int i = 0; i < stacksSerialized.length; i++) {
 			if (stacksSerialized[i].startsWith("tag:")) {
-				Tag<Item> tag = MinecraftClient.getInstance().world.getTagManager().items().get(new Identifier(stacksSerialized[i].substring(4)));
+				Tag<Item> tag = ItemTags.getContainer().get(new Identifier(stacksSerialized[i].substring(4)));
 				if(tag != null) {
 					for(Item item : tag.values())
 						stacks.add(new ItemStack(item));

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
@@ -13,12 +14,7 @@ import vazkii.patchouli.common.book.Book;
 public class GuiBookHistory extends GuiBookEntryList {
 
 	public GuiBookHistory(Book book) {
-		super(book);
-	}
-
-	@Override
-	protected String getName() {
-		return I18n.translate("patchouli.gui.lexicon.history");
+		super(book, new TranslatableText("patchouli.gui.lexicon.history"));
 	}
 
 	@Override

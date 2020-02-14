@@ -34,8 +34,8 @@ public class BookModel implements BakedModel {
                                                  @Nullable World world, @Nullable LivingEntity entity) {
             Book book = ItemModBook.getBook(stack);
             if (book != null) {
-                ModelIdentifier path = new ModelIdentifier(book.model, "inventory");
-                return MinecraftClient.getInstance().getBakedModelManager().getModel(path);
+                ModelIdentifier modelPath = new ModelIdentifier(book.model, "inventory");
+                return MinecraftClient.getInstance().getBakedModelManager().getModel(modelPath);
             }
             return original;
         }

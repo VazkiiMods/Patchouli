@@ -30,7 +30,7 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class Book {
 	
-	public static final String DEFAULT_MODEL = Patchouli.PREFIX + "book_brown";
+	public static final Identifier DEFAULT_MODEL = new Identifier(Patchouli.MOD_ID, "book_brown");
 
 	private static final Map<String, String> DEFAULT_MACROS = Util.make(() -> {
 		Map<String, String> ret = new HashMap<>();
@@ -48,10 +48,9 @@ public class Book {
 	private transient boolean wasUpdated = false;
 	
 	public transient ModContainer owner;
-	public transient Identifier resourceLoc;
+	public transient Identifier id;
 	private transient ItemStack bookItem;
 	
-	public transient Identifier bookResource, fillerResource, craftingResource;
 	public transient int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
 	
 	public transient boolean isExtension = false;
@@ -70,13 +69,15 @@ public class Book {
 	public List<String> advancementNamespaces = new ArrayList<>();
 
 	@SerializedName("book_texture")
-	public String bookTexture = Patchouli.PREFIX + "textures/gui/book_brown.png";
-	@SerializedName("filler_texture")
-	public String fillerTexture = Patchouli.PREFIX + "textures/gui/page_filler.png";
-	@SerializedName("crafting_texture")
-	public String craftingTexture = Patchouli.PREFIX + "textures/gui/crafting.png";
+	public Identifier bookTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/book_brown.png");
 
-	public String model = DEFAULT_MODEL;
+	@SerializedName("filler_texture")
+	public Identifier fillerTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/page_filler.png");
+
+	@SerializedName("crafting_texture")
+	public Identifier craftingTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/crafting.png");
+
+	public Identifier model = DEFAULT_MODEL;
 
 	@SerializedName("text_color")
 	public String textColorRaw = "000000";
@@ -98,9 +99,10 @@ public class Book {
 	public String progressBarBackgroundRaw = "DDDDDD";
 	
 	@SerializedName("open_sound")
-	public String openSound = "patchouli:book_open";
+	public Identifier openSound = new Identifier(Patchouli.MOD_ID, "book_open");
+
 	@SerializedName("flip_sound")
-	public String flipSound = "patchouli:book_flip";
+	public Identifier flipSound = new Identifier(Patchouli.MOD_ID, "book_flip");
 	
 	@SerializedName("show_progress")
 	public boolean showProgress = true;
@@ -113,11 +115,13 @@ public class Book {
 
 	@SerializedName("creative_tab")
 	public String creativeTab = "misc";
+
 	@SerializedName("advancements_tab")
-	public String advancementsTab = "";
+	public Identifier advancementsTab;
 	
 	@SerializedName("dont_generate_book")
 	public boolean noBook = false;
+
 	@SerializedName("custom_book_item")
 	public String customBookItem = "";
 	
@@ -125,7 +129,8 @@ public class Book {
 	public boolean showToasts = true;
 	
 	@SerializedName("extend")
-	public String extend = "";
+	public Identifier extend;
+
 	@SerializedName("allow_extensions")
 	public boolean allowExtensions = true;
 	
@@ -135,10 +140,10 @@ public class Book {
 	
 	public void build(ModContainer owner, Identifier resource, boolean external) {
 		this.owner = owner;
-		this.resourceLoc = resource;
+		this.id = resource;
 		this.isExternal = external;
 		
-		isExtension = !extend.isEmpty();
+		isExtension = extend != null;
 		
 		// minecraft has an advancement for every recipe, so we don't allow
 		// tracking it to keep packets at a reasonable size
@@ -146,10 +151,6 @@ public class Book {
 		AdvancementSyncHandler.trackedNamespaces.addAll(advancementNamespaces);
 		
 		if(!isExtension) {
-			bookResource = new Identifier(bookTexture);
-			fillerResource = new Identifier(fillerTexture);
-			craftingResource = new Identifier(craftingTexture);
-			
 			textColor = 0xFF000000 | Integer.parseInt(textColorRaw, 16);
 			headerColor = 0xFF000000 | Integer.parseInt(headerColorRaw, 16);
 			nameplateColor = 0xFF000000 | Integer.parseInt(nameplateColorRaw, 16);
@@ -169,7 +170,7 @@ public class Book {
 	}
 	
 	public String getModNamespace() {
-		return resourceLoc.getNamespace();
+		return id.getNamespace();
 	}
 	
 	public ItemStack getBookItem() {
@@ -208,7 +209,7 @@ public class Book {
 	
 		if(!isExtension) {
 			contents.reload(false);
-			BookContentsReloadCallback.EVENT.invoker().trigger(this.bookResource);
+			BookContentsReloadCallback.EVENT.invoker().trigger(this.id);
 		}
 	}
 	
@@ -216,12 +217,12 @@ public class Book {
 	public void reloadExtensionContents() {
 		if(isExtension) {
 			if(extensionTarget == null) {
-				extensionTarget = BookRegistry.INSTANCE.books.get(new Identifier(extend));
-				
+				extensionTarget = BookRegistry.INSTANCE.books.get(extend);
+
 				if(extensionTarget == null)
-					throw new IllegalArgumentException("Extension Book " + resourceLoc + " has no valid target");
+					throw new IllegalArgumentException("Extension Book " + id + " has no valid target");
 				else if(!extensionTarget.allowExtensions)
-					throw new IllegalArgumentException("Book " + extensionTarget.resourceLoc + " doesn't allow extensions, so " + resourceLoc + " can't resolve");
+					throw new IllegalArgumentException("Book " + extensionTarget.id + " doesn't allow extensions, so " + id + " can't resolve");
 				
 				extensionTarget.extensions.add(this);
 				
@@ -232,7 +233,7 @@ public class Book {
 			}
 			
 			contents.reload(true);
-			BookContentsReloadCallback.EVENT.invoker().trigger(this.bookResource);
+			BookContentsReloadCallback.EVENT.invoker().trigger(this.id);
 		}
 	}
 	

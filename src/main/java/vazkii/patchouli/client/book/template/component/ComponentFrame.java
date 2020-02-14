@@ -21,7 +21,7 @@ public class ComponentFrame extends TemplateComponent {
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
 		RenderSystem.enableBlend();
-		RenderSystem.color3f(1, 1, 1);
+		RenderSystem.color3f(1F, 1F, 1F);
 		GuiBook.drawFromTexture(page.book, x, y, 405, 149, 106, 106);
 	}
 	

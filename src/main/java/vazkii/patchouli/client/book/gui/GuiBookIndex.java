@@ -3,18 +3,14 @@ package vazkii.patchouli.client.book.gui;
 import java.util.Collection;
 
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.TranslatableText;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
 
 public class GuiBookIndex extends GuiBookEntryList {
 
 	public GuiBookIndex(Book book) {
-		super(book);
-	}
-
-	@Override
-	protected String getName() {
-		return I18n.translate("patchouli.gui.lexicon.index");
+		super(book, new TranslatableText("patchouli.gui.lexicon.index"));
 	}
 
 	@Override

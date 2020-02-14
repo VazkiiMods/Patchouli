@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.text.LiteralText;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
@@ -18,13 +19,8 @@ public class GuiBookCategory extends GuiBookEntryList {
 	BookCategory category;
 	
 	public GuiBookCategory(Book book, BookCategory category) {
-		super(book);
+		super(book, new LiteralText(category.getName()));
 		this.category = category;
-	}
-
-	@Override
-	protected String getName() {
-		return category.getName();
 	}
 
 	@Override

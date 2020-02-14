@@ -3,15 +3,16 @@ package vazkii.patchouli.client.book.page.abstr;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 public abstract class PageDoubleRecipe<T> extends PageWithText {
 
 	@SerializedName("recipe")
-	String recipeRaw;
+	Identifier recipeId;
 	@SerializedName("recipe2")
-	String recipe2Raw;
+	Identifier recipe2Id;
 	String title;
 
 	protected transient T recipe1, recipe2;
@@ -21,8 +22,8 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	public void build(BookEntry entry, int pageNum) {
 		super.build(entry, pageNum);
 		
-		recipe1 = loadRecipe(entry, recipeRaw);
-		recipe2 = loadRecipe(entry, recipe2Raw);
+		recipe1 = loadRecipe(entry, recipeId);
+		recipe2 = loadRecipe(entry, recipe2Id);
 		
 		if(recipe1 == null && recipe2 != null) {
 			recipe1 = recipe2;
@@ -64,7 +65,7 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	}
 	
 	protected abstract void drawRecipe(T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
-	protected abstract T loadRecipe(BookEntry entry, String loc);
+	protected abstract T loadRecipe(BookEntry entry, Identifier loc);
 	protected abstract ItemStack getRecipeOutput(T recipe);
 	protected abstract int getRecipeHeight();
 	

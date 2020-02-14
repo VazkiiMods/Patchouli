@@ -31,7 +31,7 @@ public class GuiBookLanding extends GuiBook {
 	int loadedCategories = 0;
 
 	public GuiBookLanding(Book book) {
-		super(book);
+		super(book, new TranslatableText(book.name));
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class GuiBookLanding extends GuiBook {
 		addButton(new GuiButtonBookHistory(this, x + (pos++) * dist, y, this::handleButtonHistory));
 
 		// Advancements
-		if(!book.advancementsTab.isEmpty())
+		if(book.advancementsTab != null)
 			addButton(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y, this::handleButtonAdvancements));
 
 		// Config
@@ -136,7 +136,7 @@ public class GuiBookLanding extends GuiBook {
 	void makeErrorTooltip() {
 		Throwable e = book.contents.getException();
 		
-		List<String> lines = new LinkedList<>();
+		List<String> lines = new ArrayList<>();
 		while(e != null) {
 			String msg = e.getMessage();
 			if(msg != null && !msg.isEmpty())

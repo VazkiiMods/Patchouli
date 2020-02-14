@@ -47,13 +47,11 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 	
 	@Override
-	@Environment(EnvType.CLIENT)
 	public void openBookGUI(Identifier book) {
 		// NO-OP
 	}
 	
 	@Override
-	@Environment(EnvType.CLIENT)
 	public Identifier getOpenBookGui() {
 		return null;
 	}
@@ -64,7 +62,7 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 	
 	@Override
-	public ItemStack getBookStack(String book) {
+	public ItemStack getBookStack(Identifier book) {
 		return ItemStack.EMPTY;
 	}
 	

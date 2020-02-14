@@ -12,21 +12,17 @@ import vazkii.patchouli.client.book.page.abstr.PageWithText;
 
 public class PageImage extends PageWithText {
 
-	String images[];
+	Identifier[] images;
 	String title;
 	boolean border;
 
-	transient Identifier[] imageRes;
 	transient int index;
 	
 	@Override
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 		
-		imageRes = new Identifier[images.length];
-		for(int i = 0; i < images.length; i++)
-			imageRes[i] = new Identifier(images[i]);
-		
+
 		int x = 90;
 		int y = 100;
 		addButton(new GuiButtonBookArrowSmall(parent, x, y, true, () -> index > 0, this::handleButtonArrow));
@@ -35,8 +31,8 @@ public class PageImage extends PageWithText {
 	
 	@Override
 	public void render(int mouseX, int mouseY, float pticks) {
-		mc.getTextureManager().bindTexture(imageRes[index]);
-		
+		mc.getTextureManager().bindTexture(images[index]);
+
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
 		RenderSystem.color3f(1F, 1F, 1F);

@@ -18,6 +18,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import org.apache.commons.io.IOUtils;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
@@ -58,13 +59,13 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	
 	@Override
 	public void openBookGUI(ServerPlayerEntity player, Identifier book) {
-		MessageOpenBookGui.send(player, book.toString());
+		MessageOpenBookGui.send(player, book);
 	}
 	
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void openBookGUI(Identifier book) {
-		ClientBookRegistry.INSTANCE.displayBookGui(book.toString());
+		ClientBookRegistry.INSTANCE.displayBookGui(book);
 	}
 	
 	@Override
@@ -72,7 +73,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	public Identifier getOpenBookGui() {
 		Screen gui = MinecraftClient.getInstance().currentScreen;
 		if (gui instanceof GuiBook)
-			return ((GuiBook) gui).book.resourceLoc;
+			return ((GuiBook) gui).book.id;
 		return null;
 	}
 	
@@ -82,7 +83,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 	
 	@Override
-	public ItemStack getBookStack(String book) {
+	public ItemStack getBookStack(Identifier book) {
 		return ItemModBook.forBook(book);
 	}
 	
@@ -91,15 +92,17 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 		InputStream testStream = streamProvider.get();
 		if (testStream == null)
 			throw new NullPointerException("Stream provider can't return a null stream");
+		IOUtils.closeQuietly(testStream);
 		
-		if (BookContents.addonTemplates.containsKey(res))
-			throw new IllegalArgumentException("Template " + res + " is already registered");
-		
-		BookContents.addonTemplates.put(res, () -> {
+		Supplier<BookTemplate> prev = BookContents.addonTemplates.put(res, () -> {
 			InputStream stream = streamProvider.get();
 			InputStreamReader reader = new InputStreamReader(stream);
 			return ClientBookRegistry.INSTANCE.gson.fromJson(reader, BookTemplate.class);
 		});
+
+		if (prev != null) {
+			throw new IllegalArgumentException("Template " + res + " is already registered");
+		}
 	}
 	
 	@Override

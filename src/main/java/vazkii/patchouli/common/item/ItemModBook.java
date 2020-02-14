@@ -65,14 +65,14 @@ public class ItemModBook extends Item {
 	}
 
 	public static ItemStack forBook(Book book) {
-		return forBook(book.resourceLoc.toString());
+		return forBook(book.id);
 	}
 	
-	public static ItemStack forBook(String book) {
+	public static ItemStack forBook(Identifier book) {
 		ItemStack stack = new ItemStack(PatchouliItems.book);
 
 		CompoundTag cmp = new CompoundTag();
-		cmp.putString(TAG_BOOK, book);
+		cmp.putString(TAG_BOOK, book.toString());
 		stack.setTag(cmp);
 
 		return stack;
@@ -92,8 +92,8 @@ public class ItemModBook extends Item {
 			return null;
 
 		String bookStr = stack.getTag().getString(TAG_BOOK);
-		Identifier res = new Identifier(bookStr);
-		return BookRegistry.INSTANCE.books.get(res);
+		Identifier res = Identifier.tryParse(bookStr);
+		return res == null ? null : BookRegistry.INSTANCE.books.get(res);
 	}
 
 	/* TODO fabric
@@ -134,7 +134,7 @@ public class ItemModBook extends Item {
 			return new TypedActionResult<>(ActionResult.FAIL, stack);
 
 		if(playerIn instanceof ServerPlayerEntity) {
-			MessageOpenBookGui.send(playerIn, book.resourceLoc.toString());
+			MessageOpenBookGui.send(playerIn, book.id);
 			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open);
 			worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), sfx, SoundCategory.PLAYERS, 1F, (float) (0.7 + Math.random() * 0.4));
 		}

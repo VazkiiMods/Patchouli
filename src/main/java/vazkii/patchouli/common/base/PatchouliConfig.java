@@ -1,8 +1,8 @@
 package vazkii.patchouli.common.base;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -13,7 +13,7 @@ public class PatchouliConfig {
 	public static Optional<Boolean> testingMode = Optional.of(false);
 	public static Optional<String> inventoryButtonBook = Optional.of("");
 
-	private static Map<String, Boolean> configFlags = new HashMap<>();
+	private static Map<String, Boolean> configFlags = new ConcurrentHashMap<>();
 
 	public static void setup() {
 	    /* TODO fabric load

@@ -2,56 +2,57 @@ package vazkii.patchouli.client.handler;
 
 import java.awt.Color;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.function.Function;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.GlProgramManager;
-import net.minecraft.client.gl.GlShader;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Direction;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
-
-import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
-import vazkii.patchouli.client.base.CustomVertexConsumer;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
-import vazkii.patchouli.client.book.page.PageMultiblock;
-import vazkii.patchouli.client.shader.ShaderHelper;
+import vazkii.patchouli.client.mixin.MixinVertexConsumerProviderImmediate;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
+
+import javax.annotation.Nullable;
 
 public class MultiblockVisualizationHandler {
 
@@ -62,12 +63,13 @@ public class MultiblockVisualizationHandler {
 	private static String name;
 	private static BlockPos pos;
 	private static boolean isAnchored;
-	private static BlockRotation facingBlockRotation;
+	private static BlockRotation facingRotation;
 	private static Function<BlockPos, BlockPos> offsetApplier;
 	private static int blocks, blocksDone, airFilled;
 	private static int timeComplete;
 	private static BlockState lookingState;
 	private static BlockPos lookingPos;
+	private static VertexConsumerProvider.Immediate buffers = null;
 
 	public static void setMultiblock(IMultiblock multiblock, String name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos->pos);
@@ -87,7 +89,7 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	private static void onRenderHUD(float partialTicks) {
+	public static void onRenderHUD(float partialTicks) {
 		if(hasMultiblock) {
 			int waitTime = 40;
 			int fadeOutSpeed = 4;
@@ -171,46 +173,45 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-
-	public static void anchorTo(BlockPos target, BlockRotation rot) {
-		pos = target;
-		facingBlockRotation = rot;
-		isAnchored = true;
-	}
-
-	public static ActionResult onPlayerInteract(PlayerEntity player, World world, Hand hand, BlockHitResult hit) {
-		if(hasMultiblock && !isAnchored && player == MinecraftClient.getInstance().player) {
-			anchorTo(hit.getBlockPos(), getBlockRotation(player));
-			return ActionResult.SUCCESS;
-		}
-		return ActionResult.PASS;
-	}
-
-	public static void init() {
-		HudRenderCallback.EVENT.register(MultiblockVisualizationHandler::onRenderHUD);
-		UseBlockCallback.EVENT.register(MultiblockVisualizationHandler::onPlayerInteract);
-		ClientTickCallback.EVENT.register(MultiblockVisualizationHandler::onClientTick);
-	}
-
-	private static void onClientTick(MinecraftClient mc) {
-		if(mc.world == null)
-			hasMultiblock = false;
-		else if(isAnchored && blocks == blocksDone && airFilled == 0) {
-			timeComplete++;
-			if(timeComplete == 14)
-				mc.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F));
-		} else timeComplete = 0;
-	}
-
 	public static void onWorldRenderLast(MatrixStack ms) {
 		if(hasMultiblock && multiblock != null)
 			renderMultiblock(MinecraftClient.getInstance().world, ms);
 	}
 
+	public static void anchorTo(BlockPos target, BlockRotation rot) {
+		pos = target;
+		facingRotation = rot;
+		isAnchored = true;
+	}
+
+	private static ActionResult onPlayerInteract(PlayerEntity player, World world, Hand hand, BlockHitResult hit) {
+		if(hasMultiblock && !isAnchored && player == MinecraftClient.getInstance().player) {
+			anchorTo(hit.getBlockPos(), getRotation(player));
+			return ActionResult.SUCCESS;
+		}
+		return ActionResult.PASS;
+	}
+
+	public static void onClientTick(MinecraftClient mc) {
+		if(MinecraftClient.getInstance().world == null)
+			hasMultiblock = false;
+		else if(isAnchored && blocks == blocksDone && airFilled == 0) {
+			timeComplete++;
+			if(timeComplete == 14)
+				MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F));
+		} else timeComplete = 0;
+	}
+
+	public static void init() {
+		UseBlockCallback.EVENT.register(MultiblockVisualizationHandler::onPlayerInteract);
+		ClientTickCallback.EVENT.register(MultiblockVisualizationHandler::onClientTick);
+		HudRenderCallback.EVENT.register(MultiblockVisualizationHandler::onRenderHUD);
+	}
+
 	public static void renderMultiblock(World world, MatrixStack ms) {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		if(!isAnchored) {
-			facingBlockRotation = getBlockRotation(mc.player);
+			facingRotation = getRotation(mc.player);
 			if(mc.crosshairTarget instanceof BlockHitResult)
 				pos = ((BlockHitResult) mc.crosshairTarget).getBlockPos();
 		}
@@ -220,7 +221,7 @@ public class MultiblockVisualizationHandler {
 		if(pos == null)
 			return;
 		if(multiblock.isSymmetrical())
-			facingBlockRotation = BlockRotation.NONE;
+			facingRotation = BlockRotation.NONE;
 
 		EntityRenderDispatcher erd = mc.getEntityRenderManager();
 		double renderPosX = erd.camera.getPos().getX();
@@ -228,7 +229,8 @@ public class MultiblockVisualizationHandler {
 		double renderPosZ = erd.camera.getPos().getZ();
 		ms.translate(-renderPosX, -renderPosY, -renderPosZ);
 
-		VertexConsumerProvider.Immediate buffers = mc.getBufferBuilders().getEntityVertexConsumers();
+		if (buffers == null)
+			buffers = initBuffers(mc.getBufferBuilders().getEntityVertexConsumers());
 
 		BlockPos checkPos = null;
 		if(mc.crosshairTarget instanceof BlockHitResult) {
@@ -240,7 +242,7 @@ public class MultiblockVisualizationHandler {
 		lookingState = null;
 		lookingPos = checkPos;
 
-		Pair<BlockPos, Collection<IMultiblock.SimulateResult>> sim = multiblock.simulate(world, getStartPos(), getFacingBlockRotation(), true);
+		Pair<BlockPos, Collection<IMultiblock.SimulateResult>> sim = multiblock.simulate(world, getStartPos(), getFacingRotation(), true);
 		for (IMultiblock.SimulateResult r : sim.getSecond()) {
 			float alpha = 0.3F;
 			if(r.getWorldPosition().equals(checkPos)) {
@@ -253,9 +255,9 @@ public class MultiblockVisualizationHandler {
 				if(!air)
 					blocks++;
 
-				if(!r.test(world, facingBlockRotation)) {
-					BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame).rotate(facingBlockRotation);
-					renderBlock(world, renderState, r.getWorldPosition(), alpha, ms, buffers);
+				if(!r.test(world, facingRotation)) {
+					BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame).rotate(facingRotation);
+					renderBlock(world, renderState, r.getWorldPosition(), alpha, ms);
 
 					if(air)
 						airFilled++;
@@ -264,24 +266,13 @@ public class MultiblockVisualizationHandler {
 			}
 		}
 
-		if(blocks > 0) {
-			GlProgramManager.useProgram(ShaderHelper.INSTANCE.alpha.getProgramRef());
-			ShaderHelper.INSTANCE.alphaUniform.set(0.3F);
-			ShaderHelper.INSTANCE.alphaUniform.upload();
-			((CustomVertexConsumer) buffers).patchouli_drawWithCustomState(() -> {
-				RenderSystem.enableBlend();
-				RenderSystem.defaultBlendFunc();
-				RenderSystem.disableDepthTest();
-			});
-			RenderSystem.enableDepthTest();
-			GlProgramManager.useProgram(0);
-		}
+		buffers.draw();
 
 		if(!isAnchored)
 			blocks = blocksDone = 0;
 	}
 
-	public static void renderBlock(World world, BlockState state, BlockPos pos, float alpha, MatrixStack ms, VertexConsumerProvider buffers) {
+	public static void renderBlock(World world, BlockState state, BlockPos pos, float alpha, MatrixStack ms) {
 		if(pos != null) {
 			ms.push();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
@@ -309,8 +300,8 @@ public class MultiblockVisualizationHandler {
 		return isAnchored;
 	}
 
-	public static BlockRotation getFacingBlockRotation() {
-		return multiblock.isSymmetrical() ? BlockRotation.NONE : facingBlockRotation;
+	public static BlockRotation getFacingRotation() {
+		return multiblock.isSymmetrical() ? BlockRotation.NONE : facingRotation;
 	}
 
 	public static BlockPos getStartPos() {
@@ -348,8 +339,70 @@ public class MultiblockVisualizationHandler {
 	/**
 	 * Returns the Rotation of a multiblock structure based on the given entity's facing direction.
 	 */
-	private static BlockRotation getBlockRotation(Entity entity) {
-		return RotationUtil.rotationFromFacing(entity.getHorizontalFacing());
+	private static BlockRotation getRotation(Entity entity) {
+		return RotationUtil.rotationFromFacing(Direction.fromHorizontal(MathHelper.floor((double) (-entity.yaw * 4.0F / 360.0F) + 0.5D) & 3));
+	}
+
+	private static VertexConsumerProvider.Immediate initBuffers(VertexConsumerProvider.Immediate original) {
+		BufferBuilder fallback = ((MixinVertexConsumerProviderImmediate) original).getFallbackBuffer();
+		Map<RenderLayer, BufferBuilder> layerBuffers = ((MixinVertexConsumerProviderImmediate) original).getLayerBuffers();
+		Map<RenderLayer, BufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
+		for (Map.Entry<RenderLayer, BufferBuilder> e : layerBuffers.entrySet()) {
+			remapped.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
+		}
+		return new GhostBuffers(fallback, remapped);
+	}
+
+	private static class GhostBuffers extends VertexConsumerProvider.Immediate {
+		protected GhostBuffers(BufferBuilder fallback, Map<RenderLayer, BufferBuilder> layerBuffers) {
+			super(fallback, layerBuffers);
+		}
+
+		@Override
+		public VertexConsumer getBuffer(RenderLayer type) {
+			return super.getBuffer(GhostRenderLayer.remap(type));
+		}
+	}
+
+	private static class GhostRenderLayer extends RenderLayer {
+		private static Map<RenderLayer, RenderLayer> remappedTypes = new IdentityHashMap<>();
+
+		private GhostRenderLayer(RenderLayer original) {
+			super(String.format("%s_%s_ghost", original.toString(), Patchouli.MOD_ID), original.getVertexFormat(), original.getDrawMode(), original.getExpectedBufferSize(), original.method_23037(), true, () -> {
+				original.startDrawing();
+
+				// Alter GL state
+				RenderSystem.disableDepthTest();
+				RenderSystem.enableBlend();
+				RenderSystem.blendFunc(GlStateManager.SrcFactor.CONSTANT_ALPHA, GlStateManager.DstFactor.ONE_MINUS_CONSTANT_ALPHA);
+				RenderSystem.blendColor(1, 1, 1, 0.4F);
+			}, () -> {
+				RenderSystem.blendColor(1, 1, 1, 1);
+				RenderSystem.defaultBlendFunc();
+				RenderSystem.disableBlend();
+				RenderSystem.enableDepthTest();
+
+				original.endDrawing();
+			});
+		}
+
+		@Override
+		public boolean equals(@Nullable Object other) {
+			return this == other;
+		}
+
+		@Override
+		public int hashCode() {
+			return System.identityHashCode(this);
+		}
+
+		public static RenderLayer remap(RenderLayer in) {
+			if (in instanceof GhostRenderLayer) {
+				return in;
+			} else {
+				return remappedTypes.computeIfAbsent(in, GhostRenderLayer::new);
+			}
+		}
 	}
 
 }

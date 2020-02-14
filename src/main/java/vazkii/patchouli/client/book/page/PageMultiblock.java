@@ -39,7 +39,6 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookEye;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
-import vazkii.patchouli.client.base.CustomVertexConsumer;
 import vazkii.patchouli.client.mixin.MixinBlockEntity;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.AbstractMultiblock;
@@ -47,11 +46,11 @@ import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
 
 public class PageMultiblock extends PageWithText {
-	public static final Random RAND = new Random();
+	private static final Random RAND = new Random();
 
 	String name;
 	@SerializedName("multiblock_id")
-	String multiblockId;
+	Identifier multiblockId;
 	
 	@SerializedName("multiblock")
 	SerializedMultiblock serializedMultiblock;
@@ -61,13 +60,12 @@ public class PageMultiblock extends PageWithText {
 	
 	private transient AbstractMultiblock multiblockObj;
 	private transient ButtonWidget visualizeButton;
-	private final transient Random random = new Random();
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
-		if(multiblockId != null && !multiblockId.isEmpty()) {
-			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(new Identifier(multiblockId));
-			
+		if(multiblockId != null) {
+			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(multiblockId);
+
 			if(mb instanceof AbstractMultiblock)
 				multiblockObj = (AbstractMultiblock) mb;
 		}
@@ -109,7 +107,7 @@ public class PageMultiblock extends PageWithText {
 	}
 	
 	public void handleButtonVisualize(ButtonWidget button) {
-		String entryKey = parent.getEntry().getResource().toString();
+		String entryKey = parent.getEntry().getId().toString();
 		Bookmark bookmark = new Bookmark(entryKey, pageNum / 2);
 		MultiblockVisualizationHandler.setMultiblock(multiblockObj, name, bookmark, true);
 		parent.addBookmarkButtons();
@@ -132,7 +130,7 @@ public class PageMultiblock extends PageWithText {
 		float scaleX = maxX / diag;
 		float scaleY = maxY / sizeY;
 		float scale = -Math.min(scaleX, scaleY);
-		
+
 		int xPos = GuiBook.PAGE_WIDTH / 2;
 		int yPos = 60;
 		RenderSystem.pushMatrix();
@@ -169,7 +167,7 @@ public class PageMultiblock extends PageWithText {
 
 		RenderSystem.popMatrix();
 	}
-	
+
 	private void renderElements(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, Vector4f eye) {
 		RenderSystem.pushMatrix();
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
@@ -179,7 +177,8 @@ public class PageMultiblock extends PageWithText {
 		doWorldRenderPass(mb, blocks, buffers, eye);
 		doTileEntityRenderPass(mb, blocks, buffers, eye);
 
-		((CustomVertexConsumer) buffers).patchouli_drawWithCamera(eye.getX(), eye.getY(), eye.getZ());
+		// todo 1.15 transparency sorting
+		buffers.draw();
 		RenderSystem.popMatrix();
 	}
 
@@ -201,13 +200,13 @@ public class PageMultiblock extends PageWithText {
 
 	private void doTileEntityRenderPass(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, VertexConsumerProvider buffers, Vector4f eye) {
 		MatrixStack ms = new MatrixStack();
-		
+
 		for (BlockPos pos : blocks) {
 			BlockEntity te = mb.getBlockEntity(pos);
 			if (te != null && !erroredTiles.contains(te)) {
 				te.setWorld(mc.world, pos);
 
-				// fake this in case the renderer checks it as we don't want to query the actual world
+				// fake cached state in case the renderer checks it as we don't want to query the actual world
 				((MixinBlockEntity) te).setCachedState(mb.getBlockState(pos));
 
 				ms.push();

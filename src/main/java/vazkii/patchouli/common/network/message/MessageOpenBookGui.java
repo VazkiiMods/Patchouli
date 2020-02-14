@@ -12,14 +12,14 @@ import vazkii.patchouli.common.base.Patchouli;
 public class MessageOpenBookGui {
 	public static final Identifier ID = new Identifier(Patchouli.MOD_ID, "open_book");
 
-	public static void send(PlayerEntity player, String book) {
+	public static void send(PlayerEntity player, Identifier book) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-		buf.writeString(book);
+		buf.writeIdentifier(book);
 		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, ID, buf);
 	}
 	
 	public static void handle(PacketContext context, PacketByteBuf buf) {
-		String book = buf.readString();
+		Identifier book = buf.readIdentifier();
 		context.getTaskQueue().submit(() -> {
 			ClientBookRegistry.INSTANCE.displayBookGui(book);
 		});

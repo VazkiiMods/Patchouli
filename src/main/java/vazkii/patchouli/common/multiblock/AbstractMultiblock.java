@@ -15,7 +15,6 @@ import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.chunk.light.LightingProvider;
 import net.minecraft.world.level.ColorResolver;
@@ -29,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView {
-    public Identifier res;
+    public Identifier id;
     protected int offX, offY, offZ;
     protected int viewOffX, viewOffY, viewOffZ;
     private boolean symmetrical;
@@ -73,12 +72,12 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 
     @Override
     public Identifier getID() {
-        return res;
+        return id;
     }
 
     @Override
-    public IMultiblock setIdentifier(Identifier res) {
-        this.res = res;
+    public IMultiblock setId(Identifier res) {
+        this.id = res;
         return this;
     }
 

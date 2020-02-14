@@ -1,10 +1,10 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import com.google.common.base.Supplier;
-
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import vazkii.patchouli.client.book.gui.GuiBook;
+
+import java.util.function.Supplier;
 
 public class GuiButtonBookArrowSmall extends GuiButtonBook {
 

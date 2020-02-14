@@ -1,7 +1,5 @@
 package vazkii.patchouli.api;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 
 /**
@@ -12,7 +10,6 @@ import net.minecraft.client.gui.screen.Screen;
  * Instances of this class are created once for every usage of the template it's meant to 
  * process, so you can save data on a per-template basis.
  */
-@Environment(EnvType.CLIENT)
 public interface IComponentProcessor {
 
 	/**

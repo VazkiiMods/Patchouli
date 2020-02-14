@@ -31,10 +31,10 @@ public class PageSpotlight extends PageWithText {
 		int w = 66;
 		int h = 26;
 		
-		mc.getTextureManager().bindTexture(book.craftingResource);
+		mc.getTextureManager().bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
 		DrawableHelper.blit(GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 128);
-		
+
 		parent.drawCenteredStringNoShadow(title != null && !title.isEmpty() ? i18n(title) : itemStack.getName().asFormattedString(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		parent.renderItemStack(GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, itemStack);
 		

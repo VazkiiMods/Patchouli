@@ -1,12 +1,8 @@
 package vazkii.patchouli.api;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-
 /**
  * A provider of variables to a template. Usually from json.
  */
-@Environment(EnvType.CLIENT)
 public interface IVariableProvider<T> {
 
 	/**

@@ -1,11 +1,19 @@
 package vazkii.patchouli.common.book;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.common.base.Patchouli;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -38,13 +46,13 @@ public class BookRegistry {
 	public static final String BOOKS_LOCATION = Patchouli.MOD_ID + "_books";
 
 	public final Map<Identifier, Book> books = new HashMap<>();
-	public Gson gson;
+	public static final Gson GSON = new GsonBuilder()
+			.registerTypeAdapter(Identifier.class, new Identifier.Serializer())
+			.create();
 
 	private boolean loaded = false;
 
-	private BookRegistry() {
-		gson = new GsonBuilder().create();
-	}
+	private BookRegistry() {}
 
 	public void init() {
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
@@ -78,12 +86,11 @@ public class BookRegistry {
 			ModContainer mod = pair.getLeft();
 			Identifier res = pair.getRight();
 
-			InputStream stream = null;
-			try {
-				stream = Files.newInputStream(mod.getPath(file));
+			try (InputStream stream = Files.newInputStream(mod.getPath(file))) {
 				loadBook(mod, res, stream, false);
-			} catch (IOException e) {
-			    Patchouli.LOGGER.error("Failed to load book json for mod {}'s copy of {}", mod.getMetadata().getId(), res, e);
+			} catch (Exception e) {
+				Patchouli.LOGGER.error("Failed to load book {} defined by mod {}, skipping",
+						res, mod.getMetadata().getId(), e);
 			}
 		});
 
@@ -93,10 +100,9 @@ public class BookRegistry {
 	public void loadBook(ModContainer mod, Identifier res, InputStream stream,
 						 boolean external) {
 		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-		Book book = gson.fromJson(reader, Book.class);
-
-		books.put(res, book);
+		Book book = GSON.fromJson(reader, Book.class);
 		book.build(mod, res, external);
+		books.put(res, book);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -114,39 +120,38 @@ public class BookRegistry {
 	// HELPER
 
 	public static boolean findFiles(ModContainer mod, String base, Function<Path, Boolean> preprocessor,
-			BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
+	                                BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
 		if (mod.getMetadata().getId().equals("minecraft"))
 			return false;
 
 		boolean success = true;
 
-		Path root = mod.getRootPath().resolve(base);
+		try {
+			Path root = mod.getRootPath().resolve(base);
 
-		if (!Files.exists(root))
-			return defaultUnfoundRoot;
+			if (!Files.exists(root))
+				return defaultUnfoundRoot;
 
-		if (preprocessor != null) {
-			Boolean cont = preprocessor.apply(root);
-			if (cont == null || !cont)
-				return false;
-		}
-
-		if (processor != null) {
-			Iterator<Path> itr;
-			try {
-				itr = Files.walk(root).iterator();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-
-			while (itr.hasNext()) {
-				Boolean cont = processor.apply(root, itr.next());
-
-				if (visitAllFiles)
-					success &= cont != null && cont;
-				else if (cont == null || !cont)
+			if (preprocessor != null) {
+				Boolean cont = preprocessor.apply(root);
+				if (cont == null || !cont)
 					return false;
 			}
+
+			if (processor != null) {
+				Iterator<Path> itr = Files.walk(root).iterator();
+
+				while (itr.hasNext()) {
+					Boolean cont = processor.apply(root, itr.next());
+
+					if (visitAllFiles)
+						success &= cont != null && cont;
+					else if (cont == null || !cont)
+						return false;
+				}
+			}
+		} catch(IOException ex) {
+			throw new UncheckedIOException(ex);
 		}
 
 		return success;

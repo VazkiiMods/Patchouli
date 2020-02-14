@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.page;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.util.Identifier;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
@@ -14,13 +15,11 @@ import vazkii.patchouli.common.book.Book;
 
 public class PageQuest extends PageWithText {
 
-	String trigger, title;
+	Identifier trigger;
+	String title;
 	
-	transient BookTextRenderer infoText;
 	transient boolean isManual;
-	transient int footerY;
-	transient ButtonWidget button;
-	
+
 	@Override
 	public int getTextHeight() {
 		return 22;
@@ -29,16 +28,14 @@ public class PageQuest extends PageWithText {
 	@Override
 	public void build(BookEntry entry, int pageNum) {
 		super.build(entry, pageNum);
-		
-		if(trigger != null && !trigger.isEmpty()) {
-			isManual = false;
-		} else isManual = true;
+
+		isManual = trigger == null;
 	}
 	
 	public boolean isCompleted(Book book) {
 		return isManual 
-				? PersistentData.data.getBookData(book).completedManualQuests.contains(entry.getResource().toString())
-				: trigger != null && !trigger.isEmpty() && ClientAdvancements.hasDone(trigger);
+				? PersistentData.data.getBookData(book).completedManualQuests.contains(entry.getId().toString())
+				: trigger != null && ClientAdvancements.hasDone(trigger.toString());
 	}
 
 	@Override
@@ -46,19 +43,20 @@ public class PageQuest extends PageWithText {
 		super.onDisplayed(parent, left, top);
 		
 		if(isManual) {
-			addButton(button = new ButtonWidget(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, "", this::questButtonClicked));
-			updateButtonText();
+			ButtonWidget button = new ButtonWidget(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, "", this::questButtonClicked);
+			addButton(button);
+			updateButtonText(button);
 		}
 	}
 	
-	private void updateButtonText() {
+	private void updateButtonText(ButtonWidget button) {
 		boolean completed = isCompleted(parent.book);
 		String s = I18n.translate(completed ? "patchouli.gui.lexicon.mark_incomplete" : "patchouli.gui.lexicon.mark_complete");
 		button.setMessage(s);
 	}
 	
 	protected void questButtonClicked(ButtonWidget button) {
-		String res = entry.getResource().toString();
+		String res = entry.getId().toString();
 		BookData data = PersistentData.data.getBookData(parent.book);
 		
 		if(data.completedManualQuests.contains(res))
@@ -66,7 +64,7 @@ public class PageQuest extends PageWithText {
 		else data.completedManualQuests.add(res);
 		PersistentData.save();
 		
-		updateButtonText();
+		updateButtonText(button);
 		entry.markReadStateDirty();
 	}
 	

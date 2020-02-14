@@ -5,12 +5,10 @@ import java.util.Map;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import vazkii.patchouli.api.IStateMatcher;
-import vazkii.patchouli.api.VariableHolder;
 
 public class SerializedMultiblock {
 
 	public String[][] pattern = new String[0][0];
-	@VariableHolder
 	public Map<String, String> mapping = new HashMap<>();
 
 	boolean symmetrical = false;

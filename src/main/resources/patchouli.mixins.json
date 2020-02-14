@@ -5,7 +5,8 @@
   "mixins": [
     "MixinIngredient",
     "MixinPlayerAdvancementTracker",
-    "MixinPlayerManager"
+    "MixinPlayerManager",
+    "MixinRecipeManager"
   ],
   "client": [
   ],

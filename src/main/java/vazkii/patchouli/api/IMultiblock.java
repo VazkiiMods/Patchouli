@@ -43,14 +43,12 @@ public interface IMultiblock {
 	 */
 	public IMultiblock setSymmetrical(boolean symmetrical);
 
-	public Identifier getID();
-	
 	/**
-	 * Sets the multiblock's resource location. Not something you need to
+	 * Sets the multiblock's ID. Not something you need to
 	 * call yourself as the register method in the main API class does it for you.
 	 */
-	public IMultiblock setIdentifier(Identifier res);
-	
+	public IMultiblock setId(Identifier res);
+
 	// ================================================================================================
 	// Getters
 	// ================================================================================================
@@ -60,6 +58,8 @@ public interface IMultiblock {
 	 * @see IMultiblock#setSymmetrical
 	 */
 	public boolean isSymmetrical();
+
+	public Identifier getID();
 
 	// ================================================================================================
 	// Actual functionality
