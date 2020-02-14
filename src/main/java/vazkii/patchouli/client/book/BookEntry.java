@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.resources.I18n;
-import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;

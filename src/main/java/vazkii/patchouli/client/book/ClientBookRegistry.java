@@ -15,6 +15,8 @@ import com.google.gson.JsonPrimitive;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import vazkii.patchouli.client.book.page.PageCrafting;
 import vazkii.patchouli.client.book.page.PageEmpty;
 import vazkii.patchouli.client.book.page.PageEntity;
@@ -30,6 +32,7 @@ import vazkii.patchouli.client.book.page.PageText;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 import vazkii.patchouli.client.handler.UnicodeFontHandler;
+import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
@@ -83,7 +86,8 @@ public class ClientBookRegistry {
 	}
 	
 	public void displayBookGui(ResourceLocation bookStr) {
-		currentLang = Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getCode();
+		Minecraft mc = Minecraft.getInstance();
+		currentLang = mc.getLanguageManager().getCurrentLanguage().getCode();
 		
 		Book book = BookRegistry.INSTANCE.books.get(bookStr);
 		
@@ -94,6 +98,11 @@ public class ClientBookRegistry {
 			}
 
 			book.contents.openLexiconGui(book.contents.getCurrentGui(), false);
+
+			if (mc.player != null) {
+				SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open);
+				mc.player.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
+			}
 		}
 	}
 

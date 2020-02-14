@@ -3,10 +3,8 @@ package vazkii.patchouli.client.handler;
 import java.util.Collection;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import org.apache.commons.lang3.tuple.Pair;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MainWindow;
@@ -47,7 +45,7 @@ public class BookRightClickHandler {
 			if(book != null) {
 				Pair<BookEntry, Integer> hover = getHoveredEntry(book);
 				if(hover != null) {
-					BookEntry entry = hover.getLeft();
+					BookEntry entry = hover.getFirst();
 					if(!entry.isLocked()) {
 						MainWindow window = event.getWindow();
 						int x = window.getScaledWidth() / 2 + 3;
@@ -73,36 +71,20 @@ public class BookRightClickHandler {
 	@SubscribeEvent
 	public static void onRightClick(RightClickBlock event) {
 		PlayerEntity player = event.getPlayer();
-		ItemStack bookStack = player.getHeldItemMainhand();
 
 		if(event.getWorld().isRemote && player.isSneaking()) {
-			Book book = getBookFromStack(bookStack);
+			Book book = getBookFromStack(event.getItemStack());
 
 			if(book != null) {
 				Pair<BookEntry, Integer> hover = getHoveredEntry(book);
 				if(hover != null) {
-					BookEntry entry = hover.getLeft();
-
-					if(!entry.isLocked()) {
-						int page = hover.getRight();
-						GuiBook curr = book.contents.getCurrentGui();
-						book.contents.currentGui = new GuiBookEntry(book, entry, page);
-						player.swingArm(Hand.MAIN_HAND);
-
-						if(curr instanceof GuiBookEntry) {
-							GuiBookEntry currEntry = (GuiBookEntry) curr;
-							if(currEntry.getEntry() == entry && currEntry.getPage() == page)
-								return;
-						}
-
-						book.contents.guiStack.push(curr);
-					}
+					setOpenedEntry(player, event.getHand(), hover.getFirst(), hover.getSecond());
 				}
 			}
 		}
 	}
 
-	private static Book getBookFromStack(ItemStack stack) {
+	public static Book getBookFromStack(ItemStack stack) {
 		if(stack.getItem() instanceof ItemModBook)
 			return ItemModBook.getBook(stack);
 
@@ -114,10 +96,26 @@ public class BookRightClickHandler {
 		return null;
 	}
 
+	public static void setOpenedEntry(PlayerEntity player, Hand hand, BookEntry entry, int page) {
+		if(!entry.isLocked()) {
+			GuiBook curr = entry.getBook().contents.getCurrentGui();
+			entry.getBook().contents.currentGui = new GuiBookEntry(entry.getBook(), entry, page);
+			player.swingArm(hand);
+
+			if(curr instanceof GuiBookEntry) {
+				GuiBookEntry currEntry = (GuiBookEntry) curr;
+				if(currEntry.getEntry() == entry && currEntry.getPage() == page)
+					return;
+			}
+
+			entry.getBook().contents.guiStack.push(curr);
+		}
+	}
+
 	private static Pair<BookEntry, Integer> getHoveredEntry(Book book) {
 		Minecraft mc = Minecraft.getInstance();
 		RayTraceResult res = mc.objectMouseOver;
-		if(res != null && res instanceof BlockRayTraceResult) {
+		if(res instanceof BlockRayTraceResult) {
 			BlockPos pos = ((BlockRayTraceResult) res).getPos();
 			BlockState state = mc.world.getBlockState(pos);
 			Block block = state.getBlock();

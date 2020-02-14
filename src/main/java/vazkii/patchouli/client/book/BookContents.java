@@ -22,8 +22,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.mojang.datafixers.util.Pair;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;

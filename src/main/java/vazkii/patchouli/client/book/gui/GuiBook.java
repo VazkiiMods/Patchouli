@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
-import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -205,7 +205,7 @@ public abstract class GuiBook extends Screen {
 			List<String> tooltip = this.getTooltipFromItem(tooltipStack);
 
 			Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
-			if(provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getLeft())) {
+			if(provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
 				tooltip.add(TextFormatting.GOLD + "(" + I18n.format("patchouli.gui.lexicon.shift_for_recipe") + ')');
 				targetPage = provider;
 			}
@@ -270,7 +270,7 @@ public abstract class GuiBook extends Screen {
 		switch(mouseButton) {
 		case GLFW.GLFW_MOUSE_BUTTON_LEFT:
 			if(targetPage != null && hasShiftDown()) {
-				displayLexiconGui(new GuiBookEntry(book, targetPage.getLeft(), targetPage.getRight()), true);
+				displayLexiconGui(new GuiBookEntry(book, targetPage.getFirst(), targetPage.getSecond()), true);
 				playBookFlipSound(book);
 				return true;
 			}

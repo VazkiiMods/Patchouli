@@ -17,12 +17,16 @@ public class PatchouliConfig {
 	public static ForgeConfigSpec.ConfigValue<Boolean> disableAdvancementLocking;
 	public static ForgeConfigSpec.ConfigValue<Boolean> testingMode;
 	public static ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
+	public static ForgeConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
 
 	private static Map<String, Boolean> configFlags = new ConcurrentHashMap<>();
 
 	public static void setup() {
 		Pair<Loader, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Loader::new);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, specPair.getRight());
+
+		Pair<ClientLoader, ForgeConfigSpec> clientSpec = new ForgeConfigSpec.Builder().configure(ClientLoader::new);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec.getRight());
 	}
 
 	public static void load() {
@@ -55,6 +59,18 @@ public class PatchouliConfig {
 			builder.pop();
 		}
 
+	}
+
+	static class ClientLoader {
+		public ClientLoader(ForgeConfigSpec.Builder builder) {
+			builder.push("client");
+
+			useShiftForQuickLookup = builder
+					.comment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
+					.define("quickLookupShift", false);
+
+			builder.pop();
+		}
 	}
 
 	private static void updateFlags() {

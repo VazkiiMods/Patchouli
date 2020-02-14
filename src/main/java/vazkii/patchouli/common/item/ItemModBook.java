@@ -143,8 +143,10 @@ public class ItemModBook extends Item {
 
 		if(playerIn instanceof ServerPlayerEntity) {
 			NetworkHandler.sendToPlayer(new MessageOpenBookGui(book.id), (ServerPlayerEntity) playerIn);
-			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open); 
-			worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), sfx, SoundCategory.PLAYERS, 1F, (float) (0.7 + Math.random() * 0.4));
+
+			// This plays the sound to others nearby, playing to the actual opening player handled from the packet
+			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open);
+			playerIn.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
 		}
 
 		return new ActionResult<>(ActionResultType.SUCCESS, stack);
