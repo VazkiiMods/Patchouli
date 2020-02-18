@@ -1,0 +1,11 @@
+{
+  "name": "Extensions",
+  "category": "extensions",
+  "icon": "minecraft:command_block",
+  "pages": [
+    {
+      "type": "text",
+      "text": "This entry was added from an extension book into a new extension category."
+    }
+  ]
+}

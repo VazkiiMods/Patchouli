@@ -1,0 +1,10 @@
+{
+  "components": [
+    {
+      "type": "text",
+      "x": 30,
+      "y": 30,
+      "text": "#text"
+    }
+  ]
+}
