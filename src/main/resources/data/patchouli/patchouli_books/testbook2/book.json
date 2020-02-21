@@ -1,9 +1,6 @@
 {
 	"name": "item.patchouli:test_book_2.name",
 	"landing_text": "item.patchouli:test_book_2.landing",
-	"advancement_namespaces": [
-		"patchouli"
-	],
 	"subtitle": "Cool book!",
 	"text_color": "bf1111",
 	"header_color": "114fbf",

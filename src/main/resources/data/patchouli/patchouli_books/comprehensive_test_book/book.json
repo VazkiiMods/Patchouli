@@ -1,9 +1,6 @@
 {
   "name": "item.patchouli.comprehensive_test_book.name",
   "landing_text": "item.patchouli.comprehensive_test_book.landing",
-  "advancement_namespaces": [
-    "patchouli"
-  ],
   "model": "minecraft:nether_star",
   "version": "50",
   "subtitle": "Comprehensive Test Book Subtitle",

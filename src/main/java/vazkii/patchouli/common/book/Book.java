@@ -66,9 +66,6 @@ public class Book {
 	@SerializedName("landing_text")
 	public String landingText = "patchouli.gui.lexicon.landing_info";
 
-	@SerializedName("advancement_namespaces")
-	public List<String> advancementNamespaces = new ArrayList<>();
-
 	@SerializedName("book_texture")
 	public ResourceLocation bookTexture = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/book_brown.png");
 
@@ -160,10 +157,6 @@ public class Book {
 				if(!macros.containsKey(m))
 					macros.put(m, DEFAULT_MACROS.get(m));
 		}
-	}
-	
-	public boolean usesAdvancements() {
-		return !advancementNamespaces.isEmpty();
 	}
 	
 	public String getModNamespace() {
