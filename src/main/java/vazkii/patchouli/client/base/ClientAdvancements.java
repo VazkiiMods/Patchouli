@@ -1,59 +1,64 @@
 package vazkii.patchouli.client.base;
 
-import java.util.Arrays;
-import java.util.List;
-
-import com.google.common.base.Preconditions;
-import com.mojang.blaze3d.platform.GlStateManager;
+import java.util.Map;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.toasts.IToast;
 import net.minecraft.client.gui.toasts.ToastGui;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.multiplayer.ClientAdvancementManager;
+import net.minecraft.client.network.play.ClientPlayNetHandler;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.patchouli.client.book.ClientBookRegistry;
-import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class ClientAdvancements {
+	private static boolean gotFirstAdvPacket = false;
 
-	static List<String> doneAdvancements;
-
-	public static void setDoneAdvancements(String[] done, boolean showToast, boolean reset) {
-		Preconditions.checkState(BookRegistry.INSTANCE.isLoaded(), "Advancement packet when books aren't loaded");
-		showToast &= !PatchouliConfig.disableAdvancementLocking.get();
-
-		doneAdvancements = Arrays.asList(done);
-		ClientBookRegistry.INSTANCE.reloadLocks(reset);
-
-		if(showToast)
-			BookRegistry.INSTANCE.books.values().forEach(b -> {
-				if(b.popUpdated() && b.showToasts) {
-					Minecraft.getInstance().getToastGui().add(new LexiconToast(b));
-				}
-			});
-	}
-
-	public static void resetIfNeeded() {
-		if(doneAdvancements != null && doneAdvancements.size() > 0)
-			setDoneAdvancements(new String[0], false, true);
+	/* Hooked at the end of ClientAdvancementManager.read, when the advancement packet arrives clientside
+	   The initial book load is done here when the first advancement packet arrives.
+	   Doing it anytime before that leads to excessive toast spam because the book believes everything to be locked,
+	   and then the first advancement packet unlocks everything.
+	 */
+	public static void onClientPacket() {
+		if (!gotFirstAdvPacket) {
+			ClientBookRegistry.INSTANCE.reload();
+			gotFirstAdvPacket = true;
+		} else {
+			ClientBookRegistry.INSTANCE.reloadLocks(false);
+		}
 	}
 
 	public static boolean hasDone(String advancement) {
-		return doneAdvancements != null && doneAdvancements.contains(advancement);
+		ResourceLocation id = ResourceLocation.tryCreate(advancement);
+		if (id != null) {
+			ClientPlayNetHandler conn = Minecraft.getInstance().getConnection();
+			if (conn != null) {
+				ClientAdvancementManager cm = conn.getAdvancementManager();
+				Advancement adv = cm.getAdvancementList().getAdvancement(id);
+				if (adv != null) {
+					Map<Advancement, AdvancementProgress> progressMap = ObfuscationReflectionHelper.getPrivateValue(ClientAdvancementManager.class, cm, "field_192803_d");
+					AdvancementProgress progress = progressMap.get(adv);
+					return progress != null && progress.isDone();
+				}
+			}
+		}
+		return false;
 	}
 
 	@SubscribeEvent
-	public static void onTick(TickEvent.ClientTickEvent event) {
-		if(event.phase == TickEvent.Phase.END && Minecraft.getInstance().player == null)
-			resetIfNeeded();
+	public static void playerLogout(ClientPlayerNetworkEvent.LoggedOutEvent evt) {
+		gotFirstAdvPacket = false;
 	}
 
 	public static class LexiconToast implements IToast {

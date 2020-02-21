@@ -18,12 +18,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.forgespi.language.IModInfo;
 import net.minecraftforge.common.MinecraftForge;
 import vazkii.patchouli.api.BookContentsReloadEvent;
+import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ExternalBookContents;
 import vazkii.patchouli.client.handler.UnicodeFontHandler;
 import vazkii.patchouli.common.base.Patchouli;
-import vazkii.patchouli.common.handler.AdvancementSyncHandler;
+import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
@@ -146,11 +147,6 @@ public class Book {
 		
 		isExtension = extend != null;
 		
-		// minecraft has an advancement for every recipe, so we don't allow
-		// tracking it to keep packets at a reasonable size
-		advancementNamespaces.remove("minecraft"); 
-		AdvancementSyncHandler.trackedNamespaces.addAll(advancementNamespaces);
-		
 		if(!isExtension) {
 			textColor = 0xFF000000 | Integer.parseInt(textColorRaw, 16);
 			headerColor = 0xFF000000 | Integer.parseInt(headerColorRaw, 16);
@@ -239,12 +235,14 @@ public class Book {
 	}
 	
 	@OnlyIn(Dist.CLIENT)
-	public void reloadLocks(boolean reset) {
+	public void reloadLocks(boolean suppressToasts) {
 		contents.entries.values().forEach(BookEntry::updateLockStatus);
-		contents.categories.values().forEach((c) -> c.updateLockStatus(true));
-		
-		if(reset)
-			popUpdated();
+		contents.categories.values().forEach(c -> c.updateLockStatus(true));
+
+		boolean updated = popUpdated();
+		if (updated && !suppressToasts && !PatchouliConfig.disableAdvancementLocking.get() && showToasts) {
+			Minecraft.getInstance().getToastGui().add(new ClientAdvancements.LexiconToast(this));
+		}
 	}
 	
 	public String getOwnerName() {

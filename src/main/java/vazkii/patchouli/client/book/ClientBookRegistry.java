@@ -81,8 +81,8 @@ public class ClientBookRegistry {
 		BookRegistry.INSTANCE.reloadContents();
 	}
 	
-	public void reloadLocks(boolean reset) {
-		BookRegistry.INSTANCE.books.values().forEach(b -> b.reloadLocks(reset));
+	public void reloadLocks(boolean suppressToasts) {
+		BookRegistry.INSTANCE.books.values().forEach(b -> b.reloadLocks(suppressToasts));
 	}
 	
 	public void displayBookGui(ResourceLocation bookStr) {
