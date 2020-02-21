@@ -5,8 +5,8 @@
 	"text_color": "bf1111",
 	"header_color": "114fbf",
 	"nameplate_color": "d52eff",
-	"proress_bar_background": "8892c9",
-	"proress_bar_color": "da3423", 
+	"progress_bar_background": "8892c9",
+	"progress_bar_color": "da3423",
 	"macros": {
 		"$(potato)": "(POTATO MACRO)"
 	},
