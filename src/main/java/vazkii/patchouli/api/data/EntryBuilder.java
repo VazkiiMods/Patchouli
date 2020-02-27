@@ -1,8 +1,10 @@
 package vazkii.patchouli.api.data;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +38,15 @@ public class EntryBuilder {
         this.icon = icon;
     }
 
-    public JsonObject toJson() {
+    public EntryBuilder(String id, String name, String category, ItemStack icon, CategoryBuilder parent) {
+        this.parent = parent;
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.icon = PatchouliAPI.instance.serializeItemStack(icon);
+    }
+
+    JsonObject toJson() {
         JsonObject json = new JsonObject();
         json.addProperty("name", name);
         json.addProperty("category", category);
@@ -67,12 +77,51 @@ public class EntryBuilder {
         return parent;
     }
 
-    public String getId() {
+    String getId() {
         return id;
     }
 
-    public PageBuilder addPage(String id, String type, JsonObject properties) {
-        PageBuilder builder = new PageBuilder(id, type, properties, this);
+    public TextPageBuilder addTextPage(String text) {
+        return addPage(new TextPageBuilder(text, this));
+    }
+
+    public ImagePageBuilder addImagePage(String... images) {
+        return addPage(new ImagePageBuilder(images, this));
+    }
+
+    public CraftingPageBuilder addCraftingPage(ResourceLocation recipe) {
+        return addPage(new CraftingPageBuilder(recipe, this));
+    }
+
+    public SmeltingPageBuilder addSmeltingPage(ResourceLocation recipe) {
+        return addPage(new SmeltingPageBuilder(recipe, this));
+    }
+
+    public EntityPageBuilder addEntityPage(String entity) {
+        return addPage(new EntityPageBuilder(entity, this));
+    }
+
+    public EntityPageBuilder addEntityPage(ResourceLocation entity) {
+        return addPage(new EntityPageBuilder(entity.toString(), this));
+    }
+
+    public SpotlightPageBuilder addSpotlightPage(ItemStack stack) {
+        return addPage(new SpotlightPageBuilder(stack, this));
+    }
+
+    public LinkPageBuilder addLinkPage(String url, String linkText) {
+        return addPage(new LinkPageBuilder(url, linkText, this));
+    }
+
+    public EmptyPageBuilder addEmptyPage() {
+        return addPage(new EmptyPageBuilder(true, this));
+    }
+
+    public EmptyPageBuilder addEmptyPage(boolean drawFiller) {
+        return addPage(new EmptyPageBuilder(drawFiller, this));
+    }
+
+    public <T extends PageBuilder> T addPage(T builder) {
         pages.add(builder);
         return builder;
     }

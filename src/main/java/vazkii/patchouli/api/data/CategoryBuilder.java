@@ -41,7 +41,7 @@ public class CategoryBuilder {
         return bookBuilder;
     }
 
-    public JsonObject toJson() {
+    JsonObject toJson() {
         JsonObject json = new JsonObject();
         json.addProperty("name", name);
         json.addProperty("description", description);
@@ -63,6 +63,12 @@ public class CategoryBuilder {
         return builder;
     }
 
+    public EntryBuilder addEntry(String id, String name, ItemStack icon) {
+        EntryBuilder builder = new EntryBuilder(id, name, this.id, icon, this);
+        entries.add(builder);
+        return builder;
+    }
+
     public void setParent(String parent) {
         this.parent = parent;
     }
@@ -79,7 +85,7 @@ public class CategoryBuilder {
         this.secret = secret;
     }
 
-    public String getId() {
+    String getId() {
         return id;
     }
 }

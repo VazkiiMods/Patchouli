@@ -50,7 +50,7 @@ public class BookBuilder {
         this.landingText = landingText;
     }
 
-    public JsonObject toJson() {
+    JsonObject toJson() {
         JsonObject json = new JsonObject();
         json.addProperty("name", displayName);
         json.addProperty("landing_text", landingText);
@@ -105,7 +105,7 @@ public class BookBuilder {
         return json;
     }
 
-    public String getId() {
+    String getId() {
         return id;
     }
 
