@@ -153,8 +153,17 @@ task srcJar (type: Jar) {
     classifier = 'sources'
 }
 
+task apiJar(type: Jar) {
+    // Sources included because of MinecraftForge/ForgeGradle#369
+    from(sourceSets.main.allJava)
+    from(sourceSets.main.output)
+    include 'vazkii/patchouli/api/**'
+
+    classifier = 'api'
+}
+
 artifacts {
-    archives srcJar
+    archives srcJar, apiJar
 }
 
 publishing {
