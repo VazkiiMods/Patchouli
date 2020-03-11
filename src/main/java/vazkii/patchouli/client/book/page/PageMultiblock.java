@@ -13,6 +13,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.Vector4f;
@@ -200,11 +201,17 @@ public class PageMultiblock extends PageWithText {
 		MatrixStack ms = new MatrixStack();
 		for (BlockPos pos : blocks) {
 			BlockState bs = mb.getBlockState(pos);
-			IVertexBuilder buffer = buffers.getBuffer(RenderTypeLookup.getBlockLayer(bs));
 
 			ms.push();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
-			Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(bs, pos, mb, ms, buffer, false, RAND);
+			for (RenderType layer : RenderType.getBlockLayers()) {
+				if (RenderTypeLookup.canRenderInLayer(bs, layer)) {
+					ForgeHooksClient.setRenderLayer(layer);
+					IVertexBuilder buffer = buffers.getBuffer(layer);
+					Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(bs, pos, mb, ms, buffer, false, RAND);
+					ForgeHooksClient.setRenderLayer(null);
+				}
+			}
 			ms.pop();
 		}
 	}
