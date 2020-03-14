@@ -1,0 +1,13 @@
+{
+	"name": "iname macro test",
+	"icon": "minecraft:dirt",
+	"category": "test",
+	"priority": true,
+	"read_by_default": false,
+	"pages": [
+		{
+			"type": "text",
+			"text": "This is a test entry with an item name macro: $(iname:minecraft:dirt)"
+		}
+	]
+}
