@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import vazkii.patchouli.client.book.BookEntry;
@@ -18,6 +19,7 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.handler.UnicodeFontHandler;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.util.ItemStackUtil;
 
 import javax.annotation.Nullable;
 
@@ -153,6 +155,10 @@ public class BookTextParser {
 			state.onClick = null;
 			return "";
 		}, "/c");
+		register((parameter, state) -> {
+			ItemStack stack = ItemStackUtil.loadStackFromString(parameter);
+			return stack.getDisplayName().getFormattedText();
+		}, "iname");
 	}
 
 	private final GuiBook gui;
