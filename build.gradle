@@ -174,7 +174,8 @@ publishing {
             artifactId project.archivesBaseName
             version project.version
             from components.java
-            artifacts = [srcJar, apiJar]
+            artifact srcJar
+            artifact apiJar
             pom.withXml {
                 def node = asNode()
                 if(node.dependencies.size() > 0)
