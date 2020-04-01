@@ -1,6 +1,7 @@
 modLoader="javafml"
 loaderVersion="[31,)"
 issueTrackerURL="https://github.com/Vazkii/Patchouli"
+logoFile="logo.png"
 
 [[mods]]
 modId="patchouli"

@@ -3,6 +3,9 @@ Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and
 
 For more information, see the [wiki](https://github.com/Vazkii/Patchouli/wiki).
 
+## What does the mod's name mean???1
+https://en.touhouwiki.net/wiki/Patchouli_Knowledge
+
 ## Maven info
 
 ```gradle
