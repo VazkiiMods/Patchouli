@@ -91,7 +91,13 @@ public abstract class PatchouliBookProvider implements IDataProvider {
     }
 
     public BookBuilder addBook(String id, String name, String landingText) {
-        BookBuilder builder = new BookBuilder(id, name, landingText);
+        BookBuilder builder = new BookBuilder(modid, id, name, landingText);
+        books.add(builder);
+        return builder;
+    }
+
+    public TranslationBookBuilder addTranslationBook(String id, String name, String landingText) {
+        TranslationBookBuilder builder = new TranslationBookBuilder(modid, id);
         books.add(builder);
         return builder;
     }

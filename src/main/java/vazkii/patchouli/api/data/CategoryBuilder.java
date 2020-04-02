@@ -14,8 +14,8 @@ import java.util.List;
 public class CategoryBuilder {
     final List<EntryBuilder> entries = new ArrayList<>();
 
-    private final BookBuilder bookBuilder;
-    private final String id;
+    protected final BookBuilder bookBuilder;
+    protected final String id;
 
     private final String name;
     private final String description;
@@ -69,20 +69,24 @@ public class CategoryBuilder {
         return builder;
     }
 
-    public void setParent(String parent) {
+    public CategoryBuilder setParent(String parent) {
         this.parent = parent;
+        return this;
     }
 
-    public void setFlag(String flag) {
+    public CategoryBuilder setFlag(String flag) {
         this.flag = flag;
+        return this;
     }
 
-    public void setSortnum(Integer sortnum) {
+    public CategoryBuilder setSortnum(Integer sortnum) {
         this.sortnum = sortnum;
+        return this;
     }
 
-    public void setSecret(Boolean secret) {
+    public CategoryBuilder setSecret(Boolean secret) {
         this.secret = secret;
+        return this;
     }
 
     String getId() {

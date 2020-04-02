@@ -14,13 +14,13 @@ import java.util.List;
  * @version 2020-02-26
  */
 public class EntryBuilder {
-    private final CategoryBuilder parent;
-    private final String id;
+    protected final CategoryBuilder parent;
+    protected final String id;
 
     private final String name;
     private final String category;
     private final String icon;
-    private final List<PageBuilder> pages = new ArrayList<>();
+    protected final List<PageBuilder> pages = new ArrayList<>();
     private String advancement;
     private String flag;
     private Boolean priority;
@@ -30,7 +30,7 @@ public class EntryBuilder {
     private String turnin;
 
 
-    public EntryBuilder(String id, String name, String category, String icon, CategoryBuilder parent) {
+    EntryBuilder(String id, String name, String category, String icon, CategoryBuilder parent) {
         this.parent = parent;
         this.id = id;
         this.name = name;
@@ -38,7 +38,7 @@ public class EntryBuilder {
         this.icon = icon;
     }
 
-    public EntryBuilder(String id, String name, String category, ItemStack icon, CategoryBuilder parent) {
+    EntryBuilder(String id, String name, String category, ItemStack icon, CategoryBuilder parent) {
         this.parent = parent;
         this.id = id;
         this.name = name;
@@ -81,8 +81,20 @@ public class EntryBuilder {
         return id;
     }
 
+    public EntryBuilder addSimpleTextPage(String text) {
+        return addPage(new TextPageBuilder(text, this)).build();
+    }
+
+    public EntryBuilder addSimpleTextPage(String text, String title) {
+        return addPage(new TextPageBuilder(text, title, this)).build();
+    }
+
     public TextPageBuilder addTextPage(String text) {
         return addPage(new TextPageBuilder(text, this));
+    }
+
+    public TextPageBuilder addTextPage(String text, String title) {
+        return addPage(new TextPageBuilder(text, title, this));
     }
 
     public ImagePageBuilder addImagePage(String... images) {
@@ -126,31 +138,38 @@ public class EntryBuilder {
         return builder;
     }
 
-    public void setAdvancement(String advancement) {
+    public EntryBuilder setAdvancement(String advancement) {
         this.advancement = advancement;
+        return this;
     }
 
-    public void setFlag(String flag) {
+    public EntryBuilder setFlag(String flag) {
         this.flag = flag;
+        return this;
     }
 
-    public void setPriority(Boolean priority) {
+    public EntryBuilder setPriority(boolean priority) {
         this.priority = priority;
+        return this;
     }
 
-    public void setSecret(Boolean secret) {
+    public EntryBuilder setSecret(boolean secret) {
         this.secret = secret;
+        return this;
     }
 
-    public void setReadByDefault(Boolean readByDefault) {
+    public EntryBuilder setReadByDefault(boolean readByDefault) {
         this.readByDefault = readByDefault;
+        return this;
     }
 
-    public void setSortnum(Integer sortnum) {
+    public EntryBuilder setSortnum(int sortnum) {
         this.sortnum = sortnum;
+        return this;
     }
 
-    public void setTurnin(String turnin) {
+    public EntryBuilder setTurnin(String turnin) {
         this.turnin = turnin;
+        return this;
     }
 }

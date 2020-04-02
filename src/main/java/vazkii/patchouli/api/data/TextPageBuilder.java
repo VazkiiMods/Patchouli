@@ -8,11 +8,18 @@ import com.google.gson.JsonObject;
  */
 public class TextPageBuilder extends PageBuilder {
     private final String text;
-    private String title;
+    private final String title;
+
+    public TextPageBuilder(String text, String title, EntryBuilder entryBuilder) {
+        super("text", entryBuilder);
+        this.text = text;
+        this.title = title;
+    }
 
     public TextPageBuilder(String text, EntryBuilder entryBuilder) {
         super("text", entryBuilder);
         this.text = text;
+        this.title = null;
     }
 
     @Override
@@ -20,9 +27,5 @@ public class TextPageBuilder extends PageBuilder {
         json.addProperty("text", text);
         if (title != null)
             json.addProperty("title", title);
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 }

@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.common.book.Book;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,8 @@ public class BookBuilder {
 
     final List<CategoryBuilder> categories = new ArrayList<>();
 
-    private final String id;
+    protected final String modid;
+    protected final String id;
     private final String displayName;
     private final String landingText;
     private String bookTexture;
@@ -44,7 +46,8 @@ public class BookBuilder {
     private Boolean useBlockyFont;
     private Boolean i18n;
 
-    BookBuilder(String id, String displayName, String landingText) {
+    BookBuilder(String modid, String id, String displayName, String landingText) {
+        this.modid = modid;
         this.id = id;
         this.displayName = displayName;
         this.landingText = landingText;
@@ -134,6 +137,10 @@ public class BookBuilder {
     public BookBuilder setCraftingTexture(String craftingTexture) {
         this.craftingTexture = craftingTexture;
         return this;
+    }
+
+    public BookBuilder setModel(ResourceLocation model) {
+        return this.setModel(model.toString());
     }
 
     public BookBuilder setModel(String model) {
@@ -244,5 +251,9 @@ public class BookBuilder {
     public BookBuilder setI18n(boolean i18n) {
         this.i18n = i18n;
         return this;
+    }
+
+    public ResourceLocation getBookRL() {
+        return new ResourceLocation(modid, id);
     }
 }

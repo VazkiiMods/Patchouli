@@ -1,6 +1,8 @@
 package vazkii.patchouli.api.data;
 
 import com.google.gson.JsonObject;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * @author Minecraftschurli
@@ -8,6 +10,7 @@ import com.google.gson.JsonObject;
  */
 public class EntityPageBuilder extends PageBuilder {
     private final String entity;
+    private CompoundNBT nbt;
     private Float scale;
     private Float offset;
     private Boolean rotate;
@@ -22,7 +25,7 @@ public class EntityPageBuilder extends PageBuilder {
 
     @Override
     protected void serialize(JsonObject json) {
-        json.addProperty("entity", entity);
+        json.addProperty("entity", entity+((nbt.toString() != null) ? nbt : ""));
         if (scale != null)
             json.addProperty("scale", scale);
         if (offset != null)
@@ -35,6 +38,10 @@ public class EntityPageBuilder extends PageBuilder {
             json.addProperty("name", name);
         if (text != null)
             json.addProperty("text", text);
+    }
+
+    public void setEntityNbt(CompoundNBT nbt) {
+        this.nbt = nbt;
     }
 
     public void setScale(Float scale) {
