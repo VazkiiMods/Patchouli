@@ -1,16 +1,11 @@
 package vazkii.patchouli.client.base;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import vazkii.patchouli.client.book.ClientBookRegistry;
-import vazkii.patchouli.client.handler.UnicodeFontHandler;
 
 @EventBusSubscriber(Dist.CLIENT)
 public final class ClientTicker {

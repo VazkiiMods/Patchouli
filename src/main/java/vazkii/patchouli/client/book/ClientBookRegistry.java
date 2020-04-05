@@ -15,7 +15,6 @@ import com.google.gson.JsonPrimitive;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import vazkii.patchouli.client.book.page.PageCrafting;
 import vazkii.patchouli.client.book.page.PageEmpty;
@@ -31,7 +30,6 @@ import vazkii.patchouli.client.book.page.PageTemplate;
 import vazkii.patchouli.client.book.page.PageText;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.TemplateComponent;
-import vazkii.patchouli.client.handler.UnicodeFontHandler;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -73,10 +71,6 @@ public class ClientBookRegistry {
 
 	public void reload() {
 		currentLang = Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getCode();
-		if(firstLoad)
-			/* preload to avoid lag spike when opening book. This happens in the first reload when logging
-			   in, so the user shouldn't notice it as much. */
-			UnicodeFontHandler.getUnicodeFont();
 		firstLoad = false;
 		BookRegistry.INSTANCE.reloadContents();
 	}

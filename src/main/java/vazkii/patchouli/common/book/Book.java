@@ -1,6 +1,5 @@
 package vazkii.patchouli.common.book;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +21,6 @@ import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ExternalBookContents;
-import vazkii.patchouli.client.handler.UnicodeFontHandler;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.item.ItemModBook;
@@ -31,6 +29,7 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 public class Book {
 	
 	public static final ResourceLocation DEFAULT_MODEL = new ResourceLocation(Patchouli.MOD_ID, "book_brown");
+	private static final ResourceLocation UNICODE_FONT_ID = new ResourceLocation(Patchouli.MOD_ID, "unicode_font");
 
 	private static final Map<String, String> DEFAULT_MACROS = Util.make(() -> {
 		Map<String, String> ret = new HashMap<>();
@@ -244,7 +243,11 @@ public class Book {
 	
 	@OnlyIn(Dist.CLIENT)
 	public FontRenderer getFont() {
-		return useBlockyFont ? Minecraft.getInstance().fontRenderer : UnicodeFontHandler.getUnicodeFont();
+		if (useBlockyFont) {
+			return Minecraft.getInstance().fontRenderer;
+		} else {
+			return Minecraft.getInstance().getFontResourceManager().getFontRenderer(UNICODE_FONT_ID);
+		}
 	}
 	
 }
