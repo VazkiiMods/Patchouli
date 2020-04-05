@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.opengl.GL11;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
@@ -66,7 +67,7 @@ public class TooltipHandler {
 		int tooltipX = evt.getX();
 		int tooltipY = evt.getY() - 4;
 
-		if(mc.player != null) {
+		if(mc.player != null && !(mc.currentScreen instanceof GuiBook)) {
 			int lexSlot = -1;
 			ItemStack lexiconStack = ItemStack.EMPTY;
 			Pair<BookEntry, Integer> lexiconEntry = null;
