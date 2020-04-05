@@ -32,6 +32,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import net.minecraftforge.forgespi.language.IModInfo;
 import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.GuiBookLanding;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.common.base.Patchouli;
@@ -286,6 +287,32 @@ public class BookContents extends AbstractReadStateHolder {
 	protected EntryDisplayState computeReadState() {
 		Stream<EntryDisplayState> stream = categories.values().stream().filter(BookCategory::isRootCategory).map(BookCategory::getReadState);
 		return mostImportantState(stream);
+	}
+
+	public final void checkValidCurrentEntry() {
+		if (!getCurrentGui().canBeOpened()) {
+			currentGui = null;
+			guiStack.clear();
+		}
+	}
+
+	/**
+	 * Set the given entry to be one on top of the stack, i.e. will be shown next time the book is opened
+	 */
+	public final void setTopEntry(ResourceLocation entryId, int page) {
+		BookEntry entry = entries.get(entryId);
+		if(!entry.isLocked()) {
+			GuiBook prevGui = getCurrentGui();
+			currentGui = new GuiBookEntry(book, entry);
+
+			if(prevGui instanceof GuiBookEntry) {
+				GuiBookEntry currEntry = (GuiBookEntry) prevGui;
+				if(currEntry.getEntry() == entry && currEntry.getPage() == page)
+					return;
+			}
+
+			entry.getBook().contents.guiStack.push(prevGui);
+		}
 	}
 
 }

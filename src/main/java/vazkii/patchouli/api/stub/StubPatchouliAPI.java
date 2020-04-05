@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.api.distmarker.Dist;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
@@ -44,12 +43,21 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	public void openBookGUI(ServerPlayerEntity player, ResourceLocation book) {
 		// NO-OP
 	}
-	
+
+	@Override
+	public void openBookEntry(ServerPlayerEntity player, ResourceLocation book, ResourceLocation entry, int page) {
+
+	}
+
 	@Override
 	public void openBookGUI(ResourceLocation book) {
 		// NO-OP
 	}
-	
+
+	@Override
+	public void openBookEntry(ResourceLocation book, ResourceLocation entry, int page) {
+	}
+
 	@Override
 	public ResourceLocation getOpenBookGui() {
 		return null;

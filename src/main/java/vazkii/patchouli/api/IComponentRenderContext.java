@@ -14,27 +14,27 @@ import net.minecraft.util.ResourceLocation;
  */
 public interface IComponentRenderContext {
 
-	public Screen getGui();
+	Screen getGui();
 
-	public FontRenderer getFont();
+	FontRenderer getFont();
 
-	public void renderItemStack(int x, int y, int mouseX, int mouseY, ItemStack stack);
+	void renderItemStack(int x, int y, int mouseX, int mouseY, ItemStack stack);
 
-	public void renderIngredient(int x, int y, int mouseX, int mouseY, Ingredient ingredient);
+	void renderIngredient(int x, int y, int mouseX, int mouseY, Ingredient ingredient);
 
-	public boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h);
+	boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h);
 	
-	public void setHoverTooltip(List<String> tooltip);
+	void setHoverTooltip(List<String> tooltip);
 	
-	public void registerButton(Button button, int pageNum, Runnable onClick);
+	void registerButton(Button button, int pageNum, Runnable onClick);
 
-	public ResourceLocation getBookTexture();
+	ResourceLocation getBookTexture();
 	
-	public ResourceLocation getCraftingTexture();
+	ResourceLocation getCraftingTexture();
 	
-	public int getTextColor();
+	int getTextColor();
 	
-	public int getHeaderColor();
+	int getHeaderColor();
 	
-	public int getTicksInBook();
+	int getTicksInBook();
 }

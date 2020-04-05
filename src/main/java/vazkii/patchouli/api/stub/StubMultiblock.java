@@ -2,7 +2,6 @@ package vazkii.patchouli.api.stub;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.function.Consumer;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.ResourceLocation;

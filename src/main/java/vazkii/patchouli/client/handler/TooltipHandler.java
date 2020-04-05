@@ -23,7 +23,6 @@ import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 @Mod.EventBusSubscriber(modid = Patchouli.MOD_ID, value = Dist.CLIENT)
@@ -131,8 +130,7 @@ public class TooltipHandler {
 
 					if(lexiconLookupTime >= time) {
 						mc.player.inventory.currentItem = lexSlot;
-						BookRightClickHandler.setOpenedEntry(mc.player, Hand.MAIN_HAND, lexiconEntry.getFirst(), lexiconEntry.getSecond());
-						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id);
+						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), lexiconEntry.getSecond());
 					}
 				} else lexiconLookupTime = 0F;
 

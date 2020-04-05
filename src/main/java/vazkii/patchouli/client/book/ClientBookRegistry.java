@@ -16,6 +16,8 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.PageCrafting;
 import vazkii.patchouli.client.book.page.PageEmpty;
 import vazkii.patchouli.client.book.page.PageEntity;
@@ -34,6 +36,8 @@ import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
+
+import javax.annotation.Nullable;
 
 public class ClientBookRegistry {
 
@@ -75,17 +79,22 @@ public class ClientBookRegistry {
 	public void reloadLocks(boolean suppressToasts) {
 		BookRegistry.INSTANCE.books.values().forEach(b -> b.reloadLocks(suppressToasts));
 	}
-	
-	public void displayBookGui(ResourceLocation bookStr) {
+
+	/**
+	 * @param entryId Entry to force to the top of the stack
+	 * @param page Page in the entry to force. Ignored if {@code entryId} is null.
+	 */
+	public void displayBookGui(ResourceLocation bookStr, @Nullable ResourceLocation entryId, int page) {
 		Minecraft mc = Minecraft.getInstance();
 		currentLang = mc.getLanguageManager().getCurrentLanguage().getCode();
 		
 		Book book = BookRegistry.INSTANCE.books.get(bookStr);
 		
 		if(book != null) {
-			if (!book.contents.getCurrentGui().canBeOpened()) {
-				book.contents.currentGui = null;
-				book.contents.guiStack.clear();
+			book.contents.checkValidCurrentEntry();
+
+			if (entryId != null) {
+				book.contents.setTopEntry(entryId, page);
 			}
 
 			book.contents.openLexiconGui(book.contents.getCurrentGui(), false);

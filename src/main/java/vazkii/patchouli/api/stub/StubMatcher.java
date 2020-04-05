@@ -1,7 +1,5 @@
 package vazkii.patchouli.api.stub;
 
-import java.util.function.Predicate;
-
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;

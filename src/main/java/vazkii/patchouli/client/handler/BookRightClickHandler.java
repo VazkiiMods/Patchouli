@@ -62,8 +62,8 @@ public class BookRightClickHandler {
 						RenderSystem.pushMatrix();
 						RenderSystem.scalef(0.75F, 0.75F, 1F);
 						String s = I18n.format("patchouli.gui.lexicon."+(player.isSneaking() ? "view" : "sneak"));
-                        mc.fontRenderer.drawStringWithShadow(TextFormatting.ITALIC + s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
-                        RenderSystem.popMatrix();
+						mc.fontRenderer.drawStringWithShadow(TextFormatting.ITALIC + s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
+						RenderSystem.popMatrix();
 					}
 				}
 			}
@@ -80,7 +80,7 @@ public class BookRightClickHandler {
 			if(book != null) {
 				Pair<BookEntry, Integer> hover = getHoveredEntry(book);
 				if(hover != null) {
-					setOpenedEntry(player, event.getHand(), hover.getFirst(), hover.getSecond());
+					book.contents.setTopEntry(hover.getFirst().getId(), hover.getSecond());
 				}
 			}
 		}
@@ -97,22 +97,6 @@ public class BookRightClickHandler {
 				return b;
 
 		return null;
-	}
-
-	public static void setOpenedEntry(PlayerEntity player, Hand hand, BookEntry entry, int page) {
-		if(!entry.isLocked()) {
-			GuiBook curr = entry.getBook().contents.getCurrentGui();
-			entry.getBook().contents.currentGui = new GuiBookEntry(entry.getBook(), entry, page);
-			player.swingArm(hand);
-
-			if(curr instanceof GuiBookEntry) {
-				GuiBookEntry currEntry = (GuiBookEntry) curr;
-				if(currEntry.getEntry() == entry && currEntry.getPage() == page)
-					return;
-			}
-
-			entry.getBook().contents.guiStack.push(curr);
-		}
 	}
 
 	private static Pair<BookEntry, Integer> getHoveredEntry(Book book) {

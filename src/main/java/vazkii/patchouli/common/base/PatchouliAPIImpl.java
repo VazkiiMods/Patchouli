@@ -59,15 +59,26 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	
 	@Override
 	public void openBookGUI(ServerPlayerEntity player, ResourceLocation book) {
-		NetworkHandler.sendToPlayer(new MessageOpenBookGui(book), player);
+		NetworkHandler.sendToPlayer(new MessageOpenBookGui(book, null), player);
 	}
-	
+
+	@Override
+	public void openBookEntry(ServerPlayerEntity player, ResourceLocation book, ResourceLocation entry, int page) {
+		NetworkHandler.sendToPlayer(new MessageOpenBookGui(book, entry, page), player);
+	}
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void openBookGUI(ResourceLocation book) {
-		ClientBookRegistry.INSTANCE.displayBookGui(book);
+		ClientBookRegistry.INSTANCE.displayBookGui(book, null, 0);
 	}
-	
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void openBookEntry(ResourceLocation book, ResourceLocation entry, int page) {
+		ClientBookRegistry.INSTANCE.displayBookGui(book, entry, page);
+	}
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public ResourceLocation getOpenBookGui() {

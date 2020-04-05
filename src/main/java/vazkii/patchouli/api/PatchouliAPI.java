@@ -54,17 +54,25 @@ public class PatchouliAPI {
 		boolean getConfigFlag(String flag);
 		
 		/**
-		 * Opens a book GUI for the given player (server version).
+		 * Opens the given book to the last page that was open, or the landing page otherwise.
 		 */
 		void openBookGUI(ServerPlayerEntity player, ResourceLocation book);
-		
+
 		/**
-		 * Opens a book GUI. (client version)
+		 * Opens the book to the given entry
 		 */
-		@OnlyIn(Dist.CLIENT)
+		void openBookEntry(ServerPlayerEntity player, ResourceLocation book, ResourceLocation entry, int page);
+
+		/**
+		 * Client version of {@link #openBookGUI(ServerPlayerEntity, ResourceLocation)}.
+		 */
 		void openBookGUI(ResourceLocation book);
+
+		/**
+		 * Client version of {@link #openBookEntry(ServerPlayerEntity, ResourceLocation, ResourceLocation, int)}
+		 */
+		void openBookEntry(ResourceLocation book, ResourceLocation entry, int page);
 		
-		@OnlyIn(Dist.CLIENT)
 		ResourceLocation getOpenBookGui();
 		
 		/**

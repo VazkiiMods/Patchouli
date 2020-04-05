@@ -26,10 +26,10 @@ import vazkii.patchouli.common.book.Book;
 
 public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
-	BookEntry entry;
+	final BookEntry entry;
 	BookPage leftPage, rightPage;
 
-	Map<Button, Runnable> customButtons = new HashMap<>();
+	final Map<Button, Runnable> customButtons = new HashMap<>();
 
 	public GuiBookEntry(Book book, BookEntry entry) {
 		this(book, entry, 0);
