@@ -29,7 +29,6 @@ import vazkii.patchouli.client.book.page.PageTemplate;
 import vazkii.patchouli.client.book.page.PageText;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.TemplateComponent;
-import vazkii.patchouli.client.handler.UnicodeFontHandler;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
@@ -70,10 +69,6 @@ public class ClientBookRegistry {
 
 	public void reload() {
 		currentLang = Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getCode();
-		if(firstLoad)
-			/* preload to avoid lag spike when opening book. This happens in the first reload when logging
-			   in, so the user shouldn't notice it as much. */
-			UnicodeFontHandler.getUnicodeFont();
 		firstLoad = false;
 		BookRegistry.INSTANCE.reloadContents();
 	}

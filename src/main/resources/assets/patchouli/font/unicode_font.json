@@ -1,0 +1,10 @@
+{
+  "_comment": "Same as assets/minecraft/font/default.json, but without all the bitmap fonts (so the unicode font is all that is available)",
+  "providers": [
+    {
+      "type": "legacy_unicode",
+      "sizes": "minecraft:font/glyph_sizes.bin",
+      "template": "minecraft:font/unicode_page_%s.png"
+    }
+  ]
+}
