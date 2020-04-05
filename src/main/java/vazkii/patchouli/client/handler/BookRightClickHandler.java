@@ -31,6 +31,8 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
+import javax.annotation.Nullable;
+
 @EventBusSubscriber(Dist.CLIENT)
 public class BookRightClickHandler {
 
@@ -84,6 +86,7 @@ public class BookRightClickHandler {
 		}
 	}
 
+	@Nullable
 	public static Book getBookFromStack(ItemStack stack) {
 		if(stack.getItem() instanceof ItemModBook)
 			return ItemModBook.getBook(stack);

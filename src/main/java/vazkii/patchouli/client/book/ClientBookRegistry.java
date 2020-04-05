@@ -39,8 +39,6 @@ public class ClientBookRegistry {
 
 	public final Map<String, Class<? extends BookPage>> pageTypes = new HashMap<>();
 
-	private boolean firstLoad = true;
-
 	public final Gson gson = new GsonBuilder()
 			.registerTypeHierarchyAdapter(BookPage.class, new LexiconPageAdapter())
 			.registerTypeHierarchyAdapter(TemplateComponent.class, new TemplateComponentAdapter())
@@ -71,7 +69,6 @@ public class ClientBookRegistry {
 
 	public void reload() {
 		currentLang = Minecraft.getInstance().getLanguageManager().getCurrentLanguage().getCode();
-		firstLoad = false;
 		BookRegistry.INSTANCE.reloadContents();
 	}
 	

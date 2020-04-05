@@ -74,8 +74,7 @@ public class TooltipHandler {
 
 			for(int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 				ItemStack stackAt = mc.player.inventory.getStackInSlot(i);
-				if(!stackAt.isEmpty()
-						&& stackAt.getItem() instanceof ItemModBook) {
+				if(!stackAt.isEmpty()) {
 					Book book = BookRightClickHandler.getBookFromStack(stackAt);
 					if (book != null) {
 						Pair<BookEntry, Integer> entry = book.contents.recipeMappings.get(new ItemStackUtil.StackWrapper(evt.getStack()));
