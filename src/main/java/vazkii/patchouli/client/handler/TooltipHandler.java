@@ -76,7 +76,7 @@ public class TooltipHandler {
 				if(!stackAt.isEmpty()) {
 					Book book = BookRightClickHandler.getBookFromStack(stackAt);
 					if (book != null) {
-						Pair<BookEntry, Integer> entry = book.contents.recipeMappings.get(new ItemStackUtil.StackWrapper(evt.getStack()));
+						Pair<BookEntry, Integer> entry = book.contents.getEntryForStack(evt.getStack());
 
 						if (entry != null && !entry.getFirst().isLocked()) {
 							lexiconStack = stackAt;
@@ -130,7 +130,8 @@ public class TooltipHandler {
 
 					if(lexiconLookupTime >= time) {
 						mc.player.inventory.currentItem = lexSlot;
-						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), lexiconEntry.getSecond());
+						int page = lexiconEntry.getSecond();
+						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), page);
 					}
 				} else lexiconLookupTime = 0F;
 

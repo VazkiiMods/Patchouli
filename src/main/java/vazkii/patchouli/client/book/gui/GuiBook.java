@@ -64,7 +64,7 @@ public abstract class GuiBook extends Screen {
 	private List<String> tooltip;
 	private ItemStack tooltipStack;
 	private Pair<BookEntry, Integer> targetPage;
-	protected int page = 0, maxpages = 0;
+	protected int spread = 0, maxSpreads = 0;
 
 	public int ticksInBook;
 	public int maxScale;
@@ -324,8 +324,8 @@ public abstract class GuiBook extends Screen {
 	void changePage(boolean left, boolean sfx) {
 		if(canSeePageButton(left)) {
 			if(left)
-				page--;
-			else page++;
+				spread--;
+			else spread++;
 
 			onPageChanged();
 			if(sfx)
@@ -342,7 +342,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public boolean canSeePageButton(boolean left) {
-		return left ? page > 0 : (page + 1) < maxpages; 
+		return left ? spread > 0 : (spread + 1) < maxSpreads;
 	}
 
 	public boolean canSeeBackButton() {
@@ -440,8 +440,8 @@ public abstract class GuiBook extends Screen {
 		return minecraft.getWindow().calcGuiScale(0, minecraft.getForceUnicodeFont());
 	}
 
-	public int getPage() {
-		return page;
+	public int getSpread() {
+		return spread;
 	}
 
 	public static void drawSeparator(Book book, int x, int y) {

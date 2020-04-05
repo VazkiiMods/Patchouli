@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -303,11 +302,12 @@ public class BookContents extends AbstractReadStateHolder {
 		BookEntry entry = entries.get(entryId);
 		if(!entry.isLocked()) {
 			GuiBook prevGui = getCurrentGui();
-			currentGui = new GuiBookEntry(book, entry);
+			int spread = page / 2;
+			currentGui = new GuiBookEntry(book, entry, spread);
 
 			if(prevGui instanceof GuiBookEntry) {
 				GuiBookEntry currEntry = (GuiBookEntry) prevGui;
-				if(currEntry.getEntry() == entry && currEntry.getPage() == page)
+				if(currEntry.getEntry() == entry && currEntry.getSpread() == spread)
 					return;
 			}
 

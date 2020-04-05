@@ -1,0 +1,15 @@
+{
+  "name": "Normal Recipe Mapping",
+  "category": "recipe_mapping",
+  "icon": "minecraft:cooked_salmon",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "minecraft:diamond_sword"
+    },
+    {
+      "type": "smelting",
+      "recipe": "minecraft:cooked_cod"
+    }
+  ]
+}

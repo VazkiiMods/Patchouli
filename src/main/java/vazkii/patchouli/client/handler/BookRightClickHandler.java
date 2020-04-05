@@ -80,7 +80,8 @@ public class BookRightClickHandler {
 			if(book != null) {
 				Pair<BookEntry, Integer> hover = getHoveredEntry(book);
 				if(hover != null) {
-					book.contents.setTopEntry(hover.getFirst().getId(), hover.getSecond());
+					int page = hover.getSecond() * 2;
+					book.contents.setTopEntry(hover.getFirst().getId(), page);
 				}
 			}
 		}
@@ -109,7 +110,7 @@ public class BookRightClickHandler {
 			ItemStack picked = block.getPickBlock(state, res, mc.world, pos, mc.player);
 
 			if(!picked.isEmpty())
-				return book.contents.recipeMappings.get(ItemStackUtil.wrapStack(picked));
+				return book.contents.getEntryForStack(picked);
 		}
 
 		return null;

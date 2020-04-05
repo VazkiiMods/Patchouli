@@ -61,7 +61,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return obj == this || (obj instanceof GuiBookCategory && ((GuiBookCategory) obj).category == category && ((GuiBookCategory) obj).page == page);
+		return obj == this || (obj instanceof GuiBookCategory && ((GuiBookCategory) obj).category == category && ((GuiBookCategory) obj).spread == spread);
 	}
 	
 	@Override
