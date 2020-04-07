@@ -1,14 +1,15 @@
-package vazkii.patchouli.api.data;
+package vazkii.patchouli.api.data.page;
 
 import com.google.gson.JsonObject;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import vazkii.patchouli.api.data.AbstractPageBuilder;
+import vazkii.patchouli.api.data.EntryBuilder;
 
 /**
  * @author Minecraftschurli
  * @version 2020-02-27
  */
-public class EntityPageBuilder extends PageBuilder {
+public class EntityPageBuilder extends AbstractPageBuilder {
     private final String entity;
     private CompoundNBT nbt;
     private Float scale;
@@ -25,7 +26,7 @@ public class EntityPageBuilder extends PageBuilder {
 
     @Override
     protected void serialize(JsonObject json) {
-        json.addProperty("entity", entity+((nbt.toString() != null) ? nbt : ""));
+        json.addProperty("entity", entity+((nbt != null) ? nbt.toString() : ""));
         if (scale != null)
             json.addProperty("scale", scale);
         if (offset != null)

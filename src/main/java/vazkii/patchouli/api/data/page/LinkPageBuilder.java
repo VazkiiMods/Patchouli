@@ -1,12 +1,14 @@
-package vazkii.patchouli.api.data;
+package vazkii.patchouli.api.data.page;
 
 import com.google.gson.JsonObject;
+import vazkii.patchouli.api.data.AbstractPageBuilder;
+import vazkii.patchouli.api.data.EntryBuilder;
 
 /**
  * @author Minecraftschurli
  * @version 2020-02-27
  */
-public class LinkPageBuilder extends PageBuilder {
+public class LinkPageBuilder extends AbstractPageBuilder {
     private final String url;
     private final String linkText;
 

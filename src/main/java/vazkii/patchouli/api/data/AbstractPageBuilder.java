@@ -6,14 +6,14 @@ import com.google.gson.JsonObject;
  * @author Minecraftschurli
  * @version 2020-02-26
  */
-public abstract class PageBuilder {
-    private final EntryBuilder parent;
+public abstract class AbstractPageBuilder {
+    protected final EntryBuilder parent;
     private final String type;
     private String advancement;
     private String flag;
     private String anchor;
 
-    public PageBuilder(String type, EntryBuilder parent) {
+    protected AbstractPageBuilder(String type, EntryBuilder parent) {
         this.parent = parent;
         this.type = type;
     }
@@ -30,8 +30,9 @@ public abstract class PageBuilder {
 
     protected abstract void serialize(JsonObject json);
 
-    public EntryBuilder build() {
-        return parent;
+    @SuppressWarnings("unchecked")
+    public <T> T build() {
+        return (T) parent;
     }
 
     public void setAdvancement(String advancement) {

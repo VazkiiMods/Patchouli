@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.api.data.page.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,13 +17,13 @@ import java.util.Map;
  * @version 2020-02-26
  */
 public class EntryBuilder {
-    protected final CategoryBuilder parent;
-    protected final String id;
 
+    private final CategoryBuilder parent;
+    private final ResourceLocation id;
     private final String name;
     private final String category;
     private final String icon;
-    private final List<PageBuilder> pages = new ArrayList<>();
+    private final List<AbstractPageBuilder> pages = new ArrayList<>();
     private String advancement;
     private String flag;
     private Boolean priority;
@@ -32,21 +33,16 @@ public class EntryBuilder {
     private String turnin;
     private Map<ItemStack, Integer> extraRecipeMappings;
 
-
-    EntryBuilder(String id, String name, String category, String icon, CategoryBuilder parent) {
-        this.parent = parent;
-        this.id = id;
+    EntryBuilder(String id, String name, String icon, CategoryBuilder parent) {
+        this.id = new ResourceLocation(parent.getId().getNamespace(), id);
         this.name = name;
-        this.category = category;
+        this.category = parent.getId().getPath();
         this.icon = icon;
+        this.parent = parent;
     }
 
-    EntryBuilder(String id, String name, String category, ItemStack icon, CategoryBuilder parent) {
-        this.parent = parent;
-        this.id = id;
-        this.name = name;
-        this.category = category;
-        this.icon = PatchouliAPI.instance.serializeItemStack(icon);
+    EntryBuilder(String id, String name, ItemStack icon, CategoryBuilder parent) {
+        this(id, name, PatchouliAPI.instance.serializeItemStack(icon), parent);
     }
 
     JsonObject toJson() {
@@ -55,7 +51,7 @@ public class EntryBuilder {
         json.addProperty("category", category);
         json.addProperty("icon", icon);
         JsonArray pages = new JsonArray();
-        for (PageBuilder page : this.pages) {
+        for (AbstractPageBuilder page : this.pages) {
             pages.add(page.toJson());
         }
         json.add("pages", pages);
@@ -85,10 +81,6 @@ public class EntryBuilder {
 
     public CategoryBuilder build() {
         return parent;
-    }
-
-    String getId() {
-        return id;
     }
 
     public EntryBuilder addSimpleTextPage(String text) {
@@ -143,7 +135,7 @@ public class EntryBuilder {
         return addPage(new EmptyPageBuilder(drawFiller, this));
     }
 
-    public <T extends PageBuilder> T addPage(T builder) {
+    public <T extends AbstractPageBuilder> T addPage(T builder) {
         pages.add(builder);
         return builder;
     }
@@ -188,5 +180,9 @@ public class EntryBuilder {
             this.extraRecipeMappings = new HashMap<>();
         this.extraRecipeMappings.put(stack, index);
         return this;
+    }
+
+    protected ResourceLocation getId() {
+        return id;
     }
 }

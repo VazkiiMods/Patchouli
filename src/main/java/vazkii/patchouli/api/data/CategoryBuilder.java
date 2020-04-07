@@ -2,9 +2,11 @@ package vazkii.patchouli.api.data;
 
 import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -12,14 +14,13 @@ import java.util.List;
  * @version 2020-02-26
  */
 public class CategoryBuilder {
-    final List<EntryBuilder> entries = new ArrayList<>();
 
-    protected final BookBuilder bookBuilder;
-    protected final String id;
-
+    private final BookBuilder bookBuilder;
+    private final ResourceLocation id;
     private final String name;
     private final String description;
     private final String icon;
+    private final List<EntryBuilder> entries = new ArrayList<>();
     private String parent;
     private String flag;
     private Integer sortnum;
@@ -31,14 +32,10 @@ public class CategoryBuilder {
 
     CategoryBuilder(String id, String name, String description, String icon, BookBuilder bookBuilder) {
         this.bookBuilder = bookBuilder;
-        this.id = id;
+        this.id = new ResourceLocation(bookBuilder.getId().getNamespace(), id);
         this.name = name;
         this.description = description;
         this.icon = icon;
-    }
-
-    public BookBuilder build() {
-        return bookBuilder;
     }
 
     JsonObject toJson() {
@@ -57,15 +54,24 @@ public class CategoryBuilder {
         return json;
     }
 
+    List<EntryBuilder> getEntries() {
+        return Collections.unmodifiableList(entries);
+    }
+
+    public BookBuilder build() {
+        return bookBuilder;
+    }
+
     public EntryBuilder addEntry(String id, String name, String icon) {
-        EntryBuilder builder = new EntryBuilder(id, name, this.id, icon, this);
-        entries.add(builder);
-        return builder;
+        return this.addEntry(new EntryBuilder(id, name, icon, this));
     }
 
     public EntryBuilder addEntry(String id, String name, ItemStack icon) {
-        EntryBuilder builder = new EntryBuilder(id, name, this.id, icon, this);
-        entries.add(builder);
+        return this.addEntry(new EntryBuilder(id, name, icon, this));
+    }
+
+    protected EntryBuilder addEntry(EntryBuilder builder) {
+        this.entries.add(builder);
         return builder;
     }
 
@@ -89,7 +95,7 @@ public class CategoryBuilder {
         return this;
     }
 
-    String getId() {
+    protected ResourceLocation getId() {
         return id;
     }
 }

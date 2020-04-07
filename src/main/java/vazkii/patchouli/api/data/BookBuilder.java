@@ -4,10 +4,12 @@ import com.google.gson.JsonObject;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.common.book.Book;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * @author Minecraftschurli
@@ -15,12 +17,10 @@ import java.util.List;
  */
 public class BookBuilder {
 
-    final List<CategoryBuilder> categories = new ArrayList<>();
-
-    protected final String modid;
-    protected final String id;
+    private final ResourceLocation id;
     private final String displayName;
     private final String landingText;
+    private final List<CategoryBuilder> categories = new ArrayList<>();
     private String bookTexture;
     private String fillerTexture;
     private String craftingTexture;
@@ -46,8 +46,11 @@ public class BookBuilder {
     private Boolean useBlockyFont;
     private Boolean i18n;
 
-    BookBuilder(String modid, String id, String displayName, String landingText) {
-        this.modid = modid;
+    protected BookBuilder(String modid, String id, String displayName, String landingText) {
+        this(new ResourceLocation(modid, id), displayName, landingText);
+    }
+
+    protected BookBuilder(ResourceLocation id, String displayName, String landingText) {
         this.id = id;
         this.displayName = displayName;
         this.landingText = landingText;
@@ -108,19 +111,24 @@ public class BookBuilder {
         return json;
     }
 
-    String getId() {
-        return id;
+    List<CategoryBuilder> getCategories() {
+        return Collections.unmodifiableList(categories);
+    }
+
+    public void build(Consumer<BookBuilder> consumer) {
+        consumer.accept(this);
     }
 
     public CategoryBuilder addCategory(String id, String name, String description, ItemStack icon) {
-        CategoryBuilder builder = new CategoryBuilder(id, name, description, icon, this);
-        categories.add(builder);
-        return builder;
+        return this.addCategory(new CategoryBuilder(id, name, description, icon, this));
     }
 
     public CategoryBuilder addCategory(String id, String name, String description, String icon) {
-        CategoryBuilder builder = new CategoryBuilder(id, name, description, icon, this);
-        categories.add(builder);
+        return this.addCategory(new CategoryBuilder(id, name, description, icon, this));
+    }
+
+    protected <T extends CategoryBuilder> T addCategory(T builder) {
+        this.categories.add(builder);
         return builder;
     }
 
@@ -253,7 +261,12 @@ public class BookBuilder {
         return this;
     }
 
-    public ResourceLocation getBookRL() {
-        return new ResourceLocation(modid, id);
+    protected ResourceLocation getId() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof BookBuilder && Objects.equals(((BookBuilder) obj).getId(), this.getId());
     }
 }

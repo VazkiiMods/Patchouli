@@ -6,14 +6,16 @@ import com.google.gson.JsonObject;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
+import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.function.Consumer;
 
 /**
  * @author Minecraftschurli
@@ -23,7 +25,7 @@ public abstract class PatchouliBookProvider implements IDataProvider {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
 
-    private final List<BookBuilder> books = new ArrayList<>();
+    private final Collection<BookBuilder> books = new HashSet<>();
 
     private final DataGenerator generator;
     private final String locale;
@@ -42,24 +44,22 @@ public abstract class PatchouliBookProvider implements IDataProvider {
      */
     @Override
     public void act(@Nonnull DirectoryCache cache) {
-        books.clear();
-        addBooks();
-        for (BookBuilder book : books) {
+        addBooks(book -> {
             saveBook(cache, book.toJson(), book.getId());
-            for (CategoryBuilder category : book.categories) {
+            for (CategoryBuilder category : book.getCategories()) {
                 saveCategory(cache, category.toJson(), book.getId(), category.getId());
-                for (EntryBuilder entry : category.entries) {
+                for (EntryBuilder entry : category.getEntries()) {
                     saveEntry(cache, entry.toJson(), book.getId(), entry.getId());
                 }
             }
-        }
+        });
     }
 
-    protected abstract void addBooks();
+    protected abstract void addBooks(Consumer<BookBuilder> consumer);
 
-    private void saveEntry(DirectoryCache cache, JsonObject json, String bookName, String id) {
+    private void saveEntry(DirectoryCache cache, JsonObject json, ResourceLocation bookId, ResourceLocation id) {
         Path mainOutput = generator.getOutputFolder();
-        String pathSuffix = "data/" + modid + "/patchouli_books/" + bookName + "/" + locale + "/entries/" + id + ".json";
+        String pathSuffix = makeBookPath(bookId) + "/" + locale + "/entries/" + id.getPath() + ".json";
         Path outputPath = mainOutput.resolve(pathSuffix);
         try {
             IDataProvider.save(GSON, cache, json, outputPath);
@@ -68,9 +68,9 @@ public abstract class PatchouliBookProvider implements IDataProvider {
         }
     }
 
-    private void saveCategory(DirectoryCache cache, JsonObject json, String bookName, String id) {
+    private void saveCategory(DirectoryCache cache, JsonObject json, ResourceLocation bookId, ResourceLocation id) {
         Path mainOutput = generator.getOutputFolder();
-        String pathSuffix = "data/" + modid + "/patchouli_books/" + bookName + "/" + locale + "/categories/" + id + ".json";
+        String pathSuffix = makeBookPath(bookId) + "/" + locale + "/categories/" + id.getPath() + ".json";
         Path outputPath = mainOutput.resolve(pathSuffix);
         try {
             IDataProvider.save(GSON, cache, json, outputPath);
@@ -79,9 +79,9 @@ public abstract class PatchouliBookProvider implements IDataProvider {
         }
     }
 
-    private void saveBook(DirectoryCache cache, JsonObject json, String name) {
+    private void saveBook(DirectoryCache cache, JsonObject json, ResourceLocation bookId) {
         Path mainOutput = generator.getOutputFolder();
-        String pathSuffix = "data/" + modid + "/patchouli_books/" + name + "/" + locale + "/book.json";
+        String pathSuffix = makeBookPath(bookId) + "/book.json";
         Path outputPath = mainOutput.resolve(pathSuffix);
         try {
             IDataProvider.save(GSON, cache, json, outputPath);
@@ -90,16 +90,12 @@ public abstract class PatchouliBookProvider implements IDataProvider {
         }
     }
 
-    public BookBuilder addBook(String id, String name, String landingText) {
-        BookBuilder builder = new BookBuilder(modid, id, name, landingText);
-        books.add(builder);
-        return builder;
+    public BookBuilder createBookBuilder(String id, String name, String landingText) {
+        return new BookBuilder(modid, id, name, landingText);
     }
 
-    public TranslationBookBuilder addTranslationBook(String id, String name, String landingText) {
-        TranslationBookBuilder builder = new TranslationBookBuilder(modid, id);
-        books.add(builder);
-        return builder;
+    private String makeBookPath(ResourceLocation bookId) {
+        return "data/" + bookId.getNamespace() + "/patchouli_books/" + bookId.getPath();
     }
 
     /**

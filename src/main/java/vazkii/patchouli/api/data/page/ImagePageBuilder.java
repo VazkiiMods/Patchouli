@@ -1,13 +1,15 @@
-package vazkii.patchouli.api.data;
+package vazkii.patchouli.api.data.page;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import vazkii.patchouli.api.data.AbstractPageBuilder;
+import vazkii.patchouli.api.data.EntryBuilder;
 
 /**
  * @author Minecraftschurli
  * @version 2020-02-27
  */
-public class ImagePageBuilder extends PageBuilder {
+public class ImagePageBuilder extends AbstractPageBuilder {
     private final String[] images;
     private String title;
     private Boolean border;

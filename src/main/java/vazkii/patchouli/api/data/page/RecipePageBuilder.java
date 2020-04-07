@@ -1,13 +1,15 @@
-package vazkii.patchouli.api.data;
+package vazkii.patchouli.api.data.page;
 
 import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
+import vazkii.patchouli.api.data.AbstractPageBuilder;
+import vazkii.patchouli.api.data.EntryBuilder;
 
 /**
  * @author Minecraftschurli
  * @version 2020-02-27
  */
-public abstract class RecipePageBuilder extends PageBuilder{
+public abstract class RecipePageBuilder extends AbstractPageBuilder {
     private final String recipe;
     private String recipe2;
     private String title;
