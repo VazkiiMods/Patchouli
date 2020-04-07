@@ -7,7 +7,9 @@ import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Minecraftschurli
@@ -20,7 +22,7 @@ public class EntryBuilder {
     private final String name;
     private final String category;
     private final String icon;
-    protected final List<PageBuilder> pages = new ArrayList<>();
+    private final List<PageBuilder> pages = new ArrayList<>();
     private String advancement;
     private String flag;
     private Boolean priority;
@@ -28,6 +30,7 @@ public class EntryBuilder {
     private Boolean readByDefault;
     private Integer sortnum;
     private String turnin;
+    private Map<ItemStack, Integer> extraRecipeMappings;
 
 
     EntryBuilder(String id, String name, String category, String icon, CategoryBuilder parent) {
@@ -70,6 +73,13 @@ public class EntryBuilder {
             json.addProperty("sortnum", sortnum);
         if (turnin != null)
             json.addProperty("turnin", turnin);
+        if (extraRecipeMappings != null) {
+            JsonObject mappings = new JsonObject();
+            for (Map.Entry<ItemStack, Integer> entry : extraRecipeMappings.entrySet()) {
+                mappings.addProperty(PatchouliAPI.instance.serializeItemStack(entry.getKey()), entry.getValue());
+            }
+            json.add("extra_recipe_mappings", mappings);
+        }
         return json;
     }
 
@@ -170,6 +180,13 @@ public class EntryBuilder {
 
     public EntryBuilder setTurnin(String turnin) {
         this.turnin = turnin;
+        return this;
+    }
+
+    public EntryBuilder addExtraRecipeMapping(ItemStack stack, int index) {
+        if (this.extraRecipeMappings == null)
+            this.extraRecipeMappings = new HashMap<>();
+        this.extraRecipeMappings.put(stack, index);
         return this;
     }
 }
