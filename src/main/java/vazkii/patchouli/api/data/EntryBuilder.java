@@ -23,7 +23,7 @@ public class EntryBuilder {
     private final String name;
     private final String category;
     private final String icon;
-    private final List<AbstractPageBuilder> pages = new ArrayList<>();
+    private final List<AbstractPageBuilder<?>> pages = new ArrayList<>();
     private String advancement;
     private String flag;
     private Boolean priority;
@@ -51,7 +51,7 @@ public class EntryBuilder {
         json.addProperty("category", category);
         json.addProperty("icon", icon);
         JsonArray pages = new JsonArray();
-        for (AbstractPageBuilder page : this.pages) {
+        for (AbstractPageBuilder<?> page : this.pages) {
             pages.add(page.toJson());
         }
         json.add("pages", pages);
@@ -99,8 +99,8 @@ public class EntryBuilder {
         return addPage(new TextPageBuilder(text, title, this));
     }
 
-    public ImagePageBuilder addImagePage(String... images) {
-        return addPage(new ImagePageBuilder(images, this));
+    public ImagePageBuilder addImagePage(ResourceLocation image) {
+        return addPage(new ImagePageBuilder(image, this));
     }
 
     public CraftingPageBuilder addCraftingPage(ResourceLocation recipe) {
@@ -135,7 +135,7 @@ public class EntryBuilder {
         return addPage(new EmptyPageBuilder(drawFiller, this));
     }
 
-    public <T extends AbstractPageBuilder> T addPage(T builder) {
+    public <T extends AbstractPageBuilder<T>> T addPage(T builder) {
         pages.add(builder);
         return builder;
     }

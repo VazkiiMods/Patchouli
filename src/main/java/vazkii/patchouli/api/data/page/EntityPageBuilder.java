@@ -9,7 +9,7 @@ import vazkii.patchouli.api.data.EntryBuilder;
  * @author Minecraftschurli
  * @version 2020-02-27
  */
-public class EntityPageBuilder extends AbstractPageBuilder {
+public class EntityPageBuilder extends AbstractPageBuilder<EntityPageBuilder> {
     private final String entity;
     private CompoundNBT nbt;
     private Float scale;
@@ -41,31 +41,38 @@ public class EntityPageBuilder extends AbstractPageBuilder {
             json.addProperty("text", text);
     }
 
-    public void setEntityNbt(CompoundNBT nbt) {
+    public EntityPageBuilder setEntityNbt(CompoundNBT nbt) {
         this.nbt = nbt;
+        return this;
     }
 
-    public void setScale(Float scale) {
+    public EntityPageBuilder setScale(Float scale) {
         this.scale = scale;
+        return this;
     }
 
-    public void setOffset(Float offset) {
+    public EntityPageBuilder setOffset(Float offset) {
         this.offset = offset;
+        return this;
     }
 
-    public void setRotate(Boolean rotate) {
+    public EntityPageBuilder setRotate(Boolean rotate) {
         this.rotate = rotate;
+        return this;
     }
 
-    public void setDefaultRotation(Float defaultRotation) {
+    public EntityPageBuilder setDefaultRotation(Float defaultRotation) {
         this.defaultRotation = defaultRotation;
+        return this;
     }
 
-    public void setName(String name) {
+    public EntityPageBuilder setName(String name) {
         this.name = name;
+        return this;
     }
 
-    public void setText(String text) {
+    public EntityPageBuilder setText(String text) {
         this.text = text;
+        return this;
     }
 }

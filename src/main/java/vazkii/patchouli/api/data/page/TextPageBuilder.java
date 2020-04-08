@@ -8,7 +8,7 @@ import vazkii.patchouli.api.data.EntryBuilder;
  * @author Minecraftschurli
  * @version 2020-02-27
  */
-public class TextPageBuilder extends AbstractPageBuilder {
+public class TextPageBuilder extends AbstractPageBuilder<TextPageBuilder> {
     private final String text;
     private final String title;
 

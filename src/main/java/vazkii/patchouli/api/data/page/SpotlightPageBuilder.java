@@ -10,7 +10,7 @@ import vazkii.patchouli.api.data.EntryBuilder;
  * @author Minecraftschurli
  * @version 2020-02-27
  */
-public class SpotlightPageBuilder extends AbstractPageBuilder {
+public class SpotlightPageBuilder extends AbstractPageBuilder<SpotlightPageBuilder> {
     private final String item;
     private String title;
     private Boolean linkRecipe;
@@ -32,15 +32,18 @@ public class SpotlightPageBuilder extends AbstractPageBuilder {
             json.addProperty("text", text);
     }
 
-    public void setTitle(String title) {
+    public SpotlightPageBuilder setTitle(String title) {
         this.title = title;
+        return this;
     }
 
-    public void setLinkRecipe(Boolean linkRecipe) {
+    public SpotlightPageBuilder setLinkRecipe(Boolean linkRecipe) {
         this.linkRecipe = linkRecipe;
+        return this;
     }
 
-    public void setText(String text) {
+    public SpotlightPageBuilder setText(String text) {
         this.text = text;
+        return this;
     }
 }

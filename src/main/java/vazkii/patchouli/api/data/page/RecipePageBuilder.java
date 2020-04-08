@@ -9,7 +9,8 @@ import vazkii.patchouli.api.data.EntryBuilder;
  * @author Minecraftschurli
  * @version 2020-02-27
  */
-public abstract class RecipePageBuilder extends AbstractPageBuilder {
+@SuppressWarnings("unchecked")
+public abstract class RecipePageBuilder<T extends RecipePageBuilder<T>> extends AbstractPageBuilder<T> {
     private final String recipe;
     private String recipe2;
     private String title;
@@ -31,16 +32,19 @@ public abstract class RecipePageBuilder extends AbstractPageBuilder {
             json.addProperty("text", text);
     }
 
-    public void setRecipe2(String recipe2) {
+    public T setRecipe2(String recipe2) {
         this.recipe2 = recipe2;
+        return (T) this;
     }
 
-    public void setTitle(String title) {
+    public T setTitle(String title) {
         this.title = title;
+        return (T) this;
     }
 
-    public void setText(String text) {
+    public T setText(String text) {
         this.text = text;
+        return (T) this;
     }
 
 }

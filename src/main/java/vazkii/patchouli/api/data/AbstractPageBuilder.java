@@ -6,7 +6,8 @@ import com.google.gson.JsonObject;
  * @author Minecraftschurli
  * @version 2020-02-26
  */
-public abstract class AbstractPageBuilder {
+@SuppressWarnings("unchecked")
+public abstract class AbstractPageBuilder<T extends AbstractPageBuilder<T>> {
     protected final EntryBuilder parent;
     private final String type;
     private String advancement;
@@ -30,20 +31,22 @@ public abstract class AbstractPageBuilder {
 
     protected abstract void serialize(JsonObject json);
 
-    @SuppressWarnings("unchecked")
-    public <T> T build() {
-        return (T) parent;
+    public EntryBuilder build() {
+        return parent;
     }
 
-    public void setAdvancement(String advancement) {
+    public T setAdvancement(String advancement) {
         this.advancement = advancement;
+        return (T) this;
     }
 
-    public void setFlag(String flag) {
+    public T setFlag(String flag) {
         this.flag = flag;
+        return (T) this;
     }
 
-    public void setAnchor(String anchor) {
+    public T setAnchor(String anchor) {
         this.anchor = anchor;
+        return (T) this;
     }
 }

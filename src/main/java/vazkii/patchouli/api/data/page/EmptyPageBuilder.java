@@ -8,7 +8,7 @@ import vazkii.patchouli.api.data.EntryBuilder;
  * @author Minecraftschurli
  * @version 2020-02-27
  */
-public class EmptyPageBuilder extends AbstractPageBuilder {
+public class EmptyPageBuilder extends AbstractPageBuilder<EmptyPageBuilder> {
     private final boolean drawFiller;
 
     public EmptyPageBuilder(boolean drawFiller, EntryBuilder entryBuilder) {
