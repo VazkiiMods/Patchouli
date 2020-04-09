@@ -16,14 +16,13 @@ public final class ClientTicker {
 		delta = total - oldTotal;
 	}
 
-	/* todo fabric
-	@SubscribeEvent
-	public static void renderTick(TickEvent.RenderTickEvent event) {
-		if(event.phase == TickEvent.Phase.START)
-			partialTicks = event.renderTickTime;
-		else calcDelta();
+	public static void renderTickStart(float pt) {
+		partialTicks = pt;
 	}
-	*/
+
+	public static void renderTickEnd() {
+		calcDelta();
+	}
 
 	public static void init() {
 		ClientTickCallback.EVENT.register(mc -> {

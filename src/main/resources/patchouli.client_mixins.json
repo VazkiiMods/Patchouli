@@ -9,7 +9,10 @@
     "MixinBlockEntity",
     "MixinClientAdvancementManager",
     "MixinClientAdvancementManagerAccessor",
+    "MixinGameRenderer",
     "MixinInventoryScreen",
+    "MixinMinecraftClient",
+    "MixinScreen",
     "MixinVertexConsumerProviderImmediate",
     "MixinWorldRenderer"
   ],

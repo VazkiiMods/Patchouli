@@ -11,8 +11,8 @@ import vazkii.patchouli.client.base.ClientAdvancements;
 @Mixin(ClientAdvancementManager.class)
 public abstract class MixinClientAdvancementManager {
 
-	@Inject(at = @At("RETURN"), method = "onAdvancement")
-	public void patchouli_onAdvancement(AdvancementUpdateS2CPacket packet, CallbackInfo info) {
+	@Inject(at = @At("RETURN"), method = "onAdvancements")
+	public void patchouli_onSync(AdvancementUpdateS2CPacket packet, CallbackInfo info) {
 		ClientAdvancements.onClientPacket();
 	}
 }

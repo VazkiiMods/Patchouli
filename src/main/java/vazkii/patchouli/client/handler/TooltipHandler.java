@@ -16,7 +16,6 @@ import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.book.gui.GuiBook;
-import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
