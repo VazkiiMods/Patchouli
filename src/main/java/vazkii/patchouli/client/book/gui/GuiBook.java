@@ -19,7 +19,8 @@ import net.minecraft.client.util.Window;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import org.apache.commons.lang3.tuple.Pair;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Pair;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -63,7 +64,7 @@ public abstract class GuiBook extends Screen {
 	private List<String> tooltip;
 	private ItemStack tooltipStack;
 	private Pair<BookEntry, Integer> targetPage;
-	protected int page = 0, maxpages = 0;
+	protected int spread = 0, maxSpreads = 0;
 
 	public int ticksInBook;
 	public int maxScale;
@@ -208,7 +209,7 @@ public abstract class GuiBook extends Screen {
 			List<String> tooltip = this.getTooltipFromItem(tooltipStack);
 
 			Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
-			if(provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getLeft())) {
+			if(provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
 				tooltip.add(TextFormat.GOLD + "(" + I18n.translate("patchouli.gui.lexicon.shift_for_recipe") + ')');
 				targetPage = provider;
 			}
@@ -270,7 +271,7 @@ public abstract class GuiBook extends Screen {
 		switch(mouseButton) {
 		case GLFW.GLFW_MOUSE_BUTTON_LEFT:
 			if(targetPage != null && hasShiftDown()) {
-				displayLexiconGui(new GuiBookEntry(book, targetPage.getLeft(), targetPage.getRight()), true);
+				displayLexiconGui(new GuiBookEntry(book, targetPage.getFirst(), targetPage.getSecond()), true);
 				playBookFlipSound(book);
 				return true;
 			}
@@ -324,8 +325,8 @@ public abstract class GuiBook extends Screen {
 	void changePage(boolean left, boolean sfx) {
 		if(canSeePageButton(left)) {
 			if(left)
-				page--;
-			else page++;
+				spread--;
+			else spread++;
 
 			onPageChanged();
 			if(sfx)
@@ -342,7 +343,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public boolean canSeePageButton(boolean left) {
-		return left ? page > 0 : (page + 1) < maxpages; 
+		return left ? spread > 0 : (spread + 1) < maxSpreads;
 	}
 
 	public boolean canSeeBackButton() {
@@ -440,8 +441,8 @@ public abstract class GuiBook extends Screen {
 		return minecraft.getWindow().calculateScaleFactor(0, minecraft.forcesUnicodeFont());
 	}
 
-	public int getPage() {
-		return page;
+	public int getSpread() {
+		return spread;
 	}
 
 	public static void drawSeparator(Book book, int x, int y) {

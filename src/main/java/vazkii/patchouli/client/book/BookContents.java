@@ -18,20 +18,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.mojang.datafixers.util.Pair;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.GuiBookLanding;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.common.base.Patchouli;
@@ -283,6 +283,33 @@ public class BookContents extends AbstractReadStateHolder {
 	protected EntryDisplayState computeReadState() {
 		Stream<EntryDisplayState> stream = categories.values().stream().filter(BookCategory::isRootCategory).map(BookCategory::getReadState);
 		return mostImportantState(stream);
+	}
+
+	public final void checkValidCurrentEntry() {
+		if (!getCurrentGui().canBeOpened()) {
+			currentGui = null;
+			guiStack.clear();
+		}
+	}
+
+	/**
+	 * Set the given entry to be one on top of the stack, i.e. will be shown next time the book is opened
+	 */
+	public final void setTopEntry(Identifier entryId, int page) {
+		BookEntry entry = entries.get(entryId);
+		if(!entry.isLocked()) {
+			GuiBook prevGui = getCurrentGui();
+			int spread = page / 2;
+			currentGui = new GuiBookEntry(book, entry, spread);
+
+			if(prevGui instanceof GuiBookEntry) {
+				GuiBookEntry currEntry = (GuiBookEntry) prevGui;
+				if(currEntry.getEntry() == entry && currEntry.getSpread() == spread)
+					return;
+			}
+
+			entry.getBook().contents.guiStack.push(prevGui);
+		}
 	}
 
 }

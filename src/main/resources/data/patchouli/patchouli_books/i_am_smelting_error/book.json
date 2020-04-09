@@ -1,9 +1,6 @@
 {
   "name": "patchouli.smelting.error",
   "landing_text": "DO NOT OPEN",
-  "advancement_namespaces": [
-    "patchouli"
-  ],
   "subtitle": "DO NOT OPEN",
   "model": "minecraft:barrier",
   "version": "GRADLE:VERSION"

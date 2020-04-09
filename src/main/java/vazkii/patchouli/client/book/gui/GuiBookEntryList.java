@@ -79,7 +79,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
 		super.drawForegroundElements(mouseX, mouseY, partialTicks);
 		
-		if(page == 0) {
+		if(spread == 0) {
 			drawCenteredStringNoShadow(getTitle().asFormattedString(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 			drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
@@ -89,7 +89,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 			text.render(mouseX, mouseY);
 			if(shouldDrawProgressBar())
 				drawProgressBar(book, mouseX, mouseY, this::doesEntryCountForProgress);
-		} else if(page % 2 == 1 && page == maxpages - 1 && dependentButtons.size() <= ENTRIES_PER_PAGE)
+		} else if(spread % 2 == 1 && spread == maxSpreads - 1 && dependentButtons.size() <= ENTRIES_PER_PAGE)
 			drawPageFiller(book);
 		
 		if(!searchField.getText().isEmpty()) {
@@ -166,16 +166,16 @@ public abstract class GuiBookEntryList extends GuiBook {
 		String query = searchField.getText().toLowerCase();
 		allEntries.stream().filter((e) -> e.isFoundByQuery(query)).forEach(visibleEntries::add);
 
-		maxpages = 1;
+		maxSpreads = 1;
 		int count = visibleEntries.size();
 		count -= ENTRIES_IN_FIRST_PAGE;
 		if(count > 0)
-			maxpages += (int) Math.ceil((float) count / (ENTRIES_PER_PAGE * 2));
+			maxSpreads += (int) Math.ceil((float) count / (ENTRIES_PER_PAGE * 2));
 		
 		while(getEntryCountStart() > visibleEntries.size())
-			page--;
+			spread--;
 		
-		if(page == 0) {
+		if(spread == 0) {
 			addEntryButtons(RIGHT_PAGE_X, TOP_PADDING + 20, 0, ENTRIES_IN_FIRST_PAGE);
 			addSubcategoryButtons();
 		} else {
@@ -186,11 +186,11 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 	
 	int getEntryCountStart() {
-		if(page == 0)
+		if(spread == 0)
 			return 0;
 		
 		int start = ENTRIES_IN_FIRST_PAGE;
-		start += (ENTRIES_PER_PAGE * 2) * (page - 1);
+		start += (ENTRIES_PER_PAGE * 2) * (spread - 1);
 		return start;
 	}
 	

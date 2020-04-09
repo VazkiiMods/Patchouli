@@ -14,6 +14,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import vazkii.patchouli.client.book.page.PageCrafting;
 import vazkii.patchouli.client.book.page.PageEmpty;
@@ -29,16 +30,16 @@ import vazkii.patchouli.client.book.page.PageTemplate;
 import vazkii.patchouli.client.book.page.PageText;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.TemplateComponent;
-import vazkii.patchouli.client.handler.UnicodeFontHandler;
+import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
 
+import javax.annotation.Nullable;
+
 public class ClientBookRegistry {
 
 	public final Map<String, Class<? extends BookPage>> pageTypes = new HashMap<>();
-
-	private boolean firstLoad = true;
 
 	public final Gson gson = new GsonBuilder()
 			.registerTypeHierarchyAdapter(BookPage.class, new LexiconPageAdapter())
@@ -70,30 +71,36 @@ public class ClientBookRegistry {
 
 	public void reload() {
 		currentLang = MinecraftClient.getInstance().getLanguageManager().getLanguage().getCode();
-		if(firstLoad)
-			/* preload to avoid lag spike when opening book. This happens in the first reload when logging
-			   in, so the user shouldn't notice it as much. */
-			UnicodeFontHandler.getUnicodeFont();
-		firstLoad = false;
 		BookRegistry.INSTANCE.reloadContents();
 	}
 	
-	public void reloadLocks(boolean reset) {
-		BookRegistry.INSTANCE.books.values().forEach(b -> b.reloadLocks(reset));
+	public void reloadLocks(boolean suppressToasts) {
+		BookRegistry.INSTANCE.books.values().forEach(b -> b.reloadLocks(suppressToasts));
 	}
-	
-	public void displayBookGui(Identifier bookStr) {
-		currentLang = MinecraftClient.getInstance().getLanguageManager().getLanguage().getCode();
-		
+
+	/**
+	 * @param entryId Entry to force to the top of the stack
+	 * @param page Page in the entry to force. Ignored if {@code entryId} is null.
+	 */
+	public void displayBookGui(Identifier bookStr, @Nullable Identifier entryId, int page) {
+		MinecraftClient mc = MinecraftClient.getInstance();
+		currentLang = mc.getLanguageManager().getLanguage().getCode();
+
 		Book book = BookRegistry.INSTANCE.books.get(bookStr);
 
 		if(book != null) {
-			if (!book.contents.getCurrentGui().canBeOpened()) {
-				book.contents.currentGui = null;
-				book.contents.guiStack.clear();
+			book.contents.checkValidCurrentEntry();
+
+			if (entryId != null) {
+				book.contents.setTopEntry(entryId, page);
 			}
 
 			book.contents.openLexiconGui(book.contents.getCurrentGui(), false);
+
+			if (mc.player != null) {
+				SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open);
+				mc.player.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
+			}
 		}
 	}
 

@@ -54,17 +54,25 @@ public class PatchouliAPI {
 		boolean getConfigFlag(String flag);
 		
 		/**
-		 * Opens a book GUI for the given player (server version).
+		 * Opens the given book to the last page that was open, or the landing page otherwise.
 		 */
 		void openBookGUI(ServerPlayerEntity player, Identifier book);
 
 		/**
-		 * Opens a book GUI. (client version)
+		 * Opens the book to the given entry
 		 */
-		@Environment(EnvType.CLIENT)
+		void openBookEntry(ServerPlayerEntity player, Identifier book, Identifier entry, int page);
+
+		/**
+		 * Client version of {@link #openBookGUI(ServerPlayerEntity, Identifier)}.
+		 */
 		void openBookGUI(Identifier book);
+
+		/**
+		 * Client version of {@link #openBookEntry(ServerPlayerEntity, Identifier, Identifier, int)}
+		 */
+		void openBookEntry(Identifier book, Identifier entry, int page);
 		
-		@Environment(EnvType.CLIENT)
 		Identifier getOpenBookGui();
 
 		/**

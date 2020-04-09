@@ -24,26 +24,26 @@ import vazkii.patchouli.common.book.Book;
 
 public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
-	BookEntry entry;
+	final BookEntry entry;
 	BookPage leftPage, rightPage;
 
-	Map<ButtonWidget, Runnable> customButtons = new HashMap<>();
+	final Map<ButtonWidget, Runnable> customButtons = new HashMap<>();
 
 	public GuiBookEntry(Book book, BookEntry entry) {
 		this(book, entry, 0);
 	}
 
-	public GuiBookEntry(Book book, BookEntry entry, int page) {
+	public GuiBookEntry(Book book, BookEntry entry, int spread) {
 		super(book, new LiteralText(entry.getName()));
 		this.entry = entry;
-		this.page = page; 
+		this.spread = spread;
 	}
 
 	@Override
 	public void init() {
 		super.init();
 
-		maxpages = (int) Math.ceil((float) entry.getPages().size() / 2);
+		maxSpreads = (int) Math.ceil((float) entry.getPages().size() / 2);
 		setupPages();
 	}
 
@@ -126,8 +126,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 			rightPage.onHidden(this);
 
 		List<BookPage> pages = entry.getPages();
-		int leftNum = page * 2;
-		int rightNum = (page * 2) + 1;
+		int leftNum = spread * 2;
+		int rightNum = (spread * 2) + 1;
 
 		leftPage  = leftNum  < pages.size() ? pages.get(leftNum)  : null;
 		rightPage = rightNum < pages.size() ? pages.get(rightNum) : null;
@@ -144,7 +144,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj == this || (obj instanceof GuiBookEntry && ((GuiBookEntry) obj).entry == entry && ((GuiBookEntry) obj).page == page);
+		return obj == this || (obj instanceof GuiBookEntry && ((GuiBookEntry) obj).entry == entry && ((GuiBookEntry) obj).spread == spread);
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		BookData data = PersistentData.data.getBookData(book);
 
 		for(Bookmark bookmark : data.bookmarks)
-			if(bookmark.entry.equals(entryKey) && bookmark.page == page)
+			if(bookmark.entry.equals(entryKey) && bookmark.page == spread)
 				return true;
 
 		return false;
@@ -175,7 +175,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	public void bookmarkThis() {
 		String entryKey = entry.getId().toString();
 		BookData data = PersistentData.data.getBookData(book);
-		data.bookmarks.add(new Bookmark(entryKey, page));
+		data.bookmarks.add(new Bookmark(entryKey, spread));
 		PersistentData.save();
 		needsBookmarkUpdate = true;
 	}

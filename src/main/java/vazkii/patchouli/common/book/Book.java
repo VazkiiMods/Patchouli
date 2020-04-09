@@ -1,6 +1,5 @@
 package vazkii.patchouli.common.book;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,25 +11,24 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.FontManager;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import vazkii.patchouli.api.BookContentsReloadCallback;
+import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ExternalBookContents;
-import vazkii.patchouli.client.handler.UnicodeFontHandler;
 import vazkii.patchouli.common.base.Patchouli;
-import vazkii.patchouli.common.handler.AdvancementSyncHandler;
+import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class Book {
 	
 	public static final Identifier DEFAULT_MODEL = new Identifier(Patchouli.MOD_ID, "book_brown");
+	private static final Identifier UNICODE_FONT_ID = new Identifier(Patchouli.MOD_ID, "unicode_font");
 
 	private static final Map<String, String> DEFAULT_MACROS = Util.make(() -> {
 		Map<String, String> ret = new HashMap<>();
@@ -64,9 +62,6 @@ public class Book {
 	public String name = "";
 	@SerializedName("landing_text")
 	public String landingText = "patchouli.gui.lexicon.landing_info";
-
-	@SerializedName("advancement_namespaces")
-	public List<String> advancementNamespaces = new ArrayList<>();
 
 	@SerializedName("book_texture")
 	public Identifier bookTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/book_brown.png");
@@ -145,11 +140,6 @@ public class Book {
 		
 		isExtension = extend != null;
 		
-		// minecraft has an advancement for every recipe, so we don't allow
-		// tracking it to keep packets at a reasonable size
-		advancementNamespaces.remove("minecraft"); 
-		AdvancementSyncHandler.trackedNamespaces.addAll(advancementNamespaces);
-		
 		if(!isExtension) {
 			textColor = 0xFF000000 | Integer.parseInt(textColorRaw, 16);
 			headerColor = 0xFF000000 | Integer.parseInt(headerColorRaw, 16);
@@ -163,10 +153,6 @@ public class Book {
 				if(!macros.containsKey(m))
 					macros.put(m, DEFAULT_MACROS.get(m));
 		}
-	}
-	
-	public boolean usesAdvancements() {
-		return !advancementNamespaces.isEmpty();
 	}
 	
 	public String getModNamespace() {
@@ -238,12 +224,14 @@ public class Book {
 	}
 	
 	@Environment(EnvType.CLIENT)
-	public void reloadLocks(boolean reset) {
+	public void reloadLocks(boolean suppressToasts) {
 		contents.entries.values().forEach(BookEntry::updateLockStatus);
-		contents.categories.values().forEach((c) -> c.updateLockStatus(true));
-		
-		if(reset)
-			popUpdated();
+		contents.categories.values().forEach(c -> c.updateLockStatus(true));
+
+		boolean updated = popUpdated();
+		if (updated && !suppressToasts && !PatchouliConfig.disableAdvancementLocking.get() && showToasts) {
+			MinecraftClient.getInstance().getToastManager().add(new ClientAdvancements.LexiconToast(this));
+		}
 	}
 	
 	public String getOwnerName() {
@@ -252,7 +240,11 @@ public class Book {
 	
 	@Environment(EnvType.CLIENT)
 	public TextRenderer getFont() {
-		return useBlockyFont ? MinecraftClient.getInstance().textRenderer : UnicodeFontHandler.getUnicodeFont();
+		if (useBlockyFont) {
+			return MinecraftClient.getInstance().textRenderer;
+		} else {
+			return MinecraftClient.getInstance().getFontManager().getTextRenderer(UNICODE_FONT_ID);
+		}
 	}
 	
 }

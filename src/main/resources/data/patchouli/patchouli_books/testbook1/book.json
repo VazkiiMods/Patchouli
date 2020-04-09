@@ -1,8 +1,5 @@
 {
 	"name": "item.patchouli:test_book_1.name",
-	"advancement_namespaces": [
-		"patchouli"
-	],
 	"book_texture": "patchouli:textures/gui/book_green.png",
 	"version": "GRADLE:VERSION",
 	"index_icon": "minecraft:diamond"

@@ -1,15 +1,12 @@
 {
 	"name": "item.patchouli:test_book_2.name",
 	"landing_text": "item.patchouli:test_book_2.landing",
-	"advancement_namespaces": [
-		"patchouli"
-	],
 	"subtitle": "Cool book!",
 	"text_color": "bf1111",
 	"header_color": "114fbf",
 	"nameplate_color": "d52eff",
-	"proress_bar_background": "8892c9",
-	"proress_bar_color": "da3423", 
+	"progress_bar_background": "8892c9",
+	"progress_bar_color": "da3423",
 	"macros": {
 		"$(potato)": "(POTATO MACRO)"
 	},

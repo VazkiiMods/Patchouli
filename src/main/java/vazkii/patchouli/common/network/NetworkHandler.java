@@ -13,12 +13,10 @@ package vazkii.patchouli.common.network;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 import vazkii.patchouli.common.network.message.MessageReloadBookContents;
-import vazkii.patchouli.common.network.message.MessageSyncAdvancements;
 
 public class NetworkHandler {
 
 	public static void registerMessages() {
-		ClientSidePacketRegistry.INSTANCE.register(MessageSyncAdvancements.ID, MessageSyncAdvancements::handle);
 		ClientSidePacketRegistry.INSTANCE.register(MessageOpenBookGui.ID, MessageOpenBookGui::handle);
 		ClientSidePacketRegistry.INSTANCE.register(MessageReloadBookContents.ID, MessageReloadBookContents::handle);
 	}

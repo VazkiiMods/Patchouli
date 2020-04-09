@@ -1,0 +1,22 @@
+{
+  "name": "Extra Recipe Mapping",
+  "category": "recipe_mapping",
+  "icon": "minecraft:tropical_fish",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Grass Block should be mapped here"
+    },
+    {
+      "type": "empty"
+    },
+    {
+      "type": "text",
+      "text": "Logs should be mapped here"
+    }
+  ],
+  "extra_recipe_mappings": {
+    "minecraft:grass_block": 0,
+    "tag:minecraft:logs": 2
+  }
+}

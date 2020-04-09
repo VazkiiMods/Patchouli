@@ -77,6 +77,13 @@ jar {
 	exclude "**/data/patchouli/advancements/**"
 }
 
+task apiJar(type: Jar, dependsOn: classes) {
+	from(sourceSets.main.output)
+	include 'vazkii/patchouli/api/**'
+
+	classifier = "api"
+}
+
 // configure the maven publication
 publishing {
 	publications {
@@ -87,6 +94,9 @@ publishing {
 			}
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
+			}
+            artifact(apiJar) {
+				builtBy apiJar
 			}
 		}
 	}

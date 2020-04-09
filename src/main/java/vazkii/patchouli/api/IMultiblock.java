@@ -28,26 +28,26 @@ public interface IMultiblock {
 	 * Offsets the position of the multiblock by the amount specified.
 	 * Works for both placement, validation, and rendering.
 	 */
-	public IMultiblock offset(int x, int y, int z);
+	IMultiblock offset(int x, int y, int z);
 	
 	/**
 	 * Offsets the view of the multiblock by the amount specified.
 	 * Matters only for where the multiblock renders.
 	 */
-	public IMultiblock offsetView(int x, int y, int z);
+	IMultiblock offsetView(int x, int y, int z);
 	
 	/**
 	 * Sets the multiblock's symmetrical value. Symmetrical multiblocks
 	 * check only in one rotation, not all 4. If your multiblock is symmetrical
 	 * around the center axis, set this to true to prevent needless cycles.
 	 */
-	public IMultiblock setSymmetrical(boolean symmetrical);
+	IMultiblock setSymmetrical(boolean symmetrical);
 
 	/**
 	 * Sets the multiblock's ID. Not something you need to
 	 * call yourself as the register method in the main API class does it for you.
 	 */
-	public IMultiblock setId(Identifier res);
+	IMultiblock setId(Identifier res);
 
 	// ================================================================================================
 	// Getters
@@ -57,9 +57,9 @@ public interface IMultiblock {
 	 * Gets if this multiblock is symmetrical.
 	 * @see IMultiblock#setSymmetrical
 	 */
-	public boolean isSymmetrical();
+	boolean isSymmetrical();
 
-	public Identifier getID();
+	Identifier getID();
 
 	// ================================================================================================
 	// Actual functionality
@@ -73,7 +73,7 @@ public interface IMultiblock {
 	/**
 	 * Places the multiblock at the given position with the given rotation.
 	 */
-	public void place(World world, BlockPos pos, BlockRotation rotation);
+	void place(World world, BlockPos pos, BlockRotation rotation);
 
 	/**
 	 * If this multiblock were anchored at world position {@code anchor} with rotation {@code rotation}, then
@@ -91,41 +91,40 @@ public interface IMultiblock {
      * @return The rotation that worked, null if no match
 	 */
 	@Nullable
-	public BlockRotation validate(World world, BlockPos pos);
+	BlockRotation validate(World world, BlockPos pos);
 
 	/**
 	 * Validates the multiblock for a specific rotation
 	 */
-	public boolean validate(World world, BlockPos pos, BlockRotation rotation);
+	boolean validate(World world, BlockPos pos, BlockRotation rotation);
 
 	/**
 	 * Fine-grained check for whether any one given block of the multiblock exists at the given position
 	 * with the given rotation.
 	 * @param start The anchor position. The multiblock's {@link #offset} is not applied to this.
 	 */
-	public boolean test(World world, BlockPos start, int x, int y, int z, BlockRotation rotation);
+	boolean test(World world, BlockPos start, int x, int y, int z, BlockRotation rotation);
 
 	interface SimulateResult {
 		/**
 		 * Final world position this block will be matched or placed at
 		 */
-		public BlockPos getWorldPosition();
+		BlockPos getWorldPosition();
 
 		/**
 		 * The matcher used at this position
 		 */
-		public IStateMatcher getStateMatcher();
+		IStateMatcher getStateMatcher();
 
 		/**
 		 * The character used to express the state matcher, if this is a dense multiblock.
 		 */
-		@Nullable
-		public Character getCharacter();
+		@Nullable Character getCharacter();
 
 		/**
 		 * @return Whether the multiblock is fulfilled at this position
 		 */
-		public boolean test(World world, BlockRotation rotation);
+		boolean test(World world, BlockRotation rotation);
 	}
 
 }

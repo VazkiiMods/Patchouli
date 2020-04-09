@@ -23,6 +23,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
+import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliSounds;
@@ -134,9 +135,11 @@ public class ItemModBook extends Item {
 			return new TypedActionResult<>(ActionResult.FAIL, stack);
 
 		if(playerIn instanceof ServerPlayerEntity) {
-			MessageOpenBookGui.send(playerIn, book.id);
+			PatchouliAPI.instance.openBookGUI((ServerPlayerEntity) playerIn, book.id);
+
+			// This plays the sound to others nearby, playing to the actual opening player handled from the packet
 			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open);
-			worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), sfx, SoundCategory.PLAYERS, 1F, (float) (0.7 + Math.random() * 0.4));
+			playerIn.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
 		}
 
 		return new TypedActionResult<>(ActionResult.SUCCESS, stack);

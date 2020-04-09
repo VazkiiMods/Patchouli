@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.ChatUtil;
-import org.apache.commons.lang3.tuple.Pair;
+import com.mojang.datafixers.util.Pair;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;

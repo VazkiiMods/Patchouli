@@ -3,10 +3,8 @@ package vazkii.patchouli.common.base;
 import net.fabricmc.api.ModInitializer;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.BookRegistry;
-import vazkii.patchouli.common.handler.AdvancementSyncHandler;
 import vazkii.patchouli.common.handler.ReloadContentsHandler;
 import vazkii.patchouli.common.item.PatchouliItems;
-import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 
 public class CommonProxy implements ModInitializer {
 
@@ -22,7 +20,6 @@ public class CommonProxy implements ModInitializer {
 
 		PatchouliItems.init();
 		ReloadContentsHandler.init();
-		AdvancementSyncHandler.init();
 	}
 
 }

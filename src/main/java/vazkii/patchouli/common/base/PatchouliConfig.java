@@ -9,9 +9,10 @@ import net.fabricmc.loader.api.ModContainer;
 
 public class PatchouliConfig {
 	// TODO Optional only used to present same interface as forgeconfigvalue. Clean up later.
-    public static Optional<Boolean> disableAdvancementLocking = Optional.of(false);
+	public static Optional<Boolean> disableAdvancementLocking = Optional.of(false);
 	public static Optional<Boolean> testingMode = Optional.of(false);
 	public static Optional<String> inventoryButtonBook = Optional.of("");
+	public static Optional<Boolean> useShiftForQuickLookup = Optional.of(false);
 
 	private static Map<String, Boolean> configFlags = new ConcurrentHashMap<>();
 
@@ -19,6 +20,9 @@ public class PatchouliConfig {
 	    /* TODO fabric load
 		Pair<Loader, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Loader::new);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, specPair.getRight());
+
+		Pair<ClientLoader, ForgeConfigSpec> clientSpec = new ForgeConfigSpec.Builder().configure(ClientLoader::new);
+		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec.getRight());
 	     */
 	}
 
@@ -52,6 +56,18 @@ public class PatchouliConfig {
 			builder.pop();
 		}
 
+	}
+
+	static class ClientLoader {
+		public ClientLoader(ForgeConfigSpec.Builder builder) {
+			builder.push("client");
+
+			useShiftForQuickLookup = builder
+					.comment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
+					.define("quickLookupShift", false);
+
+			builder.pop();
+		}
 	}
  	*/
 

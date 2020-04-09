@@ -13,19 +13,19 @@ public interface ICustomComponent extends IVariablesAvailableCallback {
 	 * Called when this component is built, after variables have been resolved with {@link #onVariablesAvailable}.
 	 * Take the chance to parse String variables into game objects, perform error checking, and setup any local positions here.
 	 */
-	public void build(int componentX, int componentY, int pageNum);
+	void build(int componentX, int componentY, int pageNum);
 
 	/**
 	 * Called every render tick. No special transformations are applied, so you're responsible
 	 * for putting everything in the right place.
 	 */
-	public void render(IComponentRenderContext context, float pticks, int mouseX, int mouseY);
+	void render(IComponentRenderContext context, float pticks, int mouseX, int mouseY);
 	
 	/**
 	 * Called when this component first enters the screen. Good time to refresh anything that
 	 * can be dynamic. If you need to add buttons, you can add them here too.
 	 */
-	public default void onDisplayed(IComponentRenderContext context) {
+	default void onDisplayed(IComponentRenderContext context) {
 		// NO-OP
 	}
 
@@ -33,7 +33,7 @@ public interface ICustomComponent extends IVariablesAvailableCallback {
 	 * Called on mouse click. Note that the click may not be inside your component, so
 	 * you need to validate the position.
 	 */
-	public default boolean mouseClicked(IComponentRenderContext context, double mouseX, double mouseY, int mouseButton) {
+	default boolean mouseClicked(IComponentRenderContext context, double mouseX, double mouseY, int mouseButton) {
 		return false;
 	}
 	

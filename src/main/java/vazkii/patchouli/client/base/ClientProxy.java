@@ -20,7 +20,6 @@ public class ClientProxy implements ClientModInitializer {
 	public void onInitializeClient() {
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
-		ClientAdvancements.init();
 		ClientTicker.init();
 		BookRightClickHandler.init();
 		MultiblockVisualizationHandler.init();

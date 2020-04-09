@@ -45,12 +45,21 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	public void openBookGUI(ServerPlayerEntity player, Identifier book) {
 		// NO-OP
 	}
-	
+
+	@Override
+	public void openBookEntry(ServerPlayerEntity player, Identifier book, Identifier entry, int page) {
+
+	}
+
 	@Override
 	public void openBookGUI(Identifier book) {
 		// NO-OP
 	}
-	
+
+	@Override
+	public void openBookEntry(Identifier book, Identifier entry, int page) {
+	}
+
 	@Override
 	public Identifier getOpenBookGui() {
 		return null;

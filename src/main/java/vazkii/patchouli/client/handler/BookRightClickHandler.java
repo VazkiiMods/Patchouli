@@ -13,10 +13,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 import com.mojang.blaze3d.systems.RenderSystem;
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.mojang.blaze3d.systems.RenderSystem;
-
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,6 +29,8 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
+import javax.annotation.Nullable;
+
 public class BookRightClickHandler {
 
 	private static void onRenderHUD(float partialTicks) {
@@ -43,7 +43,7 @@ public class BookRightClickHandler {
 			if(book != null) {
 				Pair<BookEntry, Integer> hover = getHoveredEntry(book);
 				if(hover != null) {
-					BookEntry entry = hover.getLeft();
+					BookEntry entry = hover.getFirst();
 					if(!entry.isLocked()) {
 						Window window = mc.getWindow();
 						int x = window.getScaledWidth() / 2 + 3;
@@ -57,9 +57,9 @@ public class BookRightClickHandler {
 
 						RenderSystem.pushMatrix();
 						RenderSystem.scalef(0.75F, 0.75F, 1F);
-						String s = I18n.translate("patchouli.gui.lexicon." + (player.isSneaking() ? "view" : "sneak"));
-                        mc.textRenderer.draw(TextFormat.ITALIC + s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
-                        RenderSystem.popMatrix();
+						String s = I18n.translate("patchouli.gui.lexicon."+(player.isSneaking() ? "view" : "sneak"));
+						mc.textRenderer.draw(TextFormat.ITALIC + s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
+						RenderSystem.popMatrix();
 					}
 				}
 			}
@@ -80,30 +80,16 @@ public class BookRightClickHandler {
 			if(book != null) {
 				Pair<BookEntry, Integer> hover = getHoveredEntry(book);
 				if(hover != null) {
-					BookEntry entry = hover.getLeft();
-
-					if(!entry.isLocked()) {
-						int page = hover.getRight();
-						GuiBook curr = book.contents.getCurrentGui();
-						book.contents.currentGui = new GuiBookEntry(book, entry, page);
-						player.swingHand(Hand.MAIN_HAND);
-
-						if(curr instanceof GuiBookEntry) {
-							GuiBookEntry currEntry = (GuiBookEntry) curr;
-							if(currEntry.getEntry() == entry && currEntry.getPage() == page)
-								return ActionResult.SUCCESS;
-						}
-
-						book.contents.guiStack.push(curr);
-						return ActionResult.SUCCESS;
-					}
+					int page = hover.getSecond() * 2;
+					book.contents.setTopEntry(hover.getFirst().getId(), page);
 				}
 			}
 		}
 		return ActionResult.PASS;
 	}
 
-	private static Book getBookFromStack(ItemStack stack) {
+	@Nullable
+	public static Book getBookFromStack(ItemStack stack) {
 		if(stack.getItem() instanceof ItemModBook)
 			return ItemModBook.getBook(stack);
 
@@ -125,7 +111,7 @@ public class BookRightClickHandler {
 			ItemStack picked = block.getPickStack(mc.world, pos, state);
 
 			if(!picked.isEmpty())
-				return book.contents.recipeMappings.get(ItemStackUtil.wrapStack(picked));
+				return book.contents.getEntryForStack(picked);
 		}
 
 		return null;

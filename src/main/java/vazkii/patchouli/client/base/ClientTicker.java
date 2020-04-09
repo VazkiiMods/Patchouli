@@ -1,12 +1,7 @@
 package vazkii.patchouli.client.base;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
-
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.minecraft.client.gui.screen.Screen;
-import vazkii.patchouli.client.book.ClientBookRegistry;
-import vazkii.patchouli.client.handler.UnicodeFontHandler;
 
 public final class ClientTicker {
 
