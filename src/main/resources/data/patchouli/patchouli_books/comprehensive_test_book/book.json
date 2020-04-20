@@ -5,5 +5,5 @@
   "version": "50",
   "subtitle": "Comprehensive Test Book Subtitle",
   "creative_tab": "tools",
-  "pause_game": true
+  "pause_game": false
 }

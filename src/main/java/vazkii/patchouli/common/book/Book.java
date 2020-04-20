@@ -132,7 +132,7 @@ public class Book {
 	public boolean allowExtensions = true;
 
 	@SerializedName("pause_game")
-	public boolean pauseGame = false;
+	public boolean pauseGame = true;
 
 	public boolean i18n = false;
 	
