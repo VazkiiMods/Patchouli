@@ -18,6 +18,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.opengl.GL11;
+import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -29,37 +30,6 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 @Mod.EventBusSubscriber(modid = Patchouli.MOD_ID, value = Dist.CLIENT)
 public class TooltipHandler {
 	private static float lexiconLookupTime = 0;
-
-	public static int ticksInGame = 0;
-	public static float partialTicks = 0;
-	public static float delta = 0;
-	public static float total = 0;
-
-	private static void calcDelta() {
-		float oldTotal = total;
-		total = ticksInGame + partialTicks;
-		delta = total - oldTotal;
-	}
-
-	@SubscribeEvent
-	public static void renderTick(TickEvent.RenderTickEvent event) {
-		if(event.phase == TickEvent.Phase.START)
-			partialTicks = event.renderTickTime;
-		else {
-			calcDelta();
-		}
-	}
-
-	@SubscribeEvent
-	public static void onClientTick(TickEvent.ClientTickEvent evt) {
-		if (evt.phase == TickEvent.Phase.END) {
-			Screen gui = Minecraft.getInstance().currentScreen;
-			if(gui == null || !gui.isPauseScreen()) {
-				ticksInGame++;
-				partialTicks = 0;
-			}
-		}
-	}
 
 	@SubscribeEvent
 	public static void onTooltip(RenderTooltipEvent.PostText evt) {
@@ -97,7 +67,7 @@ public class TooltipHandler {
 				AbstractGui.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
 
 				if(PatchouliConfig.useShiftForQuickLookup.get() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
-					lexiconLookupTime += delta;
+					lexiconLookupTime += ClientTicker.delta;
 
 					int cx = x + 8;
 					int cy = tooltipY + 8;
@@ -114,7 +84,7 @@ public class TooltipHandler {
 					BufferBuilder buf = Tessellator.getInstance().getBuffer();
 					buf.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
 
-					float a = 0.5F + 0.2F * ((float) Math.cos(total / 10) * 0.5F + 0.5F);
+					float a = 0.5F + 0.2F * ((float) Math.cos(ClientTicker.total / 10) * 0.5F + 0.5F);
 					buf.vertex(cx, cy, 0).color(0F, 0.5F, 0F, a).endVertex();
 
 					for(float i = angles; i > 0; i--) {

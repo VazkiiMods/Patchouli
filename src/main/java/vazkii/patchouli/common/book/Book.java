@@ -130,7 +130,10 @@ public class Book {
 
 	@SerializedName("allow_extensions")
 	public boolean allowExtensions = true;
-	
+
+	@SerializedName("pause_game")
+	public boolean pauseGame = false;
+
 	public boolean i18n = false;
 	
 	public Map<String, String> macros = new HashMap<>();

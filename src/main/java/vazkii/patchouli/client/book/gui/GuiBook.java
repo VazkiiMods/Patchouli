@@ -235,7 +235,7 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public boolean isPauseScreen() {
-		return false;
+		return book.pauseGame;
 	}
 
 	public void handleButtonBack(Button button) {
