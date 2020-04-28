@@ -138,7 +138,7 @@ public class ItemModBook extends Item {
 
 		Book book = getBook(stack);
 		if (book != null && book.contents != null) {
-			tooltip.add(new StringTextComponent(book.contents.getSubtitle()).applyTextStyle(TextFormatting.GRAY));
+			tooltip.add(book.getSubtitle().applyTextStyle(TextFormatting.GRAY));
 		}
 	}
 

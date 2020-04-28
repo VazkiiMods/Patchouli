@@ -140,7 +140,7 @@ public class GuiBookLanding extends GuiBook {
 
 		int color = book.nameplateColor;
 		font.drawString(book.getBookItem().getDisplayName().getFormattedText(), 13, 16, color);
-		book.getFont().drawString(book.contents.getSubtitle(), 24, 24, color);
+		book.getFont().drawString(book.getSubtitle().getFormattedText(), 24, 24, color);
 	}
 
 	void makeErrorTooltip() {

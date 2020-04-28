@@ -44,7 +44,6 @@ import java.util.stream.Stream;
 
 public class BookContents extends AbstractReadStateHolder {
 
-	private static final String[] ORDINAL_SUFFIXES = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 	protected static final String DEFAULT_LANG = "en_us";
 
 	public static final Map<ResourceLocation, Supplier<BookTemplate>> addonTemplates = new ConcurrentHashMap<>();
@@ -99,21 +98,9 @@ public class BookContents extends AbstractReadStateHolder {
 		}
 	}
 
+	// backward compat for botania reaching into impl details, TODO 1.16 remove
 	public String getSubtitle() {
-		String editionStr;
-
-		try {
-			int ver = Integer.parseInt(book.version);
-			if (ver == 0) {
-				return I18n.format(book.subtitle);
-			}
-
-			editionStr = numberToOrdinal(ver);
-		} catch (NumberFormatException e) {
-			editionStr = I18n.format("patchouli.gui.lexicon.dev_edition");
-		}
-
-		return I18n.format("patchouli.gui.lexicon.edition_str", editionStr);
+		return book.getSubtitle().getFormattedText();
 	}
 
 	public void reload(boolean isOverride) {
@@ -289,10 +276,6 @@ public class BookContents extends AbstractReadStateHolder {
 		}
 
 		return null;
-	}
-
-	private static String numberToOrdinal(int i) {
-		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
 	}
 
 	@Override

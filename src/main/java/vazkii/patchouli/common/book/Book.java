@@ -7,6 +7,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -29,6 +32,7 @@ import java.util.Map;
 
 public class Book {
 
+	private static final String[] ORDINAL_SUFFIXES = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 	public static final ResourceLocation DEFAULT_MODEL = new ResourceLocation(Patchouli.MOD_ID, "book_brown");
 	private static final ResourceLocation UNICODE_FONT_ID = new ResourceLocation(Patchouli.MOD_ID, "unicode_font");
 
@@ -235,6 +239,27 @@ public class Book {
 		} else {
 			return Minecraft.getInstance().getFontResourceManager().getFontRenderer(UNICODE_FONT_ID);
 		}
+	}
+
+	public ITextComponent getSubtitle() {
+		ITextComponent editionStr;
+
+		try {
+			int ver = Integer.parseInt(version);
+			if (ver == 0) {
+				return new TranslationTextComponent(subtitle);
+			}
+
+			editionStr = new StringTextComponent(numberToOrdinal(ver));
+		} catch (NumberFormatException e) {
+			editionStr = new TranslationTextComponent("patchouli.gui.lexicon.dev_edition");
+		}
+
+		return new TranslationTextComponent("patchouli.gui.lexicon.edition_str", editionStr);
+	}
+
+	private static String numberToOrdinal(int i) {
+		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
 	}
 
 }
