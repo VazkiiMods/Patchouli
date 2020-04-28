@@ -2,6 +2,7 @@ package vazkii.patchouli.common.book;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -9,8 +10,10 @@ import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import net.minecraftforge.forgespi.language.IModInfo;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
+
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.Patchouli;
 
@@ -118,9 +121,10 @@ public class BookRegistry {
 	// HELPER
 
 	public static boolean findFiles(ModInfo mod, String base, Function<Path, Boolean> preprocessor,
-	                                BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
-		if (mod.getModId().equals("minecraft") || mod.getModId().equals("forge"))
+			BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
+		if (mod.getModId().equals("minecraft") || mod.getModId().equals("forge")) {
 			return false;
+		}
 
 		Path source = mod.getOwningFile().getFile().getFilePath();
 
@@ -133,16 +137,19 @@ public class BookRegistry {
 			if (Files.isRegularFile(source)) {
 				fs = FileSystems.newFileSystem(source, null);
 				root = fs.getPath("/" + base);
-			} else if (Files.isDirectory(source))
+			} else if (Files.isDirectory(source)) {
 				root = source.resolve(base);
+			}
 
-			if (root == null || !Files.exists(root))
+			if (root == null || !Files.exists(root)) {
 				return defaultUnfoundRoot;
+			}
 
 			if (preprocessor != null) {
 				Boolean cont = preprocessor.apply(root);
-				if (cont == null || !cont)
+				if (cont == null || !cont) {
 					return false;
+				}
 			}
 
 			if (processor != null) {
@@ -151,13 +158,14 @@ public class BookRegistry {
 				while (itr.hasNext()) {
 					Boolean cont = processor.apply(root, itr.next());
 
-					if (visitAllFiles)
+					if (visitAllFiles) {
 						success &= cont != null && cont;
-					else if (cont == null || !cont)
+					} else if (cont == null || !cont) {
 						return false;
+					}
 				}
 			}
-		} catch(IOException ex) {
+		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		} finally {
 			IOUtils.closeQuietly(fs);

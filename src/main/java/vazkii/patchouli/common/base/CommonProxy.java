@@ -3,6 +3,7 @@ package vazkii.patchouli.common.base;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
@@ -21,7 +22,7 @@ public class CommonProxy {
 	public void setup(FMLCommonSetupEvent event) {
 
 		PatchouliConfig.load();
-		
+
 		PatchouliSounds.preInit();
 		BookRegistry.INSTANCE.init();
 

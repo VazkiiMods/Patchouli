@@ -1,13 +1,14 @@
 package vazkii.patchouli.client.book;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
@@ -19,7 +20,7 @@ public class BookIcon {
 	private final ResourceLocation res;
 
 	public static BookIcon from(String str) {
-		if(str.endsWith(".png")) {
+		if (str.endsWith(".png")) {
 			return new BookIcon(new ResourceLocation(str));
 		} else {
 			try {
@@ -46,7 +47,7 @@ public class BookIcon {
 
 	public void render(int x, int y) {
 		Minecraft mc = Minecraft.getInstance();
-		switch(type) {
+		switch (type) {
 		case STACK:
 			mc.getItemRenderer().renderItemIntoGUI(stack, x, y);
 			break;

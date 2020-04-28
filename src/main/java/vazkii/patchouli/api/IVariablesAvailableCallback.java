@@ -5,6 +5,7 @@ import java.util.function.Function;
 public interface IVariablesAvailableCallback {
 	/**
 	 * Called when variables are available, before the template component is built
+	 * 
 	 * @param lookup Call with arbitrary text, and it will be expanded:
 	 *               first expanding all inline variables,
 	 *               then attempting to apply "->" derivations if possible, otherwise looking up the string as a

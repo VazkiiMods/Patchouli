@@ -1,20 +1,14 @@
 package vazkii.patchouli.client.book;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.resources.I18n;
-
 import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
+import com.mojang.datafixers.util.Pair;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
@@ -26,25 +20,27 @@ import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public class BookEntry extends AbstractReadStateHolder implements Comparable<BookEntry> {
 
 	private String name, category, flag;
 
-	@SerializedName("icon")
-	private String iconRaw;
+	@SerializedName("icon") private String iconRaw;
 
 	private boolean priority = false;
 	private boolean secret = false;
-	@SerializedName("read_by_default")
-	private boolean readByDefault = false;
+	@SerializedName("read_by_default") private boolean readByDefault = false;
 	private BookPage[] pages;
 	private String advancement, turnin;
 	private int sortnum;
-	@SerializedName("entry_color")
-	private String entryColorRaw;
-	
-	@SerializedName("extra_recipe_mappings")
-	private Map<String, Integer> extraRecipeMappings;
+	@SerializedName("entry_color") private String entryColorRaw;
+
+	@SerializedName("extra_recipe_mappings") private Map<String, Integer> extraRecipeMappings;
 
 	private transient ResourceLocation id;
 	transient Book book;
@@ -72,8 +68,9 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		List<BookPage> pages = getPages();
 		for (int i = 0; i < pages.size(); i++) {
 			BookPage page = pages.get(i);
-			if (anchor.equals(page.anchor))
+			if (anchor.equals(page.anchor)) {
 				return i;
+			}
 		}
 
 		return -1;
@@ -86,17 +83,20 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public BookIcon getIcon() {
-		if(icon == null)
+		if (icon == null) {
 			icon = BookIcon.from(iconRaw);
+		}
 
 		return icon;
 	}
 
 	public BookCategory getCategory() {
-		if(lcategory == null) {
-			if(category.contains(":"))
+		if (lcategory == null) {
+			if (category.contains(":")) {
 				lcategory = book.contents.categories.get(new ResourceLocation(category));
-			else lcategory = book.contents.categories.get(new ResourceLocation(book.getModNamespace(), category));
+			} else {
+				lcategory = book.contents.categories.get(new ResourceLocation(book.getModNamespace(), category));
+			}
 		}
 
 		return lcategory;
@@ -107,21 +107,24 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		locked = advancement != null && !advancement.isEmpty() && !ClientAdvancements.hasDone(advancement);
 
 		boolean dirty = false;
-		if(!locked && currLocked != locked) {
+		if (!locked && currLocked != locked) {
 			dirty = true;
 			book.markUpdated();
 		}
-		
-		if(!dirty && !readStateDirty && getReadState() == EntryDisplayState.PENDING && ClientAdvancements.hasDone(turnin))
+
+		if (!dirty && !readStateDirty && getReadState() == EntryDisplayState.PENDING && ClientAdvancements.hasDone(turnin)) {
 			dirty = true;
-		
-		if(dirty)
+		}
+
+		if (dirty) {
 			markReadStateDirty();
+		}
 	}
-	
+
 	public boolean isLocked() {
-		if(isSecret())
+		if (isSecret()) {
 			return locked;
+		}
 		return !PatchouliConfig.disableAdvancementLocking.get() && locked;
 	}
 
@@ -146,29 +149,35 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public boolean isFoundByQuery(String query) {
-		if(getName().toLowerCase().contains(query))
+		if (getName().toLowerCase().contains(query)) {
 			return true;
-		
-		for(StackWrapper wrapper : relevantStacks)
-			if(StringUtils.stripControlCodes(wrapper.stack.getDisplayName().getFormattedText()).toLowerCase().contains(query))
+		}
+
+		for (StackWrapper wrapper : relevantStacks) {
+			if (StringUtils.stripControlCodes(wrapper.stack.getDisplayName().getFormattedText()).toLowerCase().contains(query)) {
 				return true;
-		
+			}
+		}
+
 		return false;
 	}
 
 	@Override
 	public int compareTo(BookEntry o) {
-		if(o.locked != this.locked)
+		if (o.locked != this.locked) {
 			return this.locked ? 1 : -1;
-		
+		}
+
 		EntryDisplayState ourState = getReadState();
 		EntryDisplayState otherState = o.getReadState();
-		
-		if(ourState != otherState)
-			return ourState.compareTo(otherState);
 
-		if(o.priority != this.priority)
+		if (ourState != otherState) {
+			return ourState.compareTo(otherState);
+		}
+
+		if (o.priority != this.priority) {
 			return this.priority ? -1 : 1;
+		}
 
 		int sort = this.sortnum - o.sortnum;
 
@@ -176,10 +185,12 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public void setBook(Book book) {
-		if(book.isExtension) {
+		if (book.isExtension) {
 			this.book = book.extensionTarget;
 			trueProvider = book;
-		} else this.book = book;
+		} else {
+			this.book = book;
+		}
 	}
 
 	public void setId(ResourceLocation id) {
@@ -187,25 +198,27 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public void build() {
-		if(built)
+		if (built) {
 			return;
+		}
 
 		if (entryColorRaw != null) {
 			this.entryColor = Integer.parseInt(entryColorRaw, 16);
 		} else {
 			this.entryColor = book.textColor;
 		}
-		for(int i = 0; i < pages.length; i++)
-			if(pages[i].canAdd(book)) {
+		for (int i = 0; i < pages.length; i++) {
+			if (pages[i].canAdd(book)) {
 				try {
 					pages[i].build(this, i);
 					realPages.add(pages[i]);
-				} catch(Exception e) {
+				} catch (Exception e) {
 					throw new RuntimeException("Error while loading entry " + id + " page " + i, e);
 				}
 			}
+		}
 
-		if(extraRecipeMappings != null) {
+		if (extraRecipeMappings != null) {
 			for (Map.Entry<String, Integer> entry : extraRecipeMappings.entrySet()) {
 				String key = entry.getKey();
 				List<ItemStack> stacks;
@@ -233,8 +246,9 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		StackWrapper wrapper = ItemStackUtil.wrapStack(stack);
 		relevantStacks.add(wrapper);
 
-		if(!book.contents.recipeMappings.containsKey(wrapper))
+		if (!book.contents.recipeMappings.containsKey(wrapper)) {
 			book.contents.recipeMappings.put(wrapper, Pair.of(this, page / 2));
+		}
 	}
 
 	public boolean isStackRelevant(ItemStack stack) {
@@ -256,19 +270,23 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	@Override
 	protected EntryDisplayState computeReadState() {
 		BookData data = PersistentData.data.getBookData(book);
-		if(data != null && getId() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getId().toString()))
+		if (data != null && getId() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getId().toString())) {
 			return EntryDisplayState.UNREAD;
+		}
 
-		if(turnin != null && !turnin.isEmpty() && !ClientAdvancements.hasDone(turnin))
+		if (turnin != null && !turnin.isEmpty() && !ClientAdvancements.hasDone(turnin)) {
 			return EntryDisplayState.PENDING;
+		}
 
-		for(BookPage page : pages)
-			if(page instanceof PageQuest && ((PageQuest) page).isCompleted(book))
+		for (BookPage page : pages) {
+			if (page instanceof PageQuest && ((PageQuest) page).isCompleted(book)) {
 				return EntryDisplayState.COMPLETED;
-		
+			}
+		}
+
 		return EntryDisplayState.NEUTRAL;
 	}
-	
+
 	@Override
 	public void markReadStateDirty() {
 		super.markReadStateDirty();

@@ -8,9 +8,15 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+'
     }
 }
+
+plugins {
+    id "com.diffplug.gradle.spotless" version "3.27.2"
+}
+
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
+apply plugin: 'pmd'
 
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
@@ -123,6 +129,25 @@ def parseConfig(File config) {
         prop.load(it)
         return (new ConfigSlurper().parse(prop))
     }
+}
+
+spotless {
+    enforceCheck = false // workaround around jenkins having wrong line endings in some files
+    // we explicitly check in github actions builds
+    java {
+        target '**/vazkii/patchouli/**/*.java'
+
+        indentWithTabs()
+        eclipse().configFile 'spotless/eclipseformat.xml'
+        importOrderFile 'spotless/eclipse.importorder'
+    }
+}
+pmd {
+    ruleSets = ["java-braces"]
+}
+
+task checkSyntax {
+    dependsOn spotlessJavaCheck, pmdMain
 }
 
 jar {

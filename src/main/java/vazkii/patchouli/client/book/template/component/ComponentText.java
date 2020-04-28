@@ -15,22 +15,19 @@ public class ComponentText extends TemplateComponent {
 
 	public String text;
 
-	@SerializedName("color")
-	public String colorStr;
-	
-	@SerializedName("max_width")
-	int maxWidth = GuiBook.PAGE_WIDTH;
-	@SerializedName("line_height")
-	int lineHeight = GuiBook.TEXT_LINE_HEIGHT;
-	
+	@SerializedName("color") public String colorStr;
+
+	@SerializedName("max_width") int maxWidth = GuiBook.PAGE_WIDTH;
+	@SerializedName("line_height") int lineHeight = GuiBook.TEXT_LINE_HEIGHT;
+
 	transient BookTextRenderer textRenderer;
 	transient int color;
-	
+
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
 		try {
 			color = Integer.parseInt(colorStr, 16);
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			color = page.book.textColor;
 		}
 	}
@@ -46,12 +43,12 @@ public class ComponentText extends TemplateComponent {
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
 		textRenderer = new BookTextRenderer(parent, text, x, y, maxWidth, lineHeight, color);
 	}
-	
+
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
 		textRenderer.render(mouseX, mouseY);
 	}
-	
+
 	@Override
 	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
 		return textRenderer.click(mouseX, mouseY, mouseButton);

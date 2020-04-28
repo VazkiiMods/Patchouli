@@ -1,15 +1,16 @@
 package vazkii.patchouli.common.multiblock;
 
-import java.util.Objects;
-import java.util.function.Predicate;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.util.TriPredicate;
+
 import vazkii.patchouli.api.IStateMatcher;
+
+import java.util.Objects;
+import java.util.function.Predicate;
 
 public class StateMatcher implements IStateMatcher {
 
@@ -78,8 +79,12 @@ public class StateMatcher implements IStateMatcher {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 		StateMatcher that = (StateMatcher) o;
 		return statePredicate.equals(that.statePredicate);
 	}

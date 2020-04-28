@@ -3,11 +3,12 @@ package vazkii.patchouli.api;
 import net.minecraft.client.gui.screen.Screen;
 
 /**
- * Implement this on a class designed to process a template and the variables bound 
+ * Implement this on a class designed to process a template and the variables bound
  * to the inside. This doesn't have to be registered anywhere, but any class implementing
  * this needs either no explicit constructor, or an implicit public no parameter constructor.
- * <br><br>
- * Instances of this class are created once for every usage of the template it's meant to 
+ * <br>
+ * <br>
+ * Instances of this class are created once for every usage of the template it's meant to
  * process, so you can save data on a per-template basis.
  */
 public interface IComponentProcessor {
@@ -24,10 +25,11 @@ public interface IComponentProcessor {
 	 * Processes a variable. You should return what you think the result should be, or
 	 * null if you don't want to process it. If you need to pass in a serialized
 	 * ItemStack, look at the ItemStack serialization methods in the main API class.
-	 * <br><br>
+	 * <br>
+	 * <br>
 	 * Note that this is also called for any right-side values of the using block of
 	 * any included templates. It is not called for the variables used inside said
-	 * templates. 
+	 * templates.
 	 */
 	String process(String key);
 
@@ -41,7 +43,8 @@ public interface IComponentProcessor {
 	/**
 	 * Returns whether an element is allowed to render based on its group. This method
 	 * isn't called by elements with no group or with an empty group.
-	 * <br><br>
+	 * <br>
+	 * <br>
 	 * In the case of included templates existing, groups are automatically assigned
 	 * to them, and this will be called for every element inside them with said groups.
 	 * Eg. Including another template as "sub", which has elements with no group, and with
@@ -52,4 +55,4 @@ public interface IComponentProcessor {
 		return true;
 	}
 
-}	
+}

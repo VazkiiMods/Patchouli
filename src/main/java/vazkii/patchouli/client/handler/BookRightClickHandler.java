@@ -1,10 +1,8 @@
 package vazkii.patchouli.client.handler;
 
-import java.util.Collection;
-
 import com.mojang.blaze3d.systems.RenderSystem;
-
 import com.mojang.datafixers.util.Pair;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MainWindow;
@@ -23,6 +21,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -33,6 +32,8 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 
 import javax.annotation.Nullable;
 
+import java.util.Collection;
+
 @EventBusSubscriber(Dist.CLIENT)
 public class BookRightClickHandler {
 
@@ -41,14 +42,14 @@ public class BookRightClickHandler {
 		Minecraft mc = Minecraft.getInstance();
 		PlayerEntity player = mc.player;
 		ItemStack bookStack = player.getHeldItemMainhand();
-		if(event.getType() == ElementType.ALL && mc.currentScreen == null) {
+		if (event.getType() == ElementType.ALL && mc.currentScreen == null) {
 			Book book = getBookFromStack(bookStack);
 
-			if(book != null) {
+			if (book != null) {
 				Pair<BookEntry, Integer> hover = getHoveredEntry(book);
-				if(hover != null) {
+				if (hover != null) {
 					BookEntry entry = hover.getFirst();
-					if(!entry.isLocked()) {
+					if (!entry.isLocked()) {
 						MainWindow window = event.getWindow();
 						int x = window.getScaledWidth() / 2 + 3;
 						int y = window.getScaledHeight() / 2 + 3;
@@ -61,7 +62,7 @@ public class BookRightClickHandler {
 
 						RenderSystem.pushMatrix();
 						RenderSystem.scalef(0.75F, 0.75F, 1F);
-						String s = I18n.format("patchouli.gui.lexicon."+(player.isSneaking() ? "view" : "sneak"));
+						String s = I18n.format("patchouli.gui.lexicon." + (player.isSneaking() ? "view" : "sneak"));
 						mc.fontRenderer.drawStringWithShadow(TextFormatting.ITALIC + s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
 						RenderSystem.popMatrix();
 					}
@@ -74,12 +75,12 @@ public class BookRightClickHandler {
 	public static void onRightClick(RightClickBlock event) {
 		PlayerEntity player = event.getPlayer();
 
-		if(event.getWorld().isRemote && player.isSneaking()) {
+		if (event.getWorld().isRemote && player.isSneaking()) {
 			Book book = getBookFromStack(event.getItemStack());
 
-			if(book != null) {
+			if (book != null) {
 				Pair<BookEntry, Integer> hover = getHoveredEntry(book);
-				if(hover != null) {
+				if (hover != null) {
 					int page = hover.getSecond() * 2;
 					book.contents.setTopEntry(hover.getFirst().getId(), page);
 				}
@@ -89,13 +90,16 @@ public class BookRightClickHandler {
 
 	@Nullable
 	public static Book getBookFromStack(ItemStack stack) {
-		if(stack.getItem() instanceof ItemModBook)
+		if (stack.getItem() instanceof ItemModBook) {
 			return ItemModBook.getBook(stack);
+		}
 
 		Collection<Book> books = BookRegistry.INSTANCE.books.values();
-		for(Book b : books)
-			if(b.getBookItem().isItemEqual(stack))
+		for (Book b : books) {
+			if (b.getBookItem().isItemEqual(stack)) {
 				return b;
+			}
+		}
 
 		return null;
 	}
@@ -103,14 +107,15 @@ public class BookRightClickHandler {
 	private static Pair<BookEntry, Integer> getHoveredEntry(Book book) {
 		Minecraft mc = Minecraft.getInstance();
 		RayTraceResult res = mc.objectMouseOver;
-		if(res instanceof BlockRayTraceResult) {
+		if (res instanceof BlockRayTraceResult) {
 			BlockPos pos = ((BlockRayTraceResult) res).getPos();
 			BlockState state = mc.world.getBlockState(pos);
 			Block block = state.getBlock();
 			ItemStack picked = block.getPickBlock(state, res, mc.world, pos, mc.player);
 
-			if(!picked.isEmpty())
+			if (!picked.isEmpty()) {
 				return book.contents.getEntryForStack(picked);
+			}
 		}
 
 		return null;

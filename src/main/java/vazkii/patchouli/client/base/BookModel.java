@@ -8,6 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.BakedModelWrapper;
+
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
 
@@ -15,26 +16,26 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class BookModel extends BakedModelWrapper<IBakedModel> {
-    public BookModel(IBakedModel original) {
-        super(original);
-    }
+	public BookModel(IBakedModel original) {
+		super(original);
+	}
 
-    private final ItemOverrideList itemHandler = new ItemOverrideList() {
-        @Override
-        public IBakedModel getModelWithOverrides(@Nonnull IBakedModel original, @Nonnull ItemStack stack,
-                                                 @Nullable World world, @Nullable LivingEntity entity) {
-            Book book = ItemModBook.getBook(stack);
-            if (book != null) {
-                ModelResourceLocation modelPath = new ModelResourceLocation(book.model, "inventory");
-                return Minecraft.getInstance().getModelManager().getModel(modelPath);
-            }
-            return original;
-        }
-    };
+	private final ItemOverrideList itemHandler = new ItemOverrideList() {
+		@Override
+		public IBakedModel getModelWithOverrides(@Nonnull IBakedModel original, @Nonnull ItemStack stack,
+				@Nullable World world, @Nullable LivingEntity entity) {
+			Book book = ItemModBook.getBook(stack);
+			if (book != null) {
+				ModelResourceLocation modelPath = new ModelResourceLocation(book.model, "inventory");
+				return Minecraft.getInstance().getModelManager().getModel(modelPath);
+			}
+			return original;
+		}
+	};
 
-    @Nonnull
-    @Override
-    public ItemOverrideList getOverrides() {
-        return itemHandler;
-    }
+	@Nonnull
+	@Override
+	public ItemOverrideList getOverrides() {
+		return itemHandler;
+	}
 }

@@ -1,11 +1,12 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
+
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -14,7 +15,7 @@ import vazkii.patchouli.common.book.Book;
 public class GuiButtonBookBookmark extends GuiButtonBook {
 
 	private final Book book;
-	
+
 	public final Bookmark bookmark;
 	public final boolean multiblock;
 
@@ -34,7 +35,7 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 		super.renderButton(mouseX, mouseY, partialTicks);
 
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
-		if(bookmark != null && entry != null) {
+		if (bookmark != null && entry != null) {
 			RenderSystem.pushMatrix();
 			RenderSystem.scalef(0.5F, 0.5F, 0.5F);
 			int px = x * 2 + (isHovered() ? 6 : 2);
@@ -43,8 +44,9 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 
 			RenderSystem.disableDepthTest();
 			String s = Integer.toString(bookmark.page + 1);
-			if(multiblock)
+			if (multiblock) {
 				s = I18n.format("patchouli.gui.lexicon.visualize_letter");
+			}
 			parent.getMinecraft().fontRenderer.drawStringWithShadow(s, px + 12, py + 10, 0xFFFFFF);
 			RenderSystem.enableDepthTest();
 			RenderSystem.popMatrix();
@@ -54,14 +56,15 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	private static String[] getTooltip(Book book, Bookmark bookmark, boolean multiblock) {
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 
-		if(bookmark == null || entry == null)
+		if (bookmark == null || entry == null) {
 			return new String[] { I18n.format("patchouli.gui.lexicon.add_bookmark") };
+		}
 
 		return new String[] {
 				entry.getName(),
-				TextFormatting.GRAY + I18n.format(multiblock 
+				TextFormatting.GRAY + I18n.format(multiblock
 						? "patchouli.gui.lexicon.multiblock_bookmark"
-								: "patchouli.gui.lexicon.remove_bookmark")
+						: "patchouli.gui.lexicon.remove_bookmark")
 		};
 	}
 

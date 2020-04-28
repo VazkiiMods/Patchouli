@@ -13,12 +13,12 @@ import net.minecraftforge.common.MinecraftForge;
  */
 public class BookDrawScreenEvent
 		extends BookEvent {
-	
+
 	public final Screen gui;
 	public final int mouseX;
 	public final int mouseY;
 	public final float partialTicks;
-	
+
 	public BookDrawScreenEvent(Screen gui, ResourceLocation book, int mouseX, int mouseY, float partialTicks) {
 		super(book);
 		this.gui = gui;

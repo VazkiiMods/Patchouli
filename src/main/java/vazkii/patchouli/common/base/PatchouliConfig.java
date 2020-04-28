@@ -1,16 +1,16 @@
 package vazkii.patchouli.common.base;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
+
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PatchouliConfig {
 
@@ -31,14 +31,15 @@ public class PatchouliConfig {
 
 	public static void load() {
 		List<ModInfo> mods = ModList.get().getMods();
-		for(ModInfo info : mods)
+		for (ModInfo info : mods) {
 			setFlag("mod:" + info.getModId(), true);
+		}
 
 		setFlag("debug", Patchouli.debug);
 
 		updateFlags();
 	}
-	
+
 	static class Loader {
 
 		public Loader(ForgeConfigSpec.Builder builder) {
@@ -79,13 +80,15 @@ public class PatchouliConfig {
 	}
 
 	public static boolean getConfigFlag(String name) {
-		if(name.startsWith("&"))
+		if (name.startsWith("&")) {
 			return getConfigFlagAND(name.replaceAll("[&|]", "").split(","));
-		if(name.startsWith("|"))
+		}
+		if (name.startsWith("|")) {
 			return getConfigFlagOR(name.replaceAll("[&|]", "").split(","));
+		}
 
 		boolean target = true;
-		if(name.startsWith("!")) {
+		if (name.startsWith("!")) {
 			name = name.substring(1);
 			target = false;
 		}
@@ -95,17 +98,21 @@ public class PatchouliConfig {
 	}
 
 	public static boolean getConfigFlagAND(String[] tokens) {
-		for(String s : tokens)
-			if(!getConfigFlag(s))
+		for (String s : tokens) {
+			if (!getConfigFlag(s)) {
 				return false;
+			}
+		}
 
 		return true;
 	}
 
 	public static boolean getConfigFlagOR(String[] tokens) {
-		for(String s : tokens)
-			if(getConfigFlag(s))
+		for (String s : tokens) {
+			if (getConfigFlag(s)) {
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -113,6 +120,5 @@ public class PatchouliConfig {
 	public static void setFlag(String flag, boolean value) {
 		configFlags.put(flag.trim().toLowerCase(), value);
 	}
-
 
 }

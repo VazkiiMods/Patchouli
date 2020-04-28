@@ -1,12 +1,14 @@
 package vazkii.patchouli.common.base;
 
-import java.lang.management.ManagementFactory;
-
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import vazkii.patchouli.client.base.ClientProxy;
+
+import java.lang.management.ManagementFactory;
 
 @Mod(Patchouli.MOD_ID)
 public class Patchouli {
@@ -30,4 +32,3 @@ public class Patchouli {
 	}
 
 }
-

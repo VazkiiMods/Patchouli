@@ -15,7 +15,7 @@ public final class ClientTicker {
 	public static float partialTicks = 0;
 	public static float delta = 0;
 	public static float total = 0;
-	
+
 	private static void calcDelta() {
 		float oldTotal = total;
 		total = ticksInGame + partialTicks;
@@ -24,14 +24,16 @@ public final class ClientTicker {
 
 	@SubscribeEvent
 	public static void renderTick(TickEvent.RenderTickEvent event) {
-		if(event.phase == TickEvent.Phase.START)
+		if (event.phase == TickEvent.Phase.START) {
 			partialTicks = event.renderTickTime;
-		else calcDelta();
+		} else {
+			calcDelta();
+		}
 	}
 
 	@SubscribeEvent
 	public static void clientTickEnd(TickEvent.ClientTickEvent event) {
-		if(event.phase == TickEvent.Phase.END) {
+		if (event.phase == TickEvent.Phase.END) {
 			ticksInGame++;
 			partialTicks = 0;
 

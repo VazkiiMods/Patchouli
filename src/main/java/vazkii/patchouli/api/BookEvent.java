@@ -4,12 +4,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class BookEvent
-    extends Event {
+		extends Event {
 
-  public final ResourceLocation book;
+	public final ResourceLocation book;
 
-  public BookEvent(ResourceLocation book) {
+	public BookEvent(ResourceLocation book) {
 
-    this.book = book;
-  }
+		this.book = book;
+	}
 }

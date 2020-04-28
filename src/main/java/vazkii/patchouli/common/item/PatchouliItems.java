@@ -13,14 +13,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.ObjectHolder;
+
 import vazkii.patchouli.client.base.BookModel;
 import vazkii.patchouli.common.book.BookRegistry;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class PatchouliItems {
 
-	@ObjectHolder("patchouli:guide_book")
-	public static Item book;
+	@ObjectHolder("patchouli:guide_book") public static Item book;
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)

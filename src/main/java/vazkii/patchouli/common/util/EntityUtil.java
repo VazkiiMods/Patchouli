@@ -1,7 +1,5 @@
 package vazkii.patchouli.common.util;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.entity.Entity;
@@ -11,6 +9,9 @@ import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import vazkii.patchouli.common.base.Patchouli;
 
 import java.util.function.Function;
@@ -23,17 +24,17 @@ public class EntityUtil {
 
 		return type.getTranslationKey();
 	}
-	
+
 	public static Function<World, Entity> loadEntity(String entityId) {
 		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
 		entityId = nameAndNbt.getLeft();
 		String nbtStr = nameAndNbt.getRight();
 		CompoundNBT nbt = null;
-		
-		if(!nbtStr.isEmpty()) {
+
+		if (!nbtStr.isEmpty()) {
 			try {
 				nbt = JsonToNBT.getTagFromJson(nbtStr);
-			} catch(CommandSyntaxException e) {
+			} catch (CommandSyntaxException e) {
 				Patchouli.LOGGER.error("Failed to load entity data", e);
 			}
 		}
@@ -49,8 +50,9 @@ public class EntityUtil {
 			Entity entity;
 			try {
 				entity = type.create(world);
-				if(useNbt != null)
+				if (useNbt != null) {
 					entity.read(useNbt);
+				}
 
 				return entity;
 			} catch (Exception e) {
@@ -58,17 +60,16 @@ public class EntityUtil {
 			}
 		};
 	}
-	
+
 	private static Pair<String, String> splitNameAndNBT(String entityId) {
 		int nbtStart = entityId.indexOf("{");
 		String nbtStr = "";
-		if(nbtStart > 0) {
+		if (nbtStart > 0) {
 			nbtStr = entityId.substring(nbtStart).replaceAll("([^\\\\])'", "$1\"").replaceAll("\\\\'", "'");
 			entityId = entityId.substring(0, nbtStart);
 		}
-		
+
 		return Pair.of(entityId, nbtStr);
 	}
-	
 
 }

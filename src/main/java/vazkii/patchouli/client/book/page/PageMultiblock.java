@@ -1,50 +1,44 @@
 package vazkii.patchouli.client.book.page;
 
-import java.util.Collections;
-import java.util.Random;
-import java.util.Set;
-import java.util.WeakHashMap;
-
-import javax.annotation.Nonnull;
-
+import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Matrix4f;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.Vector4f;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.util.math.Vec3i;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import org.lwjgl.opengl.GL11;
-
-import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+
+import org.lwjgl.opengl.GL11;
+
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
@@ -60,51 +54,59 @@ import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
 
+import javax.annotation.Nonnull;
+
+import java.util.Collections;
+import java.util.Random;
+import java.util.Set;
+import java.util.WeakHashMap;
+
 public class PageMultiblock extends PageWithText {
 	private static final Random RAND = new Random();
 
 	String name;
-	@SerializedName("multiblock_id")
-	ResourceLocation multiblockId;
-	
-	@SerializedName("multiblock")
-	SerializedMultiblock serializedMultiblock;
+	@SerializedName("multiblock_id") ResourceLocation multiblockId;
 
-	@SerializedName("enable_visualize")
-	boolean showVisualizeButton = true;
-	
+	@SerializedName("multiblock") SerializedMultiblock serializedMultiblock;
+
+	@SerializedName("enable_visualize") boolean showVisualizeButton = true;
+
 	private transient AbstractMultiblock multiblockObj;
 	private transient Button visualizeButton;
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
-		if(multiblockId != null) {
+		if (multiblockId != null) {
 			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(multiblockId);
-			
-			if(mb instanceof AbstractMultiblock)
+
+			if (mb instanceof AbstractMultiblock) {
 				multiblockObj = (AbstractMultiblock) mb;
+			}
 		}
-		
-		if(multiblockObj == null && serializedMultiblock != null)
+
+		if (multiblockObj == null && serializedMultiblock != null) {
 			multiblockObj = serializedMultiblock.toMultiblock();
-		
-		if(multiblockObj == null)
+		}
+
+		if (multiblockObj == null) {
 			throw new IllegalArgumentException("No multiblock located for " + multiblockId);
+		}
 	}
 
 	@Override
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 
-		if(showVisualizeButton)
+		if (showVisualizeButton) {
 			addButton(visualizeButton = new GuiButtonBookEye(parent, 12, 97, this::handleButtonVisualize));
+		}
 	}
 
 	@Override
 	public int getTextHeight() {
 		return 115;
 	}
-	
+
 	@Override
 	public void render(int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
@@ -112,22 +114,23 @@ public class PageMultiblock extends PageWithText {
 		RenderSystem.enableBlend();
 		RenderSystem.color3f(1F, 1F, 1F);
 		GuiBook.drawFromTexture(book, x, y, 405, 149, 106, 106);
-		
+
 		parent.drawCenteredStringNoShadow(name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 
-		if(multiblockObj != null)
+		if (multiblockObj != null) {
 			renderMultiblock();
-		
+		}
+
 		super.render(mouseX, mouseY, pticks);
 	}
-	
+
 	public void handleButtonVisualize(Button button) {
 		String entryKey = parent.getEntry().getId().toString();
 		Bookmark bookmark = new Bookmark(entryKey, pageNum / 2);
 		MultiblockVisualizationHandler.setMultiblock(multiblockObj, name, bookmark, true);
 		parent.addBookmarkButtons();
-		
-		if(!PersistentData.data.clickedVisualize) {
+
+		if (!PersistentData.data.clickedVisualize) {
 			PersistentData.data.clickedVisualize = true;
 			PersistentData.save();
 		}
@@ -166,8 +169,9 @@ public class PageMultiblock extends PageWithText {
 		float offZ = (float) -sizeZ / 2 + 1;
 
 		float time = parent.ticksInBook * 0.5F;
-		if(!Screen.hasShiftDown())
+		if (!Screen.hasShiftDown()) {
 			time += ClientTicker.partialTicks;
+		}
 		RenderSystem.translatef(-offX, 0, -offZ);
 		RenderSystem.rotatef(time, 0F, 1F, 0F);
 		rotMat.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-time));

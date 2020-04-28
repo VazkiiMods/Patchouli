@@ -2,6 +2,7 @@ package vazkii.patchouli.client.handler;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -17,7 +18,9 @@ import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
 import org.lwjgl.opengl.GL11;
+
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -37,14 +40,14 @@ public class TooltipHandler {
 		int tooltipX = evt.getX();
 		int tooltipY = evt.getY() - 4;
 
-		if(mc.player != null && !(mc.currentScreen instanceof GuiBook)) {
+		if (mc.player != null && !(mc.currentScreen instanceof GuiBook)) {
 			int lexSlot = -1;
 			ItemStack lexiconStack = ItemStack.EMPTY;
 			Pair<BookEntry, Integer> lexiconEntry = null;
 
-			for(int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
+			for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 				ItemStack stackAt = mc.player.inventory.getStackInSlot(i);
-				if(!stackAt.isEmpty()) {
+				if (!stackAt.isEmpty()) {
 					Book book = BookRightClickHandler.getBookFromStack(stackAt);
 					if (book != null) {
 						Pair<BookEntry, Integer> entry = book.contents.getEntryForStack(evt.getStack());
@@ -59,14 +62,14 @@ public class TooltipHandler {
 				}
 			}
 
-			if(lexSlot > -1) {
+			if (lexSlot > -1) {
 				int x = tooltipX - 34;
 				RenderSystem.disableDepthTest();
 
 				AbstractGui.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
 				AbstractGui.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
 
-				if(PatchouliConfig.useShiftForQuickLookup.get() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
+				if (PatchouliConfig.useShiftForQuickLookup.get() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
 					lexiconLookupTime += ClientTicker.delta;
 
 					int cx = x + 8;
@@ -87,7 +90,7 @@ public class TooltipHandler {
 					float a = 0.5F + 0.2F * ((float) Math.cos(ClientTicker.total / 10) * 0.5F + 0.5F);
 					buf.vertex(cx, cy, 0).color(0F, 0.5F, 0F, a).endVertex();
 
-					for(float i = angles; i > 0; i--) {
+					for (float i = angles; i > 0; i--) {
 						double rad = (i - 90) / 180F * Math.PI;
 						buf.vertex(cx + Math.cos(rad) * r, cy + Math.sin(rad) * r, 0).color(0F, 1F, 0F, 1F).endVertex();
 					}
@@ -99,12 +102,14 @@ public class TooltipHandler {
 					RenderSystem.enableTexture();
 					RenderSystem.shadeModel(GL11.GL_FLAT);
 
-					if(lexiconLookupTime >= time) {
+					if (lexiconLookupTime >= time) {
 						mc.player.inventory.currentItem = lexSlot;
 						int page = lexiconEntry.getSecond();
 						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), page);
 					}
-				} else lexiconLookupTime = 0F;
+				} else {
+					lexiconLookupTime = 0F;
+				}
 
 				mc.getItemRenderer().zLevel = 300;
 				mc.getItemRenderer().renderItemAndEffectIntoGUI(lexiconStack, x, tooltipY);
@@ -122,7 +127,11 @@ public class TooltipHandler {
 				RenderSystem.popMatrix();
 
 				RenderSystem.enableDepthTest();
-			} else lexiconLookupTime = 0F;
-		} else lexiconLookupTime = 0F;
+			} else {
+				lexiconLookupTime = 0F;
+			}
+		} else {
+			lexiconLookupTime = 0F;
+		}
 	}
 }

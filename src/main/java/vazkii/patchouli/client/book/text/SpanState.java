@@ -1,11 +1,12 @@
 package vazkii.patchouli.client.book.text;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 import net.minecraft.client.gui.FontRenderer;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public class SpanState {
 	public final GuiBook gui;

@@ -1,11 +1,12 @@
 package vazkii.patchouli.client.book.text;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 import net.minecraft.client.gui.FontRenderer;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 public class Word {
 	private final Book book;
@@ -36,20 +37,23 @@ public class Word {
 	public void render(FontRenderer font, int mouseX, int mouseY) {
 		String renderTarget = codes + text;
 		int renderColor = color;
-		if(isClusterHovered(mouseX, mouseY)) {
-			if (onClick != null)
+		if (isClusterHovered(mouseX, mouseY)) {
+			if (onClick != null) {
 				renderColor = book.linkHoverColor;
-			if (!tooltip.isEmpty())
+			}
+			if (!tooltip.isEmpty()) {
 				gui.setTooltip(tooltip);
+			}
 		}
 
 		font.drawString(renderTarget, x, y, renderColor);
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {
-		if(onClick != null && mouseButton == 0 && isHovered(mouseX, mouseY))
+		if (onClick != null && mouseButton == 0 && isHovered(mouseX, mouseY)) {
 			return onClick.get();
-		
+		}
+
 		return false;
 	}
 
@@ -58,12 +62,15 @@ public class Word {
 	}
 
 	private boolean isClusterHovered(double mouseX, double mouseY) {
-		if(linkCluster == null)
+		if (linkCluster == null) {
 			return isHovered(mouseX, mouseY);
+		}
 
-		for(Word w : linkCluster)
-			if(w.isHovered(mouseX, mouseY))
+		for (Word w : linkCluster) {
+			if (w.isHovered(mouseX, mouseY)) {
 				return true;
+			}
+		}
 
 		return false;
 	}

@@ -8,9 +8,9 @@ import net.minecraftforge.common.MinecraftForge;
  * book is reloaded.
  */
 public class BookContentsReloadEvent
-    extends BookEvent {
+		extends BookEvent {
 
-  public BookContentsReloadEvent(ResourceLocation book) {
-    super(book);
-  }
+	public BookContentsReloadEvent(ResourceLocation book) {
+		super(book);
+	}
 }

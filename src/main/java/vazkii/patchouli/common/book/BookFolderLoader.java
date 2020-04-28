@@ -1,32 +1,35 @@
 package vazkii.patchouli.common.book;
 
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.ResourceLocationException;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.forgespi.language.IModInfo;
+
+import vazkii.patchouli.common.base.Patchouli;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.ResourceLocationException;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.forgespi.language.IModInfo;
-import vazkii.patchouli.common.base.Patchouli;
-
 public class BookFolderLoader {
 
 	public static File loadDir;
-	
+
 	private static void setup() {
 		loadDir = new File(BookRegistry.BOOKS_LOCATION);
-		if(!loadDir.exists())
+		if (!loadDir.exists()) {
 			loadDir.mkdir();
-		else if(!loadDir.isDirectory())
+		} else if (!loadDir.isDirectory()) {
 			throw new RuntimeException(loadDir.getAbsolutePath() + " is a file, not a folder, aborting. Please delete this file or move it elsewhere if it has important contents.");
+		}
 	}
-	
+
 	public static void findBooks() {
-		if(loadDir == null)
+		if (loadDir == null) {
 			setup();
-		
+		}
+
 		IModInfo mod = ModLoadingContext.get().getActiveContainer().getModInfo();
 		File[] subdirs = loadDir.listFiles(File::isDirectory);
 		if (subdirs == null) {
@@ -35,7 +38,7 @@ public class BookFolderLoader {
 			return;
 		}
 
-		for(File dir : subdirs) {
+		for (File dir : subdirs) {
 			ResourceLocation res;
 			try {
 				res = new ResourceLocation(Patchouli.MOD_ID, dir.getName());
@@ -52,5 +55,5 @@ public class BookFolderLoader {
 			}
 		}
 	}
-	
+
 }

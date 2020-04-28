@@ -13,8 +13,7 @@ import java.util.function.Function;
 
 public class ComponentCustom extends TemplateComponent {
 
-	@SerializedName("class")
-	String clazz;
+	@SerializedName("class") String clazz;
 
 	private transient ICustomComponent callbacks;
 
@@ -23,11 +22,11 @@ public class ComponentCustom extends TemplateComponent {
 		super.onVariablesAvailable(lookup);
 		try {
 			Class<?> classObj = Class.forName(clazz);
-			if(classObj != null) {
+			if (classObj != null) {
 				callbacks = (ICustomComponent) SerializationUtil.RAW_GSON.fromJson(sourceObject, classObj);
 				callbacks.onVariablesAvailable(lookup);
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			throw new RuntimeException("Failed to create custom component " + clazz, e);
 		}
 	}
@@ -36,17 +35,17 @@ public class ComponentCustom extends TemplateComponent {
 	public void build(BookPage page, BookEntry entry, int pageNum) {
 		callbacks.build(x, y, pageNum);
 	}
-	
+
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
 		callbacks.render(page.parent, pticks, mouseX, mouseY);
 	}
-	
+
 	@Override
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
 		callbacks.onDisplayed(parent);
 	}
-	
+
 	@Override
 	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
 		return callbacks.mouseClicked(page.parent, mouseX, mouseY, mouseButton);

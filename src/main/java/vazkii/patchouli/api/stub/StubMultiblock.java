@@ -1,20 +1,22 @@
 package vazkii.patchouli.api.stub;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import com.mojang.datafixers.util.Pair;
+
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 import vazkii.patchouli.api.IMultiblock;
+
+import java.util.Collection;
+import java.util.Collections;
 
 public class StubMultiblock implements IMultiblock {
 
 	public static final StubMultiblock INSTANCE = new StubMultiblock();
 
-	private StubMultiblock() { }
+	private StubMultiblock() {}
 
 	@Override
 	public IMultiblock offset(int x, int y, int z) {
@@ -40,7 +42,7 @@ public class StubMultiblock implements IMultiblock {
 	public IMultiblock setId(ResourceLocation res) {
 		return this;
 	}
-	
+
 	@Override
 	public boolean isSymmetrical() {
 		return false;

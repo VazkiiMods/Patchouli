@@ -1,9 +1,5 @@
 package vazkii.patchouli.common.item;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,6 +23,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.base.Patchouli;
@@ -36,6 +33,10 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.network.NetworkHandler;
 import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 
+import javax.annotation.Nullable;
+
+import java.util.List;
+
 public class ItemModBook extends Item {
 
 	public static final String TAG_BOOK = "patchouli:book";
@@ -44,25 +45,26 @@ public class ItemModBook extends Item {
 		super(new Item.Properties()
 				.maxStackSize(1)
 				.group(ItemGroup.MISC));
-		
+
 		setRegistryName(new ResourceLocation(Patchouli.MOD_ID, "guide_book"));
 
 		addPropertyOverride(new ResourceLocation("completion"), new IItemPropertyGetter() {
-			
+
 			@OnlyIn(Dist.CLIENT)
 			public float call(ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entityIn) {
 				Book book = getBook(stack);
 				float progression = 0F; // default incomplete
 
-				if(book != null) {
+				if (book != null) {
 					int totalEntries = 0;
 					int unlockedEntries = 0;
 
-					for(BookEntry entry : book.contents.entries.values()) {
+					for (BookEntry entry : book.contents.entries.values()) {
 						if (!entry.isSecret()) {
 							totalEntries++;
-							if(!entry.isLocked())
+							if (!entry.isLocked()) {
 								unlockedEntries++;
+							}
 						}
 					}
 
@@ -71,14 +73,14 @@ public class ItemModBook extends Item {
 
 				return progression;
 			}
-			
+
 		});
 	}
 
 	public static ItemStack forBook(Book book) {
 		return forBook(book.id);
 	}
-	
+
 	public static ItemStack forBook(ResourceLocation book) {
 		ItemStack stack = new ItemStack(PatchouliItems.book);
 
@@ -89,18 +91,20 @@ public class ItemModBook extends Item {
 		return stack;
 	}
 
-	@Override 
+	@Override
 	public void fillItemGroup(ItemGroup tab, NonNullList<ItemStack> items) {
 		String tabName = tab.getTabLabel();
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			if(!b.noBook && !b.isExtension && (tab == ItemGroup.SEARCH || b.creativeTab.equals(tabName)))
+			if (!b.noBook && !b.isExtension && (tab == ItemGroup.SEARCH || b.creativeTab.equals(tabName))) {
 				items.add(forBook(b));
+			}
 		});
 	}
 
 	public static Book getBook(ItemStack stack) {
-		if(!stack.hasTag() || !stack.getTag().contains(TAG_BOOK))
+		if (!stack.hasTag() || !stack.getTag().contains(TAG_BOOK)) {
 			return null;
+		}
 
 		String bookStr = stack.getTag().getString(TAG_BOOK);
 		ResourceLocation res = ResourceLocation.tryCreate(bookStr);
@@ -110,17 +114,19 @@ public class ItemModBook extends Item {
 	@Override
 	public String getCreatorModId(ItemStack itemStack) {
 		Book book = getBook(itemStack);
-		if(book != null)
+		if (book != null) {
 			return book.owner.getModId();
+		}
 
 		return super.getCreatorModId(itemStack);
 	}
-	
+
 	@Override
 	public ITextComponent getDisplayName(ItemStack stack) {
 		Book book = getBook(stack);
-		if(book != null)
+		if (book != null) {
 			return new TranslationTextComponent(book.name);
+		}
 
 		return super.getDisplayName(stack);
 	}
@@ -131,18 +137,20 @@ public class ItemModBook extends Item {
 		super.addInformation(stack, worldIn, tooltip, flagIn);
 
 		Book book = getBook(stack);
-		if(book != null && book.contents != null)
+		if (book != null && book.contents != null) {
 			tooltip.add(new StringTextComponent(book.contents.getSubtitle()).applyTextStyle(TextFormatting.GRAY));
+		}
 	}
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
 		ItemStack stack = playerIn.getHeldItem(handIn);
 		Book book = getBook(stack);
-		if(book == null)
+		if (book == null) {
 			return new ActionResult<>(ActionResultType.FAIL, stack);
+		}
 
-		if(playerIn instanceof ServerPlayerEntity) {
+		if (playerIn instanceof ServerPlayerEntity) {
 			PatchouliAPI.instance.openBookGUI((ServerPlayerEntity) playerIn, book.id);
 
 			// This plays the sound to others nearby, playing to the actual opening player handled from the packet
@@ -152,6 +160,5 @@ public class ItemModBook extends Item {
 
 		return new ActionResult<>(ActionResultType.SUCCESS, stack);
 	}
-
 
 }

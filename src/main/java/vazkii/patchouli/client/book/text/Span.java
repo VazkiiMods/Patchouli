@@ -1,9 +1,9 @@
 package vazkii.patchouli.client.book.text;
 
+import net.minecraft.client.gui.FontRenderer;
+
 import java.util.List;
 import java.util.function.Supplier;
-
-import net.minecraft.client.gui.FontRenderer;
 
 public class Span {
 	public static Span error(SpanState state, String message) {

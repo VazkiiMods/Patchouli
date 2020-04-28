@@ -1,10 +1,11 @@
 package vazkii.patchouli.common.multiblock;
 
+import net.minecraft.util.ResourceLocation;
+
+import vazkii.patchouli.api.IMultiblock;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import net.minecraft.util.ResourceLocation;
-import vazkii.patchouli.api.IMultiblock;
 
 public class MultiblockRegistry {
 

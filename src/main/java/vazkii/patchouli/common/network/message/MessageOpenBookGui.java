@@ -3,16 +3,17 @@ package vazkii.patchouli.common.network.message;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
+
 import vazkii.patchouli.client.book.ClientBookRegistry;
 
 import javax.annotation.Nullable;
+
 import java.util.function.Supplier;
 
 public class MessageOpenBookGui {
 
 	private final ResourceLocation book;
-	@Nullable
-	private final ResourceLocation entry;
+	@Nullable private final ResourceLocation entry;
 	private final int page;
 
 	public MessageOpenBookGui(PacketBuffer buf) {
@@ -29,7 +30,7 @@ public class MessageOpenBookGui {
 	public MessageOpenBookGui(ResourceLocation book, @Nullable ResourceLocation entry) {
 		this(book, entry, 0);
 	}
-	
+
 	public MessageOpenBookGui(ResourceLocation book, @Nullable ResourceLocation entry, int page) {
 		this.book = book;
 		this.entry = entry;
@@ -41,7 +42,7 @@ public class MessageOpenBookGui {
 		buf.writeString(entry == null ? "" : entry.toString());
 		buf.writeVarInt(page);
 	}
-	
+
 	public boolean receive(Supplier<Context> context) {
 		if (context.get().getDirection().getReceptionSide().isClient()) {
 			context.get().enqueueWork(() -> {

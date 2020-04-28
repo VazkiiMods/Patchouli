@@ -3,7 +3,9 @@ package vazkii.patchouli.client.jei;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.ISubtypeRegistration;
+
 import net.minecraft.util.ResourceLocation;
+
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
@@ -23,8 +25,9 @@ public class PatchouliJeiPlugin implements IModPlugin {
 	@Override
 	public void registerItemSubtypes(ISubtypeRegistration registration) {
 		registration.registerSubtypeInterpreter(PatchouliItems.book, stack -> {
-			if (!stack.hasTag() || !stack.getTag().contains(ItemModBook.TAG_BOOK))
+			if (!stack.hasTag() || !stack.getTag().contains(ItemModBook.TAG_BOOK)) {
 				return "";
+			}
 			return stack.getTag().getString(ItemModBook.TAG_BOOK);
 		});
 	}

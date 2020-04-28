@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class GuiButtonBookBack extends GuiButtonBook {
@@ -11,6 +12,5 @@ public class GuiButtonBookBack extends GuiButtonBook {
 				I18n.format("patchouli.gui.lexicon.button.back"),
 				TextFormatting.GRAY + I18n.format("patchouli.gui.lexicon.button.back.info"));
 	}
-	
-	
+
 }

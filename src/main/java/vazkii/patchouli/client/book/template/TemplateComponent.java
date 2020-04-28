@@ -4,8 +4,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import vazkii.patchouli.api.IComponentProcessor;
-import vazkii.patchouli.api.IVariablesAvailableCallback;
 import vazkii.patchouli.api.IVariableProvider;
+import vazkii.patchouli.api.IVariablesAvailableCallback;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -13,6 +13,7 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
 
 import javax.annotation.Nullable;
+
 import java.util.function.Function;
 
 public abstract class TemplateComponent implements IVariablesAvailableCallback {
@@ -23,21 +24,21 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 	public String flag = "";
 
 	public String advancement = "";
-	@SerializedName("negate_advancement")
-	boolean negateAdvancement = false; 
-	
+	@SerializedName("negate_advancement") boolean negateAdvancement = false;
+
 	public String guard = null;
 
 	transient boolean isVisible = true;
 	private transient boolean compiled = false;
-	
+
 	public transient JsonObject sourceObject;
 
 	public final void compile(IVariableProvider<String> variables, IComponentProcessor processor, @Nullable TemplateInclusion encapsulation) {
-		if(compiled)
+		if (compiled) {
 			return;
+		}
 
-		if(encapsulation != null) {
+		if (encapsulation != null) {
 			x += encapsulation.x;
 			y += encapsulation.y;
 		}
@@ -46,19 +47,22 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 		compiled = true;
 	}
 
-
 	public boolean getVisibleStatus(IComponentProcessor processor) {
-		if(processor != null && group != null && !group.isEmpty() && !processor.allowRender(group))
+		if (processor != null && group != null && !group.isEmpty() && !processor.allowRender(group)) {
 			return false;
-		
-		if(guard != null && (guard.isEmpty() || guard.equalsIgnoreCase("false")))
-			return false;
+		}
 
-		if(!flag.isEmpty() && !PatchouliConfig.getConfigFlag(flag))
+		if (guard != null && (guard.isEmpty() || guard.equalsIgnoreCase("false"))) {
 			return false;
+		}
 
-		if(!advancement.isEmpty())
+		if (!flag.isEmpty() && !PatchouliConfig.getConfigFlag(flag)) {
+			return false;
+		}
+
+		if (!advancement.isEmpty()) {
 			return ClientAdvancements.hasDone(advancement) != negateAdvancement;
+		}
 
 		return true;
 	}
@@ -71,7 +75,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 		// NO-OP
 	}
 
-	public void render(BookPage page, int mouseX, int mouseY, float pticks) { 
+	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
 		// NO-OP
 	}
 

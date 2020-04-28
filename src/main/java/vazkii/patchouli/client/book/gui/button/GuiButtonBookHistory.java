@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class GuiButtonBookHistory extends GuiButtonBook {

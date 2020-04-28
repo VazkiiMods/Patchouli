@@ -5,6 +5,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.util.TriPredicate;
+
 import vazkii.patchouli.api.IStateMatcher;
 
 public final class StubMatcher implements IStateMatcher {
@@ -13,7 +14,7 @@ public final class StubMatcher implements IStateMatcher {
 
 	private final BlockState state = Blocks.AIR.getDefaultState();
 
-	private StubMatcher() { }
+	private StubMatcher() {}
 
 	@Override
 	public BlockState getDisplayedState(int ticks) {
