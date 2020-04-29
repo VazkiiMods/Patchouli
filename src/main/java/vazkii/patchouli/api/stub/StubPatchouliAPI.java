@@ -8,13 +8,14 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-
 import net.minecraft.util.text.ITextComponent;
+
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
 
 import javax.annotation.Nullable;
+
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
@@ -64,6 +65,11 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	@Override
 	public ResourceLocation getOpenBookGui() {
 		return null;
+	}
+
+	@Override
+	public ITextComponent getSubtitle(ResourceLocation bookId) {
+		throw new IllegalArgumentException("Patchouli is not loaded");
 	}
 
 	@Override

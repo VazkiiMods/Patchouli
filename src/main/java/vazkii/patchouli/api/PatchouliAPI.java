@@ -15,6 +15,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.stub.StubPatchouliAPI;
 
 import javax.annotation.Nullable;
+
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +78,18 @@ public class PatchouliAPI {
 		 */
 		void openBookEntry(ResourceLocation book, ResourceLocation entry, int page);
 
+		/**
+		 * @return Book ID of the currently open book, null if none open
+		 */
+		@Nullable
 		ResourceLocation getOpenBookGui();
+
+		/**
+		 * @return                          The subtitle (edition string/what appears under the title in the landing
+		 *                                  page) of the book.
+		 * @throws IllegalArgumentException if the book id given cannot be found
+		 */
+		ITextComponent getSubtitle(ResourceLocation bookId);
 
 		/**
 		 * Reloads the contents of all books. Call sparingly and only if you
@@ -152,18 +164,21 @@ public class PatchouliAPI {
 		IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb);
 
 		/**
-		 * @return The multiblock currently being visualized in-world or null if no multiblock is visualized. Only works clientside.
+		 * @return The multiblock currently being visualized in-world or null if no multiblock is visualized. Only works
+		 *         clientside.
 		 */
 		@Nullable
 		IMultiblock getCurrentMultiblock();
 
 		/**
-		 * Sets the given multiblock as the currently visualized one. This overwrites any currently visualized multiblock.
+		 * Sets the given multiblock as the currently visualized one. This overwrites any currently visualized
+		 * multiblock.
 		 * Only works clientside.
-		 * @param multiblock The multiblock to visualize
+		 * 
+		 * @param multiblock  The multiblock to visualize
 		 * @param displayName The name to show above the completion bar
-		 * @param center Where to place the multiblock's center
-		 * @param rotation Orientation to visualize
+		 * @param center      Where to place the multiblock's center
+		 * @param rotation    Orientation to visualize
 		 */
 		void showMultiblock(IMultiblock multiblock, ITextComponent displayName, BlockPos center, Rotation rotation);
 

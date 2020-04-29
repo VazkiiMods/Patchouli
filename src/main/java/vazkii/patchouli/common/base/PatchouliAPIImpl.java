@@ -24,6 +24,8 @@ import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
+import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.multiblock.DenseMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
@@ -34,6 +36,8 @@ import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -85,6 +89,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
+	@Nullable
 	@OnlyIn(Dist.CLIENT)
 	public ResourceLocation getOpenBookGui() {
 		Screen gui = Minecraft.getInstance().currentScreen;
@@ -92,6 +97,16 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 			return ((GuiBook) gui).book.id;
 		}
 		return null;
+	}
+
+	@Nonnull
+	@Override
+	public ITextComponent getSubtitle(@Nonnull ResourceLocation bookId) {
+		Book book = BookRegistry.INSTANCE.books.get(bookId);
+		if (book == null) {
+			throw new IllegalArgumentException("Book not found: " + bookId);
+		}
+		return book.getSubtitle();
 	}
 
 	@Override
