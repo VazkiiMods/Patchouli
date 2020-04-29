@@ -30,6 +30,8 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -64,7 +66,7 @@ public class MultiblockVisualizationHandler {
 	public static Bookmark bookmark;
 
 	private static IMultiblock multiblock;
-	private static String name;
+	private static ITextComponent name;
 	private static BlockPos pos;
 	private static boolean isAnchored;
 	private static Rotation facingRotation;
@@ -75,11 +77,16 @@ public class MultiblockVisualizationHandler {
 	private static BlockPos lookingPos;
 	private static IRenderTypeBuffer.Impl buffers = null;
 
+	// Legacy compat with older botanias. TODO 1.16 remove
 	public static void setMultiblock(IMultiblock multiblock, String name, Bookmark bookmark, boolean flip) {
+		setMultiblock(multiblock, new StringTextComponent(name), bookmark, flip);
+	}
+
+	public static void setMultiblock(IMultiblock multiblock, ITextComponent name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos -> pos);
 	}
 
-	public static void setMultiblock(IMultiblock multiblock, String name, Bookmark bookmark, boolean flip, Function<BlockPos, BlockPos> offsetApplier) {
+	public static void setMultiblock(IMultiblock multiblock, ITextComponent name, Bookmark bookmark, boolean flip, Function<BlockPos, BlockPos> offsetApplier) {
 		if (flip && hasMultiblock) {
 			hasMultiblock = false;
 		} else {
@@ -113,7 +120,8 @@ public class MultiblockVisualizationHandler {
 			int y = 12;
 
 			Minecraft mc = Minecraft.getInstance();
-			mc.fontRenderer.drawStringWithShadow(name, x - mc.fontRenderer.getStringWidth(name) / 2, y, 0xFFFFFF);
+			String toDraw = name.getFormattedText();
+			mc.fontRenderer.drawStringWithShadow(toDraw, x - mc.fontRenderer.getStringWidth(toDraw) / 2, y, 0xFFFFFF);
 
 			int width = 180;
 			int height = 9;

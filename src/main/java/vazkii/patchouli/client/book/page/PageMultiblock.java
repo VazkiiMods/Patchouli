@@ -32,6 +32,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -127,7 +128,7 @@ public class PageMultiblock extends PageWithText {
 	public void handleButtonVisualize(Button button) {
 		String entryKey = parent.getEntry().getId().toString();
 		Bookmark bookmark = new Bookmark(entryKey, pageNum / 2);
-		MultiblockVisualizationHandler.setMultiblock(multiblockObj, name, bookmark, true);
+		MultiblockVisualizationHandler.setMultiblock(multiblockObj, new StringTextComponent(name), bookmark, true);
 		parent.addBookmarkButtons();
 
 		if (!PersistentData.data.clickedVisualize) {
