@@ -8,7 +8,9 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -21,6 +23,7 @@ import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.template.BookTemplate;
+import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.multiblock.DenseMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
@@ -30,6 +33,7 @@ import vazkii.patchouli.common.network.NetworkHandler;
 import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
+import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -157,6 +161,24 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	public IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb) {
 		return MultiblockRegistry.registerMultiblock(res, mb);
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public IMultiblock getCurrentMultiblock() {
+		return MultiblockVisualizationHandler.hasMultiblock ? MultiblockVisualizationHandler.getMultiblock() : null;
+	}
+
+	@Override
+	@OnlyIn(Dist.CLIENT)
+	public void showMultiblock(@Nonnull IMultiblock multiblock, @Nonnull ITextComponent displayName, @Nonnull BlockPos center, @Nonnull Rotation rotation) {
+		MultiblockVisualizationHandler.setMultiblock(multiblock, displayName, null, false);
+		MultiblockVisualizationHandler.anchorTo(center, rotation);
+	}
+
+	@Override
+	public void clearMultiblock() {
+		MultiblockVisualizationHandler.setMultiblock(null, (ITextComponent) null, null, false);
 	}
 
 	@Override

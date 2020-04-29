@@ -95,7 +95,7 @@ public class MultiblockVisualizationHandler {
 			MultiblockVisualizationHandler.bookmark = bookmark;
 			MultiblockVisualizationHandler.offsetApplier = offsetApplier;
 			pos = null;
-			hasMultiblock = true;
+			hasMultiblock = multiblock != null;
 			isAnchored = false;
 		}
 	}

@@ -6,12 +6,15 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import vazkii.patchouli.api.stub.StubPatchouliAPI;
 
+import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
@@ -147,6 +150,27 @@ public class PatchouliAPI {
 		 * and setting its resource location to the one passed.
 		 */
 		IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb);
+
+		/**
+		 * @return The multiblock currently being visualized in-world or null if no multiblock is visualized. Only works clientside.
+		 */
+		@Nullable
+		IMultiblock getCurrentMultiblock();
+
+		/**
+		 * Sets the given multiblock as the currently visualized one. This overwrites any currently visualized multiblock.
+		 * Only works clientside.
+		 * @param multiblock The multiblock to visualize
+		 * @param displayName The name to show above the completion bar
+		 * @param center Where to place the multiblock's center
+		 * @param rotation Orientation to visualize
+		 */
+		void showMultiblock(IMultiblock multiblock, ITextComponent displayName, BlockPos center, Rotation rotation);
+
+		/**
+		 * Clears the currently visualized multiblock. Only works clientside.
+		 */
+		void clearMultiblock();
 
 		/**
 		 * Creates a multiblock given the pattern and targets given. This works in the same way as

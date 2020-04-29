@@ -6,12 +6,15 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 
+import net.minecraft.util.text.ITextComponent;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
 
+import javax.annotation.Nullable;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
@@ -116,6 +119,22 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	@Override
 	public IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb) {
 		return mb;
+	}
+
+	@Nullable
+	@Override
+	public IMultiblock getCurrentMultiblock() {
+		return null;
+	}
+
+	@Override
+	public void showMultiblock(IMultiblock multiblock, ITextComponent displayName, BlockPos center, Rotation rotation) {
+
+	}
+
+	@Override
+	public void clearMultiblock() {
+
 	}
 
 	@Override
