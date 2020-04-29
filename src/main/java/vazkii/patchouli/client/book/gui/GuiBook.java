@@ -381,8 +381,8 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public boolean isMouseInRelativeRange(double absMx, double absMy, int x, int y, int w, int h) {
-		double mx = absMx - bookLeft * scaleFactor;
-		double my = absMy - bookTop * scaleFactor;
+		double mx = absMx - bookLeft;
+		double my = absMy - bookTop;
 
 		return mx > x && my > y && mx <= (x + w) && my <= (y + h);
 	}
