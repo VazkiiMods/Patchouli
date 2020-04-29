@@ -17,6 +17,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
@@ -63,7 +64,7 @@ public abstract class GuiBook extends Screen {
 	public int bookLeft, bookTop;
 	private float scaleFactor;
 
-	private List<String> tooltip;
+	private List<ITextComponent> tooltip;
 	private ItemStack tooltipStack;
 	private Pair<BookEntry, Integer> targetPage;
 	protected int spread = 0, maxSpreads = 0;
@@ -223,10 +224,10 @@ public abstract class GuiBook extends Screen {
 			GuiUtils.postItemToolTip();
 		} else if (tooltip != null && !tooltip.isEmpty()) {
 			List<String> wrappedTooltip = new ArrayList<>();
-			for (String s : tooltip) {
-				Collections.addAll(wrappedTooltip, s.split("\n"));
+			for (ITextComponent s : tooltip) {
+				Collections.addAll(wrappedTooltip, s.getFormattedText().split("\n"));
 			}
-			GuiUtils.drawHoveringText(wrappedTooltip, mouseX, mouseY, width, height, -1, this.font);
+			this.renderTooltip(wrappedTooltip, mouseX, mouseY, this.font);
 		}
 	}
 
@@ -366,16 +367,16 @@ public abstract class GuiBook extends Screen {
 		return !book.contents.guiStack.isEmpty();
 	}
 
-	public void setTooltip(String... strings) {
+	public void setTooltip(ITextComponent... strings) {
 		setTooltip(Arrays.asList(strings));
 	}
 
-	public void setTooltip(List<String> strings) {
+	public void setTooltip(List<ITextComponent> strings) {
 		tooltip = strings;
 	}
 
 	public void setTooltipStack(ItemStack stack) {
-		setTooltip();
+		setTooltip(Collections.emptyList());
 		tooltipStack = stack;
 	}
 
@@ -432,20 +433,20 @@ public abstract class GuiBook extends Screen {
 		font.drawString(I18n.format("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
 
 		if (isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
-			List<String> tooltip = new ArrayList<>();
-			String progressStr = I18n.format("patchouli.gui.lexicon.progress_tooltip", unlockedEntries, totalEntries);
+			List<ITextComponent> tooltip = new ArrayList<>();
+			ITextComponent progressStr = new TranslationTextComponent("patchouli.gui.lexicon.progress_tooltip", unlockedEntries, totalEntries);
 			tooltip.add(progressStr);
 
 			if (unlockedSecretEntries > 0) {
 				if (unlockedSecretEntries == 1) {
-					tooltip.add(TextFormatting.GRAY + I18n.format("patchouli.gui.lexicon.progress_tooltip.secret1"));
+					tooltip.add(new TranslationTextComponent("patchouli.gui.lexicon.progress_tooltip.secret1").applyTextStyle(TextFormatting.GRAY));
 				} else {
-					tooltip.add(TextFormatting.GRAY + I18n.format("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries));
+					tooltip.add(new TranslationTextComponent("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries).applyTextStyle(TextFormatting.GRAY));
 				}
 			}
 
 			if (unlockedEntries != totalEntries) {
-				tooltip.add(TextFormatting.GRAY + I18n.format("patchouli.gui.lexicon.progress_tooltip.info"));
+				tooltip.add(new TranslationTextComponent("patchouli.gui.lexicon.progress_tooltip.info").applyTextStyle(TextFormatting.GRAY));
 			}
 
 			setTooltip(tooltip);

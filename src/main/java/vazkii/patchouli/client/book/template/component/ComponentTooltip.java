@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.resources.I18n;
 
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.TemplateComponent;
@@ -18,7 +20,7 @@ public class ComponentTooltip extends TemplateComponent {
 
 	int width, height;
 
-	transient List<String> tooltip;
+	transient List<ITextComponent> tooltip;
 
 	@Override
 	public void onVariablesAvailable(Function<String, String> lookup) {
@@ -32,10 +34,11 @@ public class ComponentTooltip extends TemplateComponent {
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
 		tooltip = new ArrayList<>();
 
+		// todo 1.16 expand this into actual text components
 		for (String s : tooltipRaw) {
 			s = I18n.format(s).replaceAll("&", "\u00A7");
 			if (!s.isEmpty()) {
-				tooltip.add(s);
+				tooltip.add(new StringTextComponent(s));
 			}
 		}
 	}

@@ -6,6 +6,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -146,17 +148,17 @@ public class GuiBookLanding extends GuiBook {
 	void makeErrorTooltip() {
 		Throwable e = book.contents.getException();
 
-		List<String> lines = new ArrayList<>();
+		List<ITextComponent> lines = new ArrayList<>();
 		while (e != null) {
 			String msg = e.getMessage();
 			if (msg != null && !msg.isEmpty()) {
-				lines.add(e.getMessage());
+				lines.add(new StringTextComponent(e.getMessage()));
 			}
 			e = e.getCause();
 		}
 
 		if (!lines.isEmpty()) {
-			lines.add(TextFormatting.GREEN + I18n.format("patchouli.gui.lexicon.loading_error_log"));
+			lines.add(new TranslationTextComponent("patchouli.gui.lexicon.loading_error_log").applyTextStyle(TextFormatting.GREEN));
 			setTooltip(lines);
 		}
 	}

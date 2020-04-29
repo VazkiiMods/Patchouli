@@ -4,8 +4,10 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
+import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BookTextParser {
+	public static final StringTextComponent EMPTY_STRING_COMPONENT = new StringTextComponent("");
 	private static final Map<String, CommandProcessor> COMMANDS = new HashMap<>();
 	private static final Map<String, FunctionProcessor> FUNCTIONS = new HashMap<>();
 
@@ -49,14 +52,14 @@ public class BookTextParser {
 			state.endingExternal = state.isExternalLink;
 			state.color = state.prevColor;
 			state.cluster = null;
-			state.tooltip = "";
+			state.tooltip = EMPTY_STRING_COMPONENT;
 			state.onClick = null;
 			state.isExternalLink = false;
 			return "";
 		}, "/l");
 		register(state -> {
 			state.cluster = null;
-			state.tooltip = "";
+			state.tooltip = EMPTY_STRING_COMPONENT;
 			return "";
 		}, "/t");
 		register(state -> state.gui.getMinecraft().player.getDisplayName().getFormattedText(), "playername");
@@ -73,11 +76,11 @@ public class BookTextParser {
 		register((parameter, state) -> {
 			KeyBinding result = getKeybindKey(state, parameter);
 			if (result == null) {
-				state.tooltip = I18n.format("patchouli.gui.lexicon.keybind_missing", parameter);
+				state.tooltip = new TranslationTextComponent("patchouli.gui.lexicon.keybind_missing", parameter);
 				return "N/A";
 			}
 
-			state.tooltip = I18n.format("patchouli.gui.lexicon.keybind", I18n.format(result.getKeyDescription()));
+			state.tooltip = new TranslationTextComponent("patchouli.gui.lexicon.keybind", new TranslationTextComponent(result.getKeyDescription()));
 			return result.getLocalizedName();
 		}, "k");
 		register((parameter, state) -> {
@@ -89,7 +92,7 @@ public class BookTextParser {
 
 			if (isExternal) {
 				String url = parameter;
-				state.tooltip = I18n.format("patchouli.gui.lexicon.external_link");
+				state.tooltip = new TranslationTextComponent("patchouli.gui.lexicon.external_link");
 				state.isExternalLink = true;
 				state.onClick = () -> {
 					GuiBook.openWebLink(url);
@@ -106,7 +109,9 @@ public class BookTextParser {
 				ResourceLocation href = new ResourceLocation(state.book.getModNamespace(), parameter);
 				BookEntry entry = state.book.contents.entries.get(href);
 				if (entry != null) {
-					state.tooltip = entry.isLocked() ? (TextFormatting.GRAY + I18n.format("patchouli.gui.lexicon.locked")) : entry.getName();
+					state.tooltip = entry.isLocked()
+									? new TranslationTextComponent("patchouli.gui.lexicon.locked").applyTextStyle(TextFormatting.GRAY)
+									: new StringTextComponent(entry.getName());
 					GuiBook gui = state.gui;
 					Book book = state.book;
 					int page = 0;
@@ -115,7 +120,7 @@ public class BookTextParser {
 						if (anchorPage >= 0) {
 							page = anchorPage / 2;
 						} else {
-							state.tooltip += " (INVALID ANCHOR:" + anchor + ")";
+							state.tooltip.appendText(" (INVALID ANCHOR:" + anchor + ")");
 						}
 					}
 					int finalPage = page;
@@ -126,13 +131,13 @@ public class BookTextParser {
 						return true;
 					};
 				} else {
-					state.tooltip = "BAD LINK: " + parameter;
+					state.tooltip = new StringTextComponent("BAD LINK: " + parameter);
 				}
 			}
 			return "";
 		}, "l");
 		register((parameter, state) -> {
-			state.tooltip = parameter;
+			state.tooltip = new StringTextComponent(parameter);
 			state.cluster = new LinkedList<>();
 			return "";
 		}, "tooltip", "t");
@@ -141,9 +146,9 @@ public class BookTextParser {
 			state.color = state.book.linkColor;
 			state.cluster = new LinkedList<>();
 			if (!parameter.startsWith("/")) {
-				state.tooltip = "INVALID COMMAND (must begin with /)";
+				state.tooltip = new StringTextComponent("INVALID COMMAND (must begin with /)");
 			} else {
-				state.tooltip = parameter.length() < 20 ? parameter : parameter.substring(0, 20) + "...";
+				state.tooltip = new StringTextComponent(parameter.length() < 20 ? parameter : parameter.substring(0, 20) + "...");
 			}
 			state.onClick = () -> {
 				state.gui.getMinecraft().player.sendChatMessage(parameter);
@@ -154,7 +159,7 @@ public class BookTextParser {
 		register(state -> {
 			state.color = state.prevColor;
 			state.cluster = null;
-			state.tooltip = "";
+			state.tooltip = EMPTY_STRING_COMPONENT;
 			state.onClick = null;
 			return "";
 		}, "/c");
@@ -247,7 +252,7 @@ public class BookTextParser {
 						spans.add(new Span(state, processed));
 
 						if (state.cluster == null) {
-							state.tooltip = "";
+							state.tooltip = EMPTY_STRING_COMPONENT;
 						}
 					}
 				} catch (Exception ex) {

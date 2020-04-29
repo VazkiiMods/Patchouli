@@ -13,6 +13,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.crafting.IShapedRecipe;
 
 import vazkii.patchouli.client.book.BookEntry;
@@ -38,7 +39,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<ICraftingRecipe> {
 			int iconY = recipeY + 2;
 			AbstractGui.blit(iconX, iconY, 0, 64, 11, 11, 128, 128);
 			if (parent.isMouseInRelativeRange(mouseX, mouseY, iconX, iconY, 11, 11)) {
-				parent.setTooltip(I18n.format("patchouli.gui.lexicon.shapeless"));
+				parent.setTooltip(new TranslationTextComponent("patchouli.gui.lexicon.shapeless"));
 			}
 		}
 

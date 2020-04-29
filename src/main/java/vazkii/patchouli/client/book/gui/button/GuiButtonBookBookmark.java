@@ -5,8 +5,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
+import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -53,18 +56,18 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 		}
 	}
 
-	private static String[] getTooltip(Book book, Bookmark bookmark, boolean multiblock) {
+	private static ITextComponent[] getTooltip(Book book, Bookmark bookmark, boolean multiblock) {
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 
 		if (bookmark == null || entry == null) {
-			return new String[] { I18n.format("patchouli.gui.lexicon.add_bookmark") };
+			return new ITextComponent[] { new TranslationTextComponent("patchouli.gui.lexicon.add_bookmark") };
 		}
 
-		return new String[] {
-				entry.getName(),
-				TextFormatting.GRAY + I18n.format(multiblock
+		return new ITextComponent[] {
+				new StringTextComponent(entry.getName()),
+				new TranslationTextComponent(multiblock
 						? "patchouli.gui.lexicon.multiblock_bookmark"
-						: "patchouli.gui.lexicon.remove_bookmark")
+						: "patchouli.gui.lexicon.remove_bookmark").applyTextStyle(TextFormatting.GRAY)
 		};
 	}
 

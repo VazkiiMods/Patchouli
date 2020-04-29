@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
 import vazkii.patchouli.api.IComponentRenderContext;
@@ -20,9 +21,11 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
@@ -253,6 +256,11 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void setHoverTooltip(List<String> tooltip) {
+		setTooltip(tooltip.stream().map(StringTextComponent::new).collect(Collectors.toList()));
+	}
+
+	@Override
+	public void setHoverTooltipComponents(@Nonnull List<ITextComponent> tooltip) {
 		setTooltip(tooltip);
 	}
 

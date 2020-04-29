@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.gui.FontRenderer;
 
+import net.minecraft.util.text.ITextComponent;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
 
@@ -16,7 +17,7 @@ public class Word {
 	private final int color;
 	private final String codes;
 	private final List<Word> linkCluster;
-	private final String tooltip;
+	private final ITextComponent tooltip;
 	private final Supplier<Boolean> onClick;
 
 	public Word(GuiBook gui, Span span, String text, int x, int y, int strWidth, List<Word> cluster) {
@@ -41,7 +42,7 @@ public class Word {
 			if (onClick != null) {
 				renderColor = book.linkHoverColor;
 			}
-			if (!tooltip.isEmpty()) {
+			if (!tooltip.getString().isEmpty()) {
 				gui.setTooltip(tooltip);
 			}
 		}

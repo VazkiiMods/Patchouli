@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.widget.button.Button;
 
+import net.minecraft.util.text.ITextComponent;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 import java.util.Arrays;
@@ -18,14 +19,14 @@ public class GuiButtonBook extends Button {
 	final GuiBook parent;
 	final int u, v;
 	final Supplier<Boolean> displayCondition;
-	final List<String> tooltip;
+	final List<ITextComponent> tooltip;
 
-	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, IPressable onPress, String... tooltip) {
+	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, IPressable onPress, ITextComponent... tooltip) {
 		this(parent, x, y, u, v, w, h, () -> true, onPress, tooltip);
 	}
 
-	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, Supplier<Boolean> displayCondition, IPressable onPress, String... tooltip) {
-		super(x, y, w, h, tooltip[0], onPress);
+	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, Supplier<Boolean> displayCondition, IPressable onPress, ITextComponent... tooltip) {
+		super(x, y, w, h, tooltip[0].getString(), onPress);
 		this.parent = parent;
 		this.u = u;
 		this.v = v;
@@ -53,7 +54,7 @@ public class GuiButtonBook extends Button {
 		GuiBook.playBookFlipSound(parent.book);
 	}
 
-	public List<String> getTooltip() {
+	public List<ITextComponent> getTooltip() {
 		return tooltip;
 	}
 

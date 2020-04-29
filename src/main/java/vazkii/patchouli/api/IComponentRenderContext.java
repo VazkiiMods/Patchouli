@@ -6,6 +6,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
 
@@ -24,7 +25,10 @@ public interface IComponentRenderContext {
 
 	boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h);
 
+	@Deprecated // use setHoverTooltipComponents
 	void setHoverTooltip(List<String> tooltip);
+
+	void setHoverTooltipComponents(List<ITextComponent> tooltip);
 
 	void registerButton(Button button, int pageNum, Runnable onClick);
 
