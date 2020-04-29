@@ -20,9 +20,6 @@ public class CommonProxy {
 	}
 
 	public void setup(FMLCommonSetupEvent event) {
-
-		PatchouliConfig.load();
-
 		PatchouliSounds.preInit();
 		BookRegistry.INSTANCE.init();
 

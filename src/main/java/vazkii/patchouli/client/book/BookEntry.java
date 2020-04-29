@@ -59,7 +59,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public List<BookPage> getPages() {
-		List<BookPage> pages = PatchouliConfig.disableAdvancementLocking.get() ? realPages : realPages.stream().filter(BookPage::isPageUnlocked).collect(Collectors.toList());
+		List<BookPage> pages = !getBook().advancementsEnabled() ? realPages : realPages.stream().filter(BookPage::isPageUnlocked).collect(Collectors.toList());
 
 		return pages.isEmpty() ? NO_PAGE : pages;
 	}
@@ -125,7 +125,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		if (isSecret()) {
 			return locked;
 		}
-		return !PatchouliConfig.disableAdvancementLocking.get() && locked;
+		return getBook().advancementsEnabled() && locked;
 	}
 
 	public boolean isSecret() {
@@ -255,7 +255,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		return relevantStacks.contains(ItemStackUtil.wrapStack(stack));
 	}
 
-	public Book getBook() {
+	public final Book getBook() {
 		return book;
 	}
 

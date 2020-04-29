@@ -388,7 +388,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public void drawProgressBar(Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
-		if (!book.showProgress || PatchouliConfig.disableAdvancementLocking.get()) {
+		if (!book.showProgress || !book.advancementsEnabled()) {
 			return;
 		}
 

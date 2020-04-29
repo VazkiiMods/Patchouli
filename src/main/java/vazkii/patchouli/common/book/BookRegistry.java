@@ -16,9 +16,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.Patchouli;
+import vazkii.patchouli.common.base.PatchouliConfig;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -108,6 +108,7 @@ public class BookRegistry {
 
 	@OnlyIn(Dist.CLIENT)
 	public void reloadContents() {
+		PatchouliConfig.reloadFlags();
 		books.values().forEach(Book::reloadContents);
 		books.values().forEach(Book::reloadExtensionContents);
 		ClientBookRegistry.INSTANCE.reloadLocks(false);

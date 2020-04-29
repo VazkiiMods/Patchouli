@@ -217,13 +217,17 @@ public class Book {
 		}
 	}
 
+	public final boolean advancementsEnabled() {
+		return !PatchouliConfig.disableAdvancementLocking.get() && !PatchouliConfig.noAdvancementBooks.get().contains(id.toString());
+	}
+
 	@OnlyIn(Dist.CLIENT)
 	public void reloadLocks(boolean suppressToasts) {
 		contents.entries.values().forEach(BookEntry::updateLockStatus);
 		contents.categories.values().forEach(c -> c.updateLockStatus(true));
 
 		boolean updated = popUpdated();
-		if (updated && !suppressToasts && !PatchouliConfig.disableAdvancementLocking.get() && showToasts) {
+		if (updated && !suppressToasts && advancementsEnabled() && showToasts) {
 			Minecraft.getInstance().getToastGui().add(new ClientAdvancements.LexiconToast(this));
 		}
 	}

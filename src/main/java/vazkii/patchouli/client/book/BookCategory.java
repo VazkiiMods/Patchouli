@@ -112,7 +112,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	}
 
 	public boolean isLocked() {
-		return !PatchouliConfig.disableAdvancementLocking.get() && locked;
+		return getBook().advancementsEnabled() && locked;
 	}
 
 	public boolean isRootCategory() {

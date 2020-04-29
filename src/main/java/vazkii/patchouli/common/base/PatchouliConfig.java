@@ -1,5 +1,6 @@
 package vazkii.patchouli.common.base;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -8,18 +9,17 @@ import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 public class PatchouliConfig {
 
 	public static ForgeConfigSpec.ConfigValue<Boolean> disableAdvancementLocking;
+	public static ForgeConfigSpec.ConfigValue<List<? extends String>> noAdvancementBooks;
 	public static ForgeConfigSpec.ConfigValue<Boolean> testingMode;
 	public static ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
 	public static ForgeConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
 
-	private static Map<String, Boolean> configFlags = new ConcurrentHashMap<>();
+	private static final Map<String, Boolean> CONFIG_FLAGS = new HashMap<>();
 
 	public static void setup() {
 		Pair<Loader, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Loader::new);
@@ -29,7 +29,8 @@ public class PatchouliConfig {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec.getRight());
 	}
 
-	public static void load() {
+	public static void reloadFlags() {
+		CONFIG_FLAGS.clear();
 		List<ModInfo> mods = ModList.get().getMods();
 		for (ModInfo info : mods) {
 			setFlag("mod:" + info.getModId(), true);
@@ -37,20 +38,28 @@ public class PatchouliConfig {
 
 		setFlag("debug", Patchouli.debug);
 
-		updateFlags();
+		setFlag("advancements_disabled", disableAdvancementLocking.get());
+		setFlag("testing_mode", testingMode.get());
+		for (String book : noAdvancementBooks.get()) {
+			setFlag("advancements_disabled_" + book, true);
+		}
 	}
 
+	// todo 1.16: move everything here to client
 	static class Loader {
 
 		public Loader(ForgeConfigSpec.Builder builder) {
 			builder.push("general");
 
 			disableAdvancementLocking = builder
-					.comment("Set this to true to disable advancement locking and make all entries visible at all times\\nConfig Flag: advancements_disabled")
+					.comment("Set this to true to disable advancement locking for ALL books, making all entries visible at all times. Config Flag: advancements_disabled")
 					.define("Disable Advancement Locking", false);
 
+			noAdvancementBooks = builder.comment("Granular list of Book ID's to disable advancement locking for, e.g. [ \"botania:lexicon\" ]. Config Flags: advancements_disabled_<bookid>")
+					.defineList("no_advancement_books", Collections.emptyList(), s -> ResourceLocation.tryCreate((String) s) != null);
+
 			testingMode = builder
-					.comment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want.\\nConfig Flag: testing_mode")
+					.comment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want. Config Flag: testing_mode")
 					.define("Testing Mode", false);
 
 			inventoryButtonBook = builder
@@ -74,11 +83,6 @@ public class PatchouliConfig {
 		}
 	}
 
-	private static void updateFlags() {
-		setFlag("advancements_disabled", disableAdvancementLocking.get());
-		setFlag("testing_mode", testingMode.get());
-	}
-
 	public static boolean getConfigFlag(String name) {
 		if (name.startsWith("&")) {
 			return getConfigFlagAND(name.replaceAll("[&|]", "").split(","));
@@ -92,9 +96,9 @@ public class PatchouliConfig {
 			name = name.substring(1);
 			target = false;
 		}
-		name = name.trim().toLowerCase();
+		name = name.trim().toLowerCase(Locale.ROOT);
 
-		return (configFlags.containsKey(name) && configFlags.get(name)) == target;
+		return (CONFIG_FLAGS.containsKey(name) && CONFIG_FLAGS.get(name)) == target;
 	}
 
 	public static boolean getConfigFlagAND(String[] tokens) {
@@ -118,7 +122,7 @@ public class PatchouliConfig {
 	}
 
 	public static void setFlag(String flag, boolean value) {
-		configFlags.put(flag.trim().toLowerCase(), value);
+		CONFIG_FLAGS.put(flag.trim().toLowerCase(Locale.ROOT), value);
 	}
 
 }
