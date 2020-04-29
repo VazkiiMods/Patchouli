@@ -9,8 +9,8 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-
 import net.minecraft.util.text.TranslationTextComponent;
+
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookIcon;
@@ -75,8 +75,8 @@ public class GuiButtonCategory extends Button {
 
 			if (isHovered) {
 				parent.setTooltip(locked
-								? new TranslationTextComponent("patchouli.gui.lexicon.locked").applyTextStyle(TextFormatting.GRAY)
-								: new StringTextComponent(name));
+						? new TranslationTextComponent("patchouli.gui.lexicon.locked").applyTextStyle(TextFormatting.GRAY)
+						: new StringTextComponent(name));
 			}
 		}
 	}

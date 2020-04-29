@@ -6,8 +6,8 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-
 import net.minecraft.util.text.TranslationTextComponent;
+
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -110,8 +110,8 @@ public class BookTextParser {
 				BookEntry entry = state.book.contents.entries.get(href);
 				if (entry != null) {
 					state.tooltip = entry.isLocked()
-									? new TranslationTextComponent("patchouli.gui.lexicon.locked").applyTextStyle(TextFormatting.GRAY)
-									: new StringTextComponent(entry.getName());
+							? new TranslationTextComponent("patchouli.gui.lexicon.locked").applyTextStyle(TextFormatting.GRAY)
+							: new StringTextComponent(entry.getName());
 					GuiBook gui = state.gui;
 					Book book = state.book;
 					int page = 0;
