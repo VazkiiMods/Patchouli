@@ -106,7 +106,7 @@ public class BookTextParser {
 					parameter = parameter.substring(0, hash);
 				}
 
-				ResourceLocation href = new ResourceLocation(state.book.getModNamespace(), parameter);
+				ResourceLocation href = parameter.contains(":") ? new ResourceLocation(parameter) : new ResourceLocation(state.book.getModNamespace(), parameter);
 				BookEntry entry = state.book.contents.entries.get(href);
 				if (entry != null) {
 					state.tooltip = entry.isLocked()

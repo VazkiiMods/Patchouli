@@ -43,7 +43,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	@SerializedName("extra_recipe_mappings") private Map<String, Integer> extraRecipeMappings;
 
 	private transient ResourceLocation id;
-	transient Book book;
+	private transient Book book;
 	private transient Book trueProvider;
 	private transient BookCategory lcategory = null;
 	private transient BookIcon icon = null;
@@ -92,10 +92,17 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 
 	public BookCategory getCategory() {
 		if (lcategory == null) {
-			if (category.contains(":")) {
+			if (category.contains(":")) { // full category ID
 				lcategory = book.contents.categories.get(new ResourceLocation(category));
 			} else {
-				lcategory = book.contents.categories.get(new ResourceLocation(book.getModNamespace(), category));
+				// if we are an extension, guess the extension book's domain first, then the parent book's domain
+				if (isExtension()) {
+					lcategory = book.contents.categories.get(new ResourceLocation(trueProvider.getModNamespace(), category));
+				}
+
+				if (lcategory == null) {
+					lcategory = book.contents.categories.get(new ResourceLocation(book.getModNamespace(), category));
+				}
 			}
 		}
 
@@ -255,6 +262,10 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		return relevantStacks.contains(ItemStackUtil.wrapStack(stack));
 	}
 
+	/**
+	 * @return The logical book this entry belongs to.
+	 *         For entries added by extension books, this is the book being extended.
+	 */
 	public final Book getBook() {
 		return book;
 	}
