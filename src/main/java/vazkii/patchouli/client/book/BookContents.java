@@ -3,7 +3,6 @@ package vazkii.patchouli.client.book;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
@@ -21,21 +20,10 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -168,10 +156,8 @@ public class BookContents extends AbstractReadStateHolder {
 
 	protected void findFiles(String dir, List<ResourceLocation> list) {
 		IModInfo mod = book.owner;
-		if (mod instanceof ModInfo) {
-			String id = mod.getModId();
-			BookRegistry.findFiles((ModInfo) mod, String.format("data/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.id.getPath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
-		}
+		String id = mod.getModId();
+		BookRegistry.findFiles(mod, String.format("data/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.id.getPath(), DEFAULT_LANG, dir), path -> true, pred(id, list), false);
 	}
 
 	private BiFunction<Path, Path, Boolean> pred(String modId, List<ResourceLocation> list) {

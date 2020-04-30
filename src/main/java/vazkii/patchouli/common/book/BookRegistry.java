@@ -8,7 +8,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
 import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
+import net.minecraftforge.forgespi.language.IModFileInfo;
 import net.minecraftforge.forgespi.language.IModInfo;
 
 import org.apache.commons.io.IOUtils;
@@ -35,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class BookRegistry {
 
@@ -76,7 +78,7 @@ public class BookRegistry {
 						}
 
 						return true;
-					}, false, true);
+					}, true);
 		});
 
 		foundBooks.forEach((pair, file) -> {
@@ -121,16 +123,22 @@ public class BookRegistry {
 
 	// HELPER
 
-	public static boolean findFiles(ModInfo mod, String base, Function<Path, Boolean> preprocessor,
-			BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
+	public static void findFiles(IModInfo mod, String base, Predicate<Path> rootFilter,
+			BiFunction<Path, Path, Boolean> processor, boolean visitAllFiles) {
 		if (mod.getModId().equals("minecraft") || mod.getModId().equals("forge")) {
-			return false;
+			return;
 		}
 
-		Path source = mod.getOwningFile().getFile().getFilePath();
+		IModFileInfo info = mod.getOwningFile();
+		Path source;
+
+		if (info instanceof ModFileInfo) {
+			source = ((ModFileInfo) info).getFile().getFilePath();
+		} else {
+			return;
+		}
 
 		FileSystem fs = null;
-		boolean success = true;
 
 		try {
 			Path root = null;
@@ -142,27 +150,18 @@ public class BookRegistry {
 				root = source.resolve(base);
 			}
 
-			if (root == null || !Files.exists(root)) {
-				return defaultUnfoundRoot;
-			}
-
-			if (preprocessor != null) {
-				Boolean cont = preprocessor.apply(root);
-				if (cont == null || !cont) {
-					return false;
-				}
+			if (root == null || !Files.exists(root) || !rootFilter.test(root)) {
+				return;
 			}
 
 			if (processor != null) {
 				Iterator<Path> itr = Files.walk(root).iterator();
 
 				while (itr.hasNext()) {
-					Boolean cont = processor.apply(root, itr.next());
+					boolean cont = processor.apply(root, itr.next());
 
-					if (visitAllFiles) {
-						success &= cont != null && cont;
-					} else if (cont == null || !cont) {
-						return false;
+					if (!visitAllFiles && !cont) {
+						return;
 					}
 				}
 			}
@@ -172,7 +171,6 @@ public class BookRegistry {
 			IOUtils.closeQuietly(fs);
 		}
 
-		return success;
 	}
 
 }
