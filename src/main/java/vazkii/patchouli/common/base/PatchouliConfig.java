@@ -98,7 +98,13 @@ public class PatchouliConfig {
 		}
 		name = name.trim().toLowerCase(Locale.ROOT);
 
-		return (CONFIG_FLAGS.containsKey(name) && CONFIG_FLAGS.get(name)) == target;
+		Boolean b = CONFIG_FLAGS.get(name);
+		if (b == null) {
+			Patchouli.LOGGER.warn("Queried for unknown config flag: {}", name);
+			return false;
+		} else {
+			return b == target;
+		}
 	}
 
 	public static boolean getConfigFlagAND(String[] tokens) {
