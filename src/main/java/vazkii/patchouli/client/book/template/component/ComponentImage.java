@@ -7,6 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.util.ResourceLocation;
 
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.template.TemplateComponent;
@@ -36,9 +37,9 @@ public class ComponentImage extends TemplateComponent {
 	}
 
 	@Override
-	public void onVariablesAvailable(Function<String, String> lookup) {
+	public void onVariablesAvailable(Function<String, IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
-		image = lookup.apply(image);
+		image = lookup.apply(image).asString();
 	}
 
 	@Override

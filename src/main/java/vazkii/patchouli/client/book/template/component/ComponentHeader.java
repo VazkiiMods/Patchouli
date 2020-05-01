@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.template.component;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -52,9 +53,9 @@ public class ComponentHeader extends TemplateComponent {
 	}
 
 	@Override
-	public void onVariablesAvailable(Function<String, String> lookup) {
+	public void onVariablesAvailable(Function<String, IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
-		text = lookup.apply(text);
-		colorStr = lookup.apply(colorStr);
+		text = lookup.apply(text).asString();
+		colorStr = lookup.apply(colorStr).asString();
 	}
 }

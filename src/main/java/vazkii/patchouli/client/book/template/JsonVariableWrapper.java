@@ -1,11 +1,12 @@
 package vazkii.patchouli.client.book.template;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonElement;
 
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
 
-public final class JsonVariableWrapper implements IVariableProvider<String> {
+public final class JsonVariableWrapper implements IVariableProvider {
 
 	private final JsonObject source;
 
@@ -14,13 +15,13 @@ public final class JsonVariableWrapper implements IVariableProvider<String> {
 	}
 
 	@Override
-	public String get(String key) {
-		JsonPrimitive prim = (JsonPrimitive) source.get(key);
+	public IVariable get(String key) {
+		JsonElement prim = source.get(key);
 		if (prim == null) {
 			throw new IllegalArgumentException("Attempted to get variable " + key + " when it's not present");
 		}
 
-		return prim.getAsString();
+		return IVariable.wrap(prim);
 	}
 
 	@Override

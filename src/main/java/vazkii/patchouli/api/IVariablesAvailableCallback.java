@@ -12,6 +12,6 @@ public interface IVariablesAvailableCallback {
 	 *               plain variable from the template environment<br />
 	 *               Gracefully handles nulls given as input, but will never return null itself.
 	 */
-	void onVariablesAvailable(Function<String, String> lookup);
+	void onVariablesAvailable(Function<String, IVariable> lookup);
 
 }

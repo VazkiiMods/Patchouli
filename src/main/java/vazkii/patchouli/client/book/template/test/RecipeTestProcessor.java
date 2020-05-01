@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class RecipeTestProcessor implements IComponentProcessor {
@@ -16,28 +17,29 @@ public class RecipeTestProcessor implements IComponentProcessor {
 	private IRecipe<?> recipe;
 
 	@Override
-	public void setup(IVariableProvider<String> variables) {
-		String recipeId = variables.get("recipe");
+	public void setup(IVariableProvider variables) {
+		// TODO probably add a recipe serializer?
+		String recipeId = variables.get("recipe").asString();
 		RecipeManager manager = Minecraft.getInstance().world.getRecipeManager();
 		recipe = manager.getRecipe(new ResourceLocation(recipeId)).orElseThrow(IllegalArgumentException::new);
 	}
 
 	@Override
-	public String process(String key) {
+	public IVariable process(String key) {
 		if (key.startsWith("item")) {
 			int index = Integer.parseInt(key.substring(4)) - 1;
 			Ingredient ingredient = recipe.getIngredients().get(index);
 			ItemStack[] stacks = ingredient.getMatchingStacks();
 			ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
 
-			return ItemStackUtil.serializeStack(stack);
+			return IVariable.from(stack);
 		} else if (key.equals("text")) {
 			ItemStack out = recipe.getRecipeOutput();
-			return out.getCount() + "x$(br)" + out.getDisplayName();
+			return IVariable.wrap(out.getCount() + "x$(br)" + out.getDisplayName());
 		} else if (key.equals("icount")) {
-			return Integer.toString(recipe.getRecipeOutput().getCount());
+			return IVariable.wrap(recipe.getRecipeOutput().getCount());
 		} else if (key.equals("iname")) {
-			return recipe.getRecipeOutput().getDisplayName().getString();
+			return IVariable.wrap(recipe.getRecipeOutput().getDisplayName().getString());
 		}
 
 		return null;

@@ -5,14 +5,15 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
+import vazkii.patchouli.api.IVariable;
 
 public class EntityTestProcessor implements IComponentProcessor {
 
 	private String entityName;
 
 	@Override
-	public void setup(IVariableProvider<String> variables) {
-		String entityType = variables.get("entity");
+	public void setup(IVariableProvider variables) {
+		String entityType = variables.get("entity").unwrap().getAsString();
 		if (entityType.contains("{")) {
 			entityType = entityType.substring(0, entityType.indexOf("{"));
 		}
@@ -24,9 +25,9 @@ public class EntityTestProcessor implements IComponentProcessor {
 	}
 
 	@Override
-	public String process(String key) {
+	public IVariable process(String key) {
 		if (key.equals("name")) {
-			return entityName;
+			return IVariable.wrap(entityName);
 		}
 
 		return null;

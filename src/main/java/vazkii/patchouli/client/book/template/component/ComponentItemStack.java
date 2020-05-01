@@ -6,13 +6,16 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.crafting.StackList;
 
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.function.Function;
 
 public class ComponentItemStack extends TemplateComponent {
@@ -26,7 +29,6 @@ public class ComponentItemStack extends TemplateComponent {
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		items = ItemStackUtil.loadStackListFromString(item);
 		if (linkedRecipe) {
 			for (ItemStack stack : items) {
 				entry.addRelevantStack(stack, pageNum);
@@ -35,9 +37,9 @@ public class ComponentItemStack extends TemplateComponent {
 	}
 
 	@Override
-	public void onVariablesAvailable(Function<String, String> lookup) {
+	public void onVariablesAvailable(Function<String, IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
-		item = lookup.apply(item);
+		items = new ArrayList(lookup.apply(item).as(StackList.class).getStacks());
 	}
 
 	@Override

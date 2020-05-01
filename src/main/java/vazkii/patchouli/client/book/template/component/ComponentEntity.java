@@ -7,6 +7,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -55,9 +56,9 @@ public class ComponentEntity extends TemplateComponent {
 	}
 
 	@Override
-	public void onVariablesAvailable(Function<String, String> lookup) {
+	public void onVariablesAvailable(Function<String, IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
-		entityId = lookup.apply(entityId);
+		entityId = lookup.apply(entityId).asString();
 	}
 
 	private void loadEntity(World world) {

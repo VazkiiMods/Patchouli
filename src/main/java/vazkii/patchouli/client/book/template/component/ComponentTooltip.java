@@ -7,6 +7,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.TemplateComponent;
@@ -24,10 +25,10 @@ public class ComponentTooltip extends TemplateComponent {
 	transient List<ITextComponent> tooltip;
 
 	@Override
-	public void onVariablesAvailable(Function<String, String> lookup) {
+	public void onVariablesAvailable(Function<String, IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
 		for (int i = 0; i < tooltipRaw.length; i++) {
-			tooltipRaw[i] = lookup.apply(tooltipRaw[i]);
+			tooltipRaw[i] = lookup.apply(tooltipRaw[i]).asString();
 		}
 	}
 
