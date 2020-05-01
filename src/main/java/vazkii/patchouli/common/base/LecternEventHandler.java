@@ -24,6 +24,7 @@ import vazkii.patchouli.common.item.ItemModBook;
  */
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class LecternEventHandler {
+
 	@SubscribeEvent
 	static void rightClick(PlayerInteractEvent.RightClickBlock event) {
 		World world = event.getWorld();
