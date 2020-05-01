@@ -65,7 +65,7 @@ import java.util.WeakHashMap;
 public class PageMultiblock extends PageWithText {
 	private static final Random RAND = new Random();
 
-	String name;
+	String name = "";
 	@SerializedName("multiblock_id") ResourceLocation multiblockId;
 
 	@SerializedName("multiblock") SerializedMultiblock serializedMultiblock;
