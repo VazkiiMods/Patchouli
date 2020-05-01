@@ -7,24 +7,25 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class ComponentTooltip extends TemplateComponent {
 
-	@SerializedName("tooltip") public String[] tooltipRaw;
+	@SerializedName("tooltip") public IVariable[] tooltipRaw;
 
 	int width, height;
 
 	transient List<Text> tooltip;
 
 	@Override
-	public void onVariablesAvailable(Function<String, String> lookup) {
+	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
 		for (int i = 0; i < tooltipRaw.length; i++) {
 			tooltipRaw[i] = lookup.apply(tooltipRaw[i]);
@@ -36,11 +37,12 @@ public class ComponentTooltip extends TemplateComponent {
 		tooltip = new ArrayList<>();
 
 		// todo 1.16 expand this into actual text components
-		for (String s : tooltipRaw) {
-			s = I18n.translate(s).replaceAll("&", "\u00A7");
-			if (!s.isEmpty()) {
-				tooltip.add(new LiteralText(s));
-			}
+		for (IVariable s : tooltipRaw) {
+			//s = I18n.translate(s).replaceAll("&", "\u00A7");
+			//if (!s.isEmpty()) {
+			//	tooltip.add(new LiteralText(s));
+			//}
+			tooltip.add(s.as(Text.class));
 		}
 	}
 

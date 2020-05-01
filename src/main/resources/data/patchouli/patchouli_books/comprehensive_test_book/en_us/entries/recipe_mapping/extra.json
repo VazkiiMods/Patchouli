@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Grass Block should be mapped here"
+      "text": {"translate":"patchouli.gui.lexicon.reloaded","with":[69]}
     },
     {
       "type": "empty"

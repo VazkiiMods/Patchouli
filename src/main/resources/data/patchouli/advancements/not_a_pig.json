@@ -7,14 +7,14 @@
       "translate": "That's no pig..."
     },
     "description": {
-      "translate": "Hit a Pigman and realize your mistake."
+      "translate": "Hit a Zombie Piglin and realize your mistake."
     }
   },
   "parent": "patchouli:root",
   "criteria": {
     "slain": {
       "trigger": "minecraft:entity_killed_player",
-      "conditions": { "entity": { "type": "minecraft:zombie_pigman" }}
+      "conditions": { "entity": { "type": "minecraft:zombified_piglin" }}
     }
   }
 }

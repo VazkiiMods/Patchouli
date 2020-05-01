@@ -7,9 +7,10 @@ import net.minecraft.text.Text;
 
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.api.ICustomComponent;
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.common.base.Patchouli;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class ComponentCustomTest implements ICustomComponent {
 	private transient int x, y;
@@ -35,7 +36,7 @@ public class ComponentCustomTest implements ICustomComponent {
 	}
 
 	@Override
-	public void onVariablesAvailable(Function<String, String> lookup) {
-		text = lookup.apply("First we eat #spaghet#, then we drink #pop#");
+	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
+		text = lookup.apply(IVariable.wrap("First we eat #spaghet#, then we drink #pop#")).asString();
 	}
 }

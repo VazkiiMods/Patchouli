@@ -1,6 +1,6 @@
 package vazkii.patchouli.api;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public interface IVariablesAvailableCallback {
 	/**
@@ -12,6 +12,6 @@ public interface IVariablesAvailableCallback {
 	 *               plain variable from the template environment<br />
 	 *               Gracefully handles nulls given as input, but will never return null itself.
 	 */
-	void onVariablesAvailable(Function<String, String> lookup);
+	void onVariablesAvailable(UnaryOperator<IVariable> lookup);
 
 }

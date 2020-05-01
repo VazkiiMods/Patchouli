@@ -1,8 +1,12 @@
 package vazkii.patchouli.client.book.template;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import vazkii.patchouli.api.IComponentProcessor;
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
 
 import javax.annotation.Nullable;
@@ -26,11 +30,11 @@ public class TemplateInclusion {
 	 * Bindings to perform on the included template.
 	 * Right hand side can reference variables in the including template.
 	 */
-	@SerializedName("using") public Map<String, String> localBindings = new HashMap<>();
+	@SerializedName("using") public JsonObject localBindings = new JsonObject();
 
 	public int x, y;
 
-	transient List<String> visitedTemplates = new ArrayList<>();
+	transient Set<String> visitedTemplates = new LinkedHashSet<>();
 
 	public void upperMerge(@Nullable TemplateInclusion parent) {
 		if (parent == null) {
@@ -41,19 +45,19 @@ public class TemplateInclusion {
 			throw new IllegalArgumentException("Breaking when include template " + template + ", circular dependencies aren't allowed (stack = " + parent.visitedTemplates + ")");
 		}
 
-		visitedTemplates = new ArrayList<>(parent.visitedTemplates);
+		visitedTemplates = new LinkedHashSet<>(parent.visitedTemplates);
 		visitedTemplates.add(template);
-		as = parent.realName(as);
+		as = parent.qualifyName(as);
 		x += parent.x;
 		y += parent.y;
 
-		Set<String> keys = localBindings.keySet();
-		for (String key : keys) {
-			String val = localBindings.get(key);
-			if (val.startsWith("#")) {
-				String realVal = val.substring(1);
-				if (parent.localBindings.containsKey(realVal)) {
-					localBindings.put(key, parent.localBindings.get(realVal));
+		for (Map.Entry<String, JsonElement> entry : localBindings.entrySet()) {
+			String key = entry.getKey();
+			JsonElement val = entry.getValue();
+			if (val.isJsonPrimitive() && val.getAsString().startsWith("#")) {
+				String realVal = val.getAsString().substring(1);
+				if (parent.localBindings.has(realVal)) {
+					entry.setValue(parent.localBindings.get(realVal));
 				}
 			}
 		}
@@ -64,53 +68,61 @@ public class TemplateInclusion {
 			return;
 		}
 
-		Set<String> keys = localBindings.keySet();
-		for (String key : keys) {
-			String val = localBindings.get(key);
-			if (val.startsWith("#")) {
-				String realVal = val.substring(1);
-				String res = processor.process(realVal);
+		for (Map.Entry<String, JsonElement> entry : localBindings.entrySet()) {
+			String key = entry.getKey();
+			JsonElement val = entry.getValue();
+			if (val.isJsonPrimitive() && val.getAsString().startsWith("#")) {
+				String realVal = val.getAsString().substring(1);
+				IVariable res = processor.process(realVal);
 				if (res != null) {
-					localBindings.put(key, res);
+					entry.setValue(res.unwrap());
 				}
 			}
 		}
 	}
 
-	private String realName(String name) {
-		if (name.isEmpty()) {
-			return as;
-		}
-		return as + "." + name;
-	}
+	public String qualifyName(String name) {
+		boolean prefixed = name.startsWith("#");
+		String query = prefixed ? name.substring(1) : name;
 
-	public String transform(String var, boolean prefixedOnly) {
-		boolean isPrefixed = var.startsWith("#");
-		if (!prefixedOnly || isPrefixed) {
-			String key = isPrefixed ? var.substring(1) : var;
-			if (localBindings.containsKey(key)) {
-				return localBindings.get(key);
-			}
-
-			return (isPrefixed ? "#" : "") + realName(key);
+		// if it's an upreference, return the upreference
+		String result = IVariable.wrap(localBindings.get(query)).asString();
+		if (result.startsWith("#")) {
+			return result.substring(1);
 		}
 
-		return var;
+		return (prefixed ? "#" : "") + as + (query.isEmpty() ? "" : "." + query);
 	}
 
-	public IVariableProvider<String> wrapProvider(IVariableProvider<String> provider) {
-		return new IVariableProvider<String>() {
+	/**
+	 * Attempt to look up a variable in local scope.
+	 */
+	public IVariable attemptVariableLookup(String key) {
+		if (key.startsWith("#")) {
+			key = key.substring(1);
+		}
+		IVariable result = IVariable.wrap(localBindings.get(key));
+		return result.asString().isEmpty() || isUpreference(result) ? null : result;
+	}
 
+	/**
+	 * Check if this variable is actually a string starting with "#".
+	 */
+	public boolean isUpreference(IVariable v) {
+		return v.unwrap().isJsonPrimitive() && v.asString().startsWith("#");
+	}
+
+	public IVariableProvider wrapProvider(IVariableProvider provider) {
+		return new IVariableProvider() {
 			@Override
 			public boolean has(String key) {
-				String transformed = transform(key, false);
-				return !transformed.startsWith("#") || provider.has(transformed.substring(1));
+				return attemptVariableLookup(key) != null || provider.has(qualifyName(key));
 			}
 
 			@Override
-			public String get(String key) {
-				String transformed = transform(key, false);
-				return transformed.startsWith("#") ? provider.get(transformed.substring(1)) : transformed;
+			public IVariable get(String key) {
+				IVariable vari = attemptVariableLookup(key);
+				return vari == null ? provider.get(qualifyName(key)) : vari;
 			}
 		};
 	}
