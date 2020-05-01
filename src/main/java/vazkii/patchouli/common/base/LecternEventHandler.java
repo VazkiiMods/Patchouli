@@ -18,10 +18,6 @@ import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
 
-/**
- * @author  Minecraftschurli
- * @version 2020-05-01
- */
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class LecternEventHandler {
 
