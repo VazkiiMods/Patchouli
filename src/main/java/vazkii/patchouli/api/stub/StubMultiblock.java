@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 import vazkii.patchouli.api.IMultiblock;
@@ -71,6 +72,11 @@ public class StubMultiblock implements IMultiblock {
 	@Override
 	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
 		return false;
+	}
+
+	@Override
+	public Vec3i getSize() {
+		return Vec3i.NULL_VECTOR;
 	}
 
 }

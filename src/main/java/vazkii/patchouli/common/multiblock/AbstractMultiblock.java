@@ -169,5 +169,4 @@ public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
 		return 15 - ambientDarkening;
 	}
 
-	public abstract Vec3i getSize();
 }
