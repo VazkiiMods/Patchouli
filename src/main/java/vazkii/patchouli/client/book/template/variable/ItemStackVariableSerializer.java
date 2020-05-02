@@ -12,6 +12,9 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 public class ItemStackVariableSerializer implements IVariableSerializer<ItemStack> {
 	@Override
 	public ItemStack fromJson(JsonElement json) {
+		if (json.isJsonNull()) {
+			return ItemStack.EMPTY;
+		}
 		if (json.isJsonPrimitive()) {
 			return ItemStackUtil.loadStackFromString(json.getAsString());
 		}

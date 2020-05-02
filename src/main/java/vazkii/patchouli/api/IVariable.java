@@ -1,10 +1,16 @@
 package vazkii.patchouli.api;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Streams;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A Patchouli derivation variable, represented internally as {@link JsonElement}.
@@ -65,9 +71,31 @@ public interface IVariable {
 
 	/**
 	 * Get this IVariable as a boolean, with a default value.
+	 * For legacy reasons, the strings {@code ""} and {@code "false"} evaluate to false.
 	 */
 	default boolean asBoolean(boolean def) {
-		return unwrap().isJsonNull() ? def : (!unwrap().getAsString().equals("false") && unwrap().getAsBoolean());
+		return unwrap().isJsonNull() ? def : (!unwrap().getAsString().equals("false") && !unwrap().getAsString().isEmpty() && unwrap().getAsBoolean());
+	}
+
+	/**
+	 * Get this IVariable as a {@code Stream<IVariable>}, assuming it's backed by a JsonArray.
+	 */
+	default Stream<IVariable> asStream() {
+		return Streams.stream(unwrap().getAsJsonArray()).map(IVariable::wrap);
+	}
+
+	/**
+	 * Get this IVariable as a {@code List<IVariable>}, assuming it's backed by a JsonArray.
+	 */
+	default List<IVariable> asList() {
+		return asStream().collect(Collectors.toList());
+	}
+
+	/**
+	 * Get this IVariable as a {@code List<IVariable>}, returning as singleton if it's not a JsonArray.
+	 */
+	default List<IVariable> asPossiblyList() {
+		return unwrap().isJsonArray() ? asStream().collect(Collectors.toList()) : ImmutableList.of(this);
 	}
 
 	/**
@@ -78,10 +106,21 @@ public interface IVariable {
 	}
 
 	/**
-	 * Convenience method to create an IVariable from {@link VariableHelper#createFromJson}.
+	 * Convenience method to create an IVariable from a JsonElement with {@link VariableHelper#createFromJson}.
 	 */
 	static IVariable wrap(JsonElement elem) {
 		return elem != null ? VariableHelper.instance().createFromJson(elem) : empty();
+	}
+
+	/**
+	 * Convenience method to create an IVariable from a list of IVariables.
+	 */
+	static IVariable wrap(List<IVariable> elems) {
+		JsonArray arr = new JsonArray();
+		for (IVariable v : elems) {
+			arr.add(v.unwrap());
+		}
+		return wrap(arr);
 	}
 
 	static IVariable wrap(Number n) {

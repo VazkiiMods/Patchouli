@@ -27,6 +27,10 @@ public class MessageOpenBookGui {
 		page = buf.readVarInt();
 	}
 
+	public MessageOpenBookGui(ResourceLocation book) {
+		this(book, null);
+	}
+
 	public MessageOpenBookGui(ResourceLocation book, @Nullable ResourceLocation entry) {
 		this(book, entry, 0);
 	}

@@ -128,16 +128,13 @@ public class VariableAssigner {
 				val = c.variables.get(key);
 			}
 
-			if (val != null) {
-				return val;
-			}
+			return val == null ? IVariable.empty() : val;
 		}
 		return IVariable.wrap(curr);
 	}
 
 	private static UnaryOperator<IVariable> wrapStringFunc(Function<String, String> inner) {
-		Function<IVariable, String> unwrap = IVariable::asString;
-		return (UnaryOperator<IVariable>) unwrap.andThen(inner).andThen(IVariable::wrap);
+		return x -> IVariable.wrap(inner.apply(x.asString()));
 	}
 
 	private static IVariable iname(IVariable arg) {

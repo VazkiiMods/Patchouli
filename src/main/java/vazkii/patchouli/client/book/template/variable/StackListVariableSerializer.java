@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.template.variable;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -13,11 +14,17 @@ import vazkii.patchouli.api.VariableHelper;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class StackListVariableSerializer implements IVariableSerializer<StackList> {
+
+	public static final StackList EMPTY = new StackList(Collections.EMPTY_LIST);
 	@Override
 	public StackList fromJson(JsonElement json) {
+		if (json.isJsonNull()) {
+			return EMPTY;
+		}
 		// legacy compat
 		if (json.isJsonPrimitive()) {
 			return new StackList(ItemStackUtil.loadStackListFromString(json.getAsString()));
@@ -35,6 +42,7 @@ public class StackListVariableSerializer implements IVariableSerializer<StackLis
 
 	@Override
 	public JsonElement toJson(StackList list) {
-		return list.serialize().get("items");
+		JsonObject elem = list.serialize();
+		return elem.has("item") ? elem : elem.get("items");
 	}
 }

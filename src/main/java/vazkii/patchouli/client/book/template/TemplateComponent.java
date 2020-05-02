@@ -30,7 +30,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 
 	public String guard = null;
 
-	transient boolean doGuard = false;
+	transient boolean guardPass = false;
 	transient boolean isVisible = true;
 	private transient boolean compiled = false;
 
@@ -55,7 +55,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 			return false;
 		}
 
-		if (doGuard) {
+		if (!guardPass) {
 			return false;
 		}
 
@@ -91,6 +91,6 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 		group = lookup.apply(group).asString();
 		flag = lookup.apply(flag).asString();
 		advancement = lookup.apply(advancement).asString();
-		doGuard = lookup.apply(guard).asBoolean();
+		guardPass = (guard == null || lookup.apply(guard).asBoolean());
 	}
 }
