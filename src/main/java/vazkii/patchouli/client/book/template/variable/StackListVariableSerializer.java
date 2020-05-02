@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book.template.variable;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.common.collect.ImmutableList;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.crafting.CraftingHelper;
@@ -19,16 +19,16 @@ public class StackListVariableSerializer implements IVariableSerializer<StackLis
 	@Override
 	public StackList fromJson(JsonElement json) {
 		// legacy compat
-		if(json.isJsonPrimitive()) {
+		if (json.isJsonPrimitive()) {
 			return new StackList(ItemStackUtil.loadStackListFromString(json.getAsString()));
 		}
-		if(json.isJsonArray()) {
+		if (json.isJsonArray()) {
 			JsonArray arr = json.getAsJsonArray();
 			List<ItemStack> deserial = new ArrayList(arr.size());
 			arr.forEach(j -> deserial.add(VariableHelper.instance().<ItemStack>serializerForClass(ItemStack.class).fromJson(j)));
 			return new StackList(deserial);
 		}
-		
+
 		// if it's an object, assume a singleton ItemStack obj
 		return new StackList(ImmutableList.of(CraftingHelper.getItemStack(json.getAsJsonObject(), true)));
 	}

@@ -4,8 +4,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import vazkii.patchouli.api.IComponentProcessor;
-import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.IVariable;
+import vazkii.patchouli.api.IVariableProvider;
 
 public class EntityTestProcessor implements IComponentProcessor {
 

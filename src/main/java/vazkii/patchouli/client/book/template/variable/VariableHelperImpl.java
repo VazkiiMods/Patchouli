@@ -11,8 +11,8 @@ import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableSerializer;
 import vazkii.patchouli.api.VariableHelper;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 public class VariableHelperImpl implements VariableHelper {
 
@@ -23,11 +23,6 @@ public class VariableHelperImpl implements VariableHelper {
 	}
 
 	public Map<Class<?>, IVariableSerializer<?>> serializers = new HashMap<>();
-
-	@Override
-	public boolean hasSerializerFor(Class<?> clazz) {
-		return serializers.containsKey(clazz);
-	}
 
 	@Override
 	@SuppressWarnings("unchecked")

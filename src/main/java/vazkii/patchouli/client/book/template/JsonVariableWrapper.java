@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.template;
 
-import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;

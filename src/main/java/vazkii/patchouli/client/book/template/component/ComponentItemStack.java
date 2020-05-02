@@ -14,8 +14,8 @@ import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public class ComponentItemStack extends TemplateComponent {

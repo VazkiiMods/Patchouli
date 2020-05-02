@@ -90,7 +90,7 @@ public class TemplateInclusion {
 	 * Attempt to look up a variable in local scope.
 	 */
 	public IVariable attemptVariableLookup(String key) {
-		if(key.startsWith("#")) {
+		if (key.startsWith("#")) {
 			key = key.substring(1);
 		}
 		return localBindings.has(key) ? IVariable.wrap(localBindings.get(key)) : null;

@@ -1,8 +1,8 @@
 package vazkii.patchouli.api;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonElement;
 
 import java.util.Objects;
 
@@ -15,13 +15,15 @@ public interface IVariable {
 	 * Interpret the JSON of this variable as a given Object class.
 	 * Will return {@code null} if this type doesn't have a serializer registered;
 	 * might return {@code null} or throw if the input is malformed.
-	 * @param clazz the Class of the object you want to convert this to
-	 * @return this variable as an object of that class
+	 * 
+	 * @param  clazz the Class of the object you want to convert this to
+	 * @return       this variable as an object of that class
 	 */
 	<T> T as(Class<T> clazz);
 
 	/**
 	 * Take a look at the underlying {@link JsonElement} for this variable.
+	 * 
 	 * @return the underlying JSON element for this Variable
 	 */
 	JsonElement unwrap();
@@ -30,28 +32,56 @@ public interface IVariable {
 	 * Get this IVariable as a String.
 	 */
 	default String asString() {
-		return unwrap().isJsonNull() ? "" : unwrap().getAsString();
+		return asString("");
 	}
 
 	/**
-	 * Get this IVariable as a boolean (truthy value).
+	 * Get this IVariable as a String, with a default value.
+	 */
+	default String asString(String def) {
+		return unwrap().isJsonNull() ? def : unwrap().getAsString();
+	}
+
+	/**
+	 * Get this IVariable as a Number.
+	 */
+	default Number asNumber() {
+		return asNumber(0);
+	}
+
+	/**
+	 * Get this IVariable as a Number, with a default value.
+	 */
+	default Number asNumber(Number def) {
+		return unwrap().isJsonNull() ? def : unwrap().getAsNumber();
+	}
+
+	/**
+	 * Get this IVariable as a boolean.
 	 */
 	default boolean asBoolean() {
-		return !unwrap().isJsonNull() && unwrap().getAsBoolean();
+		return asBoolean(false);
+	}
+
+	/**
+	 * Get this IVariable as a boolean, with a default value.
+	 */
+	default boolean asBoolean(boolean def) {
+		return unwrap().isJsonNull() ? def : (!unwrap().getAsString().equals("false") && unwrap().getAsBoolean());
 	}
 
 	/**
 	 * Convenience method to create an IVariable from {@link VariableHelper#createFromObject}.
 	 */
 	static <T> IVariable from(T object) {
-		return VariableHelper.instance().createFromObject(object);
+		return object != null ? VariableHelper.instance().createFromObject(object) : empty();
 	}
 
 	/**
 	 * Convenience method to create an IVariable from {@link VariableHelper#createFromJson}.
 	 */
 	static IVariable wrap(JsonElement elem) {
-		return VariableHelper.instance().createFromJson(elem);
+		return elem != null ? VariableHelper.instance().createFromJson(elem) : empty();
 	}
 
 	static IVariable wrap(Number n) {

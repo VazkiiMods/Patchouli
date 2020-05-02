@@ -11,8 +11,7 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 public class IngredientVariableSerializer implements IVariableSerializer<Ingredient> {
 	@Override
 	public Ingredient fromJson(JsonElement json) {
-		return (json.isJsonPrimitive()) ? ItemStackUtil.loadIngredientFromString(json.getAsString()) :
-			Ingredient.deserialize(json);
+		return (json.isJsonPrimitive()) ? ItemStackUtil.loadIngredientFromString(json.getAsString()) : Ingredient.deserialize(json);
 	}
 
 	@Override

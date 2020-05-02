@@ -1,10 +1,10 @@
 package vazkii.patchouli.client.book.template;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,20 +29,20 @@ public class VariableAssigner {
 	private static final Pattern INLINE_VAR_PATTERN = Pattern.compile("([^#]*)(#[^#]+)#(.*)");
 	private static final Pattern FUNCTION_PATTERN = Pattern.compile("(.+)->(.+)");
 
-	private static final Map<String, Function<IVariable, IVariable>> FUNCTIONS = new HashMap<>();
+	private static final Map<String, UnaryOperator<IVariable>> FUNCTIONS = new HashMap<>();
 	static {
-		FUNCTIONS.put("iname",    VariableAssigner::iname);
-		FUNCTIONS.put("icount",   VariableAssigner::icount);
-		FUNCTIONS.put("ename",    wrapStringFunc(VariableAssigner::ename));
-		FUNCTIONS.put("lower",    wrapStringFunc(String::toLowerCase));
-		FUNCTIONS.put("upper",    wrapStringFunc(String::toUpperCase));
-		FUNCTIONS.put("trim",     wrapStringFunc(String::trim));
-		FUNCTIONS.put("capital",  wrapStringFunc(WordUtils::capitalize));
+		FUNCTIONS.put("iname", VariableAssigner::iname);
+		FUNCTIONS.put("icount", VariableAssigner::icount);
+		FUNCTIONS.put("ename", wrapStringFunc(VariableAssigner::ename));
+		FUNCTIONS.put("lower", wrapStringFunc(String::toLowerCase));
+		FUNCTIONS.put("upper", wrapStringFunc(String::toUpperCase));
+		FUNCTIONS.put("trim", wrapStringFunc(String::trim));
+		FUNCTIONS.put("capital", wrapStringFunc(WordUtils::capitalize));
 		FUNCTIONS.put("fcapital", wrapStringFunc(WordUtils::capitalizeFully));
-		FUNCTIONS.put("i18n",     wrapStringFunc(I18n::format));
-		FUNCTIONS.put("exists",   VariableAssigner::exists);
-		FUNCTIONS.put("iexists",  VariableAssigner::iexists);
-		FUNCTIONS.put("inv",      VariableAssigner::inv);
+		FUNCTIONS.put("i18n", wrapStringFunc(I18n::format));
+		FUNCTIONS.put("exists", VariableAssigner::exists);
+		FUNCTIONS.put("iexists", VariableAssigner::iexists);
+		FUNCTIONS.put("inv", VariableAssigner::inv);
 	}
 
 	public static void assignVariableHolders(IVariablesAvailableCallback object, IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
@@ -86,7 +87,7 @@ public class VariableAssigner {
 			String arg = m.group(1);
 
 			if (FUNCTIONS.containsKey(funcStr)) {
-				Function<IVariable, IVariable> func = FUNCTIONS.get(funcStr);
+				UnaryOperator<IVariable> func = FUNCTIONS.get(funcStr);
 				IVariable parsedArg = resolveStringFunctions(arg, c);
 				return c.cache(curr, func.apply(parsedArg));
 			} else {
@@ -103,11 +104,11 @@ public class VariableAssigner {
 		String curr = original;
 		IVariable val = null;
 
-		if(curr == null) {
+		if (curr == null) {
 			return IVariable.empty();
 		}
 
-		if(curr.startsWith("#")) {
+		if (curr.startsWith("#")) {
 			if (c.encapsulation != null) {
 				val = c.encapsulation.attemptVariableLookup(curr);
 				if (val != null) {
@@ -127,16 +128,16 @@ public class VariableAssigner {
 				val = c.variables.get(key);
 			}
 
-			if(val != null) {
+			if (val != null) {
 				return val;
 			}
 		}
 		return IVariable.wrap(curr);
 	}
 
-	private static Function<IVariable, IVariable> wrapStringFunc(Function<String, String> inner) {
+	private static UnaryOperator<IVariable> wrapStringFunc(Function<String, String> inner) {
 		Function<IVariable, String> unwrap = IVariable::asString;
-		return unwrap.andThen(inner).andThen(IVariable::wrap);
+		return (UnaryOperator<IVariable>) unwrap.andThen(inner).andThen(IVariable::wrap);
 	}
 
 	private static IVariable iname(IVariable arg) {
