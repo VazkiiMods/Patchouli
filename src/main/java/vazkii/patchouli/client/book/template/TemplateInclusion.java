@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.template;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
@@ -83,6 +84,13 @@ public class TemplateInclusion {
 	public String qualifyName(String name) {
 		boolean prefixed = name.startsWith("#");
 		String query = prefixed ? name.substring(1) : name;
+
+		// if it's an upreference, return the upreference
+		String result = IVariable.wrap(localBindings.get(query)).asString();
+		if (result.startsWith("#")) {
+			return result.substring(1);
+		}
+
 		return (prefixed ? "#" : "") + as + (query.isEmpty() ? "" : "." + query);
 	}
 
@@ -93,7 +101,15 @@ public class TemplateInclusion {
 		if (key.startsWith("#")) {
 			key = key.substring(1);
 		}
-		return localBindings.has(key) ? IVariable.wrap(localBindings.get(key)) : null;
+		IVariable result = IVariable.wrap(localBindings.get(key));
+		return result.asString().isEmpty() || isUpreference(result) ? null : result;
+	}
+
+	/**
+	 * Check if this variable is actually a string starting with "#".
+	 */
+	public boolean isUpreference(IVariable v) {
+		return v.unwrap().isJsonPrimitive() && v.asString().startsWith("#");
 	}
 
 	public IVariableProvider wrapProvider(IVariableProvider provider) {

@@ -113,11 +113,12 @@ public class VariableAssigner {
 				val = c.encapsulation.attemptVariableLookup(curr);
 				if (val != null) {
 					return val;
+				} else {
+					curr = c.encapsulation.qualifyName(curr);
 				}
-				curr = c.encapsulation.qualifyName(curr);
 			}
 
-			String key = curr.substring(1);
+			String key = curr.startsWith("#") ? curr.substring(1) : curr;
 			String originalKey = original.substring(1);
 
 			if (c.processor != null) {

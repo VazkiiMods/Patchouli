@@ -20,6 +20,7 @@ import java.util.List;
 public class StackListVariableSerializer implements IVariableSerializer<StackList> {
 
 	public static final StackList EMPTY = new StackList(Collections.EMPTY_LIST);
+
 	@Override
 	public StackList fromJson(JsonElement json) {
 		if (json.isJsonNull()) {
