@@ -7,10 +7,6 @@ import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.data.AbstractPageBuilder;
 import vazkii.patchouli.api.data.EntryBuilder;
 
-/**
- * @author  Minecraftschurli
- * @version 2020-02-27
- */
 @SuppressWarnings("unchecked")
 public abstract class RecipePageBuilder<T extends RecipePageBuilder<T>> extends AbstractPageBuilder<T> {
 	private final String recipe;

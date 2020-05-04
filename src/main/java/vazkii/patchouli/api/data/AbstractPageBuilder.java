@@ -2,10 +2,6 @@ package vazkii.patchouli.api.data;
 
 import com.google.gson.JsonObject;
 
-/**
- * @author  Minecraftschurli
- * @version 2020-02-26
- */
 @SuppressWarnings("unchecked")
 public abstract class AbstractPageBuilder<T extends AbstractPageBuilder<T>> {
 	protected final EntryBuilder parent;

@@ -7,10 +7,6 @@ import net.minecraft.nbt.CompoundNBT;
 import vazkii.patchouli.api.data.AbstractPageBuilder;
 import vazkii.patchouli.api.data.EntryBuilder;
 
-/**
- * @author  Minecraftschurli
- * @version 2020-02-27
- */
 public class EntityPageBuilder extends AbstractPageBuilder<EntityPageBuilder> {
 	private final String entity;
 	private CompoundNBT nbt;

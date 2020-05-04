@@ -14,10 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author  Minecraftschurli
- * @version 2020-02-26
- */
 public class EntryBuilder {
 
 	private final CategoryBuilder parent;

@@ -11,10 +11,6 @@ import vazkii.patchouli.api.data.EntryBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author  Minecraftschurli
- * @version 2020-02-27
- */
 public class ImagePageBuilder extends AbstractPageBuilder<ImagePageBuilder> {
 	private final List<ResourceLocation> images = new ArrayList<>();
 	private String title;

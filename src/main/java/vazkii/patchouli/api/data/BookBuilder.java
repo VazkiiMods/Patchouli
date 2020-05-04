@@ -13,10 +13,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-/**
- * @author  Minecraftschurli
- * @version 2020-02-26
- */
 public class BookBuilder {
 
 	private final ResourceLocation id;

@@ -8,10 +8,6 @@ import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.api.data.AbstractPageBuilder;
 import vazkii.patchouli.api.data.EntryBuilder;
 
-/**
- * @author  Minecraftschurli
- * @version 2020-02-27
- */
 public class SpotlightPageBuilder extends AbstractPageBuilder<SpotlightPageBuilder> {
 	private final String item;
 	private String title;

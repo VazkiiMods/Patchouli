@@ -20,10 +20,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.function.Consumer;
 
-/**
- * @author  Minecraftschurli
- * @version 2020-02-26
- */
 public abstract class PatchouliBookProvider implements IDataProvider {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();

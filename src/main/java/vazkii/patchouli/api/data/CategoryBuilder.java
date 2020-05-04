@@ -11,10 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author  Minecraftschurli
- * @version 2020-02-26
- */
 public class CategoryBuilder {
 
 	private final BookBuilder bookBuilder;
