@@ -13,5 +13,5 @@ public interface IAdvancedStateMatcher extends IStateMatcher {
 	 * acceptable. This should check the passed in blockstate instead of requerying it from the world,
 	 * for both performance and correctness reasons -- the state may be rotated for multiblock matching.
 	 */
-	QuadPredicate<IBlockReader, BlockPos, BlockState, IAdditionalMultiblockData> getAdvancedStatePredicate();
+	IAdvancedMatcherPredicate<IBlockReader, BlockPos, BlockState, IAdditionalMultiblockData> getAdvancedStatePredicate();
 }

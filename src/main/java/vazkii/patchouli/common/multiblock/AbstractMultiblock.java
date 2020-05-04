@@ -121,7 +121,7 @@ public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
 			BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
 			IStateMatcher matcher = r.getStateMatcher();
 			if (matcher instanceof IAdvancedStateMatcher && additionalData != null) {
-				QuadPredicate pred = ((IAdvancedStateMatcher) matcher).getAdvancedStatePredicate();
+				IAdvancedMatcherPredicate pred = ((IAdvancedStateMatcher) matcher).getAdvancedStatePredicate();
 				return pred.test(world, checkPos, state, additionalData);
 			} else {
 				TriPredicate<IBlockReader, BlockPos, BlockState> pred = matcher.getStatePredicate();
