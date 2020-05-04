@@ -1,9 +1,5 @@
 package vazkii.patchouli.api;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-
 /**
  * Advanced version of {@link IStateMatcher} with support for {@link IAdditionalMultiblockData}
  */
