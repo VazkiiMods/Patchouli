@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.state.IProperty;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -40,6 +41,7 @@ import javax.annotation.Nullable;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -219,6 +221,11 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	public IStateMatcher stateMatcher(BlockState state) {
 		return StateMatcher.fromState(state);
+	}
+
+	@Override
+	public IStateMatcher propertyMatcher(BlockState state, IProperty<?>... properties) {
+		return StateMatcher.fromStateWithFilter(state, Arrays.asList(properties)::contains);
 	}
 
 	@Override
