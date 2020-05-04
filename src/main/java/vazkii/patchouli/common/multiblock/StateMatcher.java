@@ -50,8 +50,9 @@ public class StateMatcher implements IStateMatcher {
 
 	public static StateMatcher fromStateWithFilter(BlockState state, Predicate<IProperty<?>> filter) {
 		return fromPredicate(state, state1 -> {
-			if (state.getBlock() != state1.getBlock())
+			if (state.getBlock() != state1.getBlock()) {
 				return false;
+			}
 			return state1.getProperties()
 					.stream()
 					.filter(filter)
