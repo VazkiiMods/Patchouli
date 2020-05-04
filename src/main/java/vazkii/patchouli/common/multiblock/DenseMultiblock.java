@@ -9,10 +9,10 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.TriPredicate;
 
+import vazkii.patchouli.api.IAdditionalMultiblockData;
+import vazkii.patchouli.api.IAdvancedStateMatcher;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
@@ -52,16 +52,19 @@ public class DenseMultiblock extends AbstractMultiblock {
 	}
 
 	@Override
-	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
+	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation, IAdditionalMultiblockData additionalData) {
 		setWorld(world);
 		if (x < 0 || y < 0 || z < 0 || x >= size.getX() || y >= size.getY() || z >= size.getZ()) {
 			return false;
 		}
 		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-		TriPredicate<IBlockReader, BlockPos, BlockState> pred = stateTargets[x][y][z].getStatePredicate();
+		IStateMatcher matcher = stateTargets[x][y][z];
 		BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
-
-		return pred.test(world, checkPos, state);
+		if (matcher instanceof IAdvancedStateMatcher && additionalData != null) {
+			return ((IAdvancedStateMatcher) matcher).getAdvancedStatePredicate().test(world, checkPos, state, additionalData);
+		} else {
+			return matcher.getStatePredicate().test(world, checkPos, state);
+		}
 	}
 
 	private Vec3i build(Object[] targets, int[] dimensions) {

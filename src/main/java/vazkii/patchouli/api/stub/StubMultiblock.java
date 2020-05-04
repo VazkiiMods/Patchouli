@@ -8,7 +8,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
+import vazkii.patchouli.api.IAdditionalMultiblockData;
 import vazkii.patchouli.api.IMultiblock;
+
+import javax.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -60,17 +63,17 @@ public class StubMultiblock implements IMultiblock {
 	}
 
 	@Override
-	public Rotation validate(World world, BlockPos pos) {
+	public Rotation validate(World world, BlockPos pos, @Nullable IAdditionalMultiblockData additionalData) {
 		return null;
 	}
 
 	@Override
-	public boolean validate(World world, BlockPos pos, Rotation rotation) {
+	public boolean validate(World world, BlockPos pos, Rotation rotation, @Nullable IAdditionalMultiblockData additionalData) {
 		return false;
 	}
 
 	@Override
-	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
+	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation, @Nullable IAdditionalMultiblockData additionalData) {
 		return false;
 	}
 

@@ -95,12 +95,16 @@ public interface IMultiblock {
 	 * @return The rotation that worked, null if no match
 	 */
 	@Nullable
-	Rotation validate(World world, BlockPos pos);
+	default Rotation validate(World world, BlockPos pos) {
+		return validate(world, pos, (IAdditionalMultiblockData) null);
+	}
 
 	/**
 	 * Validates the multiblock for a specific rotation
 	 */
-	boolean validate(World world, BlockPos pos, Rotation rotation);
+	default boolean validate(World world, BlockPos pos, Rotation rotation) {
+		return validate(world, pos, rotation, null);
+	}
 
 	/**
 	 * Fine-grained check for whether any one given block of the multiblock exists at the given position
@@ -108,7 +112,31 @@ public interface IMultiblock {
 	 * 
 	 * @param start The anchor position. The multiblock's {@link #offset} is not applied to this.
 	 */
-	boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation);
+	default boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
+		return test(world, start, x, y, z, rotation, null);
+	}
+
+	/**
+	 * Validates if the multiblock exists at the given position. Will check all 4
+	 * rotations if the multiblock is not symmetrical.
+	 *
+	 * @return The rotation that worked, null if no match
+	 */
+	@Nullable
+	Rotation validate(World world, BlockPos pos, @Nullable IAdditionalMultiblockData data);
+
+	/**
+	 * Validates the multiblock for a specific rotation
+	 */
+	boolean validate(World world, BlockPos pos, Rotation rotation, @Nullable IAdditionalMultiblockData data);
+
+	/**
+	 * Fine-grained check for whether any one given block of the multiblock exists at the given position
+	 * with the given rotation.
+	 *
+	 * @param start The anchor position. The multiblock's {@link #offset} is not applied to this.
+	 */
+	boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation, @Nullable IAdditionalMultiblockData data);
 
 	/**
 	 * Gets the size of this multiblock

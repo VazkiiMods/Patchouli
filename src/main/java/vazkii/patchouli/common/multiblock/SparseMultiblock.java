@@ -10,6 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
+import vazkii.patchouli.api.IAdditionalMultiblockData;
+import vazkii.patchouli.api.IAdvancedStateMatcher;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
@@ -63,11 +65,14 @@ public class SparseMultiblock extends AbstractMultiblock {
 	}
 
 	@Override
-	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
+	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation, IAdditionalMultiblockData additionalData) {
 		setWorld(world);
 		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
 		BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
 		IStateMatcher matcher = data.getOrDefault(new BlockPos(x, y, z), StateMatcher.ANY);
+		if (matcher instanceof IAdvancedStateMatcher && additionalData != null) {
+			return ((IAdvancedStateMatcher) matcher).getAdvancedStatePredicate().test(world, checkPos, state, additionalData);
+		}
 		return matcher.getStatePredicate().test(world, checkPos, state);
 	}
 }

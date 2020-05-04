@@ -20,7 +20,7 @@ import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.lighting.WorldLightManager;
 import net.minecraftforge.common.util.TriPredicate;
 
-import vazkii.patchouli.api.IMultiblock;
+import vazkii.patchouli.api.*;
 import vazkii.patchouli.common.util.RotationUtil;
 
 import javax.annotation.Nullable;
@@ -98,12 +98,12 @@ public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
 	}
 
 	@Override
-	public Rotation validate(World world, BlockPos pos) {
-		if (isSymmetrical() && validate(world, pos, Rotation.NONE)) {
+	public Rotation validate(World world, BlockPos pos, IAdditionalMultiblockData additionalData) {
+		if (isSymmetrical() && validate(world, pos, Rotation.NONE, additionalData)) {
 			return Rotation.NONE;
 		} else {
 			for (Rotation rot : Rotation.values()) {
-				if (validate(world, pos, rot)) {
+				if (validate(world, pos, rot, additionalData)) {
 					return rot;
 				}
 			}
@@ -112,16 +112,21 @@ public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
 	}
 
 	@Override
-	public boolean validate(World world, BlockPos pos, Rotation rotation) {
+	public boolean validate(World world, BlockPos pos, Rotation rotation, IAdditionalMultiblockData additionalData) {
 		setWorld(world);
 		Pair<BlockPos, Collection<SimulateResult>> sim = simulate(world, pos, rotation, false);
 
 		return sim.getSecond().stream().allMatch(r -> {
 			BlockPos checkPos = r.getWorldPosition();
-			TriPredicate<IBlockReader, BlockPos, BlockState> pred = r.getStateMatcher().getStatePredicate();
 			BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
-
-			return pred.test(world, checkPos, state);
+			IStateMatcher matcher = r.getStateMatcher();
+			if (matcher instanceof IAdvancedStateMatcher && additionalData != null) {
+				QuadPredicate pred = ((IAdvancedStateMatcher) matcher).getAdvancedStatePredicate();
+				return pred.test(world, checkPos, state, additionalData);
+			} else {
+				TriPredicate<IBlockReader, BlockPos, BlockState> pred = matcher.getStatePredicate();
+				return pred.test(world, checkPos, state);
+			}
 		});
 	}
 
