@@ -63,9 +63,16 @@
             "type": "multiblock",
             "name": "rotation test",
             "multiblock": {
-                "pattern": [[
-                    "   ", " L ", "   "], [
-                    " W ", "S0N", " EB"]
+                "pattern": [
+                    [
+                        "   ",
+                        " L ",
+                        "   "
+                    ], [
+                        " W ",
+                        "S0N",
+                        " EB"
+                    ]
                 ],
                 "mapping": {
                     "N": "minecraft:sandstone_stairs[facing=north]",
