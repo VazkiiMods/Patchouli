@@ -58,6 +58,10 @@
                     "N": "minecraft:note_block[note=4]"
                 }
             }
+        },
+        {
+            "type": "text",
+            "text": "This is a test entry with an item name macro: $(iname:minecraft:enchanted_golden_apple)"
         }
     ]
 }

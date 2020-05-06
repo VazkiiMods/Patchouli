@@ -227,6 +227,20 @@ public class PatchouliAPI {
 		 * Gets an IStateMatcher that accepts anything.
 		 */
 		IStateMatcher anyMatcher();
+
+		// ================================================================================================
+		// Macros
+		// ================================================================================================
+
+		/**
+		 * Registers a command macro handler under the given names
+		 */
+		void registerMacro(ICommandProcessor handler, String... names);
+
+		/**
+		 * Registers a function macro handler under the given names
+		 */
+		void registerMacro(IFunctionProcessor handler, String... names);
 	}
 
 }
