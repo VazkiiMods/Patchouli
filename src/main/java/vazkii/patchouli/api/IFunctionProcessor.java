@@ -1,11 +1,16 @@
 package vazkii.patchouli.api;
 
-import vazkii.patchouli.client.book.text.SpanState;
-
 /**
  * Functional interface for handling macro functions
  */
 @FunctionalInterface
 public interface IFunctionProcessor {
-	String process(String parameter, SpanState state);
+	/**
+	 * Handles a text function and returns the text to be displayed
+	 *
+	 * @param  parameter the function parameter
+	 * @param  state     the current span state to set styles, tooltips, etc.
+	 * @return           the text to be displayed
+	 */
+	String process(String parameter, ISpanState state);
 }
