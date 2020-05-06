@@ -40,7 +40,7 @@ public class SimulateResultImpl implements IMultiblock.SimulateResult {
 
 	@Override
 	public boolean test(World world, Rotation rotation) {
-		BlockState state = world.getBlockState(getWorldPosition()).rotate(RotationUtil.fixHorizontal(rotation));
+		BlockState state = RotationUtil.rotateState(world.getBlockState(getWorldPosition()), rotation);
 		return getStateMatcher().getStatePredicate().test(world, getWorldPosition(), state);
 	}
 }

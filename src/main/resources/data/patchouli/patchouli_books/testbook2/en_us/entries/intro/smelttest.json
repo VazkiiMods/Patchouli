@@ -58,6 +58,25 @@
                     "N": "minecraft:note_block[note=4]"
                 }
             }
+        },
+        {
+            "type": "multiblock",
+            "name": "rotation test",
+            "multiblock": {
+                "pattern": [[
+                    "   ", " L ", "   "], [
+                    " W ", "S0N", " EB"]
+                ],
+                "mapping": {
+                    "N": "minecraft:sandstone_stairs[facing=north]",
+                    "E": "minecraft:sandstone_stairs[facing=east]",
+                    "S": "minecraft:sandstone_stairs[facing=south]",
+                    "W": "minecraft:sandstone_stairs[facing=west]",
+                    "0": "minecraft:sandstone",
+                    "B": "minecraft:sandstone",
+                    "L": "minecraft:lectern[facing=south]"
+                }
+            }
         }
     ]
 }

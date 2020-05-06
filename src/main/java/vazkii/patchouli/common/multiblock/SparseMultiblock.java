@@ -66,7 +66,7 @@ public class SparseMultiblock extends AbstractMultiblock {
 	public boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
 		setWorld(world);
 		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-		BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
+		BlockState state = RotationUtil.rotateState(world.getBlockState(checkPos), rotation);
 		IStateMatcher matcher = data.getOrDefault(new BlockPos(x, y, z), StateMatcher.ANY);
 		return matcher.getStatePredicate().test(world, checkPos, state);
 	}

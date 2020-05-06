@@ -1,6 +1,8 @@
 package vazkii.patchouli.common.util;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 
 public class RotationUtil {
@@ -44,15 +46,8 @@ public class RotationUtil {
 		}
 	}
 
-	public static Rotation fixHorizontal(Rotation rot) {
-		switch (rot) {
-		case CLOCKWISE_90:
-			return Rotation.COUNTERCLOCKWISE_90;
-		case COUNTERCLOCKWISE_90:
-			return Rotation.CLOCKWISE_90;
-		default:
-			return rot;
-		}
+	public static BlockState rotateState(BlockState state, Rotation rotation) {
+		return state.rotate(rotation).mirror(Mirror.FRONT_BACK);
 	}
 
 }

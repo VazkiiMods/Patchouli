@@ -52,9 +52,8 @@ import vazkii.patchouli.common.util.RotationUtil;
 
 import javax.annotation.Nullable;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -273,7 +272,7 @@ public class MultiblockVisualizationHandler {
 				}
 
 				if (!r.test(world, facingRotation)) {
-					BlockState renderState = r.getStateMatcher().getDisplayedState((int) ClientTicker.ticksInGame).rotate(facingRotation);
+					BlockState renderState = RotationUtil.rotateState(r.getStateMatcher().getDisplayedState((int) ClientTicker.ticksInGame), facingRotation);
 					renderBlock(world, renderState, r.getWorldPosition(), alpha, ms);
 
 					if (air) {

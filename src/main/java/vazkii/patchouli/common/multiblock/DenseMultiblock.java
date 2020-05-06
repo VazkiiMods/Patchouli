@@ -16,11 +16,7 @@ import net.minecraftforge.common.util.TriPredicate;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DenseMultiblock extends AbstractMultiblock {
 
@@ -43,8 +39,9 @@ public class DenseMultiblock extends AbstractMultiblock {
 			for (int y = 0; y < size.getY(); y++) {
 				for (int z = 0; z < size.getZ(); z++) {
 					BlockPos actionPos = center.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-					char currC = pattern[y][x].charAt(z);
-					ret.add(new SimulateResultImpl(actionPos, stateTargets[x][y][z], currC));
+					char currC = pattern[size.getY() - y - 1][rotation == Rotation.NONE || rotation == Rotation.CLOCKWISE_180 ? x : size.getX() - x - 1].charAt(z);
+					IStateMatcher matcher = stateTargets[rotation == Rotation.NONE || rotation == Rotation.CLOCKWISE_180 ? x : size.getX() - x - 1][y][z];
+					ret.add(new SimulateResultImpl(actionPos, matcher, currC));
 				}
 			}
 		}
@@ -58,8 +55,8 @@ public class DenseMultiblock extends AbstractMultiblock {
 			return false;
 		}
 		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
-		TriPredicate<IBlockReader, BlockPos, BlockState> pred = stateTargets[x][y][z].getStatePredicate();
-		BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
+		TriPredicate<IBlockReader, BlockPos, BlockState> pred = stateTargets[rotation == Rotation.NONE || rotation == Rotation.CLOCKWISE_180 ? x : size.getX() - x - 1][y][z].getStatePredicate();
+		BlockState state = RotationUtil.rotateState(world.getBlockState(checkPos), rotation);
 
 		return pred.test(world, checkPos, state);
 	}
@@ -127,7 +124,7 @@ public class DenseMultiblock extends AbstractMultiblock {
 						setViewOffset();
 					}
 
-					stateTargets[x][dimensions[0] - y - 1][z] = matcher;
+					stateTargets[dimensions[1] - x - 1][dimensions[0] - y - 1][z] = matcher;
 				}
 			}
 		}

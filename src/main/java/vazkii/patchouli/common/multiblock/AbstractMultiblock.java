@@ -10,7 +10,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.ILightReader;
 import net.minecraft.world.LightType;
@@ -119,7 +118,7 @@ public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
 		return sim.getSecond().stream().allMatch(r -> {
 			BlockPos checkPos = r.getWorldPosition();
 			TriPredicate<IBlockReader, BlockPos, BlockState> pred = r.getStateMatcher().getStatePredicate();
-			BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
+			BlockState state = RotationUtil.rotateState(world.getBlockState(checkPos), rotation);
 
 			return pred.test(world, checkPos, state);
 		});
