@@ -28,11 +28,11 @@ public class Word {
 		this.width = strWidth;
 		this.height = 8;
 		this.text = text;
-		this.color = span.color;
-		this.codes = span.codes;
-		this.onClick = span.onClick;
+		this.color = span.getColor();
+		this.codes = span.getCodes();
+		this.onClick = span.getOnClick();
 		this.linkCluster = cluster;
-		this.tooltip = span.tooltip;
+		this.tooltip = span.getTooltip();
 	}
 
 	public void render(FontRenderer font, int mouseX, int mouseY) {

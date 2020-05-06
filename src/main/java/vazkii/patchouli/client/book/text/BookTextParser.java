@@ -1,15 +1,10 @@
 package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 
-import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
-import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.MacroRegistry;
@@ -17,7 +12,6 @@ import vazkii.patchouli.common.book.MacroRegistry;
 import javax.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -110,8 +104,8 @@ public class BookTextParser {
 					if (!processed.isEmpty()) {
 						spans.add(new Span(state, processed));
 
-						if (state.cluster == null) {
-							state.tooltip = EMPTY_STRING_COMPONENT;
+						if (state.getCluster() == null) {
+							state.setTooltip(EMPTY_STRING_COMPONENT);
 						}
 					}
 				} catch (Exception ex) {
@@ -126,11 +120,11 @@ public class BookTextParser {
 	}
 
 	private String processCommand(SpanState state, String cmd) {
-		state.endingExternal = false;
+		state.setEndingExternal(false);
 		String result = "";
 
 		if (cmd.length() == 1 && cmd.matches("^[0123456789abcdef]$")) { // Vanilla colors
-			state.color = TextFormatting.fromFormattingCode(cmd.charAt(0)).getColor();
+			state.setColor(TextFormatting.fromFormattingCode(cmd.charAt(0)).getColor());
 			return "";
 		} else if (cmd.startsWith("#") && (cmd.length() == 4 || cmd.length() == 7)) { // Hex colors
 			String parse = cmd.substring(1);
@@ -138,9 +132,9 @@ public class BookTextParser {
 				parse = "" + parse.charAt(0) + parse.charAt(0) + parse.charAt(1) + parse.charAt(1) + parse.charAt(2) + parse.charAt(2);
 			}
 			try {
-				state.color = Integer.parseInt(parse, 16);
+				state.setColor(Integer.parseInt(parse, 16));
 			} catch (NumberFormatException e) {
-				state.color = baseColor;
+				state.setColor(baseColor);
 			}
 			return "";
 		} else if (cmd.matches("li\\d?")) { // List Element
@@ -148,9 +142,9 @@ public class BookTextParser {
 			int dist = Character.isDigit(c) ? Character.digit(c, 10) : 1;
 			int pad = dist * 4;
 			char bullet = dist % 2 == 0 ? '\u25E6' : '\u2022';
-			state.lineBreaks = 1;
-			state.spacingLeft = pad;
-			state.spacingRight = spaceWidth;
+			state.setLineBreaks(1);
+			state.setSpacingLeft(pad);
+			state.setSpacingRight(spaceWidth);
 			return TextFormatting.BLACK.toString() + bullet;
 		}
 
@@ -167,7 +161,7 @@ public class BookTextParser {
 			result = MacroRegistry.INSTANCE.processCommand(cmd, state);
 		}
 
-		if (state.endingExternal) {
+		if (state.isEndingExternal()) {
 			result += TextFormatting.GRAY + "\u21AA";
 		}
 

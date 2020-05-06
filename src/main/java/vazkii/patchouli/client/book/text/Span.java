@@ -1,43 +1,41 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+
+import vazkii.patchouli.api.ISpan;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public class Span {
-	public static Span error(SpanState state, String message) {
-		return new Span(state, message, 0xFF0000, "");
-	}
+public class Span implements ISpan {
 
-	public final String text;
-	public final int color;
-	public final String codes;
-	public final List<Span> linkCluster;
-	public final ITextComponent tooltip;
-	public final Supplier<Boolean> onClick;
-	public final int lineBreaks;
-	public final int spacingLeft;
-	public final int spacingRight;
-	public final boolean bold;
+	private final String text;
+	private final int color;
+	private final String codes;
+	private final List<ISpan> linkCluster;
+	private final ITextComponent tooltip;
+	private final Supplier<Boolean> onClick;
+	private final int lineBreaks;
+	private final int spacingLeft;
+	private final int spacingRight;
+	private final boolean bold;
 
 	public Span(SpanState state, String text) {
 		this.text = text;
-		this.color = state.color;
-		this.codes = state.codes;
-		this.onClick = state.onClick;
-		this.linkCluster = state.cluster;
-		this.tooltip = state.tooltip;
-		this.lineBreaks = state.lineBreaks;
-		this.spacingLeft = state.spacingLeft;
-		this.spacingRight = state.spacingRight;
-		this.bold = codes.contains("\u00A7l");
+		this.color = state.getColor();
+		this.codes = state.getCodes();
+		this.onClick = state.getOnClick();
+		this.linkCluster = state.getCluster();
+		this.tooltip = state.getTooltip();
+		this.lineBreaks = state.getLineBreaks();
+		this.spacingLeft = state.getSpacingLeft();
+		this.spacingRight = state.getSpacingRight();
+		this.bold = getCodes().contains("\u00A7l");
 
-		state.lineBreaks = 0;
-		state.spacingLeft = 0;
-		state.spacingRight = 0;
+		state.setLineBreaks(0);
+		state.setSpacingLeft(0);
+		state.setSpacingRight(0);
 	}
 
 	private Span(SpanState state, String text, int color, String codes) {
@@ -47,13 +45,67 @@ public class Span {
 		this.onClick = null;
 		this.linkCluster = null;
 		this.tooltip = new StringTextComponent("");
-		this.lineBreaks = state.lineBreaks;
-		this.spacingLeft = state.spacingLeft;
-		this.spacingRight = state.spacingRight;
+		this.lineBreaks = state.getLineBreaks();
+		this.spacingLeft = state.getSpacingLeft();
+		this.spacingRight = state.getSpacingRight();
 		this.bold = codes.contains("\u00A7l");
 
-		state.lineBreaks = 0;
-		state.spacingLeft = 0;
-		state.spacingRight = 0;
+		state.setLineBreaks(0);
+		state.setSpacingLeft(0);
+		state.setSpacingRight(0);
+	}
+
+	public static Span error(SpanState state, String message) {
+		return new Span(state, message, 0xFF0000, "");
+	}
+
+	@Override
+	public String getText() {
+		return text;
+	}
+
+	@Override
+	public int getColor() {
+		return color;
+	}
+
+	@Override
+	public String getCodes() {
+		return codes;
+	}
+
+	@Override
+	public List<ISpan> getLinkCluster() {
+		return linkCluster;
+	}
+
+	@Override
+	public ITextComponent getTooltip() {
+		return tooltip;
+	}
+
+	@Override
+	public Supplier<Boolean> getOnClick() {
+		return onClick;
+	}
+
+	@Override
+	public int getLineBreaks() {
+		return lineBreaks;
+	}
+
+	@Override
+	public int getSpacingLeft() {
+		return spacingLeft;
+	}
+
+	@Override
+	public int getSpacingRight() {
+		return spacingRight;
+	}
+
+	@Override
+	public boolean isBold() {
+		return bold;
 	}
 }

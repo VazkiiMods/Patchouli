@@ -61,7 +61,7 @@
         },
         {
             "type": "text",
-            "text": "This is a test entry with an item name macro: $(iname:minecraft:enchanted_golden_apple)"
+            "text": "This is a test entry with an item name macro: $(iname:minecraft:enchanted_golden_apple) and a $(l:intro/preface)link$(/l)"
         }
     ]
 }

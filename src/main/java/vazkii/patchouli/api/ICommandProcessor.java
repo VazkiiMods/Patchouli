@@ -1,11 +1,15 @@
 package vazkii.patchouli.api;
 
-import vazkii.patchouli.client.book.text.SpanState;
-
 /**
  * Functional interface for handling macro commands
  */
 @FunctionalInterface
 public interface ICommandProcessor {
-	String process(SpanState state);
+	/**
+	 * Handles a text command and returns the text to be displayed
+	 *
+	 * @param  state the current span state to set styles, tooltips, etc.
+	 * @return       the string that should replace the command in the text
+	 */
+	String process(ISpanState state);
 }
