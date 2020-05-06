@@ -29,6 +29,7 @@ import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
+import vazkii.patchouli.common.book.MacroRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.multiblock.DenseMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
@@ -232,12 +233,12 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	@Override
 	public void registerMacro(ICommandProcessor handler, String... names) {
-
+		MacroRegistry.INSTANCE.register(handler, names);
 	}
 
 	@Override
 	public void registerMacro(IFunctionProcessor handler, String... names) {
-
+		MacroRegistry.INSTANCE.register(handler, names);
 	}
 
 }
