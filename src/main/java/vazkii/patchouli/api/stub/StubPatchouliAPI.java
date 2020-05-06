@@ -11,6 +11,8 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
+import vazkii.patchouli.api.ICommandProcessor;
+import vazkii.patchouli.api.IFunctionProcessor;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
@@ -202,6 +204,16 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	@Override
 	public IStateMatcher anyMatcher() {
 		return StubMatcher.INSTANCE;
+	}
+
+	@Override
+	public void registerMacro(ICommandProcessor handler, String... names) {
+
+	}
+
+	@Override
+	public void registerMacro(IFunctionProcessor handler, String... names) {
+
 	}
 
 }

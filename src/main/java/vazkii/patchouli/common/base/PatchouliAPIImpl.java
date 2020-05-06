@@ -17,6 +17,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import org.apache.commons.io.IOUtils;
 
+import vazkii.patchouli.api.ICommandProcessor;
+import vazkii.patchouli.api.IFunctionProcessor;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
@@ -256,6 +258,16 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	public IStateMatcher anyMatcher() {
 		return StateMatcher.ANY;
+	}
+
+	@Override
+	public void registerMacro(ICommandProcessor handler, String... names) {
+
+	}
+
+	@Override
+	public void registerMacro(IFunctionProcessor handler, String... names) {
+
 	}
 
 }
