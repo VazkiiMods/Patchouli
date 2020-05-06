@@ -10,8 +10,6 @@ import vazkii.patchouli.api.ISpanState;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
-import vazkii.patchouli.client.book.gui.GuiBookEntry;
-import vazkii.patchouli.client.book.text.SpanState;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 import java.util.*;
@@ -21,30 +19,22 @@ public class MacroRegistry {
 
 	public static final MacroRegistry INSTANCE = new MacroRegistry();
 
-	public final Map<String, ICommandProcessor> COMMANDS = new HashMap<>();
-	public final Map<String, IFunctionProcessor> FUNCTIONS = new HashMap<>();
+	private final Map<String, ICommandProcessor> COMMANDS = new HashMap<>();
+	private final Map<String, IFunctionProcessor> FUNCTIONS = new HashMap<>();
 
 	public void register(ICommandProcessor handler, String... names) {
-		List<String> erroredNames = new ArrayList<>();
 		for (String name : names) {
 			if (COMMANDS.putIfAbsent(name, handler) != null) {
-				erroredNames.add(name);
+				throw new IllegalArgumentException("Duplicate Command Processor not registered for the given name: " + name);
 			}
-		}
-		if (erroredNames.size() == names.length) {
-			throw new IllegalArgumentException("Command Processor not registered for the given names (" + String.join(",", erroredNames) + ")");
 		}
 	}
 
 	public void register(IFunctionProcessor handler, String... names) {
-		List<String> erroredNames = new ArrayList<>();
 		for (String name : names) {
 			if (FUNCTIONS.putIfAbsent(name, handler) != null) {
-				erroredNames.add(name);
+				throw new IllegalArgumentException("Duplicate Function Processor not registered for the given name: " + name);
 			}
-		}
-		if (erroredNames.size() == names.length) {
-			throw new IllegalArgumentException("Command Processor not registered for the given names (" + String.join(",", erroredNames) + ")");
 		}
 	}
 

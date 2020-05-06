@@ -272,11 +272,13 @@ public class PatchouliAPI {
 
 		/**
 		 * Registers a command macro handler under the given names
+		 * @throws IllegalArgumentException if a macro with one of the given names was already registered
 		 */
 		void registerMacro(ICommandProcessor handler, String... names);
 
 		/**
 		 * Registers a function macro handler under the given names
+		 * @throws IllegalArgumentException if a macro with one of the given names was already registered
 		 */
 		void registerMacro(IFunctionProcessor handler, String... names);
 	}
