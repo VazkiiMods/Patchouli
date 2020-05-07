@@ -83,11 +83,19 @@ public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
 	}
 
 	@Override
-	public void place(World world, BlockPos pos, Rotation rotation) {
+	public void place(World world, BlockPos pos, Rotation rotation, IAdditionalMultiblockData additionalData) {
 		setWorld(world);
 		simulate(world, pos, rotation, false).getSecond().forEach(r -> {
 			BlockPos placePos = r.getWorldPosition();
-			BlockState targetState = r.getStateMatcher().getDisplayedState((int) world.getDayTime()).rotate(rotation);
+			IStateMatcher matcher = r.getStateMatcher();
+			BlockState targetState;
+			int ticks = (int) world.getDayTime();
+			if (matcher instanceof IAdvancedStateMatcher && additionalData != null) {
+				targetState = ((IAdvancedStateMatcher)matcher).getDisplayedState(ticks, additionalData);
+			} else {
+				targetState = matcher.getDisplayedState(ticks);
+			}
+			targetState = targetState.rotate(rotation);
 			Block targetBlock = targetState.getBlock();
 
 			if (!targetBlock.isAir(targetState, world, placePos) && targetState.isValidPosition(world, placePos) && world.getBlockState(placePos).getMaterial().isReplaceable()) {

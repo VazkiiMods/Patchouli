@@ -75,11 +75,6 @@ public interface IMultiblock {
 	// ================================================================================================
 
 	/**
-	 * Places the multiblock at the given position with the given rotation.
-	 */
-	void place(World world, BlockPos pos, Rotation rotation);
-
-	/**
 	 * If this multiblock were anchored at world position {@code anchor} with rotation {@code rotation}, then
 	 * return a pair whose first element is the final center position (after rotation and {@link #offset}),
 	 * and whose second element describes each position of the multiblock.
@@ -87,6 +82,13 @@ public interface IMultiblock {
 	 * See the main Patchouli code to see what can be done with this.
 	 */
 	Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, Rotation rotation, boolean forView);
+
+	/**
+	 * Places the multiblock at the given position with the given rotation.
+	 */
+	default void place(World world, BlockPos pos, Rotation rotation) {
+		place(world, pos, rotation, null);
+	}
 
 	/**
 	 * Validates if the multiblock exists at the given position. Will check all 4
@@ -115,6 +117,11 @@ public interface IMultiblock {
 	default boolean test(World world, BlockPos start, int x, int y, int z, Rotation rotation) {
 		return test(world, start, x, y, z, rotation, null);
 	}
+
+	/**
+	 * Places the multiblock at the given position with the given rotation.
+	 */
+	void place(World world, BlockPos pos, Rotation rotation, @Nullable IAdditionalMultiblockData data);
 
 	/**
 	 * Validates if the multiblock exists at the given position. Will check all 4

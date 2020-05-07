@@ -53,7 +53,7 @@ public class StubMultiblock implements IMultiblock {
 	}
 
 	@Override
-	public void place(World world, BlockPos pos, Rotation rotation) {
+	public void place(World world, BlockPos pos, Rotation rotation, @Nullable IAdditionalMultiblockData data) {
 		// NO-OP
 	}
 
