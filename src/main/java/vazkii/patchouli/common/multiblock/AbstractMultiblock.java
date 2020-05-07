@@ -91,7 +91,7 @@ public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
 			BlockState targetState;
 			int ticks = (int) world.getDayTime();
 			if (matcher instanceof IAdvancedStateMatcher && additionalData != null) {
-				targetState = ((IAdvancedStateMatcher)matcher).getDisplayedState(ticks, additionalData);
+				targetState = ((IAdvancedStateMatcher) matcher).getDisplayedState(ticks, additionalData);
 			} else {
 				targetState = matcher.getDisplayedState(ticks);
 			}
