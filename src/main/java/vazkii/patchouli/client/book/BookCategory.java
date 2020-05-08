@@ -86,10 +86,10 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 		children.forEach((c) -> c.updateLockStatus(false));
 
-		boolean currLocked = locked;
+		boolean wasLocked = locked;
 
 		updateLocked: {
-			locked = true;
+			locked = !children.isEmpty() || !entries.isEmpty(); // empty categories are unlocked by default
 			for (BookCategory c : children) {
 				if (!c.isLocked()) {
 					locked = false;
@@ -105,7 +105,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 			}
 		}
 
-		if (!locked && currLocked != locked) {
+		if (!locked && wasLocked) {
 			book.markUpdated();
 		}
 	}

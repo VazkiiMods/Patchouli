@@ -104,10 +104,14 @@ public abstract class GuiBookEntryList extends GuiBook {
 		}
 
 		if (visibleEntries.isEmpty()) {
-			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
-			RenderSystem.scalef(2F, 2F, 2F);
-			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
-			RenderSystem.scalef(0.5F, 0.5F, 0.5F);
+			if (!searchField.getText().isEmpty()) {
+				drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
+				RenderSystem.scalef(2F, 2F, 2F);
+				drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
+				RenderSystem.scalef(0.5F, 0.5F, 0.5F);
+			} else {
+				drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.no_entries"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
+			}
 		}
 	}
 
