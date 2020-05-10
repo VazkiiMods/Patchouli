@@ -7,6 +7,7 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -16,7 +17,7 @@ import vazkii.patchouli.common.book.Book;
 public class GuiButtonInventoryBook extends ButtonWidget {
 
 	private Book book;
-	
+
 	public GuiButtonInventoryBook(Book book, int x, int y) {
 		super(x, y, 20, 20, "", (b) -> {
 			BookContents contents = book.contents;
@@ -24,26 +25,26 @@ public class GuiButtonInventoryBook extends ButtonWidget {
 		});
 		this.book = book;
 	}
-	
+
 	@Override
 	public void renderButton(int mouseX, int mouseY, float pticks) {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		mc.getTextureManager().bindTexture(new Identifier(Patchouli.MOD_ID, "textures/gui/inventory_button.png"));
 		RenderSystem.color3f(1F, 1F, 1F);
-		
+
 		boolean hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 		DrawableHelper.blit(x, y, (hovered ? 20 : 0), 0, width, height, 64, 64);
-		
+
 		ItemStack stack = book.getBookItem();
 		mc.getItemRenderer().renderGuiItem(stack, x + 2, y + 2);
 
 		EntryDisplayState readState = book.contents.getReadState();
-		if(readState.hasIcon && readState.showInInventory)
+		if (readState.hasIcon && readState.showInInventory)
 			GuiBook.drawMarking(book, x, y, 0, readState);
 	}
-	
+
 	public Book getBook() {
 		return book;
 	}
-	
+
 }

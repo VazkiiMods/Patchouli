@@ -1,14 +1,15 @@
 package vazkii.patchouli.client.book.text;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.resource.language.LanguageDefinition;
+
+import vazkii.patchouli.client.book.gui.GuiBook;
+
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.resource.language.LanguageDefinition;
-import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class TextLayouter {
 	private final List<Word> words = new ArrayList<>();
@@ -33,12 +34,12 @@ public class TextLayouter {
 	private List<SpanTail> pending = new ArrayList<>();
 	private int lineStart = 0;
 	private int widthSoFar = 0;
-	
+
 	private TextRenderer font;
 
 	public void layout(TextRenderer font, List<Span> spans) {
 		this.font = font;
-		
+
 		List<Span> paragraph = new ArrayList<>();
 		for (Span span : spans) {
 			if (span.lineBreaks > 0) {
@@ -181,7 +182,7 @@ public class TextLayouter {
 	}
 
 	private class SpanTail {
-		
+
 		private final Span span;
 		private final int start;
 		private final int width;

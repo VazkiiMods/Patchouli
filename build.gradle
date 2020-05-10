@@ -1,7 +1,10 @@
 plugins {
 	id 'fabric-loom' version '0.2.6-SNAPSHOT'
 	id 'maven-publish'
+	id "com.diffplug.gradle.spotless" version "3.27.2"
 }
+
+apply plugin: 'pmd'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -19,6 +22,25 @@ group = "vazkii.${config.mod_id}"
 archivesBaseName = "${config.mod_name}"
 
 minecraft {
+}
+
+spotless {
+	enforceCheck = false // workaround around jenkins having wrong line endings in some files
+	// we explicitly check in github actions builds
+	java {
+		target '**/vazkii/patchouli/**/*.java'
+
+		indentWithTabs()
+		eclipse().configFile 'spotless/eclipseformat.xml'
+		importOrderFile 'spotless/eclipse.importorder'
+	}
+}
+pmd {
+	ruleSets = ["java-braces"]
+}
+
+task checkSyntax {
+	dependsOn spotlessJavaCheck, pmdMain
 }
 
 dependencies {

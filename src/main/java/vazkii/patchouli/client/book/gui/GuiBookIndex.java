@@ -1,11 +1,12 @@
 package vazkii.patchouli.client.book.gui;
 
-import java.util.Collection;
-
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.TranslatableText;
+
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
+
+import java.util.Collection;
 
 public class GuiBookIndex extends GuiBookEntryList {
 

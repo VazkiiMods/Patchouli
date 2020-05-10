@@ -1,30 +1,31 @@
 package vazkii.patchouli.common.book;
 
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.InvalidIdentifierException;
+
+import vazkii.patchouli.common.base.Patchouli;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.InvalidIdentifierException;
-import vazkii.patchouli.common.base.Patchouli;
-
 public class BookFolderLoader {
 
 	public static File loadDir;
-	
+
 	private static void setup() {
 		loadDir = new File(BookRegistry.BOOKS_LOCATION);
-		if(!loadDir.exists())
+		if (!loadDir.exists())
 			loadDir.mkdir();
-		else if(!loadDir.isDirectory())
+		else if (!loadDir.isDirectory())
 			throw new RuntimeException(loadDir.getAbsolutePath() + " is a file, not a folder, aborting. Please delete this file or move it elsewhere if it has important contents.");
 	}
-	
+
 	public static void findBooks() {
-		if(loadDir == null)
+		if (loadDir == null)
 			setup();
 
 		ModContainer self = FabricLoader.getInstance().getModContainer(Patchouli.MOD_ID).get();
@@ -35,7 +36,7 @@ public class BookFolderLoader {
 			return;
 		}
 
-		for(File dir : subdirs) {
+		for (File dir : subdirs) {
 			Identifier res;
 			try {
 				res = new Identifier(Patchouli.MOD_ID, dir.getName());
@@ -52,5 +53,5 @@ public class BookFolderLoader {
 			}
 		}
 	}
-	
+
 }

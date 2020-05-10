@@ -1,17 +1,12 @@
 package vazkii.patchouli.client.book.text;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.TextFormat;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -19,6 +14,12 @@ import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class BookTextParser {
 	private static final Map<String, CommandProcessor> COMMANDS = new HashMap<>();
@@ -58,11 +59,14 @@ public class BookTextParser {
 			return "";
 		}, "/t");
 		register(state -> state.gui.getMinecraft().player.getDisplayName().asFormattedString(), "playername");
-		register(state -> state.codes( "\u00A7k"), "k", "obf");
+		register(state -> state.codes("\u00A7k"), "k", "obf");
 		register(state -> state.codes("\u00A7l"), "l", "bold");
 		register(state -> state.codes("\u00A7m"), "m", "strike");
 		register(state -> state.codes("\u00A7o"), "o", "italic", "italics");
-		register(state -> { state.reset(); return ""; }, "", "reset", "clear");
+		register(state -> {
+			state.reset();
+			return "";
+		}, "", "reset", "clear");
 		register(state -> state.color(state.baseColor), "nocolor");
 
 		register((parameter, state) -> {
@@ -100,7 +104,7 @@ public class BookTextParser {
 
 				Identifier href = new Identifier(state.book.getModNamespace(), parameter);
 				BookEntry entry = state.book.contents.entries.get(href);
-				if(entry != null) {
+				if (entry != null) {
 					state.tooltip = entry.isLocked() ? (TextFormat.GRAY + I18n.translate("patchouli.gui.lexicon.locked")) : entry.getName();
 					GuiBook gui = state.gui;
 					Book book = state.book;
@@ -177,7 +181,7 @@ public class BookTextParser {
 
 	public List<Word> parse(@Nullable String text) {
 		String actualText = text;
-		if(actualText == null)
+		if (actualText == null)
 			actualText = "[ERROR]";
 
 		int i = 0;
@@ -196,7 +200,7 @@ public class BookTextParser {
 
 		if (i == expansionCap) {
 			Patchouli.LOGGER.warn("Expanded macros for {} iterations without reaching fixpoint, stopping. " +
-				"Make sure you don't have circular macro invocations", expansionCap);
+					"Make sure you don't have circular macro invocations", expansionCap);
 		}
 
 		List<Span> spans = processCommands(actualText);
@@ -214,7 +218,7 @@ public class BookTextParser {
 	private List<Span> processCommands(String text) {
 		SpanState state = new SpanState(gui, book, baseColor, font);
 		List<Span> spans = new ArrayList<>();
-		
+
 		int from = 0;
 		char[] chars = text.toCharArray();
 		for (int i = 0; i < chars.length; i++) {
@@ -257,19 +261,17 @@ public class BookTextParser {
 		if (cmd.length() == 1 && cmd.matches("^[0123456789abcdef]$")) { // Vanilla colors
 			state.color = Formatting.byCode(cmd.charAt(0)).getColorValue();
 			return "";
-		}
-		else if(cmd.startsWith("#") && (cmd.length() == 4 || cmd.length() == 7)) { // Hex colors
+		} else if (cmd.startsWith("#") && (cmd.length() == 4 || cmd.length() == 7)) { // Hex colors
 			String parse = cmd.substring(1);
-			if(parse.length() == 3)
+			if (parse.length() == 3)
 				parse = "" + parse.charAt(0) + parse.charAt(0) + parse.charAt(1) + parse.charAt(1) + parse.charAt(2) + parse.charAt(2);
 			try {
 				state.color = Integer.parseInt(parse, 16);
-			} catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				state.color = baseColor;
 			}
 			return "";
-		}
-		else if (cmd.matches("li\\d?")) { // List Element
+		} else if (cmd.matches("li\\d?")) { // List Element
 			char c = cmd.length() > 2 ? cmd.charAt(2) : '1';
 			int dist = Character.isDigit(c) ? Character.digit(c, 10) : 1;
 			int pad = dist * 4;
@@ -289,12 +291,11 @@ public class BookTextParser {
 			} else {
 				result = "[MISSING FUNCTION: " + function + "]";
 			}
-		}
-		else if (COMMANDS.containsKey(cmd)) {
+		} else if (COMMANDS.containsKey(cmd)) {
 			result = COMMANDS.get(cmd).process(state);
 		}
 
-		if(state.endingExternal)
+		if (state.endingExternal)
 			result += TextFormat.GRAY + "\u21AA";
 
 		return result;
@@ -304,19 +305,19 @@ public class BookTextParser {
 		String alt = "key." + keybind;
 
 		KeyBinding[] keys = state.gui.getMinecraft().options.keysAll;
-		for(KeyBinding k : keys) {
+		for (KeyBinding k : keys) {
 			String name = k.getId();
-			if(name.equals(keybind) || name.equals(alt))
+			if (name.equals(keybind) || name.equals(alt))
 				return k;
 		}
 
 		return null;
 	}
-	
+
 	public interface CommandProcessor {
 		String process(SpanState state);
 	}
-	
+
 	public interface FunctionProcessor {
 		String process(String parameter, SpanState state);
 	}

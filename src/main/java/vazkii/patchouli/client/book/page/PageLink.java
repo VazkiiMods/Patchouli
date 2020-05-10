@@ -3,14 +3,14 @@ package vazkii.patchouli.client.book.page;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 
 public class PageLink extends PageText {
 
 	String url;
-	@SerializedName("link_text")
-	String linkText;
+	@SerializedName("link_text") String linkText;
 
 	@Override
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {

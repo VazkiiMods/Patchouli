@@ -1,23 +1,23 @@
 package vazkii.patchouli.client.book.template.component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.resource.language.I18n;
+
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
 public class ComponentTooltip extends TemplateComponent {
 
-	@SerializedName("tooltip")
-	public String[] tooltipRaw;
-	
+	@SerializedName("tooltip") public String[] tooltipRaw;
+
 	int width, height;
-	
+
 	transient List<String> tooltip;
 
 	@Override
@@ -31,18 +31,18 @@ public class ComponentTooltip extends TemplateComponent {
 	@Override
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
 		tooltip = new ArrayList<>();
-		
-		for(String s : tooltipRaw) {
+
+		for (String s : tooltipRaw) {
 			s = I18n.translate(s).replaceAll("&", "\u00A7");
-			if(!s.isEmpty())
+			if (!s.isEmpty())
 				tooltip.add(s);
 		}
 	}
-	
+
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
-		if(page.parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height))
+		if (page.parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height))
 			page.parent.setTooltip(tooltip);
 	}
-	
+
 }

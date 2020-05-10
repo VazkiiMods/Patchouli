@@ -9,10 +9,12 @@ import net.minecraft.container.PlayerContainer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import vazkii.patchouli.client.gui.GuiButtonInventoryBook;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
@@ -28,7 +30,7 @@ public abstract class MixinInventoryScreen extends AbstractInventoryScreen<Playe
 	public void onGuiInitPost(CallbackInfo info) {
 		String bookID = PatchouliConfig.inventoryButtonBook.get();
 		Book book = BookRegistry.INSTANCE.books.get(new Identifier(bookID));
-		if(book == null)
+		if (book == null)
 			return;
 
 		AbstractButtonWidget replaced = null;

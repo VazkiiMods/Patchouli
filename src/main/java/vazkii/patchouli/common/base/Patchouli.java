@@ -1,9 +1,9 @@
 package vazkii.patchouli.common.base;
 
-import java.lang.management.ManagementFactory;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.lang.management.ManagementFactory;
 
 public class Patchouli {
 
@@ -15,7 +15,5 @@ public class Patchouli {
 
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
-	public static Runnable reloadBookHandler = () -> {
-	};
+	public static Runnable reloadBookHandler = () -> {};
 }
-

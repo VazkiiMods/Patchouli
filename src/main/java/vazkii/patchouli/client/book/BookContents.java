@@ -1,5 +1,25 @@
 package vazkii.patchouli.client.book;
 
+import com.mojang.datafixers.util.Pair;
+
+import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
+
+import org.apache.commons.io.FilenameUtils;
+
+import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
+import vazkii.patchouli.client.book.gui.GuiBookLanding;
+import vazkii.patchouli.client.book.template.BookTemplate;
+import vazkii.patchouli.common.base.Patchouli;
+import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.book.BookRegistry;
+import vazkii.patchouli.common.util.ItemStackUtil;
+import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,29 +42,11 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.mojang.datafixers.util.Pair;
-import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.language.I18n;
-import org.apache.commons.io.FilenameUtils;
-
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
-import vazkii.patchouli.client.book.gui.GuiBook;
-import vazkii.patchouli.client.book.gui.GuiBookEntry;
-import vazkii.patchouli.client.book.gui.GuiBookLanding;
-import vazkii.patchouli.client.book.template.BookTemplate;
-import vazkii.patchouli.common.base.Patchouli;
-import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.common.book.BookRegistry;
-import vazkii.patchouli.common.util.ItemStackUtil;
-import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
-
 public class BookContents extends AbstractReadStateHolder {
 
-	private static final String[] ORDINAL_SUFFIXES = new String[]{ "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
+	private static final String[] ORDINAL_SUFFIXES = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 	protected static final String DEFAULT_LANG = "en_us";
-	
+
 	public static final Map<Identifier, Supplier<BookTemplate>> addonTemplates = new ConcurrentHashMap<>();
 
 	public final Book book;
@@ -58,7 +60,7 @@ public class BookContents extends AbstractReadStateHolder {
 
 	public Deque<GuiBook> guiStack = new ArrayDeque<>();
 	public GuiBook currentGui;
-	
+
 	public BookIcon indexIcon;
 
 	public BookContents(Book book) {
@@ -68,7 +70,7 @@ public class BookContents extends AbstractReadStateHolder {
 	public boolean isErrored() {
 		return errored;
 	}
-	
+
 	public Exception getException() {
 		return exception;
 	}
@@ -78,16 +80,16 @@ public class BookContents extends AbstractReadStateHolder {
 	}
 
 	public GuiBook getCurrentGui() {
-		if(currentGui == null)
+		if (currentGui == null)
 			currentGui = new GuiBookLanding(book);
 
 		return currentGui;
 	}
 
 	public void openLexiconGui(GuiBook gui, boolean push) {
-		if(gui.canBeOpened()) {
+		if (gui.canBeOpened()) {
 			MinecraftClient mc = MinecraftClient.getInstance();
-			if(push && mc.currentScreen instanceof GuiBook && gui != mc.currentScreen)
+			if (push && mc.currentScreen instanceof GuiBook && gui != mc.currentScreen)
 				guiStack.push((GuiBook) mc.currentScreen);
 
 			mc.openScreen(gui);
@@ -100,11 +102,11 @@ public class BookContents extends AbstractReadStateHolder {
 
 		try {
 			int ver = Integer.parseInt(book.version);
-			if(ver == 0)
+			if (ver == 0)
 				return I18n.translate(book.subtitle);
 
-			editionStr = numberToOrdinal(ver); 
-		} catch(NumberFormatException e) {
+			editionStr = numberToOrdinal(ver);
+		} catch (NumberFormatException e) {
 			editionStr = I18n.translate("patchouli.gui.lexicon.dev_edition");
 		}
 
@@ -114,36 +116,37 @@ public class BookContents extends AbstractReadStateHolder {
 	public void reload(boolean isOverride) {
 		errored = false;
 
-		if(!isOverride) {
+		if (!isOverride) {
 			currentGui = null;
 			guiStack.clear();
 			categories.clear();
 			entries.clear();
 			templates.clear();
 			recipeMappings.clear();
-			
+
 			templates.putAll(addonTemplates);
-			
-			if(book.indexIconRaw == null || book.indexIconRaw.isEmpty())
+
+			if (book.indexIconRaw == null || book.indexIconRaw.isEmpty())
 				indexIcon = new BookIcon(book.getBookItem());
-			else indexIcon = BookIcon.from(book.indexIconRaw);
+			else
+				indexIcon = BookIcon.from(book.indexIconRaw);
 		}
 
 		List<Identifier> foundCategories = new ArrayList<>();
 		List<Identifier> foundEntries = new ArrayList<>();
 		List<Identifier> foundTemplates = new ArrayList<>();
 
-		try { 
+		try {
 			String bookName = book.id.getPath();
 
 			findFiles("categories", foundCategories);
 			findFiles("entries", foundEntries);
 			findFiles("templates", foundTemplates);
-			
+
 			foundCategories.forEach(c -> loadCategory(c, new Identifier(c.getNamespace(),
 					String.format("%s/%s/%s/categories/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, c.getPath())), book));
 			foundEntries.stream().map(id -> loadEntry(id, new Identifier(id.getNamespace(),
-						String.format("%s/%s/%s/entries/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, id.getPath())), book))
+					String.format("%s/%s/%s/entries/%s.json", BookRegistry.BOOKS_LOCATION, bookName, DEFAULT_LANG, id.getPath())), book))
 					.filter(Optional::isPresent)
 					.map(Optional::get)
 					.forEach(b -> entries.put(b.getId(), b));
@@ -153,7 +156,7 @@ public class BookContents extends AbstractReadStateHolder {
 			categories.forEach((id, category) -> {
 				try {
 					category.build(id);
-				} catch(Exception e) {
+				} catch (Exception e) {
 					throw new RuntimeException("Error while building category " + id, e);
 				}
 			});
@@ -161,7 +164,7 @@ public class BookContents extends AbstractReadStateHolder {
 			entries.values().forEach(entry -> {
 				try {
 					entry.build();
-				} catch(Exception e) {
+				} catch (Exception e) {
 					throw new RuntimeException("Error building entry " + entry.getId(), e);
 				}
 			});
@@ -177,12 +180,12 @@ public class BookContents extends AbstractReadStateHolder {
 		String id = mod.getMetadata().getId();
 		BookRegistry.findFiles(mod, String.format("data/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.id.getPath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
 	}
-	
+
 	private BiFunction<Path, Path, Boolean> pred(String modId, List<Identifier> list) {
 		return (root, file) -> {
 			Path rel = root.relativize(file);
 			String relName = rel.toString();
-			if(relName.endsWith(".json")) {
+			if (relName.endsWith(".json")) {
 				relName = FilenameUtils.removeExtension(FilenameUtils.separatorsToUnix(relName));
 				Identifier res = new Identifier(modId, relName);
 				list.add(res);
@@ -230,7 +233,7 @@ public class BookContents extends AbstractReadStateHolder {
 		}
 		return Optional.empty();
 	}
-	
+
 	private void loadTemplate(Identifier key, Identifier res) {
 		String json;
 		try (BufferedReader stream = loadLocalizedJson(res)) {
@@ -243,9 +246,9 @@ public class BookContents extends AbstractReadStateHolder {
 
 		// test supplier
 		BookTemplate template = supplier.get();
-		if(template == null)
+		if (template == null)
 			throw new IllegalArgumentException(res + " could not be instantiated by the supplier.");
-		
+
 		templates.put(key, supplier);
 	}
 
@@ -297,14 +300,14 @@ public class BookContents extends AbstractReadStateHolder {
 	 */
 	public final void setTopEntry(Identifier entryId, int page) {
 		BookEntry entry = entries.get(entryId);
-		if(!entry.isLocked()) {
+		if (!entry.isLocked()) {
 			GuiBook prevGui = getCurrentGui();
 			int spread = page / 2;
 			currentGui = new GuiBookEntry(book, entry, spread);
 
-			if(prevGui instanceof GuiBookEntry) {
+			if (prevGui instanceof GuiBookEntry) {
 				GuiBookEntry currEntry = (GuiBookEntry) prevGui;
-				if(currEntry.getEntry() == entry && currEntry.getSpread() == spread)
+				if (currEntry.getEntry() == entry && currEntry.getSpread() == spread)
 					return;
 			}
 

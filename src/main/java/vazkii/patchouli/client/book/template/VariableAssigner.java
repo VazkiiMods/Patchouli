@@ -1,25 +1,26 @@
 package vazkii.patchouli.client.book.template;
 
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.item.ItemStack;
+
+import org.apache.commons.lang3.text.WordUtils;
+
+import vazkii.patchouli.api.IComponentProcessor;
+import vazkii.patchouli.api.IVariableProvider;
+import vazkii.patchouli.api.IVariablesAvailableCallback;
+import vazkii.patchouli.common.util.EntityUtil;
+import vazkii.patchouli.common.util.ItemStackUtil;
+
+import javax.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.minecraft.client.resource.language.I18n;
-import org.apache.commons.lang3.text.WordUtils;
-
-import net.minecraft.item.ItemStack;
-import vazkii.patchouli.api.IComponentProcessor;
-import vazkii.patchouli.api.IVariablesAvailableCallback;
-import vazkii.patchouli.api.IVariableProvider;
-import vazkii.patchouli.common.util.EntityUtil;
-import vazkii.patchouli.common.util.ItemStackUtil;
-
-import javax.annotation.Nullable;
-
 public class VariableAssigner {
-	
+
 	private static final Pattern INLINE_VAR_PATTERN = Pattern.compile("([^#]*)(#[^#]+)#(.*)");
 	private static final Pattern FUNCTION_PATTERN = Pattern.compile("(.+)->(.+)");
 
@@ -48,18 +49,18 @@ public class VariableAssigner {
 	}
 
 	private static String resolveString(@Nullable String curr, Context c) {
-		if(curr == null || curr.isEmpty())
+		if (curr == null || curr.isEmpty())
 			return null;
-		
+
 		String s = curr;
 		Matcher m = INLINE_VAR_PATTERN.matcher(s);
-		while(m.matches()) {
+		while (m.matches()) {
 			String before = m.group(1);
 			String var = m.group(2);
 			String after = m.group(3);
-		
+
 			String resolved = resolveStringFunctions(var, c);
-			
+
 			s = String.format("%s%s%s", before, resolved, after);
 			m = INLINE_VAR_PATTERN.matcher(s);
 		}
@@ -69,48 +70,49 @@ public class VariableAssigner {
 
 	private static String resolveStringFunctions(String curr, Context c) {
 		String cached = c.getCached(curr);
-		if(cached != null)
+		if (cached != null)
 			return cached;
-		
+
 		Matcher m = FUNCTION_PATTERN.matcher(curr);
-		
-		if(m.matches()) {
+
+		if (m.matches()) {
 			String funcStr = m.group(2);
 			String arg = m.group(1);
-			
-			if(FUNCTIONS.containsKey(funcStr)) {
+
+			if (FUNCTIONS.containsKey(funcStr)) {
 				Function<String, String> func = FUNCTIONS.get(funcStr);
 				String parsedArg = resolveStringFunctions(arg, c);
 				return func.apply(parsedArg);
-			} else throw new IllegalArgumentException("Invalid Function " + funcStr);
-		} 
-		
+			} else
+				throw new IllegalArgumentException("Invalid Function " + funcStr);
+		}
+
 		String ret = resolveStringVar(curr, c);
 		c.cache(curr, ret);
-		
+
 		return ret;
 	}
-	
+
 	private static String resolveStringVar(String curr, Context c) {
 		String original = curr;
 
-		if(curr != null && !curr.isEmpty() && c.encapsulation != null)
+		if (curr != null && !curr.isEmpty() && c.encapsulation != null)
 			curr = c.encapsulation.transform(curr, true);
 
-		if(curr != null) {
+		if (curr != null) {
 			String val = curr;
-			if(curr.startsWith("#")) {
+			if (curr.startsWith("#")) {
 				val = null;
 				String key = curr.substring(1);
 				String originalKey = original.substring(1);
 
-				if(c.processor != null)
+				if (c.processor != null)
 					val = c.processor.process(originalKey);
 
-				if(val == null && c.variables.has(key))
+				if (val == null && c.variables.has(key))
 					val = c.variables.get(key);
 
-				if(val == null)
+				if (val == null)
 					val = "";
 			}
 
@@ -125,35 +127,35 @@ public class VariableAssigner {
 		ItemStack stack = ItemStackUtil.loadStackFromString(arg);
 		return stack.getName().asFormattedString();
 	}
-	
+
 	private static String icount(String arg) {
 		ItemStack stack = ItemStackUtil.loadStackFromString(arg);
 		return Integer.toString(stack.getCount());
 	}
-	
+
 	private static String ename(String arg) {
 		return EntityUtil.getEntityName(arg);
 	}
-	
+
 	private static String exists(String arg) {
 		return arg.isEmpty() ? "false" : "true";
 	}
-	
+
 	private static String iexists(String arg) {
-		if(arg.isEmpty())
+		if (arg.isEmpty())
 			return "false";
-		
+
 		ItemStack stack = ItemStackUtil.loadStackFromString(arg);
-		if(stack.isEmpty())
+		if (stack.isEmpty())
 			return "false";
-		
+
 		return "true";
 	}
-	
+
 	private static String inv(String arg) {
-		return arg.equalsIgnoreCase("false") ? "true" : "false"; 
+		return arg.equalsIgnoreCase("false") ? "true" : "false";
 	}
-	
+
 	private static class Context {
 
 		final IVariableProvider<String> variables;

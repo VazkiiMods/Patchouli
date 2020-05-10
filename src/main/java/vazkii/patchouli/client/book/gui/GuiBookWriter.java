@@ -4,6 +4,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.LiteralText;
+
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
@@ -40,7 +41,7 @@ public class GuiBookWriter extends GuiBook {
 		drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 		drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
 
-		if(drawHeader) {
+		if (drawHeader) {
 			drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
 		}
@@ -51,7 +52,7 @@ public class GuiBookWriter extends GuiBook {
 	}
 
 	@Override
-	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton){
+	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
 		return textfield.mouseClicked(mouseX - bookLeft, mouseY - bookTop, mouseButton)
 				|| text.click(mouseX, mouseY, mouseButton)
 				|| editableText.click(mouseX, mouseY, mouseButton)
@@ -59,24 +60,24 @@ public class GuiBookWriter extends GuiBook {
 	}
 
 	@Override
-    public boolean keyPressed(int key, int scanCode, int modifiers) {
-		if(textfield.keyPressed(key, scanCode, modifiers)) {
+	public boolean keyPressed(int key, int scanCode, int modifiers) {
+		if (textfield.keyPressed(key, scanCode, modifiers)) {
 			refreshText();
 			return true;
 		}
-		
+
 		return super.keyPressed(key, scanCode, modifiers);
 	}
-	
+
 	@Override
 	public boolean charTyped(char c, int i) {
-		if(textfield.charTyped(c, i)) {
+		if (textfield.charTyped(c, i)) {
 			refreshText();
 			return true;
 		}
-		
+
 		return super.charTyped(c, i);
- 	}
+	}
 
 	public void handleButtonResize(ButtonWidget button) {
 		drawHeader = !drawHeader;
@@ -89,7 +90,7 @@ public class GuiBookWriter extends GuiBook {
 		savedText = textfield.getText();
 		try {
 			editableText = new BookTextRenderer(this, savedText, RIGHT_PAGE_X, yPos);
-		} catch(Throwable e) {
+		} catch (Throwable e) {
 			editableText = new BookTextRenderer(this, "[ERROR]", RIGHT_PAGE_X, yPos);
 			Patchouli.LOGGER.catching(e);
 		}

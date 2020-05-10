@@ -2,8 +2,16 @@ package vazkii.patchouli.common.book;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.util.Identifier;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
+
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.Patchouli;
 
@@ -25,20 +33,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import net.minecraft.util.Identifier;
-import vazkii.patchouli.client.book.ClientBookRegistry;
-import vazkii.patchouli.common.base.Patchouli;
 
 public class BookRegistry {
 
@@ -98,7 +92,7 @@ public class BookRegistry {
 	}
 
 	public void loadBook(ModContainer mod, Identifier res, InputStream stream,
-						 boolean external) {
+			boolean external) {
 		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		Book book = GSON.fromJson(reader, Book.class);
 		book.build(mod, res, external);
@@ -120,7 +114,7 @@ public class BookRegistry {
 	// HELPER
 
 	public static boolean findFiles(ModContainer mod, String base, Function<Path, Boolean> preprocessor,
-	                                BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
+			BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
 		if (mod.getMetadata().getId().equals("minecraft"))
 			return false;
 
@@ -150,7 +144,7 @@ public class BookRegistry {
 						return false;
 				}
 			}
-		} catch(IOException ex) {
+		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
 

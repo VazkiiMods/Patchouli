@@ -9,7 +9,7 @@ public final class ClientTicker {
 	public static float partialTicks = 0;
 	public static float delta = 0;
 	public static float total = 0;
-	
+
 	private static void calcDelta() {
 		float oldTotal = total;
 		total = ticksInGame + partialTicks;
@@ -27,7 +27,7 @@ public final class ClientTicker {
 	public static void init() {
 		ClientTickCallback.EVENT.register(mc -> {
 			Screen gui = mc.currentScreen;
-			if(gui == null || !gui.isPauseScreen()) {
+			if (gui == null || !gui.isPauseScreen()) {
 				ticksInGame++;
 				partialTicks = 0;
 			}

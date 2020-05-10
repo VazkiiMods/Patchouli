@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.resource.ResourceType;
+
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;

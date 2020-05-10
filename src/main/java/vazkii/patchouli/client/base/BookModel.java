@@ -12,75 +12,77 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 public class BookModel implements BakedModel {
-    private final BakedModel original;
+	private final BakedModel original;
 
-    public BookModel(BakedModel original) {
-        this.original = original;
-    }
+	public BookModel(BakedModel original) {
+		this.original = original;
+	}
 
-    private final ModelItemPropertyOverrideList itemHandler = new ModelItemPropertyOverrideList(null, null, null, Collections.emptyList()) {
-        @Override
-        public BakedModel apply(@Nonnull BakedModel original, @Nonnull ItemStack stack,
-                                                 @Nullable World world, @Nullable LivingEntity entity) {
-            Book book = ItemModBook.getBook(stack);
-            if (book != null) {
-                ModelIdentifier modelPath = new ModelIdentifier(book.model, "inventory");
-                return MinecraftClient.getInstance().getBakedModelManager().getModel(modelPath);
-            }
-            return original;
-        }
-    };
+	private final ModelItemPropertyOverrideList itemHandler = new ModelItemPropertyOverrideList(null, null, null, Collections.emptyList()) {
+		@Override
+		public BakedModel apply(@Nonnull BakedModel original, @Nonnull ItemStack stack,
+				@Nullable World world, @Nullable LivingEntity entity) {
+			Book book = ItemModBook.getBook(stack);
+			if (book != null) {
+				ModelIdentifier modelPath = new ModelIdentifier(book.model, "inventory");
+				return MinecraftClient.getInstance().getBakedModelManager().getModel(modelPath);
+			}
+			return original;
+		}
+	};
 
-    @Nonnull
-    @Override
-    public ModelItemPropertyOverrideList getItemPropertyOverrides() {
-        return itemHandler;
-    }
+	@Nonnull
+	@Override
+	public ModelItemPropertyOverrideList getItemPropertyOverrides() {
+		return itemHandler;
+	}
 
-    @Nonnull
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand) {
-        return original.getQuads(state, side, rand);
-    }
+	@Nonnull
+	@Override
+	public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand) {
+		return original.getQuads(state, side, rand);
+	}
 
-    @Override
-    public boolean useAmbientOcclusion() {
-        return original.useAmbientOcclusion();
-    }
+	@Override
+	public boolean useAmbientOcclusion() {
+		return original.useAmbientOcclusion();
+	}
 
-    @Override
-    public boolean hasDepth() {
-        return original.hasDepth();
-    }
+	@Override
+	public boolean hasDepth() {
+		return original.hasDepth();
+	}
 
-    @Override
-    public boolean isSideLit() {
-        return original.isSideLit();
-    }
+	@Override
+	public boolean isSideLit() {
+		return original.isSideLit();
+	}
 
-    @Override
-    public boolean isBuiltin() {
-        return original.isBuiltin();
-    }
+	@Override
+	public boolean isBuiltin() {
+		return original.isBuiltin();
+	}
 
-    @Nonnull
-    @Override
-    public Sprite getSprite() {
-        return original.getSprite();
-    }
+	@Nonnull
+	@Override
+	public Sprite getSprite() {
+		return original.getSprite();
+	}
 
-    @Override
-    public ModelTransformation getTransformation() {
-        return original.getTransformation();
-    }
+	@Override
+	public ModelTransformation getTransformation() {
+		return original.getTransformation();
+	}
 }

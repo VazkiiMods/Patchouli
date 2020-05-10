@@ -11,6 +11,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.Toast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.util.Identifier;
+
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.mixin.MixinClientAdvancementManagerAccessor;
 import vazkii.patchouli.common.book.Book;
@@ -21,10 +22,10 @@ public class ClientAdvancements {
 	private static boolean gotFirstAdvPacket = false;
 
 	/* Hooked at the end of ClientAdvancementManager.read, when the advancement packet arrives clientside
-	   The initial book load is done here when the first advancement packet arrives.
-	   Doing it anytime before that leads to excessive toast spam because the book believes everything to be locked,
-	   and then the first advancement packet unlocks everything.
-	 */
+	The initial book load is done here when the first advancement packet arrives.
+	Doing it anytime before that leads to excessive toast spam because the book believes everything to be locked,
+	and then the first advancement packet unlocks everything.
+	*/
 	public static void onClientPacket() {
 		if (!gotFirstAdvPacket) {
 			ClientBookRegistry.INSTANCE.reload();

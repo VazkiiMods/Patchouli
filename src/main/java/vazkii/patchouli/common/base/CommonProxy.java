@@ -1,6 +1,7 @@
 package vazkii.patchouli.common.base;
 
 import net.fabricmc.api.ModInitializer;
+
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.handler.ReloadContentsHandler;

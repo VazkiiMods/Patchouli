@@ -1,33 +1,25 @@
 package vazkii.patchouli.client.book.gui;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.function.Predicate;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.TextFormat;
 import net.minecraft.client.util.Window;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.datafixers.util.Pair;
-
-import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Util;
+
 import org.lwjgl.glfw.GLFW;
+
 import vazkii.patchouli.api.BookDrawScreenCallback;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
@@ -42,6 +34,14 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class GuiBook extends Screen {
 
@@ -86,14 +86,15 @@ public abstract class GuiBook extends Screen {
 		int persistentScale = Math.min(PersistentData.data.bookGuiScale, maxScale);
 		double newGuiScale = res.calculateScaleFactor(persistentScale, minecraft.forcesUnicodeFont());
 
-		if(persistentScale > 0 && newGuiScale != oldGuiScale) {
+		if (persistentScale > 0 && newGuiScale != oldGuiScale) {
 			scaleFactor = (float) newGuiScale / (float) res.getScaleFactor();
 
 			res.setScaleFactor(newGuiScale);
 			width = res.getScaledWidth();
 			height = res.getScaledHeight();
 			res.setScaleFactor(oldGuiScale);
-		} else scaleFactor = 1;
+		} else
+			scaleFactor = 1;
 
 		bookLeft = width / 2 - FULL_WIDTH / 2;
 		bookTop = height / 2 - FULL_HEIGHT / 2;
@@ -114,7 +115,7 @@ public abstract class GuiBook extends Screen {
 	@Override
 	public final void render(int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.pushMatrix();
-		if(scaleFactor != 1) {
+		if (scaleFactor != 1) {
 			RenderSystem.scalef(scaleFactor, scaleFactor, scaleFactor);
 
 			mouseX /= scaleFactor;
@@ -154,10 +155,10 @@ public abstract class GuiBook extends Screen {
 		}
 
 		y += (y == 0 ? 0 : 2);
-		if(shouldAddAddBookmarkButton() && bookmarks.size() <= MAX_BOOKMARKS)
+		if (shouldAddAddBookmarkButton() && bookmarks.size() <= MAX_BOOKMARKS)
 			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
 
-		if(MultiblockVisualizationHandler.hasMultiblock && MultiblockVisualizationHandler.bookmark != null)
+		if (MultiblockVisualizationHandler.hasMultiblock && MultiblockVisualizationHandler.bookmark != null)
 			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.bookmark, true));
 	}
 
@@ -189,10 +190,10 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public void tick() {
-		if(!hasShiftDown())
+		if (!hasShiftDown())
 			ticksInBook++;
 
-		if(needsBookmarkUpdate) {
+		if (needsBookmarkUpdate) {
 			needsBookmarkUpdate = false;
 			addBookmarkButtons();
 		}
@@ -202,20 +203,20 @@ public abstract class GuiBook extends Screen {
 		drawFromTexture(book, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT);
 	}
 
-	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) { }
+	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {}
 
 	final void drawTooltip(int mouseX, int mouseY) {
-		if(tooltipStack != null) {
+		if (tooltipStack != null) {
 			List<String> tooltip = this.getTooltipFromItem(tooltipStack);
 
 			Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
-			if(provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
+			if (provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
 				tooltip.add(TextFormat.GOLD + "(" + I18n.translate("patchouli.gui.lexicon.shift_for_recipe") + ')');
 				targetPage = provider;
 			}
 
 			this.renderTooltip(tooltip, mouseX, mouseY);
-		} else if(tooltip != null && !tooltip.isEmpty()) {
+		} else if (tooltip != null && !tooltip.isEmpty()) {
 			List<String> wrappedTooltip = new ArrayList<>();
 			for (String s : tooltip)
 				Collections.addAll(wrappedTooltip, s.split("\n"));
@@ -250,15 +251,16 @@ public abstract class GuiBook extends Screen {
 	public void handleButtonBookmark(ButtonWidget button) {
 		GuiButtonBookBookmark bookmarkButton = (GuiButtonBookBookmark) button;
 		Bookmark bookmark = bookmarkButton.bookmark;
-		if(bookmark == null || bookmark.getEntry(book) == null)
+		if (bookmark == null || bookmark.getEntry(book) == null)
 			bookmarkThis();
 		else {
-			if(hasShiftDown() && !bookmarkButton.multiblock) {
+			if (hasShiftDown() && !bookmarkButton.multiblock) {
 				List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
 				bookmarks.remove(bookmark);
 				PersistentData.save();
 				needsBookmarkUpdate = true;
-			} else displayLexiconGui(new GuiBookEntry(book, bookmark.getEntry(book), bookmark.page), true);
+			} else
+				displayLexiconGui(new GuiBookEntry(book, bookmark.getEntry(book), bookmark.page), true);
 		}
 	}
 
@@ -268,9 +270,9 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-		switch(mouseButton) {
+		switch (mouseButton) {
 		case GLFW.GLFW_MOUSE_BUTTON_LEFT:
-			if(targetPage != null && hasShiftDown()) {
+			if (targetPage != null && hasShiftDown()) {
 				displayLexiconGui(new GuiBookEntry(book, targetPage.getFirst(), targetPage.getSecond()), true);
 				playBookFlipSound(book);
 				return true;
@@ -302,34 +304,36 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
-		if(scroll < 0)
+		if (scroll < 0)
 			changePage(false, true);
-		else if(scroll > 0)
+		else if (scroll > 0)
 			changePage(true, true);
 
 		return true;
 	}
 
 	void back(boolean sfx) {
-		if(!book.contents.guiStack.isEmpty()) {
-			if(hasShiftDown()) {
+		if (!book.contents.guiStack.isEmpty()) {
+			if (hasShiftDown()) {
 				displayLexiconGui(new GuiBookLanding(book), false);
 				book.contents.guiStack.clear();
-			} else displayLexiconGui(book.contents.guiStack.pop(), false);
+			} else
+				displayLexiconGui(book.contents.guiStack.pop(), false);
 
-			if(sfx)
+			if (sfx)
 				playBookFlipSound(book);
 		}
 	}
 
 	void changePage(boolean left, boolean sfx) {
-		if(canSeePageButton(left)) {
-			if(left)
+		if (canSeePageButton(left)) {
+			if (left)
 				spread--;
-			else spread++;
+			else
+				spread++;
 
 			onPageChanged();
-			if(sfx)
+			if (sfx)
 				playBookFlipSound(book);
 		}
 	}
@@ -371,7 +375,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public void drawProgressBar(Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
-		if(!book.showProgress || PatchouliConfig.disableAdvancementLocking.get())
+		if (!book.showProgress || PatchouliConfig.disableAdvancementLocking.get())
 			return;
 
 		int barLeft = 19;
@@ -384,18 +388,18 @@ public abstract class GuiBook extends Screen {
 
 		int unlockedSecretEntries = 0;
 
-		for(BookEntry entry : book.contents.entries.values())
-			if(filter.test(entry)) {
-				if(entry.isSecret()) {
-					if(!entry.isLocked())
+		for (BookEntry entry : book.contents.entries.values())
+			if (filter.test(entry)) {
+				if (entry.isSecret()) {
+					if (!entry.isLocked())
 						unlockedSecretEntries++;
 				} else {
 					BookCategory category = entry.getCategory();
-					if(category.isSecret() && !category.isLocked())
+					if (category.isSecret() && !category.isLocked())
 						continue;
 
 					totalEntries++;
-					if(!entry.isLocked())
+					if (!entry.isLocked())
 						unlockedEntries++;
 				}
 			}
@@ -410,18 +414,19 @@ public abstract class GuiBook extends Screen {
 
 		font.draw(I18n.translate("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
 
-		if(isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
+		if (isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
 			List<String> tooltip = new ArrayList<>();
 			String progressStr = I18n.translate("patchouli.gui.lexicon.progress_tooltip", unlockedEntries, totalEntries);
 			tooltip.add(progressStr);
 
-			if(unlockedSecretEntries > 0) {
-				if(unlockedSecretEntries == 1)
+			if (unlockedSecretEntries > 0) {
+				if (unlockedSecretEntries == 1)
 					tooltip.add(TextFormat.GRAY + I18n.translate("patchouli.gui.lexicon.progress_tooltip.secret1"));
-				else tooltip.add(TextFormat.GRAY + I18n.translate("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries));
+				else
+					tooltip.add(TextFormat.GRAY + I18n.translate("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries));
 			}
 
-			if(unlockedEntries != totalEntries)
+			if (unlockedEntries != totalEntries)
 				tooltip.add(TextFormat.GRAY + I18n.translate("patchouli.gui.lexicon.progress_tooltip.info"));
 
 			setTooltip(tooltip);
@@ -460,9 +465,8 @@ public abstract class GuiBook extends Screen {
 		drawFromTexture(book, x, y, 250, 180, 16, 16);
 	}
 
-
 	public static void drawMarking(Book book, int x, int y, int rand, EntryDisplayState state) {
-		if(!state.hasIcon)
+		if (!state.hasIcon)
 			return;
 
 		RenderSystem.enableBlend();
@@ -486,7 +490,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public static void playBookFlipSound(Book book) {
-		if(ClientTicker.ticksInGame - lastSound > 6) {
+		if (ClientTicker.ticksInGame - lastSound > 6) {
 			SoundEvent sfx = PatchouliSounds.getSound(book.flipSound, PatchouliSounds.book_flip);
 			MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(sfx, (float) (0.7 + Math.random() * 0.3)));
 			lastSound = ClientTicker.ticksInGame;
@@ -502,4 +506,3 @@ public abstract class GuiBook extends Screen {
 	}
 
 }
-

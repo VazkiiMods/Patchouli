@@ -9,12 +9,12 @@ import net.minecraft.util.Identifier;
  * book is reloaded.
  */
 public interface BookContentsReloadCallback {
-  Event<BookContentsReloadCallback> EVENT = EventFactory.createArrayBacked(BookContentsReloadCallback.class,
-          (listeners) -> (b) -> {
-            for (BookContentsReloadCallback l : listeners) {
-              l.trigger(b);
-            }
-          });
+	Event<BookContentsReloadCallback> EVENT = EventFactory.createArrayBacked(BookContentsReloadCallback.class,
+			(listeners) -> (b) -> {
+				for (BookContentsReloadCallback l : listeners) {
+					l.trigger(b);
+				}
+			});
 
-  void trigger(Identifier book);
+	void trigger(Identifier book);
 }

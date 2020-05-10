@@ -1,5 +1,12 @@
 package vazkii.patchouli.common.util;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import net.minecraft.util.Identifier;
+
+import vazkii.patchouli.common.base.Patchouli;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,11 +15,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import net.minecraft.util.Identifier;
-import vazkii.patchouli.common.base.Patchouli;
 
 public class SerializationUtil {
 
@@ -27,7 +29,7 @@ public class SerializationUtil {
 
 	public static <T> T loadFromFile(Gson gson, File f, Class<? extends T> clazz, Supplier<T> baseCase) {
 		try {
-			if(!f.exists()) {
+			if (!f.exists()) {
 				T t = baseCase.get();
 				saveToFile(gson, f, clazz, t);
 				return t;
@@ -40,7 +42,7 @@ public class SerializationUtil {
 			return null;
 		}
 	}
-	
+
 	public static <T> void saveToFile(File f, Class<? extends T> clazz, T obj) {
 		saveToFile(RAW_GSON, f, clazz, obj);
 	}
@@ -49,11 +51,11 @@ public class SerializationUtil {
 		String json = gson.toJson(obj, clazz);
 		try {
 			f.createNewFile();
-			
+
 			try (BufferedWriter writer = new BufferedWriter(new FileWriter(f))) {
 				writer.write(json);
 			}
-		} catch(IOException e) {
+		} catch (IOException e) {
 			Patchouli.LOGGER.error("Failed to save file", e);
 		}
 	}

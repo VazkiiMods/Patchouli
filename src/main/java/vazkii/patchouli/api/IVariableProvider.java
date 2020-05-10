@@ -7,10 +7,10 @@ public interface IVariableProvider<T> {
 
 	/**
 	 * Gets the value assigned to the variable passed in.
-	 * May throw an exception if it doesn't exist. 
+	 * May throw an exception if it doesn't exist.
 	 */
 	T get(String key);
-	
+
 	/**
 	 * Returns if a variable exists or not.
 	 */

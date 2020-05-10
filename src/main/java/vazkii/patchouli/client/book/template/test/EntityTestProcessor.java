@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 
@@ -16,7 +17,6 @@ public class EntityTestProcessor implements IComponentProcessor {
 		String entityType = variables.get("entity");
 		if (entityType.contains("{"))
 			entityType = entityType.substring(0, entityType.indexOf("{"));
-
 
 		Identifier key = new Identifier(entityType);
 		entityName = Registry.ENTITY_TYPE.getOrEmpty(key)
@@ -31,6 +31,5 @@ public class EntityTestProcessor implements IComponentProcessor {
 
 		return null;
 	}
-
 
 }

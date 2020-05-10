@@ -1,12 +1,5 @@
 package vazkii.patchouli.api.stub;
 
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -16,21 +9,29 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
+
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class StubPatchouliAPI implements IPatchouliAPI {
 
 	public static final StubPatchouliAPI INSTANCE = new StubPatchouliAPI();
 
-	private StubPatchouliAPI() { }
+	private StubPatchouliAPI() {}
 
 	@Override
 	public boolean isStub() {
 		return true;
 	}
-	
+
 	@Override
 	public void setConfigFlag(String flag, boolean value) {
 		// NO-OP
@@ -57,24 +58,23 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 
 	@Override
-	public void openBookEntry(Identifier book, Identifier entry, int page) {
-	}
+	public void openBookEntry(Identifier book, Identifier entry, int page) {}
 
 	@Override
 	public Identifier getOpenBookGui() {
 		return null;
 	}
-	
+
 	@Override
 	public void reloadBookContents() {
 		// NO-OP
 	}
-	
+
 	@Override
 	public ItemStack getBookStack(Identifier book) {
 		return ItemStack.EMPTY;
 	}
-	
+
 	@Override
 	public void registerTemplateAsBuiltin(Identifier res, Supplier<InputStream> streamProvider) {
 		// NO-OP
@@ -99,7 +99,7 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	public String serializeItemStackList(List<ItemStack> stacks) {
 		return "";
 	}
-	
+
 	@Override
 	public Ingredient deserializeIngredient(String str) {
 		return Ingredient.EMPTY;
@@ -114,7 +114,7 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	public IMultiblock getMultiblock(Identifier res) {
 		return null;
 	}
-	
+
 	@Override
 	public IMultiblock registerMultiblock(Identifier res, IMultiblock mb) {
 		return mb;

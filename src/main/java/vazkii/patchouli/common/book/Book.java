@@ -1,10 +1,5 @@
 package vazkii.patchouli.common.book;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gson.annotations.SerializedName;
 
 import net.fabricmc.api.EnvType;
@@ -15,6 +10,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+
 import vazkii.patchouli.api.BookContentsReloadCallback;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.BookContents;
@@ -25,8 +21,13 @@ import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 public class Book {
-	
+
 	public static final Identifier DEFAULT_MODEL = new Identifier(Patchouli.MOD_ID, "book_brown");
 	private static final Identifier UNICODE_FONT_ID = new Identifier(Patchouli.MOD_ID, "unicode_font");
 
@@ -44,103 +45,80 @@ public class Book {
 	public transient BookContents contents;
 
 	private transient boolean wasUpdated = false;
-	
+
 	public transient ModContainer owner;
 	public transient Identifier id;
 	private transient ItemStack bookItem;
-	
+
 	public transient int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
-	
+
 	public transient boolean isExtension = false;
 	public transient List<Book> extensions = new LinkedList<>();
 	public transient Book extensionTarget;
-	
+
 	public transient boolean isExternal;
-	
+
 	// JSON Loaded properties
-	
+
 	public String name = "";
-	@SerializedName("landing_text")
-	public String landingText = "patchouli.gui.lexicon.landing_info";
+	@SerializedName("landing_text") public String landingText = "patchouli.gui.lexicon.landing_info";
 
-	@SerializedName("book_texture")
-	public Identifier bookTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/book_brown.png");
+	@SerializedName("book_texture") public Identifier bookTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/book_brown.png");
 
-	@SerializedName("filler_texture")
-	public Identifier fillerTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/page_filler.png");
+	@SerializedName("filler_texture") public Identifier fillerTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/page_filler.png");
 
-	@SerializedName("crafting_texture")
-	public Identifier craftingTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/crafting.png");
+	@SerializedName("crafting_texture") public Identifier craftingTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/crafting.png");
 
 	public Identifier model = DEFAULT_MODEL;
 
-	@SerializedName("text_color")
-	public String textColorRaw = "000000";
-	@SerializedName("header_color")
-	public String headerColorRaw = "333333";
-	@SerializedName("nameplate_color")
-	public String nameplateColorRaw = "FFDD00";
-	@SerializedName("link_color")
-	public String linkColorRaw = "0000EE";
-	@SerializedName("link_hover_color")
-	public String linkHoverColorRaw = "8800EE";
-	
-	@SerializedName("use_blocky_font")
-	public boolean useBlockyFont = false;
-	
-	@SerializedName("progress_bar_color")
-	public String progressBarColorRaw = "FFFF55";
-	@SerializedName("progress_bar_background")
-	public String progressBarBackgroundRaw = "DDDDDD";
-	
-	@SerializedName("open_sound")
-	public Identifier openSound = new Identifier(Patchouli.MOD_ID, "book_open");
+	@SerializedName("text_color") public String textColorRaw = "000000";
+	@SerializedName("header_color") public String headerColorRaw = "333333";
+	@SerializedName("nameplate_color") public String nameplateColorRaw = "FFDD00";
+	@SerializedName("link_color") public String linkColorRaw = "0000EE";
+	@SerializedName("link_hover_color") public String linkHoverColorRaw = "8800EE";
 
-	@SerializedName("flip_sound")
-	public Identifier flipSound = new Identifier(Patchouli.MOD_ID, "book_flip");
-	
-	@SerializedName("show_progress")
-	public boolean showProgress = true;
-	
-	@SerializedName("index_icon")
-	public String indexIconRaw = "";
+	@SerializedName("use_blocky_font") public boolean useBlockyFont = false;
+
+	@SerializedName("progress_bar_color") public String progressBarColorRaw = "FFFF55";
+	@SerializedName("progress_bar_background") public String progressBarBackgroundRaw = "DDDDDD";
+
+	@SerializedName("open_sound") public Identifier openSound = new Identifier(Patchouli.MOD_ID, "book_open");
+
+	@SerializedName("flip_sound") public Identifier flipSound = new Identifier(Patchouli.MOD_ID, "book_flip");
+
+	@SerializedName("show_progress") public boolean showProgress = true;
+
+	@SerializedName("index_icon") public String indexIconRaw = "";
 
 	public String version = "0";
 	public String subtitle = "";
 
-	@SerializedName("creative_tab")
-	public String creativeTab = "misc";
+	@SerializedName("creative_tab") public String creativeTab = "misc";
 
-	@SerializedName("advancements_tab")
-	public Identifier advancementsTab;
-	
-	@SerializedName("dont_generate_book")
-	public boolean noBook = false;
+	@SerializedName("advancements_tab") public Identifier advancementsTab;
 
-	@SerializedName("custom_book_item")
-	public String customBookItem = "";
-	
-	@SerializedName("show_toasts")
-	public boolean showToasts = true;
-	
-	@SerializedName("extend")
-	public Identifier extend;
+	@SerializedName("dont_generate_book") public boolean noBook = false;
 
-	@SerializedName("allow_extensions")
-	public boolean allowExtensions = true;
-	
+	@SerializedName("custom_book_item") public String customBookItem = "";
+
+	@SerializedName("show_toasts") public boolean showToasts = true;
+
+	@SerializedName("extend") public Identifier extend;
+
+	@SerializedName("allow_extensions") public boolean allowExtensions = true;
+
 	public boolean i18n = false;
-	
+
 	public Map<String, String> macros = new HashMap<>();
-	
+
 	public void build(ModContainer owner, Identifier resource, boolean external) {
 		this.owner = owner;
 		this.id = resource;
 		this.isExternal = external;
-		
+
 		isExtension = extend != null;
-		
-		if(!isExtension) {
+
+		if (!isExtension) {
 			textColor = 0xFF000000 | Integer.parseInt(textColorRaw, 16);
 			headerColor = 0xFF000000 | Integer.parseInt(headerColorRaw, 16);
 			nameplateColor = 0xFF000000 | Integer.parseInt(nameplateColorRaw, 16);
@@ -149,80 +127,81 @@ public class Book {
 			progressBarColor = 0xFF000000 | Integer.parseInt(progressBarColorRaw, 16);
 			progressBarBackground = 0xFF000000 | Integer.parseInt(progressBarBackgroundRaw, 16);
 
-			for(String m : DEFAULT_MACROS.keySet())
-				if(!macros.containsKey(m))
+			for (String m : DEFAULT_MACROS.keySet())
+				if (!macros.containsKey(m))
 					macros.put(m, DEFAULT_MACROS.get(m));
 		}
 	}
-	
+
 	public String getModNamespace() {
 		return id.getNamespace();
 	}
-	
+
 	public ItemStack getBookItem() {
-		if(bookItem == null) {
-			if(noBook)
+		if (bookItem == null) {
+			if (noBook)
 				bookItem = ItemStackUtil.loadStackFromString(customBookItem);
-			else bookItem = ItemModBook.forBook(this);
+			else
+				bookItem = ItemModBook.forBook(this);
 		}
-		
+
 		return bookItem;
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	public void markUpdated() {
 		wasUpdated = true;
 	}
-	
+
 	public boolean popUpdated() {
 		boolean updated = wasUpdated;
 		wasUpdated = false;
 		return updated;
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	public void reloadContentsAndExtensions() {
 		reloadContents();
 
-		for(Book b : extensions)
+		for (Book b : extensions)
 			b.reloadExtensionContents();
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	public void reloadContents() {
-		if(contents == null)
+		if (contents == null)
 			contents = isExternal ? new ExternalBookContents(this) : new BookContents(this);
-	
-		if(!isExtension) {
+
+		if (!isExtension) {
 			contents.reload(false);
 			BookContentsReloadCallback.EVENT.invoker().trigger(this.id);
 		}
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	public void reloadExtensionContents() {
-		if(isExtension) {
-			if(extensionTarget == null) {
+		if (isExtension) {
+			if (extensionTarget == null) {
 				extensionTarget = BookRegistry.INSTANCE.books.get(extend);
 
-				if(extensionTarget == null)
+				if (extensionTarget == null)
 					throw new IllegalArgumentException("Extension Book " + id + " has no valid target");
-				else if(!extensionTarget.allowExtensions)
+				else if (!extensionTarget.allowExtensions)
 					throw new IllegalArgumentException("Book " + extensionTarget.id + " doesn't allow extensions, so " + id + " can't resolve");
-				
+
 				extensionTarget.extensions.add(this);
-				
+
 				contents.categories = extensionTarget.contents.categories;
 				contents.entries = extensionTarget.contents.entries;
 				contents.templates = extensionTarget.contents.templates;
 				contents.recipeMappings = extensionTarget.contents.recipeMappings;
 			}
-			
+
 			contents.reload(true);
 			BookContentsReloadCallback.EVENT.invoker().trigger(this.id);
 		}
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	public void reloadLocks(boolean suppressToasts) {
 		contents.entries.values().forEach(BookEntry::updateLockStatus);
@@ -233,11 +212,11 @@ public class Book {
 			MinecraftClient.getInstance().getToastManager().add(new ClientAdvancements.LexiconToast(this));
 		}
 	}
-	
+
 	public String getOwnerName() {
 		return owner.getMetadata().getName();
 	}
-	
+
 	@Environment(EnvType.CLIENT)
 	public TextRenderer getFont() {
 		if (useBlockyFont) {
@@ -246,5 +225,5 @@ public class Book {
 			return MinecraftClient.getInstance().getFontManager().getTextRenderer(UNICODE_FONT_ID);
 		}
 	}
-	
+
 }

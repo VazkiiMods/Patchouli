@@ -1,16 +1,17 @@
 package vazkii.patchouli.common.util;
 
-import net.minecraft.nbt.StringNbtReader;
-import net.minecraft.util.registry.Registry;
-import org.apache.commons.lang3.tuple.Pair;
-
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
+
+import org.apache.commons.lang3.tuple.Pair;
+
 import vazkii.patchouli.common.base.Patchouli;
 
 import java.util.Optional;
@@ -24,17 +25,17 @@ public class EntityUtil {
 
 		return type.getTranslationKey();
 	}
-	
+
 	public static Function<World, Entity> loadEntity(String entityId) {
 		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
 		entityId = nameAndNbt.getLeft();
 		String nbtStr = nameAndNbt.getRight();
 		CompoundTag nbt = null;
-		
-		if(!nbtStr.isEmpty()) {
+
+		if (!nbtStr.isEmpty()) {
 			try {
 				nbt = StringNbtReader.parse(nbtStr);
-			} catch(CommandSyntaxException e) {
+			} catch (CommandSyntaxException e) {
 				Patchouli.LOGGER.error("Failed to load entity data", e);
 			}
 		}
@@ -51,7 +52,7 @@ public class EntityUtil {
 			Entity entity;
 			try {
 				entity = type.create(world);
-				if(useNbt != null)
+				if (useNbt != null)
 					entity.fromTag(useNbt);
 
 				return entity;
@@ -60,17 +61,16 @@ public class EntityUtil {
 			}
 		};
 	}
-	
+
 	private static Pair<String, String> splitNameAndNBT(String entityId) {
 		int nbtStart = entityId.indexOf("{");
 		String nbtStr = "";
-		if(nbtStart > 0) {
+		if (nbtStart > 0) {
 			nbtStr = entityId.substring(nbtStart).replaceAll("([^\\\\])'", "$1\"").replaceAll("\\\\'", "'");
 			entityId = entityId.substring(0, nbtStart);
 		}
-		
+
 		return Pair.of(entityId, nbtStr);
 	}
-	
 
 }

@@ -1,23 +1,24 @@
 package vazkii.patchouli.client.book.gui;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.LiteralText;
+
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 public class GuiBookCategory extends GuiBookEntryList {
 
 	BookCategory category;
-	
+
 	public GuiBookCategory(Book book, BookCategory category) {
 		super(book, new LiteralText(category.getName()));
 		this.category = category;
@@ -32,41 +33,41 @@ public class GuiBookCategory extends GuiBookEntryList {
 	protected Collection<BookEntry> getEntries() {
 		return category.getEntries();
 	}
-	
+
 	@Override
 	protected void addSubcategoryButtons() {
 		int i = 0;
 		List<BookCategory> categories = new ArrayList<>(book.contents.categories.values());
 		Collections.sort(categories);
-		
-		for(BookCategory ocategory : categories) {
-			if(ocategory.getParentCategory() != category || ocategory.shouldHide())
+
+		for (BookCategory ocategory : categories) {
+			if (ocategory.getParentCategory() != category || ocategory.shouldHide())
 				continue;
-			
+
 			int x = LEFT_PAGE_X + 10 + (i % 4) * 24;
 			int y = TOP_PADDING + PAGE_HEIGHT - (PatchouliConfig.disableAdvancementLocking.get() ? 46 : 68);
-			
+
 			ButtonWidget button = new GuiButtonCategory(this, x, y, ocategory, this::handleButtonCategory);
 			addButton(button);
 			dependentButtons.add(button);
-			
+
 			i++;
 		}
 	}
-	
+
 	@Override
 	protected boolean doesEntryCountForProgress(BookEntry entry) {
 		return entry.getCategory() == category;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		return obj == this || (obj instanceof GuiBookCategory && ((GuiBookCategory) obj).category == category && ((GuiBookCategory) obj).spread == spread);
 	}
-	
+
 	@Override
 	public boolean canBeOpened() {
 		return !category.isLocked() && !equals(MinecraftClient.getInstance().currentScreen);
 	}
-	
+
 }

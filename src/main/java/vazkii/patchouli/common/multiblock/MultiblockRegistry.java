@@ -1,13 +1,13 @@
 package vazkii.patchouli.common.multiblock;
 
+import net.minecraft.util.Identifier;
+
+import vazkii.patchouli.api.IMultiblock;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.minecraft.util.Identifier;
-import vazkii.patchouli.api.IMultiblock;
-
 public class MultiblockRegistry {
-
 
 	public static final Map<Identifier, IMultiblock> MULTIBLOCKS = new ConcurrentHashMap<>();
 

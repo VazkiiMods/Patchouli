@@ -4,16 +4,17 @@ import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.minecraft.resource.SynchronousResourceReloadListener;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+
 import vazkii.patchouli.common.network.message.MessageReloadBookContents;
 
 public class ReloadContentsHandler {
-    public static void init() {
-        ServerStartCallback.EVENT.register(ReloadContentsHandler::serverStart);
-    }
+	public static void init() {
+		ServerStartCallback.EVENT.register(ReloadContentsHandler::serverStart);
+	}
 
-    private static void serverStart(MinecraftServer server) {
-        // Also reload contents when someone types /reload
-        SynchronousResourceReloadListener listener = m -> MessageReloadBookContents.sendToAll(server);
-        server.getDataManager().registerListener(listener);
-    }
+	private static void serverStart(MinecraftServer server) {
+		// Also reload contents when someone types /reload
+		SynchronousResourceReloadListener listener = m -> MessageReloadBookContents.sendToAll(server);
+		server.getDataManager().registerListener(listener);
+	}
 }

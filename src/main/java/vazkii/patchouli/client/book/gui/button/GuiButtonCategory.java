@@ -6,6 +6,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.TextFormat;
+
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookIcon;
@@ -25,7 +26,7 @@ public class GuiButtonCategory extends ButtonWidget {
 	public GuiButtonCategory(GuiBook parent, int x, int y, BookCategory category, ButtonWidget.PressAction onPress) {
 		this(parent, x, y, category.getIcon(), category.getName(), onPress);
 		this.category = category;
-	}	
+	}
 
 	public GuiButtonCategory(GuiBook parent, int x, int y, BookIcon icon, String name, ButtonWidget.PressAction onPress) {
 		super(parent.bookLeft + x, parent.bookTop + y, 20, 20, name, onPress);
@@ -38,18 +39,19 @@ public class GuiButtonCategory extends ButtonWidget {
 
 	@Override
 	public void renderButton(int mouseX, int mouseY, float partialTicks) {
-		if(active) {
-			if(isHovered())
+		if (active) {
+			if (isHovered())
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
-			else timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
+			else
+				timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
 
 			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHovered() ? partialTicks : -partialTicks)));
 			float transparency = 0.5F - (time / ANIM_TIME) * 0.5F;
 			boolean locked = category != null && category.isLocked();
 
-			if(locked) {
+			if (locked) {
 				RenderSystem.color4f(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(parent.book, x + 2, y + 2); 
+				GuiBook.drawLock(parent.book, x + 2, y + 2);
 			} else
 				icon.render(x + 2, y + 2);
 
@@ -60,18 +62,18 @@ public class GuiButtonCategory extends ButtonWidget {
 			GuiBook.drawFromTexture(parent.book, x, y, u, v, width, height);
 			RenderSystem.color4f(1F, 1F, 1F, 1F);
 
-			if(category != null && !category.isLocked())
+			if (category != null && !category.isLocked())
 				GuiBook.drawMarking(parent.book, x, y, 0, category.getReadState());
 			RenderSystem.popMatrix();
 
-			if(isHovered)
+			if (isHovered)
 				parent.setTooltip(locked ? (TextFormat.GRAY + I18n.translate("patchouli.gui.lexicon.locked")) : name);
 		}
 	}
 
 	@Override
 	public void playDownSound(SoundManager soundHandlerIn) {
-		if(category != null && !category.isLocked())
+		if (category != null && !category.isLocked())
 			GuiBook.playBookFlipSound(parent.book);
 	}
 
