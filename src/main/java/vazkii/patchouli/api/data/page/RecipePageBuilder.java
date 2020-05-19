@@ -33,8 +33,8 @@ public abstract class RecipePageBuilder<T extends RecipePageBuilder<T>> extends 
 		}
 	}
 
-	public T setRecipe2(String recipe2) {
-		this.recipe2 = recipe2;
+	public T setRecipe2(ResourceLocation recipe2) {
+		this.recipe2 = recipe2.toString();
 		return (T) this;
 	}
 

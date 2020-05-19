@@ -130,10 +130,13 @@ public class BookBuilder {
 		if (i18n != null) {
 			json.addProperty("i18n", i18n);
 		}
+		this.serialize(json);
 		return json;
 	}
 
-	List<CategoryBuilder> getCategories() {
+	protected void serialize(JsonObject json) {}
+
+	protected List<CategoryBuilder> getCategories() {
 		return Collections.unmodifiableList(categories);
 	}
 

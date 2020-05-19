@@ -24,11 +24,11 @@ public class CategoryBuilder {
 	private Integer sortnum;
 	private Boolean secret;
 
-	CategoryBuilder(String id, String name, String description, ItemStack icon, BookBuilder bookBuilder) {
+	protected CategoryBuilder(String id, String name, String description, ItemStack icon, BookBuilder bookBuilder) {
 		this(id, name, description, PatchouliAPI.instance.serializeItemStack(icon), bookBuilder);
 	}
 
-	CategoryBuilder(String id, String name, String description, String icon, BookBuilder bookBuilder) {
+	protected CategoryBuilder(String id, String name, String description, String icon, BookBuilder bookBuilder) {
 		this.bookBuilder = bookBuilder;
 		this.id = new ResourceLocation(bookBuilder.getId().getNamespace(), id);
 		this.name = name;
@@ -53,10 +53,13 @@ public class CategoryBuilder {
 		if (secret != null) {
 			json.addProperty("secret", secret);
 		}
+		this.serialize(json);
 		return json;
 	}
 
-	List<EntryBuilder> getEntries() {
+	protected void serialize(JsonObject json) {}
+
+	protected List<EntryBuilder> getEntries() {
 		return Collections.unmodifiableList(entries);
 	}
 
@@ -79,6 +82,11 @@ public class CategoryBuilder {
 
 	public CategoryBuilder setParent(String parent) {
 		this.parent = parent;
+		return this;
+	}
+
+	public CategoryBuilder setParent(CategoryBuilder parent) {
+		this.parent = parent.getId().toString();
 		return this;
 	}
 

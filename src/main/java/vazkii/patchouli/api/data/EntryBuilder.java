@@ -121,7 +121,7 @@ public class EntryBuilder {
 	}
 
 	public EntityPageBuilder addEntityPage(ResourceLocation entity) {
-		return addPage(new EntityPageBuilder(entity.toString(), this));
+		return addEntityPage(entity.toString());
 	}
 
 	public SpotlightPageBuilder addSpotlightPage(ItemStack stack) {
