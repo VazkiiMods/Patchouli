@@ -31,7 +31,7 @@ public class EntryBuilder {
 	private String turnin;
 	private Map<ItemStack, Integer> extraRecipeMappings;
 
-	EntryBuilder(String id, String name, String icon, CategoryBuilder parent) {
+	protected EntryBuilder(String id, String name, String icon, CategoryBuilder parent) {
 		this.id = new ResourceLocation(parent.getId().getNamespace(), id);
 		this.name = name;
 		this.category = parent.getId().getPath();
@@ -39,7 +39,7 @@ public class EntryBuilder {
 		this.parent = parent;
 	}
 
-	EntryBuilder(String id, String name, ItemStack icon, CategoryBuilder parent) {
+	protected EntryBuilder(String id, String name, ItemStack icon, CategoryBuilder parent) {
 		this(id, name, PatchouliAPI.instance.serializeItemStack(icon), parent);
 	}
 
@@ -81,8 +81,11 @@ public class EntryBuilder {
 			}
 			json.add("extra_recipe_mappings", mappings);
 		}
+		this.serialize(json);
 		return json;
 	}
+
+	protected void serialize(JsonObject json) {}
 
 	public CategoryBuilder build() {
 		return parent;
