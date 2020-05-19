@@ -56,7 +56,7 @@ public class DenseMultiblock extends AbstractMultiblock {
 		}
 		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
 		TriPredicate<IBlockReader, BlockPos, BlockState> pred = stateTargets[rotation == Rotation.NONE || rotation == Rotation.CLOCKWISE_180 ? x : size.getX() - x - 1][y][z].getStatePredicate();
-		BlockState state = RotationUtil.rotateState(world.getBlockState(checkPos), rotation);
+		BlockState state = RotationUtil.rotateState(world.getBlockState(checkPos), world, checkPos, rotation);
 
 		return pred.test(world, checkPos, state);
 	}

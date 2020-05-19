@@ -272,7 +272,19 @@ public class MultiblockVisualizationHandler {
 				}
 
 				if (!r.test(world, facingRotation)) {
-					BlockState renderState = RotationUtil.rotateState(r.getStateMatcher().getDisplayedState((int) ClientTicker.ticksInGame), facingRotation);
+					Rotation rot;
+					switch (facingRotation) { // this is needed because the rotation for rendering is broken
+					case CLOCKWISE_90:
+						rot = Rotation.COUNTERCLOCKWISE_90;
+						break;
+					case COUNTERCLOCKWISE_90:
+						rot = Rotation.CLOCKWISE_90;
+						break;
+					default:
+						rot = facingRotation;
+						break;
+					}
+					BlockState renderState = RotationUtil.rotateState(r.getStateMatcher().getDisplayedState((int) ClientTicker.ticksInGame), world, r.getWorldPosition(), rot);
 					renderBlock(world, renderState, r.getWorldPosition(), alpha, ms);
 
 					if (air) {

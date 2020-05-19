@@ -4,6 +4,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 
 public class RotationUtil {
 
@@ -46,8 +48,8 @@ public class RotationUtil {
 		}
 	}
 
-	public static BlockState rotateState(BlockState state, Rotation rotation) {
-		return state.rotate(rotation).mirror(Mirror.FRONT_BACK);
+	public static BlockState rotateState(BlockState state, IWorld world, BlockPos pos, Rotation rotation) {
+		return state.getBlock().rotate(state, world, pos, rotation);
 	}
 
 }
