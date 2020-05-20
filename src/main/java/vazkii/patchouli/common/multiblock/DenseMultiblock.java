@@ -30,7 +30,7 @@ public class DenseMultiblock extends AbstractMultiblock {
 
 	public DenseMultiblock(String[][] pattern, Object... targets) {
 		this.pattern = pattern;
-		this.size = build(targets, getPatternDimensions());
+		this.size = build(targets, getPatternDimensions(pattern));
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class DenseMultiblock extends AbstractMultiblock {
 		return pred.test(world, checkPos, state);
 	}
 
-	private Vec3i build(Object[] targets, int[] dimensions) {
+	private Vec3i build(Object[] targets, Vec3i dimensions) {
 		if (targets.length % 2 == 1) {
 			throw new IllegalArgumentException("Illegal argument length for targets array " + targets.length);
 		}
@@ -106,10 +106,10 @@ public class DenseMultiblock extends AbstractMultiblock {
 
 		boolean foundCenter = false;
 
-		stateTargets = new IStateMatcher[dimensions[1]][dimensions[0]][dimensions[2]];
-		for (int y = 0; y < dimensions[0]; y++) {
-			for (int x = 0; x < dimensions[1]; x++) {
-				for (int z = 0; z < dimensions[2]; z++) {
+		stateTargets = new IStateMatcher[dimensions.getX()][dimensions.getY()][dimensions.getZ()];
+		for (int y = 0; y < dimensions.getY(); y++) {
+			for (int x = 0; x < dimensions.getX(); x++) {
+				for (int z = 0; z < dimensions.getZ(); z++) {
 					char c = pattern[y][x].charAt(z);
 					if (!stateMap.containsKey(c)) {
 						throw new IllegalArgumentException("Character " + c + " isn't mapped");
@@ -122,12 +122,12 @@ public class DenseMultiblock extends AbstractMultiblock {
 						}
 						foundCenter = true;
 						offX = x;
-						offY = dimensions[0] - y - 1;
+						offY = dimensions.getY() - y - 1;
 						offZ = z;
 						setViewOffset();
 					}
 
-					stateTargets[x][dimensions[0] - y - 1][z] = matcher;
+					stateTargets[x][dimensions.getY() - y - 1][z] = matcher;
 				}
 			}
 		}
@@ -135,10 +135,10 @@ public class DenseMultiblock extends AbstractMultiblock {
 		if (!foundCenter) {
 			throw new IllegalArgumentException("A structure can't have no center");
 		}
-		return new Vec3i(dimensions[1], dimensions[0], dimensions[2]);
+		return dimensions;
 	}
 
-	private int[] getPatternDimensions() {
+	private static Vec3i getPatternDimensions(String[][] pattern) {
 		int expectedLenX = -1;
 		int expectedLenZ = -1;
 		for (String[] arr : pattern) {
@@ -159,7 +159,7 @@ public class DenseMultiblock extends AbstractMultiblock {
 			}
 		}
 
-		return new int[] { pattern.length, expectedLenX, expectedLenZ };
+		return new Vec3i(expectedLenX, pattern.length, expectedLenZ);
 	}
 
 	@Override

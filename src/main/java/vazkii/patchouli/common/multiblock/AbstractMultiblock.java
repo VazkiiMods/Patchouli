@@ -116,13 +116,7 @@ public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
 		setWorld(world);
 		Pair<BlockPos, Collection<SimulateResult>> sim = simulate(world, pos, rotation, false);
 
-		return sim.getSecond().stream().allMatch(r -> {
-			BlockPos checkPos = r.getWorldPosition();
-			TriPredicate<IBlockReader, BlockPos, BlockState> pred = r.getStateMatcher().getStatePredicate();
-			BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
-
-			return pred.test(world, checkPos, state);
-		});
+		return sim.getSecond().stream().allMatch(r -> r.test(world, rotation));
 	}
 
 	@Override
