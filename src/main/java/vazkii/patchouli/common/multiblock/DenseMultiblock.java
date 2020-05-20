@@ -14,7 +14,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.TriPredicate;
 
 import vazkii.patchouli.api.IStateMatcher;
-import vazkii.patchouli.common.util.RotationUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,16 +27,21 @@ public class DenseMultiblock extends AbstractMultiblock {
 	private IStateMatcher[][][] stateTargets;
 	private final Vec3i size;
 
-	public DenseMultiblock(String[][] pattern, Object... targets) {
+	public DenseMultiblock(String[][] pattern, Map<Character, IStateMatcher> targets) {
 		this.pattern = pattern;
 		this.size = build(targets, getPatternDimensions(pattern));
+	}
+
+	public DenseMultiblock(String[][] pattern, Object... targets) {
+		this.pattern = pattern;
+		this.size = build(targetsToMatchers(targets), getPatternDimensions(pattern));
 	}
 
 	@Override
 	public Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, Rotation rotation, boolean forView) {
 		BlockPos disp = forView
-						? new BlockPos(-viewOffX, -viewOffY + 1, -viewOffZ).rotate(rotation)
-						: new BlockPos(-offX, -offY, -offZ).rotate(rotation);
+				? new BlockPos(-viewOffX, -viewOffY + 1, -viewOffZ).rotate(rotation)
+				: new BlockPos(-offX, -offY, -offZ).rotate(rotation);
 		// the local origin of this multiblock, in world coordinates
 		BlockPos origin = anchor.add(disp);
 		List<SimulateResult> ret = new ArrayList<>();
@@ -67,11 +71,10 @@ public class DenseMultiblock extends AbstractMultiblock {
 		return pred.test(world, checkPos, state);
 	}
 
-	private Vec3i build(Object[] targets, Vec3i dimensions) {
+	private static Map<Character, IStateMatcher> targetsToMatchers(Object... targets) {
 		if (targets.length % 2 == 1) {
 			throw new IllegalArgumentException("Illegal argument length for targets array " + targets.length);
 		}
-
 		Map<Character, IStateMatcher> stateMap = new HashMap<>();
 		for (int i = 0; i < targets.length / 2; i++) {
 			char c = (Character) targets[i * 2];
@@ -106,7 +109,10 @@ public class DenseMultiblock extends AbstractMultiblock {
 		if (!stateMap.containsKey('0')) {
 			stateMap.put('0', StateMatcher.AIR);
 		}
+		return stateMap;
+	}
 
+	private Vec3i build(Map<Character, IStateMatcher> stateMap, Vec3i dimensions) {
 		boolean foundCenter = false;
 
 		stateTargets = new IStateMatcher[dimensions.getX()][dimensions.getY()][dimensions.getZ()];

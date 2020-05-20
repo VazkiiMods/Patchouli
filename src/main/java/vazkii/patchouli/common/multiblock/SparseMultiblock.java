@@ -52,8 +52,8 @@ public class SparseMultiblock extends AbstractMultiblock {
 	@Override
 	public Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, Rotation rotation, boolean forView) {
 		BlockPos disp = forView
-						? new BlockPos(-viewOffX, -viewOffY + 1, -viewOffZ).rotate(rotation)
-						: new BlockPos(-offX, -offY, -offZ).rotate(rotation);
+				? new BlockPos(-viewOffX, -viewOffY + 1, -viewOffZ).rotate(rotation)
+				: new BlockPos(-offX, -offY, -offZ).rotate(rotation);
 		// the local origin of this multiblock, in world coordinates
 		BlockPos origin = anchor.add(disp);
 		List<SimulateResult> ret = new ArrayList<>();
