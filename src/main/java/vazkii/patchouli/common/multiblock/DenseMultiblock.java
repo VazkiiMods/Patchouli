@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.TriPredicate;
 
 import vazkii.patchouli.api.IStateMatcher;
+import vazkii.patchouli.common.util.RotationUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -64,7 +65,7 @@ public class DenseMultiblock extends AbstractMultiblock {
 		if (x < 0 || y < 0 || z < 0 || x >= size.getX() || y >= size.getY() || z >= size.getZ()) {
 			return false;
 		}
-		BlockPos checkPos = start.add(new BlockPos(x, y, z).rotate(rotation));
+		BlockPos checkPos = start.add(new BlockPos(x, y, z).rotate(RotationUtil.fixHorizontal(rotation)));
 		TriPredicate<IBlockReader, BlockPos, BlockState> pred = stateTargets[x][y][z].getStatePredicate();
 		BlockState state = world.getBlockState(checkPos).rotate(rotation);
 

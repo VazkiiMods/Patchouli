@@ -18,4 +18,16 @@ public class RotationUtil {
 		}
 	}
 
+	// TODO figure out why this is needed and document it.
+	public static Rotation fixHorizontal(Rotation rot) {
+		switch (rot) {
+		case CLOCKWISE_90:
+			return Rotation.COUNTERCLOCKWISE_90;
+		case COUNTERCLOCKWISE_90:
+			return Rotation.CLOCKWISE_90;
+		default:
+			return rot;
+		}
+	}
+
 }
