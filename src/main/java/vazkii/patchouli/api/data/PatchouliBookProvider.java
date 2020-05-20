@@ -24,8 +24,6 @@ public abstract class PatchouliBookProvider implements IDataProvider {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().disableHtmlEscaping().create();
 
-	private final Collection<BookBuilder> books = new HashSet<>();
-
 	private final DataGenerator generator;
 	private final String locale;
 	private final String modid;
