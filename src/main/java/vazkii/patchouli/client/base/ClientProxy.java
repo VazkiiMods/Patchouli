@@ -1,9 +1,11 @@
 package vazkii.patchouli.client.base;
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.client.handler.BookCrashHandler;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.CommonProxy;
@@ -23,6 +25,7 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(MultiblockVisualizationHandler.class);
 		MinecraftForge.EVENT_BUS.register(BookRightClickHandler.class);
 		MinecraftForge.EVENT_BUS.register(InventoryBookButtonHandler.class);
+		FMLCommonHandler.instance().registerCrashCallable(new BookCrashHandler());
 	}
 	
 	@Override
@@ -36,5 +39,5 @@ public class ClientProxy extends CommonProxy {
 	public void requestBookReload() {
 		BookRegistry.INSTANCE.reload();
 	}
-	
+
 }

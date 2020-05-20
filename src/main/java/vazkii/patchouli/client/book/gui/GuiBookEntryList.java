@@ -191,4 +191,8 @@ public abstract class GuiBookEntryList extends GuiBook {
 		}
 	}
 
+	public String getSearchQuery() {
+		return searchField.getText();
+	}
+
 }
