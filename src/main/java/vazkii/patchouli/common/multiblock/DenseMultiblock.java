@@ -35,20 +35,23 @@ public class DenseMultiblock extends AbstractMultiblock {
 
 	@Override
 	public Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, Rotation rotation, boolean forView) {
-		BlockPos center = forView
-				? anchor.add(RotationUtil.x(rotation, -viewOffX, -viewOffZ), -viewOffY + 1, RotationUtil.z(rotation, -viewOffX, -viewOffZ))
-				: anchor.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
+		BlockPos disp = forView
+						? new BlockPos(-viewOffX, -viewOffY + 1, -viewOffZ).rotate(rotation)
+						: new BlockPos(-offX, -offY, -offZ).rotate(rotation);
+		// the local origin of this multiblock, in world coordinates
+		BlockPos origin = anchor.add(disp);
 		List<SimulateResult> ret = new ArrayList<>();
 		for (int x = 0; x < size.getX(); x++) {
 			for (int y = 0; y < size.getY(); y++) {
 				for (int z = 0; z < size.getZ(); z++) {
-					BlockPos actionPos = center.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
+					BlockPos currDisp = new BlockPos(x, y, z).rotate(rotation);
+					BlockPos actionPos = origin.add(currDisp);
 					char currC = pattern[y][x].charAt(z);
 					ret.add(new SimulateResultImpl(actionPos, stateTargets[x][y][z], currC));
 				}
 			}
 		}
-		return Pair.of(center, ret);
+		return Pair.of(origin, ret);
 	}
 
 	@Override
@@ -57,9 +60,9 @@ public class DenseMultiblock extends AbstractMultiblock {
 		if (x < 0 || y < 0 || z < 0 || x >= size.getX() || y >= size.getY() || z >= size.getZ()) {
 			return false;
 		}
-		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
+		BlockPos checkPos = start.add(new BlockPos(x, y, z).rotate(rotation));
 		TriPredicate<IBlockReader, BlockPos, BlockState> pred = stateTargets[x][y][z].getStatePredicate();
-		BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
+		BlockState state = world.getBlockState(checkPos).rotate(rotation);
 
 		return pred.test(world, checkPos, state);
 	}
