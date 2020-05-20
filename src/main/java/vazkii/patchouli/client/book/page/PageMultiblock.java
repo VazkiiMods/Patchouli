@@ -170,9 +170,9 @@ public class PageMultiblock extends PageWithText {
 		eye.transform(rotMat);
 		eye.normalizeProjectiveCoordinates();
 		/* TODO XXX This does not handle visualization of sparse multiblocks correctly.
-		    Dense multiblocks store everything in positive X/Z, so this works, but sparse multiblocks store everything from the JSON as-is.
-		    Potential solution: Rotate around the offset vars of the multiblock, and add AABB method for extent of the multiblock
-		 */
+			Dense multiblocks store everything in positive X/Z, so this works, but sparse multiblocks store everything from the JSON as-is.
+			Potential solution: Rotate around the offset vars of the multiblock, and add AABB method for extent of the multiblock
+		*/
 		renderElements(multiblockObj, BlockPos.getAllInBoxMutable(BlockPos.ZERO, new BlockPos(sizeX - 1, sizeY - 1, sizeZ - 1)), eye);
 
 		RenderSystem.popMatrix();
