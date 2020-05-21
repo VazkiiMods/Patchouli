@@ -20,38 +20,15 @@ import vazkii.patchouli.common.book.BookRegistry;
 
 public class InventoryBookButtonHandler {
 
-	static boolean recipeBookOpen;
-	static Book book;
-
-	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public static void onGuiInitPre(InitGuiEvent.Pre event) {
-		book = null;
-		
-		EntityPlayerSP player = Minecraft.getMinecraft().player;
-		if(player == null)
-			return;
-		
-		RecipeBook recipeBook = player.getRecipeBook();
-		if(event.getGui() instanceof GuiInventory) {
-			String bookID = PatchouliConfig.inventoryButtonBook;
-			book = BookRegistry.INSTANCE.books.get(new ResourceLocation(bookID));
-			
-			if(recipeBook.isGuiOpen())
-				recipeBookOpen = true;
-			
-			recipeBook.setGuiOpen(false);
-		} else if(recipeBookOpen && !recipeBook.isGuiOpen()) {
-			recipeBook.setGuiOpen(true);
-			recipeBookOpen = false;
-		}
-	}
-
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onGuiInitPost(InitGuiEvent.Post event) {
-		if(book == null)
+		String bookID = PatchouliConfig.inventoryButtonBook;
+		Book book = BookRegistry.INSTANCE.books.get(new ResourceLocation(bookID));
+		if(book == null || !(event.getGui() instanceof GuiInventory))
 			return;
 
 		List<GuiButton> buttons = event.getButtonList();
+
 		for(int i = 0; i < buttons.size(); i++) {
 			GuiButton button = buttons.get(i);
 			if(button.id == 10) {
