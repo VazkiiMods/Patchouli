@@ -1,13 +1,13 @@
 package vazkii.patchouli.client.base;
 
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.CrashReportExtender;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.client.handler.BookCrashHandler;
 import vazkii.patchouli.common.base.CommonProxy;
-import vazkii.patchouli.common.book.BookRegistry;
 
 public class ClientProxy extends CommonProxy {
 
@@ -22,6 +22,7 @@ public class ClientProxy extends CommonProxy {
 	public void setupClient(FMLClientSetupEvent event) {
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
+		CrashReportExtender.registerCrashCallable(new BookCrashHandler());
 	}
 
 	@Override
