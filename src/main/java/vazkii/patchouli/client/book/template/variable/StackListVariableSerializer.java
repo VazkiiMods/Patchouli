@@ -19,7 +19,7 @@ import java.util.List;
 
 public class StackListVariableSerializer implements IVariableSerializer<StackList> {
 
-	public static final StackList EMPTY = new StackList(Collections.EMPTY_LIST);
+	public static final StackList EMPTY = new StackList(Collections.emptyList());
 
 	@Override
 	public StackList fromJson(JsonElement json) {
@@ -32,7 +32,7 @@ public class StackListVariableSerializer implements IVariableSerializer<StackLis
 		}
 		if (json.isJsonArray()) {
 			JsonArray arr = json.getAsJsonArray();
-			List<ItemStack> deserial = new ArrayList(arr.size());
+			List<ItemStack> deserial = new ArrayList<>(arr.size());
 			arr.forEach(j -> deserial.add(VariableHelper.instance().<ItemStack>serializerForClass(ItemStack.class).fromJson(j)));
 			return new StackList(deserial);
 		}

@@ -35,7 +35,7 @@ public class VariableHelperImpl implements VariableHelper {
 		Class<?> clazz = object.getClass();
 		for (Class<?> c : serializers.keySet()) {
 			if (c.isAssignableFrom(clazz)) {
-				return createFromJson(serializerForClass(c).toJson(object));
+				return create(serializerForClass(c).toJson(object), clazz);
 			}
 		}
 
@@ -44,7 +44,11 @@ public class VariableHelperImpl implements VariableHelper {
 
 	@Override
 	public IVariable createFromJson(JsonElement elem) {
-		return new Variable(elem);
+		return create(elem, null);
+	}
+
+	private IVariable create(JsonElement elem, Class<?> originator) {
+		return new Variable(elem, originator);
 	}
 
 	@Override

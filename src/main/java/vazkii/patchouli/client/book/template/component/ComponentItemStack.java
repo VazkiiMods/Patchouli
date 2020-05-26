@@ -39,7 +39,7 @@ public class ComponentItemStack extends TemplateComponent {
 	@Override
 	public void onVariablesAvailable(Function<String, IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
-		items = new ArrayList(lookup.apply(item).as(StackList.class).getStacks());
+		items = new ArrayList<>(lookup.apply(item).as(StackList.class).getStacks());
 	}
 
 	@Override
