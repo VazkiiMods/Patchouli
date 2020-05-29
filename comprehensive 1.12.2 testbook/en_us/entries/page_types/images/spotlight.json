@@ -1,0 +1,24 @@
+{
+	"name": "Spotlight Pages",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/images",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "Spotlight pages can showcase individual items in a more grandiose manner."
+	},
+	{
+		"type": "spotlight",
+		"item": "minecraft:diamond_sword",
+		"title": "Diamond Sword",
+		"link_recipe":false,
+		"text": "This is a spotlight for the diamond sword. It's a really cool item!"
+	}
+	]
+}

@@ -1,0 +1,9 @@
+{
+	"name": "Page Types",
+	"description": "These are example pages to show sample code of the default page types. This will not show custom templates.",
+	"icon": "minecraft:writable_book",
+
+	"sortnum":0,
+	"secret":false,
+	"flag":"advancements_disabled"
+}

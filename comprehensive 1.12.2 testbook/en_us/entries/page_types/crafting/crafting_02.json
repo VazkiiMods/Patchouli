@@ -1,0 +1,23 @@
+{
+	"name": "Crafting Recipe Page 2",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/crafting",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "Crafting Recipe pages can show two different recipies in one page!$(br2)Alternatively you can show one recipe and some text."
+	},
+	{
+		"type": "crafting",
+		"title": "Furnace",
+		"recipe": "minecraft:diamond_pickaxe",
+		"recipe2": "minecraft:diamond_axe"
+	}
+	]
+}

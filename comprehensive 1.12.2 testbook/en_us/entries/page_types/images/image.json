@@ -1,0 +1,24 @@
+{
+	"name": "Custom Images",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/images",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "For custom images you will need the $(l:https://www.curseforge.com/minecraft/mc-mods/resource-loader)RESOURCE LOADER MOD$(/l).$(br2)For now, an image from Minecraft vanilla is used in this example image page."
+	},
+	{
+		"type": "image",
+		"images":["minecraft:textures/gui/presets/isles.png"],
+		"title" : "Title of image",
+		"border":true,
+		"text": "Images used here should ideally be dimensioned as 256x256"
+	}
+	]
+}

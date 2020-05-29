@@ -1,0 +1,41 @@
+{
+	"name": "Multiblock Pages",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/gameplay",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+	"enable_visualize":true,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "Multiblock pages can display multiblocks that you can also visualize in the world!"
+	},
+	{
+		"type": "multiblock",
+		"text": "This pattern is for a custom portal.",
+		"name": "Multiblock Structure",
+		"multiblock": {
+			"pattern": [
+				["AAAAA"],
+				["E   F"],
+				["A   A"],
+				["A   A"],
+				["D 0 C"],
+				["AABAA"]
+			],
+			"mapping": {
+				"A": "minecraft:glass",
+				"B": "minecraft:diamond_block",
+				"C": "minecraft:gold_block",
+				"D": "minecraft:emerald_block",
+				"E": "minecraft:redstone_block",
+				"F": "minecraft:lapis_block"
+			}
+		}
+	}
+	]
+}

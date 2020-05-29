@@ -1,0 +1,23 @@
+{
+	"name": "Quest Pages",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/gameplay",
+
+
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+	"turnin":"botania:main/flower_pickup",
+	"pages": [
+	{
+		"type": "text",
+		"text": "$(l)Notes:$()$(li)Quest pages will make the entry show up with a checkmark once the quest is completed.$(li)Entries that show up with a checkmark will show up at the end of the list to be out of the way.$(li)If you use a quest page, it is recommended you also use \"turnin\" in the entry."
+	},
+	{
+		"type": "quest",
+		"trigger": "botania:main/flower_pickup",
+		"title": "My Quest",
+		"text": "Quest Pages are tied to advancements.$(br2)In this example, the Botania achivement, \"$(l)Sky of the Beginning$()\" was used.$(br2)If you wish to create custom advancements, then use the $(l:https://www.curseforge.com/minecraft/mc-mods/triumph)TRIUMPH$(/l) mod."
+	}
+	]
+}

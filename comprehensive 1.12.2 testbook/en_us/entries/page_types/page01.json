@@ -1,0 +1,21 @@
+{
+	"name": "Page 1",
+	"icon": "minecraft:paper",
+	"category": "page_types",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "This is a collection of sample pages to cover the default page types for Patchouli. This page is located in the category called page_types."
+	},
+	{
+		"type": "text",
+		"text": "Most of the pages for the default page types are organized into subcategories."
+	}
+	]
+}

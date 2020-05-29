@@ -1,0 +1,29 @@
+{
+	"name": "Text and Lists",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/text",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "This is a basic block of text. The formatting rules allow the text become $(l)bold$() or $(o)italic$(). It is also possible to put a $(m)strikethrough$() in the text.$(br2)The formatting also allows links to be put into the book. These links are either $(l:page_types/page02)internal$(), meaning that they link to other pages, or $(l:https://github.com/Vazkii/Patchouli/wiki)external$(), meaning that they link to websites."
+	},
+	{
+		"type": "text",
+		"text": "You will need to be specific on what you put on each page or else the text will run off the bottom of the screen and that looks messy."
+	},
+	{
+		"type": "text",
+		"text": "If you need to organize your text into a bulleted list, you can do that here.$(br2)$(li)Here is a list.$(li2)Here is a nested list.$(li3)... and here is another nested list.$(br2)You can also add a little personal touch by having the book to print out the player\'s name.$(br2)$(o)\"Hello, $(playername)!\"$()"
+	},
+	{
+		"type": "text",
+		"text": "$(l)What about colors?$()$(br)There are three ways to color your text. The first option is to use a code 0-f to choose from the standard 16 colors. The second option is to use a hex code such as, #ff0000, to choose a specific color. Alternatively, you can use an RGB code such as, #f00, to make a color selection.$(br2)$(li)$(c)This red text was chosen with a default code.$()$(li)$(#ff0000)This red text was chosen using a Hex code.$()$(li)$(#f00)This red text was chosen using an RGB code.$()"
+	}
+	]
+}

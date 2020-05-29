@@ -1,0 +1,9 @@
+{
+	"name": "Images",
+	"description": "This is a subcategory for parent page_types",
+	"icon": "minecraft:book",
+	"parent": "patchouli:page_types",
+	"sortnum":0,
+	"secret":false,
+	"flag":"advancements_disabled"
+}

@@ -1,0 +1,24 @@
+{
+	"name": "Smelting Recipe Page 2",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/crafting",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "Smelting Recipe pages can show two different smelting recipes in one page, and they can even fit some text!$(br2)However, if you wish to use a smelting recipe from a mod such as the Alloy Smelter from EnderIO, then it will be up to you to create a template since the smelting recipies were designed to work for the vanilla furnace."
+	},
+	{
+		"type": "smelting",
+		"recipe": "minecraft:sand",
+		"recipe2": "minecraft:cobblestone",
+		"title": "Two Smelting Recipes",
+		"text": "Even if you have two smelting recipes, there's plenty of space for text here!"
+	}
+	]
+}
