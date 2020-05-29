@@ -1,0 +1,27 @@
+{
+	"name": "Entity Pages",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/gameplay",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "There is a \"scale\" and \"offset\" setting that allows you to adjust the size and position of this entity. There is also an option to enable the entity to \"rotate\" and at what speed (\"default_rotation\")."
+	},
+	{
+		"type": "entity",
+		"entity": "minecraft:wither",
+		"scale": 1.0,
+		"offset": 0.0,
+		"rotate": true,
+		"default_rotation": -45,
+		"title": "Wither",
+		"text": "The Wither is a tough boss!"
+	}
+	]
+}

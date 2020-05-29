@@ -1,0 +1,23 @@
+{
+	"name": "Crafting Recipe Page 1",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/crafting",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "This page has room for two crafting recipes and the second one is optional. If a page has just one crafting recipe, then there is room to add in some text."
+	},
+	{
+		"type": "crafting",
+		"title": "Furnace",
+		"recipe": "minecraft:furnace",
+		"text": "This is a vanilla furnace."
+	}
+	]
+}

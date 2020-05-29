@@ -1,0 +1,23 @@
+{
+	"name": "Link Pages",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/text",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "$(l)Note:$() Link pages are just specialized Text pages, which means they can work just like text pages, with the additional link button on the bottom. They also have all the attributes text pages do, and you can use them as the first page in your entry"
+	},
+	{
+		"type": "link",
+		"url": "https://github.com/Vazkii/Patchouli/wiki",
+		"link_text": "Patchouli Wiki",
+		"text": "Click the button at the end of the page to open the Patchouli Wiki!"
+	}
+	]
+}

@@ -1,0 +1,23 @@
+{
+	"name": "Relations Pages",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/text",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "Relation pages can display a small category listing in the middle of a page with links to other enteries."
+	},
+	{
+		"type": "relations",
+		"entries": ["patchouli:page_types/text/link", "patchouli:page_types/text/text", "patchouli:page_types/images/image", "patchouli:page_types/images/spotlight"],
+		"title": "Related Pages",
+		"text": "Check out these other cool test entries while you are here!"
+	}
+	]
+}

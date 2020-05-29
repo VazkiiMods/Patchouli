@@ -1,0 +1,20 @@
+{
+	"name": "Book of PageTypes",
+	"landing_text": "I insert text here and assign all of the varibles to their default values for now",
+	"version": 1,
+	"subtitle":"Set version to equal 0 to view",
+	"book_texture":"patchouli:textures/gui/book_red.png",
+	"model":"patchouli:book_red",
+	"text_color":"000000",
+	"header_color":"333333",
+	"nameplate_color":"FFDD00",
+	"link_color":"0000EE",
+	"link_hover_color":"8800EE",
+	"progress_bar_color":"FFFF55",
+	"progress_bar_background":"DDDDDD",
+	"show_progress":true,
+	"creative_tab":"misc",
+	"pause_game":true,
+	"show_toasts":true,
+	"use_blocky_font":false
+}

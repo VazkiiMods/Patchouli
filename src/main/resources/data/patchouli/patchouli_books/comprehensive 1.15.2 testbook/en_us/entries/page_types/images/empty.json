@@ -1,0 +1,21 @@
+{
+	"name": "Empty Pages",
+	"icon": "minecraft:paper",
+	"category": "patchouli:page_types/images",
+
+	"flag":"advancements_disabled",
+	"priority":false,
+	"secret":false,
+	"read_by_default":false,
+
+	"pages": [
+	{
+		"type": "text",
+		"text": "Empty pages are just empty and draw the page filler, even if there's no more pages after it. I dunno someone might want it so why not?"
+	},
+	{
+		"type": "empty",
+		"draw_filler": true
+	}
+	]
+}
