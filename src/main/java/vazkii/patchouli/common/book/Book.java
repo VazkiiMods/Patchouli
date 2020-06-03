@@ -134,11 +134,6 @@ public class Book {
 		
 		isExtension = !extend.isEmpty();
 		
-		// minecraft has an advancement for every recipe, so we don't allow
-		// tracking it to keep packets at a reasonable size
-		advancementNamespaces.remove("minecraft"); 
-		AdvancementSyncHandler.trackedNamespaces.addAll(advancementNamespaces);
-		
 		if(!isExtension) {
 			modelResourceLoc = new ModelResourceLocation(model, "inventory");
 			

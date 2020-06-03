@@ -10,13 +10,11 @@ import vazkii.patchouli.common.network.NetworkMessage;
 
 public class MessageSyncAdvancements extends NetworkMessage<MessageSyncAdvancements> {
 
-	public String[] done;
 	public boolean showToast;
 	
 	public MessageSyncAdvancements() { }
 	
-	public MessageSyncAdvancements(String[] done, boolean showToast) { 
-		this.done = done;
+	public MessageSyncAdvancements(boolean showToast) { 
 		this.showToast = showToast;
 	}
 	
@@ -24,7 +22,7 @@ public class MessageSyncAdvancements extends NetworkMessage<MessageSyncAdvanceme
 	@SideOnly(Side.CLIENT)
 	public IMessage handleMessage(MessageContext context) {
 		ClientTicker.addAction(() -> {
-			ClientAdvancements.setDoneAdvancements(done, showToast, false);
+			ClientAdvancements.setDoneAdvancements(showToast, false);
 		});
 		
 		return null;
