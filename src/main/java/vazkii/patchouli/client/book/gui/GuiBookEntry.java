@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
@@ -161,6 +162,11 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	@Override
 	public boolean equals(Object obj) {
 		return obj == this || (obj instanceof GuiBookEntry && ((GuiBookEntry) obj).entry == entry && ((GuiBookEntry) obj).spread == spread);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(entry) * 31 + Objects.hashCode(spread);
 	}
 
 	@Override

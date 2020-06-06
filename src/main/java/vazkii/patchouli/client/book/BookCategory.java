@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book;
 
+import com.google.common.collect.Streams;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.resources.I18n;
@@ -182,7 +183,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	protected EntryDisplayState computeReadState() {
 		Stream<EntryDisplayState> entryStream = entries.stream().filter(e -> !e.isLocked()).map(BookEntry::getReadState);
 		Stream<EntryDisplayState> childrenStream = children.stream().map(BookCategory::getReadState);
-		return mostImportantState(entryStream, childrenStream);
+		return mostImportantState(Streams.concat(entryStream, childrenStream));
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class GuiBookCategory extends GuiBookEntryList {
 
@@ -64,6 +65,11 @@ public class GuiBookCategory extends GuiBookEntryList {
 	@Override
 	public boolean equals(Object obj) {
 		return obj == this || (obj instanceof GuiBookCategory && ((GuiBookCategory) obj).category == category && ((GuiBookCategory) obj).spread == spread);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(category) * 31 + Objects.hashCode(spread);
 	}
 
 	@Override
