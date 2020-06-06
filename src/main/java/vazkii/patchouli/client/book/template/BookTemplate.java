@@ -81,7 +81,7 @@ public class BookTemplate {
 		return template;
 	}
 
-	public void compile(IVariableProvider variables) {
+	public void compile(IVariableProvider<String> variables) {
 		if (compiled) {
 			return;
 		}
@@ -90,7 +90,7 @@ public class BookTemplate {
 		components.removeIf(Objects::isNull);
 
 		if (processor != null) {
-			IVariableProvider processorVars = variables;
+			IVariableProvider<String> processorVars = variables;
 			if (encapsulation != null) {
 				processorVars = encapsulation.wrapProvider(variables);
 			}

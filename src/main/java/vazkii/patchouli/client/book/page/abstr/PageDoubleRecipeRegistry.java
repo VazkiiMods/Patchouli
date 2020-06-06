@@ -28,13 +28,14 @@ public abstract class PageDoubleRecipeRegistry<T extends IRecipe<?>> extends Pag
 	@Nullable
 	private T getRecipe(ResourceLocation id) {
 		RecipeManager manager = Minecraft.getInstance().world.getRecipeManager();
-		Map<ResourceLocation, T> recipes = Collections.emptyMap();
 		try {
-			recipes = (Map<ResourceLocation, T>) GET_RECIPE_MAP.invoke(manager, recipeType);
+			@SuppressWarnings("unchecked")
+			Map<ResourceLocation, T> recipes = (Map<ResourceLocation, T>) GET_RECIPE_MAP.invoke(manager, recipeType);
+			return recipes.get(id);
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			Patchouli.LOGGER.error("Failed to get recipe map", e);
+			return null;
 		}
-		return recipes.get(id);
 	}
 
 	@Override
