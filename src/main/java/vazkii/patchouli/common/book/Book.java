@@ -228,7 +228,7 @@ public class Book {
 
 		boolean updated = popUpdated();
 		if (updated && !suppressToasts && advancementsEnabled() && showToasts) {
-			Minecraft.getInstance().getToastGui().add(new ClientAdvancements.LexiconToast(this));
+			ClientAdvancements.sendBookToast(this);
 		}
 	}
 

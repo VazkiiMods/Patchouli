@@ -20,6 +20,8 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.book.Book;
 
+import javax.annotation.Nonnull;
+
 import java.util.Map;
 
 @EventBusSubscriber(Dist.CLIENT)
@@ -62,16 +64,29 @@ public class ClientAdvancements {
 		gotFirstAdvPacket = false;
 	}
 
-	public static class LexiconToast implements IToast {
+	public static void sendBookToast(Book book) {
+		ToastGui gui = Minecraft.getInstance().getToastGui();
+		if (gui.getToast(LexiconToast.class, book) == null) {
+			gui.add(new LexiconToast(book));
+		}
+	}
 
-		final Book book;
+	public static class LexiconToast implements IToast {
+		private final Book book;
 
 		public LexiconToast(Book book) {
 			this.book = book;
 		}
 
+		@Nonnull
 		@Override
-		public Visibility draw(ToastGui toastGui, long delta) {
+		public Book getType() {
+			return book;
+		}
+
+		@Nonnull
+		@Override
+		public Visibility draw(@Nonnull ToastGui toastGui, long delta) {
 			Minecraft mc = Minecraft.getInstance();
 			mc.getTextureManager().bindTexture(TEXTURE_TOASTS);
 			RenderSystem.color3f(1.0F, 1.0F, 1.0F);
