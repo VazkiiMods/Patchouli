@@ -29,12 +29,14 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 
 	@Override
 	protected T loadRecipe(BookEntry entry, Identifier res) {
-		if (res == null)
+		if (res == null) {
 			return null;
+		}
 
 		T tempRecipe = getRecipe(res);
-		if (tempRecipe == null) // this is hacky but it works around Forge requiring custom recipes to have the prefix of the adding mod
+		if (tempRecipe == null) { // this is hacky but it works around Forge requiring custom recipes to have the prefix of the adding mod
 			tempRecipe = getRecipe(new Identifier("crafttweaker", res.getPath()));
+		}
 
 		if (tempRecipe != null) {
 			entry.addRelevantStack(tempRecipe.getOutput(), pageNum);

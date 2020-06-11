@@ -9,10 +9,12 @@ public class ComponentSeparator extends TemplateComponent {
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		if (x == -1)
+		if (x == -1) {
 			x = 0;
-		if (y == -1)
+		}
+		if (y == -1) {
 			y = 12;
+		}
 	}
 
 	@Override

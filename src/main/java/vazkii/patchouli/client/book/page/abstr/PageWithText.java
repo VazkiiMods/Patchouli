@@ -14,8 +14,9 @@ public abstract class PageWithText extends BookPage {
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 
-		if (text == null)
+		if (text == null) {
 			text = "";
+		}
 
 		textRender = new BookTextRenderer(parent, text, 0, getTextHeight());
 	}
@@ -24,8 +25,9 @@ public abstract class PageWithText extends BookPage {
 
 	@Override
 	public void render(int mouseX, int mouseY, float pticks) {
-		if (shouldRenderText())
+		if (shouldRenderText()) {
 			textRender.render(mouseX, mouseY);
+		}
 	}
 
 	@Override

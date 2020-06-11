@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -24,7 +25,10 @@ public interface IComponentRenderContext {
 
 	boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h);
 
+	@Deprecated // use setHoverTooltipComponents
 	void setHoverTooltip(List<String> tooltip);
+
+	void setHoverTooltipComponents(List<Text> tooltip);
 
 	void registerButton(ButtonWidget button, int pageNum, Runnable onClick);
 

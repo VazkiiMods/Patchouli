@@ -5,6 +5,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.TextFormat;
 
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -42,25 +46,27 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 
 			RenderSystem.disableDepthTest();
 			String s = Integer.toString(bookmark.page + 1);
-			if (multiblock)
+			if (multiblock) {
 				s = I18n.translate("patchouli.gui.lexicon.visualize_letter");
+			}
 			parent.getMinecraft().textRenderer.drawWithShadow(s, px + 12, py + 10, 0xFFFFFF);
 			RenderSystem.enableDepthTest();
 			RenderSystem.popMatrix();
 		}
 	}
 
-	private static String[] getTooltip(Book book, Bookmark bookmark, boolean multiblock) {
+	private static Text[] getTooltip(Book book, Bookmark bookmark, boolean multiblock) {
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 
-		if (bookmark == null || entry == null)
-			return new String[] { I18n.translate("patchouli.gui.lexicon.add_bookmark") };
+		if (bookmark == null || entry == null) {
+			return new Text[] { new TranslatableText("patchouli.gui.lexicon.add_bookmark") };
+		}
 
-		return new String[] {
-				entry.getName(),
-				TextFormat.GRAY + I18n.translate(multiblock
+		return new Text[] {
+				new LiteralText(entry.getName()),
+				new TranslatableText(multiblock
 						? "patchouli.gui.lexicon.multiblock_bookmark"
-						: "patchouli.gui.lexicon.remove_bookmark")
+						: "patchouli.gui.lexicon.remove_bookmark").formatted(Formatting.GRAY)
 		};
 	}
 

@@ -24,8 +24,7 @@ public abstract class AbstractReadStateHolder {
 
 	protected abstract EntryDisplayState computeReadState();
 
-	public static EntryDisplayState mostImportantState(Stream<EntryDisplayState>... streams) {
-		Stream<EntryDisplayState> stream = Streams.concat(streams);
+	public static EntryDisplayState mostImportantState(Stream<EntryDisplayState> stream) {
 		return EntryDisplayState.fromOrdinal(stream.mapToInt(EntryDisplayState::ordinal).min().orElse(EntryDisplayState.DEFAULT_TYPE.ordinal()));
 	}
 

@@ -14,11 +14,13 @@ public class PageText extends PageWithText {
 
 	@Override
 	public int getTextHeight() {
-		if (pageNum == 0)
+		if (pageNum == 0) {
 			return 22;
+		}
 
-		if (title != null && !title.isEmpty())
+		if (title != null && !title.isEmpty()) {
 			return 12;
+		}
 
 		return -4;
 	}
@@ -48,10 +50,9 @@ public class PageText extends PageWithText {
 
 			parent.drawCenteredStringNoShadow(parent.getEntry().getName(), GuiBook.PAGE_WIDTH / 2, renderedSmol ? -3 : 0, book.headerColor);
 			GuiBook.drawSeparator(book, 0, 12);
-		}
-
-		else if (title != null && !title.isEmpty())
+		} else if (title != null && !title.isEmpty()) {
 			parent.drawCenteredStringNoShadow(i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		}
 	}
 
 }

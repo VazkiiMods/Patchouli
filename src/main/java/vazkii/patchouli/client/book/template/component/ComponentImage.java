@@ -27,10 +27,11 @@ public class ComponentImage extends TemplateComponent {
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		if (image.contains(":"))
+		if (image.contains(":")) {
 			resource = new Identifier(image);
-		else
+		} else {
 			resource = new Identifier(page.book.getModNamespace(), image);
+		}
 	}
 
 	@Override
@@ -41,8 +42,9 @@ public class ComponentImage extends TemplateComponent {
 
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
-		if (scale == 0F)
+		if (scale == 0F) {
 			return;
+		}
 
 		page.mc.getTextureManager().bindTexture(resource);
 		RenderSystem.pushMatrix();

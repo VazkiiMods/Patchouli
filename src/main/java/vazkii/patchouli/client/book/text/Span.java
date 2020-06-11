@@ -1,5 +1,8 @@
 package vazkii.patchouli.client.book.text;
 
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -12,7 +15,7 @@ public class Span {
 	public final int color;
 	public final String codes;
 	public final List<Span> linkCluster;
-	public final String tooltip;
+	public final Text tooltip;
 	public final Supplier<Boolean> onClick;
 	public final int lineBreaks;
 	public final int spacingLeft;
@@ -42,7 +45,7 @@ public class Span {
 		this.codes = codes;
 		this.onClick = null;
 		this.linkCluster = null;
-		this.tooltip = "";
+		this.tooltip = new LiteralText("");
 		this.lineBreaks = state.lineBreaks;
 		this.spacingLeft = state.spacingLeft;
 		this.spacingRight = state.spacingRight;

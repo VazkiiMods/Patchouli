@@ -97,8 +97,9 @@ public class TooltipHandler {
 						int page = lexiconEntry.getSecond();
 						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), page);
 					}
-				} else
+				} else {
 					lexiconLookupTime = 0F;
+				}
 
 				mc.getItemRenderer().zOffset = 300;
 				mc.getItemRenderer().renderGuiItem(lexiconStack, x, tooltipY);
@@ -116,9 +117,11 @@ public class TooltipHandler {
 				RenderSystem.popMatrix();
 
 				RenderSystem.enableDepthTest();
-			} else
+			} else {
 				lexiconLookupTime = 0F;
-		} else
+			}
+		} else {
 			lexiconLookupTime = 0F;
+		}
 	}
 }

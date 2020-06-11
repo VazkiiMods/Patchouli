@@ -73,10 +73,12 @@ public class StringStateMatcher {
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o)
+			if (this == o) {
 				return true;
-			if (o == null || getClass() != o.getClass())
+			}
+			if (o == null || getClass() != o.getClass()) {
 				return false;
+			}
 			ExactMatcher that = (ExactMatcher) o;
 			return Objects.equals(state, that.state) &&
 					Objects.equals(props, that.props);
@@ -134,10 +136,12 @@ public class StringStateMatcher {
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o)
+			if (this == o) {
 				return true;
-			if (o == null || getClass() != o.getClass())
+			}
+			if (o == null || getClass() != o.getClass()) {
 				return false;
+			}
 			TagMatcher that = (TagMatcher) o;
 			return Objects.equals(tag.getId(), that.tag.getId()) &&
 					Objects.equals(props, that.props);

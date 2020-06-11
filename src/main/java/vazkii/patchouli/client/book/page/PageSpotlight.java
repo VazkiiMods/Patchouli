@@ -22,8 +22,9 @@ public class PageSpotlight extends PageWithText {
 	public void build(BookEntry entry, int pageNum) {
 		itemStack = ItemStackUtil.loadStackFromString(item);
 
-		if (linkRecipe)
+		if (linkRecipe) {
 			entry.addRelevantStack(itemStack, pageNum);
+		}
 	}
 
 	@Override

@@ -60,10 +60,11 @@ public class PageQuest extends PageWithText {
 		String res = entry.getId().toString();
 		BookData data = PersistentData.data.getBookData(parent.book);
 
-		if (data.completedManualQuests.contains(res))
+		if (data.completedManualQuests.contains(res)) {
 			data.completedManualQuests.remove(res);
-		else
+		} else {
 			data.completedManualQuests.add(res);
+		}
 		PersistentData.save();
 
 		updateButtonText(button);

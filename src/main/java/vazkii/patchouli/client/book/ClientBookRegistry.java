@@ -113,8 +113,9 @@ public class ClientBookRegistry {
 			JsonPrimitive prim = (JsonPrimitive) obj.get("type");
 			String type = prim.getAsString();
 			Class<? extends BookPage> clazz = ClientBookRegistry.INSTANCE.pageTypes.get(type);
-			if (clazz == null)
+			if (clazz == null) {
 				clazz = PageTemplate.class;
+			}
 
 			BookPage page = SerializationUtil.RAW_GSON.fromJson(json, clazz);
 			page.sourceObject = obj;
@@ -133,8 +134,9 @@ public class ClientBookRegistry {
 			String type = prim.getAsString();
 			Class<? extends TemplateComponent> clazz = BookTemplate.componentTypes.get(type);
 
-			if (clazz == null)
+			if (clazz == null) {
 				return null;
+			}
 
 			TemplateComponent component = SerializationUtil.RAW_GSON.fromJson(json, clazz);
 			component.sourceObject = obj;

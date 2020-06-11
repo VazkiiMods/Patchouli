@@ -92,21 +92,23 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 			BlockState targetState = r.getStateMatcher().getDisplayedState((int) world.getTimeOfDay()).rotate(rotation);
 			Block targetBlock = targetState.getBlock();
 
-			if (!targetState.isAir() && targetState.canPlaceAt(world, placePos) && world.getBlockState(placePos).getMaterial().isReplaceable())
+			if (!targetBlock.isAir(targetState) && targetState.canPlaceAt(world, placePos) && world.getBlockState(placePos).getMaterial().isReplaceable()) {
 				world.setBlockState(placePos, targetState);
+			}
 		});
 	}
 
 	@Override
 	public BlockRotation validate(World world, BlockPos pos) {
-		if (isSymmetrical() && validate(world, pos, BlockRotation.NONE))
+		if (isSymmetrical() && validate(world, pos, BlockRotation.NONE)) {
 			return BlockRotation.NONE;
-		else
+		} else {
 			for (BlockRotation rot : BlockRotation.values()) {
 				if (validate(world, pos, rot)) {
 					return rot;
 				}
 			}
+		}
 		return null;
 	}
 
@@ -156,17 +158,17 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 	}
 
 	@Override
+	public int getColor(BlockPos pos, ColorResolver color) {
+		return color.getColor(Biomes.PLAINS, pos.getX(), pos.getZ());
+	}
+
+	@Override
 	public int getLightLevel(LightType type, BlockPos pos) {
 		return 15;
 	}
 
 	@Override
-	public int getBaseLightLevel(BlockPos pos, int ambientDarkness) {
-		return 15 - ambientDarkness;
-	}
-
-	@Override
-	public int getColor(BlockPos pos, ColorResolver colorResolver) {
-		return colorResolver.getColor(Biomes.PLAINS, pos.getX(), pos.getZ());
+	public int getBaseLightLevel(BlockPos pos, int ambientDarkening) {
+		return 15 - ambientDarkening;
 	}
 }

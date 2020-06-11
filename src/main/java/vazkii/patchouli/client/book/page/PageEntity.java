@@ -69,11 +69,13 @@ public class PageEntity extends PageWithText {
 
 		parent.drawCenteredStringNoShadow(name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 
-		if (errored)
+		if (errored) {
 			fontRenderer.drawWithShadow(I18n.translate("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
+		}
 
-		if (entity != null)
+		if (entity != null) {
 			renderEntity(parent.getMinecraft().world, rotate ? ClientTicker.total : defaultRotation);
+		}
 
 		super.render(mouseX, mouseY, pticks);
 	}
@@ -111,15 +113,17 @@ public class PageEntity extends PageWithText {
 				float height = entity.getHeight();
 
 				float entitySize = width;
-				if (width < height)
+				if (width < height) {
 					entitySize = height;
+				}
 				entitySize = Math.max(1F, entitySize);
 
 				renderScale = 100F / entitySize * 0.8F * scale;
 				offset = Math.max(height, entitySize) * 0.5F + extraOffset;
 
-				if (name == null || name.isEmpty())
+				if (name == null || name.isEmpty()) {
 					name = entity.getName().asFormattedString();
+				}
 			} catch (Exception e) {
 				errored = true;
 				Patchouli.LOGGER.error("Failed to load entity", e);

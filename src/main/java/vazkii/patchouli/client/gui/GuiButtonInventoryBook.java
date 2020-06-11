@@ -39,8 +39,9 @@ public class GuiButtonInventoryBook extends ButtonWidget {
 		mc.getItemRenderer().renderGuiItem(stack, x + 2, y + 2);
 
 		EntryDisplayState readState = book.contents.getReadState();
-		if (readState.hasIcon && readState.showInInventory)
+		if (readState.hasIcon && readState.showInInventory) {
 			GuiBook.drawMarking(book, x, y, 0, readState);
+		}
 	}
 
 	public Book getBook() {

@@ -29,10 +29,11 @@ public class GuiButtonEntry extends ButtonWidget {
 	@Override
 	public void renderButton(int mouseX, int mouseY, float partialTicks) {
 		if (active) {
-			if (isHovered())
+			if (isHovered()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
-			else
+			} else {
 				timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
+			}
 
 			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHovered() ? partialTicks : -partialTicks)));
 			float widthFract = time / ANIM_TIME;
@@ -45,8 +46,9 @@ public class GuiButtonEntry extends ButtonWidget {
 			if (locked) {
 				RenderSystem.color4f(1F, 1F, 1F, 0.7F);
 				GuiBook.drawLock(parent.book, x * 2 + 2, y * 2 + 2);
-			} else
+			} else {
 				entry.getIcon().render(x * 2 + 2, y * 2 + 2);
+			}
 
 			RenderSystem.scalef(2F, 2F, 2F);
 
@@ -57,23 +59,27 @@ public class GuiButtonEntry extends ButtonWidget {
 			int color = getColor();
 			entry.getBook().getFont().draw(name, x + 12, y, color);
 
-			if (!entry.isLocked())
+			if (!entry.isLocked()) {
 				GuiBook.drawMarking(parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());
+			}
 		}
 	}
 
 	private int getColor() {
-		if (entry.isSecret())
+		if (entry.isSecret()) {
 			return 0xAA000000 | (parent.book.textColor & 0x00FFFFFF);
-		if (entry.isLocked())
+		}
+		if (entry.isLocked()) {
 			return 0x77000000 | (parent.book.textColor & 0x00FFFFFF);
+		}
 		return entry.getEntryColor();
 	}
 
 	@Override
 	public void playDownSound(SoundManager soundHandlerIn) {
-		if (entry != null && !entry.isLocked())
+		if (entry != null && !entry.isLocked()) {
 			GuiBook.playBookFlipSound(parent.book);
+		}
 	}
 
 	public BookEntry getEntry() {

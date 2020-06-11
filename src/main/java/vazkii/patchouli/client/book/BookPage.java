@@ -31,7 +31,7 @@ public abstract class BookPage {
 	protected String type, flag, advancement, anchor;
 
 	public void build(BookEntry entry, int pageNum) {
-		this.book = entry.book;
+		this.book = entry.getBook();
 		this.entry = entry;
 		this.pageNum = pageNum;
 	}

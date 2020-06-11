@@ -24,7 +24,7 @@ public class ComponentEntity extends TemplateComponent {
 	@SerializedName("render_size") float renderSize = 100;
 
 	boolean rotate = true;
-	@SerializedName("default_rotation") float defaultBlockRotation = -45f;
+	@SerializedName("default_rotation") float defaultRotation = -45f;
 
 	transient boolean errored;
 	transient Entity entity;
@@ -43,11 +43,13 @@ public class ComponentEntity extends TemplateComponent {
 
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
-		if (errored)
+		if (errored) {
 			page.fontRenderer.drawWithShadow(I18n.translate("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
+		}
 
-		if (entity != null)
-			renderEntity(page.mc.world, rotate ? ClientTicker.total : defaultBlockRotation);
+		if (entity != null) {
+			renderEntity(page.mc.world, rotate ? ClientTicker.total : defaultRotation);
+		}
 	}
 
 	@Override
@@ -68,8 +70,9 @@ public class ComponentEntity extends TemplateComponent {
 				float height = entity.getHeight();
 
 				float entitySize = width;
-				if (width < height)
+				if (width < height) {
 					entitySize = height;
+				}
 				entitySize = Math.max(1F, entitySize);
 
 				renderScale = renderSize / entitySize * 0.8F;

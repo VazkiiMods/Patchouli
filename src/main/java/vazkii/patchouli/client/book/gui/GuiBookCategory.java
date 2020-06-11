@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class GuiBookCategory extends GuiBookEntryList {
 
@@ -41,8 +42,9 @@ public class GuiBookCategory extends GuiBookEntryList {
 		Collections.sort(categories);
 
 		for (BookCategory ocategory : categories) {
-			if (ocategory.getParentCategory() != category || ocategory.shouldHide())
+			if (ocategory.getParentCategory() != category || ocategory.shouldHide()) {
 				continue;
+			}
 
 			int x = LEFT_PAGE_X + 10 + (i % 4) * 24;
 			int y = TOP_PADDING + PAGE_HEIGHT - (PatchouliConfig.disableAdvancementLocking.get() ? 46 : 68);
@@ -63,6 +65,11 @@ public class GuiBookCategory extends GuiBookEntryList {
 	@Override
 	public boolean equals(Object obj) {
 		return obj == this || (obj instanceof GuiBookCategory && ((GuiBookCategory) obj).category == category && ((GuiBookCategory) obj).spread == spread);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(category) * 31 + Objects.hashCode(spread);
 	}
 
 	@Override

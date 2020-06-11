@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
@@ -16,6 +17,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 
 import org.lwjgl.glfw.GLFW;
@@ -57,11 +60,11 @@ public abstract class GuiBook extends Screen {
 
 	public final Book book;
 
-	private static int lastSound;
+	private static long lastSound;
 	public int bookLeft, bookTop;
 	private float scaleFactor;
 
-	private List<String> tooltip;
+	private List<Text> tooltip;
 	private ItemStack tooltipStack;
 	private Pair<BookEntry, Integer> targetPage;
 	protected int spread = 0, maxSpreads = 0;
@@ -93,8 +96,9 @@ public abstract class GuiBook extends Screen {
 			width = res.getScaledWidth();
 			height = res.getScaledHeight();
 			res.setScaleFactor(oldGuiScale);
-		} else
+		} else {
 			scaleFactor = 1;
+		}
 
 		bookLeft = width / 2 - FULL_WIDTH / 2;
 		bookTop = height / 2 - FULL_HEIGHT / 2;
@@ -155,11 +159,13 @@ public abstract class GuiBook extends Screen {
 		}
 
 		y += (y == 0 ? 0 : 2);
-		if (shouldAddAddBookmarkButton() && bookmarks.size() <= MAX_BOOKMARKS)
+		if (shouldAddAddBookmarkButton() && bookmarks.size() <= MAX_BOOKMARKS) {
 			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
+		}
 
-		if (MultiblockVisualizationHandler.hasMultiblock && MultiblockVisualizationHandler.bookmark != null)
+		if (MultiblockVisualizationHandler.hasMultiblock && MultiblockVisualizationHandler.bookmark != null) {
 			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.bookmark, true));
+		}
 	}
 
 	public void removeButtonsIf(Predicate<Element> pred) {
@@ -190,8 +196,9 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public void tick() {
-		if (!hasShiftDown())
+		if (!hasShiftDown()) {
 			ticksInBook++;
+		}
 
 		if (needsBookmarkUpdate) {
 			needsBookmarkUpdate = false;
@@ -218,8 +225,9 @@ public abstract class GuiBook extends Screen {
 			this.renderTooltip(tooltip, mouseX, mouseY);
 		} else if (tooltip != null && !tooltip.isEmpty()) {
 			List<String> wrappedTooltip = new ArrayList<>();
-			for (String s : tooltip)
-				Collections.addAll(wrappedTooltip, s.split("\n"));
+			for (Text s : tooltip) {
+				Collections.addAll(wrappedTooltip, s.asFormattedString().split("\n"));
+			}
 			this.renderTooltip(wrappedTooltip, mouseX, mouseY);
 		}
 	}
@@ -237,7 +245,7 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public boolean isPauseScreen() {
-		return false;
+		return book.pauseGame;
 	}
 
 	public void handleButtonBack(ButtonWidget button) {
@@ -251,16 +259,17 @@ public abstract class GuiBook extends Screen {
 	public void handleButtonBookmark(ButtonWidget button) {
 		GuiButtonBookBookmark bookmarkButton = (GuiButtonBookBookmark) button;
 		Bookmark bookmark = bookmarkButton.bookmark;
-		if (bookmark == null || bookmark.getEntry(book) == null)
+		if (bookmark == null || bookmark.getEntry(book) == null) {
 			bookmarkThis();
-		else {
+		} else {
 			if (hasShiftDown() && !bookmarkButton.multiblock) {
 				List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
 				bookmarks.remove(bookmark);
 				PersistentData.save();
 				needsBookmarkUpdate = true;
-			} else
+			} else {
 				displayLexiconGui(new GuiBookEntry(book, bookmark.getEntry(book), bookmark.page), true);
+			}
 		}
 	}
 
@@ -304,10 +313,11 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
-		if (scroll < 0)
+		if (scroll < 0) {
 			changePage(false, true);
-		else if (scroll > 0)
+		} else if (scroll > 0) {
 			changePage(true, true);
+		}
 
 		return true;
 	}
@@ -317,24 +327,28 @@ public abstract class GuiBook extends Screen {
 			if (hasShiftDown()) {
 				displayLexiconGui(new GuiBookLanding(book), false);
 				book.contents.guiStack.clear();
-			} else
+			} else {
 				displayLexiconGui(book.contents.guiStack.pop(), false);
+			}
 
-			if (sfx)
+			if (sfx) {
 				playBookFlipSound(book);
+			}
 		}
 	}
 
 	void changePage(boolean left, boolean sfx) {
 		if (canSeePageButton(left)) {
-			if (left)
+			if (left) {
 				spread--;
-			else
+			} else {
 				spread++;
+			}
 
 			onPageChanged();
-			if (sfx)
+			if (sfx) {
 				playBookFlipSound(book);
+			}
 		}
 	}
 
@@ -354,29 +368,30 @@ public abstract class GuiBook extends Screen {
 		return !book.contents.guiStack.isEmpty();
 	}
 
-	public void setTooltip(String... strings) {
+	public void setTooltip(Text... strings) {
 		setTooltip(Arrays.asList(strings));
 	}
 
-	public void setTooltip(List<String> strings) {
+	public void setTooltip(List<Text> strings) {
 		tooltip = strings;
 	}
 
 	public void setTooltipStack(ItemStack stack) {
-		setTooltip();
+		setTooltip(Collections.emptyList());
 		tooltipStack = stack;
 	}
 
 	public boolean isMouseInRelativeRange(double absMx, double absMy, int x, int y, int w, int h) {
-		double mx = absMx - bookLeft * scaleFactor;
-		double my = absMy - bookTop * scaleFactor;
+		double mx = absMx - bookLeft;
+		double my = absMy - bookTop;
 
 		return mx > x && my > y && mx <= (x + w) && my <= (y + h);
 	}
 
 	public void drawProgressBar(Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
-		if (!book.showProgress || PatchouliConfig.disableAdvancementLocking.get())
+		if (!book.showProgress || !book.advancementsEnabled()) {
 			return;
+		}
 
 		int barLeft = 19;
 		int barTop = FULL_HEIGHT - 36;
@@ -388,21 +403,25 @@ public abstract class GuiBook extends Screen {
 
 		int unlockedSecretEntries = 0;
 
-		for (BookEntry entry : book.contents.entries.values())
+		for (BookEntry entry : book.contents.entries.values()) {
 			if (filter.test(entry)) {
 				if (entry.isSecret()) {
-					if (!entry.isLocked())
+					if (!entry.isLocked()) {
 						unlockedSecretEntries++;
+					}
 				} else {
 					BookCategory category = entry.getCategory();
-					if (category.isSecret() && !category.isLocked())
+					if (category.isSecret() && !category.isLocked()) {
 						continue;
+					}
 
 					totalEntries++;
-					if (!entry.isLocked())
+					if (!entry.isLocked()) {
 						unlockedEntries++;
+					}
 				}
 			}
+		}
 
 		float unlockFract = (float) unlockedEntries / Math.max(1, (float) totalEntries);
 		int progressWidth = (int) (((float) barWidth - 1) * unlockFract);
@@ -415,19 +434,21 @@ public abstract class GuiBook extends Screen {
 		font.draw(I18n.translate("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
 
 		if (isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
-			List<String> tooltip = new ArrayList<>();
-			String progressStr = I18n.translate("patchouli.gui.lexicon.progress_tooltip", unlockedEntries, totalEntries);
+			List<Text> tooltip = new ArrayList<>();
+			Text progressStr = new TranslatableText("patchouli.gui.lexicon.progress_tooltip", unlockedEntries, totalEntries);
 			tooltip.add(progressStr);
 
 			if (unlockedSecretEntries > 0) {
-				if (unlockedSecretEntries == 1)
-					tooltip.add(TextFormat.GRAY + I18n.translate("patchouli.gui.lexicon.progress_tooltip.secret1"));
-				else
-					tooltip.add(TextFormat.GRAY + I18n.translate("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries));
+				if (unlockedSecretEntries == 1) {
+					tooltip.add(new TranslatableText("patchouli.gui.lexicon.progress_tooltip.secret1").formatted(Formatting.GRAY));
+				} else {
+					tooltip.add(new TranslatableText("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries).formatted(Formatting.GRAY));
+				}
 			}
 
-			if (unlockedEntries != totalEntries)
-				tooltip.add(TextFormat.GRAY + I18n.translate("patchouli.gui.lexicon.progress_tooltip.info"));
+			if (unlockedEntries != totalEntries) {
+				tooltip.add(new TranslatableText("patchouli.gui.lexicon.progress_tooltip.info").formatted(Formatting.GRAY));
+			}
 
 			setTooltip(tooltip);
 		}
@@ -466,8 +487,9 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public static void drawMarking(Book book, int x, int y, int rand, EntryDisplayState state) {
-		if (!state.hasIcon)
+		if (!state.hasIcon) {
 			return;
+		}
 
 		RenderSystem.enableBlend();
 		RenderSystem.disableAlphaTest();

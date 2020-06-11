@@ -49,8 +49,9 @@ public class VariableAssigner {
 	}
 
 	private static String resolveString(@Nullable String curr, Context c) {
-		if (curr == null || curr.isEmpty())
+		if (curr == null || curr.isEmpty()) {
 			return null;
+		}
 
 		String s = curr;
 		Matcher m = INLINE_VAR_PATTERN.matcher(s);
@@ -70,8 +71,9 @@ public class VariableAssigner {
 
 	private static String resolveStringFunctions(String curr, Context c) {
 		String cached = c.getCached(curr);
-		if (cached != null)
+		if (cached != null) {
 			return cached;
+		}
 
 		Matcher m = FUNCTION_PATTERN.matcher(curr);
 
@@ -83,8 +85,9 @@ public class VariableAssigner {
 				Function<String, String> func = FUNCTIONS.get(funcStr);
 				String parsedArg = resolveStringFunctions(arg, c);
 				return func.apply(parsedArg);
-			} else
+			} else {
 				throw new IllegalArgumentException("Invalid Function " + funcStr);
+			}
 		}
 
 		String ret = resolveStringVar(curr, c);
@@ -96,8 +99,9 @@ public class VariableAssigner {
 	private static String resolveStringVar(String curr, Context c) {
 		String original = curr;
 
-		if (curr != null && !curr.isEmpty() && c.encapsulation != null)
+		if (curr != null && !curr.isEmpty() && c.encapsulation != null) {
 			curr = c.encapsulation.transform(curr, true);
+		}
 
 		if (curr != null) {
 			String val = curr;
@@ -106,14 +110,17 @@ public class VariableAssigner {
 				String key = curr.substring(1);
 				String originalKey = original.substring(1);
 
-				if (c.processor != null)
+				if (c.processor != null) {
 					val = c.processor.process(originalKey);
+				}
 
-				if (val == null && c.variables.has(key))
+				if (val == null && c.variables.has(key)) {
 					val = c.variables.get(key);
+				}
 
-				if (val == null)
+				if (val == null) {
 					val = "";
+				}
 			}
 
 			c.cache(original, val);
@@ -142,12 +149,14 @@ public class VariableAssigner {
 	}
 
 	private static String iexists(String arg) {
-		if (arg.isEmpty())
+		if (arg.isEmpty()) {
 			return "false";
+		}
 
 		ItemStack stack = ItemStackUtil.loadStackFromString(arg);
-		if (stack.isEmpty())
+		if (stack.isEmpty()) {
 			return "false";
+		}
 
 		return "true";
 	}

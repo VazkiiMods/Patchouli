@@ -7,10 +7,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.state.property.Property;
+import net.minecraft.text.Text;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import vazkii.patchouli.api.stub.StubPatchouliAPI;
+
+import javax.annotation.Nullable;
 
 import java.io.InputStream;
 import java.util.List;
@@ -75,6 +80,13 @@ public class PatchouliAPI {
 		void openBookEntry(Identifier book, Identifier entry, int page);
 
 		Identifier getOpenBookGui();
+
+		/**
+		 * @return                          The subtitle (edition string/what appears under the title in the landing
+		 *                                  page) of the book.
+		 * @throws IllegalArgumentException if the book id given cannot be found
+		 */
+		Text getSubtitle(Identifier bookId);
 
 		/**
 		 * Reloads the contents of all books. Call sparingly and only if you
@@ -149,6 +161,30 @@ public class PatchouliAPI {
 		IMultiblock registerMultiblock(Identifier res, IMultiblock mb);
 
 		/**
+		 * @return The multiblock currently being visualized in-world or null if no multiblock is visualized. Only works
+		 *         clientside.
+		 */
+		@Nullable
+		IMultiblock getCurrentMultiblock();
+
+		/**
+		 * Sets the given multiblock as the currently visualized one. This overwrites any currently visualized
+		 * multiblock.
+		 * Only works clientside.
+		 * 
+		 * @param multiblock  The multiblock to visualize
+		 * @param displayName The name to show above the completion bar
+		 * @param center      Where to place the multiblock's center
+		 * @param rotation    Orientation to visualize
+		 */
+		void showMultiblock(IMultiblock multiblock, Text displayName, BlockPos center, BlockRotation rotation);
+
+		/**
+		 * Clears the currently visualized multiblock. Only works clientside.
+		 */
+		void clearMultiblock();
+
+		/**
 		 * Creates a multiblock given the pattern and targets given. This works in the same way as
 		 * recipe registrations do, except it's a 2D array. The pattern works in the same way as
 		 * you'd register a multiblock using JSON. Check the page on Multiblocks on the Patchouli
@@ -185,6 +221,12 @@ public class PatchouliAPI {
 		 * requiring that the state in world be exactly the same.
 		 */
 		IStateMatcher stateMatcher(BlockState state);
+
+		/**
+		 * Gets an IStateMatcher with the passed in BlockState for display and validation,
+		 * requiring that only the specified properties are the same.
+		 */
+		IStateMatcher propertyMatcher(BlockState state, Property<?>... properties);
 
 		/**
 		 * Gets an IStateMatcher with the passed in Block's default state for display and

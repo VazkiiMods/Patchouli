@@ -26,9 +26,11 @@ public class ComponentItemStack extends TemplateComponent {
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
 		items = ItemStackUtil.loadStackListFromString(item);
-		if (linkedRecipe)
-			for (ItemStack stack : items)
+		if (linkedRecipe) {
+			for (ItemStack stack : items) {
 				entry.addRelevantStack(stack, pageNum);
+			}
+		}
 	}
 
 	@Override
@@ -39,8 +41,9 @@ public class ComponentItemStack extends TemplateComponent {
 
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
-		if (items.isEmpty())
+		if (items.isEmpty()) {
 			return;
+		}
 
 		if (framed) {
 			RenderSystem.enableBlend();

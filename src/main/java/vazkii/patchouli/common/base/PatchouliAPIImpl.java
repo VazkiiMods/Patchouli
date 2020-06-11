@@ -9,6 +9,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.state.property.Property;
+import net.minecraft.text.Text;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
@@ -21,6 +24,9 @@ import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.template.BookTemplate;
+import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
+import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.multiblock.DenseMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
@@ -30,8 +36,10 @@ import vazkii.patchouli.common.network.NetworkHandler;
 import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
+import javax.annotation.Nonnull;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -84,9 +92,20 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Environment(EnvType.CLIENT)
 	public Identifier getOpenBookGui() {
 		Screen gui = MinecraftClient.getInstance().currentScreen;
-		if (gui instanceof GuiBook)
+		if (gui instanceof GuiBook) {
 			return ((GuiBook) gui).book.id;
+		}
 		return null;
+	}
+
+	@Nonnull
+	@Override
+	public Text getSubtitle(@Nonnull Identifier bookId) {
+		Book book = BookRegistry.INSTANCE.books.get(bookId);
+		if (book == null) {
+			throw new IllegalArgumentException("Book not found: " + bookId);
+		}
+		return book.getSubtitle();
 	}
 
 	@Override
@@ -102,8 +121,9 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	public void registerTemplateAsBuiltin(Identifier res, Supplier<InputStream> streamProvider) {
 		InputStream testStream = streamProvider.get();
-		if (testStream == null)
+		if (testStream == null) {
 			throw new NullPointerException("Stream provider can't return a null stream");
+		}
 		IOUtils.closeQuietly(testStream);
 
 		Supplier<BookTemplate> prev = BookContents.addonTemplates.put(res, () -> {
@@ -158,6 +178,24 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
+	public IMultiblock getCurrentMultiblock() {
+		return MultiblockVisualizationHandler.hasMultiblock ? MultiblockVisualizationHandler.getMultiblock() : null;
+	}
+
+	@Override
+	@Environment(EnvType.CLIENT)
+	public void showMultiblock(@Nonnull IMultiblock multiblock, @Nonnull Text displayName, @Nonnull BlockPos center, @Nonnull BlockRotation rotation) {
+		MultiblockVisualizationHandler.setMultiblock(multiblock, displayName, null, false);
+		MultiblockVisualizationHandler.anchorTo(center, rotation);
+	}
+
+	@Override
+	public void clearMultiblock() {
+		MultiblockVisualizationHandler.setMultiblock(null, (Text) null, null, false);
+	}
+
+	@Override
 	public IMultiblock makeMultiblock(String[][] pattern, Object... targets) {
 		return new DenseMultiblock(pattern, targets);
 	}
@@ -180,6 +218,11 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	public IStateMatcher stateMatcher(BlockState state) {
 		return StateMatcher.fromState(state);
+	}
+
+	@Override
+	public IStateMatcher propertyMatcher(BlockState state, Property<?>... properties) {
+		return StateMatcher.fromStateWithFilter(state, Arrays.asList(properties)::contains);
 	}
 
 	@Override

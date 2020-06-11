@@ -29,10 +29,12 @@ public class ComponentHeader extends TemplateComponent {
 			color = page.book.headerColor;
 		}
 
-		if (x == -1)
+		if (x == -1) {
 			x = GuiBook.PAGE_WIDTH / 2;
-		if (y == -1)
+		}
+		if (y == -1) {
 			y = 0;
+		}
 	}
 
 	@Override
@@ -41,10 +43,11 @@ public class ComponentHeader extends TemplateComponent {
 		RenderSystem.translatef(x, y, 0);
 		RenderSystem.scalef(scale, scale, scale);
 
-		if (centered)
+		if (centered) {
 			page.parent.drawCenteredStringNoShadow(page.i18n(text), 0, 0, color);
-		else
+		} else {
 			page.fontRenderer.draw(page.i18n(text), 0, 0, color);
+		}
 		RenderSystem.popMatrix();
 	}
 

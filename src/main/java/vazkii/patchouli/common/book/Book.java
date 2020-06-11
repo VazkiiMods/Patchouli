@@ -8,6 +8,9 @@ import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
@@ -28,6 +31,7 @@ import java.util.Map;
 
 public class Book {
 
+	private static final String[] ORDINAL_SUFFIXES = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 	public static final Identifier DEFAULT_MODEL = new Identifier(Patchouli.MOD_ID, "book_brown");
 	private static final Identifier UNICODE_FONT_ID = new Identifier(Patchouli.MOD_ID, "unicode_font");
 
@@ -107,6 +111,8 @@ public class Book {
 
 	@SerializedName("allow_extensions") public boolean allowExtensions = true;
 
+	@SerializedName("pause_game") public boolean pauseGame = false;
+
 	public boolean i18n = false;
 
 	public Map<String, String> macros = new HashMap<>();
@@ -127,9 +133,11 @@ public class Book {
 			progressBarColor = 0xFF000000 | Integer.parseInt(progressBarColorRaw, 16);
 			progressBarBackground = 0xFF000000 | Integer.parseInt(progressBarBackgroundRaw, 16);
 
-			for (String m : DEFAULT_MACROS.keySet())
-				if (!macros.containsKey(m))
+			for (String m : DEFAULT_MACROS.keySet()) {
+				if (!macros.containsKey(m)) {
 					macros.put(m, DEFAULT_MACROS.get(m));
+				}
+			}
 		}
 	}
 
@@ -139,10 +147,11 @@ public class Book {
 
 	public ItemStack getBookItem() {
 		if (bookItem == null) {
-			if (noBook)
+			if (noBook) {
 				bookItem = ItemStackUtil.loadStackFromString(customBookItem);
-			else
+			} else {
 				bookItem = ItemModBook.forBook(this);
+			}
 		}
 
 		return bookItem;
@@ -163,14 +172,16 @@ public class Book {
 	public void reloadContentsAndExtensions() {
 		reloadContents();
 
-		for (Book b : extensions)
+		for (Book b : extensions) {
 			b.reloadExtensionContents();
+		}
 	}
 
 	@Environment(EnvType.CLIENT)
 	public void reloadContents() {
-		if (contents == null)
+		if (contents == null) {
 			contents = isExternal ? new ExternalBookContents(this) : new BookContents(this);
+		}
 
 		if (!isExtension) {
 			contents.reload(false);
@@ -184,10 +195,11 @@ public class Book {
 			if (extensionTarget == null) {
 				extensionTarget = BookRegistry.INSTANCE.books.get(extend);
 
-				if (extensionTarget == null)
+				if (extensionTarget == null) {
 					throw new IllegalArgumentException("Extension Book " + id + " has no valid target");
-				else if (!extensionTarget.allowExtensions)
+				} else if (!extensionTarget.allowExtensions) {
 					throw new IllegalArgumentException("Book " + extensionTarget.id + " doesn't allow extensions, so " + id + " can't resolve");
+				}
 
 				extensionTarget.extensions.add(this);
 
@@ -202,14 +214,18 @@ public class Book {
 		}
 	}
 
+	public final boolean advancementsEnabled() {
+		return !PatchouliConfig.disableAdvancementLocking.get() && !PatchouliConfig.noAdvancementBooks.get().contains(id.toString());
+	}
+
 	@Environment(EnvType.CLIENT)
 	public void reloadLocks(boolean suppressToasts) {
 		contents.entries.values().forEach(BookEntry::updateLockStatus);
 		contents.categories.values().forEach(c -> c.updateLockStatus(true));
 
 		boolean updated = popUpdated();
-		if (updated && !suppressToasts && !PatchouliConfig.disableAdvancementLocking.get() && showToasts) {
-			MinecraftClient.getInstance().getToastManager().add(new ClientAdvancements.LexiconToast(this));
+		if (updated && !suppressToasts && advancementsEnabled() && showToasts) {
+			ClientAdvancements.sendBookToast(this);
 		}
 	}
 
@@ -226,4 +242,24 @@ public class Book {
 		}
 	}
 
+	public Text getSubtitle() {
+		Text editionStr;
+
+		try {
+			int ver = Integer.parseInt(version);
+			if (ver == 0) {
+				return new TranslatableText(subtitle);
+			}
+
+			editionStr = new LiteralText(numberToOrdinal(ver));
+		} catch (NumberFormatException e) {
+			editionStr = new TranslatableText("patchouli.gui.lexicon.dev_edition");
+		}
+
+		return new TranslatableText("patchouli.gui.lexicon.edition_str", editionStr);
+	}
+
+	private static String numberToOrdinal(int i) {
+		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
+	}
 }

@@ -25,6 +25,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
+
 public class ItemStackUtil {
 	private static final Gson GSON = new GsonBuilder().create();
 
@@ -63,8 +67,9 @@ public class ItemStackUtil {
 		}
 
 		String[] tokens = res.split(":");
-		if (tokens.length < 2)
+		if (tokens.length < 2) {
 			return ItemStack.EMPTY;
+		}
 
 		int countn = Integer.parseInt(count);
 		Identifier key = new Identifier(tokens[0], tokens[1]);
@@ -75,12 +80,13 @@ public class ItemStackUtil {
 		Item item = maybeItem.get();
 		ItemStack stack = new ItemStack(item, countn);
 
-		if (!nbt.isEmpty())
+		if (!nbt.isEmpty()) {
 			try {
 				stack.setTag(StringNbtReader.parse(nbt));
 			} catch (CommandSyntaxException e) {
 				throw new RuntimeException("Failed to parse ItemStack JSON", e);
 			}
+		}
 
 		return stack;
 	}
@@ -114,8 +120,9 @@ public class ItemStackUtil {
 			if (stacksSerialized[i].startsWith("tag:")) {
 				Tag<Item> tag = ItemTags.getContainer().get(new Identifier(stacksSerialized[i].substring(4)));
 				if (tag != null) {
-					for (Item item : tag.values())
+					for (Item item : tag.values()) {
 						stacks.add(new ItemStack(item));
+					}
 				}
 			} else {
 				stacks.add(loadStackFromString(stacksSerialized[i]));
@@ -164,12 +171,14 @@ public class ItemStackUtil {
 		for (int i = 0; i < ingredientSerialized.length(); i++) {
 			switch (ingredientSerialized.charAt(i)) {
 			case '{':
-				if (insideString == null)
+				if (insideString == null) {
 					braces++;
+				}
 				break;
 			case '}':
-				if (insideString == null)
+				if (insideString == null) {
 					braces--;
+				}
 				break;
 			case '\'':
 				insideString = insideString == null ? '\'' : null;

@@ -26,18 +26,20 @@ public class ExternalBookContents extends BookContents {
 		File enUs = new File(root, DEFAULT_LANG);
 		if (enUs.exists()) {
 			File searchDir = new File(enUs, dir);
-			if (searchDir.exists())
+			if (searchDir.exists()) {
 				crawl(searchDir, searchDir, list);
+			}
 		}
 	}
 
 	private void crawl(File realRoot, File root, List<Identifier> list) {
 		File[] files = root.listFiles();
 		for (File f : files) {
-			if (f.isDirectory())
+			if (f.isDirectory()) {
 				crawl(realRoot, f, list);
-			else if (f.getName().endsWith(".json"))
+			} else if (f.getName().endsWith(".json")) {
 				list.add(relativize(realRoot, f));
+			}
 		}
 	}
 

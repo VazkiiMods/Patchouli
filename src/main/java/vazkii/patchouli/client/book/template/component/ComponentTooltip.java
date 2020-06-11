@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.resource.language.I18n;
 
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.TemplateComponent;
@@ -18,7 +20,7 @@ public class ComponentTooltip extends TemplateComponent {
 
 	int width, height;
 
-	transient List<String> tooltip;
+	transient List<Text> tooltip;
 
 	@Override
 	public void onVariablesAvailable(Function<String, String> lookup) {
@@ -32,17 +34,20 @@ public class ComponentTooltip extends TemplateComponent {
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
 		tooltip = new ArrayList<>();
 
+		// todo 1.16 expand this into actual text components
 		for (String s : tooltipRaw) {
 			s = I18n.translate(s).replaceAll("&", "\u00A7");
-			if (!s.isEmpty())
-				tooltip.add(s);
+			if (!s.isEmpty()) {
+				tooltip.add(new LiteralText(s));
+			}
 		}
 	}
 
 	@Override
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
-		if (page.parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height))
+		if (page.parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
 			page.parent.setTooltip(tooltip);
+		}
 	}
 
 }

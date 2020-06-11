@@ -13,9 +13,6 @@ public class CommonProxy implements ModInitializer {
 	public void onInitialize() {
 		PatchouliConfig.setup();
 		PatchouliAPI.instance = PatchouliAPIImpl.INSTANCE;
-
-		PatchouliConfig.load();
-
 		PatchouliSounds.preInit();
 		BookRegistry.INSTANCE.init();
 

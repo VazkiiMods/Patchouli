@@ -15,8 +15,9 @@ public class EntityTestProcessor implements IComponentProcessor {
 	@Override
 	public void setup(IVariableProvider<String> variables) {
 		String entityType = variables.get("entity");
-		if (entityType.contains("{"))
+		if (entityType.contains("{")) {
 			entityType = entityType.substring(0, entityType.indexOf("{"));
+		}
 
 		Identifier key = new Identifier(entityType);
 		entityName = Registry.ENTITY_TYPE.getOrEmpty(key)
@@ -26,8 +27,9 @@ public class EntityTestProcessor implements IComponentProcessor {
 
 	@Override
 	public String process(String key) {
-		if (key.equals("name"))
+		if (key.equals("name")) {
 			return entityName;
+		}
 
 		return null;
 	}

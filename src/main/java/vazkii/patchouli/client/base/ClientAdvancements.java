@@ -18,6 +18,8 @@ import vazkii.patchouli.common.book.Book;
 
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 public class ClientAdvancements {
 	private static boolean gotFirstAdvPacket = false;
 
@@ -56,17 +58,31 @@ public class ClientAdvancements {
 		gotFirstAdvPacket = false;
 	}
 
-	public static class LexiconToast implements Toast {
+	public static void sendBookToast(Book book) {
+		ToastManager gui = MinecraftClient.getInstance().getToastManager();
+		if (gui.getToast(LexiconToast.class, book) == null) {
+			gui.add(new LexiconToast(book));
+		}
+	}
 
-		final Book book;
+	public static class LexiconToast implements Toast {
+		private final Book book;
 
 		public LexiconToast(Book book) {
 			this.book = book;
 		}
 
+		@Nonnull
+		@Override
+		public Book getType() {
+			return book;
+		}
+
+		@Nonnull
 		@Override
 		public Visibility draw(ToastManager toastGui, long delta) {
-			toastGui.getGame().getTextureManager().bindTexture(TOASTS_TEX);
+			MinecraftClient mc = MinecraftClient.getInstance();
+			mc.getTextureManager().bindTexture(TOASTS_TEX);
 			RenderSystem.color3f(1.0F, 1.0F, 1.0F);
 			toastGui.blit(0, 0, 0, 32, 160, 32);
 

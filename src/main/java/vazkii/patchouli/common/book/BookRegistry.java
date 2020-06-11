@@ -14,9 +14,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.Patchouli;
+import vazkii.patchouli.common.base.PatchouliConfig;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class BookRegistry {
 
@@ -73,7 +73,7 @@ public class BookRegistry {
 						}
 
 						return true;
-					}, false, true);
+					}, true);
 		});
 
 		foundBooks.forEach((pair, file) -> {
@@ -101,6 +101,7 @@ public class BookRegistry {
 
 	@Environment(EnvType.CLIENT)
 	public void reloadContents() {
+		PatchouliConfig.reloadFlags();
 		books.values().forEach(Book::reloadContents);
 		books.values().forEach(Book::reloadExtensionContents);
 		ClientBookRegistry.INSTANCE.reloadLocks(false);
@@ -113,42 +114,34 @@ public class BookRegistry {
 
 	// HELPER
 
-	public static boolean findFiles(ModContainer mod, String base, Function<Path, Boolean> preprocessor,
-			BiFunction<Path, Path, Boolean> processor, boolean defaultUnfoundRoot, boolean visitAllFiles) {
-		if (mod.getMetadata().getId().equals("minecraft"))
-			return false;
-
-		boolean success = true;
+	public static void findFiles(ModContainer mod, String base, Predicate<Path> rootFilter,
+			BiFunction<Path, Path, Boolean> processor, boolean visitAllFiles) {
+		if (mod.getMetadata().getId().equals("minecraft") || mod.getMetadata().getId().equals("forge")) {
+			return;
+		}
 
 		try {
 			Path root = mod.getRootPath().resolve(base);
 
-			if (!Files.exists(root))
-				return defaultUnfoundRoot;
-
-			if (preprocessor != null) {
-				Boolean cont = preprocessor.apply(root);
-				if (cont == null || !cont)
-					return false;
+			if (root == null || !Files.exists(root) || !rootFilter.test(root)) {
+				return;
 			}
 
 			if (processor != null) {
 				Iterator<Path> itr = Files.walk(root).iterator();
 
 				while (itr.hasNext()) {
-					Boolean cont = processor.apply(root, itr.next());
+					boolean cont = processor.apply(root, itr.next());
 
-					if (visitAllFiles)
-						success &= cont != null && cont;
-					else if (cont == null || !cont)
-						return false;
+					if (!visitAllFiles && !cont) {
+						return;
+					}
 				}
 			}
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
 
-		return success;
 	}
 
 }

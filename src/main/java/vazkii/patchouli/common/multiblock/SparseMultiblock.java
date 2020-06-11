@@ -51,21 +51,24 @@ public class SparseMultiblock extends AbstractMultiblock {
 
 	@Override
 	public Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, BlockRotation rotation, boolean forView) {
-		BlockPos center = forView
-				? anchor.add(RotationUtil.x(rotation, -viewOffX, -viewOffZ), -viewOffY + 1, RotationUtil.z(rotation, -viewOffX, -viewOffZ))
-				: anchor.add(RotationUtil.x(rotation, -offX, -offZ), -offY, RotationUtil.z(rotation, -offX, -offZ));
+		BlockPos disp = forView
+				? new BlockPos(-viewOffX, -viewOffY + 1, -viewOffZ).rotate(rotation)
+				: new BlockPos(-offX, -offY, -offZ).rotate(rotation);
+		// the local origin of this multiblock, in world coordinates
+		BlockPos origin = anchor.add(disp);
 		List<SimulateResult> ret = new ArrayList<>();
 		for (Map.Entry<BlockPos, IStateMatcher> e : data.entrySet()) {
-			BlockPos actionPos = center.add(RotationUtil.x(rotation, e.getKey().getX(), e.getKey().getZ()), e.getKey().getY(), RotationUtil.z(rotation, e.getKey().getX(), e.getKey().getZ()));
+			BlockPos currDisp = e.getKey().rotate(rotation);
+			BlockPos actionPos = origin.add(currDisp);
 			ret.add(new SimulateResultImpl(actionPos, e.getValue(), null));
 		}
-		return Pair.of(center, ret);
+		return Pair.of(origin, ret);
 	}
 
 	@Override
 	public boolean test(World world, BlockPos start, int x, int y, int z, BlockRotation rotation) {
 		setWorld(world);
-		BlockPos checkPos = start.add(RotationUtil.x(rotation, x, z), y, RotationUtil.z(rotation, x, z));
+		BlockPos checkPos = start.add(new BlockPos(x, y, z).rotate(rotation));
 		BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
 		IStateMatcher matcher = data.getOrDefault(new BlockPos(x, y, z), StateMatcher.ANY);
 		return matcher.getStatePredicate().test(world, checkPos, state);

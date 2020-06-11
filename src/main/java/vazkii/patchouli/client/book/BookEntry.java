@@ -43,7 +43,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	@SerializedName("extra_recipe_mappings") private Map<String, Integer> extraRecipeMappings;
 
 	private transient Identifier id;
-	transient Book book;
+	private transient Book book;
 	private transient Book trueProvider;
 	private transient BookCategory lcategory = null;
 	private transient BookIcon icon = null;
@@ -59,7 +59,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public List<BookPage> getPages() {
-		List<BookPage> pages = PatchouliConfig.disableAdvancementLocking.get() ? realPages : realPages.stream().filter(BookPage::isPageUnlocked).collect(Collectors.toList());
+		List<BookPage> pages = !getBook().advancementsEnabled() ? realPages : realPages.stream().filter(BookPage::isPageUnlocked).collect(Collectors.toList());
 
 		return pages.isEmpty() ? NO_PAGE : pages;
 	}
@@ -68,8 +68,9 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		List<BookPage> pages = getPages();
 		for (int i = 0; i < pages.size(); i++) {
 			BookPage page = pages.get(i);
-			if (anchor.equals(page.anchor))
+			if (anchor.equals(page.anchor)) {
 				return i;
+			}
 		}
 
 		return -1;
@@ -82,18 +83,27 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public BookIcon getIcon() {
-		if (icon == null)
+		if (icon == null) {
 			icon = BookIcon.from(iconRaw);
+		}
 
 		return icon;
 	}
 
 	public BookCategory getCategory() {
 		if (lcategory == null) {
-			if (category.contains(":"))
+			if (category.contains(":")) { // full category ID
 				lcategory = book.contents.categories.get(new Identifier(category));
-			else
-				lcategory = book.contents.categories.get(new Identifier(book.getModNamespace(), category));
+			} else {
+				// if we are an extension, guess the extension book's domain first, then the parent book's domain
+				if (isExtension()) {
+					lcategory = book.contents.categories.get(new Identifier(trueProvider.getModNamespace(), category));
+				}
+
+				if (lcategory == null) {
+					lcategory = book.contents.categories.get(new Identifier(book.getModNamespace(), category));
+				}
+			}
 		}
 
 		return lcategory;
@@ -109,17 +119,20 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 			book.markUpdated();
 		}
 
-		if (!dirty && !readStateDirty && getReadState() == EntryDisplayState.PENDING && ClientAdvancements.hasDone(turnin))
+		if (!dirty && !readStateDirty && getReadState() == EntryDisplayState.PENDING && ClientAdvancements.hasDone(turnin)) {
 			dirty = true;
+		}
 
-		if (dirty)
+		if (dirty) {
 			markReadStateDirty();
+		}
 	}
 
 	public boolean isLocked() {
-		if (isSecret())
+		if (isSecret()) {
 			return locked;
-		return !PatchouliConfig.disableAdvancementLocking.get() && locked;
+		}
+		return getBook().advancementsEnabled() && locked;
 	}
 
 	public boolean isSecret() {
@@ -143,29 +156,35 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public boolean isFoundByQuery(String query) {
-		if (getName().toLowerCase().contains(query))
+		if (getName().toLowerCase().contains(query)) {
 			return true;
+		}
 
-		for (StackWrapper wrapper : relevantStacks)
-			if (ChatUtil.stripTextFormat(wrapper.stack.getName().asFormattedString()).toLowerCase().contains(query))
+		for (StackWrapper wrapper : relevantStacks) {
+			if (ChatUtil.stripTextFormat(wrapper.stack.getName().asFormattedString()).toLowerCase().contains(query)) {
 				return true;
+			}
+		}
 
 		return false;
 	}
 
 	@Override
 	public int compareTo(BookEntry o) {
-		if (o.locked != this.locked)
+		if (o.locked != this.locked) {
 			return this.locked ? 1 : -1;
+		}
 
 		EntryDisplayState ourState = getReadState();
 		EntryDisplayState otherState = o.getReadState();
 
-		if (ourState != otherState)
+		if (ourState != otherState) {
 			return ourState.compareTo(otherState);
+		}
 
-		if (o.priority != this.priority)
+		if (o.priority != this.priority) {
 			return this.priority ? -1 : 1;
+		}
 
 		int sort = this.sortnum - o.sortnum;
 
@@ -176,8 +195,9 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		if (book.isExtension) {
 			this.book = book.extensionTarget;
 			trueProvider = book;
-		} else
+		} else {
 			this.book = book;
+		}
 	}
 
 	public void setId(Identifier id) {
@@ -185,15 +205,16 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public void build() {
-		if (built)
+		if (built) {
 			return;
+		}
 
 		if (entryColorRaw != null) {
 			this.entryColor = Integer.parseInt(entryColorRaw, 16);
 		} else {
 			this.entryColor = book.textColor;
 		}
-		for (int i = 0; i < pages.length; i++)
+		for (int i = 0; i < pages.length; i++) {
 			if (pages[i].canAdd(book)) {
 				try {
 					pages[i].build(this, i);
@@ -202,6 +223,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 					throw new RuntimeException("Error while loading entry " + id + " page " + i, e);
 				}
 			}
+		}
 
 		if (extraRecipeMappings != null) {
 			for (Map.Entry<String, Integer> entry : extraRecipeMappings.entrySet()) {
@@ -231,15 +253,20 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		StackWrapper wrapper = ItemStackUtil.wrapStack(stack);
 		relevantStacks.add(wrapper);
 
-		if (!book.contents.recipeMappings.containsKey(wrapper))
+		if (!book.contents.recipeMappings.containsKey(wrapper)) {
 			book.contents.recipeMappings.put(wrapper, Pair.of(this, page / 2));
+		}
 	}
 
 	public boolean isStackRelevant(ItemStack stack) {
 		return relevantStacks.contains(ItemStackUtil.wrapStack(stack));
 	}
 
-	public Book getBook() {
+	/**
+	 * @return The logical book this entry belongs to.
+	 *         For entries added by extension books, this is the book being extended.
+	 */
+	public final Book getBook() {
 		return book;
 	}
 
@@ -254,15 +281,19 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	@Override
 	protected EntryDisplayState computeReadState() {
 		BookData data = PersistentData.data.getBookData(book);
-		if (data != null && getId() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getId().toString()))
+		if (data != null && getId() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getId().toString())) {
 			return EntryDisplayState.UNREAD;
+		}
 
-		if (turnin != null && !turnin.isEmpty() && !ClientAdvancements.hasDone(turnin))
+		if (turnin != null && !turnin.isEmpty() && !ClientAdvancements.hasDone(turnin)) {
 			return EntryDisplayState.PENDING;
+		}
 
-		for (BookPage page : pages)
-			if (page instanceof PageQuest && ((PageQuest) page).isCompleted(book))
+		for (BookPage page : pages) {
+			if (page instanceof PageQuest && ((PageQuest) page).isCompleted(book)) {
 				return EntryDisplayState.COMPLETED;
+			}
+		}
 
 		return EntryDisplayState.NEUTRAL;
 	}

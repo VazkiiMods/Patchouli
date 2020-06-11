@@ -40,8 +40,9 @@ public final class PersistentData {
 
 		public BookData getBookData(Book book) {
 			String res = book.id.toString();
-			if (!bookData.containsKey(res))
+			if (!bookData.containsKey(res)) {
 				bookData.put(res, new BookData());
+			}
 
 			return bookData.get(res);
 		}

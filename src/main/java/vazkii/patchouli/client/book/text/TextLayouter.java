@@ -52,8 +52,9 @@ public class TextLayouter {
 
 			paragraph.add(span);
 		}
-		if (!paragraph.isEmpty())
+		if (!paragraph.isEmpty()) {
 			layoutParagraph(paragraph);
+		}
 	}
 
 	// a paragraph is a series of spans without explicit line break
@@ -72,8 +73,9 @@ public class TextLayouter {
 		iterator.setText(text);
 		lineStart = 0;
 
-		for (Span span : paragraph)
+		for (Span span : paragraph) {
 			append(iterator, span);
+		}
 
 		flush();
 	}
@@ -92,8 +94,9 @@ public class TextLayouter {
 			breakLine(iterator);
 
 			widthSoFar = 0;
-			for (SpanTail pending : this.pending)
+			for (SpanTail pending : this.pending) {
 				widthSoFar += pending.width;
+			}
 		}
 	}
 
@@ -112,16 +115,19 @@ public class TextLayouter {
 		char[] characters = last.span.text.toCharArray();
 		for (int i = last.start; i < characters.length; i++) {
 			width += font.getCharWidth(characters[i]);
-			if (last.span.bold)
+			if (last.span.bold) {
 				width++;
+			}
 
 			if (width > pageWidth) {
 				int overflowOffset = lineStart + offset + i - last.start;
 				int breakOffset = overflowOffset + 1;
-				if (!Character.isWhitespace(characters[i]))
+				if (!Character.isWhitespace(characters[i])) {
 					breakOffset = iterator.preceding(breakOffset);
-				if (breakOffset <= lineStart) // could not break: we have a long word
+				}
+				if (breakOffset <= lineStart) { // could not break: we have a long word
 					breakOffset = overflowOffset - 1; // cut off the word
+				}
 
 				breakLine(breakOffset);
 				return;
@@ -137,14 +143,16 @@ public class TextLayouter {
 
 	private String toString(List<Span> paragraph) {
 		StringBuilder result = new StringBuilder();
-		for (Span span : paragraph)
+		for (Span span : paragraph) {
 			result.append(span.text);
+		}
 		return result.toString();
 	}
 
 	public void flush() {
-		if (pending.isEmpty())
+		if (pending.isEmpty()) {
 			return;
+		}
 
 		int x = pageX;
 		for (SpanTail pending : this.pending) {
@@ -170,8 +178,9 @@ public class TextLayouter {
 				break;
 			}
 		}
-		for (int i = index - 1; i >= 0; i--)
+		for (int i = index - 1; i >= 0; i--) {
 			pending.remove(i);
+		}
 
 		lineStart = textOffset;
 		y += lineHeight;
@@ -200,8 +209,9 @@ public class TextLayouter {
 		public Word position(GuiBook gui, int x, int y, int length) {
 			x += span.spacingLeft;
 			Word result = new Word(gui, span, span.text.substring(start, start + length), x, y, width, cluster);
-			if (cluster != null)
+			if (cluster != null) {
 				cluster.add(result);
+			}
 			return result;
 		}
 

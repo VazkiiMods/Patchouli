@@ -3,6 +3,7 @@ package vazkii.patchouli.common.item;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -31,6 +32,8 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.network.NetworkHandler;
 import vazkii.patchouli.common.network.message.MessageOpenBookGui;
 
+import javax.annotation.Nullable;
+
 import java.util.List;
 
 public class ItemModBook extends Item {
@@ -53,8 +56,9 @@ public class ItemModBook extends Item {
 				for (BookEntry entry : book.contents.entries.values()) {
 					if (!entry.isSecret()) {
 						totalEntries++;
-						if (!entry.isLocked())
+						if (!entry.isLocked()) {
 							unlockedEntries++;
+						}
 					}
 				}
 
@@ -83,14 +87,16 @@ public class ItemModBook extends Item {
 	public void appendStacks(ItemGroup tab, DefaultedList<ItemStack> items) {
 		String tabName = tab.getName();
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			if (!b.noBook && !b.isExtension && (tab == ItemGroup.SEARCH || b.creativeTab.equals(tabName)))
+			if (!b.noBook && !b.isExtension && (tab == ItemGroup.SEARCH || b.creativeTab.equals(tabName))) {
 				items.add(forBook(b));
+			}
 		});
 	}
 
 	public static Book getBook(ItemStack stack) {
-		if (!stack.hasTag() || !stack.getTag().contains(TAG_BOOK))
+		if (!stack.hasTag() || !stack.getTag().contains(TAG_BOOK)) {
 			return null;
+		}
 
 		String bookStr = stack.getTag().getString(TAG_BOOK);
 		Identifier res = Identifier.tryParse(bookStr);
@@ -101,9 +107,10 @@ public class ItemModBook extends Item {
 	@Override
 	public String getCreatorModId(ItemStack itemStack) {
 		Book book = getBook(itemStack);
-		if(book != null)
+		if (book != null) {
 			return book.owner.getModId();
-	
+		}
+
 		return super.getCreatorModId(itemStack);
 	}
 	*/
@@ -111,8 +118,9 @@ public class ItemModBook extends Item {
 	@Override
 	public Text getName(ItemStack stack) {
 		Book book = getBook(stack);
-		if (book != null)
+		if (book != null) {
 			return new TranslatableText(book.name);
+		}
 
 		return super.getName(stack);
 	}
@@ -123,16 +131,18 @@ public class ItemModBook extends Item {
 		super.appendTooltip(stack, worldIn, tooltip, flagIn);
 
 		Book book = getBook(stack);
-		if (book != null && book.contents != null)
+		if (book != null && book.contents != null) {
 			tooltip.add(new LiteralText(book.contents.getSubtitle()).formatted(Formatting.GRAY));
+		}
 	}
 
 	@Override
 	public TypedActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
 		ItemStack stack = playerIn.getStackInHand(handIn);
 		Book book = getBook(stack);
-		if (book == null)
+		if (book == null) {
 			return new TypedActionResult<>(ActionResult.FAIL, stack);
+		}
 
 		if (playerIn instanceof ServerPlayerEntity) {
 			PatchouliAPI.instance.openBookGUI((ServerPlayerEntity) playerIn, book.id);

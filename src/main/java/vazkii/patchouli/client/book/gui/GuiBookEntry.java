@@ -9,6 +9,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.api.IComponentRenderContext;
@@ -22,6 +23,9 @@ import vazkii.patchouli.common.book.Book;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 
 public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
@@ -65,18 +69,21 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 		int index = data.history.indexOf(key);
 		if (index != 0) {
-			if (index > 0)
+			if (index > 0) {
 				data.history.remove(key);
+			}
 
 			data.history.add(0, key);
-			while (data.history.size() > GuiBookEntryList.ENTRIES_PER_PAGE)
+			while (data.history.size() > GuiBookEntryList.ENTRIES_PER_PAGE) {
 				data.history.remove(GuiBookEntryList.ENTRIES_PER_PAGE);
+			}
 
 			dirty = true;
 		}
 
-		if (dirty)
+		if (dirty) {
 			PersistentData.save();
+		}
 	}
 
 	@Override
@@ -84,8 +91,9 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		drawPage(leftPage, mouseX, mouseY, partialTicks);
 		drawPage(rightPage, mouseX, mouseY, partialTicks);
 
-		if (rightPage == null)
+		if (rightPage == null) {
 			drawPageFiller(leftPage.book);
+		}
 	}
 
 	@Override
@@ -96,8 +104,9 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	void drawPage(BookPage page, int mouseX, int mouseY, float pticks) {
-		if (page == null)
+		if (page == null) {
 			return;
+		}
 
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(page.left, page.top, 0);
@@ -106,8 +115,9 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	boolean clickPage(BookPage page, double mouseX, double mouseY, int mouseButton) {
-		if (page != null)
+		if (page != null) {
 			return page.mouseClicked(mouseX - page.left, mouseY - page.top, mouseButton);
+		}
 
 		return false;
 	}
@@ -121,10 +131,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	void setupPages() {
 		customButtons.clear();
 
-		if (leftPage != null)
+		if (leftPage != null) {
 			leftPage.onHidden(this);
-		if (rightPage != null)
+		}
+		if (rightPage != null) {
 			rightPage.onHidden(this);
+		}
 
 		List<BookPage> pages = entry.getPages();
 		int leftNum = spread * 2;
@@ -133,10 +145,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		leftPage = leftNum < pages.size() ? pages.get(leftNum) : null;
 		rightPage = rightNum < pages.size() ? pages.get(rightNum) : null;
 
-		if (leftPage != null)
+		if (leftPage != null) {
 			leftPage.onDisplayed(this, LEFT_PAGE_X, TOP_PADDING);
-		if (rightPage != null)
+		}
+		if (rightPage != null) {
 			rightPage.onDisplayed(this, RIGHT_PAGE_X, TOP_PADDING);
+		}
 	}
 
 	public BookEntry getEntry() {
@@ -146,6 +160,11 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	@Override
 	public boolean equals(Object obj) {
 		return obj == this || (obj instanceof GuiBookEntry && ((GuiBookEntry) obj).entry == entry && ((GuiBookEntry) obj).spread == spread);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(entry) * 31 + Objects.hashCode(spread);
 	}
 
 	@Override
@@ -159,15 +178,18 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	boolean isBookmarkedAlready() {
-		if (entry == null || entry.getId() == null)
+		if (entry == null || entry.getId() == null) {
 			return false;
+		}
 
 		String entryKey = entry.getId().toString();
 		BookData data = PersistentData.data.getBookData(book);
 
-		for (Bookmark bookmark : data.bookmarks)
-			if (bookmark.entry.equals(entryKey) && bookmark.page == spread)
+		for (Bookmark bookmark : data.bookmarks) {
+			if (bookmark.entry.equals(entryKey) && bookmark.page == spread) {
 				return true;
+			}
+		}
 
 		return false;
 	}
@@ -216,25 +238,33 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void renderItemStack(int x, int y, int mouseX, int mouseY, ItemStack stack) {
-		if (stack == null || stack.isEmpty())
+		if (stack == null || stack.isEmpty()) {
 			return;
+		}
 
 		minecraft.getItemRenderer().renderGuiItem(stack, x, y);
 		minecraft.getItemRenderer().renderGuiItemOverlay(font, stack, x, y);
 
-		if (isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16))
+		if (isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
 			setTooltipStack(stack);
+		}
 	}
 
 	@Override
 	public void renderIngredient(int x, int y, int mouseX, int mouseY, Ingredient ingr) {
 		ItemStack[] stacks = ingr.getMatchingStacksClient();
-		if (stacks.length > 0)
+		if (stacks.length > 0) {
 			renderItemStack(x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
+		}
 	}
 
 	@Override
 	public void setHoverTooltip(List<String> tooltip) {
+		setTooltip(tooltip.stream().map(LiteralText::new).collect(Collectors.toList()));
+	}
+
+	@Override
+	public void setHoverTooltipComponents(@Nonnull List<Text> tooltip) {
 		setTooltip(tooltip);
 	}
 

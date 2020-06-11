@@ -52,8 +52,9 @@ public class EntityUtil {
 			Entity entity;
 			try {
 				entity = type.create(world);
-				if (useNbt != null)
+				if (useNbt != null) {
 					entity.fromTag(useNbt);
+				}
 
 				return entity;
 			} catch (Exception e) {

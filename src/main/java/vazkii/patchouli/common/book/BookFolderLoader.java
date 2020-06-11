@@ -18,15 +18,17 @@ public class BookFolderLoader {
 
 	private static void setup() {
 		loadDir = new File(BookRegistry.BOOKS_LOCATION);
-		if (!loadDir.exists())
+		if (!loadDir.exists()) {
 			loadDir.mkdir();
-		else if (!loadDir.isDirectory())
+		} else if (!loadDir.isDirectory()) {
 			throw new RuntimeException(loadDir.getAbsolutePath() + " is a file, not a folder, aborting. Please delete this file or move it elsewhere if it has important contents.");
+		}
 	}
 
 	public static void findBooks() {
-		if (loadDir == null)
+		if (loadDir == null) {
 			setup();
+		}
 
 		ModContainer self = FabricLoader.getInstance().getModContainer(Patchouli.MOD_ID).get();
 		File[] subdirs = loadDir.listFiles(File::isDirectory);

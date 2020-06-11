@@ -18,6 +18,7 @@ import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.client.util.math.Vector4f;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -48,7 +49,7 @@ import java.util.WeakHashMap;
 public class PageMultiblock extends PageWithText {
 	private static final Random RAND = new Random();
 
-	String name;
+	String name = "";
 	@SerializedName("multiblock_id") Identifier multiblockId;
 
 	@SerializedName("multiblock") SerializedMultiblock serializedMultiblock;
@@ -63,23 +64,27 @@ public class PageMultiblock extends PageWithText {
 		if (multiblockId != null) {
 			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(multiblockId);
 
-			if (mb instanceof AbstractMultiblock)
+			if (mb instanceof AbstractMultiblock) {
 				multiblockObj = (AbstractMultiblock) mb;
+			}
 		}
 
-		if (multiblockObj == null && serializedMultiblock != null)
+		if (multiblockObj == null && serializedMultiblock != null) {
 			multiblockObj = serializedMultiblock.toMultiblock();
+		}
 
-		if (multiblockObj == null)
+		if (multiblockObj == null) {
 			throw new IllegalArgumentException("No multiblock located for " + multiblockId);
+		}
 	}
 
 	@Override
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 
-		if (showVisualizeButton)
+		if (showVisualizeButton) {
 			addButton(visualizeButton = new GuiButtonBookEye(parent, 12, 97, this::handleButtonVisualize));
+		}
 	}
 
 	@Override
@@ -97,8 +102,9 @@ public class PageMultiblock extends PageWithText {
 
 		parent.drawCenteredStringNoShadow(name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 
-		if (multiblockObj != null)
+		if (multiblockObj != null) {
 			renderMultiblock();
+		}
 
 		super.render(mouseX, mouseY, pticks);
 	}
@@ -106,7 +112,7 @@ public class PageMultiblock extends PageWithText {
 	public void handleButtonVisualize(ButtonWidget button) {
 		String entryKey = parent.getEntry().getId().toString();
 		Bookmark bookmark = new Bookmark(entryKey, pageNum / 2);
-		MultiblockVisualizationHandler.setMultiblock(multiblockObj, name, bookmark, true);
+		MultiblockVisualizationHandler.setMultiblock(multiblockObj, new LiteralText(name), bookmark, true);
 		parent.addBookmarkButtons();
 
 		if (!PersistentData.data.clickedVisualize) {
@@ -148,8 +154,9 @@ public class PageMultiblock extends PageWithText {
 		float offZ = (float) -sizeZ / 2 + 1;
 
 		float time = parent.ticksInBook * 0.5F;
-		if (!Screen.hasShiftDown())
+		if (!Screen.hasShiftDown()) {
 			time += ClientTicker.partialTicks;
+		}
 		RenderSystem.translatef(-offX, 0, -offZ);
 		RenderSystem.rotatef(time, 0F, 1F, 0F);
 		rotMat.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-time));
@@ -160,6 +167,10 @@ public class PageMultiblock extends PageWithText {
 		// Finally apply the rotations
 		eye.transform(rotMat);
 		eye.normalizeProjectiveCoordinates();
+		/* TODO XXX This does not handle visualization of sparse multiblocks correctly.
+			Dense multiblocks store everything in positive X/Z, so this works, but sparse multiblocks store everything from the JSON as-is.
+			Potential solution: Rotate around the offset vars of the multiblock, and add AABB method for extent of the multiblock
+		*/
 		renderElements(multiblockObj, BlockPos.iterate(BlockPos.ORIGIN, new BlockPos(sizeX - 1, sizeY - 1, sizeZ - 1)), eye);
 
 		RenderSystem.popMatrix();

@@ -51,9 +51,11 @@ public class BookTextRenderer {
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {
-		for (Word word : words)
-			if (word.click(mouseX, mouseY, mouseButton))
+		for (Word word : words) {
+			if (word.click(mouseX, mouseY, mouseButton)) {
 				return true;
+			}
+		}
 
 		return false;
 	}

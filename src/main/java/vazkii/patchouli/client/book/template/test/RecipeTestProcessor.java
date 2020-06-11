@@ -31,18 +31,14 @@ public class RecipeTestProcessor implements IComponentProcessor {
 			ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
 
 			return ItemStackUtil.serializeStack(stack);
-		}
-
-		else if (key.equals("text")) {
+		} else if (key.equals("text")) {
 			ItemStack out = recipe.getOutput();
 			return out.getCount() + "x$(br)" + out.getName();
-		}
-
-		else if (key.equals("icount"))
+		} else if (key.equals("icount")) {
 			return Integer.toString(recipe.getOutput().getCount());
-
-		else if (key.equals("iname"))
+		} else if (key.equals("iname")) {
 			return recipe.getOutput().getName().getString();
+		}
 
 		return null;
 	}

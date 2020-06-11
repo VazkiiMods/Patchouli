@@ -5,32 +5,6 @@ import net.minecraft.util.math.Direction;
 
 public class RotationUtil {
 
-	public static int x(BlockRotation rot, int x, int z) {
-		switch (rot) {
-		case NONE:
-			return x;
-		case CLOCKWISE_180:
-			return -x;
-		case CLOCKWISE_90:
-			return z;
-		default:
-			return -z;
-		}
-	}
-
-	public static int z(BlockRotation rot, int x, int z) {
-		switch (rot) {
-		case NONE:
-			return z;
-		case CLOCKWISE_180:
-			return -z;
-		case CLOCKWISE_90:
-			return x;
-		default:
-			return -x;
-		}
-	}
-
 	public static BlockRotation rotationFromFacing(Direction facing) {
 		switch (facing) {
 		case EAST:
@@ -44,6 +18,7 @@ public class RotationUtil {
 		}
 	}
 
+	// TODO figure out why this is needed and document it.
 	public static BlockRotation fixHorizontal(BlockRotation rot) {
 		switch (rot) {
 		case CLOCKWISE_90:

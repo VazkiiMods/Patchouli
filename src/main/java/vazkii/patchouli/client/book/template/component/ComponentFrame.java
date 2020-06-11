@@ -11,10 +11,12 @@ public class ComponentFrame extends TemplateComponent {
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		if (x == -1)
+		if (x == -1) {
 			x = GuiBook.PAGE_WIDTH / 2 - 53;
-		if (y == -1)
+		}
+		if (y == -1) {
 			y = 7;
+		}
 	}
 
 	@Override

@@ -34,8 +34,9 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 	public transient JsonObject sourceObject;
 
 	public final void compile(IVariableProvider<String> variables, IComponentProcessor processor, @Nullable TemplateInclusion encapsulation) {
-		if (compiled)
+		if (compiled) {
 			return;
+		}
 
 		if (encapsulation != null) {
 			x += encapsulation.x;
@@ -47,17 +48,21 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 	}
 
 	public boolean getVisibleStatus(IComponentProcessor processor) {
-		if (processor != null && group != null && !group.isEmpty() && !processor.allowRender(group))
+		if (processor != null && group != null && !group.isEmpty() && !processor.allowRender(group)) {
 			return false;
+		}
 
-		if (guard != null && (guard.isEmpty() || guard.equalsIgnoreCase("false")))
+		if (guard != null && (guard.isEmpty() || guard.equalsIgnoreCase("false"))) {
 			return false;
+		}
 
-		if (!flag.isEmpty() && !PatchouliConfig.getConfigFlag(flag))
+		if (!flag.isEmpty() && !PatchouliConfig.getConfigFlag(flag)) {
 			return false;
+		}
 
-		if (!advancement.isEmpty())
+		if (!advancement.isEmpty()) {
 			return ClientAdvancements.hasDone(advancement) != negateAdvancement;
+		}
 
 		return true;
 	}

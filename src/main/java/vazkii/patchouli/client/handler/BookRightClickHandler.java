@@ -91,13 +91,16 @@ public class BookRightClickHandler {
 
 	@Nullable
 	public static Book getBookFromStack(ItemStack stack) {
-		if (stack.getItem() instanceof ItemModBook)
+		if (stack.getItem() instanceof ItemModBook) {
 			return ItemModBook.getBook(stack);
+		}
 
 		Collection<Book> books = BookRegistry.INSTANCE.books.values();
-		for (Book b : books)
-			if (b.getBookItem().isItemEqual(stack))
+		for (Book b : books) {
+			if (b.getBookItem().isItemEqual(stack)) {
 				return b;
+			}
+		}
 
 		return null;
 	}
@@ -111,8 +114,9 @@ public class BookRightClickHandler {
 			Block block = state.getBlock();
 			ItemStack picked = block.getPickStack(mc.world, pos, state);
 
-			if (!picked.isEmpty())
+			if (!picked.isEmpty()) {
 				return book.contents.getEntryForStack(picked);
+			}
 		}
 
 		return null;

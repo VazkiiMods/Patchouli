@@ -1,18 +1,21 @@
 package vazkii.patchouli.api.stub;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.state.property.Property;
+import net.minecraft.text.Text;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
+
+import javax.annotation.Nullable;
 
 import java.io.InputStream;
 import java.util.Collections;
@@ -63,6 +66,11 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	@Override
 	public Identifier getOpenBookGui() {
 		return null;
+	}
+
+	@Override
+	public Text getSubtitle(Identifier bookId) {
+		throw new IllegalArgumentException("Patchouli is not loaded");
 	}
 
 	@Override
@@ -120,6 +128,22 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 		return mb;
 	}
 
+	@Nullable
+	@Override
+	public IMultiblock getCurrentMultiblock() {
+		return null;
+	}
+
+	@Override
+	public void showMultiblock(IMultiblock multiblock, Text displayName, BlockPos center, BlockRotation rotation) {
+
+	}
+
+	@Override
+	public void clearMultiblock() {
+
+	}
+
 	@Override
 	public IMultiblock makeMultiblock(String[][] pattern, Object... targets) {
 		return StubMultiblock.INSTANCE;
@@ -142,6 +166,11 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 
 	@Override
 	public IStateMatcher stateMatcher(BlockState state) {
+		return StubMatcher.INSTANCE;
+	}
+
+	@Override
+	public IStateMatcher propertyMatcher(BlockState state, Property<?>... properties) {
 		return StubMatcher.INSTANCE;
 	}
 

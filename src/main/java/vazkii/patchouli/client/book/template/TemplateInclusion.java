@@ -37,11 +37,13 @@ public class TemplateInclusion {
 	transient List<String> visitedTemplates = new ArrayList<>();
 
 	public void upperMerge(@Nullable TemplateInclusion parent) {
-		if (parent == null)
+		if (parent == null) {
 			return;
+		}
 
-		if (parent.visitedTemplates.contains(template))
+		if (parent.visitedTemplates.contains(template)) {
 			throw new IllegalArgumentException("Breaking when include template " + template + ", circular dependencies aren't allowed (stack = " + parent.visitedTemplates + ")");
+		}
 
 		visitedTemplates = new ArrayList<>(parent.visitedTemplates);
 		visitedTemplates.add(template);
@@ -54,15 +56,17 @@ public class TemplateInclusion {
 			String val = localBindings.get(key);
 			if (val.startsWith("#")) {
 				String realVal = val.substring(1);
-				if (parent.localBindings.containsKey(realVal))
+				if (parent.localBindings.containsKey(realVal)) {
 					localBindings.put(key, parent.localBindings.get(realVal));
+				}
 			}
 		}
 	}
 
 	public void process(IComponentProcessor processor) {
-		if (processor == null)
+		if (processor == null) {
 			return;
+		}
 
 		Set<String> keys = localBindings.keySet();
 		for (String key : keys) {
@@ -70,15 +74,17 @@ public class TemplateInclusion {
 			if (val.startsWith("#")) {
 				String realVal = val.substring(1);
 				String res = processor.process(realVal);
-				if (res != null)
+				if (res != null) {
 					localBindings.put(key, res);
+				}
 			}
 		}
 	}
 
 	private String realName(String name) {
-		if (name.isEmpty())
+		if (name.isEmpty()) {
 			return as;
+		}
 		return as + "." + name;
 	}
 
@@ -86,8 +92,9 @@ public class TemplateInclusion {
 		boolean isPrefixed = var.startsWith("#");
 		if (!prefixedOnly || isPrefixed) {
 			String key = isPrefixed ? var.substring(1) : var;
-			if (localBindings.containsKey(key))
+			if (localBindings.containsKey(key)) {
 				return localBindings.get(key);
+			}
 
 			return (isPrefixed ? "#" : "") + realName(key);
 		}

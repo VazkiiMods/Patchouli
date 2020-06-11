@@ -6,8 +6,11 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.TextFormat;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
+import net.minecraft.util.Formatting;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookAdvancements;
@@ -41,7 +44,7 @@ public class GuiBookLanding extends GuiBook {
 
 		text = new BookTextRenderer(this, I18n.translate(book.landingText), LEFT_PAGE_X, TOP_PADDING + 25);
 
-		boolean disableBar = !book.showProgress || PatchouliConfig.disableAdvancementLocking.get();
+		boolean disableBar = !book.showProgress || !book.advancementsEnabled();
 
 		int x = bookLeft + (disableBar ? 25 : 20);
 		int y = bookTop + FULL_HEIGHT - (disableBar ? 25 : 62);
@@ -49,15 +52,17 @@ public class GuiBookLanding extends GuiBook {
 		int pos = 0;
 
 		// Resize
-		if (maxScale > 2)
+		if (maxScale > 2) {
 			addButton(new GuiButtonBookResize(this, x + (pos++) * dist, y, true, this::handleButtonResize));
+		}
 
 		// History
 		addButton(new GuiButtonBookHistory(this, x + (pos++) * dist, y, this::handleButtonHistory));
 
 		// Advancements
-		if (book.advancementsTab != null)
+		if (book.advancementsTab != null) {
 			addButton(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y, this::handleButtonAdvancements));
+		}
 
 		// Config
 		//		if(!book.isExternal) {
@@ -66,16 +71,18 @@ public class GuiBookLanding extends GuiBook {
 		//				addButton(new GuiButtonBookConfig(this, x + (pos++) * dist, y));
 		//		}
 
-		if (MinecraftClient.getInstance().player.isCreative())
+		if (MinecraftClient.getInstance().player.isCreative()) {
 			addButton(new GuiButtonBookEdit(this, x + (pos++) * dist, y, this::handleButtonEdit));
+		}
 
 		int i = 0;
 		List<BookCategory> categories = new ArrayList<>(book.contents.categories.values());
 		Collections.sort(categories);
 
 		for (BookCategory category : categories) {
-			if (category.getParentCategory() != null || category.shouldHide())
+			if (category.getParentCategory() != null || category.shouldHide()) {
 				continue;
+			}
 
 			addCategoryButton(i, category);
 			i++;
@@ -88,10 +95,11 @@ public class GuiBookLanding extends GuiBook {
 		int x = RIGHT_PAGE_X + 10 + (i % 4) * 24;
 		int y = TOP_PADDING + 25 + (i / 4) * 24;
 
-		if (category == null)
+		if (category == null) {
 			addButton(new GuiButtonIndex(this, x, y, this::handleButtonIndex));
-		else
+		} else {
 			addButton(new GuiButtonCategory(this, x, y, category, this::handleButtonCategory));
+		}
 	}
 
 	@Override
@@ -106,8 +114,9 @@ public class GuiBookLanding extends GuiBook {
 		drawHeader();
 		drawSeparator(book, RIGHT_PAGE_X, topSeparator);
 
-		if (loadedCategories <= 16)
+		if (loadedCategories <= 16) {
 			drawSeparator(book, RIGHT_PAGE_X, bottomSeparator);
+		}
 
 		if (book.contents.isErrored()) {
 			int x = RIGHT_PAGE_X + PAGE_WIDTH / 2;
@@ -119,8 +128,9 @@ public class GuiBookLanding extends GuiBook {
 			x -= PAGE_WIDTH / 2;
 			y -= 4;
 
-			if (isMouseInRelativeRange(mouseX, mouseY, x, y, PAGE_WIDTH, 20))
+			if (isMouseInRelativeRange(mouseX, mouseY, x, y, PAGE_WIDTH, 20)) {
 				makeErrorTooltip();
+			}
 		}
 
 		drawProgressBar(book, mouseX, mouseY, (e) -> true);
@@ -138,16 +148,17 @@ public class GuiBookLanding extends GuiBook {
 	void makeErrorTooltip() {
 		Throwable e = book.contents.getException();
 
-		List<String> lines = new ArrayList<>();
+		List<Text> lines = new ArrayList<>();
 		while (e != null) {
 			String msg = e.getMessage();
-			if (msg != null && !msg.isEmpty())
-				lines.add(e.getMessage());
+			if (msg != null && !msg.isEmpty()) {
+				lines.add(new LiteralText(e.getMessage()));
+			}
 			e = e.getCause();
 		}
 
 		if (!lines.isEmpty()) {
-			lines.add(TextFormat.GREEN + I18n.translate("patchouli.gui.lexicon.loading_error_log"));
+			lines.add(new TranslatableText("patchouli.gui.lexicon.loading_error_log").formatted(Formatting.GREEN));
 			setTooltip(lines);
 		}
 	}
@@ -187,15 +198,17 @@ public class GuiBookLanding extends GuiBook {
 			book.reloadLocks(false);
 			displayLexiconGui(new GuiBookLanding(book), false);
 			minecraft.player.sendMessage(new TranslatableText("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)));
-		} else
+		} else {
 			displayLexiconGui(new GuiBookWriter(book), true);
+		}
 	}
 
 	public void handleButtonResize(ButtonWidget button) {
-		if (PersistentData.data.bookGuiScale >= maxScale)
+		if (PersistentData.data.bookGuiScale >= maxScale) {
 			PersistentData.data.bookGuiScale = 0;
-		else
+		} else {
 			PersistentData.data.bookGuiScale = Math.max(2, PersistentData.data.bookGuiScale + 1);
+		}
 
 		PersistentData.save();
 		displayLexiconGui(this, false);

@@ -41,11 +41,13 @@ public class PageImage extends PageWithText {
 		parent.blit(x * 2 + 6, y * 2 + 6, 0, 0, 200, 200);
 		RenderSystem.scalef(2F, 2F, 2F);
 
-		if (border)
+		if (border) {
 			GuiBook.drawFromTexture(book, x, y, 405, 149, 106, 106);
+		}
 
-		if (title != null && !title.isEmpty())
+		if (title != null && !title.isEmpty()) {
 			parent.drawCenteredStringNoShadow(i18n(title), GuiBook.PAGE_WIDTH / 2, -3, book.headerColor);
+		}
 
 		if (images.length > 1 && border) {
 			int xs = x + 83;
@@ -59,10 +61,11 @@ public class PageImage extends PageWithText {
 
 	public void handleButtonArrow(ButtonWidget button) {
 		boolean left = ((GuiButtonBookArrowSmall) button).left;
-		if (left)
+		if (left) {
 			index--;
-		else
+		} else {
 			index++;
+		}
 	}
 
 	@Override

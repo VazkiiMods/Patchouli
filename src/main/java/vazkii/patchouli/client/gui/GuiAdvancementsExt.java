@@ -17,17 +17,19 @@ public class GuiAdvancementsExt extends AdvancementsScreen {
 		this.parent = parent;
 
 		Advancement start = manager.getManager().get(tab);
-		if (start != null && ClientAdvancements.hasDone(start.getId().toString()))
+		if (start != null && ClientAdvancements.hasDone(start.getId().toString())) {
 			manager.selectTab(start, false);
+		}
 	}
 
 	@Override
 	public boolean keyPressed(int key, int scanCode, int modifiers) {
-		if (minecraft.options.keyAdvancements.matchesKey(key, scanCode)) {
+		if (key == minecraft.options.keyAdvancements.getDefaultKeyCode().getKeyCode() || scanCode == 1) {
 			minecraft.openScreen(parent);
 			return true;
-		} else
+		} else {
 			return super.keyPressed(key, scanCode, modifiers);
+		}
 	}
 
 }

@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.sound.SoundManager;
 
+import net.minecraft.text.Text;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 import java.util.Arrays;
@@ -16,14 +17,14 @@ public class GuiButtonBook extends ButtonWidget {
 	final GuiBook parent;
 	final int u, v;
 	final Supplier<Boolean> displayCondition;
-	final List<String> tooltip;
+	final List<Text> tooltip;
 
-	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, ButtonWidget.PressAction onPress, String... tooltip) {
+	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, PressAction onPress, Text... tooltip) {
 		this(parent, x, y, u, v, w, h, () -> true, onPress, tooltip);
 	}
 
-	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, Supplier<Boolean> displayCondition, ButtonWidget.PressAction onPress, String... tooltip) {
-		super(x, y, w, h, tooltip[0], onPress);
+	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, Supplier<Boolean> displayCondition, PressAction onPress, Text... tooltip) {
+		super(x, y, w, h, tooltip[0].getString(), onPress);
 		this.parent = parent;
 		this.u = u;
 		this.v = v;
@@ -41,8 +42,9 @@ public class GuiButtonBook extends ButtonWidget {
 	public void renderButton(int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.color3f(1F, 1F, 1F);
 		GuiBook.drawFromTexture(parent.book, x, y, u + (isHovered() ? width : 0), v, width, height);
-		if (isHovered)
+		if (isHovered) {
 			parent.setTooltip(getTooltip());
+		}
 	}
 
 	@Override
@@ -50,7 +52,7 @@ public class GuiButtonBook extends ButtonWidget {
 		GuiBook.playBookFlipSound(parent.book);
 	}
 
-	public List<String> getTooltip() {
+	public List<Text> getTooltip() {
 		return tooltip;
 	}
 

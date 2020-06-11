@@ -63,14 +63,16 @@ public class BookTemplate {
 
 	public static BookTemplate createTemplate(Book book, String type, @Nullable TemplateInclusion inclusion) {
 		Identifier key;
-		if (type.contains(":"))
+		if (type.contains(":")) {
 			key = new Identifier(type);
-		else
+		} else {
 			key = new Identifier(book.getModNamespace(), type);
+		}
 
 		Supplier<BookTemplate> supplier = book.contents.templates.get(key);
-		if (supplier == null)
+		if (supplier == null) {
 			throw new IllegalArgumentException("Template " + key + " does not exist");
+		}
 
 		BookTemplate template = supplier.get();
 		template.book = book;
@@ -79,17 +81,19 @@ public class BookTemplate {
 		return template;
 	}
 
-	public void compile(IVariableProvider variables) {
-		if (compiled)
+	public void compile(IVariableProvider<String> variables) {
+		if (compiled) {
 			return;
+		}
 
 		createProcessor();
 		components.removeIf(Objects::isNull);
 
 		if (processor != null) {
-			IVariableProvider processorVars = variables;
-			if (encapsulation != null)
+			IVariableProvider<String> processorVars = variables;
+			if (encapsulation != null) {
 				processorVars = encapsulation.wrapProvider(variables);
+			}
 
 			try {
 				processor.setup(processorVars);
@@ -99,8 +103,9 @@ public class BookTemplate {
 		}
 
 		for (TemplateInclusion include : inclusions) {
-			if (include.template == null || include.template.isEmpty() || include.as == null || include.as.isEmpty())
+			if (include.template == null || include.template.isEmpty() || include.as == null || include.as.isEmpty()) {
 				throw new IllegalArgumentException("Template inclusion must define both \"template\" and \"as\" fields.");
+			}
 
 			include.upperMerge(encapsulation);
 			include.process(processor);
@@ -110,23 +115,26 @@ public class BookTemplate {
 			components.addAll(template.components);
 		}
 
-		for (TemplateComponent c : components)
+		for (TemplateComponent c : components) {
 			c.compile(variables, processor, encapsulation);
+		}
 
 		compiled = true;
 	}
 
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		if (compiled)
+		if (compiled) {
 			components.forEach(c -> {
 				c.build(page, entry, pageNum);
 			});
+		}
 	}
 
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
 		if (compiled) {
-			if (processor != null)
+			if (processor != null) {
 				processor.refresh(parent, left, top);
+			}
 
 			components.forEach(c -> c.isVisible = c.getVisibleStatus(processor));
 			components.forEach(c -> c.onDisplayed(page, parent, left, top));
@@ -134,18 +142,22 @@ public class BookTemplate {
 	}
 
 	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
-		if (compiled)
+		if (compiled) {
 			components.forEach(c -> {
-				if (c.isVisible)
+				if (c.isVisible) {
 					c.render(page, mouseX, mouseY, pticks);
+				}
 			});
+		}
 	}
 
 	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
 		if (compiled) {
-			for (TemplateComponent c : components)
-				if (c.isVisible && c.mouseClicked(page, mouseX, mouseY, mouseButton))
+			for (TemplateComponent c : components) {
+				if (c.isVisible && c.mouseClicked(page, mouseX, mouseY, mouseButton)) {
 					return true;
+				}
+			}
 		}
 
 		return false;
@@ -157,14 +169,14 @@ public class BookTemplate {
 
 	private void createProcessor() {
 		if (!attemptedCreatingProcessor) {
-			if (processorClass != null && !processorClass.isEmpty())
+			if (processorClass != null && !processorClass.isEmpty()) {
 				try {
 					Class<?> clazz = Class.forName(processorClass);
-					if (clazz != null)
-						processor = (IComponentProcessor) clazz.newInstance();
+					processor = (IComponentProcessor) clazz.newInstance();
 				} catch (Exception e) {
 					throw new RuntimeException("Failed to create component processor " + processorClass, e);
 				}
+			}
 
 			attemptedCreatingProcessor = true;
 		}

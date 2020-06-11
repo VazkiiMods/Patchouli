@@ -9,6 +9,7 @@
     "MixinBlockEntity",
     "MixinClientAdvancementManager",
     "MixinClientAdvancementManagerAccessor",
+    "MixinCrashReport",
     "MixinGameRenderer",
     "MixinInventoryScreen",
     "MixinMinecraftClient",

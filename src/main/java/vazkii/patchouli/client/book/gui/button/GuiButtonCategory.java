@@ -7,6 +7,9 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.TextFormat;
 
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookIcon;
@@ -40,10 +43,11 @@ public class GuiButtonCategory extends ButtonWidget {
 	@Override
 	public void renderButton(int mouseX, int mouseY, float partialTicks) {
 		if (active) {
-			if (isHovered())
+			if (isHovered()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
-			else
+			} else {
 				timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
+			}
 
 			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHovered() ? partialTicks : -partialTicks)));
 			float transparency = 0.5F - (time / ANIM_TIME) * 0.5F;
@@ -52,8 +56,9 @@ public class GuiButtonCategory extends ButtonWidget {
 			if (locked) {
 				RenderSystem.color4f(1F, 1F, 1F, 0.7F);
 				GuiBook.drawLock(parent.book, x + 2, y + 2);
-			} else
+			} else {
 				icon.render(x + 2, y + 2);
+			}
 
 			RenderSystem.pushMatrix();
 			RenderSystem.enableBlend();
@@ -62,19 +67,24 @@ public class GuiButtonCategory extends ButtonWidget {
 			GuiBook.drawFromTexture(parent.book, x, y, u, v, width, height);
 			RenderSystem.color4f(1F, 1F, 1F, 1F);
 
-			if (category != null && !category.isLocked())
+			if (category != null && !category.isLocked()) {
 				GuiBook.drawMarking(parent.book, x, y, 0, category.getReadState());
+			}
 			RenderSystem.popMatrix();
 
-			if (isHovered)
-				parent.setTooltip(locked ? (TextFormat.GRAY + I18n.translate("patchouli.gui.lexicon.locked")) : name);
+			if (isHovered) {
+				parent.setTooltip(locked
+						? new TranslatableText("patchouli.gui.lexicon.locked").formatted(Formatting.GRAY)
+						: new LiteralText(name));
+			}
 		}
 	}
 
 	@Override
 	public void playDownSound(SoundManager soundHandlerIn) {
-		if (category != null && !category.isLocked())
+		if (category != null && !category.isLocked()) {
 			GuiBook.playBookFlipSound(parent.book);
+		}
 	}
 
 	public BookCategory getCategory() {

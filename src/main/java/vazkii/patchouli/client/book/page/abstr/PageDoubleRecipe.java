@@ -34,8 +34,9 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 		title2 = "-";
 		if (recipe2 != null) {
 			title2 = !customTitle ? getRecipeOutput(recipe2).getName().asFormattedString() : "";
-			if (title1.equals(title2))
+			if (title1.equals(title2)) {
 				title2 = "";
+			}
 		}
 	}
 
@@ -46,8 +47,9 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 			int recipeY = getY();
 			drawRecipe(recipe1, recipeX, recipeY, mouseX, mouseY, false);
 
-			if (recipe2 != null)
+			if (recipe2 != null) {
 				drawRecipe(recipe2, recipeX, recipeY + getRecipeHeight() - (title2.isEmpty() ? 10 : 0), mouseX, mouseY, true);
+			}
 		}
 
 		super.render(mouseX, mouseY, pticks);

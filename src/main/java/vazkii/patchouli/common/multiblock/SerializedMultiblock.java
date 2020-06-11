@@ -3,38 +3,34 @@ package vazkii.patchouli.common.multiblock;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import vazkii.patchouli.api.IStateMatcher;
-
 import java.util.HashMap;
+import com.google.gson.annotations.SerializedName;
+import net.minecraft.util.math.BlockPos;
+import java.util.List;
 import java.util.Map;
 
 public class SerializedMultiblock {
 
-	public String[][] pattern = new String[0][0];
-	public Map<String, String> mapping = new HashMap<>();
+	@SerializedName("pattern") private String[][] densePattern = null;
+	@SerializedName("sparse_pattern") private Map<String, List<List<Integer>>> sparsePattern = null;
+	private Map<String, String> mapping = new HashMap<>();
 
-	boolean symmetrical = false;
-	int[] offset = new int[] { 0, 0, 0 };
+	private boolean symmetrical = false;
+	private int[] offset = new int[] { 0, 0, 0 };
 
-	public DenseMultiblock toMultiblock() {
-		final String allowed = "0_ ";
+	private static char assertValidMappingKey(String s) {
+		if (s.length() != 1) {
+			throw new IllegalArgumentException(s + " is an invalid mapping key, every mapping key must be 1 character long");
+		}
+		return s.charAt(0);
+	}
 
-		for (String[] line : pattern)
-			for (String s : line)
-				for (char c : s.toCharArray())
-					if (allowed.indexOf(c) == -1 && !mapping.containsKey(String.valueOf(c)))
-						throw new IllegalArgumentException("Character " + c + " in multiblock isn't mapped to a block");
-
-		Object[] targets = new Object[mapping.size() * 2];
-
-		int i = 0;
+	private static Map<Character, IStateMatcher> deserializeMapping(Map<String, String> mapping) {
+		Map<Character, IStateMatcher> ret = new HashMap<>(mapping.size());
 		for (Map.Entry<String, String> e : mapping.entrySet()) {
-			String key = e.getKey();
+			char key = assertValidMappingKey(e.getKey());
 			String value = e.getValue();
 
-			if (key.length() != 1)
-				throw new IllegalArgumentException(key + " is an invalid mapping key, every mapping key must be 1 character long");
-
-			char keyChar = key.charAt(0);
 			IStateMatcher matcher;
 			try {
 				matcher = StringStateMatcher.fromString(value);
@@ -42,12 +38,70 @@ public class SerializedMultiblock {
 				throw new IllegalArgumentException("Failure parsing state matcher", ex);
 			}
 
-			targets[i] = keyChar;
-			targets[i + 1] = matcher;
-			i += 2;
+			ret.put(key, matcher);
+		}
+		if (!ret.containsKey('_')) {
+			ret.put('_', StateMatcher.ANY);
+		}
+		if (!ret.containsKey(' ')) {
+			ret.put(' ', StateMatcher.AIR);
+		}
+		if (!ret.containsKey('0')) {
+			ret.put('0', StateMatcher.AIR);
+		}
+		return ret;
+	}
+
+	private SparseMultiblock deserializeSparse() {
+		Map<Character, IStateMatcher> matchers = deserializeMapping(mapping);
+		Map<BlockPos, IStateMatcher> data = new HashMap<>();
+		for (Map.Entry<String, List<List<Integer>>> e : sparsePattern.entrySet()) {
+			char key = assertValidMappingKey(e.getKey());
+			assertMappingContains(key);
+
+			List<List<Integer>> positions = e.getValue();
+			for (List<Integer> position : positions) {
+				if (position.size() != 3) {
+					throw new IllegalArgumentException("Position has more than three coordinates: " + position);
+				}
+				BlockPos pos = new BlockPos(position.get(0), position.get(1), position.get(2));
+				data.put(pos, matchers.get(key));
+			}
 		}
 
-		DenseMultiblock mb = new DenseMultiblock(pattern, targets);
+		return new SparseMultiblock(data);
+	}
+
+	private void assertMappingContains(char c) {
+		if (c != '0' && c != '_' && c != ' ' && !mapping.containsKey(String.valueOf(c))) {
+			throw new IllegalArgumentException("Character " + c + " in multiblock isn't mapped to a block");
+		}
+	}
+
+	public DenseMultiblock deserializeDense() {
+		for (String[] line : densePattern) {
+			for (String s : line) {
+				for (char c : s.toCharArray()) {
+					assertMappingContains(c);
+				}
+			}
+		}
+
+		return new DenseMultiblock(densePattern, deserializeMapping(mapping));
+	}
+
+	public AbstractMultiblock toMultiblock() {
+		if ((densePattern != null) == (sparsePattern != null)) {
+			throw new IllegalArgumentException("One and only one of pattern and sparse_pattern should be specified");
+		}
+
+		AbstractMultiblock mb;
+		if (densePattern != null) {
+			mb = deserializeDense();
+		} else {
+			mb = deserializeSparse();
+		}
+
 		mb.setSymmetrical(symmetrical);
 		mb.offset(offset[0], offset[1], offset[2]);
 		return mb;

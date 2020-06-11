@@ -36,6 +36,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -44,7 +48,6 @@ import java.util.stream.Stream;
 
 public class BookContents extends AbstractReadStateHolder {
 
-	private static final String[] ORDINAL_SUFFIXES = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
 	protected static final String DEFAULT_LANG = "en_us";
 
 	public static final Map<Identifier, Supplier<BookTemplate>> addonTemplates = new ConcurrentHashMap<>();
@@ -80,8 +83,9 @@ public class BookContents extends AbstractReadStateHolder {
 	}
 
 	public GuiBook getCurrentGui() {
-		if (currentGui == null)
+		if (currentGui == null) {
 			currentGui = new GuiBookLanding(book);
+		}
 
 		return currentGui;
 	}
@@ -89,28 +93,18 @@ public class BookContents extends AbstractReadStateHolder {
 	public void openLexiconGui(GuiBook gui, boolean push) {
 		if (gui.canBeOpened()) {
 			MinecraftClient mc = MinecraftClient.getInstance();
-			if (push && mc.currentScreen instanceof GuiBook && gui != mc.currentScreen)
+			if (push && mc.currentScreen instanceof GuiBook && gui != mc.currentScreen) {
 				guiStack.push((GuiBook) mc.currentScreen);
+			}
 
 			mc.openScreen(gui);
 			gui.onFirstOpened();
 		}
 	}
 
+	// backward compat for botania reaching into impl details, TODO 1.16 remove
 	public String getSubtitle() {
-		String editionStr;
-
-		try {
-			int ver = Integer.parseInt(book.version);
-			if (ver == 0)
-				return I18n.translate(book.subtitle);
-
-			editionStr = numberToOrdinal(ver);
-		} catch (NumberFormatException e) {
-			editionStr = I18n.translate("patchouli.gui.lexicon.dev_edition");
-		}
-
-		return I18n.translate("patchouli.gui.lexicon.edition_str", editionStr);
+		return book.getSubtitle().asFormattedString();
 	}
 
 	public void reload(boolean isOverride) {
@@ -126,10 +120,11 @@ public class BookContents extends AbstractReadStateHolder {
 
 			templates.putAll(addonTemplates);
 
-			if (book.indexIconRaw == null || book.indexIconRaw.isEmpty())
+			if (book.indexIconRaw == null || book.indexIconRaw.isEmpty()) {
 				indexIcon = new BookIcon(book.getBookItem());
-			else
+			} else {
 				indexIcon = BookIcon.from(book.indexIconRaw);
+			}
 		}
 
 		List<Identifier> foundCategories = new ArrayList<>();
@@ -178,7 +173,7 @@ public class BookContents extends AbstractReadStateHolder {
 	protected void findFiles(String dir, List<Identifier> list) {
 		ModContainer mod = book.owner;
 		String id = mod.getMetadata().getId();
-		BookRegistry.findFiles(mod, String.format("data/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.id.getPath(), DEFAULT_LANG, dir), null, pred(id, list), false, false);
+		BookRegistry.findFiles(mod, String.format("data/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.id.getPath(), DEFAULT_LANG, dir), path -> true, pred(id, list), false);
 	}
 
 	private BiFunction<Path, Path, Boolean> pred(String modId, List<Identifier> list) {
@@ -198,12 +193,14 @@ public class BookContents extends AbstractReadStateHolder {
 	private void loadCategory(Identifier key, Identifier res, Book book) {
 		try (Reader stream = loadLocalizedJson(res)) {
 			BookCategory category = ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookCategory.class);
-			if (category == null)
+			if (category == null) {
 				throw new IllegalArgumentException(res + " does not exist.");
+			}
 
 			category.setBook(book);
-			if (category.canAdd())
+			if (category.canAdd()) {
 				categories.put(key, category);
+			}
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
@@ -212,15 +209,16 @@ public class BookContents extends AbstractReadStateHolder {
 	private Optional<BookEntry> loadEntry(Identifier id, Identifier file, Book book) {
 		try (Reader stream = loadLocalizedJson(file)) {
 			BookEntry entry = ClientBookRegistry.INSTANCE.gson.fromJson(stream, BookEntry.class);
-			if (entry == null)
+			if (entry == null) {
 				throw new IllegalArgumentException(file + " does not exist.");
+			}
 
 			entry.setBook(book);
 			if (entry.canAdd()) {
 				BookCategory category = entry.getCategory();
-				if (category != null)
+				if (category != null) {
 					category.addEntry(entry);
-				else {
+				} else {
 					String msg = String.format("Entry in file %s does not have a valid category.", file);
 					throw new RuntimeException(msg);
 				}
@@ -246,8 +244,9 @@ public class BookContents extends AbstractReadStateHolder {
 
 		// test supplier
 		BookTemplate template = supplier.get();
-		if (template == null)
+		if (template == null) {
 			throw new IllegalArgumentException(res + " could not be instantiated by the supplier.");
+		}
 
 		templates.put(key, supplier);
 	}
@@ -257,8 +256,9 @@ public class BookContents extends AbstractReadStateHolder {
 				res.getPath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
 
 		InputStream input = loadJson(localized, res);
-		if (input == null)
+		if (input == null) {
 			throw new IllegalArgumentException(res + " does not exist.");
+		}
 
 		return new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
 	}
@@ -270,16 +270,13 @@ public class BookContents extends AbstractReadStateHolder {
 		try {
 			return Files.newInputStream(book.owner.getPath(path));
 		} catch (IOException ex) {
-			Patchouli.LOGGER.warn("Failed to load " + resloc + ".");
-			if (fallback != null)
+			if (fallback != null) {
+				Patchouli.LOGGER.warn("Failed to load " + resloc + ". Switching to fallback.");
 				return loadJson(fallback, null);
+			}
 		}
 
 		return null;
-	}
-
-	private static String numberToOrdinal(int i) {
-		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
 	}
 
 	@Override
@@ -307,8 +304,9 @@ public class BookContents extends AbstractReadStateHolder {
 
 			if (prevGui instanceof GuiBookEntry) {
 				GuiBookEntry currEntry = (GuiBookEntry) prevGui;
-				if (currEntry.getEntry() == entry && currEntry.getSpread() == spread)
+				if (currEntry.getEntry() == entry && currEntry.getSpread() == spread) {
 					return;
+				}
 			}
 
 			entry.getBook().contents.guiStack.push(prevGui);

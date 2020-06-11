@@ -29,6 +29,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
@@ -61,7 +63,7 @@ public class MultiblockVisualizationHandler {
 	public static Bookmark bookmark;
 
 	private static IMultiblock multiblock;
-	private static String name;
+	private static Text name;
 	private static BlockPos pos;
 	private static boolean isAnchored;
 	private static BlockRotation facingRotation;
@@ -72,20 +74,25 @@ public class MultiblockVisualizationHandler {
 	private static BlockPos lookingPos;
 	private static VertexConsumerProvider.Immediate buffers = null;
 
+	// Legacy compat with older botanias. TODO 1.16 remove
 	public static void setMultiblock(IMultiblock multiblock, String name, Bookmark bookmark, boolean flip) {
+		setMultiblock(multiblock, new LiteralText(name == null ? "" : name), bookmark, flip);
+	}
+
+	public static void setMultiblock(IMultiblock multiblock, Text name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos -> pos);
 	}
 
-	public static void setMultiblock(IMultiblock multiblock, String name, Bookmark bookmark, boolean flip, Function<BlockPos, BlockPos> offsetApplier) {
-		if (flip && hasMultiblock)
+	public static void setMultiblock(IMultiblock multiblock, Text name, Bookmark bookmark, boolean flip, Function<BlockPos, BlockPos> offsetApplier) {
+		if (flip && hasMultiblock) {
 			hasMultiblock = false;
-		else {
+		} else {
 			MultiblockVisualizationHandler.multiblock = multiblock;
 			MultiblockVisualizationHandler.name = name;
 			MultiblockVisualizationHandler.bookmark = bookmark;
 			MultiblockVisualizationHandler.offsetApplier = offsetApplier;
 			pos = null;
-			hasMultiblock = true;
+			hasMultiblock = multiblock != null;
 			isAnchored = false;
 		}
 	}
@@ -109,7 +116,8 @@ public class MultiblockVisualizationHandler {
 			int x = mc.getWindow().getScaledWidth() / 2;
 			int y = 12;
 
-			mc.textRenderer.drawWithShadow(name, x - mc.textRenderer.getStringWidth(name) / 2, y, 0xFFFFFF);
+			String toDraw = name.asFormattedString();
+			mc.textRenderer.drawWithShadow(toDraw, x - mc.textRenderer.getStringWidth(toDraw) / 2, y, 0xFFFFFF);
 
 			int width = 180;
 			int height = 9;
@@ -175,8 +183,9 @@ public class MultiblockVisualizationHandler {
 	}
 
 	public static void onWorldRenderLast(MatrixStack ms) {
-		if (hasMultiblock && multiblock != null)
+		if (hasMultiblock && multiblock != null) {
 			renderMultiblock(MinecraftClient.getInstance().world, ms);
+		}
 	}
 
 	public static void anchorTo(BlockPos target, BlockRotation rot) {
@@ -216,13 +225,16 @@ public class MultiblockVisualizationHandler {
 			facingRotation = getRotation(mc.player);
 			if (mc.crosshairTarget instanceof BlockHitResult)
 				pos = ((BlockHitResult) mc.crosshairTarget).getBlockPos();
-		} else if (pos.getSquaredDistance(mc.player.getPos(), false) > 64 * 64)
+		} else if (pos.getSquaredDistance(mc.player.getPos(), false) > 64 * 64) {
 			return;
+		}
 
-		if (pos == null)
+		if (pos == null) {
 			return;
-		if (multiblock.isSymmetrical())
+		}
+		if (multiblock.isSymmetrical()) {
 			facingRotation = BlockRotation.NONE;
+		}
 
 		EntityRenderDispatcher erd = mc.getEntityRenderManager();
 		double renderPosX = erd.camera.getPos().getX();
@@ -230,8 +242,9 @@ public class MultiblockVisualizationHandler {
 		double renderPosZ = erd.camera.getPos().getZ();
 		ms.translate(-renderPosX, -renderPosY, -renderPosZ);
 
-		if (buffers == null)
+		if (buffers == null) {
 			buffers = initBuffers(mc.getBufferBuilders().getEntityVertexConsumers());
+		}
 
 		BlockPos checkPos = null;
 		if (mc.crosshairTarget instanceof BlockHitResult) {
@@ -247,30 +260,34 @@ public class MultiblockVisualizationHandler {
 		for (IMultiblock.SimulateResult r : sim.getSecond()) {
 			float alpha = 0.3F;
 			if (r.getWorldPosition().equals(checkPos)) {
-				lookingState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame);
+				lookingState = r.getStateMatcher().getDisplayedState((int) ClientTicker.ticksInGame);
 				alpha = 0.6F + (float) (Math.sin(ClientTicker.total * 0.3F) + 1F) * 0.1F;
 			}
 
 			if (r.getStateMatcher() != StateMatcher.ANY) {
 				boolean air = r.getStateMatcher() == StateMatcher.AIR;
-				if (!air)
+				if (!air) {
 					blocks++;
+				}
 
 				if (!r.test(world, facingRotation)) {
-					BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame).rotate(facingRotation);
+					BlockState renderState = r.getStateMatcher().getDisplayedState((int) ClientTicker.ticksInGame).rotate(facingRotation);
 					renderBlock(world, renderState, r.getWorldPosition(), alpha, ms);
 
-					if (air)
+					if (air) {
 						airFilled++;
-				} else if (!air)
+					}
+				} else if (!air) {
 					blocksDone++;
+				}
 			}
 		}
 
 		buffers.draw();
 
-		if (!isAnchored)
+		if (!isAnchored) {
 			blocks = blocksDone = 0;
+		}
 	}
 
 	public static void renderBlock(World world, BlockState state, BlockPos pos, float alpha, MatrixStack ms) {
@@ -341,7 +358,7 @@ public class MultiblockVisualizationHandler {
 	 * Returns the Rotation of a multiblock structure based on the given entity's facing direction.
 	 */
 	private static BlockRotation getRotation(Entity entity) {
-		return RotationUtil.rotationFromFacing(Direction.fromHorizontal(MathHelper.floor((double) (-entity.yaw * 4.0F / 360.0F) + 0.5D) & 3));
+		return RotationUtil.rotationFromFacing(entity.getHorizontalFacing());
 	}
 
 	private static VertexConsumerProvider.Immediate initBuffers(VertexConsumerProvider.Immediate original) {

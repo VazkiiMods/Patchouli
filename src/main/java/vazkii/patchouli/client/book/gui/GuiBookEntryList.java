@@ -45,8 +45,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 		visibleEntries = new ArrayList<>();
 		allEntries = new ArrayList<>(getEntries());
 		allEntries.removeIf(BookEntry::shouldHide);
-		if (shouldSortEntryList())
+		if (shouldSortEntryList()) {
 			Collections.sort(allEntries);
+		}
 
 		searchField = new TextFieldWidget(font, 160, 170, 90, 12, "");
 		searchField.setMaxLength(32);
@@ -89,10 +90,12 @@ public abstract class GuiBookEntryList extends GuiBook {
 			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
 
 			text.render(mouseX, mouseY);
-			if (shouldDrawProgressBar())
+			if (shouldDrawProgressBar()) {
 				drawProgressBar(book, mouseX, mouseY, this::doesEntryCountForProgress);
-		} else if (spread % 2 == 1 && spread == maxSpreads - 1 && dependentButtons.size() <= ENTRIES_PER_PAGE)
+			}
+		} else if (spread % 2 == 1 && spread == maxSpreads - 1 && dependentButtons.size() <= ENTRIES_PER_PAGE) {
 			drawPageFiller(book);
+		}
 
 		if (!searchField.getText().isEmpty()) {
 			RenderSystem.color4f(1F, 1F, 1F, 1F);
@@ -101,10 +104,14 @@ public abstract class GuiBookEntryList extends GuiBook {
 		}
 
 		if (visibleEntries.isEmpty()) {
-			drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
-			RenderSystem.scalef(2F, 2F, 2F);
-			drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
-			RenderSystem.scalef(0.5F, 0.5F, 0.5F);
+			if (!searchField.getText().isEmpty()) {
+				drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
+				RenderSystem.scalef(2F, 2F, 2F);
+				drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
+				RenderSystem.scalef(0.5F, 0.5F, 0.5F);
+			} else {
+				drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.no_entries"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
+			}
 		}
 	}
 
@@ -119,8 +126,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 	public boolean charTyped(char c, int i) {
 		String currQuery = searchField.getText();
 		if (searchField.charTyped(c, i)) {
-			if (!searchField.getText().equals(currQuery))
+			if (!searchField.getText().equals(currQuery)) {
 				buildEntryButtons();
+			}
 
 			return true;
 		}
@@ -138,8 +146,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 				return true;
 			}
 		} else if (searchField.keyPressed(key, scanCode, modifiers)) {
-			if (!searchField.getText().equals(currQuery))
+			if (!searchField.getText().equals(currQuery)) {
 				buildEntryButtons();
+			}
 
 			return true;
 		}
@@ -171,11 +180,13 @@ public abstract class GuiBookEntryList extends GuiBook {
 		maxSpreads = 1;
 		int count = visibleEntries.size();
 		count -= ENTRIES_IN_FIRST_PAGE;
-		if (count > 0)
+		if (count > 0) {
 			maxSpreads += (int) Math.ceil((float) count / (ENTRIES_PER_PAGE * 2));
+		}
 
-		while (getEntryCountStart() > visibleEntries.size())
+		while (getEntryCountStart() > visibleEntries.size()) {
 			spread--;
+		}
 
 		if (spread == 0) {
 			addEntryButtons(RIGHT_PAGE_X, TOP_PADDING + 20, 0, ENTRIES_IN_FIRST_PAGE);
@@ -188,8 +199,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 
 	int getEntryCountStart() {
-		if (spread == 0)
+		if (spread == 0) {
 			return 0;
+		}
 
 		int start = ENTRIES_IN_FIRST_PAGE;
 		start += (ENTRIES_PER_PAGE * 2) * (spread - 1);
@@ -202,6 +214,10 @@ public abstract class GuiBookEntryList extends GuiBook {
 			addButton(button);
 			dependentButtons.add(button);
 		}
+	}
+
+	public String getSearchQuery() {
+		return searchField.getText();
 	}
 
 }

@@ -9,6 +9,7 @@ import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.ShapedRecipe;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -31,8 +32,9 @@ public class PageCrafting extends PageDoubleRecipeRegistry<CraftingRecipe> {
 			int iconX = recipeX + 62;
 			int iconY = recipeY + 2;
 			DrawableHelper.blit(iconX, iconY, 0, 64, 11, 11, 128, 128);
-			if (parent.isMouseInRelativeRange(mouseX, mouseY, iconX, iconY, 11, 11))
-				parent.setTooltip(I18n.translate("patchouli.gui.lexicon.shapeless"));
+			if (parent.isMouseInRelativeRange(mouseX, mouseY, iconX, iconY, 11, 11)) {
+				parent.setTooltip(new TranslatableText("patchouli.gui.lexicon.shapeless"));
+			}
 		}
 
 		parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
@@ -44,8 +46,9 @@ public class PageCrafting extends PageDoubleRecipeRegistry<CraftingRecipe> {
 		if (shaped)
 			wrap = ((ShapedRecipe) recipe).getWidth();
 
-		for (int i = 0; i < ingredients.size(); i++)
+		for (int i = 0; i < ingredients.size(); i++) {
 			parent.renderIngredient(recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
+		}
 	}
 
 	@Override
@@ -55,8 +58,9 @@ public class PageCrafting extends PageDoubleRecipeRegistry<CraftingRecipe> {
 
 	@Override
 	protected ItemStack getRecipeOutput(CraftingRecipe recipe) {
-		if (recipe == null)
+		if (recipe == null) {
 			return ItemStack.EMPTY;
+		}
 
 		return recipe.getOutput();
 	}
