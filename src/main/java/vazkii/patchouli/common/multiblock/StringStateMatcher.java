@@ -18,7 +18,6 @@ import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.TriPredicate;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -26,10 +25,12 @@ import java.util.Objects;
 public class StringStateMatcher {
 	public static IStateMatcher fromString(String s) throws CommandSyntaxException {
 		s = s.trim();
-		if (s.equals("ANY"))
+		if (s.equals("ANY")) {
 			return StateMatcher.ANY;
-		if (s.equals("AIR"))
+		}
+		if (s.equals("AIR")) {
 			return StateMatcher.AIR;
+		}
 
 		// c.f. BlockPredicateArgumentType. Similar, but doesn't use vanilla's weird caching class.
 		BlockArgumentParser parser = new BlockArgumentParser(new StringReader(s), true).parse(false);

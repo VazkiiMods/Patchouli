@@ -1,10 +1,10 @@
 package vazkii.patchouli.client.book;
 
+import com.google.common.collect.Streams;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.util.Identifier;
-import com.google.common.collect.Streams;
 
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;

@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.book;
 
-import com.google.common.collect.Streams;
-
 import java.util.stream.Stream;
 
 public abstract class AbstractReadStateHolder {

@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.base;
 
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
-import net.minecraft.client.gui.screen.Screen;
 
 /**
  * Counts ticks passed in-game, does <b>not</b> stop counting when paused.

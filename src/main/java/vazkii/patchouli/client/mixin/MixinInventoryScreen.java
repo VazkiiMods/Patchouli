@@ -30,8 +30,9 @@ public abstract class MixinInventoryScreen extends AbstractInventoryScreen<Playe
 	public void onGuiInitPost(CallbackInfo info) {
 		String bookID = PatchouliConfig.inventoryButtonBook.get();
 		Book book = BookRegistry.INSTANCE.books.get(new Identifier(bookID));
-		if (book == null)
+		if (book == null) {
 			return;
+		}
 
 		AbstractButtonWidget replaced = null;
 		ButtonWidget replacement = null;

@@ -1,12 +1,10 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.TextFormat;
-
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
@@ -19,7 +17,7 @@ public class GuiButtonBookResize extends GuiButtonBook {
 
 	public GuiButtonBookResize(GuiBook parent, int x, int y, boolean uiscale, ButtonWidget.PressAction onPress) {
 		super(parent, x, y, 330, 9, 11, 11, onPress,
-						new TranslatableText("patchouli.gui.lexicon.button.resize"));
+				new TranslatableText("patchouli.gui.lexicon.button.resize"));
 		this.uiscale = uiscale;
 	}
 

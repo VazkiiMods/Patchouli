@@ -10,11 +10,7 @@ import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GuiBookCategory extends GuiBookEntryList {
 

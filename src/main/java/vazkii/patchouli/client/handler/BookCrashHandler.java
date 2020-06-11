@@ -2,8 +2,8 @@ package vazkii.patchouli.client.handler;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-
 import net.minecraft.util.crash.CrashCallable;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.GuiBookEntryList;

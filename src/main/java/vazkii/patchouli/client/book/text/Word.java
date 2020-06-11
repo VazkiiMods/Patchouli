@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.font.TextRenderer;
-
 import net.minecraft.text.Text;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
 

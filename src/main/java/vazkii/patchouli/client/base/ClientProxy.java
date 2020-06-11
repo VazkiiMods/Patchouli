@@ -3,9 +3,7 @@ package vazkii.patchouli.client.base;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.resource.ResourceType;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;

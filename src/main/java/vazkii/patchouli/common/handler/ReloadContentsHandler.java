@@ -3,7 +3,6 @@ package vazkii.patchouli.common.handler;
 import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.minecraft.resource.SynchronousResourceReloadListener;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 import vazkii.patchouli.common.network.message.MessageReloadBookContents;
 

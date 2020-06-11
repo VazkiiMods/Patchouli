@@ -5,28 +5,19 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.TextFormat;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-
 import net.minecraft.util.Formatting;
+
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookCategory;
-import vazkii.patchouli.client.book.gui.button.GuiButtonBookAdvancements;
-import vazkii.patchouli.client.book.gui.button.GuiButtonBookEdit;
-import vazkii.patchouli.client.book.gui.button.GuiButtonBookHistory;
-import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
-import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
-import vazkii.patchouli.client.book.gui.button.GuiButtonIndex;
+import vazkii.patchouli.client.book.gui.button.*;
 import vazkii.patchouli.client.gui.GuiAdvancementsExt;
-import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 public class GuiBookLanding extends GuiBook {

@@ -3,7 +3,6 @@ package vazkii.patchouli.client.book.page;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.Ingredient;
@@ -43,8 +42,9 @@ public class PageCrafting extends PageDoubleRecipeRegistry<CraftingRecipe> {
 
 		DefaultedList<Ingredient> ingredients = recipe.getPreviewInputs();
 		int wrap = 3;
-		if (shaped)
+		if (shaped) {
 			wrap = ((ShapedRecipe) recipe).getWidth();
+		}
 
 		for (int i = 0; i < ingredients.size(); i++) {
 			parent.renderIngredient(recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));

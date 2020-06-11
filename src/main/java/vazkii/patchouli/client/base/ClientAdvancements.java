@@ -16,9 +16,9 @@ import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.mixin.MixinClientAdvancementManagerAccessor;
 import vazkii.patchouli.common.book.Book;
 
-import java.util.Map;
-
 import javax.annotation.Nonnull;
+
+import java.util.Map;
 
 public class ClientAdvancements {
 	private static boolean gotFirstAdvPacket = false;

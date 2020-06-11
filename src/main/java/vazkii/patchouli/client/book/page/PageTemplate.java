@@ -1,6 +1,5 @@
 package vazkii.patchouli.client.book.page;
 
-import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;

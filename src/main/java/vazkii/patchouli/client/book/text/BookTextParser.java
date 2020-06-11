@@ -16,11 +16,7 @@ import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BookTextParser {
 	public static final LiteralText EMPTY_STRING_COMPONENT = new LiteralText("");

@@ -7,7 +7,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.JsonOps;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.datafixer.NbtOps;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,10 +22,6 @@ import vazkii.patchouli.common.mixin.MixinIngredient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.StringJoiner;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringJoiner;
 
 public class ItemStackUtil {

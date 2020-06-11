@@ -4,8 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.sound.SoundManager;
-
 import net.minecraft.text.Text;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 import java.util.Arrays;

@@ -1,8 +1,7 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import net.minecraft.client.resource.language.I18n;
-
 import net.minecraft.text.TranslatableText;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class GuiButtonBookArrow extends GuiButtonBook {

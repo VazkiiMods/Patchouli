@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
-
 import net.minecraft.text.TranslatableText;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 public class GuiButtonBookHistory extends GuiButtonBook {

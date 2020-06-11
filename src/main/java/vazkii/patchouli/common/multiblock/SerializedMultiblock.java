@@ -1,11 +1,13 @@
 package vazkii.patchouli.common.multiblock;
 
+import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import vazkii.patchouli.api.IStateMatcher;
-import java.util.HashMap;
-import com.google.gson.annotations.SerializedName;
 import net.minecraft.util.math.BlockPos;
+
+import vazkii.patchouli.api.IStateMatcher;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

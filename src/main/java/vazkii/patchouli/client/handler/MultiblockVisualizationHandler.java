@@ -14,13 +14,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -36,7 +30,6 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
@@ -50,9 +43,8 @@ import vazkii.patchouli.common.util.RotationUtil;
 
 import javax.annotation.Nullable;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -203,14 +195,16 @@ public class MultiblockVisualizationHandler {
 	}
 
 	public static void onClientTick(MinecraftClient mc) {
-		if (MinecraftClient.getInstance().world == null)
+		if (MinecraftClient.getInstance().world == null) {
 			hasMultiblock = false;
-		else if (isAnchored && blocks == blocksDone && airFilled == 0) {
+		} else if (isAnchored && blocks == blocksDone && airFilled == 0) {
 			timeComplete++;
-			if (timeComplete == 14)
+			if (timeComplete == 14) {
 				MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F));
-		} else
+			}
+		} else {
 			timeComplete = 0;
+		}
 	}
 
 	public static void init() {
@@ -223,8 +217,9 @@ public class MultiblockVisualizationHandler {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		if (!isAnchored) {
 			facingRotation = getRotation(mc.player);
-			if (mc.crosshairTarget instanceof BlockHitResult)
+			if (mc.crosshairTarget instanceof BlockHitResult) {
 				pos = ((BlockHitResult) mc.crosshairTarget).getBlockPos();
+			}
 		} else if (pos.getSquaredDistance(mc.player.getPos(), false) > 64 * 64) {
 			return;
 		}

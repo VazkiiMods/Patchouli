@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.shader;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.client.gl.GlProgram;
 import net.minecraft.client.gl.GlProgramManager;
@@ -14,11 +12,7 @@ import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.common.base.Patchouli;
 
-import javax.annotation.Nullable;
-
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ShaderHelper implements SynchronousResourceReloadListener, IdentifiableResourceReloadListener {
 	public static final ShaderHelper INSTANCE = new ShaderHelper();

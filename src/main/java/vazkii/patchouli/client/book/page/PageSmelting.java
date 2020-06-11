@@ -29,8 +29,9 @@ public class PageSmelting extends PageDoubleRecipeRegistry<SmeltingRecipe> {
 
 	@Override
 	protected ItemStack getRecipeOutput(SmeltingRecipe recipe) {
-		if (recipe == null)
+		if (recipe == null) {
 			return ItemStack.EMPTY;
+		}
 
 		return recipe.getOutput();
 	}

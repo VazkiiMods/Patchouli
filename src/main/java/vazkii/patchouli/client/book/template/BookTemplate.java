@@ -9,15 +9,7 @@ import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
-import vazkii.patchouli.client.book.template.component.ComponentCustom;
-import vazkii.patchouli.client.book.template.component.ComponentEntity;
-import vazkii.patchouli.client.book.template.component.ComponentFrame;
-import vazkii.patchouli.client.book.template.component.ComponentHeader;
-import vazkii.patchouli.client.book.template.component.ComponentImage;
-import vazkii.patchouli.client.book.template.component.ComponentItemStack;
-import vazkii.patchouli.client.book.template.component.ComponentSeparator;
-import vazkii.patchouli.client.book.template.component.ComponentText;
-import vazkii.patchouli.client.book.template.component.ComponentTooltip;
+import vazkii.patchouli.client.book.template.component.*;
 import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nullable;
