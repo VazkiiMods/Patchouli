@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.gui;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -13,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.api.IComponentRenderContext;
+import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
@@ -238,12 +238,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public void renderItemStack(int x, int y, int mouseX, int mouseY, ItemStack stack) {
+	public void renderItemStack(MatrixStack ms, int x, int y, int mouseX, int mouseY, ItemStack stack) {
 		if (stack == null || stack.isEmpty()) {
 			return;
 		}
 
-		client.getItemRenderer().renderInGuiWithOverrides(stack, x, y);
+		RenderHelper.renderItemStackInGui(ms, stack, x, y);
 		client.getItemRenderer().renderGuiItemOverlay(textRenderer, stack, x, y);
 
 		if (isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
@@ -252,10 +252,10 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public void renderIngredient(int x, int y, int mouseX, int mouseY, Ingredient ingr) {
+	public void renderIngredient(MatrixStack ms, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
 		ItemStack[] stacks = ingr.getMatchingStacksClient();
 		if (stacks.length > 0) {
-			renderItemStack(x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
+			renderItemStack(ms, x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
 		}
 	}
 

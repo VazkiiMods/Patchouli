@@ -22,6 +22,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -49,9 +50,9 @@ public class BookRightClickHandler {
 						int x = window.getScaledWidth() / 2 + 3;
 						int y = window.getScaledHeight() / 2 + 3;
 						entry.getIcon().render(ms, x, y);
-						RenderSystem.scalef(0.5F, 0.5F, 1F);
-						mc.getItemRenderer().renderInGuiWithOverrides(bookStack, (x + 8) * 2, (y + 8) * 2);
-						RenderSystem.scalef(2F, 2F, 1F);
+						ms.scale(0.5F, 0.5F, 1);
+						RenderHelper.renderItemStackInGui(ms, bookStack, (x + 8) * 2, (y + 8) * 2);
+						ms.scale(2F, 2F, 1F);
 
 						mc.textRenderer.draw(ms, entry.getName(), x + 18, y + 3, 0xFFFFFF);
 

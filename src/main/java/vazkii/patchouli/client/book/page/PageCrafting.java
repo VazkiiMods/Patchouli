@@ -39,7 +39,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<CraftingRecipe> {
 
 		parent.drawCenteredStringNoShadow(ms, getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-		parent.renderItemStack(recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getOutput());
+		parent.renderItemStack(ms, recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getOutput());
 
 		DefaultedList<Ingredient> ingredients = recipe.getPreviewInputs();
 		int wrap = 3;
@@ -48,7 +48,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<CraftingRecipe> {
 		}
 
 		for (int i = 0; i < ingredients.size(); i++) {
-			parent.renderIngredient(recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
+			parent.renderIngredient(ms, recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
 		}
 	}
 

@@ -24,8 +24,8 @@ public class PageSmelting extends PageDoubleRecipeRegistry<SmeltingRecipe> {
 		DrawableHelper.drawTexture(ms, recipeX, recipeY, 11, 71, 96, 24, 128, 128);
 		parent.drawCenteredStringNoShadow(ms, getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-		parent.renderIngredient(recipeX + 4, recipeY + 4, mouseX, mouseY, recipe.getPreviewInputs().get(0));
-		parent.renderItemStack(recipeX + 76, recipeY + 4, mouseX, mouseY, recipe.getOutput());
+		parent.renderIngredient(ms, recipeX + 4, recipeY + 4, mouseX, mouseY, recipe.getPreviewInputs().get(0));
+		parent.renderItemStack(ms, recipeX + 76, recipeY + 4, mouseX, mouseY, recipe.getOutput());
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import net.minecraft.client.toast.ToastManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.mixin.MixinClientAdvancementManagerAccessor;
 import vazkii.patchouli.common.book.Book;
@@ -90,7 +91,7 @@ public class ClientAdvancements {
 			toastGui.getGame().textRenderer.draw(ms, I18n.translate(book.name), 30, 7, -11534256);
 			toastGui.getGame().textRenderer.draw(ms, I18n.translate("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
 
-			toastGui.getGame().getItemRenderer().renderInGuiWithOverrides(book.getBookItem(), 8, 8);
+			RenderHelper.renderItemStackInGui(ms, book.getBookItem(), 8, 8);
 
 			return delta >= 5000L ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
 		}

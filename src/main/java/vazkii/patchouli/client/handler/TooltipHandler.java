@@ -18,6 +18,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.lwjgl.opengl.GL11;
 
+import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -105,7 +106,7 @@ public class TooltipHandler {
 				}
 
 				mc.getItemRenderer().zOffset = 300;
-				mc.getItemRenderer().renderInGuiWithOverrides(lexiconStack, x, tooltipY);
+				RenderHelper.renderItemStackInGui(ms, lexiconStack, x, tooltipY);
 				mc.getItemRenderer().zOffset = 0;
 				RenderSystem.disableLighting();
 

@@ -3,6 +3,7 @@ package vazkii.patchouli.api;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.text.Style;
@@ -20,9 +21,9 @@ public interface IComponentRenderContext {
 
 	Style getFont();
 
-	void renderItemStack(int x, int y, int mouseX, int mouseY, ItemStack stack);
+	void renderItemStack(MatrixStack ms, int x, int y, int mouseX, int mouseY, ItemStack stack);
 
-	void renderIngredient(int x, int y, int mouseX, int mouseY, Ingredient ingredient);
+	void renderIngredient(MatrixStack ms, int x, int y, int mouseX, int mouseY, Ingredient ingredient);
 
 	boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h);
 

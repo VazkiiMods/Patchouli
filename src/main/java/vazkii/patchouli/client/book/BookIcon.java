@@ -8,6 +8,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
+import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
@@ -48,7 +49,7 @@ public class BookIcon {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		switch (type) {
 		case STACK:
-			mc.getItemRenderer().renderInGuiWithOverrides(stack, x, y);
+			RenderHelper.renderItemStackInGui(ms, stack, x, y);
 			break;
 
 		case RESOURCE:

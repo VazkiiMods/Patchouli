@@ -31,9 +31,11 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.world.World;
 
 import vazkii.patchouli.api.IMultiblock;
+import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.client.mixin.MixinVertexConsumerProviderImmediate;
@@ -124,13 +126,13 @@ public class MultiblockVisualizationHandler {
 			}
 
 			DrawableHelper.fill(ms, left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
-			drawGradientRect(left, top, left + width, top + height, 0xFF666666, 0xFF555555);
+			drawGradientRect(ms, left, top, left + width, top + height, 0xFF666666, 0xFF555555);
 
 			float fract = (float) blocksDone / Math.max(1, blocks);
 			int progressWidth = (int) ((float) width * fract);
 			int color = MathHelper.hsvToRgb(fract / 3.0F, 1.0F, 1.0F) | 0xFF000000;
 			int color2 = new Color(color).darker().getRGB();
-			drawGradientRect(left, top, left + progressWidth, top + height, color, color2);
+			drawGradientRect(ms, left, top, left + progressWidth, top + height, color, color2);
 
 			if (!isAnchored) {
 				String s = I18n.translate("patchouli.gui.lexicon.not_anchored");
@@ -145,7 +147,7 @@ public class MultiblockVisualizationHandler {
 
 						if (!stack.isEmpty()) {
 							mc.textRenderer.drawWithShadow(ms, stack.getName(), left + 20, top + height + 8, 0xFFFFFF);
-							mc.getItemRenderer().renderInGuiWithOverrides(stack, left, top + height + 2);
+							RenderHelper.renderItemStackInGui(ms, stack, left, top + height + 2);
 						}
 					} catch (Exception ignored) {}
 				}
@@ -169,7 +171,7 @@ public class MultiblockVisualizationHandler {
 				}
 			}
 
-			RenderSystem.popMatrix();
+			ms.pop();
 		}
 	}
 
@@ -320,7 +322,7 @@ public class MultiblockVisualizationHandler {
 		return offsetApplier.apply(pos);
 	}
 
-	private static void drawGradientRect(int left, int top, int right, int bottom, int startColor, int endColor) {
+	private static void drawGradientRect(MatrixStack ms, int left, int top, int right, int bottom, int startColor, int endColor) {
 		float f = (float) (startColor >> 24 & 255) / 255.0F;
 		float f1 = (float) (startColor >> 16 & 255) / 255.0F;
 		float f2 = (float) (startColor >> 8 & 255) / 255.0F;
@@ -337,10 +339,11 @@ public class MultiblockVisualizationHandler {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(7, VertexFormats.POSITION_COLOR);
-		bufferbuilder.vertex((double) right, (double) top, 0).color(f1, f2, f3, f).next();
-		bufferbuilder.vertex((double) left, (double) top, 0).color(f1, f2, f3, f).next();
-		bufferbuilder.vertex((double) left, (double) bottom, 0).color(f5, f6, f7, f4).next();
-		bufferbuilder.vertex((double) right, (double) bottom, 0).color(f5, f6, f7, f4).next();
+		Matrix4f mat = ms.peek().getModel();
+		bufferbuilder.vertex(mat, right, top, 0).color(f1, f2, f3, f).next();
+		bufferbuilder.vertex(mat, left, top, 0).color(f1, f2, f3, f).next();
+		bufferbuilder.vertex(mat, left, bottom, 0).color(f5, f6, f7, f4).next();
+		bufferbuilder.vertex(mat, right, bottom, 0).color(f5, f6, f7, f4).next();
 		tessellator.draw();
 		RenderSystem.shadeModel(7424);
 		RenderSystem.disableBlend();
@@ -377,7 +380,7 @@ public class MultiblockVisualizationHandler {
 	}
 
 	private static class GhostRenderLayer extends RenderLayer {
-		private static Map<RenderLayer, RenderLayer> remappedTypes = new IdentityHashMap<>();
+		private static final Map<RenderLayer, RenderLayer> remappedTypes = new IdentityHashMap<>();
 
 		private GhostRenderLayer(RenderLayer original) {
 			super(String.format("%s_%s_ghost", original.toString(), Patchouli.MOD_ID), original.getVertexFormat(), original.getDrawMode(), original.getExpectedBufferSize(), original.hasCrumbling(), true, () -> {

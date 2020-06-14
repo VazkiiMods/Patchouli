@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
+import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -38,7 +39,7 @@ public class GuiButtonInventoryBook extends ButtonWidget {
 		DrawableHelper.drawTexture(ms, x, y, (hovered ? 20 : 0), 0, width, height, 64, 64);
 
 		ItemStack stack = book.getBookItem();
-		mc.getItemRenderer().renderInGuiWithOverrides(stack, x + 2, y + 2);
+		RenderHelper.renderItemStackInGui(ms, stack, x + 2, y + 2);
 
 		EntryDisplayState readState = book.contents.getReadState();
 		if (readState.hasIcon && readState.showInInventory) {

@@ -46,7 +46,7 @@ public class PageSpotlight extends PageWithText {
 		}
 
 		parent.drawCenteredStringNoShadow(ms, toDraw, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
-		parent.renderItemStack(GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, itemStack);
+		parent.renderItemStack(ms, GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, itemStack);
 
 		super.render(ms, mouseX, mouseY, pticks);
 	}

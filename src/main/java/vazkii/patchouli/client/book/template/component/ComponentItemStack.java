@@ -53,7 +53,7 @@ public class ComponentItemStack extends TemplateComponent {
 			DrawableHelper.drawTexture(ms, x - 4, y - 4, 83, 71, 24, 24, 128, 128);
 		}
 
-		page.parent.renderItemStack(x, y, mouseX, mouseY, items.get((page.parent.ticksInBook / 20) % items.size()));
+		page.parent.renderItemStack(ms, x, y, mouseX, mouseY, items.get((page.parent.ticksInBook / 20) % items.size()));
 	}
 
 }
