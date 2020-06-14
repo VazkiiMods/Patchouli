@@ -12,7 +12,7 @@ public class RenderHelper {
 	 * Assumption: the "root" state of the MatrixStack is same as the currently GL state,
 	 * such that multiplying the MatrixStack to the current GL matrix state will get us where we want to be.
 	 *
-	 * If there have been intervening dirty changes to the GL matrix state, then this won't work.
+	 * If there have been intervening changes to the GL matrix state since the MatrixStack was constructed, then this won't work.
 	 */
 	public static void renderItemStackInGui(MatrixStack ms, ItemStack stack, int x, int y) {
 		RenderSystem.pushMatrix();

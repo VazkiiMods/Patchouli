@@ -14,10 +14,7 @@ import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 
@@ -37,6 +34,7 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -176,6 +174,11 @@ public abstract class GuiBook extends Screen {
 	@Override // make public
 	public <T extends AbstractButtonWidget> T addButton(T p_addButton_1_) {
 		return super.addButton(p_addButton_1_);
+	}
+
+	@Override // make public
+	public void renderTextHoverEffect(MatrixStack matrices, @Nullable Style style, int mouseX, int mouseY) {
+		super.renderTextHoverEffect(matrices, style, mouseX, mouseY);
 	}
 
 	protected boolean shouldAddAddBookmarkButton() {
@@ -378,10 +381,24 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public boolean isMouseInRelativeRange(double absMx, double absMy, int x, int y, int w, int h) {
-		double mx = absMx - bookLeft;
-		double my = absMy - bookTop;
+		double mx = getRelativeX(absMx);
+		double my = getRelativeY(absMy);
 
 		return mx > x && my > y && mx <= (x + w) && my <= (y + h);
+	}
+
+	/**
+	 * Convert the given argument from global screen coordinates to local coordinates
+	 */
+	public double getRelativeX(double absX) {
+		return absX - bookLeft;
+	}
+
+	/**
+	 * Convert the given argument from global screen coordinates to local coordinates
+	 */
+	public double getRelativeY(double absY) {
+		return absY - bookTop;
 	}
 
 	public void drawProgressBar(MatrixStack ms, Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {

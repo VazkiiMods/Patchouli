@@ -220,6 +220,9 @@ public class BookTextParser {
 		return layouter.getWords();
 	}
 
+	/**
+	 * Takes in the raw book source and computes a collection of spans from it.
+	 */
 	private List<Span> processCommands(String text) {
 		SpanState state = new SpanState(gui, book, baseStyle);
 		List<Span> spans = new ArrayList<>();

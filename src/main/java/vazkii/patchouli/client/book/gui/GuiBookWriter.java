@@ -54,7 +54,7 @@ public class GuiBookWriter extends GuiBook {
 
 	@Override
 	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-		return textfield.mouseClicked(mouseX - bookLeft, mouseY - bookTop, mouseButton)
+		return textfield.mouseClicked(getRelativeX(mouseX), getRelativeY(mouseY), mouseButton)
 				|| text.click(mouseX, mouseY, mouseButton)
 				|| editableText.click(mouseX, mouseY, mouseButton)
 				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);

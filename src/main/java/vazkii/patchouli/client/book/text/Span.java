@@ -1,14 +1,15 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * An associated span of textual data. A {@code Span} does not know its positioning.
+ * At this point, all macros should have been expanded.
+ */
 public class Span {
 	public static Span error(SpanState state, String message) {
 		return new Span(state, message, Style.EMPTY.withColor(Formatting.RED));
@@ -56,7 +57,11 @@ public class Span {
 		state.spacingRight = 0;
 	}
 
-	public Text getStyledSubstring(int start) {
+	public MutableText styledSubstring(int start) {
 		return new LiteralText(text.substring(start)).setStyle(style);
+	}
+
+	public MutableText styledSubstring(int start, int end) {
+		return new LiteralText(text.substring(start, end)).setStyle(style);
 	}
 }
