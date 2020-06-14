@@ -177,7 +177,7 @@ public class BookTextParser {
 		this.lineHeight = lineHeight;
 		this.baseColor = baseColor;
 
-		this.font = book.getFont();
+		this.font = book.getFontStyle();
 		this.spaceWidth = font.getWidth(" ");
 	}
 
@@ -315,7 +315,7 @@ public class BookTextParser {
 
 		KeyBinding[] keys = state.gui.getMinecraft().options.keysAll;
 		for (KeyBinding k : keys) {
-			String name = k.getId();
+			String name = k.getTranslationKey();
 			if (name.equals(keybind) || name.equals(alt)) {
 				return k;
 			}

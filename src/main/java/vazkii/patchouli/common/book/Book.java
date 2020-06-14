@@ -5,13 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
@@ -235,11 +230,11 @@ public class Book {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public TextRenderer getFont() {
+	public Style getFontStyle() {
 		if (useBlockyFont) {
-			return MinecraftClient.getInstance().textRenderer;
+			return Style.EMPTY;
 		} else {
-			return MinecraftClient.getInstance().getFontManager().getTextRenderer(UNICODE_FONT_ID);
+			return Style.EMPTY.withFont(UNICODE_FONT_ID);
 		}
 	}
 

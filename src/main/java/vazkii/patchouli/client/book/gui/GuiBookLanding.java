@@ -134,7 +134,8 @@ public class GuiBookLanding extends GuiBook {
 
 		int color = book.nameplateColor;
 		textRenderer.draw(ms, book.getBookItem().getName(), 13, 16, color);
-		book.getFont().draw(ms, book.getSubtitle(), 24, 24, color);
+		Text toDraw = book.getSubtitle().fillStyle(book.getFontStyle());
+		textRenderer.draw(ms, toDraw, 24, 24, color);
 	}
 
 	void makeErrorTooltip() {

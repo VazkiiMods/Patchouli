@@ -233,7 +233,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public TextRenderer getFont() {
-		return book.getFont();
+		return book.getFontStyle();
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
@@ -9,6 +10,8 @@ import net.minecraft.client.sound.SoundManager;
 
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
@@ -54,12 +57,18 @@ public class GuiButtonEntry extends ButtonWidget {
 
 			ms.scale(2F, 2F, 2F);
 
-			String name = (entry.isPriority() ? Formatting.ITALIC : "") + entry.getName();
+			MutableText name;
 			if (locked) {
-				name = I18n.translate("patchouli.gui.lexicon.locked");
+				name = new TranslatableText("patchouli.gui.lexicon.locked");
+			} else {
+				name = new LiteralText(entry.getName());
+				if (entry.isPriority()) {
+					name = name.formatted(Formatting.ITALIC);
+				}
 			}
-			int color = getColor();
-			entry.getBook().getFont().draw(ms, name, x + 12, y, color);
+
+			name = name.fillStyle(entry.getBook().getFontStyle());
+			MinecraftClient.getInstance().textRenderer.draw(ms, name, x + 12, y, getColor());
 
 			if (!entry.isLocked()) {
 				GuiBook.drawMarking(ms, parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());

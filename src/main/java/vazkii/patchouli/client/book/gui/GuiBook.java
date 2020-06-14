@@ -14,6 +14,7 @@ import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -213,7 +214,11 @@ public abstract class GuiBook extends Screen {
 
 			Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
 			if (provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
-				tooltip.add(TextFormat.GOLD + "(" + I18n.translate("patchouli.gui.lexicon.shift_for_recipe") + ')');
+				Text t = new LiteralText("(")
+								.append(new TranslatableText("patchouli.gui.lexicon.shift_for_recipe"))
+								.append(")")
+								.formatted(Formatting.GOLD);
+				tooltip.add(t);
 				targetPage = provider;
 			}
 

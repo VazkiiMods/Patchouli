@@ -47,7 +47,7 @@ public class BookTextRenderer {
 	}
 
 	public void render(MatrixStack ms, int mouseX, int mouseY) {
-		TextRenderer font = book.getFont();
+		TextRenderer font = book.getFontStyle();
 		words.forEach(word -> word.render(ms, font, mouseX, mouseY));
 	}
 

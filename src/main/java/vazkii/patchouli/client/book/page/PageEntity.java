@@ -65,41 +65,42 @@ public class PageEntity extends PageWithText {
 		RenderSystem.color3f(1F, 1F, 1F);
 		GuiBook.drawFromTexture(ms, book, x, y, 405, 149, 106, 106);
 
-		parent.drawCenteredStringNoShadow(ms, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		if (name == null || name.isEmpty()) {
+			if (entity != null) {
+				parent.drawCenteredStringNoShadow(ms, entity.getName(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+			}
+		} else {
+			parent.drawCenteredStringNoShadow(ms, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		}
 
 		if (errored) {
 			fontRenderer.drawWithShadow(ms, I18n.translate("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
 		}
 
 		if (entity != null) {
-			renderEntity(parent.getMinecraft().world, rotate ? ClientTicker.total : defaultRotation);
+			float rotation = rotate ? ClientTicker.total : defaultRotation;
+			renderEntity(ms, entity, parent.getMinecraft().world, 58, 60, rotation, renderScale, offset);
 		}
 
 		super.render(ms, mouseX, mouseY, pticks);
 	}
 
-	private void renderEntity(World world, float rotation) {
-		renderEntity(entity, world, 58, 60, rotation, renderScale, offset);
-	}
-
-	public static void renderEntity(Entity entity, World world, float x, float y, float rotation, float renderScale, float offset) {
+	public static void renderEntity(MatrixStack ms, Entity entity, World world, float x, float y, float rotation, float renderScale, float offset) {
 		entity.world = world;
 
-		RenderSystem.pushMatrix();
-		RenderSystem.color3f(1F, 1F, 1F);
-		MatrixStack matrix = new MatrixStack();
-		matrix.translate(x, y, 50);
-		matrix.scale(renderScale, renderScale, renderScale);
-		matrix.translate(0, offset, 0);
-		matrix.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
-		matrix.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(rotation));
+		ms.push();
+		ms.translate(x, y, 50);
+		ms.scale(renderScale, renderScale, renderScale);
+		ms.translate(0, offset, 0);
+		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
+		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(rotation));
 		EntityRenderDispatcher erd = MinecraftClient.getInstance().getEntityRenderManager();
 		VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
 		erd.setRenderShadows(false);
-		erd.render(entity, 0, 0, 0, 0, 1, matrix, immediate, 0xF000F0);
+		erd.render(entity, 0, 0, 0, 0, 1, ms, immediate, 0xF000F0);
 		erd.setRenderShadows(true);
 		immediate.draw();
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
 	private void loadEntity(World world) {
@@ -118,10 +119,6 @@ public class PageEntity extends PageWithText {
 
 				renderScale = 100F / entitySize * 0.8F * scale;
 				offset = Math.max(height, entitySize) * 0.5F + extraOffset;
-
-				if (name == null || name.isEmpty()) {
-					name = entity.getName().asFormattedString();
-				}
 			} catch (Exception e) {
 				errored = true;
 				Patchouli.LOGGER.error("Failed to load entity", e);
