@@ -42,13 +42,14 @@ public class ComponentEntity extends TemplateComponent {
 	}
 
 	@Override
-	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (errored) {
-			page.fontRenderer.drawStringWithShadow(I18n.format("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
+			page.fontRenderer.drawWithShadow(ms, I18n.translate("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
 		}
 
 		if (entity != null) {
-			renderEntity(page.mc.world, rotate ? ClientTicker.total : defaultRotation);
+			float rotation = rotate ? ClientTicker.total : defaultRotation;
+			PageEntity.renderEntity(ms, entity, page.mc.world, x, y, rotation, renderScale, offset);
 		}
 	}
 
@@ -56,10 +57,6 @@ public class ComponentEntity extends TemplateComponent {
 	public void onVariablesAvailable(Function<String, String> lookup) {
 		super.onVariablesAvailable(lookup);
 		entityId = lookup.apply(entityId);
-	}
-
-	private void renderEntity(World world, float rotation) {
-		PageEntity.renderEntity(entity, world, x, y, rotation, renderScale, offset);
 	}
 
 	private void loadEntity(World world) {

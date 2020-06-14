@@ -41,19 +41,19 @@ public class ComponentImage extends TemplateComponent {
 	}
 
 	@Override
-	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (scale == 0F) {
 			return;
 		}
 
-		page.mc.textureManager.bindTexture(resource);
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(x, y, 0);
-		RenderSystem.scalef(scale, scale, scale);
+		page.mc.getTextureManager().bindTexture(resource);
+		ms.push();
+		ms.translate(x, y, 0);
+		ms.scale(scale, scale, scale);
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		RenderSystem.enableBlend();
-		AbstractGui.blit(0, 0, u, v, width, height, textureWidth, textureHeight);
-		RenderSystem.popMatrix();
+		DrawableHelper.drawTexture(ms, 0, 0, u, v, width, height, textureWidth, textureHeight);
+		ms.pop();
 	}
 
 }

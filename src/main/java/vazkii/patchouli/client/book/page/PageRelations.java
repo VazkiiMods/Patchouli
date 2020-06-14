@@ -52,11 +52,11 @@ public class PageRelations extends PageWithText {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float pticks) {
-		parent.drawCenteredStringNoShadow(title == null || title.isEmpty() ? I18n.format("patchouli.gui.lexicon.relations") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
-		GuiBook.drawSeparator(book, 0, 12);
+	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
+		parent.drawCenteredStringNoShadow(ms, title == null || title.isEmpty() ? I18n.translate("patchouli.gui.lexicon.relations") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		GuiBook.drawSeparator(ms, book, 0, 12);
 
-		super.render(mouseX, mouseY, pticks);
+		super.render(ms, mouseX, mouseY, pticks);
 	}
 
 	@Override

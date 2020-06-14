@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -21,7 +22,7 @@ public class GuiButtonInventoryBook extends Button {
 	private Book book;
 
 	public GuiButtonInventoryBook(Book book, int x, int y) {
-		super(x, y, 20, 20, "", (b) -> {
+		super(x, y, 20, 20, LiteralText.EMPTY, (b) -> {
 			BookContents contents = book.contents;
 			contents.openLexiconGui(contents.getCurrentGui(), false);
 		});
@@ -29,20 +30,20 @@ public class GuiButtonInventoryBook extends Button {
 	}
 
 	@Override
-	public void renderButton(int mouseX, int mouseY, float pticks) {
-		Minecraft mc = Minecraft.getInstance();
-		Minecraft.getInstance().textureManager.bindTexture(new ResourceLocation(Patchouli.MOD_ID, "textures/gui/inventory_button.png"));
+	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float pticks) {
+		MinecraftClient mc = MinecraftClient.getInstance();
+		mc.getTextureManager().bindTexture(new Identifier(Patchouli.MOD_ID, "textures/gui/inventory_button.png"));
 		RenderSystem.color3f(1F, 1F, 1F);
 
 		boolean hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
-		AbstractGui.blit(x, y, (hovered ? 20 : 0), 0, width, height, 64, 64);
+		DrawableHelper.drawTexture(ms, x, y, (hovered ? 20 : 0), 0, width, height, 64, 64);
 
 		ItemStack stack = book.getBookItem();
-		mc.getItemRenderer().renderItemAndEffectIntoGUI(stack, x + 2, y + 2);
+		RenderHelper.renderItemStackInGui(ms, stack, x + 2, y + 2);
 
 		EntryDisplayState readState = book.contents.getReadState();
 		if (readState.hasIcon && readState.showInInventory) {
-			GuiBook.drawMarking(book, x, y, 0, readState);
+			GuiBook.drawMarking(ms, book, x, y, 0, readState);
 		}
 	}
 

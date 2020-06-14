@@ -31,8 +31,8 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 	private transient boolean built;
 
-	public String getName() {
-		return book.i18n ? I18n.format(name) : name;
+	public Text getName() {
+		return book.i18n ? new TranslatableText(name) : new LiteralText(name);
 	}
 
 	public String getDescription() {
@@ -137,7 +137,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 	@Override
 	public int compareTo(BookCategory o) {
-		if (!PatchouliConfig.disableAdvancementLocking.get() && o.locked != this.locked) {
+		if (!PatchouliConfig.disableAdvancementLocking.getValue() && o.locked != this.locked) {
 			return this.locked ? 1 : -1;
 		}
 

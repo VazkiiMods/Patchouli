@@ -18,7 +18,7 @@ public class GuiBookWriter extends GuiBook {
 	private static boolean drawHeader;
 
 	public GuiBookWriter(Book book) {
-		super(book, new StringTextComponent(""));
+		super(book, LiteralText.EMPTY);
 	}
 
 	@Override
@@ -35,25 +35,25 @@ public class GuiBookWriter extends GuiBook {
 	}
 
 	@Override
-	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
-		super.drawForegroundElements(mouseX, mouseY, partialTicks);
+	void drawForegroundElements(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		super.drawForegroundElements(ms, mouseX, mouseY, partialTicks);
 
-		drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-		drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
+		drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+		drawSeparator(ms, book, LEFT_PAGE_X, TOP_PADDING + 12);
 
 		if (drawHeader) {
-			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
+			drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawSeparator(ms, book, RIGHT_PAGE_X, TOP_PADDING + 12);
 		}
 
-		textfield.render(mouseX, mouseY, partialTicks);
-		text.render(mouseX, mouseY);
-		editableText.render(mouseX, mouseY);
+		textfield.render(ms, mouseX, mouseY, partialTicks);
+		text.render(ms, mouseX, mouseY);
+		editableText.render(ms, mouseX, mouseY);
 	}
 
 	@Override
 	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-		return textfield.mouseClicked(mouseX - bookLeft, mouseY - bookTop, mouseButton)
+		return textfield.mouseClicked(getRelativeX(mouseX), getRelativeY(mouseY), mouseButton)
 				|| text.click(mouseX, mouseY, mouseButton)
 				|| editableText.click(mouseX, mouseY, mouseButton)
 				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);

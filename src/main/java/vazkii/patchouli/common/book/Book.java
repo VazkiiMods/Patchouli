@@ -218,7 +218,7 @@ public class Book {
 	}
 
 	public final boolean advancementsEnabled() {
-		return !PatchouliConfig.disableAdvancementLocking.get() && !PatchouliConfig.noAdvancementBooks.get().contains(id.toString());
+		return !PatchouliConfig.disableAdvancementLocking.getValue() && !PatchouliConfig.noAdvancementBooks.getValue().contains(id.toString());
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -236,17 +236,17 @@ public class Book {
 		return owner.getDisplayName();
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public FontRenderer getFont() {
+	@Environment(EnvType.CLIENT)
+	public Style getFontStyle() {
 		if (useBlockyFont) {
-			return Minecraft.getInstance().fontRenderer;
+			return Style.EMPTY;
 		} else {
-			return Minecraft.getInstance().getFontResourceManager().getFontRenderer(UNICODE_FONT_ID);
+			return Style.EMPTY.withFont(UNICODE_FONT_ID);
 		}
 	}
 
-	public ITextComponent getSubtitle() {
-		ITextComponent editionStr;
+	public MutableText getSubtitle() {
+		Text editionStr;
 
 		try {
 			int ver = Integer.parseInt(version);

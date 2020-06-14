@@ -17,6 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
+import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.book.Book;
 
@@ -86,16 +87,16 @@ public class ClientAdvancements {
 
 		@Nonnull
 		@Override
-		public Visibility draw(@Nonnull ToastGui toastGui, long delta) {
+		public Visibility draw(MatrixStack ms, ToastGui toastGui, long delta) {
 			Minecraft mc = Minecraft.getInstance();
 			mc.getTextureManager().bindTexture(TEXTURE_TOASTS);
 			RenderSystem.color3f(1.0F, 1.0F, 1.0F);
-			toastGui.blit(0, 0, 0, 32, 160, 32);
+			toastGui.drawTexture(ms, 0, 0, 0, 32, 160, 32);
 
-			toastGui.getMinecraft().fontRenderer.drawString(I18n.format(book.name), 30, 7, -11534256);
-			toastGui.getMinecraft().fontRenderer.drawString(I18n.format("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
+			toastGui.getGame().textRenderer.draw(ms, I18n.translate(book.name), 30, 7, -11534256);
+			toastGui.getGame().textRenderer.draw(ms, I18n.translate("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
 
-			toastGui.getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(null, book.getBookItem(), 8, 8);
+			RenderHelper.renderItemStackInGui(ms, book.getBookItem(), 8, 8);
 
 			return delta >= 5000L ? IToast.Visibility.HIDE : IToast.Visibility.SHOW;
 		}

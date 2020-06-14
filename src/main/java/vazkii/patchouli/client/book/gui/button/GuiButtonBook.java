@@ -26,7 +26,7 @@ public class GuiButtonBook extends Button {
 	}
 
 	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, Supplier<Boolean> displayCondition, IPressable onPress, ITextComponent... tooltip) {
-		super(x, y, w, h, tooltip[0].getString(), onPress);
+		super(x, y, w, h, tooltip[0], onPress);
 		this.parent = parent;
 		this.u = u;
 		this.v = v;
@@ -35,16 +35,16 @@ public class GuiButtonBook extends Button {
 	}
 
 	@Override
-	public final void render(int mouseX, int mouseY, float partialTicks) {
+	public final void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		active = visible = displayCondition.get();
-		super.render(mouseX, mouseY, partialTicks);
+		super.render(ms, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	public void renderButton(int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.color3f(1F, 1F, 1F);
-		GuiBook.drawFromTexture(parent.book, x, y, u + (isHovered() ? width : 0), v, width, height);
-		if (isHovered) {
+		GuiBook.drawFromTexture(ms, parent.book, x, y, u + (isHovered() ? width : 0), v, width, height);
+		if (isHovered()) {
 			parent.setTooltip(getTooltip());
 		}
 	}

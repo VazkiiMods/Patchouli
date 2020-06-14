@@ -14,6 +14,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
 import vazkii.patchouli.api.IComponentRenderContext;
+import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
@@ -41,7 +42,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	public GuiBookEntry(Book book, BookEntry entry, int spread) {
-		super(book, new StringTextComponent(entry.getName()));
+		super(book, entry.getName());
 		this.entry = entry;
 		this.spread = spread;
 	}
@@ -89,12 +90,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
-		drawPage(leftPage, mouseX, mouseY, partialTicks);
-		drawPage(rightPage, mouseX, mouseY, partialTicks);
+	void drawForegroundElements(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		drawPage(ms, leftPage, mouseX, mouseY, partialTicks);
+		drawPage(ms, rightPage, mouseX, mouseY, partialTicks);
 
 		if (rightPage == null) {
-			drawPageFiller(leftPage.book);
+			drawPageFiller(ms, leftPage.book);
 		}
 	}
 
@@ -105,15 +106,15 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 
-	void drawPage(BookPage page, int mouseX, int mouseY, float pticks) {
+	void drawPage(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (page == null) {
 			return;
 		}
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(page.left, page.top, 0);
-		page.render(mouseX - page.left, mouseY - page.top, pticks);
-		RenderSystem.popMatrix();
+		ms.push();
+		ms.translate(page.left, page.top, 0);
+		page.render(ms, mouseX - page.left, mouseY - page.top, pticks);
+		ms.pop();
 	}
 
 	boolean clickPage(BookPage page, double mouseX, double mouseY, int mouseButton) {
@@ -234,18 +235,20 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public FontRenderer getFont() {
-		return book.getFont();
+	public Style getFont() {
+		return book.getFontStyle();
 	}
 
 	@Override
-	public void renderItemStack(int x, int y, int mouseX, int mouseY, ItemStack stack) {
+	public void renderItemStack(MatrixStack ms, int x, int y, int mouseX, int mouseY, ItemStack stack) {
 		if (stack == null || stack.isEmpty()) {
 			return;
 		}
 
-		minecraft.getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
-		minecraft.getItemRenderer().renderItemOverlays(font, stack, x, y);
+		RenderHelper.transferMsToGl(ms, () -> {
+			MinecraftClient.getInstance().getItemRenderer().renderInGuiWithOverrides(stack, x, y);
+			client.getItemRenderer().renderGuiItemOverlay(textRenderer, stack, x, y);
+		});
 
 		if (isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
 			setTooltipStack(stack);
@@ -254,10 +257,10 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public void renderIngredient(int x, int y, int mouseX, int mouseY, Ingredient ingr) {
+	public void renderIngredient(MatrixStack ms, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
 		ItemStack[] stacks = ingr.getMatchingStacks();
 		if (stacks.length > 0) {
-			renderItemStack(x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
+			renderItemStack(ms, x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
 		}
 	}
 

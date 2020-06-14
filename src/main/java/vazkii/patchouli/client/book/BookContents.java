@@ -86,11 +86,6 @@ public class BookContents extends AbstractReadStateHolder {
 		}
 	}
 
-	// backward compat for botania reaching into impl details, TODO 1.16 remove
-	public String getSubtitle() {
-		return book.getSubtitle().getFormattedText();
-	}
-
 	public void reload(boolean isOverride) {
 		errored = false;
 

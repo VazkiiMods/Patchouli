@@ -19,14 +19,14 @@ public class PageSmelting extends PageDoubleRecipeRegistry<FurnaceRecipe> {
 	}
 
 	@Override
-	protected void drawRecipe(FurnaceRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-		mc.textureManager.bindTexture(book.craftingTexture);
+	protected void drawRecipe(MatrixStack ms, SmeltingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
+		mc.getTextureManager().bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
-		AbstractGui.blit(recipeX, recipeY, 11, 71, 96, 24, 128, 128);
-		parent.drawCenteredStringNoShadow(getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
+		DrawableHelper.drawTexture(ms, recipeX, recipeY, 11, 71, 96, 24, 128, 128);
+		parent.drawCenteredStringNoShadow(ms, getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-		parent.renderIngredient(recipeX + 4, recipeY + 4, mouseX, mouseY, recipe.getIngredients().get(0));
-		parent.renderItemStack(recipeX + 76, recipeY + 4, mouseX, mouseY, recipe.getRecipeOutput());
+		parent.renderIngredient(ms, recipeX + 4, recipeY + 4, mouseX, mouseY, recipe.getPreviewInputs().get(0));
+		parent.renderItemStack(ms, recipeX + 76, recipeY + 4, mouseX, mouseY, recipe.getOutput());
 	}
 
 	@Override

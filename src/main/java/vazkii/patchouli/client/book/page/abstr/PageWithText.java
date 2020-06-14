@@ -1,5 +1,7 @@
 package vazkii.patchouli.client.book.page.abstr;
 
+import net.minecraft.client.util.math.MatrixStack;
+
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.BookTextRenderer;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -24,9 +26,9 @@ public abstract class PageWithText extends BookPage {
 	public abstract int getTextHeight();
 
 	@Override
-	public void render(int mouseX, int mouseY, float pticks) {
+	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
 		if (shouldRenderText()) {
-			textRender.render(mouseX, mouseY);
+			textRender.render(ms, mouseX, mouseY);
 		}
 	}
 

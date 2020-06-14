@@ -21,6 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import org.lwjgl.opengl.GL11;
 
+import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -66,10 +67,10 @@ public class TooltipHandler {
 				int x = tooltipX - 34;
 				RenderSystem.disableDepthTest();
 
-				AbstractGui.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
-				AbstractGui.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
+				DrawableHelper.fill(ms, x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
+				DrawableHelper.fill(ms, x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
 
-				if (PatchouliConfig.useShiftForQuickLookup.get() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
+				if (PatchouliConfig.useShiftForQuickLookup.getValue() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
 					lexiconLookupTime += ClientTicker.delta;
 
 					int cx = x + 8;
@@ -103,28 +104,29 @@ public class TooltipHandler {
 					RenderSystem.shadeModel(GL11.GL_FLAT);
 
 					if (lexiconLookupTime >= time) {
-						mc.player.inventory.currentItem = lexSlot;
-						int page = lexiconEntry.getSecond();
-						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), page);
+						mc.player.inventory.selectedSlot = lexSlot;
+						int spread = lexiconEntry.getSecond();
+						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), spread * 2);
 					}
 				} else {
 					lexiconLookupTime = 0F;
 				}
 
-				mc.getItemRenderer().zLevel = 300;
-				mc.getItemRenderer().renderItemAndEffectIntoGUI(lexiconStack, x, tooltipY);
-				mc.getItemRenderer().zLevel = 0;
+				mc.getItemRenderer().zOffset = 300;
+				RenderHelper.renderItemStackInGui(ms, lexiconStack, x, tooltipY);
+				mc.getItemRenderer().zOffset = 0;
 				RenderSystem.disableLighting();
 
-				RenderSystem.pushMatrix();
-				RenderSystem.translatef(0, 0, 500);
-				mc.fontRenderer.drawStringWithShadow("?", x + 10, tooltipY + 8, 0xFFFFFFFF);
+				ms.push();
+				ms.translate(0, 0, 500);
+				mc.textRenderer.drawWithShadow(ms, "?", x + 10, tooltipY + 8, 0xFFFFFFFF);
 
-				RenderSystem.scalef(0.5F, 0.5F, 1F);
-				boolean mac = Minecraft.IS_RUNNING_ON_MAC;
-				String key = (PatchouliConfig.useShiftForQuickLookup.get() ? "Shift" : mac ? "Cmd" : "Ctrl");
-				mc.fontRenderer.drawStringWithShadow(TextFormatting.BOLD + key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
-				RenderSystem.popMatrix();
+				ms.scale(0.5F, 0.5F, 1F);
+				boolean mac = MinecraftClient.IS_SYSTEM_MAC;
+				Text key = new LiteralText(PatchouliConfig.useShiftForQuickLookup.getValue() ? "Shift" : mac ? "Cmd" : "Ctrl")
+						.formatted(Formatting.BOLD);
+				mc.textRenderer.drawWithShadow(ms, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
+				ms.pop();
 
 				RenderSystem.enableDepthTest();
 			} else {

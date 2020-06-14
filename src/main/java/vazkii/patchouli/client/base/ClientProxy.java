@@ -23,6 +23,7 @@ public class ClientProxy extends CommonProxy {
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
 		CrashReportExtender.registerCrashCallable(new BookCrashHandler());
+        // todo 1.16 register property override
 	}
 
 	@Override

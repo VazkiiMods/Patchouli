@@ -31,8 +31,8 @@ public class PageTemplate extends BookPage {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float pticks) {
-		template.render(this, mouseX, mouseY, pticks);
+	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
+		template.render(ms, this, mouseX, mouseY, pticks);
 	}
 
 	@Override

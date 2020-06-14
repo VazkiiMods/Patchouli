@@ -15,7 +15,7 @@ public class BookTextRenderer {
 	private final String text;
 	private final int x, y, width;
 	private final int lineHeight;
-	private final int baseColor;
+	private final Style baseStyle;
 
 	private List<Word> words;
 
@@ -35,19 +35,20 @@ public class BookTextRenderer {
 		this.y = y;
 		this.width = width;
 		this.lineHeight = lineHeight;
-		this.baseColor = baseColor;
+		this.baseStyle = book.getFontStyle().withColor(TextColor.fromRgb(baseColor));
 
 		build();
 	}
 
 	private void build() {
-		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, baseColor);
+		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, baseStyle);
 		words = parser.parse(text);
 	}
 
-	public void render(int mouseX, int mouseY) {
-		FontRenderer font = book.getFont();
-		words.forEach(word -> word.render(font, mouseX, mouseY));
+	public void render(MatrixStack ms, int mouseX, int mouseY) {
+		TextRenderer font = MinecraftClient.getInstance().textRenderer;
+		Style style = book.getFontStyle();
+		words.forEach(word -> word.render(ms, font, style, mouseX, mouseY));
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {

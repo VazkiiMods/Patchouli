@@ -22,15 +22,16 @@ ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
 
 def mc_version = '1.16.1'
-version = "${mc_version}-${config.version}-${config.build_number}"
-group = "vazkii.${config.mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = "${config.version}-${config.build_number}"
+if (System.getenv().BUILD_NUMBER != null) { 
+    //adds the build number to the end of the version string if on a build server
+    version += ".${System.getenv().BUILD_NUMBER}"
+}
+
+group = "vazkii.${config.mod_id}"
 archivesBaseName = "${config.mod_name}"
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
-if (System.getenv('BUILD_NUMBER') != null) {
-    version += "." + System.getenv('BUILD_NUMBER')
-}
 
 minecraft {
     mappings channel: "snapshot", version: "20200514-1.16"
@@ -71,6 +72,13 @@ repositories {
         name "yarn2mcp"
         url "https://maven.tterrag.com/"
     }
+}
+
+repositories {
+	maven {
+		name = "Modmuss"
+		url = "https://maven.modmuss50.me/"
+	}
 }
 
 dependencies {

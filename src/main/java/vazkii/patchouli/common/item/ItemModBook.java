@@ -45,36 +45,31 @@ public class ItemModBook extends Item {
 		super(new Item.Properties()
 				.maxStackSize(1)
 				.group(ItemGroup.MISC));
+	}
 
-		setRegistryName(new ResourceLocation(Patchouli.MOD_ID, "guide_book"));
+	public static float getCompletion(ItemStack stack) {
+		Book book = getBook(stack);
+		float progression = 0F; // default incomplete
 
-		addPropertyOverride(new ResourceLocation("completion"), new IItemPropertyGetter() {
+		if (book != null) {
+			int totalEntries = 0;
+			int unlockedEntries = 0;
 
-			@OnlyIn(Dist.CLIENT)
-			public float call(ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entityIn) {
-				Book book = getBook(stack);
-				float progression = 0F; // default incomplete
-
-				if (book != null) {
-					int totalEntries = 0;
-					int unlockedEntries = 0;
-
-					for (BookEntry entry : book.contents.entries.values()) {
-						if (!entry.isSecret()) {
-							totalEntries++;
-							if (!entry.isLocked()) {
-								unlockedEntries++;
-							}
-						}
+			for (BookEntry entry : book.contents.entries.values()) {
+				if (!entry.isSecret()) {
+					totalEntries++;
+					if (!entry.isLocked()) {
+						unlockedEntries++;
 					}
 
 					progression = ((float) unlockedEntries) / Math.max(1f, (float) totalEntries);
 				}
-
-				return progression;
 			}
 
-		});
+			progression = ((float) unlockedEntries) / Math.max(1f, (float) totalEntries);
+		}
+
+		return progression;
 	}
 
 	public static ItemStack forBook(Book book) {

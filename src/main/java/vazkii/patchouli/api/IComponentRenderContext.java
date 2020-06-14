@@ -17,11 +17,11 @@ public interface IComponentRenderContext {
 
 	Screen getGui();
 
-	FontRenderer getFont();
+	Style getFont();
 
-	void renderItemStack(int x, int y, int mouseX, int mouseY, ItemStack stack);
+	void renderItemStack(MatrixStack ms, int x, int y, int mouseX, int mouseY, ItemStack stack);
 
-	void renderIngredient(int x, int y, int mouseX, int mouseY, Ingredient ingredient);
+	void renderIngredient(MatrixStack ms, int x, int y, int mouseX, int mouseY, Ingredient ingredient);
 
 	boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h);
 

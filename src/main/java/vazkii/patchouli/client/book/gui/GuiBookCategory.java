@@ -21,7 +21,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 	BookCategory category;
 
 	public GuiBookCategory(Book book, BookCategory category) {
-		super(book, new StringTextComponent(category.getName()));
+		super(book, category.getName());
 		this.category = category;
 	}
 

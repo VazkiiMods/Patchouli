@@ -44,7 +44,7 @@ public class ComponentTooltip extends TemplateComponent {
 	}
 
 	@Override
-	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (page.parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
 			page.parent.setTooltip(tooltip);
 		}

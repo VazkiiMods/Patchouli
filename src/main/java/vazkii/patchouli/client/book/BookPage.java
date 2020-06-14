@@ -61,7 +61,7 @@ public abstract class BookPage {
 		parent.addButton(button);
 	}
 
-	public void render(int mouseX, int mouseY, float pticks) {}
+	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {}
 
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		return false;
@@ -73,5 +73,9 @@ public abstract class BookPage {
 
 	public String i18n(String text) {
 		return book.i18n ? I18n.format(text) : text;
+	}
+
+	public Text i18nText(String text) {
+		return book.i18n ? new TranslatableText(text) : new LiteralText(text);
 	}
 }

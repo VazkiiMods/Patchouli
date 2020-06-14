@@ -34,25 +34,25 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	}
 
 	@Override
-	public void renderButton(int mouseX, int mouseY, float partialTicks) {
-		super.renderButton(mouseX, mouseY, partialTicks);
+	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		super.renderButton(ms, mouseX, mouseY, partialTicks);
 
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 		if (bookmark != null && entry != null) {
-			RenderSystem.pushMatrix();
-			RenderSystem.scalef(0.5F, 0.5F, 0.5F);
+			ms.push();
+			ms.scale(0.5F, 0.5F, 0.5F);
 			int px = x * 2 + (isHovered() ? 6 : 2);
 			int py = y * 2 + 2;
-			entry.getIcon().render(px, py);
+			entry.getIcon().render(ms, px, py);
 
 			RenderSystem.disableDepthTest();
 			String s = Integer.toString(bookmark.page + 1);
 			if (multiblock) {
 				s = I18n.format("patchouli.gui.lexicon.visualize_letter");
 			}
-			parent.getMinecraft().fontRenderer.drawStringWithShadow(s, px + 12, py + 10, 0xFFFFFF);
+			parent.getMinecraft().textRenderer.drawWithShadow(ms, s, px + 12, py + 10, 0xFFFFFF);
 			RenderSystem.enableDepthTest();
-			RenderSystem.popMatrix();
+			ms.pop();
 		}
 	}
 
@@ -64,7 +64,7 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 		}
 
 		return new ITextComponent[] {
-				new StringTextComponent(entry.getName()),
+				entry.getName(),
 				new TranslationTextComponent(multiblock
 						? "patchouli.gui.lexicon.multiblock_bookmark"
 						: "patchouli.gui.lexicon.remove_bookmark").applyTextStyle(TextFormatting.GRAY)

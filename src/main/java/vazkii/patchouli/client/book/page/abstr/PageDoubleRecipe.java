@@ -2,8 +2,11 @@ package vazkii.patchouli.client.book.page.abstr;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -15,7 +18,7 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	String title;
 
 	protected transient T recipe1, recipe2;
-	protected transient String title1, title2;
+	protected transient Text title1, title2;
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
@@ -30,34 +33,34 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 		}
 
 		boolean customTitle = title != null && !title.isEmpty();
-		title1 = !customTitle ? getRecipeOutput(recipe1).getDisplayName().getFormattedText() : title;
-		title2 = "-";
+		title1 = !customTitle ? getRecipeOutput(recipe1).getName() : i18nText(title);
+		title2 = new LiteralText("-");
 		if (recipe2 != null) {
-			title2 = !customTitle ? getRecipeOutput(recipe2).getDisplayName().getFormattedText() : "";
+			title2 = !customTitle ? getRecipeOutput(recipe2).getName() : LiteralText.EMPTY;
 			if (title1.equals(title2)) {
-				title2 = "";
+				title2 = LiteralText.EMPTY;
 			}
 		}
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float pticks) {
+	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
 		if (recipe1 != null) {
 			int recipeX = getX();
 			int recipeY = getY();
-			drawRecipe(recipe1, recipeX, recipeY, mouseX, mouseY, false);
+			drawRecipe(ms, recipe1, recipeX, recipeY, mouseX, mouseY, false);
 
 			if (recipe2 != null) {
-				drawRecipe(recipe2, recipeX, recipeY + getRecipeHeight() - (title2.isEmpty() ? 10 : 0), mouseX, mouseY, true);
+				drawRecipe(ms, recipe2, recipeX, recipeY + getRecipeHeight() - (title2.getString().isEmpty() ? 10 : 0), mouseX, mouseY, true);
 			}
 		}
 
-		super.render(mouseX, mouseY, pticks);
+		super.render(ms, mouseX, mouseY, pticks);
 	}
 
 	@Override
 	public int getTextHeight() {
-		return getY() + getRecipeHeight() * (recipe2 == null ? 1 : 2) - (title2.isEmpty() ? 23 : 13);
+		return getY() + getRecipeHeight() * (recipe2 == null ? 1 : 2) - (title2.getString().isEmpty() ? 23 : 13);
 	}
 
 	@Override
@@ -65,8 +68,8 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 		return getTextHeight() + 10 < GuiBook.PAGE_HEIGHT;
 	}
 
-	protected abstract void drawRecipe(T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
-	protected abstract T loadRecipe(BookEntry entry, ResourceLocation loc);
+	protected abstract void drawRecipe(MatrixStack ms, T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
+	protected abstract T loadRecipe(BookEntry entry, Identifier loc);
 	protected abstract ItemStack getRecipeOutput(T recipe);
 	protected abstract int getRecipeHeight();
 
@@ -78,8 +81,8 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 		return 4;
 	}
 
-	protected String getTitle(boolean second) {
-		return i18n(second ? title2 : title1);
+	protected Text getTitle(boolean second) {
+		return second ? title2 : title1;
 	}
 
 }

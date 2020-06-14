@@ -1,6 +1,5 @@
 package vazkii.patchouli.client.handler;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.block.Block;
@@ -22,6 +21,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBloc
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
+import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -53,18 +53,19 @@ public class BookRightClickHandler {
 						MainWindow window = event.getWindow();
 						int x = window.getScaledWidth() / 2 + 3;
 						int y = window.getScaledHeight() / 2 + 3;
-						entry.getIcon().render(x, y);
-						RenderSystem.scalef(0.5F, 0.5F, 1F);
-						mc.getItemRenderer().renderItemAndEffectIntoGUI(bookStack, (x + 8) * 2, (y + 8) * 2);
-						RenderSystem.scalef(2F, 2F, 1F);
+						entry.getIcon().render(ms, x, y);
+						ms.scale(0.5F, 0.5F, 1);
+						RenderHelper.renderItemStackInGui(ms, bookStack, (x + 8) * 2, (y + 8) * 2);
+						ms.scale(2F, 2F, 1F);
 
-						mc.fontRenderer.drawStringWithShadow(entry.getName(), x + 18, y + 3, 0xFFFFFF);
+						mc.textRenderer.draw(ms, entry.getName(), x + 18, y + 3, 0xFFFFFF);
 
-						RenderSystem.pushMatrix();
-						RenderSystem.scalef(0.75F, 0.75F, 1F);
-						String s = I18n.format("patchouli.gui.lexicon." + (player.isSneaking() ? "view" : "sneak"));
-						mc.fontRenderer.drawStringWithShadow(TextFormatting.ITALIC + s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
-						RenderSystem.popMatrix();
+						ms.push();
+						ms.scale(0.75F, 0.75F, 1F);
+						Text s = new TranslatableText("patchouli.gui.lexicon." + (player.isSneaking() ? "view" : "sneak"))
+								.formatted(Formatting.ITALIC);
+						mc.textRenderer.draw(ms, s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
+						ms.pop();
 					}
 				}
 			}

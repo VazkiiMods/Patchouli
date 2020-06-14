@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -95,20 +96,20 @@ public class PageMultiblock extends PageWithText {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float pticks) {
+	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
 		RenderSystem.enableBlend();
 		RenderSystem.color3f(1F, 1F, 1F);
-		GuiBook.drawFromTexture(book, x, y, 405, 149, 106, 106);
+		GuiBook.drawFromTexture(ms, book, x, y, 405, 149, 106, 106);
 
-		parent.drawCenteredStringNoShadow(name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		parent.drawCenteredStringNoShadow(ms, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 
 		if (multiblockObj != null) {
-			renderMultiblock();
+			renderMultiblock(ms);
 		}
 
-		super.render(mouseX, mouseY, pticks);
+		super.render(ms, mouseX, mouseY, pticks);
 	}
 
 	public void handleButtonVisualize(Button button) {
@@ -123,7 +124,7 @@ public class PageMultiblock extends PageWithText {
 		}
 	}
 
-	private void renderMultiblock() {
+	private void renderMultiblock(MatrixStack ms) {
 		multiblockObj.setWorld(mc.world);
 		Vec3i size = multiblockObj.getSize();
 		int sizeX = size.getX();
@@ -138,10 +139,10 @@ public class PageMultiblock extends PageWithText {
 
 		int xPos = GuiBook.PAGE_WIDTH / 2;
 		int yPos = 60;
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(xPos, yPos, 100);
-		RenderSystem.scalef(scale, scale, scale);
-		RenderSystem.translatef(-(float) sizeX / 2, -(float) sizeY / 2, 0);
+		ms.push();
+		ms.translate(xPos, yPos, 100);
+		ms.scale(scale, scale, scale);
+		ms.translate(-(float) sizeX / 2, -(float) sizeY / 2, 0);
 
 		// Initial eye pos somewhere off in the distance in the -Z direction
 		Vector4f eye = new Vector4f(0, 0, -100, 1);
@@ -149,8 +150,8 @@ public class PageMultiblock extends PageWithText {
 		rotMat.setIdentity();
 
 		// For each GL rotation done, track the opposite to keep the eye pos accurate
-		RenderSystem.rotatef(-30F, 1F, 0F, 0F);
-		rotMat.mul(Vector3f.XP.rotationDegrees(30));
+		ms.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-30F));
+		rotMat.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(30));
 
 		float offX = (float) -sizeX / 2;
 		float offZ = (float) -sizeZ / 2 + 1;
@@ -159,12 +160,12 @@ public class PageMultiblock extends PageWithText {
 		if (!Screen.hasShiftDown()) {
 			time += ClientTicker.partialTicks;
 		}
-		RenderSystem.translatef(-offX, 0, -offZ);
-		RenderSystem.rotatef(time, 0F, 1F, 0F);
-		rotMat.mul(Vector3f.YP.rotationDegrees(-time));
-		RenderSystem.rotatef(45F, 0F, 1F, 0F);
-		rotMat.mul(Vector3f.YP.rotationDegrees(-45));
-		RenderSystem.translatef(offX, 0, offZ);
+		ms.translate(-offX, 0, -offZ);
+		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(time));
+		rotMat.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-time));
+		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(45));
+		rotMat.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-45));
+		ms.translate(offX, 0, offZ);
 
 		// Finally apply the rotations
 		eye.transform(rotMat);
@@ -173,27 +174,26 @@ public class PageMultiblock extends PageWithText {
 			Dense multiblocks store everything in positive X/Z, so this works, but sparse multiblocks store everything from the JSON as-is.
 			Potential solution: Rotate around the offset vars of the multiblock, and add AABB method for extent of the multiblock
 		*/
-		renderElements(multiblockObj, BlockPos.getAllInBoxMutable(BlockPos.ZERO, new BlockPos(sizeX - 1, sizeY - 1, sizeZ - 1)), eye);
+		renderElements(ms, multiblockObj, BlockPos.iterate(BlockPos.ORIGIN, new BlockPos(sizeX - 1, sizeY - 1, sizeZ - 1)), eye);
 
-		RenderSystem.popMatrix();
+		ms.pop();
 	}
 
-	private void renderElements(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, Vector4f eye) {
-		RenderSystem.pushMatrix();
+	private void renderElements(MatrixStack ms, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, Vector4f eye) {
+		ms.push();
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
-		RenderSystem.translatef(0, 0, -1);
+		ms.translate(0, 0, -1);
 
-		IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-		doWorldRenderPass(mb, blocks, buffers, eye);
-		doTileEntityRenderPass(mb, blocks, buffers, eye);
+		VertexConsumerProvider.Immediate buffers = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+		doWorldRenderPass(ms, mb, blocks, buffers, eye);
+		doTileEntityRenderPass(ms, mb, blocks, buffers, eye);
 
 		// todo 1.15 transparency sorting
-		buffers.finish();
-		RenderSystem.popMatrix();
+		buffers.draw();
+		ms.pop();
 	}
 
-	private void doWorldRenderPass(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull IRenderTypeBuffer.Impl buffers, Vector4f eye) {
-		MatrixStack ms = new MatrixStack();
+	private void doWorldRenderPass(MatrixStack ms, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull VertexConsumerProvider.Immediate buffers, Vector4f eye) {
 		for (BlockPos pos : blocks) {
 			BlockState bs = mb.getBlockState(pos);
 
@@ -214,9 +214,7 @@ public class PageMultiblock extends PageWithText {
 	// Hold errored TEs weakly, this may cause some dupe errors but will prevent spamming it every frame
 	private final transient Set<TileEntity> erroredTiles = Collections.newSetFromMap(new WeakHashMap<>());
 
-	private void doTileEntityRenderPass(AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, IRenderTypeBuffer buffers, Vector4f eye) {
-		MatrixStack ms = new MatrixStack();
-
+	private void doTileEntityRenderPass(MatrixStack ms, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, VertexConsumerProvider buffers, Vector4f eye) {
 		for (BlockPos pos : blocks) {
 			TileEntity te = mb.getTileEntity(pos);
 			if (te != null && !erroredTiles.contains(te)) {

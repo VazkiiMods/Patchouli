@@ -9,6 +9,10 @@ import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The {@code TextLayouter} is responsible for taking a series of {@link Span spans}
+ * and computing its layout and positioning, producing a collection of {@link Word words}.
+ */
 public class TextLayouter {
 	private final List<Word> words = new ArrayList<>();
 	private final GuiBook gui;
@@ -29,7 +33,7 @@ public class TextLayouter {
 	private List<Word> linkCluster = null;
 	private List<Span> spanCluster = null;
 
-	private List<SpanTail> pending = new ArrayList<>();
+	private final List<SpanTail> pending = new ArrayList<>();
 	private int lineStart = 0;
 	private int widthSoFar = 0;
 
@@ -63,13 +67,13 @@ public class TextLayouter {
 		lineStart = 0;
 
 		for (Span span : paragraph) {
-			append(iterator, span);
+			layoutSpan(iterator, span);
 		}
 
 		flush();
 	}
 
-	private void append(BreakIterator iterator, Span span) {
+	private void layoutSpan(BreakIterator iterator, Span span) {
 		if (spanCluster != span.linkCluster) {
 			linkCluster = span.linkCluster == null ? null : new ArrayList<>();
 			spanCluster = span.linkCluster;
@@ -103,7 +107,8 @@ public class TextLayouter {
 
 		char[] characters = last.span.text.toCharArray();
 		for (int i = last.start; i < characters.length; i++) {
-			width += font.getCharWidth(characters[i]);
+			Text tmp = new LiteralText(String.valueOf(characters[i])).setStyle(last.span.style);
+			width += font.getWidth(tmp);
 			if (last.span.bold) {
 				width++;
 			}
@@ -190,14 +195,14 @@ public class TextLayouter {
 		public SpanTail(Span span, int start, List<Word> cluster) {
 			this.span = span;
 			this.start = start;
-			this.width = font.getStringWidth(span.codes + span.text.substring(start)) + span.spacingLeft + span.spacingRight;
+			this.width = font.getWidth(span.styledSubstring(start)) + span.spacingLeft + span.spacingRight;
 			this.cluster = cluster;
 			this.length = span.text.length() - start;
 		}
 
 		public Word position(GuiBook gui, int x, int y, int length) {
 			x += span.spacingLeft;
-			Word result = new Word(gui, span, span.text.substring(start, start + length), x, y, width, cluster);
+			Word result = new Word(gui, span, span.styledSubstring(start, start + length), x, y, width, cluster);
 			if (cluster != null) {
 				cluster.add(result);
 			}

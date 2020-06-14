@@ -9,7 +9,16 @@ import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.*;
+import java.nio.file.*;
 import java.util.*;
+
+import io.github.fablabsmc.fablabs.api.fiber.v1.exception.ValueDeserializationException;
+import io.github.fablabsmc.fablabs.api.fiber.v1.schema.type.derived.ConfigTypes;
+import io.github.fablabsmc.fablabs.api.fiber.v1.serialization.FiberSerialization;
+import io.github.fablabsmc.fablabs.api.fiber.v1.serialization.JanksonValueSerializer;
+import io.github.fablabsmc.fablabs.api.fiber.v1.tree.ConfigTree;
+import io.github.fablabsmc.fablabs.api.fiber.v1.tree.PropertyMirror;
 
 public class PatchouliConfig {
 
@@ -20,6 +29,36 @@ public class PatchouliConfig {
 	public static ForgeConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
 
 	private static final Map<String, Boolean> CONFIG_FLAGS = new HashMap<>();
+
+	private static final ConfigTree CONFIG = ConfigTree.builder()
+			.beginValue("disableAdvancementLocking", ConfigTypes.BOOLEAN, false)
+			.withComment("Set this to true to disable advancement locking for ALL books, making all entries visible at all times. Config Flag: advancements_disabled")
+			.finishValue(disableAdvancementLocking::mirror)
+
+			.beginValue("noAdvancementBooks", ConfigTypes.makeList(ConfigTypes.STRING), Collections.emptyList())
+			.withComment("Granular list of Book ID's to disable advancement locking for, e.g. [ \"botania:lexicon\" ]. Config Flags: advancements_disabled_<bookid>")
+			.finishValue(noAdvancementBooks::mirror)
+
+			.beginValue("testingMode", ConfigTypes.BOOLEAN, false)
+			.withComment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want. Config Flag: testing_mode")
+			.finishValue(testingMode::mirror)
+
+			.beginValue("inventoryButtonBook", ConfigTypes.STRING, "")
+			.withComment("Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.")
+			.finishValue(inventoryButtonBook::mirror)
+
+			.beginValue("useShiftForQuickLookup", ConfigTypes.BOOLEAN, false)
+			.withComment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
+			.finishValue(useShiftForQuickLookup::mirror)
+
+			.build();
+
+	private static void writeDefaultConfig(Path path, JanksonValueSerializer serializer) {
+		try (OutputStream s = new BufferedOutputStream(Files.newOutputStream(path, StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW))) {
+			FiberSerialization.serialize(CONFIG, s, serializer);
+		} catch (IOException ignored) {}
+
+	}
 
 	public static void setup() {
 		Pair<Loader, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Loader::new);
@@ -38,9 +77,9 @@ public class PatchouliConfig {
 
 		setFlag("debug", Patchouli.debug);
 
-		setFlag("advancements_disabled", disableAdvancementLocking.get());
-		setFlag("testing_mode", testingMode.get());
-		for (String book : noAdvancementBooks.get()) {
+		setFlag("advancements_disabled", disableAdvancementLocking.getValue());
+		setFlag("testing_mode", testingMode.getValue());
+		for (String book : noAdvancementBooks.getValue()) {
 			setFlag("advancements_disabled_" + book, true);
 		}
 	}

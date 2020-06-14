@@ -29,7 +29,7 @@ public class GuiButtonEntry extends Button {
 	}
 
 	@Override
-	public void renderButton(int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (active) {
 			if (isHovered()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
@@ -41,28 +41,34 @@ public class GuiButtonEntry extends Button {
 			float widthFract = time / ANIM_TIME;
 			boolean locked = entry.isLocked();
 
-			RenderSystem.scalef(0.5F, 0.5F, 0.5F);
-			AbstractGui.fill(x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
+			ms.scale(0.5F, 0.5F, 0.5F);
+			DrawableHelper.fill(ms, x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
 			RenderSystem.enableBlend();
 
 			if (locked) {
 				RenderSystem.color4f(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(parent.book, x * 2 + 2, y * 2 + 2);
+				GuiBook.drawLock(ms, parent.book, x * 2 + 2, y * 2 + 2);
 			} else {
-				entry.getIcon().render(x * 2 + 2, y * 2 + 2);
+				entry.getIcon().render(ms, x * 2 + 2, y * 2 + 2);
 			}
 
-			RenderSystem.scalef(2F, 2F, 2F);
+			ms.scale(2F, 2F, 2F);
 
-			String name = (entry.isPriority() ? TextFormatting.ITALIC : "") + entry.getName();
+			MutableText name;
 			if (locked) {
-				name = I18n.format("patchouli.gui.lexicon.locked");
+				name = new TranslatableText("patchouli.gui.lexicon.locked");
+			} else {
+				name = entry.getName();
+				if (entry.isPriority()) {
+					name = name.formatted(Formatting.ITALIC);
+				}
 			}
-			int color = getColor();
-			entry.getBook().getFont().drawString(name, x + 12, y, color);
+
+			name = name.fillStyle(entry.getBook().getFontStyle());
+			MinecraftClient.getInstance().textRenderer.draw(ms, name, x + 12, y, getColor());
 
 			if (!entry.isLocked()) {
-				GuiBook.drawMarking(parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());
+				GuiBook.drawMarking(ms, parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());
 			}
 		}
 	}
