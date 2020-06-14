@@ -4,7 +4,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
@@ -20,7 +22,7 @@ public class GuiButtonCategory extends ButtonWidget {
 	final GuiBook parent;
 	BookCategory category;
 	final BookIcon icon;
-	final String name;
+	final Text name;
 	final int u, v;
 	float timeHovered;
 
@@ -29,7 +31,7 @@ public class GuiButtonCategory extends ButtonWidget {
 		this.category = category;
 	}
 
-	public GuiButtonCategory(GuiBook parent, int x, int y, BookIcon icon, String name, ButtonWidget.PressAction onPress) {
+	public GuiButtonCategory(GuiBook parent, int x, int y, BookIcon icon, Text name, ButtonWidget.PressAction onPress) {
 		super(parent.bookLeft + x, parent.bookTop + y, 20, 20, name, onPress);
 		this.parent = parent;
 		this.u = x;
@@ -39,7 +41,7 @@ public class GuiButtonCategory extends ButtonWidget {
 	}
 
 	@Override
-	public void renderButton(int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (active) {
 			if (isHovered()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
@@ -53,27 +55,27 @@ public class GuiButtonCategory extends ButtonWidget {
 
 			if (locked) {
 				RenderSystem.color4f(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(parent.book, x + 2, y + 2);
+				GuiBook.drawLock(ms, parent.book, x + 2, y + 2);
 			} else {
-				icon.render(x + 2, y + 2);
+				icon.render(ms, x + 2, y + 2);
 			}
 
-			RenderSystem.pushMatrix();
+			ms.push();
 			RenderSystem.enableBlend();
 			RenderSystem.color4f(1F, 1F, 1F, transparency);
-			RenderSystem.translatef(0, 0, 200);
-			GuiBook.drawFromTexture(parent.book, x, y, u, v, width, height);
+			ms.translate(0, 0, 200);
+			GuiBook.drawFromTexture(ms, parent.book, x, y, u, v, width, height);
 			RenderSystem.color4f(1F, 1F, 1F, 1F);
 
 			if (category != null && !category.isLocked()) {
-				GuiBook.drawMarking(parent.book, x, y, 0, category.getReadState());
+				GuiBook.drawMarking(ms, parent.book, x, y, 0, category.getReadState());
 			}
-			RenderSystem.popMatrix();
+			ms.pop();
 
-			if (isHovered) {
+			if (isHovered()) {
 				parent.setTooltip(locked
 						? new TranslatableText("patchouli.gui.lexicon.locked").formatted(Formatting.GRAY)
-						: new LiteralText(name));
+						: name);
 			}
 		}
 	}

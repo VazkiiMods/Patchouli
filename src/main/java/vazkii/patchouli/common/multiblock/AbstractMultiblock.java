@@ -11,6 +11,7 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
@@ -90,9 +91,8 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 		simulate(world, pos, rotation, false).getSecond().forEach(r -> {
 			BlockPos placePos = r.getWorldPosition();
 			BlockState targetState = r.getStateMatcher().getDisplayedState((int) world.getTimeOfDay()).rotate(rotation);
-			Block targetBlock = targetState.getBlock();
 
-			if (!targetBlock.isAir(targetState) && targetState.canPlaceAt(world, placePos) && world.getBlockState(placePos).getMaterial().isReplaceable()) {
+			if (!targetState.isAir() && targetState.canPlaceAt(world, placePos) && world.getBlockState(placePos).getMaterial().isReplaceable()) {
 				world.setBlockState(placePos, targetState);
 			}
 		});
@@ -151,6 +151,11 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 	}
 
 	public abstract Vec3i getSize();
+
+	@Override
+	public float getBrightness(Direction direction, boolean shaded) {
+		return 1.0F;
+	}
 
 	@Override
 	public LightingProvider getLightingProvider() {

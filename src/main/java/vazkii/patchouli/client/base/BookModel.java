@@ -4,10 +4,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
+import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
@@ -30,10 +31,10 @@ public class BookModel implements BakedModel {
 		this.original = original;
 	}
 
-	private final ModelItemPropertyOverrideList itemHandler = new ModelItemPropertyOverrideList(null, null, null, Collections.emptyList()) {
+	private final ModelOverrideList itemHandler = new ModelOverrideList(null, null, null, Collections.emptyList()) {
 		@Override
 		public BakedModel apply(@Nonnull BakedModel original, @Nonnull ItemStack stack,
-				@Nullable World world, @Nullable LivingEntity entity) {
+				@Nullable ClientWorld world, @Nullable LivingEntity entity) {
 			Book book = ItemModBook.getBook(stack);
 			if (book != null) {
 				ModelIdentifier modelPath = new ModelIdentifier(book.model, "inventory");
@@ -45,7 +46,7 @@ public class BookModel implements BakedModel {
 
 	@Nonnull
 	@Override
-	public ModelItemPropertyOverrideList getItemPropertyOverrides() {
+	public ModelOverrideList getOverrides() {
 		return itemHandler;
 	}
 

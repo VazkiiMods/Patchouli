@@ -161,7 +161,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		}
 
 		for (StackWrapper wrapper : relevantStacks) {
-			if (ChatUtil.stripTextFormat(wrapper.stack.getName().asFormattedString()).toLowerCase().contains(query)) {
+			if (wrapper.stack.getName().getString().toLowerCase().contains(query)) {
 				return true;
 			}
 		}

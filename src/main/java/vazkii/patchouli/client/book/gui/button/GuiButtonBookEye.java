@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
@@ -17,11 +18,11 @@ public class GuiButtonBookEye extends GuiButtonBook {
 	}
 
 	@Override
-	public void renderButton(int mouseX, int mouseY, float partialTicks) {
-		super.renderButton(mouseX, mouseY, partialTicks);
+	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		super.renderButton(ms, mouseX, mouseY, partialTicks);
 
 		if (!PersistentData.data.clickedVisualize && (ClientTicker.ticksInGame) % 20 < 10) {
-			parent.getMinecraft().textRenderer.drawWithShadow("!", x, y, 0xFF3333);
+			parent.getMinecraft().textRenderer.drawWithShadow(ms, "!", x, y, 0xFF3333);
 		}
 	}
 

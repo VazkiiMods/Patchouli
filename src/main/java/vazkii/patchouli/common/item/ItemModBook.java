@@ -14,6 +14,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 import vazkii.patchouli.api.PatchouliAPI;
@@ -32,29 +33,29 @@ public class ItemModBook extends Item {
 		super(new Item.Settings()
 				.maxCount(1)
 				.group(ItemGroup.MISC));
+	}
 
-		addPropertyGetter(new Identifier("completion"), (stack, world, entity) -> {
-			Book book = getBook(stack);
-			float progression = 0F; // default incomplete
+	public static float getCompletion(ItemStack stack) {
+		Book book = getBook(stack);
+		float progression = 0F; // default incomplete
 
-			if (book != null) {
-				int totalEntries = 0;
-				int unlockedEntries = 0;
+		if (book != null) {
+			int totalEntries = 0;
+			int unlockedEntries = 0;
 
-				for (BookEntry entry : book.contents.entries.values()) {
-					if (!entry.isSecret()) {
-						totalEntries++;
-						if (!entry.isLocked()) {
-							unlockedEntries++;
-						}
+			for (BookEntry entry : book.contents.entries.values()) {
+				if (!entry.isSecret()) {
+					totalEntries++;
+					if (!entry.isLocked()) {
+						unlockedEntries++;
 					}
 				}
-
-				progression = ((float) unlockedEntries) / Math.max(1f, (float) totalEntries);
 			}
 
-			return progression;
-		});
+			progression = ((float) unlockedEntries) / Math.max(1f, (float) totalEntries);
+		}
+
+		return progression;
 	}
 
 	public static ItemStack forBook(Book book) {
@@ -120,7 +121,7 @@ public class ItemModBook extends Item {
 
 		Book book = getBook(stack);
 		if (book != null && book.contents != null) {
-			tooltip.add(new LiteralText(book.contents.getSubtitle()).formatted(Formatting.GRAY));
+			tooltip.add(book.getSubtitle().formatted(Formatting.GRAY));
 		}
 	}
 

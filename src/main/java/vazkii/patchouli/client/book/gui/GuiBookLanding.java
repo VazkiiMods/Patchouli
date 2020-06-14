@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -94,27 +95,27 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	@Override
-	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
-		text.render(mouseX, mouseY);
+	void drawForegroundElements(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		text.render(ms, mouseX, mouseY);
 
-		drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+		drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
 		int topSeparator = TOP_PADDING + 12;
 		int bottomSeparator = topSeparator + 25 + 24 * ((loadedCategories - 1) / 4 + 1);
 
-		drawHeader();
-		drawSeparator(book, RIGHT_PAGE_X, topSeparator);
+		drawHeader(ms);
+		drawSeparator(ms, book, RIGHT_PAGE_X, topSeparator);
 
 		if (loadedCategories <= 16) {
-			drawSeparator(book, RIGHT_PAGE_X, bottomSeparator);
+			drawSeparator(ms, book, RIGHT_PAGE_X, bottomSeparator);
 		}
 
 		if (book.contents.isErrored()) {
 			int x = RIGHT_PAGE_X + PAGE_WIDTH / 2;
 			int y = bottomSeparator + 12;
 
-			drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
-			drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.loading_error_hover"), x, y + 10, 0x777777);
+			drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
+			drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.loading_error_hover"), x, y + 10, 0x777777);
 
 			x -= PAGE_WIDTH / 2;
 			y -= 4;
@@ -124,16 +125,16 @@ public class GuiBookLanding extends GuiBook {
 			}
 		}
 
-		drawProgressBar(book, mouseX, mouseY, (e) -> true);
+		drawProgressBar(ms, book, mouseX, mouseY, (e) -> true);
 	}
 
-	void drawHeader() {
+	void drawHeader(MatrixStack ms) {
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
-		drawFromTexture(book, -8, 12, 0, 180, 140, 31);
+		drawFromTexture(ms, book, -8, 12, 0, 180, 140, 31);
 
 		int color = book.nameplateColor;
-		font.draw(book.getBookItem().getName().asFormattedString(), 13, 16, color);
-		book.getFont().draw(book.contents.getSubtitle(), 24, 24, color);
+		textRenderer.draw(ms, book.getBookItem().getName(), 13, 16, color);
+		book.getFont().draw(ms, book.getSubtitle(), 24, 24, color);
 	}
 
 	void makeErrorTooltip() {
@@ -179,7 +180,7 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	public void handleButtonAdvancements(ButtonWidget button) {
-		minecraft.openScreen(new GuiAdvancementsExt(minecraft.player.networkHandler.getAdvancementHandler(), this, book.advancementsTab));
+		client.openScreen(new GuiAdvancementsExt(client.player.networkHandler.getAdvancementHandler(), this, book.advancementsTab));
 	}
 
 	public void handleButtonEdit(ButtonWidget button) {
@@ -188,7 +189,7 @@ public class GuiBookLanding extends GuiBook {
 			book.reloadContentsAndExtensions();
 			book.reloadLocks(false);
 			displayLexiconGui(new GuiBookLanding(book), false);
-			minecraft.player.sendMessage(new TranslatableText("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)));
+			client.player.sendMessage(new TranslatableText("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)), false);
 		} else {
 			displayLexiconGui(new GuiBookWriter(book), true);
 		}

@@ -2,7 +2,6 @@ package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.options.KeyBinding;
-import net.minecraft.client.util.TextFormat;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -76,8 +75,8 @@ public class BookTextParser {
 				return "N/A";
 			}
 
-			state.tooltip = new TranslatableText("patchouli.gui.lexicon.keybind", new TranslatableText(result.getName()));
-			return result.getLocalizedName();
+			state.tooltip = new TranslatableText("patchouli.gui.lexicon.keybind", new TranslatableText(result.getTranslationKey()));
+			return result.getBoundKeyLocalizedText().getString();
 		}, "k");
 		register((parameter, state) -> {
 			state.cluster = new LinkedList<>();
@@ -179,7 +178,7 @@ public class BookTextParser {
 		this.baseColor = baseColor;
 
 		this.font = book.getFont();
-		this.spaceWidth = font.getStringWidth(" ");
+		this.spaceWidth = font.getWidth(" ");
 	}
 
 	public List<Word> parse(@Nullable String text) {
@@ -288,7 +287,7 @@ public class BookTextParser {
 			state.lineBreaks = 1;
 			state.spacingLeft = pad;
 			state.spacingRight = spaceWidth;
-			return TextFormat.BLACK.toString() + bullet;
+			return Formatting.BLACK.toString() + bullet;
 		}
 
 		if (cmd.indexOf(':') > 0) {
@@ -305,7 +304,7 @@ public class BookTextParser {
 		}
 
 		if (state.endingExternal) {
-			result += TextFormat.GRAY + "\u21AA";
+			result += Formatting.GRAY + "\u21AA";
 		}
 
 		return result;

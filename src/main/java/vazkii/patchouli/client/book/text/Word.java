@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -35,7 +36,7 @@ public class Word {
 		this.tooltip = span.tooltip;
 	}
 
-	public void render(TextRenderer font, int mouseX, int mouseY) {
+	public void render(MatrixStack ms, TextRenderer font, int mouseX, int mouseY) {
 		String renderTarget = codes + text;
 		int renderColor = color;
 		if (isClusterHovered(mouseX, mouseY)) {
@@ -47,7 +48,7 @@ public class Word {
 			}
 		}
 
-		font.draw(renderTarget, x, y, renderColor);
+		font.draw(ms, renderTarget, x, y, renderColor);
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {

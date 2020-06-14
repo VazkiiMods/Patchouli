@@ -39,7 +39,7 @@ public class StringStateMatcher {
 		if (state != null) {
 			return new ExactMatcher(state, parser.getBlockProperties());
 		} else {
-			Tag<Block> tag = new TagDelegate<>(Objects.requireNonNull(parser.getTagId()), BlockTags::getContainer);
+			Tag.Identified<Block> tag = new TagDelegate<>(Objects.requireNonNull(parser.getTagId()), BlockTags::getContainer);
 			return new TagMatcher(tag, parser.getProperties());
 		}
 	}
@@ -92,10 +92,10 @@ public class StringStateMatcher {
 	}
 
 	private static class TagMatcher implements IStateMatcher {
-		private final Tag<Block> tag;
+		private final Tag.Identified<Block> tag;
 		private final Map<String, String> props;
 
-		private TagMatcher(Tag<Block> tag, Map<String, String> props) {
+		private TagMatcher(Tag.Identified<Block> tag, Map<String, String> props) {
 			this.tag = tag;
 			this.props = props;
 		}

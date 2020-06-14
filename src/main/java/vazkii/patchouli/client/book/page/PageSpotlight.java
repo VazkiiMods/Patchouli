@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 
 import vazkii.patchouli.client.book.BookEntry;
@@ -28,18 +29,18 @@ public class PageSpotlight extends PageWithText {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float pticks) {
+	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
 		int w = 66;
 		int h = 26;
 
 		mc.getTextureManager().bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
-		DrawableHelper.blit(GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 128);
+		DrawableHelper.drawTexture(ms, GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 128);
 
-		parent.drawCenteredStringNoShadow(title != null && !title.isEmpty() ? i18n(title) : itemStack.getName().asFormattedString(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		parent.drawCenteredStringNoShadow(ms, title != null && !title.isEmpty() ? i18n(title) : itemStack.getName().asFormattedString(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		parent.renderItemStack(GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, itemStack);
 
-		super.render(mouseX, mouseY, pticks);
+		super.render(ms, mouseX, mouseY, pticks);
 	}
 
 	@Override

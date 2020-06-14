@@ -14,6 +14,6 @@ public class ReloadContentsHandler {
 	private static void serverStart(MinecraftServer server) {
 		// Also reload contents when someone types /reload
 		SynchronousResourceReloadListener listener = m -> MessageReloadBookContents.sendToAll(server);
-		server.getDataManager().registerListener(listener);
+		server.serverResourceManager.registerListener(listener);
 	}
 }

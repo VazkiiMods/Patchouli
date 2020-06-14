@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.gui;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
@@ -26,7 +27,7 @@ public class GuiBookWriter extends GuiBook {
 		super.init();
 
 		text = new BookTextRenderer(this, I18n.translate("patchouli.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
-		textfield = new TextFieldWidget(font, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20, "");
+		textfield = new TextFieldWidget(textRenderer, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20, LiteralText.EMPTY);
 		textfield.setMaxLength(Integer.MAX_VALUE);
 		textfield.setText(savedText);
 
@@ -35,20 +36,20 @@ public class GuiBookWriter extends GuiBook {
 	}
 
 	@Override
-	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
-		super.drawForegroundElements(mouseX, mouseY, partialTicks);
+	void drawForegroundElements(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		super.drawForegroundElements(ms, mouseX, mouseY, partialTicks);
 
-		drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-		drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
+		drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+		drawSeparator(ms, book, LEFT_PAGE_X, TOP_PADDING + 12);
 
 		if (drawHeader) {
-			drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
+			drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawSeparator(ms, book, RIGHT_PAGE_X, TOP_PADDING + 12);
 		}
 
-		textfield.render(mouseX, mouseY, partialTicks);
-		text.render(mouseX, mouseY);
-		editableText.render(mouseX, mouseY);
+		textfield.render(ms, mouseX, mouseY, partialTicks);
+		text.render(ms, mouseX, mouseY);
+		editableText.render(ms, mouseX, mouseY);
 	}
 
 	@Override

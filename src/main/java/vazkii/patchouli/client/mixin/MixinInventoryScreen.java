@@ -5,8 +5,8 @@ import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.container.PlayerContainer;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -21,8 +21,8 @@ import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
 @Mixin(InventoryScreen.class)
-public abstract class MixinInventoryScreen extends AbstractInventoryScreen<PlayerContainer> {
-	public MixinInventoryScreen(PlayerContainer container, PlayerInventory playerInventory, Text text) {
+public abstract class MixinInventoryScreen extends AbstractInventoryScreen<PlayerScreenHandler> {
+	public MixinInventoryScreen(PlayerScreenHandler container, PlayerInventory playerInventory, Text text) {
 		super(container, playerInventory, text);
 	}
 

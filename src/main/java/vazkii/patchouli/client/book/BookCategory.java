@@ -4,6 +4,9 @@ import com.google.common.collect.Streams;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.common.base.PatchouliConfig;
@@ -31,8 +34,8 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 	private transient boolean built;
 
-	public String getName() {
-		return book.i18n ? I18n.translate(name) : name;
+	public Text getName() {
+		return book.i18n ? new TranslatableText(name) : new LiteralText(name);
 	}
 
 	public String getDescription() {

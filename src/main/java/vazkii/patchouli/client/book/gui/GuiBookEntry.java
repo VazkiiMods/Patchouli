@@ -1,11 +1,10 @@
 package vazkii.patchouli.client.book.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.text.LiteralText;
@@ -88,12 +87,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
-		drawPage(leftPage, mouseX, mouseY, partialTicks);
-		drawPage(rightPage, mouseX, mouseY, partialTicks);
+	void drawForegroundElements(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		drawPage(ms, leftPage, mouseX, mouseY, partialTicks);
+		drawPage(ms, rightPage, mouseX, mouseY, partialTicks);
 
 		if (rightPage == null) {
-			drawPageFiller(leftPage.book);
+			drawPageFiller(ms, leftPage.book);
 		}
 	}
 
@@ -104,15 +103,15 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 
-	void drawPage(BookPage page, int mouseX, int mouseY, float pticks) {
+	void drawPage(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (page == null) {
 			return;
 		}
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(page.left, page.top, 0);
-		page.render(mouseX - page.left, mouseY - page.top, pticks);
-		RenderSystem.popMatrix();
+		ms.push();
+		ms.translate(page.left, page.top, 0);
+		page.render(ms, mouseX - page.left, mouseY - page.top, pticks);
+		ms.pop();
 	}
 
 	boolean clickPage(BookPage page, double mouseX, double mouseY, int mouseButton) {
@@ -243,8 +242,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 			return;
 		}
 
-		minecraft.getItemRenderer().renderGuiItem(stack, x, y);
-		minecraft.getItemRenderer().renderGuiItemOverlay(font, stack, x, y);
+		client.getItemRenderer().renderInGuiWithOverrides(stack, x, y);
+		client.getItemRenderer().renderGuiItemOverlay(textRenderer, stack, x, y);
 
 		if (isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
 			setTooltipStack(stack);

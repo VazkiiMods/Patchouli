@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book.template.test;
 
+import net.minecraft.client.util.math.MatrixStack;
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.api.ICustomComponent;
 import vazkii.patchouli.common.base.Patchouli;
@@ -18,8 +19,8 @@ public class ComponentCustomTest implements ICustomComponent {
 	}
 
 	@Override
-	public void render(IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
-		context.getFont().drawWithShadow(text, x, y, 0);
+	public void render(MatrixStack ms, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
+		context.getFont().drawWithShadow(ms, text, x, y, 0);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.page;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -26,8 +27,8 @@ public class PageText extends PageWithText {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float pticks) {
-		super.render(mouseX, mouseY, pticks);
+	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
+		super.render(ms, mouseX, mouseY, pticks);
 
 		if (pageNum == 0) {
 			boolean renderedSmol = false;
@@ -42,16 +43,16 @@ public class PageText extends PageWithText {
 			}
 
 			if (!smolText.isEmpty()) {
-				RenderSystem.scalef(0.5F, 0.5F, 1F);
-				parent.drawCenteredStringNoShadow(smolText, GuiBook.PAGE_WIDTH, 12, book.headerColor);
-				RenderSystem.scalef(2F, 2F, 1F);
+				ms.scale(0.5F, 0.5F, 1F);
+				parent.drawCenteredStringNoShadow(ms, smolText, GuiBook.PAGE_WIDTH, 12, book.headerColor);
+				ms.scale(2F, 2F, 1F);
 				renderedSmol = true;
 			}
 
-			parent.drawCenteredStringNoShadow(parent.getEntry().getName(), GuiBook.PAGE_WIDTH / 2, renderedSmol ? -3 : 0, book.headerColor);
-			GuiBook.drawSeparator(book, 0, 12);
+			parent.drawCenteredStringNoShadow(ms, parent.getEntry().getName(), GuiBook.PAGE_WIDTH / 2, renderedSmol ? -3 : 0, book.headerColor);
+			GuiBook.drawSeparator(ms, book, 0, 12);
 		} else if (title != null && !title.isEmpty()) {
-			parent.drawCenteredStringNoShadow(i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+			parent.drawCenteredStringNoShadow(ms, i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		}
 	}
 

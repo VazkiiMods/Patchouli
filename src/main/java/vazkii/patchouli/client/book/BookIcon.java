@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
@@ -43,17 +44,17 @@ public class BookIcon {
 		this.res = res;
 	}
 
-	public void render(int x, int y) {
+	public void render(MatrixStack ms, int x, int y) {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		switch (type) {
 		case STACK:
-			mc.getItemRenderer().renderGuiItem(stack, x, y);
+			mc.getItemRenderer().renderInGuiWithOverrides(stack, x, y);
 			break;
 
 		case RESOURCE:
 			RenderSystem.color4f(1F, 1F, 1F, 1F);
 			mc.getTextureManager().bindTexture(res);
-			DrawableHelper.blit(x, y, 0, 0, 16, 16, 16, 16);
+			DrawableHelper.drawTexture(ms, x, y, 0, 0, 16, 16, 16, 16);
 			break;
 		}
 	}

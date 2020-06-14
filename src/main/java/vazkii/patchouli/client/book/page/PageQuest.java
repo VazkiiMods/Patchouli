@@ -2,6 +2,10 @@ package vazkii.patchouli.client.book.page;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.client.base.ClientAdvancements;
@@ -43,7 +47,7 @@ public class PageQuest extends PageWithText {
 		super.onDisplayed(parent, left, top);
 
 		if (isManual) {
-			ButtonWidget button = new ButtonWidget(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, "", this::questButtonClicked);
+			ButtonWidget button = new ButtonWidget(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, LiteralText.EMPTY, this::questButtonClicked);
 			addButton(button);
 			updateButtonText(button);
 		}
@@ -51,7 +55,7 @@ public class PageQuest extends PageWithText {
 
 	private void updateButtonText(ButtonWidget button) {
 		boolean completed = isCompleted(parent.book);
-		String s = I18n.translate(completed ? "patchouli.gui.lexicon.mark_incomplete" : "patchouli.gui.lexicon.mark_complete");
+		Text s = new TranslatableText(completed ? "patchouli.gui.lexicon.mark_incomplete" : "patchouli.gui.lexicon.mark_complete");
 		button.setMessage(s);
 	}
 
@@ -71,20 +75,20 @@ public class PageQuest extends PageWithText {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float pticks) {
-		super.render(mouseX, mouseY, pticks);
+	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
+		super.render(ms, mouseX, mouseY, pticks);
 
-		parent.drawCenteredStringNoShadow(title == null || title.isEmpty() ? I18n.translate("patchouli.gui.lexicon.objective") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
-		GuiBook.drawSeparator(book, 0, 12);
+		parent.drawCenteredStringNoShadow(ms, title == null || title.isEmpty() ? I18n.translate("patchouli.gui.lexicon.objective") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		GuiBook.drawSeparator(ms, book, 0, 12);
 
 		if (!isManual) {
-			GuiBook.drawSeparator(book, 0, GuiBook.PAGE_HEIGHT - 25);
+			GuiBook.drawSeparator(ms, book, 0, GuiBook.PAGE_HEIGHT - 25);
 
 			boolean completed = isCompleted(parent.book);
 			String s = I18n.translate(completed ? "patchouli.gui.lexicon.complete" : "patchouli.gui.lexicon.incomplete");
 			int color = completed ? 0x008b1a : book.headerColor;
 
-			parent.drawCenteredStringNoShadow(s, GuiBook.PAGE_WIDTH / 2, GuiBook.PAGE_HEIGHT - 17, color);
+			parent.drawCenteredStringNoShadow(ms, s, GuiBook.PAGE_WIDTH / 2, GuiBook.PAGE_HEIGHT - 17, color);
 		}
 
 	}

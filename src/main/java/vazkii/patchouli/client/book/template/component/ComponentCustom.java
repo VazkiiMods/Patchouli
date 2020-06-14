@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.client.util.math.MatrixStack;
 import vazkii.patchouli.api.ICustomComponent;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -37,8 +38,8 @@ public class ComponentCustom extends TemplateComponent {
 	}
 
 	@Override
-	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
-		callbacks.render(page.parent, pticks, mouseX, mouseY);
+	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
+		callbacks.render(ms, page.parent, pticks, mouseX, mouseY);
 	}
 
 	@Override

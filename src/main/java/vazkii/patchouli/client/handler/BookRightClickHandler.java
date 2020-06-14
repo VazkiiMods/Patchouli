@@ -8,12 +8,14 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.TextFormat;
 import net.minecraft.client.util.Window;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -31,7 +33,7 @@ import java.util.Collection;
 
 public class BookRightClickHandler {
 
-	private static void onRenderHUD(float partialTicks) {
+	private static void onRenderHUD(MatrixStack ms, float partialTicks) {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		PlayerEntity player = mc.player;
 		ItemStack bookStack = player.getMainHandStack();
@@ -46,18 +48,19 @@ public class BookRightClickHandler {
 						Window window = mc.getWindow();
 						int x = window.getScaledWidth() / 2 + 3;
 						int y = window.getScaledHeight() / 2 + 3;
-						entry.getIcon().render(x, y);
+						entry.getIcon().render(ms, x, y);
 						RenderSystem.scalef(0.5F, 0.5F, 1F);
-						mc.getItemRenderer().renderGuiItem(bookStack, (x + 8) * 2, (y + 8) * 2);
+						mc.getItemRenderer().renderInGuiWithOverrides(bookStack, (x + 8) * 2, (y + 8) * 2);
 						RenderSystem.scalef(2F, 2F, 1F);
 
-						mc.textRenderer.draw(entry.getName(), x + 18, y + 3, 0xFFFFFF);
+						mc.textRenderer.draw(ms, entry.getName(), x + 18, y + 3, 0xFFFFFF);
 
-						RenderSystem.pushMatrix();
-						RenderSystem.scalef(0.75F, 0.75F, 1F);
-						String s = I18n.translate("patchouli.gui.lexicon." + (player.isSneaking() ? "view" : "sneak"));
-						mc.textRenderer.draw(TextFormat.ITALIC + s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
-						RenderSystem.popMatrix();
+						ms.push();
+						ms.scale(0.75F, 0.75F, 1F);
+						Text s = new TranslatableText("patchouli.gui.lexicon." + (player.isSneaking() ? "view" : "sneak"))
+										.formatted(Formatting.ITALIC);
+						mc.textRenderer.draw(ms, s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
+						ms.pop();
 					}
 				}
 			}

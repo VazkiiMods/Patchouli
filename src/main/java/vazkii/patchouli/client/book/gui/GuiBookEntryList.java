@@ -5,6 +5,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 import org.lwjgl.glfw.GLFW;
@@ -49,7 +51,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 			Collections.sort(allEntries);
 		}
 
-		searchField = new TextFieldWidget(font, 160, 170, 90, 12, "");
+		searchField = new TextFieldWidget(textRenderer, 160, 170, 90, 12, LiteralText.EMPTY);
 		searchField.setMaxLength(32);
 		searchField.setHasBorder(false);
 		searchField.setFocusUnlocked(false);
@@ -79,38 +81,38 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 
 	@Override
-	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
-		super.drawForegroundElements(mouseX, mouseY, partialTicks);
+	void drawForegroundElements(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		super.drawForegroundElements(ms, mouseX, mouseY, partialTicks);
 
 		if (spread == 0) {
-			drawCenteredStringNoShadow(getTitle().asFormattedString(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-			drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawCenteredStringNoShadow(ms, getTitle(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
-			drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
-			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
+			drawSeparator(ms, book, LEFT_PAGE_X, TOP_PADDING + 12);
+			drawSeparator(ms, book, RIGHT_PAGE_X, TOP_PADDING + 12);
 
-			text.render(mouseX, mouseY);
+			text.render(ms, mouseX, mouseY);
 			if (shouldDrawProgressBar()) {
-				drawProgressBar(book, mouseX, mouseY, this::doesEntryCountForProgress);
+				drawProgressBar(ms, book, mouseX, mouseY, this::doesEntryCountForProgress);
 			}
 		} else if (spread % 2 == 1 && spread == maxSpreads - 1 && dependentButtons.size() <= ENTRIES_PER_PAGE) {
-			drawPageFiller(book);
+			drawPageFiller(ms, book);
 		}
 
 		if (!searchField.getText().isEmpty()) {
 			RenderSystem.color4f(1F, 1F, 1F, 1F);
-			drawFromTexture(book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
-			book.getFont().draw(searchField.getText(), searchField.x + 7, searchField.y + 1, 0);
+			drawFromTexture(ms, book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
+			book.getFont().draw(ms, searchField.getText(), searchField.x + 7, searchField.y + 1, 0);
 		}
 
 		if (visibleEntries.isEmpty()) {
 			if (!searchField.getText().isEmpty()) {
-				drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
-				RenderSystem.scalef(2F, 2F, 2F);
-				drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
-				RenderSystem.scalef(0.5F, 0.5F, 0.5F);
+				drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
+				ms.scale(2F, 2F, 2F);
+				drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
+				ms.scale(0.5F, 0.5F, 0.5F);
 			} else {
-				drawCenteredStringNoShadow(I18n.translate("patchouli.gui.lexicon.no_entries"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
+				drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.no_entries"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
 			}
 		}
 	}

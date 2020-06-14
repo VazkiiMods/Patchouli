@@ -58,24 +58,24 @@ public class PageEntity extends PageWithText {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float pticks) {
+	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
 		RenderSystem.enableBlend();
 		RenderSystem.color3f(1F, 1F, 1F);
-		GuiBook.drawFromTexture(book, x, y, 405, 149, 106, 106);
+		GuiBook.drawFromTexture(ms, book, x, y, 405, 149, 106, 106);
 
-		parent.drawCenteredStringNoShadow(name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		parent.drawCenteredStringNoShadow(ms, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 
 		if (errored) {
-			fontRenderer.drawWithShadow(I18n.translate("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
+			fontRenderer.drawWithShadow(ms, I18n.translate("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
 		}
 
 		if (entity != null) {
 			renderEntity(parent.getMinecraft().world, rotate ? ClientTicker.total : defaultRotation);
 		}
 
-		super.render(mouseX, mouseY, pticks);
+		super.render(ms, mouseX, mouseY, pticks);
 	}
 
 	private void renderEntity(World world, float rotation) {

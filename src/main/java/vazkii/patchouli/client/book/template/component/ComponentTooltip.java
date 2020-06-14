@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.template.component;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
@@ -44,7 +45,7 @@ public class ComponentTooltip extends TemplateComponent {
 	}
 
 	@Override
-	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (page.parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
 			page.parent.setTooltip(tooltip);
 		}

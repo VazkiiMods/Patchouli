@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.template.component;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
@@ -42,9 +43,9 @@ public class ComponentEntity extends TemplateComponent {
 	}
 
 	@Override
-	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (errored) {
-			page.fontRenderer.drawWithShadow(I18n.translate("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
+			page.fontRenderer.drawWithShadow(ms, I18n.translate("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
 		}
 
 		if (entity != null) {

@@ -2,16 +2,20 @@ package vazkii.patchouli.client.base;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.resource.ResourceType;
 
+import net.minecraft.util.Identifier;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.shader.ShaderHelper;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.BookRegistry;
+import vazkii.patchouli.common.item.ItemModBook;
+import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.common.network.NetworkHandler;
 
 public class ClientProxy implements ClientModInitializer {
@@ -31,5 +35,9 @@ public class ClientProxy implements ClientModInitializer {
 					.map(b -> new ModelIdentifier(b.model, "inventory"))
 					.forEach(register);
 		});
+
+		FabricModelPredicateProviderRegistry.register(PatchouliItems.book,
+						new Identifier("completion"),
+						(stack, world, entity) -> ItemModBook.getCompletion(stack));
 	}
 }

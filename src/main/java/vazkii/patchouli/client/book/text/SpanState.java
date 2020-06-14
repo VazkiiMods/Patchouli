@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -18,7 +19,7 @@ public class SpanState {
 	public int color;
 	public int prevColor;
 	public String codes = "";
-	public Text tooltip = BookTextParser.EMPTY_STRING_COMPONENT;
+	public MutableText tooltip = BookTextParser.EMPTY_STRING_COMPONENT;
 	public Supplier<Boolean> onClick = null;
 	public List<Span> cluster = null;
 	public boolean isExternalLink = false; // will show the "external link" symbol next to the link as soon as the link is closed

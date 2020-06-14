@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
+import net.minecraft.client.util.math.MatrixStack;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -30,8 +31,8 @@ public class PageTemplate extends BookPage {
 	}
 
 	@Override
-	public void render(int mouseX, int mouseY, float pticks) {
-		template.render(this, mouseX, mouseY, pticks);
+	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
+		template.render(ms, this, mouseX, mouseY, pticks);
 	}
 
 	@Override

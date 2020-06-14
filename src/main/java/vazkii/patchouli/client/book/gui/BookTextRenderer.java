@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.gui;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.resource.language.I18n;
 
+import net.minecraft.client.util.math.MatrixStack;
 import vazkii.patchouli.client.book.text.BookTextParser;
 import vazkii.patchouli.client.book.text.Word;
 import vazkii.patchouli.common.book.Book;
@@ -45,9 +46,9 @@ public class BookTextRenderer {
 		words = parser.parse(text);
 	}
 
-	public void render(int mouseX, int mouseY) {
+	public void render(MatrixStack ms, int mouseX, int mouseY) {
 		TextRenderer font = book.getFont();
-		words.forEach(word -> word.render(font, mouseX, mouseY));
+		words.forEach(word -> word.render(ms, font, mouseX, mouseY));
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {

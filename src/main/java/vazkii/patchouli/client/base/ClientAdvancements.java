@@ -10,6 +10,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.Toast;
 import net.minecraft.client.toast.ToastManager;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -80,16 +81,16 @@ public class ClientAdvancements {
 
 		@Nonnull
 		@Override
-		public Visibility draw(ToastManager toastGui, long delta) {
+		public Visibility draw(MatrixStack ms, ToastManager toastGui, long delta) {
 			MinecraftClient mc = MinecraftClient.getInstance();
 			mc.getTextureManager().bindTexture(TOASTS_TEX);
 			RenderSystem.color3f(1.0F, 1.0F, 1.0F);
-			toastGui.blit(0, 0, 0, 32, 160, 32);
+			toastGui.drawTexture(ms, 0, 0, 0, 32, 160, 32);
 
-			toastGui.getGame().textRenderer.draw(I18n.translate(book.name), 30, 7, -11534256);
-			toastGui.getGame().textRenderer.draw(I18n.translate("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
+			toastGui.getGame().textRenderer.draw(ms, I18n.translate(book.name), 30, 7, -11534256);
+			toastGui.getGame().textRenderer.draw(ms, I18n.translate("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
 
-			toastGui.getGame().getItemRenderer().renderGuiItem(null, book.getBookItem(), 8, 8);
+			toastGui.getGame().getItemRenderer().renderInGuiWithOverrides(book.getBookItem(), 8, 8);
 
 			return delta >= 5000L ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
 		}

@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.minecraft.client.util.math.MatrixStack;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -20,10 +21,10 @@ public class ComponentFrame extends TemplateComponent {
 	}
 
 	@Override
-	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		RenderSystem.enableBlend();
 		RenderSystem.color3f(1F, 1F, 1F);
-		GuiBook.drawFromTexture(page.book, x, y, 405, 149, 106, 106);
+		GuiBook.drawFromTexture(ms, page.book, x, y, 405, 149, 106, 106);
 	}
 
 }

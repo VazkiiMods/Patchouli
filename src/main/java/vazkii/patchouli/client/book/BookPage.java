@@ -7,6 +7,10 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
@@ -61,7 +65,7 @@ public abstract class BookPage {
 		parent.addButton(button);
 	}
 
-	public void render(int mouseX, int mouseY, float pticks) {}
+	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {}
 
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		return false;
@@ -73,5 +77,9 @@ public abstract class BookPage {
 
 	public String i18n(String text) {
 		return book.i18n ? I18n.translate(text) : text;
+	}
+
+	public Text i18nText(String text) {
+		return book.i18n ? new TranslatableText(text) : new LiteralText(text);
 	}
 }

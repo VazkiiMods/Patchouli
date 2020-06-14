@@ -89,7 +89,7 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static void onRenderHUD(float partialTicks) {
+	public static void onRenderHUD(MatrixStack ms, float partialTicks) {
 		if (hasMultiblock) {
 			int waitTime = 40;
 			int fadeOutSpeed = 4;
@@ -101,15 +101,14 @@ public class MultiblockVisualizationHandler {
 				return;
 			}
 
-			RenderSystem.pushMatrix();
-			RenderSystem.translatef(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed, 0);
+			ms.push();
+			ms.translate(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed, 0);
 
 			MinecraftClient mc = MinecraftClient.getInstance();
 			int x = mc.getWindow().getScaledWidth() / 2;
 			int y = 12;
 
-			String toDraw = name.asFormattedString();
-			mc.textRenderer.drawWithShadow(toDraw, x - mc.textRenderer.getStringWidth(toDraw) / 2, y, 0xFFFFFF);
+			mc.textRenderer.drawWithShadow(ms, name, x - mc.textRenderer.getWidth(name) / 2, y, 0xFFFFFF);
 
 			int width = 180;
 			int height = 9;
@@ -118,13 +117,13 @@ public class MultiblockVisualizationHandler {
 
 			if (timeComplete > 0) {
 				String s = I18n.translate("patchouli.gui.lexicon.structure_complete");
-				RenderSystem.pushMatrix();
-				RenderSystem.translatef(0, Math.min(height + 5, animTime), 0);
-				mc.textRenderer.drawWithShadow(s, x - mc.textRenderer.getStringWidth(s) / 2, top + height - 10, 0x00FF00);
-				RenderSystem.popMatrix();
+				ms.push();
+				ms.translate(0, Math.min(height + 5, animTime), 0);
+				mc.textRenderer.drawWithShadow(ms, s, x - mc.textRenderer.getWidth(s) / 2, top + height - 10, 0x00FF00);
+				ms.pop();
 			}
 
-			DrawableHelper.fill(left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
+			DrawableHelper.fill(ms, left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
 			drawGradientRect(left, top, left + width, top + height, 0xFF666666, 0xFF555555);
 
 			float fract = (float) blocksDone / Math.max(1, blocks);
@@ -135,7 +134,7 @@ public class MultiblockVisualizationHandler {
 
 			if (!isAnchored) {
 				String s = I18n.translate("patchouli.gui.lexicon.not_anchored");
-				mc.textRenderer.drawWithShadow(s, x - mc.textRenderer.getStringWidth(s) / 2, top + height + 8, 0xFFFFFF);
+				mc.textRenderer.drawWithShadow(ms, s, x - mc.textRenderer.getWidth(s) / 2, top + height + 8, 0xFFFFFF);
 			} else {
 				if (lookingState != null) {
 					// try-catch around here because the state isn't necessarily present in the world in this instance,
@@ -145,8 +144,8 @@ public class MultiblockVisualizationHandler {
 						ItemStack stack = block.getPickStack(mc.world, lookingPos, lookingState);
 
 						if (!stack.isEmpty()) {
-							mc.textRenderer.drawWithShadow(stack.getName().asFormattedString(), left + 20, top + height + 8, 0xFFFFFF);
-							mc.getItemRenderer().renderGuiItem(stack, left, top + height + 2);
+							mc.textRenderer.drawWithShadow(ms, stack.getName(), left + 20, top + height + 8, 0xFFFFFF);
+							mc.getItemRenderer().renderInGuiWithOverrides(stack, left, top + height + 2);
 						}
 					} catch (Exception ignored) {}
 				}
@@ -166,7 +165,7 @@ public class MultiblockVisualizationHandler {
 						posy += 2;
 					}
 
-					mc.textRenderer.drawWithShadow(progress, posx - mc.textRenderer.getStringWidth(progress) / mult, posy, color);
+					mc.textRenderer.drawWithShadow(ms, progress, posx - mc.textRenderer.getWidth(progress) / mult, posy, color);
 				}
 			}
 
@@ -381,7 +380,7 @@ public class MultiblockVisualizationHandler {
 		private static Map<RenderLayer, RenderLayer> remappedTypes = new IdentityHashMap<>();
 
 		private GhostRenderLayer(RenderLayer original) {
-			super(String.format("%s_%s_ghost", original.toString(), Patchouli.MOD_ID), original.getVertexFormat(), original.getDrawMode(), original.getExpectedBufferSize(), original.method_23037(), true, () -> {
+			super(String.format("%s_%s_ghost", original.toString(), Patchouli.MOD_ID), original.getVertexFormat(), original.getDrawMode(), original.getExpectedBufferSize(), original.hasCrumbling(), true, () -> {
 				original.startDrawing();
 
 				// Alter GL state

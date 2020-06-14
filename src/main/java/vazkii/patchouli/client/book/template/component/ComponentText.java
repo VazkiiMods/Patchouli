@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.client.util.math.MatrixStack;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.BookTextRenderer;
@@ -45,8 +46,8 @@ public class ComponentText extends TemplateComponent {
 	}
 
 	@Override
-	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
-		textRenderer.render(mouseX, mouseY);
+	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
+		textRenderer.render(ms, mouseX, mouseY);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.template;
 
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.api.IComponentProcessor;
@@ -133,11 +134,11 @@ public class BookTemplate {
 		}
 	}
 
-	public void render(BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (compiled) {
 			components.forEach(c -> {
 				if (c.isVisible) {
-					c.render(page, mouseX, mouseY, pticks);
+					c.render(ms, page, mouseX, mouseY, pticks);
 				}
 			});
 		}

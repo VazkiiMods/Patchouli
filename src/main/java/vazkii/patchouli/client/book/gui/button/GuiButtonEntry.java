@@ -6,8 +6,10 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.SoundManager;
-import net.minecraft.client.util.TextFormat;
 
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.util.Formatting;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -21,13 +23,13 @@ public class GuiButtonEntry extends ButtonWidget {
 	private float timeHovered;
 
 	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, ButtonWidget.PressAction onPress) {
-		super(x, y, GuiBook.PAGE_WIDTH, 10, entry.getName(), onPress);
+		super(x, y, GuiBook.PAGE_WIDTH, 10, new LiteralText(entry.getName()), onPress);
 		this.parent = parent;
 		this.entry = entry;
 	}
 
 	@Override
-	public void renderButton(int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (active) {
 			if (isHovered()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
@@ -39,28 +41,28 @@ public class GuiButtonEntry extends ButtonWidget {
 			float widthFract = time / ANIM_TIME;
 			boolean locked = entry.isLocked();
 
-			RenderSystem.scalef(0.5F, 0.5F, 0.5F);
-			DrawableHelper.fill(x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
+			ms.scale(0.5F, 0.5F, 0.5F);
+			DrawableHelper.fill(ms, x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
 			RenderSystem.enableBlend();
 
 			if (locked) {
 				RenderSystem.color4f(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(parent.book, x * 2 + 2, y * 2 + 2);
+				GuiBook.drawLock(ms, parent.book, x * 2 + 2, y * 2 + 2);
 			} else {
-				entry.getIcon().render(x * 2 + 2, y * 2 + 2);
+				entry.getIcon().render(ms, x * 2 + 2, y * 2 + 2);
 			}
 
-			RenderSystem.scalef(2F, 2F, 2F);
+			ms.scale(2F, 2F, 2F);
 
-			String name = (entry.isPriority() ? TextFormat.ITALIC : "") + entry.getName();
+			String name = (entry.isPriority() ? Formatting.ITALIC : "") + entry.getName();
 			if (locked) {
 				name = I18n.translate("patchouli.gui.lexicon.locked");
 			}
 			int color = getColor();
-			entry.getBook().getFont().draw(name, x + 12, y, color);
+			entry.getBook().getFont().draw(ms, name, x + 12, y, color);
 
 			if (!entry.isLocked()) {
-				GuiBook.drawMarking(parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());
+				GuiBook.drawMarking(ms, parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());
 			}
 		}
 	}

@@ -10,10 +10,11 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.util.TextFormat;
 import net.minecraft.client.util.Window;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -76,12 +77,12 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public void init() {
-		Window res = minecraft.getWindow();
-		double oldGuiScale = res.calculateScaleFactor(minecraft.options.guiScale, minecraft.forcesUnicodeFont());
+		Window res = client.getWindow();
+		double oldGuiScale = res.calculateScaleFactor(client.options.guiScale, client.forcesUnicodeFont());
 
 		maxScale = getMaxAllowedScale();
 		int persistentScale = Math.min(PersistentData.data.bookGuiScale, maxScale);
-		double newGuiScale = res.calculateScaleFactor(persistentScale, minecraft.forcesUnicodeFont());
+		double newGuiScale = res.calculateScaleFactor(persistentScale, client.forcesUnicodeFont());
 
 		if (persistentScale > 0 && newGuiScale != oldGuiScale) {
 			scaleFactor = (float) newGuiScale / (float) res.getScaleFactor();
@@ -107,39 +108,39 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public MinecraftClient getMinecraft() {
-		return minecraft;
+		return client;
 	}
 
 	@Override
-	public final void render(int mouseX, int mouseY, float partialTicks) {
-		RenderSystem.pushMatrix();
+	public final void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		ms.push();
 		if (scaleFactor != 1) {
-			RenderSystem.scalef(scaleFactor, scaleFactor, scaleFactor);
+			ms.scale(scaleFactor, scaleFactor, scaleFactor);
 
 			mouseX /= scaleFactor;
 			mouseY /= scaleFactor;
 		}
 
-		drawScreenAfterScale(mouseX, mouseY, partialTicks);
-		RenderSystem.popMatrix();
+		drawScreenAfterScale(ms, mouseX, mouseY, partialTicks);
+		ms.pop();
 	}
 
-	final void drawScreenAfterScale(int mouseX, int mouseY, float partialTicks) {
+	final void drawScreenAfterScale(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		resetTooltip();
-		renderBackground();
+		renderBackground(ms);
 
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(bookLeft, bookTop, 0);
+		ms.push();
+		ms.translate(bookLeft, bookTop, 0);
 		RenderSystem.color3f(1F, 1F, 1F);
-		drawBackgroundElements(mouseX, mouseY, partialTicks);
-		drawForegroundElements(mouseX, mouseY, partialTicks);
-		RenderSystem.popMatrix();
+		drawBackgroundElements(ms, mouseX, mouseY, partialTicks);
+		drawForegroundElements(ms, mouseX, mouseY, partialTicks);
+		ms.pop();
 
-		super.render(mouseX, mouseY, partialTicks);
+		super.render(ms, mouseX, mouseY, partialTicks);
 
 		BookDrawScreenCallback.EVENT.invoker().trigger(this.book.id, this, mouseX, mouseY, partialTicks);
 
-		drawTooltip(mouseX, mouseY);
+		drawTooltip(ms, mouseX, mouseY);
 	}
 
 	public void addBookmarkButtons() {
@@ -200,15 +201,15 @@ public abstract class GuiBook extends Screen {
 		}
 	}
 
-	final void drawBackgroundElements(int mouseX, int mouseY, float partialTicks) {
-		drawFromTexture(book, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT);
+	final void drawBackgroundElements(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		drawFromTexture(ms, book, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT);
 	}
 
-	void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {}
+	void drawForegroundElements(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {}
 
-	final void drawTooltip(int mouseX, int mouseY) {
+	final void drawTooltip(MatrixStack ms, int mouseX, int mouseY) {
 		if (tooltipStack != null) {
-			List<String> tooltip = this.getTooltipFromItem(tooltipStack);
+			List<Text> tooltip = this.getTooltipFromItem(tooltipStack);
 
 			Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
 			if (provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
@@ -216,13 +217,9 @@ public abstract class GuiBook extends Screen {
 				targetPage = provider;
 			}
 
-			this.renderTooltip(tooltip, mouseX, mouseY);
+			this.renderTooltip(ms, tooltip, mouseX, mouseY);
 		} else if (tooltip != null && !tooltip.isEmpty()) {
-			List<String> wrappedTooltip = new ArrayList<>();
-			for (Text s : tooltip) {
-				Collections.addAll(wrappedTooltip, s.asFormattedString().split("\n"));
-			}
-			this.renderTooltip(wrappedTooltip, mouseX, mouseY);
+			this.renderTooltip(ms, tooltip, mouseX, mouseY);
 		}
 	}
 
@@ -232,9 +229,9 @@ public abstract class GuiBook extends Screen {
 		targetPage = null;
 	}
 
-	public static void drawFromTexture(Book book, int x, int y, int u, int v, int w, int h) {
+	public static void drawFromTexture(MatrixStack ms, Book book, int x, int y, int u, int v, int w, int h) {
 		MinecraftClient.getInstance().getTextureManager().bindTexture(book.bookTexture);
-		blit(x, y, u, v, w, h, 512, 256);
+		drawTexture(ms, x, y, u, v, w, h, 512, 256);
 	}
 
 	@Override
@@ -382,7 +379,7 @@ public abstract class GuiBook extends Screen {
 		return mx > x && my > y && mx <= (x + w) && my <= (y + h);
 	}
 
-	public void drawProgressBar(Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
+	public void drawProgressBar(MatrixStack ms, Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
 		if (!book.showProgress || !book.advancementsEnabled()) {
 			return;
 		}
@@ -420,12 +417,12 @@ public abstract class GuiBook extends Screen {
 		float unlockFract = (float) unlockedEntries / Math.max(1, (float) totalEntries);
 		int progressWidth = (int) (((float) barWidth - 1) * unlockFract);
 
-		fill(barLeft, barTop, barLeft + barWidth, barTop + barHeight, book.headerColor);
+		fill(ms, barLeft, barTop, barLeft + barWidth, barTop + barHeight, book.headerColor);
 
-		drawGradient(barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, book.progressBarBackground);
-		drawGradient(barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, book.progressBarColor);
+		drawGradient(ms, barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, book.progressBarBackground);
+		drawGradient(ms, barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, book.progressBarColor);
 
-		font.draw(I18n.translate("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
+		textRenderer.draw(ms, new TranslatableText("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
 
 		if (isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
 			List<Text> tooltip = new ArrayList<>();
@@ -448,39 +445,43 @@ public abstract class GuiBook extends Screen {
 		}
 	}
 
-	private void drawGradient(int x, int y, int w, int h, int color) {
+	private void drawGradient(MatrixStack ms, int x, int y, int w, int h, int color) {
 		int darkerColor = new Color(color).darker().getRGB();
-		fillGradient(x, y, w, h, color, darkerColor);
+		fillGradient(ms, x, y, w, h, color, darkerColor);
 	}
 
-	public void drawCenteredStringNoShadow(String s, int x, int y, int color) {
-		font.draw(s, x - font.getStringWidth(s) / 2.0F, y, color);
+	public void drawCenteredStringNoShadow(MatrixStack ms, StringRenderable s, int x, int y, int color) {
+		textRenderer.draw(ms, s, x - textRenderer.getWidth(s) / 2.0F, y, color);
+	}
+
+	public void drawCenteredStringNoShadow(MatrixStack ms, String s, int x, int y, int color) {
+		textRenderer.draw(ms, s, x - textRenderer.getWidth(s) / 2.0F, y, color);
 	}
 
 	private int getMaxAllowedScale() {
-		return minecraft.getWindow().calculateScaleFactor(0, minecraft.forcesUnicodeFont());
+		return client.getWindow().calculateScaleFactor(0, client.forcesUnicodeFont());
 	}
 
 	public int getSpread() {
 		return spread;
 	}
 
-	public static void drawSeparator(Book book, int x, int y) {
+	public static void drawSeparator(MatrixStack ms, Book book, int x, int y) {
 		int w = 110;
 		int h = 3;
 		int rx = x + PAGE_WIDTH / 2 - w / 2;
 
 		RenderSystem.enableBlend();
 		RenderSystem.color4f(1F, 1F, 1F, 0.8F);
-		drawFromTexture(book, rx, y, 140, 180, w, h);
+		drawFromTexture(ms, book, rx, y, 140, 180, w, h);
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
 	}
 
-	public static void drawLock(Book book, int x, int y) {
-		drawFromTexture(book, x, y, 250, 180, 16, 16);
+	public static void drawLock(MatrixStack ms, Book book, int x, int y) {
+		drawFromTexture(ms, book, x, y, 250, 180, 16, 16);
 	}
 
-	public static void drawMarking(Book book, int x, int y, int rand, EntryDisplayState state) {
+	public static void drawMarking(MatrixStack ms, Book book, int x, int y, int rand, EntryDisplayState state) {
 		if (!state.hasIcon) {
 			return;
 		}
@@ -489,20 +490,20 @@ public abstract class GuiBook extends Screen {
 		RenderSystem.disableAlphaTest();
 		float alpha = state.hasAnimation ? ((float) Math.sin(ClientTicker.total * 0.2F) * 0.3F + 0.7F) : 1F;
 		RenderSystem.color4f(1F, 1F, 1F, alpha);
-		drawFromTexture(book, x, y, state.u, 197, 8, 8);
+		drawFromTexture(ms, book, x, y, state.u, 197, 8, 8);
 		RenderSystem.enableAlphaTest();
 		RenderSystem.color3f(1F, 1F, 1F);
 	}
 
-	public static void drawPageFiller(Book book) {
-		drawPageFiller(book, RIGHT_PAGE_X, TOP_PADDING);
+	public static void drawPageFiller(MatrixStack ms, Book book) {
+		drawPageFiller(ms, book, RIGHT_PAGE_X, TOP_PADDING);
 	}
 
-	public static void drawPageFiller(Book book, int x, int y) {
+	public static void drawPageFiller(MatrixStack ms, Book book, int x, int y) {
 		RenderSystem.enableBlend();
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		MinecraftClient.getInstance().getTextureManager().bindTexture(book.fillerTexture);
-		blit(x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
+		drawTexture(ms, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 
 	public static void playBookFlipSound(Book book) {
