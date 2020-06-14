@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.page.abstr;
 
 import net.minecraft.client.util.math.MatrixStack;
+
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.BookTextRenderer;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;

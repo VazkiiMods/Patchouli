@@ -19,7 +19,7 @@ public class GuiBookWriter extends GuiBook {
 	private static boolean drawHeader;
 
 	public GuiBookWriter(Book book) {
-		super(book, new LiteralText(""));
+		super(book, LiteralText.EMPTY);
 	}
 
 	@Override

@@ -59,7 +59,7 @@ public class BookRightClickHandler {
 						ms.push();
 						ms.scale(0.75F, 0.75F, 1F);
 						Text s = new TranslatableText("patchouli.gui.lexicon." + (player.isSneaking() ? "view" : "sneak"))
-										.formatted(Formatting.ITALIC);
+								.formatted(Formatting.ITALIC);
 						mc.textRenderer.draw(ms, s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
 						ms.pop();
 					}

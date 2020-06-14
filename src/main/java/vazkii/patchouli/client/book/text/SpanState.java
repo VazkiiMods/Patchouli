@@ -2,8 +2,8 @@ package vazkii.patchouli.client.book.text;
 
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
-
 import net.minecraft.text.TextColor;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
 

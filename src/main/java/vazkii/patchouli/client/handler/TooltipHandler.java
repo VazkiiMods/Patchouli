@@ -12,10 +12,10 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+
 import org.lwjgl.opengl.GL11;
 
 import vazkii.patchouli.client.RenderHelper;
@@ -117,7 +117,7 @@ public class TooltipHandler {
 				ms.scale(0.5F, 0.5F, 1F);
 				boolean mac = MinecraftClient.IS_SYSTEM_MAC;
 				Text key = new LiteralText(PatchouliConfig.useShiftForQuickLookup.get() ? "Shift" : mac ? "Cmd" : "Ctrl")
-								.formatted(Formatting.BOLD);
+						.formatted(Formatting.BOLD);
 				mc.textRenderer.drawWithShadow(ms, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
 				ms.pop();
 

@@ -35,6 +35,7 @@ import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nullable;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -218,9 +219,9 @@ public abstract class GuiBook extends Screen {
 			Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
 			if (provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
 				Text t = new LiteralText("(")
-								.append(new TranslatableText("patchouli.gui.lexicon.shift_for_recipe"))
-								.append(")")
-								.formatted(Formatting.GOLD);
+						.append(new TranslatableText("patchouli.gui.lexicon.shift_for_recipe"))
+						.append(")")
+						.formatted(Formatting.GOLD);
 				tooltip.add(t);
 				targetPage = provider;
 			}

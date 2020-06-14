@@ -6,8 +6,8 @@ import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredica
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.resource.ResourceType;
-
 import net.minecraft.util.Identifier;
+
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
@@ -37,7 +37,7 @@ public class ClientProxy implements ClientModInitializer {
 		});
 
 		FabricModelPredicateProviderRegistry.register(PatchouliItems.book,
-						new Identifier("completion"),
-						(stack, world, entity) -> ItemModBook.getCompletion(stack));
+				new Identifier("completion"),
+				(stack, world, entity) -> ItemModBook.getCompletion(stack));
 	}
 }

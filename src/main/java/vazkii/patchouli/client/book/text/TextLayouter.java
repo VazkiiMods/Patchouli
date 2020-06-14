@@ -3,9 +3,9 @@ package vazkii.patchouli.client.book.text;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.resource.language.LanguageDefinition;
-
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 import java.text.BreakIterator;
