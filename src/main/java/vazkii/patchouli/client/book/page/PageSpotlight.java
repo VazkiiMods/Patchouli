@@ -7,6 +7,7 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.text.Text;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
@@ -37,7 +38,14 @@ public class PageSpotlight extends PageWithText {
 		RenderSystem.enableBlend();
 		DrawableHelper.drawTexture(ms, GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 128);
 
-		parent.drawCenteredStringNoShadow(ms, title != null && !title.isEmpty() ? i18n(title) : itemStack.getName().asFormattedString(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		Text toDraw;
+		if (title != null && !title.isEmpty()) {
+			toDraw = i18nText(title);
+		} else {
+			toDraw = itemStack.getName();
+		}
+
+		parent.drawCenteredStringNoShadow(ms, toDraw, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		parent.renderItemStack(GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, itemStack);
 
 		super.render(ms, mouseX, mouseY, pticks);

@@ -1,9 +1,12 @@
 package vazkii.patchouli.client.book.gui;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.resource.language.I18n;
 
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Style;
+import net.minecraft.text.TextColor;
 import vazkii.patchouli.client.book.text.BookTextParser;
 import vazkii.patchouli.client.book.text.Word;
 import vazkii.patchouli.common.book.Book;
@@ -42,13 +45,14 @@ public class BookTextRenderer {
 	}
 
 	private void build() {
-		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, baseColor);
+		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, Style.EMPTY.withColor(TextColor.fromRgb(baseColor)));
 		words = parser.parse(text);
 	}
 
 	public void render(MatrixStack ms, int mouseX, int mouseY) {
-		TextRenderer font = book.getFontStyle();
-		words.forEach(word -> word.render(ms, font, mouseX, mouseY));
+		TextRenderer font = MinecraftClient.getInstance().textRenderer;
+		Style style = book.getFontStyle();
+		words.forEach(word -> word.render(ms, font, style, mouseX, mouseY));
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {

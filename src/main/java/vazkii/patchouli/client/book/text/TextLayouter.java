@@ -4,6 +4,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.resource.language.LanguageDefinition;
 
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 import java.text.BreakIterator;
@@ -114,7 +116,8 @@ public class TextLayouter {
 
 		char[] characters = last.span.text.toCharArray();
 		for (int i = last.start; i < characters.length; i++) {
-			width += font.getCharWidth(characters[i]);
+			Text tmp = new LiteralText(String.valueOf(characters[i])).setStyle(last.span.style);
+			width += font.getWidth(tmp);
 			if (last.span.bold) {
 				width++;
 			}
@@ -201,7 +204,7 @@ public class TextLayouter {
 		public SpanTail(Span span, int start, List<Word> cluster) {
 			this.span = span;
 			this.start = start;
-			this.width = font.getWidth(span.codes + span.text.substring(start)) + span.spacingLeft + span.spacingRight;
+			this.width = font.getWidth(span.getStyledSubstring(start)) + span.spacingLeft + span.spacingRight;
 			this.cluster = cluster;
 			this.length = span.text.length() - start;
 		}

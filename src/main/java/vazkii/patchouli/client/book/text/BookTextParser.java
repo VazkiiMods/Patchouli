@@ -1,8 +1,11 @@
 package vazkii.patchouli.client.book.text;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -45,7 +48,7 @@ public class BookTextParser {
 		}, "br2", "2br", "p");
 		register(state -> {
 			state.endingExternal = state.isExternalLink;
-			state.color = state.prevColor;
+			state.popStyle();
 			state.cluster = null;
 			state.tooltip = EMPTY_STRING_COMPONENT;
 			state.onClick = null;
@@ -57,16 +60,16 @@ public class BookTextParser {
 			state.tooltip = EMPTY_STRING_COMPONENT;
 			return "";
 		}, "/t");
-		register(state -> state.gui.getMinecraft().player.getDisplayName().asFormattedString(), "playername");
-		register(state -> state.codes("\u00A7k"), "k", "obf");
-		register(state -> state.codes("\u00A7l"), "l", "bold");
-		register(state -> state.codes("\u00A7m"), "m", "strike");
-		register(state -> state.codes("\u00A7o"), "o", "italic", "italics");
+		register(state -> state.gui.getMinecraft().player.getName().getString(), "playername"); // TODO 1.16: dropped format codes
+		register(state -> state.modifyStyle(s -> s.withFormatting(Formatting.OBFUSCATED)), "k", "obf");
+		register(state -> state.modifyStyle(s -> s.withFormatting(Formatting.BOLD)), "l", "bold");
+		register(state -> state.modifyStyle(s -> s.withFormatting(Formatting.STRIKETHROUGH)), "m", "strike");
+		register(state -> state.modifyStyle(s -> s.withFormatting(Formatting.ITALIC)), "o", "italic", "italics");
 		register(state -> {
 			state.reset();
 			return "";
 		}, "", "reset", "clear");
-		register(state -> state.color(state.baseColor), "nocolor");
+		register(SpanState::baseColor, "nocolor");
 
 		register((parameter, state) -> {
 			KeyBinding result = getKeybindKey(state, parameter);
@@ -81,8 +84,7 @@ public class BookTextParser {
 		register((parameter, state) -> {
 			state.cluster = new LinkedList<>();
 
-			state.prevColor = state.color;
-			state.color = state.book.linkColor;
+			state.pushStyle(Style.EMPTY.withColor(TextColor.fromRgb(state.book.linkColor)));
 			boolean isExternal = parameter.matches("^https?\\:.*");
 
 			if (isExternal) {
@@ -137,8 +139,7 @@ public class BookTextParser {
 			return "";
 		}, "tooltip", "t");
 		register((parameter, state) -> {
-			state.prevColor = state.color;
-			state.color = state.book.linkColor;
+			state.pushStyle(Style.EMPTY.withColor(TextColor.fromRgb(state.book.linkColor)));
 			state.cluster = new LinkedList<>();
 			if (!parameter.startsWith("/")) {
 				state.tooltip = new LiteralText("INVALID COMMAND (must begin with /)");
@@ -152,7 +153,7 @@ public class BookTextParser {
 			return "";
 		}, "command", "c");
 		register(state -> {
-			state.color = state.prevColor;
+			state.popStyle();
 			state.cluster = null;
 			state.tooltip = EMPTY_STRING_COMPONENT;
 			state.onClick = null;
@@ -164,21 +165,21 @@ public class BookTextParser {
 	private final Book book;
 	private final int x, y, width;
 	private final int lineHeight;
-	private final int baseColor;
+	private final Style baseStyle;
 	private final TextRenderer font;
 	private final int spaceWidth;
 
-	public BookTextParser(GuiBook gui, Book book, int x, int y, int width, int lineHeight, int baseColor) {
+	public BookTextParser(GuiBook gui, Book book, int x, int y, int width, int lineHeight, Style baseStyle) {
 		this.gui = gui;
 		this.book = book;
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.lineHeight = lineHeight;
-		this.baseColor = baseColor;
+		this.baseStyle = baseStyle;
 
-		this.font = book.getFontStyle();
-		this.spaceWidth = font.getWidth(" ");
+		this.font = MinecraftClient.getInstance().textRenderer;
+		this.spaceWidth = font.getWidth(new LiteralText(" ").setStyle(baseStyle));
 	}
 
 	public List<Word> parse(@Nullable String text) {
@@ -220,7 +221,7 @@ public class BookTextParser {
 	}
 
 	private List<Span> processCommands(String text) {
-		SpanState state = new SpanState(gui, book, baseColor, font);
+		SpanState state = new SpanState(gui, book, baseStyle);
 		List<Span> spans = new ArrayList<>();
 
 		int from = 0;
@@ -266,19 +267,19 @@ public class BookTextParser {
 		String result = "";
 
 		if (cmd.length() == 1 && cmd.matches("^[0123456789abcdef]$")) { // Vanilla colors
-			state.color = Formatting.byCode(cmd.charAt(0)).getColorValue();
-			return "";
+			return state.modifyStyle(s -> s.withColor(Formatting.byCode(cmd.charAt(0))));
 		} else if (cmd.startsWith("#") && (cmd.length() == 4 || cmd.length() == 7)) { // Hex colors
+			TextColor color;
 			String parse = cmd.substring(1);
 			if (parse.length() == 3) {
 				parse = "" + parse.charAt(0) + parse.charAt(0) + parse.charAt(1) + parse.charAt(1) + parse.charAt(2) + parse.charAt(2);
 			}
 			try {
-				state.color = Integer.parseInt(parse, 16);
+				color = TextColor.fromRgb(Integer.parseInt(parse, 16));
 			} catch (NumberFormatException e) {
-				state.color = baseColor;
+				color = baseStyle.getColor();
 			}
-			return "";
+			return state.color(color);
 		} else if (cmd.matches("li\\d?")) { // List Element
 			char c = cmd.length() > 2 ? cmd.charAt(2) : '1';
 			int dist = Character.isDigit(c) ? Character.digit(c, 10) : 1;

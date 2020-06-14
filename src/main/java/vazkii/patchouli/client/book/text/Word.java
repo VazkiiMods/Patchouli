@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
@@ -15,8 +15,7 @@ public class Word {
 	private final GuiBook gui;
 	private final int x, y, width, height;
 	private final String text;
-	private final int color;
-	private final String codes;
+	private final Style style;
 	private final List<Word> linkCluster;
 	private final Text tooltip;
 	private final Supplier<Boolean> onClick;
@@ -29,26 +28,26 @@ public class Word {
 		this.width = strWidth;
 		this.height = 8;
 		this.text = text;
-		this.color = span.color;
-		this.codes = span.codes;
+		this.style = span.style;
 		this.onClick = span.onClick;
 		this.linkCluster = cluster;
 		this.tooltip = span.tooltip;
 	}
 
-	public void render(MatrixStack ms, TextRenderer font, int mouseX, int mouseY) {
-		String renderTarget = codes + text;
-		int renderColor = color;
+	public void render(MatrixStack ms, TextRenderer font, Style styleOverride, int mouseX, int mouseY) {
+		MutableText toRender = new LiteralText(text)
+						.setStyle(style)
+						.fillStyle(styleOverride);
 		if (isClusterHovered(mouseX, mouseY)) {
 			if (onClick != null) {
-				renderColor = book.linkHoverColor;
+				toRender.styled(s -> s.withColor(TextColor.fromRgb(book.linkHoverColor)));
 			}
 			if (!tooltip.getString().isEmpty()) {
 				gui.setTooltip(tooltip);
 			}
 		}
 
-		font.draw(ms, renderTarget, x, y, renderColor);
+		font.draw(ms, toRender, x, y, -1);
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {
