@@ -117,7 +117,7 @@ publishing {
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
 			}
-            artifact(apiJar) {
+			artifact(apiJar) {
 				builtBy apiJar
 			}
 		}
@@ -125,7 +125,8 @@ publishing {
 
 	// select the repositories you want to publish to
 	repositories {
-		// uncomment to publish to the local maven
-		// mavenLocal()
+		maven {
+			url "file://" + System.getenv("local_maven")
+		}
 	}
 }
