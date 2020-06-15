@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
- * An associated span of textual data. A {@code Span} does not know its positioning.
+ * An associated span of textual data that shares the same style.
+ * A {@code Span} does not know its positioning.
  * At this point, all macros should have been expanded.
  */
 public class Span {

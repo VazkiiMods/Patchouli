@@ -108,7 +108,7 @@ public class BookTextParser {
 				if (entry != null) {
 					state.tooltip = entry.isLocked()
 							? new TranslatableText("patchouli.gui.lexicon.locked").formatted(Formatting.GRAY)
-							: new LiteralText(entry.getName());
+							: entry.getName();
 					GuiBook gui = state.gui;
 					Book book = state.book;
 					int page = 0;

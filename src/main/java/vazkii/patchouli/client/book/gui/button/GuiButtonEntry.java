@@ -26,7 +26,7 @@ public class GuiButtonEntry extends ButtonWidget {
 	private float timeHovered;
 
 	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, ButtonWidget.PressAction onPress) {
-		super(x, y, GuiBook.PAGE_WIDTH, 10, new LiteralText(entry.getName()), onPress);
+		super(x, y, GuiBook.PAGE_WIDTH, 10, entry.getName(), onPress);
 		this.parent = parent;
 		this.entry = entry;
 	}
@@ -61,7 +61,7 @@ public class GuiButtonEntry extends ButtonWidget {
 			if (locked) {
 				name = new TranslatableText("patchouli.gui.lexicon.locked");
 			} else {
-				name = new LiteralText(entry.getName());
+				name = entry.getName();
 				if (entry.isPriority()) {
 					name = name.formatted(Formatting.ITALIC);
 				}

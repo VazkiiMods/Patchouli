@@ -6,6 +6,10 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ChatUtil;
 import net.minecraft.util.Identifier;
 
@@ -54,8 +58,8 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 
 	private transient boolean built;
 
-	public String getName() {
-		return book.i18n ? I18n.translate(name) : name;
+	public MutableText getName() {
+		return book.i18n ? new TranslatableText(name) : new LiteralText(name);
 	}
 
 	public List<BookPage> getPages() {
@@ -156,7 +160,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public boolean isFoundByQuery(String query) {
-		if (getName().toLowerCase().contains(query)) {
+		if (getName().getString().toLowerCase().contains(query)) {
 			return true;
 		}
 
@@ -188,7 +192,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 
 		int sort = this.sortnum - o.sortnum;
 
-		return sort == 0 ? this.getName().compareTo(o.getName()) : sort;
+		return sort == 0 ? this.getName().getString().compareTo(o.getName().getString()) : sort;
 	}
 
 	public void setBook(Book book) {

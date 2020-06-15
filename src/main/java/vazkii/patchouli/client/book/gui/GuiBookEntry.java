@@ -40,7 +40,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	public GuiBookEntry(Book book, BookEntry entry, int spread) {
-		super(book, new LiteralText(entry.getName()));
+		super(book, entry.getName());
 		this.entry = entry;
 		this.spread = spread;
 	}

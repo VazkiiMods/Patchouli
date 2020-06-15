@@ -63,7 +63,7 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 		}
 
 		return new Text[] {
-				new LiteralText(entry.getName()),
+				entry.getName(),
 				new TranslatableText(multiblock
 						? "patchouli.gui.lexicon.multiblock_bookmark"
 						: "patchouli.gui.lexicon.remove_bookmark").formatted(Formatting.GRAY)

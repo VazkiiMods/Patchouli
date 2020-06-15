@@ -1,6 +1,5 @@
 package vazkii.patchouli.client.handler;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
