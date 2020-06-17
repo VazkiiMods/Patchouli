@@ -87,6 +87,7 @@ public class ItemStackUtil {
 	}
 
 	public static String serializeIngredient(Ingredient ingredient) {
+		((MixinIngredient) (Object) ingredient).callCacheMatchingStacks();
 		ItemStack[] stacks = ((MixinIngredient) (Object) ingredient).getMatchingStacks();
 		String[] stacksSerialized = new String[stacks.length];
 		for (int i = 0; i < stacks.length; i++) {
