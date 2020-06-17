@@ -19,7 +19,7 @@ public class BookTextRenderer {
 	private final String text;
 	private final int x, y, width;
 	private final int lineHeight;
-	private final int baseColor;
+	private final Style baseStyle;
 
 	private List<Word> words;
 
@@ -39,13 +39,13 @@ public class BookTextRenderer {
 		this.y = y;
 		this.width = width;
 		this.lineHeight = lineHeight;
-		this.baseColor = baseColor;
+		this.baseStyle = book.getFontStyle().withColor(TextColor.fromRgb(baseColor));
 
 		build();
 	}
 
 	private void build() {
-		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, Style.EMPTY.withColor(TextColor.fromRgb(baseColor)));
+		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, baseStyle);
 		words = parser.parse(text);
 	}
 
