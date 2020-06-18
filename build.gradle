@@ -49,16 +49,25 @@ task checkSyntax {
 	dependsOn spotlessJavaCheck, pmdMain
 }
 
+repositories {
+	maven {
+		name = "Modmuss"
+		url = "https://maven.modmuss50.me/"
+	}
+}
+
 dependencies {
 	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+	modImplementation "me.zeroeightsix:fiber:0.23.0-1"
+	include "me.zeroeightsix:fiber:0.23.0-1"
 
 	//to change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
+	minecraft "com.mojang:minecraft:1.16-pre8"
+	mappings "net.fabricmc:yarn:1.16-pre8+build.1:v2"
+	modCompile "net.fabricmc:fabric-loader:0.8.7+build.201"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	modCompile "net.fabricmc.fabric-api:fabric-api:0.12.4+build.365-1.16"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.

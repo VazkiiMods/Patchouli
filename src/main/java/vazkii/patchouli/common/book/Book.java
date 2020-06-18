@@ -211,7 +211,7 @@ public class Book {
 	}
 
 	public final boolean advancementsEnabled() {
-		return !PatchouliConfig.disableAdvancementLocking.get() && !PatchouliConfig.noAdvancementBooks.get().contains(id.toString());
+		return !PatchouliConfig.disableAdvancementLocking.getValue() && !PatchouliConfig.noAdvancementBooks.getValue().contains(id.toString());
 	}
 
 	@Environment(EnvType.CLIENT)

@@ -63,7 +63,7 @@ public class TooltipHandler {
 				DrawableHelper.fill(ms, x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
 				DrawableHelper.fill(ms, x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
 
-				if (PatchouliConfig.useShiftForQuickLookup.get() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
+				if (PatchouliConfig.useShiftForQuickLookup.getValue() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
 					lexiconLookupTime += ClientTicker.delta;
 
 					int cx = x + 8;
@@ -116,7 +116,7 @@ public class TooltipHandler {
 
 				ms.scale(0.5F, 0.5F, 1F);
 				boolean mac = MinecraftClient.IS_SYSTEM_MAC;
-				Text key = new LiteralText(PatchouliConfig.useShiftForQuickLookup.get() ? "Shift" : mac ? "Cmd" : "Ctrl")
+				Text key = new LiteralText(PatchouliConfig.useShiftForQuickLookup.getValue() ? "Shift" : mac ? "Cmd" : "Ctrl")
 						.formatted(Formatting.BOLD);
 				mc.textRenderer.drawWithShadow(ms, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
 				ms.pop();
