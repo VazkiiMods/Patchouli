@@ -2,7 +2,8 @@
 This is the Fabric port of Patchouli, it will receive support for the latest stable version of Minecraft available on Fabric.
 Snapshot releases may happen depending on my mood, but don't count on them.
 
-There is no Maven release for Fabric yet (The below maven info is for Forge), so please use [JitPack](https://jitpack.io/) or similar on this branch of the repository. 
+Maven builds: https://maven.blamejared.com/vazkii/patchouli/Patchouli_1.16-fabric/
+(The info below is for forge and I'm too lazy to update it)
 
 # Patchouli
 Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers
