@@ -17,7 +17,13 @@ ext.config = configFile.withReader {
 	return (new ConfigSlurper().parse(prop))
 }
 
-version = "${project.minecraft_version}-${config.version}-${config.build_number}-FABRIC"
+version = "${config.version}-${config.build_number}"
+if (System.getenv().BUILD_NUMBER != null) { 
+    //adds the build number to the end of the version string if on a build server
+    version += ".${System.getenv().BUILD_NUMBER}"
+}
+version += "-FABRIC"
+
 group = "vazkii.${config.mod_id}"
 archivesBaseName = "${config.mod_name}"
 
