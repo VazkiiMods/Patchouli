@@ -62,12 +62,12 @@ dependencies {
 	include "me.zeroeightsix:fiber:0.23.0-1"
 
 	//to change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:1.16-rc1"
-	mappings "net.fabricmc:yarn:1.16-rc1+build.1:v2"
+	minecraft "com.mojang:minecraft:1.16"
+	mappings "net.fabricmc:yarn:1.16+build.1:v2"
 	modCompile "net.fabricmc:fabric-loader:0.8.8+build.202"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modCompile "net.fabricmc.fabric-api:fabric-api:0.12.4+build.365-1.16"
+	modCompile "net.fabricmc.fabric-api:fabric-api:0.13.1+build.370-1.16"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
