@@ -12,10 +12,10 @@ public class RenderHelper {
 	}
 
 	/**
-	 * Temporary shim to allow methods such as {@link net.minecraft.client.render.item.ItemRenderer#renderInGuiWithOverrides}
+	 * Temporary shim to allow methods such as
+	 * {@link net.minecraft.client.render.item.ItemRenderer#renderInGuiWithOverrides}
 	 * to support matrixstack transformations. Hopefully Mojang finishes this migration up...
 	 * Transfers the current CPU matrixstack to the openGL matrix stack, then runs the provided function
-	 *
 	 * Assumption: the "root" state of the MatrixStack is same as the currently GL state,
 	 * such that multiplying the MatrixStack to the current GL matrix state will get us where we want to be.
 	 * If there have been intervening changes to the GL matrix state since the MatrixStack was constructed, then this
