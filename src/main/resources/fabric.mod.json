@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Patchouli",
-  "description": "Unofficial Fabric port of Patchouli: Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers",
+  "description": "Patchouli: Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers",
   "authors": [
     "Vazkii",
     "williewillus"
