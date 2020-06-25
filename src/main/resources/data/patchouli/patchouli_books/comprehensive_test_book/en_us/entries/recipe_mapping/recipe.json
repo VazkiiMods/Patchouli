@@ -5,7 +5,8 @@
   "pages": [
     {
       "type": "crafting",
-      "recipe": "minecraft:diamond_sword"
+      "recipe": "minecraft:diamond_sword",
+      "recipe2": "minecraft:oak_slab"
     },
     {
       "type": "smelting",

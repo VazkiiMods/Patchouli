@@ -243,8 +243,10 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 			return;
 		}
 
-		RenderHelper.renderItemStackInGui(ms, stack, x, y);
-		client.getItemRenderer().renderGuiItemOverlay(textRenderer, stack, x, y);
+		RenderHelper.transferMsToGl(ms, () -> {
+			MinecraftClient.getInstance().getItemRenderer().renderInGuiWithOverrides(stack, x, y);
+			client.getItemRenderer().renderGuiItemOverlay(textRenderer, stack, x, y);
+		});
 
 		if (isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
 			setTooltipStack(stack);
