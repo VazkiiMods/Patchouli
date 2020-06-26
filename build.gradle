@@ -21,7 +21,7 @@ apply plugin: 'pmd'
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
 
-def mc_version = '1.15.2'
+def mc_version = '1.16.1'
 version = "${mc_version}-${config.version}-${config.build_number}"
 group = "vazkii.${config.mod_id}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "${config.mod_name}"
@@ -33,7 +33,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 }
 
 minecraft {
-    mappings channel: "snapshot", version: "20200510-1.15.1"
+    mappings channel: "snapshot", version: "20200514-1.16"
 
     runs {
         client {
@@ -74,10 +74,10 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${mc_version}-31.2.0"
+    minecraft "net.minecraftforge:forge:${mc_version}-32.0.0"
 
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:6.0.0.2:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:6.0.0.2")
+    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:6.0.0.2:api")
+    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:6.0.0.2")
 }
 
 processResources {
