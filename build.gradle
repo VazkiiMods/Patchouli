@@ -33,7 +33,7 @@ if (System.getenv('BUILD_NUMBER') != null) {
 }
 
 minecraft {
-    mappings channel: "snapshot", version: "20200123-mixed-1.15.2"
+    mappings channel: "snapshot", version: "20200510-1.15.1"
 
     runs {
         client {

@@ -146,11 +146,11 @@ public class PageMultiblock extends PageWithText {
 		// Initial eye pos somewhere off in the distance in the -Z direction
 		Vector4f eye = new Vector4f(0, 0, -100, 1);
 		Matrix4f rotMat = new Matrix4f();
-		rotMat.loadIdentity();
+		rotMat.setIdentity();
 
 		// For each GL rotation done, track the opposite to keep the eye pos accurate
 		RenderSystem.rotatef(-30F, 1F, 0F, 0F);
-		rotMat.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(30));
+		rotMat.mul(Vector3f.XP.rotationDegrees(30));
 
 		float offX = (float) -sizeX / 2;
 		float offZ = (float) -sizeZ / 2 + 1;
@@ -161,14 +161,14 @@ public class PageMultiblock extends PageWithText {
 		}
 		RenderSystem.translatef(-offX, 0, -offZ);
 		RenderSystem.rotatef(time, 0F, 1F, 0F);
-		rotMat.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-time));
+		rotMat.mul(Vector3f.YP.rotationDegrees(-time));
 		RenderSystem.rotatef(45F, 0F, 1F, 0F);
-		rotMat.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-45));
+		rotMat.mul(Vector3f.YP.rotationDegrees(-45));
 		RenderSystem.translatef(offX, 0, offZ);
 
 		// Finally apply the rotations
 		eye.transform(rotMat);
-		eye.normalizeProjectiveCoordinates();
+		eye.normalize();
 		/* TODO XXX This does not handle visualization of sparse multiblocks correctly.
 			Dense multiblocks store everything in positive X/Z, so this works, but sparse multiblocks store everything from the JSON as-is.
 			Potential solution: Rotate around the offset vars of the multiblock, and add AABB method for extent of the multiblock
@@ -183,12 +183,12 @@ public class PageMultiblock extends PageWithText {
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		RenderSystem.translatef(0, 0, -1);
 
-		IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
+		IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
 		doWorldRenderPass(mb, blocks, buffers, eye);
 		doTileEntityRenderPass(mb, blocks, buffers, eye);
 
 		// todo 1.15 transparency sorting
-		buffers.draw();
+		buffers.finish();
 		RenderSystem.popMatrix();
 	}
 
@@ -199,11 +199,11 @@ public class PageMultiblock extends PageWithText {
 
 			ms.push();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
-			for (RenderType layer : RenderType.getBlockLayers()) {
+			for (RenderType layer : RenderType.getBlockRenderTypes()) {
 				if (RenderTypeLookup.canRenderInLayer(bs, layer)) {
 					ForgeHooksClient.setRenderLayer(layer);
 					IVertexBuilder buffer = buffers.getBuffer(layer);
-					Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(bs, pos, mb, ms, buffer, false, RAND);
+					Minecraft.getInstance().getBlockRendererDispatcher().renderModel(bs, pos, mb, ms, buffer, false, RAND);
 					ForgeHooksClient.setRenderLayer(null);
 				}
 			}
@@ -220,7 +220,7 @@ public class PageMultiblock extends PageWithText {
 		for (BlockPos pos : blocks) {
 			TileEntity te = mb.getTileEntity(pos);
 			if (te != null && !erroredTiles.contains(te)) {
-				te.setLocation(mc.world, pos);
+				te.setWorldAndPos(mc.world, pos);
 
 				// fake cached state in case the renderer checks it as we don't want to query the actual world
 				ObfuscationReflectionHelper.setPrivateValue(TileEntity.class, te, mb.getBlockState(pos), "field_195045_e");
@@ -230,7 +230,7 @@ public class PageMultiblock extends PageWithText {
 				try {
 					TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(te);
 					if (renderer != null) {
-						renderer.render(te, ClientTicker.partialTicks, ms, buffers, 0xF000F0, OverlayTexture.DEFAULT_UV);
+						renderer.render(te, ClientTicker.partialTicks, ms, buffers, 0xF000F0, OverlayTexture.NO_OVERLAY);
 					}
 				} catch (Exception e) {
 					erroredTiles.add(te);

@@ -245,7 +245,7 @@ public class MultiblockVisualizationHandler {
 		ms.translate(-renderPosX, -renderPosY, -renderPosZ);
 
 		if (buffers == null) {
-			buffers = initBuffers(mc.getBufferBuilders().getEntityVertexConsumers());
+			buffers = initBuffers(mc.getRenderTypeBuffers().getBufferSource());
 		}
 
 		BlockPos checkPos = null;
@@ -285,7 +285,7 @@ public class MultiblockVisualizationHandler {
 			}
 		}
 
-		buffers.draw();
+		buffers.finish();
 
 		if (!isAnchored) {
 			blocks = blocksDone = 0;
@@ -306,7 +306,7 @@ public class MultiblockVisualizationHandler {
 				state = Blocks.RED_CONCRETE.getDefaultState();
 			}
 
-			Minecraft.getInstance().getBlockRendererDispatcher().renderBlockAsEntity(state, ms, buffers, 0xF000F0, OverlayTexture.DEFAULT_UV);
+			Minecraft.getInstance().getBlockRendererDispatcher().renderBlock(state, ms, buffers, 0xF000F0, OverlayTexture.NO_OVERLAY);
 
 			ms.pop();
 		}
@@ -345,10 +345,10 @@ public class MultiblockVisualizationHandler {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-		bufferbuilder.vertex((double) right, (double) top, 0).color(f1, f2, f3, f).endVertex();
-		bufferbuilder.vertex((double) left, (double) top, 0).color(f1, f2, f3, f).endVertex();
-		bufferbuilder.vertex((double) left, (double) bottom, 0).color(f5, f6, f7, f4).endVertex();
-		bufferbuilder.vertex((double) right, (double) bottom, 0).color(f5, f6, f7, f4).endVertex();
+		bufferbuilder.pos((double) right, (double) top, 0).color(f1, f2, f3, f).endVertex();
+		bufferbuilder.pos((double) left, (double) top, 0).color(f1, f2, f3, f).endVertex();
+		bufferbuilder.pos((double) left, (double) bottom, 0).color(f5, f6, f7, f4).endVertex();
+		bufferbuilder.pos((double) right, (double) bottom, 0).color(f5, f6, f7, f4).endVertex();
 		tessellator.draw();
 		RenderSystem.shadeModel(7424);
 		RenderSystem.disableBlend();
@@ -388,8 +388,8 @@ public class MultiblockVisualizationHandler {
 		private static Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
 
 		private GhostRenderType(RenderType original) {
-			super(String.format("%s_%s_ghost", original.toString(), Patchouli.MOD_ID), original.getVertexFormat(), original.getDrawMode(), original.getExpectedBufferSize(), original.func_228665_s_(), true, () -> {
-				original.startDrawing();
+			super(String.format("%s_%s_ghost", original.toString(), Patchouli.MOD_ID), original.getVertexFormat(), original.getDrawMode(), original.getBufferSize(), original.isUseDelegate(), true, () -> {
+				original.setupRenderState();
 
 				// Alter GL state
 				RenderSystem.disableDepthTest();
@@ -402,7 +402,7 @@ public class MultiblockVisualizationHandler {
 				RenderSystem.disableBlend();
 				RenderSystem.enableDepthTest();
 
-				original.endDrawing();
+				original.clearRenderState();
 			});
 		}
 

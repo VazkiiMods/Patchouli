@@ -144,22 +144,22 @@ public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
 	}
 
 	@Override
-	public WorldLightManager getLightingProvider() {
+	public WorldLightManager getLightManager() {
 		return null;
 	}
 
 	@Override
-	public int getColor(BlockPos pos, ColorResolver color) {
+	public int getBlockColor(BlockPos pos, ColorResolver color) {
 		return color.getColor(Biomes.PLAINS, pos.getX(), pos.getZ());
 	}
 
 	@Override
-	public int getLightLevel(LightType type, BlockPos pos) {
+	public int getLightFor(LightType type, BlockPos pos) {
 		return 15;
 	}
 
 	@Override
-	public int getBaseLightLevel(BlockPos pos, int ambientDarkening) {
+	public int getLightSubtracted(BlockPos pos, int ambientDarkening) {
 		return 15 - ambientDarkening;
 	}
 

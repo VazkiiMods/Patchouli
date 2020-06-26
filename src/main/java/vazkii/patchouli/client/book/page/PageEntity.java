@@ -94,14 +94,14 @@ public class PageEntity extends PageWithText {
 		matrix.translate(x, y, 50);
 		matrix.scale(renderScale, renderScale, renderScale);
 		matrix.translate(0, offset, 0);
-		matrix.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
-		matrix.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(rotation));
+		matrix.rotate(Vector3f.ZP.rotationDegrees(180));
+		matrix.rotate(Vector3f.YP.rotationDegrees(rotation));
 		EntityRendererManager erd = Minecraft.getInstance().getRenderManager();
-		IRenderTypeBuffer.Impl immediate = Minecraft.getInstance().getBufferBuilders().getEntityVertexConsumers();
+		IRenderTypeBuffer.Impl immediate = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
 		erd.setRenderShadow(false);
-		erd.render(entity, 0, 0, 0, 0, 1, matrix, immediate, 0xF000F0);
+		erd.renderEntityStatic(entity, 0, 0, 0, 0, 1, matrix, immediate, 0xF000F0);
 		erd.setRenderShadow(true);
-		immediate.draw();
+		immediate.finish();
 		RenderSystem.popMatrix();
 	}
 

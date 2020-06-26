@@ -82,7 +82,7 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public void init() {
-		MainWindow res = minecraft.getWindow();
+		MainWindow res = minecraft.getMainWindow();
 		double oldGuiScale = res.calcGuiScale(minecraft.gameSettings.guiScale, minecraft.getForceUnicodeFont());
 
 		maxScale = getMaxAllowedScale();
@@ -463,7 +463,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	private int getMaxAllowedScale() {
-		return minecraft.getWindow().calcGuiScale(0, minecraft.getForceUnicodeFont());
+		return minecraft.getMainWindow().calcGuiScale(0, minecraft.getForceUnicodeFont());
 	}
 
 	public int getSpread() {

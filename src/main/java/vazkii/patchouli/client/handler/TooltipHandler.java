@@ -88,14 +88,14 @@ public class TooltipHandler {
 					buf.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION_COLOR);
 
 					float a = 0.5F + 0.2F * ((float) Math.cos(ClientTicker.total / 10) * 0.5F + 0.5F);
-					buf.vertex(cx, cy, 0).color(0F, 0.5F, 0F, a).endVertex();
+					buf.pos(cx, cy, 0).color(0F, 0.5F, 0F, a).endVertex();
 
 					for (float i = angles; i > 0; i--) {
 						double rad = (i - 90) / 180F * Math.PI;
-						buf.vertex(cx + Math.cos(rad) * r, cy + Math.sin(rad) * r, 0).color(0F, 1F, 0F, 1F).endVertex();
+						buf.pos(cx + Math.cos(rad) * r, cy + Math.sin(rad) * r, 0).color(0F, 1F, 0F, 1F).endVertex();
 					}
 
-					buf.vertex(cx, cy, 0).color(0F, 1F, 0F, 0F).endVertex();
+					buf.pos(cx, cy, 0).color(0F, 1F, 0F, 0F).endVertex();
 					Tessellator.getInstance().draw();
 
 					RenderSystem.disableBlend();
