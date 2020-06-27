@@ -2,14 +2,10 @@ package vazkii.patchouli.common.book;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -218,7 +214,7 @@ public class Book {
 	}
 
 	public final boolean advancementsEnabled() {
-		return !PatchouliConfig.disableAdvancementLocking.getValue() && !PatchouliConfig.noAdvancementBooks.getValue().contains(id.toString());
+		return !PatchouliConfig.disableAdvancementLocking.get() && !PatchouliConfig.noAdvancementBooks.get().contains(id.toString());
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -236,17 +232,17 @@ public class Book {
 		return owner.getDisplayName();
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public Style getFontStyle() {
 		if (useBlockyFont) {
-			return Style.EMPTY;
+			return Style.field_240709_b_;
 		} else {
-			return Style.EMPTY.withFont(UNICODE_FONT_ID);
+			return Style.field_240709_b_.func_240719_a_(UNICODE_FONT_ID);
 		}
 	}
 
-	public MutableText getSubtitle() {
-		Text editionStr;
+	public IFormattableTextComponent getSubtitle() {
+		ITextComponent editionStr;
 
 		try {
 			int ver = Integer.parseInt(version);

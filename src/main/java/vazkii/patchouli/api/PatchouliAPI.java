@@ -5,7 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -230,7 +230,7 @@ public class PatchouliAPI {
 		 * Gets an IStateMatcher with the passed in BlockState for display and validation,
 		 * requiring that only the specified properties are the same.
 		 */
-		IStateMatcher propertyMatcher(BlockState state, IProperty<?>... properties);
+		IStateMatcher propertyMatcher(BlockState state, Property<?>... properties);
 
 		/**
 		 * Gets an IStateMatcher with the passed in Block's default state for display and

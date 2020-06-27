@@ -3,8 +3,10 @@ package vazkii.patchouli.client.book;
 import com.google.common.collect.Streams;
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
@@ -31,8 +33,8 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 	private transient boolean built;
 
-	public Text getName() {
-		return book.i18n ? new TranslatableText(name) : new LiteralText(name);
+	public ITextComponent getName() {
+		return book.i18n ? new TranslationTextComponent(name) : new StringTextComponent(name);
 	}
 
 	public String getDescription() {
@@ -137,7 +139,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 	@Override
 	public int compareTo(BookCategory o) {
-		if (!PatchouliConfig.disableAdvancementLocking.getValue() && o.locked != this.locked) {
+		if (!book.advancementsEnabled() && o.locked != this.locked) {
 			return this.locked ? 1 : -1;
 		}
 

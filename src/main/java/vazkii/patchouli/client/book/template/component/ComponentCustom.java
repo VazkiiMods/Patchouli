@@ -1,8 +1,7 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
-
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import vazkii.patchouli.api.ICustomComponent;
 import vazkii.patchouli.client.book.BookEntry;
@@ -49,7 +48,7 @@ public class ComponentCustom extends TemplateComponent {
 	}
 
 	@Override
-	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
+	public boolean func_231043_a_(BookPage page, double mouseX, double mouseY, int mouseButton) {
 		return callbacks.mouseClicked(page.parent, mouseX, mouseY, mouseButton);
 	}
 

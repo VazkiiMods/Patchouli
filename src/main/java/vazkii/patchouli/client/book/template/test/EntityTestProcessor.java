@@ -1,6 +1,5 @@
 package vazkii.patchouli.client.book.template.test;
 
-import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 

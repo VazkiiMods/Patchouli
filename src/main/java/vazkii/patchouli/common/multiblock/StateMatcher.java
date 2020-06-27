@@ -3,7 +3,7 @@ package vazkii.patchouli.common.multiblock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.util.TriPredicate;
@@ -48,16 +48,16 @@ public class StateMatcher implements IStateMatcher {
 						: ((state) -> state.getBlock() == displayState.getBlock()));
 	}
 
-	public static StateMatcher fromStateWithFilter(BlockState state, Predicate<IProperty<?>> filter) {
+	public static StateMatcher fromStateWithFilter(BlockState state, Predicate<Property<?>> filter) {
 		return fromPredicate(state, state1 -> {
 			if (state.getBlock() != state1.getBlock()) {
 				return false;
 			}
-			return state1.getProperties()
+			return state1.func_235904_r_()
 					.stream()
 					.filter(filter)
-					.allMatch(property -> state1.has(property) &&
-							state.has(property) &&
+					.allMatch(property -> state1.func_235901_b_(property) &&
+							state.func_235901_b_(property) &&
 							Objects.equals(state.get(property), state1.get(property)));
 		});
 	}

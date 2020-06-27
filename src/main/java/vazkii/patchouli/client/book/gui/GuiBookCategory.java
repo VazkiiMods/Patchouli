@@ -2,19 +2,13 @@ package vazkii.patchouli.client.book.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.text.StringTextComponent;
 
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
-import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GuiBookCategory extends GuiBookEntryList {
 
@@ -50,7 +44,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 			int y = TOP_PADDING + PAGE_HEIGHT - (!book.advancementsEnabled() ? 46 : 68);
 
 			Button button = new GuiButtonCategory(this, x, y, ocategory, this::handleButtonCategory);
-			addButton(button);
+			func_230480_a_(button);
 			dependentButtons.add(button);
 
 			i++;

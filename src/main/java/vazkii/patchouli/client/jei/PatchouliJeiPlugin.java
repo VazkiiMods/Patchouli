@@ -1,16 +1,6 @@
+/*
 package vazkii.patchouli.client.jei;
 
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.registration.ISubtypeRegistration;
-
-import net.minecraft.util.ResourceLocation;
-
-import vazkii.patchouli.common.base.Patchouli;
-import vazkii.patchouli.common.item.ItemModBook;
-import vazkii.patchouli.common.item.PatchouliItems;
-
-import javax.annotation.Nonnull;
 
 @JeiPlugin
 public class PatchouliJeiPlugin implements IModPlugin {
@@ -32,3 +22,4 @@ public class PatchouliJeiPlugin implements IModPlugin {
 		});
 	}
 }
+*/

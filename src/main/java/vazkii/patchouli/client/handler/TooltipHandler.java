@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.handler;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 
@@ -11,11 +12,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -29,7 +30,6 @@ import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.common.util.ItemStackUtil;
 
 @Mod.EventBusSubscriber(modid = Patchouli.MOD_ID, value = Dist.CLIENT)
 public class TooltipHandler {
@@ -37,6 +37,7 @@ public class TooltipHandler {
 
 	@SubscribeEvent
 	public static void onTooltip(RenderTooltipEvent.PostText evt) {
+		MatrixStack ms = new MatrixStack(); // todo 1.16 get this?
 		Minecraft mc = Minecraft.getInstance();
 		int tooltipX = evt.getX();
 		int tooltipY = evt.getY() - 4;
@@ -67,10 +68,10 @@ public class TooltipHandler {
 				int x = tooltipX - 34;
 				RenderSystem.disableDepthTest();
 
-				DrawableHelper.fill(ms, x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
-				DrawableHelper.fill(ms, x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
+				AbstractGui.func_238467_a_(ms, x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
+				AbstractGui.func_238467_a_(ms, x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
 
-				if (PatchouliConfig.useShiftForQuickLookup.getValue() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
+				if (PatchouliConfig.useShiftForQuickLookup.get() ? Screen.func_231173_s_() : Screen.func_231172_r_()) {
 					lexiconLookupTime += ClientTicker.delta;
 
 					int cx = x + 8;
@@ -104,7 +105,7 @@ public class TooltipHandler {
 					RenderSystem.shadeModel(GL11.GL_FLAT);
 
 					if (lexiconLookupTime >= time) {
-						mc.player.inventory.selectedSlot = lexSlot;
+						mc.player.inventory.currentItem = lexSlot;
 						int spread = lexiconEntry.getSecond();
 						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), spread * 2);
 					}
@@ -112,20 +113,20 @@ public class TooltipHandler {
 					lexiconLookupTime = 0F;
 				}
 
-				mc.getItemRenderer().zOffset = 300;
+				mc.getItemRenderer().zLevel = 300;
 				RenderHelper.renderItemStackInGui(ms, lexiconStack, x, tooltipY);
-				mc.getItemRenderer().zOffset = 0;
+				mc.getItemRenderer().zLevel = 0;
 				RenderSystem.disableLighting();
 
 				ms.push();
 				ms.translate(0, 0, 500);
-				mc.textRenderer.drawWithShadow(ms, "?", x + 10, tooltipY + 8, 0xFFFFFFFF);
+				mc.fontRenderer.func_238405_a_(ms, "?", x + 10, tooltipY + 8, 0xFFFFFFFF);
 
 				ms.scale(0.5F, 0.5F, 1F);
-				boolean mac = MinecraftClient.IS_SYSTEM_MAC;
-				Text key = new LiteralText(PatchouliConfig.useShiftForQuickLookup.getValue() ? "Shift" : mac ? "Cmd" : "Ctrl")
-						.formatted(Formatting.BOLD);
-				mc.textRenderer.drawWithShadow(ms, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
+				boolean mac = Minecraft.IS_RUNNING_ON_MAC;
+				ITextComponent key = new StringTextComponent(PatchouliConfig.useShiftForQuickLookup.get() ? "Shift" : mac ? "Cmd" : "Ctrl")
+						.func_240699_a_(TextFormatting.BOLD);
+				mc.fontRenderer.func_238407_a_(ms, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
 				ms.pop();
 
 				RenderSystem.enableDepthTest();

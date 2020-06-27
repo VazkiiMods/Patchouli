@@ -5,7 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -170,7 +170,7 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 
 	@Override
-	public IStateMatcher propertyMatcher(BlockState state, IProperty<?>... properties) {
+	public IStateMatcher propertyMatcher(BlockState state, Property<?>... properties) {
 		return StubMatcher.INSTANCE;
 	}
 

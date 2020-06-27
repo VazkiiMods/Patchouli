@@ -1,8 +1,6 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.*;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -14,7 +12,7 @@ import java.util.function.Supplier;
  */
 public class Span {
 	public static Span error(SpanState state, String message) {
-		return new Span(state, message, Style.EMPTY.withColor(Formatting.RED));
+		return new Span(state, message, Style.field_240709_b_.func_240712_a_(TextFormatting.RED));
 	}
 
 	public final String text;
@@ -36,7 +34,7 @@ public class Span {
 		this.lineBreaks = state.lineBreaks;
 		this.spacingLeft = state.spacingLeft;
 		this.spacingRight = state.spacingRight;
-		this.bold = style.isBold();
+		this.bold = style.getBold();
 
 		state.lineBreaks = 0;
 		state.spacingLeft = 0;
@@ -52,18 +50,18 @@ public class Span {
 		this.lineBreaks = state.lineBreaks;
 		this.spacingLeft = state.spacingLeft;
 		this.spacingRight = state.spacingRight;
-		this.bold = style.isBold();
+		this.bold = style.getBold();
 
 		state.lineBreaks = 0;
 		state.spacingLeft = 0;
 		state.spacingRight = 0;
 	}
 
-	public MutableText styledSubstring(int start) {
-		return new LiteralText(text.substring(start)).setStyle(style);
+	public IFormattableTextComponent styledSubstring(int start) {
+		return new StringTextComponent(text.substring(start)).func_230530_a_(style);
 	}
 
-	public MutableText styledSubstring(int start, int end) {
-		return new LiteralText(text.substring(start, end)).setStyle(style);
+	public IFormattableTextComponent styledSubstring(int start, int end) {
+		return new StringTextComponent(text.substring(start, end)).func_230530_a_(style);
 	}
 }

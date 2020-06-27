@@ -12,8 +12,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTDynamicOps;
+import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -109,9 +109,9 @@ public class ItemStackUtil {
 		List<ItemStack> stacks = new ArrayList<>();
 		for (int i = 0; i < stacksSerialized.length; i++) {
 			if (stacksSerialized[i].startsWith("tag:")) {
-				Tag<Item> tag = ItemTags.getCollection().get(new ResourceLocation(stacksSerialized[i].substring(4)));
+				ITag<Item> tag = ItemTags.getCollection().get(new ResourceLocation(stacksSerialized[i].substring(4)));
 				if (tag != null) {
-					for (Item item : tag.getAllElements()) {
+					for (Item item : tag.func_230236_b_()) {
 						stacks.add(new ItemStack(item));
 					}
 				}

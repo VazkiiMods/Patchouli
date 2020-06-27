@@ -1,11 +1,15 @@
 package vazkii.patchouli.client.book;
 
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -55,15 +59,15 @@ public abstract class BookPage {
 	}
 
 	protected void addButton(Button button) {
-		button.x += (parent.bookLeft + left);
-		button.y += (parent.bookTop + top);
+		button.field_230690_l_ += (parent.bookLeft + left);
+		button.field_230691_m_ += (parent.bookTop + top);
 		buttons.add(button);
-		parent.addButton(button);
+		parent.func_230480_a_(button);
 	}
 
 	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {}
 
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public boolean func_231043_a_(double mouseX, double mouseY, int mouseButton) {
 		return false;
 	}
 
@@ -75,7 +79,7 @@ public abstract class BookPage {
 		return book.i18n ? I18n.format(text) : text;
 	}
 
-	public Text i18nText(String text) {
-		return book.i18n ? new TranslatableText(text) : new LiteralText(text);
+	public ITextComponent i18nText(String text) {
+		return book.i18n ? new TranslationTextComponent(text) : new StringTextComponent(text);
 	}
 }

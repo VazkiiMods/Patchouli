@@ -1,7 +1,8 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.Style;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
@@ -18,7 +19,7 @@ public class SpanState {
 
 	private final Style baseStyle;
 	private final Deque<Style> styleStack = new ArrayDeque<>();
-	public MutableText tooltip = BookTextParser.EMPTY_STRING_COMPONENT;
+	public IFormattableTextComponent tooltip = BookTextParser.EMPTY_STRING_COMPONENT;
 	public Supplier<Boolean> onClick = null;
 	public List<Span> cluster = null;
 	public boolean isExternalLink = false; // will show the "external link" symbol next to the link as soon as the link is closed
@@ -34,12 +35,12 @@ public class SpanState {
 		this.styleStack.push(baseStyle);
 	}
 
-	public String color(TextColor color) {
-		return modifyStyle(s -> s.withColor(color));
+	public String color(Color color) {
+		return modifyStyle(s -> s.func_240718_a_(color));
 	}
 
 	public String baseColor() {
-		return color(baseStyle.getColor());
+		return color(baseStyle.func_240711_a_());
 	}
 
 	public String modifyStyle(Function<Style, Style> f) {
@@ -50,7 +51,7 @@ public class SpanState {
 
 	public void pushStyle(Style style) {
 		Style top = styleStack.peek();
-		styleStack.push(style.withParent(top));
+		styleStack.push(style.func_240717_a_(top));
 	}
 
 	public Style popStyle() {

@@ -4,9 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.client.model.BakedModelWrapper;
 
 import vazkii.patchouli.common.book.Book;
@@ -22,8 +22,8 @@ public class BookModel extends BakedModelWrapper<IBakedModel> {
 
 	private final ItemOverrideList itemHandler = new ItemOverrideList() {
 		@Override
-		public IBakedModel getModelWithOverrides(@Nonnull IBakedModel original, @Nonnull ItemStack stack,
-				@Nullable World world, @Nullable LivingEntity entity) {
+		public IBakedModel func_239290_a_(@Nonnull IBakedModel original, @Nonnull ItemStack stack,
+				@Nullable ClientWorld world, @Nullable LivingEntity entity) {
 			Book book = ItemModBook.getBook(stack);
 			if (book != null) {
 				ModelResourceLocation modelPath = new ModelResourceLocation(book.model, "inventory");

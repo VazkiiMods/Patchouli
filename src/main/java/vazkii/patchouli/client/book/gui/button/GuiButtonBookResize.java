@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -26,7 +25,7 @@ public class GuiButtonBookResize extends GuiButtonBook {
 	public List<ITextComponent> getTooltip() {
 		return !uiscale ? tooltip : Arrays.asList(
 				tooltip.get(0),
-				new TranslationTextComponent("patchouli.gui.lexicon.button.resize.size" + PersistentData.data.bookGuiScale).applyTextStyle(TextFormatting.GRAY));
+				new TranslationTextComponent("patchouli.gui.lexicon.button.resize.size" + PersistentData.data.bookGuiScale).func_240699_a_(TextFormatting.GRAY));
 	}
 
 }

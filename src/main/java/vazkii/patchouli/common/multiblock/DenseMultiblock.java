@@ -8,7 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.TriPredicate;
@@ -16,17 +16,13 @@ import net.minecraftforge.common.util.TriPredicate;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DenseMultiblock extends AbstractMultiblock {
 
 	private final String[][] pattern;
 	private IStateMatcher[][][] stateTargets;
-	private final Vec3i size;
+	private final Vector3i size;
 
 	public DenseMultiblock(String[][] pattern, Map<Character, IStateMatcher> targets) {
 		this.pattern = pattern;
@@ -113,7 +109,7 @@ public class DenseMultiblock extends AbstractMultiblock {
 		return stateMap;
 	}
 
-	private Vec3i build(Map<Character, IStateMatcher> stateMap, Vec3i dimensions) {
+	private Vector3i build(Map<Character, IStateMatcher> stateMap, Vector3i dimensions) {
 		boolean foundCenter = false;
 
 		stateTargets = new IStateMatcher[dimensions.getX()][dimensions.getY()][dimensions.getZ()];
@@ -148,7 +144,7 @@ public class DenseMultiblock extends AbstractMultiblock {
 		return dimensions;
 	}
 
-	private static Vec3i getPatternDimensions(String[][] pattern) {
+	private static Vector3i getPatternDimensions(String[][] pattern) {
 		int expectedLenX = -1;
 		int expectedLenZ = -1;
 		for (String[] arr : pattern) {
@@ -169,7 +165,7 @@ public class DenseMultiblock extends AbstractMultiblock {
 			}
 		}
 
-		return new Vec3i(expectedLenX, pattern.length, expectedLenZ);
+		return new Vector3i(expectedLenX, pattern.length, expectedLenZ);
 	}
 
 	@Override
@@ -185,7 +181,7 @@ public class DenseMultiblock extends AbstractMultiblock {
 	}
 
 	@Override
-	public Vec3i getSize() {
+	public Vector3i getSize() {
 		return size;
 	}
 }

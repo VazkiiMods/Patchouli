@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.AbstractGui;
@@ -39,7 +39,7 @@ public class PageImage extends PageWithText {
 		RenderSystem.color3f(1F, 1F, 1F);
 		RenderSystem.enableBlend();
 		ms.scale(0.5F, 0.5F, 0.5F);
-		parent.drawTexture(ms, x * 2 + 6, y * 2 + 6, 0, 0, 200, 200);
+		parent.func_238474_b_(ms, x * 2 + 6, y * 2 + 6, 0, 0, 200, 200);
 		ms.scale(2F, 2F, 2F);
 
 		if (border) {
@@ -53,8 +53,8 @@ public class PageImage extends PageWithText {
 		if (images.length > 1 && border) {
 			int xs = x + 83;
 			int ys = y + 92;
-			AbstractGui.fill(ms, xs, ys, xs + 20, ys + 11, 0x44000000);
-			AbstractGui.fill(ms, xs - 1, ys - 1, xs + 20, ys + 11, 0x44000000);
+			AbstractGui.func_238467_a_(ms, xs, ys, xs + 20, ys + 11, 0x44000000);
+			AbstractGui.func_238467_a_(ms, xs - 1, ys - 1, xs + 20, ys + 11, 0x44000000);
 		}
 
 		super.render(ms, mouseX, mouseY, pticks);

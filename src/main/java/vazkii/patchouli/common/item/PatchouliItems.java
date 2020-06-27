@@ -12,15 +12,15 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.registries.ObjectHolder;
 
 import vazkii.patchouli.client.base.BookModel;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.BookRegistry;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class PatchouliItems {
 
-	@ObjectHolder("patchouli:guide_book") public static Item book;
+	public static final Item book = new ItemModBook();
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
@@ -40,6 +40,6 @@ public class PatchouliItems {
 
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Item> event) {
-		event.getRegistry().register(new ItemModBook());
+		event.getRegistry().register(book.setRegistryName(Patchouli.MOD_ID, "guide_book"));
 	}
 }

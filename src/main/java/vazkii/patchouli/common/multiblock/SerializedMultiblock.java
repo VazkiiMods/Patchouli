@@ -3,8 +3,6 @@ package vazkii.patchouli.common.multiblock;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
 import vazkii.patchouli.api.IStateMatcher;

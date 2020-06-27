@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.page.abstr;
 
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.BookTextRenderer;
@@ -33,7 +33,7 @@ public abstract class PageWithText extends BookPage {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+	public boolean func_231043_a_(double mouseX, double mouseY, int mouseButton) {
 		return shouldRenderText() && textRender.click(mouseX, mouseY, mouseButton);
 	}
 

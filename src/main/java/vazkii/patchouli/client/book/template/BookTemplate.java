@@ -1,24 +1,16 @@
 package vazkii.patchouli.client.book.template;
 
 import com.google.gson.annotations.SerializedName;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.ResourceLocation;
 
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
-import vazkii.patchouli.client.book.template.component.ComponentCustom;
-import vazkii.patchouli.client.book.template.component.ComponentEntity;
-import vazkii.patchouli.client.book.template.component.ComponentFrame;
-import vazkii.patchouli.client.book.template.component.ComponentHeader;
-import vazkii.patchouli.client.book.template.component.ComponentImage;
-import vazkii.patchouli.client.book.template.component.ComponentItemStack;
-import vazkii.patchouli.client.book.template.component.ComponentSeparator;
-import vazkii.patchouli.client.book.template.component.ComponentText;
-import vazkii.patchouli.client.book.template.component.ComponentTooltip;
+import vazkii.patchouli.client.book.template.component.*;
 import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nullable;
@@ -152,10 +144,10 @@ public class BookTemplate {
 		}
 	}
 
-	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
+	public boolean func_231043_a_(BookPage page, double mouseX, double mouseY, int mouseButton) {
 		if (compiled) {
 			for (TemplateComponent c : components) {
-				if (c.isVisible && c.mouseClicked(page, mouseX, mouseY, mouseButton)) {
+				if (c.isVisible && c.func_231043_a_(page, mouseX, mouseY, mouseButton)) {
 					return true;
 				}
 			}

@@ -2,8 +2,7 @@ package vazkii.patchouli.client.book.template;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
@@ -81,7 +80,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 		// NO-OP
 	}
 
-	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
+	public boolean func_231043_a_(BookPage page, double mouseX, double mouseY, int mouseButton) {
 		return false;
 	}
 

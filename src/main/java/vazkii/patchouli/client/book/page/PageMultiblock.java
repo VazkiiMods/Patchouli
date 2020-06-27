@@ -10,19 +10,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.Vector3f;
-import net.minecraft.client.renderer.Vector4f;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Matrix4f;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -126,7 +125,7 @@ public class PageMultiblock extends PageWithText {
 
 	private void renderMultiblock(MatrixStack ms) {
 		multiblockObj.setWorld(mc.world);
-		Vec3i size = multiblockObj.getSize();
+		Vector3i size = multiblockObj.getSize();
 		int sizeX = size.getX();
 		int sizeY = size.getY();
 		int sizeZ = size.getZ();
@@ -150,21 +149,21 @@ public class PageMultiblock extends PageWithText {
 		rotMat.setIdentity();
 
 		// For each GL rotation done, track the opposite to keep the eye pos accurate
-		ms.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-30F));
-		rotMat.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(30));
+		ms.rotate(Vector3f.XP.rotationDegrees(-30F));
+		rotMat.mul(Vector3f.XP.rotationDegrees(30));
 
 		float offX = (float) -sizeX / 2;
 		float offZ = (float) -sizeZ / 2 + 1;
 
 		float time = parent.ticksInBook * 0.5F;
-		if (!Screen.hasShiftDown()) {
+		if (!Screen.func_231173_s_()) {
 			time += ClientTicker.partialTicks;
 		}
 		ms.translate(-offX, 0, -offZ);
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(time));
-		rotMat.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-time));
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(45));
-		rotMat.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-45));
+		ms.rotate(Vector3f.YP.rotationDegrees(time));
+		rotMat.mul(Vector3f.YP.rotationDegrees(-time));
+		ms.rotate(Vector3f.YP.rotationDegrees(45));
+		rotMat.mul(Vector3f.YP.rotationDegrees(-45));
 		ms.translate(offX, 0, offZ);
 
 		// Finally apply the rotations
@@ -174,7 +173,7 @@ public class PageMultiblock extends PageWithText {
 			Dense multiblocks store everything in positive X/Z, so this works, but sparse multiblocks store everything from the JSON as-is.
 			Potential solution: Rotate around the offset vars of the multiblock, and add AABB method for extent of the multiblock
 		*/
-		renderElements(ms, multiblockObj, BlockPos.iterate(BlockPos.ORIGIN, new BlockPos(sizeX - 1, sizeY - 1, sizeZ - 1)), eye);
+		renderElements(ms, multiblockObj, BlockPos.getAllInBoxMutable(BlockPos.ZERO, new BlockPos(sizeX - 1, sizeY - 1, sizeZ - 1)), eye);
 
 		ms.pop();
 	}
@@ -184,16 +183,16 @@ public class PageMultiblock extends PageWithText {
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		ms.translate(0, 0, -1);
 
-		VertexConsumerProvider.Immediate buffers = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+		IRenderTypeBuffer.Impl buffers = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
 		doWorldRenderPass(ms, mb, blocks, buffers, eye);
 		doTileEntityRenderPass(ms, mb, blocks, buffers, eye);
 
 		// todo 1.15 transparency sorting
-		buffers.draw();
+		buffers.finish();
 		ms.pop();
 	}
 
-	private void doWorldRenderPass(MatrixStack ms, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull VertexConsumerProvider.Immediate buffers, Vector4f eye) {
+	private void doWorldRenderPass(MatrixStack ms, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull IRenderTypeBuffer.Impl buffers, Vector4f eye) {
 		for (BlockPos pos : blocks) {
 			BlockState bs = mb.getBlockState(pos);
 
@@ -214,7 +213,7 @@ public class PageMultiblock extends PageWithText {
 	// Hold errored TEs weakly, this may cause some dupe errors but will prevent spamming it every frame
 	private final transient Set<TileEntity> erroredTiles = Collections.newSetFromMap(new WeakHashMap<>());
 
-	private void doTileEntityRenderPass(MatrixStack ms, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, VertexConsumerProvider buffers, Vector4f eye) {
+	private void doTileEntityRenderPass(MatrixStack ms, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, IRenderTypeBuffer buffers, Vector4f eye) {
 		for (BlockPos pos : blocks) {
 			TileEntity te = mb.getTileEntity(pos);
 			if (te != null && !erroredTiles.contains(te)) {

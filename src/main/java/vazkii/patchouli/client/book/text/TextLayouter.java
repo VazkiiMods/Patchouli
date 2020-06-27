@@ -1,6 +1,8 @@
 package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.MinecraftForgeClient;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -107,8 +109,8 @@ public class TextLayouter {
 
 		char[] characters = last.span.text.toCharArray();
 		for (int i = last.start; i < characters.length; i++) {
-			Text tmp = new LiteralText(String.valueOf(characters[i])).setStyle(last.span.style);
-			width += font.getWidth(tmp);
+			ITextComponent tmp = new StringTextComponent(String.valueOf(characters[i])).func_230530_a_(last.span.style);
+			width += font.func_238414_a_(tmp);
 			if (last.span.bold) {
 				width++;
 			}
@@ -195,7 +197,7 @@ public class TextLayouter {
 		public SpanTail(Span span, int start, List<Word> cluster) {
 			this.span = span;
 			this.start = start;
-			this.width = font.getWidth(span.styledSubstring(start)) + span.spacingLeft + span.spacingRight;
+			this.width = font.func_238414_a_(span.styledSubstring(start)) + span.spacingLeft + span.spacingRight;
 			this.cluster = cluster;
 			this.length = span.text.length() - start;
 		}

@@ -7,9 +7,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.arguments.BlockStateParser;
-import net.minecraft.state.IProperty;
+import net.minecraft.state.Property;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.ITag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.util.TriPredicate;
@@ -17,7 +17,6 @@ import net.minecraftforge.common.util.TriPredicate;
 import vazkii.patchouli.api.IStateMatcher;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -39,16 +38,16 @@ public class StringStateMatcher {
 		if (state != null) {
 			return new ExactMatcher(state, parser.getProperties());
 		} else {
-			Tag.Identified<Block> tag = new TagDelegate<>(Objects.requireNonNull(parser.getTagId()), BlockTags::getContainer);
-			return new TagMatcher(tag, parser.getProperties());
+			ITag.INamedTag<Block> tag = BlockTags.makeWrapperTag(parser.getTag().toString());
+			return new TagMatcher(tag, parser.getStringProperties());
 		}
 	}
 
 	private static class ExactMatcher implements IStateMatcher {
 		private final BlockState state;
-		private final Map<IProperty<?>, Comparable<?>> props;
+		private final Map<Property<?>, Comparable<?>> props;
 
-		private ExactMatcher(BlockState state, Map<IProperty<?>, Comparable<?>> props) {
+		private ExactMatcher(BlockState state, Map<Property<?>, Comparable<?>> props) {
 			this.state = state;
 			this.props = props;
 		}
@@ -64,7 +63,7 @@ public class StringStateMatcher {
 		}
 
 		private boolean checkProps(BlockState state) {
-			for (Map.Entry<IProperty<?>, Comparable<?>> e : props.entrySet()) {
+			for (Map.Entry<Property<?>, Comparable<?>> e : props.entrySet()) {
 				if (!state.get(e.getKey()).equals(e.getValue())) {
 					return false;
 				}
@@ -92,17 +91,17 @@ public class StringStateMatcher {
 	}
 
 	private static class TagMatcher implements IStateMatcher {
-		private final Tag.Identified<Block> tag;
+		private final ITag.INamedTag<Block> tag;
 		private final Map<String, String> props;
 
-		private TagMatcher(Tag.Identified<Block> tag, Map<String, String> props) {
+		private TagMatcher(ITag.INamedTag<Block> tag, Map<String, String> props) {
 			this.tag = tag;
 			this.props = props;
 		}
 
 		@Override
 		public BlockState getDisplayedState(int ticks) {
-			List<Block> all = new ArrayList<>(tag.getAllElements());
+			List<Block> all = new ArrayList<>(tag.func_230236_b_());
 			if (all.isEmpty()) {
 				return Blocks.BEDROCK.getDefaultState(); // show something impossible
 			} else {
@@ -113,12 +112,12 @@ public class StringStateMatcher {
 
 		@Override
 		public TriPredicate<IBlockReader, BlockPos, BlockState> getStatePredicate() {
-			return (w, p, s) -> tag.contains(s.getBlock()) && checkProps(s);
+			return (w, p, s) -> tag.func_230235_a_(s.getBlock()) && checkProps(s);
 		}
 
 		private boolean checkProps(BlockState state) {
 			for (Map.Entry<String, String> entry : props.entrySet()) {
-				IProperty<?> prop = state.getBlock().getStateContainer().getProperty(entry.getKey());
+				Property<?> prop = state.getBlock().getStateContainer().getProperty(entry.getKey());
 				if (prop == null) {
 					return false;
 				}
@@ -144,13 +143,13 @@ public class StringStateMatcher {
 				return false;
 			}
 			TagMatcher that = (TagMatcher) o;
-			return Objects.equals(tag.getId(), that.tag.getId()) &&
+			return Objects.equals(tag.func_230234_a_(), that.tag.func_230234_a_()) &&
 					Objects.equals(props, that.props);
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(tag.getId(), props);
+			return Objects.hash(tag.func_230234_a_(), props);
 		}
 	}
 }

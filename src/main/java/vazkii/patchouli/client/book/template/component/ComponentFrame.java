@@ -1,9 +1,7 @@
 package vazkii.patchouli.client.book.template.component;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-
-import net.minecraft.client.util.math.MatrixStack;
 
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;

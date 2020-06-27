@@ -1,22 +1,17 @@
 package vazkii.patchouli.client.base;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
-import net.minecraft.item.crafting.RecipeBook;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.gui.GuiButtonInventoryBook;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
@@ -39,7 +34,7 @@ public class InventoryBookButtonHandler {
 		List<Widget> buttons = event.getWidgetList();
 		for (Widget button : buttons) {
 			if (button instanceof ImageButton) {
-				Button newButton = new GuiButtonInventoryBook(book, button.x, button.y - 1);
+				Button newButton = new GuiButtonInventoryBook(book, button.field_230690_l_, button.field_230691_m_ - 1);
 				event.removeWidget(button);
 				event.addWidget(newButton);
 				return;

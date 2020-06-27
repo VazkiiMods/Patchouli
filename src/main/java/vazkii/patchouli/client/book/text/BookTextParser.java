@@ -1,12 +1,10 @@
 package vazkii.patchouli.client.book.text;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -16,11 +14,7 @@ import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BookTextParser {
 	public static final StringTextComponent EMPTY_STRING_COMPONENT = new StringTextComponent("");
@@ -63,10 +57,10 @@ public class BookTextParser {
 			return "";
 		}, "/t");
 		register(state -> state.gui.getMinecraft().player.getName().getString(), "playername"); // TODO 1.16: dropped format codes
-		register(state -> state.modifyStyle(s -> s.withFormatting(Formatting.OBFUSCATED)), "k", "obf");
-		register(state -> state.modifyStyle(s -> s.withFormatting(Formatting.BOLD)), "l", "bold");
-		register(state -> state.modifyStyle(s -> s.withFormatting(Formatting.STRIKETHROUGH)), "m", "strike");
-		register(state -> state.modifyStyle(s -> s.withFormatting(Formatting.ITALIC)), "o", "italic", "italics");
+		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.OBFUSCATED)), "k", "obf");
+		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.BOLD)), "l", "bold");
+		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.STRIKETHROUGH)), "m", "strike");
+		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.ITALIC)), "o", "italic", "italics");
 		register(state -> {
 			state.reset();
 			return "";
@@ -80,13 +74,13 @@ public class BookTextParser {
 				return "N/A";
 			}
 
-			state.tooltip = new TranslatableText("patchouli.gui.lexicon.keybind", new TranslatableText(result.getTranslationKey()));
-			return result.getBoundKeyLocalizedText().getString();
+			state.tooltip = new TranslationTextComponent("patchouli.gui.lexicon.keybind", new TranslationTextComponent(result.getTranslationKey()));
+			return result.func_238171_j_().getString();
 		}, "k");
 		register((parameter, state) -> {
 			state.cluster = new LinkedList<>();
 
-			state.pushStyle(Style.EMPTY.withColor(TextColor.fromRgb(state.book.linkColor)));
+			state.pushStyle(Style.field_240709_b_.func_240718_a_(Color.func_240743_a_(state.book.linkColor)));
 			boolean isExternal = parameter.matches("^https?\\:.*");
 
 			if (isExternal) {
@@ -109,7 +103,7 @@ public class BookTextParser {
 				BookEntry entry = state.book.contents.entries.get(href);
 				if (entry != null) {
 					state.tooltip = entry.isLocked()
-							? new TranslationTextComponent("patchouli.gui.lexicon.locked").applyTextStyle(TextFormatting.GRAY)
+							? new TranslationTextComponent("patchouli.gui.lexicon.locked").func_240699_a_(TextFormatting.GRAY)
 							: entry.getName();
 					GuiBook gui = state.gui;
 					Book book = state.book;
@@ -119,7 +113,7 @@ public class BookTextParser {
 						if (anchorPage >= 0) {
 							page = anchorPage / 2;
 						} else {
-							state.tooltip.appendText(" (INVALID ANCHOR:" + anchor + ")");
+							state.tooltip.func_240702_b_(" (INVALID ANCHOR:" + anchor + ")");
 						}
 					}
 					int finalPage = page;
@@ -141,7 +135,7 @@ public class BookTextParser {
 			return "";
 		}, "tooltip", "t");
 		register((parameter, state) -> {
-			state.pushStyle(Style.EMPTY.withColor(TextColor.fromRgb(state.book.linkColor)));
+			state.pushStyle(Style.field_240709_b_.func_240718_a_(Color.func_240743_a_(state.book.linkColor)));
 			state.cluster = new LinkedList<>();
 			if (!parameter.startsWith("/")) {
 				state.tooltip = new StringTextComponent("INVALID COMMAND (must begin with /)");
@@ -168,7 +162,7 @@ public class BookTextParser {
 	private final int x, y, width;
 	private final int lineHeight;
 	private final Style baseStyle;
-	private final TextRenderer font;
+	private final FontRenderer font;
 	private final int spaceWidth;
 
 	public BookTextParser(GuiBook gui, Book book, int x, int y, int width, int lineHeight, Style baseStyle) {
@@ -180,8 +174,8 @@ public class BookTextParser {
 		this.lineHeight = lineHeight;
 		this.baseStyle = baseStyle;
 
-		this.font = MinecraftClient.getInstance().textRenderer;
-		this.spaceWidth = font.getWidth(new LiteralText(" ").setStyle(baseStyle));
+		this.font = Minecraft.getInstance().fontRenderer;
+		this.spaceWidth = font.func_238414_a_(new StringTextComponent(" ").func_230530_a_(baseStyle));
 	}
 
 	public List<Word> parse(@Nullable String text) {
@@ -272,17 +266,17 @@ public class BookTextParser {
 		String result = "";
 
 		if (cmd.length() == 1 && cmd.matches("^[0123456789abcdef]$")) { // Vanilla colors
-			return state.modifyStyle(s -> s.withColor(Formatting.byCode(cmd.charAt(0))));
+			return state.modifyStyle(s -> s.func_240712_a_(TextFormatting.fromFormattingCode(cmd.charAt(0))));
 		} else if (cmd.startsWith("#") && (cmd.length() == 4 || cmd.length() == 7)) { // Hex colors
-			TextColor color;
+			Color color;
 			String parse = cmd.substring(1);
 			if (parse.length() == 3) {
 				parse = "" + parse.charAt(0) + parse.charAt(0) + parse.charAt(1) + parse.charAt(1) + parse.charAt(2) + parse.charAt(2);
 			}
 			try {
-				color = TextColor.fromRgb(Integer.parseInt(parse, 16));
+				color = Color.func_240743_a_(Integer.parseInt(parse, 16));
 			} catch (NumberFormatException e) {
-				color = baseStyle.getColor();
+				color = baseStyle.func_240711_a_();
 			}
 			return state.color(color);
 		} else if (cmd.matches("li\\d?")) { // List Element

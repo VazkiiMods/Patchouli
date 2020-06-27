@@ -1,19 +1,20 @@
 package vazkii.patchouli.client.handler;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -23,12 +24,9 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.gui.GuiBook;
-import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
-import vazkii.patchouli.common.util.ItemStackUtil;
 
 import javax.annotation.Nullable;
 
@@ -39,6 +37,7 @@ public class BookRightClickHandler {
 
 	@SubscribeEvent
 	public static void onRenderHUD(RenderGameOverlayEvent.Post event) {
+		MatrixStack ms = new MatrixStack(); // todo 1.16 forge moment: event has matrixstack but no getter for it
 		Minecraft mc = Minecraft.getInstance();
 		PlayerEntity player = mc.player;
 		ItemStack bookStack = player.getHeldItemMainhand();
@@ -58,13 +57,13 @@ public class BookRightClickHandler {
 						RenderHelper.renderItemStackInGui(ms, bookStack, (x + 8) * 2, (y + 8) * 2);
 						ms.scale(2F, 2F, 1F);
 
-						mc.textRenderer.draw(ms, entry.getName(), x + 18, y + 3, 0xFFFFFF);
+						mc.fontRenderer.func_238422_b_(ms, entry.getName(), x + 18, y + 3, 0xFFFFFF);
 
 						ms.push();
 						ms.scale(0.75F, 0.75F, 1F);
-						Text s = new TranslatableText("patchouli.gui.lexicon." + (player.isSneaking() ? "view" : "sneak"))
-								.formatted(Formatting.ITALIC);
-						mc.textRenderer.draw(ms, s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
+						ITextComponent s = new TranslationTextComponent("patchouli.gui.lexicon." + (player.isSneaking() ? "view" : "sneak"))
+								.func_240699_a_(TextFormatting.ITALIC);
+						mc.fontRenderer.func_238422_b_(ms, s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
 						ms.pop();
 					}
 				}

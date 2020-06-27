@@ -1,32 +1,12 @@
 package vazkii.patchouli.client.book;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 
-import vazkii.patchouli.client.book.gui.GuiBook;
-import vazkii.patchouli.client.book.gui.GuiBookEntry;
-import vazkii.patchouli.client.book.page.PageCrafting;
-import vazkii.patchouli.client.book.page.PageEmpty;
-import vazkii.patchouli.client.book.page.PageEntity;
-import vazkii.patchouli.client.book.page.PageImage;
-import vazkii.patchouli.client.book.page.PageLink;
-import vazkii.patchouli.client.book.page.PageMultiblock;
-import vazkii.patchouli.client.book.page.PageQuest;
-import vazkii.patchouli.client.book.page.PageRelations;
-import vazkii.patchouli.client.book.page.PageSmelting;
-import vazkii.patchouli.client.book.page.PageSpotlight;
-import vazkii.patchouli.client.book.page.PageTemplate;
-import vazkii.patchouli.client.book.page.PageText;
+import vazkii.patchouli.client.book.page.*;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 import vazkii.patchouli.common.base.PatchouliSounds;

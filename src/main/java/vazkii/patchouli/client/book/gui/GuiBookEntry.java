@@ -1,17 +1,16 @@
 package vazkii.patchouli.client.book.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.client.RenderHelper;
@@ -48,8 +47,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public void init() {
-		super.init();
+	public void func_231160_c_() {
+		super.func_231160_c_();
 
 		maxSpreads = (int) Math.ceil((float) entry.getPages().size() / 2);
 		setupPages();
@@ -119,7 +118,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	boolean clickPage(BookPage page, double mouseX, double mouseY, int mouseButton) {
 		if (page != null) {
-			return page.mouseClicked(mouseX - page.left, mouseY - page.top, mouseButton);
+			return page.func_231043_a_(mouseX - page.left, mouseY - page.top, mouseButton);
 		}
 
 		return false;
@@ -210,7 +209,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		Book book = currGui.book;
 		GuiBookEntry gui = new GuiBookEntry(currGui.book, entry);
 
-		if (Screen.hasShiftDown()) {
+		if (Screen.func_231173_s_()) {
 			BookData data = PersistentData.data.getBookData(book);
 
 			if (gui.isBookmarkedAlready()) {
@@ -246,14 +245,13 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		}
 
 		RenderHelper.transferMsToGl(ms, () -> {
-			MinecraftClient.getInstance().getItemRenderer().renderInGuiWithOverrides(stack, x, y);
-			client.getItemRenderer().renderGuiItemOverlay(textRenderer, stack, x, y);
+			getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
+			getMinecraft().getItemRenderer().renderItemOverlays(field_230712_o_, stack, x, y);
 		});
 
 		if (isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
 			setTooltipStack(stack);
 		}
-		RenderHelper.disableStandardItemLighting();
 	}
 
 	@Override
@@ -281,11 +279,11 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void registerButton(Button button, int pageNum, Runnable onClick) {
-		button.x += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
-		button.y += bookTop;
+		button.field_230690_l_ += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
+		button.field_230691_m_ += bookTop;
 
 		customButtons.put(button, onClick);
-		addButton(button);
+		func_230480_a_(button);
 	}
 
 	@Override

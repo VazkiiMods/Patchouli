@@ -1,12 +1,10 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -34,15 +32,15 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	}
 
 	@Override
-	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.renderButton(ms, mouseX, mouseY, partialTicks);
+	public void func_230431_b_(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		super.func_230431_b_(ms, mouseX, mouseY, partialTicks);
 
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 		if (bookmark != null && entry != null) {
 			ms.push();
 			ms.scale(0.5F, 0.5F, 0.5F);
-			int px = x * 2 + (isHovered() ? 6 : 2);
-			int py = y * 2 + 2;
+			int px = field_230690_l_ * 2 + (func_230449_g_() ? 6 : 2);
+			int py = field_230691_m_ * 2 + 2;
 			entry.getIcon().render(ms, px, py);
 
 			RenderSystem.disableDepthTest();
@@ -50,7 +48,7 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 			if (multiblock) {
 				s = I18n.format("patchouli.gui.lexicon.visualize_letter");
 			}
-			parent.getMinecraft().textRenderer.drawWithShadow(ms, s, px + 12, py + 10, 0xFFFFFF);
+			parent.getMinecraft().fontRenderer.func_238405_a_(ms, s, px + 12, py + 10, 0xFFFFFF);
 			RenderSystem.enableDepthTest();
 			ms.pop();
 		}
@@ -67,7 +65,7 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 				entry.getName(),
 				new TranslationTextComponent(multiblock
 						? "patchouli.gui.lexicon.multiblock_bookmark"
-						: "patchouli.gui.lexicon.remove_bookmark").applyTextStyle(TextFormatting.GRAY)
+						: "patchouli.gui.lexicon.remove_bookmark").func_240699_a_(TextFormatting.GRAY)
 		};
 	}
 

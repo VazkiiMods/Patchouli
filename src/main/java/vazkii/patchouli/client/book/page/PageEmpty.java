@@ -1,8 +1,7 @@
 package vazkii.patchouli.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
-
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBook;

@@ -1,14 +1,15 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
@@ -29,46 +30,46 @@ public class GuiButtonEntry extends Button {
 	}
 
 	@Override
-	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		if (active) {
-			if (isHovered()) {
+	public void func_230431_b_(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		if (field_230693_o_) {
+			if (func_230449_g_()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
 			} else {
 				timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
 			}
 
-			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHovered() ? partialTicks : -partialTicks)));
+			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (func_230449_g_() ? partialTicks : -partialTicks)));
 			float widthFract = time / ANIM_TIME;
 			boolean locked = entry.isLocked();
 
 			ms.scale(0.5F, 0.5F, 0.5F);
-			DrawableHelper.fill(ms, x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
+			AbstractGui.func_238467_a_(ms, field_230690_l_ * 2, field_230691_m_ * 2, (field_230690_l_ + (int) ((float) field_230688_j_ * widthFract)) * 2, (field_230691_m_ + field_230689_k_) * 2, 0x22000000);
 			RenderSystem.enableBlend();
 
 			if (locked) {
 				RenderSystem.color4f(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(ms, parent.book, x * 2 + 2, y * 2 + 2);
+				GuiBook.drawLock(ms, parent.book, field_230690_l_ * 2 + 2, field_230691_m_ * 2 + 2);
 			} else {
-				entry.getIcon().render(ms, x * 2 + 2, y * 2 + 2);
+				entry.getIcon().render(ms, field_230690_l_ * 2 + 2, field_230691_m_ * 2 + 2);
 			}
 
 			ms.scale(2F, 2F, 2F);
 
-			MutableText name;
+			IFormattableTextComponent name;
 			if (locked) {
-				name = new TranslatableText("patchouli.gui.lexicon.locked");
+				name = new TranslationTextComponent("patchouli.gui.lexicon.locked");
 			} else {
 				name = entry.getName();
 				if (entry.isPriority()) {
-					name = name.formatted(Formatting.ITALIC);
+					name = name.func_240699_a_(TextFormatting.ITALIC);
 				}
 			}
 
-			name = name.fillStyle(entry.getBook().getFontStyle());
-			MinecraftClient.getInstance().textRenderer.draw(ms, name, x + 12, y, getColor());
+			name = name.func_240703_c_(entry.getBook().getFontStyle());
+			Minecraft.getInstance().fontRenderer.func_238422_b_(ms, name, field_230690_l_ + 12, field_230691_m_, getColor());
 
 			if (!entry.isLocked()) {
-				GuiBook.drawMarking(ms, parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());
+				GuiBook.drawMarking(ms, parent.book, field_230690_l_ + field_230688_j_ - 5, field_230691_m_ + 1, entry.hashCode(), entry.getReadState());
 			}
 		}
 	}
@@ -84,7 +85,7 @@ public class GuiButtonEntry extends Button {
 	}
 
 	@Override
-	public void playDownSound(SoundHandler soundHandlerIn) {
+	public void func_230988_a_(SoundHandler soundHandlerIn) {
 		if (entry != null && !entry.isLocked()) {
 			GuiBook.playBookFlipSound(parent.book);
 		}

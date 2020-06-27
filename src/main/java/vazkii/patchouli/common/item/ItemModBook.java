@@ -1,23 +1,14 @@
 package vazkii.patchouli.common.item;
 
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
+import net.minecraft.util.*;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -26,14 +17,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
-import vazkii.patchouli.common.network.NetworkHandler;
-import vazkii.patchouli.common.network.message.MessageOpenBookGui;
-
-import javax.annotation.Nullable;
 
 import java.util.List;
 
@@ -133,7 +119,7 @@ public class ItemModBook extends Item {
 
 		Book book = getBook(stack);
 		if (book != null && book.contents != null) {
-			tooltip.add(book.getSubtitle().applyTextStyle(TextFormatting.GRAY));
+			tooltip.add(book.getSubtitle().func_240699_a_(TextFormatting.GRAY));
 		}
 	}
 

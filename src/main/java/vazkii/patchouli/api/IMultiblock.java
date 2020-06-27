@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -115,7 +115,7 @@ public interface IMultiblock {
 	 *
 	 * @return The size of the multiblock
 	 */
-	Vec3i getSize();
+	Vector3i getSize();
 
 	interface SimulateResult {
 		/**

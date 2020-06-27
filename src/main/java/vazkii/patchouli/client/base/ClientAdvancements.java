@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.base;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.advancements.Advancement;
@@ -87,14 +88,14 @@ public class ClientAdvancements {
 
 		@Nonnull
 		@Override
-		public Visibility draw(MatrixStack ms, ToastGui toastGui, long delta) {
+		public Visibility func_230444_a_(MatrixStack ms, ToastGui toastGui, long delta) {
 			Minecraft mc = Minecraft.getInstance();
 			mc.getTextureManager().bindTexture(TEXTURE_TOASTS);
 			RenderSystem.color3f(1.0F, 1.0F, 1.0F);
-			toastGui.drawTexture(ms, 0, 0, 0, 32, 160, 32);
+			toastGui.func_238474_b_(ms, 0, 0, 0, 32, 160, 32);
 
-			toastGui.getGame().textRenderer.draw(ms, I18n.translate(book.name), 30, 7, -11534256);
-			toastGui.getGame().textRenderer.draw(ms, I18n.translate("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
+			toastGui.getMinecraft().fontRenderer.func_238421_b_(ms, I18n.format(book.name), 30, 7, -11534256);
+			toastGui.getMinecraft().fontRenderer.func_238421_b_(ms, I18n.format("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
 
 			RenderHelper.renderItemStackInGui(ms, book.getBookItem(), 8, 8);
 

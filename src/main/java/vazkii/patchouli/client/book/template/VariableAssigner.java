@@ -132,7 +132,7 @@ public class VariableAssigner {
 
 	private static String iname(String arg) {
 		ItemStack stack = ItemStackUtil.loadStackFromString(arg);
-		return stack.getName().getString(); // todo 1.16 dropped format codes
+		return stack.getDisplayName().getString(); // todo 1.16 dropped format codes
 	}
 
 	private static String icount(String arg) {

@@ -2,17 +2,14 @@ package vazkii.patchouli.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GLX;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 
 import vazkii.patchouli.client.base.ClientTicker;
@@ -77,7 +74,7 @@ public class PageEntity extends PageWithText {
 		}
 
 		if (errored) {
-			fontRenderer.drawStringWithShadow(ms, I18n.format("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
+			fontRenderer.func_238405_a_(ms, I18n.format("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
 		}
 
 		if (entity != null) {
@@ -95,14 +92,14 @@ public class PageEntity extends PageWithText {
 		ms.translate(x, y, 50);
 		ms.scale(renderScale, renderScale, renderScale);
 		ms.translate(0, offset, 0);
-		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(rotation));
-		EntityRenderDispatcher erd = MinecraftClient.getInstance().getEntityRenderManager();
-		VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-		erd.setRenderShadows(false);
-		erd.render(entity, 0, 0, 0, 0, 1, ms, immediate, 0xF000F0);
-		erd.setRenderShadows(true);
-		immediate.draw();
+		ms.rotate(Vector3f.ZP.rotationDegrees(180));
+		ms.rotate(Vector3f.YP.rotationDegrees(rotation));
+		EntityRendererManager erd = Minecraft.getInstance().getRenderManager();
+		IRenderTypeBuffer.Impl immediate = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+		erd.setRenderShadow(false);
+		erd.renderEntityStatic(entity, 0, 0, 0, 0, 1, ms, immediate, 0xF000F0);
+		erd.setRenderShadow(true);
+		immediate.finish();
 		ms.pop();
 	}
 

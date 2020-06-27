@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.AbstractGui;
@@ -52,7 +53,7 @@ public class ComponentImage extends TemplateComponent {
 		ms.scale(scale, scale, scale);
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		RenderSystem.enableBlend();
-		DrawableHelper.drawTexture(ms, 0, 0, u, v, width, height, textureWidth, textureHeight);
+		AbstractGui.func_238463_a_(ms, 0, 0, u, v, width, height, textureWidth, textureHeight);
 		ms.pop();
 	}
 

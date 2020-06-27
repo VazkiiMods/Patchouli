@@ -1,6 +1,6 @@
 package vazkii.patchouli.api;
 
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 /**
  * An interface for API level custom components for templates.

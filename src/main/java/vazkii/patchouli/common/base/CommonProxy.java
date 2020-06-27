@@ -6,7 +6,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.BookRegistry;
-import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.network.NetworkHandler;
 
 public class CommonProxy {

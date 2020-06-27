@@ -1,7 +1,12 @@
 package vazkii.patchouli.client.book.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.Style;
 
 import vazkii.patchouli.client.book.text.BookTextParser;
 import vazkii.patchouli.client.book.text.Word;
@@ -35,7 +40,7 @@ public class BookTextRenderer {
 		this.y = y;
 		this.width = width;
 		this.lineHeight = lineHeight;
-		this.baseStyle = book.getFontStyle().withColor(TextColor.fromRgb(baseColor));
+		this.baseStyle = book.getFontStyle().func_240718_a_(Color.func_240743_a_(baseColor));
 
 		build();
 	}
@@ -46,7 +51,7 @@ public class BookTextRenderer {
 	}
 
 	public void render(MatrixStack ms, int mouseX, int mouseY) {
-		TextRenderer font = MinecraftClient.getInstance().textRenderer;
+		FontRenderer font = Minecraft.getInstance().fontRenderer;
 		Style style = book.getFontStyle();
 		words.forEach(word -> word.render(ms, font, style, mouseX, mouseY));
 	}

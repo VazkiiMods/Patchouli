@@ -7,7 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
 
 import vazkii.patchouli.api.IStateMatcher;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class SparseMultiblock extends AbstractMultiblock {
 	private final Map<BlockPos, IStateMatcher> data;
-	private final Vec3i size;
+	private final Vector3i size;
 
 	public SparseMultiblock(Map<BlockPos, IStateMatcher> data) {
 		Preconditions.checkArgument(!data.isEmpty(), "No data given to sparse multiblock!");
@@ -29,18 +29,18 @@ public class SparseMultiblock extends AbstractMultiblock {
 	}
 
 	@Override
-	public Vec3i getSize() {
+	public Vector3i getSize() {
 		return size;
 	}
 
-	private Vec3i calculateSize() {
+	private Vector3i calculateSize() {
 		int minX = data.keySet().stream().mapToInt(BlockPos::getX).min().getAsInt();
 		int maxX = data.keySet().stream().mapToInt(BlockPos::getX).max().getAsInt();
 		int minY = data.keySet().stream().mapToInt(BlockPos::getY).min().getAsInt();
 		int maxY = data.keySet().stream().mapToInt(BlockPos::getY).max().getAsInt();
 		int minZ = data.keySet().stream().mapToInt(BlockPos::getZ).min().getAsInt();
 		int maxZ = data.keySet().stream().mapToInt(BlockPos::getZ).max().getAsInt();
-		return new Vec3i(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
+		return new Vector3i(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
 	}
 
 	@Override

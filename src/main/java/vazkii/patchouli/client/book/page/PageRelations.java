@@ -1,5 +1,7 @@
 package vazkii.patchouli.client.book.page;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -53,7 +55,7 @@ public class PageRelations extends PageWithText {
 
 	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
-		parent.drawCenteredStringNoShadow(ms, title == null || title.isEmpty() ? I18n.translate("patchouli.gui.lexicon.relations") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		parent.drawCenteredStringNoShadow(ms, title == null || title.isEmpty() ? I18n.format("patchouli.gui.lexicon.relations") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		GuiBook.drawSeparator(ms, book, 0, 12);
 
 		super.render(ms, mouseX, mouseY, pticks);

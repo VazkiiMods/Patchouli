@@ -24,12 +24,12 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -53,9 +53,8 @@ import vazkii.patchouli.common.util.RotationUtil;
 
 import javax.annotation.Nullable;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -104,6 +103,8 @@ public class MultiblockVisualizationHandler {
 	@SubscribeEvent
 	public static void onRenderHUD(RenderGameOverlayEvent.Post event) {
 		if (event.getType() == ElementType.ALL && hasMultiblock) {
+			MatrixStack ms = new MatrixStack(); // todo 1.16 forge moment: event has matrixstack but no getter for it
+			Minecraft mc = Minecraft.getInstance();
 			int waitTime = 40;
 			int fadeOutSpeed = 4;
 			int fullAnimTime = waitTime + 10;
@@ -120,7 +121,7 @@ public class MultiblockVisualizationHandler {
 			int x = event.getWindow().getScaledWidth() / 2;
 			int y = 12;
 
-			mc.textRenderer.drawWithShadow(ms, name, x - mc.textRenderer.getWidth(name) / 2, y, 0xFFFFFF);
+			mc.fontRenderer.func_238407_a_(ms, name, x - mc.fontRenderer.func_238414_a_(name) / 2, y, 0xFFFFFF);
 
 			int width = 180;
 			int height = 9;
@@ -128,14 +129,14 @@ public class MultiblockVisualizationHandler {
 			int top = y + 10;
 
 			if (timeComplete > 0) {
-				String s = I18n.translate("patchouli.gui.lexicon.structure_complete");
+				String s = I18n.format("patchouli.gui.lexicon.structure_complete");
 				ms.push();
 				ms.translate(0, Math.min(height + 5, animTime), 0);
-				mc.textRenderer.drawWithShadow(ms, s, x - mc.textRenderer.getWidth(s) / 2, top + height - 10, 0x00FF00);
+				mc.fontRenderer.func_238405_a_(ms, s, x - mc.fontRenderer.getStringWidth(s) / 2, top + height - 10, 0x00FF00);
 				ms.pop();
 			}
 
-			DrawableHelper.fill(ms, left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
+			AbstractGui.func_238467_a_(ms, left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
 			drawGradientRect(ms, left, top, left + width, top + height, 0xFF666666, 0xFF555555);
 
 			float fract = (float) blocksDone / Math.max(1, blocks);
@@ -145,8 +146,8 @@ public class MultiblockVisualizationHandler {
 			drawGradientRect(ms, left, top, left + progressWidth, top + height, color, color2);
 
 			if (!isAnchored) {
-				String s = I18n.translate("patchouli.gui.lexicon.not_anchored");
-				mc.textRenderer.drawWithShadow(ms, s, x - mc.textRenderer.getWidth(s) / 2, top + height + 8, 0xFFFFFF);
+				String s = I18n.format("patchouli.gui.lexicon.not_anchored");
+				mc.fontRenderer.func_238405_a_(ms, s, x - mc.fontRenderer.getStringWidth(s) / 2, top + height + 8, 0xFFFFFF);
 			} else {
 				if (lookingState != null) {
 					// try-catch around here because the state isn't necessarily present in the world in this instance,
@@ -156,7 +157,7 @@ public class MultiblockVisualizationHandler {
 						ItemStack stack = block.getPickBlock(lookingState, mc.objectMouseOver, mc.world, lookingPos, mc.player);
 
 						if (!stack.isEmpty()) {
-							mc.textRenderer.drawWithShadow(ms, stack.getName(), left + 20, top + height + 8, 0xFFFFFF);
+							mc.fontRenderer.func_238407_a_(ms, stack.getDisplayName(), left + 20, top + height + 8, 0xFFFFFF);
 							RenderHelper.renderItemStackInGui(ms, stack, left, top + height + 2);
 						}
 					} catch (Exception ignored) {}
@@ -177,7 +178,7 @@ public class MultiblockVisualizationHandler {
 						posy += 2;
 					}
 
-					mc.fontRenderer.drawStringWithShadow(ms, progress, posx - mc.fontRenderer.getStringWidth(progress) / mult, posy, color);
+					mc.fontRenderer.func_238405_a_(ms, progress, posx - mc.fontRenderer.getStringWidth(progress) / mult, posy, color);
 				}
 			}
 
@@ -344,11 +345,11 @@ public class MultiblockVisualizationHandler {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
-		Matrix4f mat = ms.peek().getModel();
-		bufferbuilder.pos(mat, (double) right, (double) top, 0).color(f1, f2, f3, f).endVertex();
-		bufferbuilder.pos(mat, (double) left, (double) top, 0).color(f1, f2, f3, f).endVertex();
-		bufferbuilder.pos(mat, (double) left, (double) bottom, 0).color(f5, f6, f7, f4).endVertex();
-		bufferbuilder.pos(mat, (double) right, (double) bottom, 0).color(f5, f6, f7, f4).endVertex();
+		Matrix4f mat = ms.getLast().getMatrix();
+		bufferbuilder.pos(mat, right, top, 0).color(f1, f2, f3, f).endVertex();
+		bufferbuilder.pos(mat, left, top, 0).color(f1, f2, f3, f).endVertex();
+		bufferbuilder.pos(mat, left, bottom, 0).color(f5, f6, f7, f4).endVertex();
+		bufferbuilder.pos(mat, right, bottom, 0).color(f5, f6, f7, f4).endVertex();
 		tessellator.draw();
 		RenderSystem.shadeModel(7424);
 		RenderSystem.disableBlend();

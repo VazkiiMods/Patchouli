@@ -4,25 +4,21 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.ILightReader;
+import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.lighting.WorldLightManager;
-import net.minecraftforge.common.util.TriPredicate;
 
 import vazkii.patchouli.api.IMultiblock;
-import vazkii.patchouli.common.util.RotationUtil;
 
 import javax.annotation.Nullable;
 
@@ -30,7 +26,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
+public abstract class AbstractMultiblock implements IMultiblock, IBlockDisplayReader {
 	public ResourceLocation id;
 	protected int offX, offY, offZ;
 	protected int viewOffX, viewOffY, viewOffZ;
@@ -140,13 +136,12 @@ public abstract class AbstractMultiblock implements IMultiblock, ILightReader {
 	}
 
 	@Override
-	public IFluidState getFluidState(BlockPos pos) {
+	public FluidState getFluidState(BlockPos pos) {
 		return Fluids.EMPTY.getDefaultState();
 	}
 
-
-    @Override
-	public float getBrightness(Direction direction, boolean shaded) {
+	@Override
+	public float func_230487_a_(Direction direction, boolean shaded) {
 		return 1.0F;
 	}
 

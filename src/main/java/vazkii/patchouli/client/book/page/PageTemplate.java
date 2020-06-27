@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.page;
 
-import vazkii.patchouli.api.IComponentProcessor;
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -36,8 +37,8 @@ public class PageTemplate extends BookPage {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		return template.mouseClicked(this, mouseX, mouseY, mouseButton);
+	public boolean func_231043_a_(double mouseX, double mouseY, int mouseButton) {
+		return template.func_231043_a_(this, mouseX, mouseY, mouseButton);
 	}
 
 	@Override

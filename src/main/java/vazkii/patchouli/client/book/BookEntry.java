@@ -4,10 +4,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StringUtils;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
@@ -54,8 +55,8 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 
 	private transient boolean built;
 
-	public MutableText getName() {
-		return book.i18n ? new TranslatableText(name) : new LiteralText(name);
+	public IFormattableTextComponent getName() {
+		return book.i18n ? new TranslationTextComponent(name) : new StringTextComponent(name);
 	}
 
 	public List<BookPage> getPages() {
@@ -161,7 +162,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		}
 
 		for (StackWrapper wrapper : relevantStacks) {
-			if (wrapper.stack.getName().getString().toLowerCase().contains(query)) {
+			if (wrapper.stack.getDisplayName().getString().toLowerCase().contains(query)) {
 				return true;
 			}
 		}

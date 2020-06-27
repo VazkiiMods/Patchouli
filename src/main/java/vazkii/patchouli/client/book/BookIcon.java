@@ -1,11 +1,10 @@
 package vazkii.patchouli.client.book;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -47,7 +46,7 @@ public class BookIcon {
 	}
 
 	public void render(MatrixStack ms, int x, int y) {
-		MinecraftClient mc = MinecraftClient.getInstance();
+		Minecraft mc = Minecraft.getInstance();
 		switch (type) {
 		case STACK:
 			RenderHelper.renderItemStackInGui(ms, stack, x, y);
@@ -56,7 +55,7 @@ public class BookIcon {
 		case RESOURCE:
 			RenderSystem.color4f(1F, 1F, 1F, 1F);
 			mc.textureManager.bindTexture(res);
-			AbstractGui.blit(x, y, 0, 0, 16, 16, 16, 16);
+			AbstractGui.func_238463_a_(ms, x, y, 0, 0, 16, 16, 16, 16);
 			break;
 		}
 	}
