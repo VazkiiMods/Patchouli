@@ -77,11 +77,6 @@ public class MultiblockVisualizationHandler {
 	private static BlockPos lookingPos;
 	private static IRenderTypeBuffer.Impl buffers = null;
 
-	// Legacy compat with older botanias. TODO 1.16 remove
-	public static void setMultiblock(IMultiblock multiblock, String name, Bookmark bookmark, boolean flip) {
-		setMultiblock(multiblock, new StringTextComponent(name == null ? "" : name), bookmark, flip);
-	}
-
 	public static void setMultiblock(IMultiblock multiblock, ITextComponent name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos -> pos);
 	}
@@ -103,7 +98,7 @@ public class MultiblockVisualizationHandler {
 	@SubscribeEvent
 	public static void onRenderHUD(RenderGameOverlayEvent.Post event) {
 		if (event.getType() == ElementType.ALL && hasMultiblock) {
-			MatrixStack ms = new MatrixStack(); // todo 1.16 forge moment: event has matrixstack but no getter for it
+			MatrixStack ms = event.getMatrixStack();
 			Minecraft mc = Minecraft.getInstance();
 			int waitTime = 40;
 			int fadeOutSpeed = 4;

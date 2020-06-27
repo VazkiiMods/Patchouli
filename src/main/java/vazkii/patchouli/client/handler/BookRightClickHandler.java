@@ -37,7 +37,7 @@ public class BookRightClickHandler {
 
 	@SubscribeEvent
 	public static void onRenderHUD(RenderGameOverlayEvent.Post event) {
-		MatrixStack ms = new MatrixStack(); // todo 1.16 forge moment: event has matrixstack but no getter for it
+		MatrixStack ms = event.getMatrixStack();
 		Minecraft mc = Minecraft.getInstance();
 		PlayerEntity player = mc.player;
 		ItemStack bookStack = player.getHeldItemMainhand();
