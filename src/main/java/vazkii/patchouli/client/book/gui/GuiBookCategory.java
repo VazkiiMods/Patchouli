@@ -43,7 +43,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 			}
 
 			int x = LEFT_PAGE_X + 10 + (i % 4) * 24;
-			int y = TOP_PADDING + PAGE_HEIGHT - (PatchouliConfig.disableAdvancementLocking.getValue() ? 46 : 68);
+			int y = TOP_PADDING + PAGE_HEIGHT - (!book.advancementsEnabled() ? 46 : 68);
 
 			ButtonWidget button = new GuiButtonCategory(this, x, y, ocategory, this::handleButtonCategory);
 			addButton(button);

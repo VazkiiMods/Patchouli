@@ -140,7 +140,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 	@Override
 	public int compareTo(BookCategory o) {
-		if (!PatchouliConfig.disableAdvancementLocking.getValue() && o.locked != this.locked) {
+		if (book.advancementsEnabled() && o.locked != this.locked) {
 			return this.locked ? 1 : -1;
 		}
 
