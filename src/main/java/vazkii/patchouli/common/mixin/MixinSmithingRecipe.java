@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface MixinSmithingRecipe {
 	@Accessor
 	Ingredient getBase();
-
 	@Accessor
 	Ingredient getAddition();
 }
