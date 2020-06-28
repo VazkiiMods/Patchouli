@@ -1,0 +1,28 @@
+{
+  "name": "Spotlights",
+  "category": "spotlights",
+  "icon": "minecraft:oak_sapling",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "minecraft:oak_sapling",
+      "link_recipe": true
+    },
+    {
+      "type": "spotlight",
+      "item": "minecraft:dead_bush",
+      "title": "Custom title",
+      "text": "Custom text $(l)with formatting$()."
+    },
+    {
+      "type": "spotlighttag",
+      "tag": "minecraft:piglin_loved",
+      "title": "Tag Spotlight",
+      "text": "Piglins love these!"
+    },
+    {
+      "type": "spotlighttag",
+      "tag": "minecraft:piglin_repellents"
+    }
+  ]
+}

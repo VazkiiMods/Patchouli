@@ -42,8 +42,14 @@ public class ClientBookRegistry {
 		pageTypes.put("text", PageText.class);
 		pageTypes.put("crafting", PageCrafting.class);
 		pageTypes.put("smelting", PageSmelting.class);
+		pageTypes.put("blasting", PageBlasting.class);
+		pageTypes.put("smoking", PageSmoking.class);
+		pageTypes.put("campfire", PageCampfireCooking.class);
+		pageTypes.put("smithing", PageSmithing.class);
+		pageTypes.put("stonecutting", PageStonecutting.class);
 		pageTypes.put("image", PageImage.class);
 		pageTypes.put("spotlight", PageSpotlight.class);
+		pageTypes.put("spotlighttag", PageSpotlightTag.class);
 		pageTypes.put("empty", PageEmpty.class);
 		pageTypes.put("multiblock", PageMultiblock.class);
 		pageTypes.put("link", PageLink.class);

@@ -1,32 +1,33 @@
 package vazkii.patchouli.client.book.page;
 
-import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.fabric.api.tag.TagRegistry;
 
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.tag.Tag;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
-public class PageSpotlight extends PageWithText {
+import com.google.gson.annotations.SerializedName;
 
-	String item, title;
-	@SerializedName("link_recipe") boolean linkRecipe;
+public class PageSpotlightTag extends PageWithText {
 
-	transient ItemStack itemStack;
+	String tag, title;
+
+	transient Ingredient ingredient;
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
-		itemStack = ItemStackUtil.loadStackFromString(item);
-
-		if (linkRecipe) {
-			entry.addRelevantStack(itemStack, pageNum);
-		}
+		ingredient = Ingredient.fromTag(TagRegistry.item(new Identifier(tag)));
 	}
 
 	@Override
@@ -42,11 +43,11 @@ public class PageSpotlight extends PageWithText {
 		if (title != null && !title.isEmpty()) {
 			toDraw = i18nText(title);
 		} else {
-			toDraw = itemStack.getName();
+			toDraw = i18nText(tag);
 		}
 
 		parent.drawCenteredStringNoShadow(ms, toDraw, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
-		parent.renderItemStack(ms, GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, itemStack);
+		parent.renderIngredient(ms, GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, ingredient);
 
 		super.render(ms, mouseX, mouseY, pticks);
 	}
