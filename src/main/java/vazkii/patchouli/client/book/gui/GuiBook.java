@@ -135,7 +135,7 @@ public abstract class GuiBook extends Screen {
 
 		super.func_230430_a_(ms, mouseX, mouseY, partialTicks);
 
-		MinecraftForge.EVENT_BUS.post(new BookDrawScreenEvent(this, this.book.id, mouseX, mouseY, partialTicks));
+		MinecraftForge.EVENT_BUS.post(new BookDrawScreenEvent(this, this.book.id, mouseX, mouseY, partialTicks, ms));
 
 		drawTooltip(ms, mouseX, mouseY);
 	}

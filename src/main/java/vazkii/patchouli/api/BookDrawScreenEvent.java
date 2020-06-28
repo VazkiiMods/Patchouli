@@ -1,5 +1,6 @@
 package vazkii.patchouli.api;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,12 +19,14 @@ public class BookDrawScreenEvent
 	public final int mouseX;
 	public final int mouseY;
 	public final float partialTicks;
+	public final MatrixStack matrixStack;
 
-	public BookDrawScreenEvent(Screen gui, ResourceLocation book, int mouseX, int mouseY, float partialTicks) {
+	public BookDrawScreenEvent(Screen gui, ResourceLocation book, int mouseX, int mouseY, float partialTicks, MatrixStack matrixStack) {
 		super(book);
 		this.gui = gui;
 		this.mouseX = mouseX;
 		this.mouseY = mouseY;
 		this.partialTicks = partialTicks;
+		this.matrixStack = matrixStack;
 	}
 }
