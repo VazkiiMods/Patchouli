@@ -11,7 +11,7 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 import vazkii.patchouli.common.util.SerializationUtil;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class ComponentCustom extends TemplateComponent {
 
@@ -20,7 +20,7 @@ public class ComponentCustom extends TemplateComponent {
 	private transient ICustomComponent callbacks;
 
 	@Override
-	public void onVariablesAvailable(Function<String, IVariable> lookup) {
+	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
 		try {
 			Class<?> classObj = Class.forName(clazz);

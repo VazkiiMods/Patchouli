@@ -47,9 +47,17 @@ public class VariableAssigner {
 
 	public static void assignVariableHolders(IVariablesAvailableCallback object, IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
 		Context c = new Context(variables, processor, encapsulation);
-		object.onVariablesAvailable(key -> {
-			IVariable resolved = resolveString(key, c);
-			return resolved != null ? resolved : IVariable.wrap(key);
+		object.onVariablesAvailable(input -> {
+			if (input == null) {
+				return IVariable.empty();
+			}
+			if (input.unwrap().isJsonPrimitive() && input.unwrap().getAsJsonPrimitive().isString()) {
+				IVariable resolved = resolveString(input.asString(), c);
+				if (resolved != null) {
+					return resolved;
+				}
+			}
+			return input;
 		});
 	}
 
@@ -140,7 +148,7 @@ public class VariableAssigner {
 
 	private static IVariable iname(IVariable arg) {
 		ItemStack stack = arg.as(ItemStack.class);
-		return IVariable.wrap(stack.getDisplayName().getFormattedText());
+		return IVariable.wrap(stack.getDisplayName().getString());
 	}
 
 	private static IVariable icount(IVariable arg) {

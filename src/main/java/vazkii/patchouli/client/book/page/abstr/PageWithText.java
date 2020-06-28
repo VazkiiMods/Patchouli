@@ -2,13 +2,16 @@ package vazkii.patchouli.client.book.page.abstr;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.util.text.ITextComponent;
+
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.BookTextRenderer;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 
 public abstract class PageWithText extends BookPage {
 
-	String text;
+	IVariable text;
 
 	transient BookTextRenderer textRender;
 
@@ -17,10 +20,10 @@ public abstract class PageWithText extends BookPage {
 		super.onDisplayed(parent, left, top);
 
 		if (text == null) {
-			text = "";
+			text = IVariable.wrap("");
 		}
 
-		textRender = new BookTextRenderer(parent, text, 0, getTextHeight());
+		textRender = new BookTextRenderer(parent, text.as(ITextComponent.class).getString(), 0, getTextHeight());
 	}
 
 	public abstract int getTextHeight();

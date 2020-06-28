@@ -24,13 +24,13 @@ public class Variable implements IVariable {
 	@Override
 	public <T> T as(Class<T> clazz) {
 		if (sourceClass != null && !sourceClass.isAssignableFrom(clazz)) {
-			Patchouli.LOGGER.warn("You're trying to deserialize an object of type %s from one of type %s. This is likely not what you want!", clazz, sourceClass);
+			Patchouli.LOGGER.warn("You're trying to deserialize an object of type {} from one of type {}. This is likely not what you want!", clazz, sourceClass);
 		}
 
 		IVariableSerializer<T> serializer = VariableHelper.instance().<T>serializerForClass(clazz);
 
 		if (serializer == null) {
-			throw new IllegalArgumentException(String.format("Can't deserialize object of class %s from IVariable", clazz));
+			throw new IllegalArgumentException(String.format("Can't deserialize object of class {} from IVariable", clazz));
 		}
 
 		return serializer.fromJson(value);
@@ -39,7 +39,7 @@ public class Variable implements IVariable {
 	@Override
 	public JsonElement unwrap() {
 		if (sourceClass != null) {
-			Patchouli.LOGGER.warn("You're trying to unwrap an object serialized as type %s directly as JSON. This is likely not what you want!", sourceClass);
+			Patchouli.LOGGER.warn("You're trying to unwrap an object serialized as type {} directly as JSON. This is likely not what you want!", sourceClass);
 		}
 
 		return value;

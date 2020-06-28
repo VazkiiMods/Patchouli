@@ -14,21 +14,21 @@ import vazkii.patchouli.client.book.template.TemplateComponent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class ComponentTooltip extends TemplateComponent {
 
-	@SerializedName("tooltip") public String[] tooltipRaw;
+	@SerializedName("tooltip") public IVariable[] tooltipRaw;
 
 	int width, height;
 
 	transient List<ITextComponent> tooltip;
 
 	@Override
-	public void onVariablesAvailable(Function<String, IVariable> lookup) {
+	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
 		for (int i = 0; i < tooltipRaw.length; i++) {
-			tooltipRaw[i] = lookup.apply(tooltipRaw[i]).asString();
+			tooltipRaw[i] = lookup.apply(tooltipRaw[i]);
 		}
 	}
 
@@ -37,11 +37,12 @@ public class ComponentTooltip extends TemplateComponent {
 		tooltip = new ArrayList<>();
 
 		// todo 1.16 expand this into actual text components
-		for (String s : tooltipRaw) {
-			s = I18n.format(s).replaceAll("&", "\u00A7");
-			if (!s.isEmpty()) {
-				tooltip.add(new StringTextComponent(s));
-			}
+		for (IVariable s : tooltipRaw) {
+			//s = I18n.format(s).replaceAll("&", "\u00A7");
+			//if (!s.isEmpty()) {
+			//	tooltip.add(new StringTextComponent(s));
+			//}
+			tooltip.add(s.as(ITextComponent.class));
 		}
 	}
 

@@ -16,7 +16,7 @@ import vazkii.patchouli.common.base.PatchouliConfig;
 
 import javax.annotation.Nullable;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public abstract class TemplateComponent implements IVariablesAvailableCallback {
 
@@ -87,10 +87,11 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 	}
 
 	@Override
-	public void onVariablesAvailable(Function<String, IVariable> lookup) {
-		group = lookup.apply(group).asString();
-		flag = lookup.apply(flag).asString();
-		advancement = lookup.apply(advancement).asString();
-		guardPass = (guard == null || lookup.apply(guard).asBoolean());
+	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
+		// TODO fix this up to use IVariable more intelligently
+		group = lookup.apply(IVariable.wrap(group)).asString();
+		flag = lookup.apply(IVariable.wrap(flag)).asString();
+		advancement = lookup.apply(IVariable.wrap(advancement)).asString();
+		guardPass = (guard == null || lookup.apply(IVariable.wrap(guard)).asBoolean());
 	}
 }

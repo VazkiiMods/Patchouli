@@ -12,7 +12,7 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class ComponentImage extends TemplateComponent {
 
@@ -37,9 +37,9 @@ public class ComponentImage extends TemplateComponent {
 	}
 
 	@Override
-	public void onVariablesAvailable(Function<String, IVariable> lookup) {
+	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
-		image = lookup.apply(image).asString();
+		image = lookup.apply(IVariable.wrap(image)).asString();
 	}
 
 	@Override

@@ -3,10 +3,13 @@ package vazkii.patchouli.api;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -26,6 +29,10 @@ public interface IVariable {
 	 * @return       this variable as an object of that class
 	 */
 	<T> T as(Class<T> clazz);
+
+	default <T> T as(Class<T> clazz, T def) {
+		return unwrap().isJsonNull() ? def : as(clazz);
+	};
 
 	/**
 	 * Take a look at the underlying {@link JsonElement} for this variable.
@@ -137,5 +144,11 @@ public interface IVariable {
 
 	static IVariable empty() {
 		return wrap(JsonNull.INSTANCE);
+	}
+
+	static class Serializer implements JsonDeserializer<IVariable> {
+		public IVariable deserialize(JsonElement elem, Type t, JsonDeserializationContext c) {
+			return IVariable.wrap(elem);
+		}
 	}
 }

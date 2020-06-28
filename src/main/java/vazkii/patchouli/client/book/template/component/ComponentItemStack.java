@@ -17,10 +17,11 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class ComponentItemStack extends TemplateComponent {
 
-	public String item;
+	public IVariable item;
 
 	private boolean framed;
 	@SerializedName("link_recipe") private boolean linkedRecipe;
@@ -37,7 +38,7 @@ public class ComponentItemStack extends TemplateComponent {
 	}
 
 	@Override
-	public void onVariablesAvailable(Function<String, IVariable> lookup) {
+	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
 		items = new ArrayList<>(lookup.apply(item).as(StackList.class).getStacks());
 	}

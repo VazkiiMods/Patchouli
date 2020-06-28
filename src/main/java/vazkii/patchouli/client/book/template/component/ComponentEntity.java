@@ -18,10 +18,11 @@ import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.util.EntityUtil;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class ComponentEntity extends TemplateComponent {
 
-	@SerializedName("entity") public String entityId;
+	@SerializedName("entity") public IVariable entityId;
 
 	@SerializedName("render_size") float renderSize = 100;
 
@@ -35,7 +36,7 @@ public class ComponentEntity extends TemplateComponent {
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		creator = EntityUtil.loadEntity(entityId);
+		creator = EntityUtil.loadEntity(entityId.asString());
 	}
 
 	@Override
@@ -56,9 +57,9 @@ public class ComponentEntity extends TemplateComponent {
 	}
 
 	@Override
-	public void onVariablesAvailable(Function<String, IVariable> lookup) {
+	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
-		entityId = lookup.apply(entityId).asString();
+		entityId = lookup.apply(entityId);
 	}
 
 	private void loadEntity(World world) {
