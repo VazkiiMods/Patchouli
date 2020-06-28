@@ -138,7 +138,7 @@ public abstract class GuiBook extends Screen {
 
 		super.render(ms, mouseX, mouseY, partialTicks);
 
-		BookDrawScreenCallback.EVENT.invoker().trigger(this.book.id, this, mouseX, mouseY, partialTicks);
+		BookDrawScreenCallback.EVENT.invoker().trigger(this.book.id, this, mouseX, mouseY, partialTicks, ms);
 
 		drawTooltip(ms, mouseX, mouseY);
 	}
