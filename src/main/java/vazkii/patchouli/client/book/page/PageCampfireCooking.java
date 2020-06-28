@@ -1,12 +1,13 @@
 package vazkii.patchouli.client.book.page;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.BlastingRecipe;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;

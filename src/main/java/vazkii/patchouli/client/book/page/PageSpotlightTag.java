@@ -1,7 +1,9 @@
 package vazkii.patchouli.client.book.page;
 
-import net.fabricmc.fabric.api.tag.TagRegistry;
+import com.google.gson.annotations.SerializedName;
+import com.mojang.blaze3d.systems.RenderSystem;
 
+import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.Item;
@@ -10,14 +12,11 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.tag.Tag;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.common.util.ItemStackUtil;
-
-import com.google.gson.annotations.SerializedName;
 
 public class PageSpotlightTag extends PageWithText {
 
