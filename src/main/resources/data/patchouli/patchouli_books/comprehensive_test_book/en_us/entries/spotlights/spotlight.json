@@ -10,19 +10,26 @@
     },
     {
       "type": "spotlight",
-      "item": "minecraft:dead_bush",
+      "item": "minecraft:dead_bush,minecraft:spruce_sapling",
       "title": "Custom title",
       "text": "Custom text $(l)with formatting$()."
     },
     {
-      "type": "spotlighttag",
-      "tag": "minecraft:piglin_loved",
+      "type": "spotlight",
+      "item": "tag:minecraft:piglin_loved",
       "title": "Tag Spotlight",
-      "text": "Piglins love these!"
+      "text": "Piglins love these!",
+      "link_recipe": true
     },
     {
-      "type": "spotlighttag",
-      "tag": "minecraft:piglin_repellents"
+      "type": "spotlight",
+      "item": "tag:minecraft:piglin_repellents"
+    },
+    {
+      "type": "spotlight",
+      "item": "tag:minecraft:wool,minecraft:bone",
+      "title": "Wool",
+      "text": "But also a bone?"
     }
   ]
 }

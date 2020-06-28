@@ -30,7 +30,9 @@
     },
     {
       "type": "smithing",
-      "recipe": "minecraft:netherite_axe_smithing"
+      "recipe": "minecraft:netherite_axe_smithing",
+      "recipe2": "minecraft:netherite_pickaxe_smithing",
+      "text": "Smithing table recipes"
     }
   ]
 }

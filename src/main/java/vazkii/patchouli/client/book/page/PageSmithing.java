@@ -23,12 +23,13 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 	protected void drawRecipe(MatrixStack ms, SmithingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		mc.getTextureManager().bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
-		DrawableHelper.drawTexture(ms, recipeX, recipeY, 11, 135, 96, 24, 256, 256);
+		DrawableHelper.drawTexture(ms, recipeX, recipeY, 11, 135, 96, 43, 128, 256);
 		parent.drawCenteredStringNoShadow(ms, getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
 		parent.renderIngredient(ms, recipeX + 4, recipeY + 4, mouseX, mouseY, ((MixinSmithingRecipe) recipe).getBase());
-		parent.renderIngredient(ms, recipeX + 39, recipeY + 4, mouseX, mouseY, ((MixinSmithingRecipe) recipe).getAddition());
-		parent.renderItemStack(ms, recipeX + 76, recipeY + 4, mouseX, mouseY, recipe.getOutput());
+		parent.renderIngredient(ms, recipeX + 4, recipeY + 23, mouseX, mouseY, ((MixinSmithingRecipe) recipe).getAddition());
+		parent.renderItemStack(ms, recipeX + 40, recipeY + 13, mouseX, mouseY, recipe.getRecipeKindIcon());
+		parent.renderItemStack(ms, recipeX + 76, recipeY + 13, mouseX, mouseY, recipe.getOutput());
 	}
 
 	@Override
@@ -42,6 +43,6 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 
 	@Override
 	protected int getRecipeHeight() {
-		return 45;
+		return 60;
 	}
 }

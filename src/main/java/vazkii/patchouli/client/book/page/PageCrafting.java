@@ -25,7 +25,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<CraftingRecipe> {
 	protected void drawRecipe(MatrixStack ms, CraftingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		mc.getTextureManager().bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
-		DrawableHelper.drawTexture(ms, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 256, 256);
+		DrawableHelper.drawTexture(ms, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 256);
 
 		boolean shaped = recipe instanceof ShapedRecipe;
 		if (!shaped) {
@@ -50,6 +50,8 @@ public class PageCrafting extends PageDoubleRecipeRegistry<CraftingRecipe> {
 		for (int i = 0; i < ingredients.size(); i++) {
 			parent.renderIngredient(ms, recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
 		}
+
+		parent.renderItemStack(ms, recipeX + 79, recipeY + 41, mouseX, mouseY, recipe.getRecipeKindIcon());
 	}
 
 	@Override

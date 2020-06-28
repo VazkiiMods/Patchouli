@@ -49,7 +49,6 @@ public class ClientBookRegistry {
 		pageTypes.put("stonecutting", PageStonecutting.class);
 		pageTypes.put("image", PageImage.class);
 		pageTypes.put("spotlight", PageSpotlight.class);
-		pageTypes.put("spotlighttag", PageSpotlightTag.class);
 		pageTypes.put("empty", PageEmpty.class);
 		pageTypes.put("multiblock", PageMultiblock.class);
 		pageTypes.put("link", PageLink.class);
