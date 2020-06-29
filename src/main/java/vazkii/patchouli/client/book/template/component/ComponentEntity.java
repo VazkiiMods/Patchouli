@@ -7,6 +7,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -17,10 +18,11 @@ import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.util.EntityUtil;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class ComponentEntity extends TemplateComponent {
 
-	@SerializedName("entity") public String entityId;
+	@SerializedName("entity") public IVariable entityId;
 
 	@SerializedName("render_size") float renderSize = 100;
 
@@ -34,7 +36,7 @@ public class ComponentEntity extends TemplateComponent {
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		creator = EntityUtil.loadEntity(entityId);
+		creator = EntityUtil.loadEntity(entityId.asString());
 	}
 
 	@Override
@@ -55,7 +57,7 @@ public class ComponentEntity extends TemplateComponent {
 	}
 
 	@Override
-	public void onVariablesAvailable(Function<String, String> lookup) {
+	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
 		entityId = lookup.apply(entityId);
 	}

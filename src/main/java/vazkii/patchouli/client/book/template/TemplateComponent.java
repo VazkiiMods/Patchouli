@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import vazkii.patchouli.api.IComponentProcessor;
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.IVariablesAvailableCallback;
 import vazkii.patchouli.client.base.ClientAdvancements;
@@ -15,7 +16,7 @@ import vazkii.patchouli.common.base.PatchouliConfig;
 
 import javax.annotation.Nullable;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public abstract class TemplateComponent implements IVariablesAvailableCallback {
 
@@ -29,12 +30,13 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 
 	public String guard = null;
 
+	transient boolean guardPass = false;
 	transient boolean isVisible = true;
 	private transient boolean compiled = false;
 
 	public transient JsonObject sourceObject;
 
-	public final void compile(IVariableProvider<String> variables, IComponentProcessor processor, @Nullable TemplateInclusion encapsulation) {
+	public final void compile(IVariableProvider variables, IComponentProcessor processor, @Nullable TemplateInclusion encapsulation) {
 		if (compiled) {
 			return;
 		}
@@ -53,7 +55,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 			return false;
 		}
 
-		if (guard != null && (guard.isEmpty() || guard.equalsIgnoreCase("false"))) {
+		if (!guardPass) {
 			return false;
 		}
 
@@ -85,10 +87,11 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 	}
 
 	@Override
-	public void onVariablesAvailable(Function<String, String> lookup) {
-		group = lookup.apply(group);
-		flag = lookup.apply(flag);
-		advancement = lookup.apply(advancement);
-		guard = lookup.apply(guard);
+	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
+		// TODO fix this up to use IVariable more intelligently
+		group = lookup.apply(IVariable.wrap(group)).asString();
+		flag = lookup.apply(IVariable.wrap(flag)).asString();
+		advancement = lookup.apply(IVariable.wrap(advancement)).asString();
+		guardPass = (guard == null || lookup.apply(IVariable.wrap(guard)).asBoolean());
 	}
 }

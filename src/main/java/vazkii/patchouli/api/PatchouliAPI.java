@@ -112,44 +112,6 @@ public class PatchouliAPI {
 		void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider);
 
 		// ================================================================================================
-		// ItemStack Serialization
-		// ================================================================================================
-
-		/**
-		 * Deserializes a stack string into its ItemStack.
-		 */
-		ItemStack deserializeItemStack(String str);
-
-		/**
-		 * Serializes an ItemStack into its string correspondent.
-		 */
-		String serializeItemStack(ItemStack stack);
-
-		/**
-		 * Serializes an ingredient string into a list of ItemStacks.
-		 */
-		List<ItemStack> deserializeItemStackList(String str);
-
-		/**
-		 * Serializes a list of ItemStacks into its string correspondent.
-		 */
-		String serializeItemStackList(List<ItemStack> stacks);
-
-		// ================================================================================================
-		// Ingredient Serialization
-		// ================================================================================================
-
-		/**
-		 * Deserializes an ingredient string into its Ingredient.
-		 */
-		Ingredient deserializeIngredient(String str);
-
-		/**
-		 * Serializes an Ingredient into its string correspondent.
-		 */
-		String serializeIngredient(Ingredient ingredient);
-
-		// ================================================================================================
 		// Multiblocks
 		// ================================================================================================
 

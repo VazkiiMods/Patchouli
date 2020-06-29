@@ -4,13 +4,14 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import vazkii.patchouli.api.ICustomComponent;
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 import vazkii.patchouli.common.util.SerializationUtil;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class ComponentCustom extends TemplateComponent {
 
@@ -19,7 +20,7 @@ public class ComponentCustom extends TemplateComponent {
 	private transient ICustomComponent callbacks;
 
 	@Override
-	public void onVariablesAvailable(Function<String, String> lookup) {
+	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
 		try {
 			Class<?> classObj = Class.forName(clazz);

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 
 import net.minecraft.util.ResourceLocation;
 
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.common.base.Patchouli;
 
 import java.io.*;
@@ -15,6 +16,7 @@ public class SerializationUtil {
 
 	public static final Gson RAW_GSON = new GsonBuilder()
 			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+			.registerTypeAdapter(IVariable.class, new IVariable.Serializer())
 			.create();
 	public static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
 
