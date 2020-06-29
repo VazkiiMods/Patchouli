@@ -12,6 +12,9 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 public class TextComponentVariableSerializer implements IVariableSerializer<ITextComponent> {
 	@Override
 	public ITextComponent fromJson(JsonElement json) {
+		if (json.isJsonNull()) {
+			return new StringTextComponent("");
+		}
 		if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isString()) {
 			return new StringTextComponent(json.getAsString());
 		}
