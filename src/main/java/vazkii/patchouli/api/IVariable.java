@@ -92,6 +92,13 @@ public interface IVariable {
 	}
 
 	/**
+	 * Get this IVariable as a {@code List<IVariable>}, returning as singleton if it's not a JsonArray.
+	 */
+	default Stream<IVariable> asStreamOrSingleton() {
+		return unwrap().isJsonArray() ? asStream() : Stream.of(this);
+	}
+
+	/**
 	 * Get this IVariable as a {@code List<IVariable>}, assuming it's backed by a JsonArray.
 	 */
 	default List<IVariable> asList() {
@@ -101,8 +108,8 @@ public interface IVariable {
 	/**
 	 * Get this IVariable as a {@code List<IVariable>}, returning as singleton if it's not a JsonArray.
 	 */
-	default List<IVariable> asPossiblyList() {
-		return unwrap().isJsonArray() ? asStream().collect(Collectors.toList()) : ImmutableList.of(this);
+	default List<IVariable> asListOrSingleton() {
+		return asStreamOrSingleton().collect(Collectors.toList());
 	}
 
 	/**
@@ -122,7 +129,7 @@ public interface IVariable {
 	/**
 	 * Convenience method to create an IVariable from a list of IVariables.
 	 */
-	static IVariable wrap(List<IVariable> elems) {
+	static IVariable wrapList(Iterable<IVariable> elems) {
 		JsonArray arr = new JsonArray();
 		for (IVariable v : elems) {
 			arr.add(v.unwrap());
