@@ -6,7 +6,6 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.common.crafting.StackList;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableSerializer;
@@ -19,7 +18,6 @@ public class VariableHelperImpl implements VariableHelper {
 
 	public VariableHelperImpl() {
 		registerSerializer(new ItemStackVariableSerializer(), ItemStack.class);
-		registerSerializer(new StackListVariableSerializer(), StackList.class);
 		registerSerializer(new IngredientVariableSerializer(), Ingredient.class);
 		registerSerializer(new TextComponentVariableSerializer(), ITextComponent.class);
 	}

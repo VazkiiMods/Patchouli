@@ -3,6 +3,7 @@ package vazkii.patchouli.common.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
@@ -10,11 +11,14 @@ import com.mojang.serialization.JsonOps;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTDynamicOps;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
@@ -189,6 +193,32 @@ public class ItemStackUtil {
 		result.add(ingredientSerialized.substring(lastIndex));
 
 		return result.toArray(new String[0]);
+	}
+
+	public static ItemStack loadStackFromJson(JsonObject json) {
+		// Adapted from net.minecraftforge.common.crafting.CraftingHelper::getItemStack
+		String itemName = json.get("item").getAsString();
+
+		Item item = Registry.ITEM.getValue(new ResourceLocation(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'"));
+
+		ItemStack stack = new ItemStack(item, JSONUtils.getInt(json, "count", 1));
+
+		if (json.has("nbt")) {
+			try {
+				JsonElement element = json.get("nbt");
+				CompoundNBT nbt;
+				if (element.isJsonObject()) {
+					nbt = JsonToNBT.getTagFromJson(GSON.toJson(element));
+				} else {
+					nbt = JsonToNBT.getTagFromJson(element.getAsString());
+				}
+				stack.setTag(nbt);
+			} catch (CommandSyntaxException e) {
+				throw new IllegalArgumentException("Invalid NBT Entry: " + e.toString());
+			}
+		}
+
+		return stack;
 	}
 
 }

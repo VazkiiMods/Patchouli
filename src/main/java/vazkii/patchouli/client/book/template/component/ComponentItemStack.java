@@ -6,7 +6,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.crafting.StackList;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookEntry;
@@ -18,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 public class ComponentItemStack extends TemplateComponent {
 
@@ -40,7 +40,7 @@ public class ComponentItemStack extends TemplateComponent {
 	@Override
 	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
-		items = new ArrayList<>(lookup.apply(item).as(StackList.class).getStacks());
+		items = lookup.apply(item).asStreamOrSingleton().map(x -> x.as(ItemStack.class)).collect(Collectors.toList());
 	}
 
 	@Override
