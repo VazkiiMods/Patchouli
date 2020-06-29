@@ -138,36 +138,6 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	public ItemStack deserializeItemStack(String str) {
-		return ItemStackUtil.loadStackFromString(str);
-	}
-
-	@Override
-	public String serializeItemStack(ItemStack stack) {
-		return ItemStackUtil.serializeStack(stack);
-	}
-
-	@Override
-	public List<ItemStack> deserializeItemStackList(String str) {
-		return ItemStackUtil.loadStackListFromString(str);
-	}
-
-	@Override
-	public String serializeItemStackList(List<ItemStack> stacks) {
-		return ItemStackUtil.serializeStackList(stacks);
-	}
-
-	@Override
-	public Ingredient deserializeIngredient(String str) {
-		return ItemStackUtil.loadIngredientFromString(str);
-	}
-
-	@Override
-	public String serializeIngredient(Ingredient ingredient) {
-		return ItemStackUtil.serializeIngredient(ingredient);
-	}
-
-	@Override
 	public IMultiblock getMultiblock(Identifier res) {
 		return MultiblockRegistry.MULTIBLOCKS.get(res);
 	}

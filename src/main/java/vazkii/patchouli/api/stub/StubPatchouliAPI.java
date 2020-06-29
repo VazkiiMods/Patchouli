@@ -89,36 +89,6 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 
 	@Override
-	public ItemStack deserializeItemStack(String str) {
-		return ItemStack.EMPTY;
-	}
-
-	@Override
-	public String serializeItemStack(ItemStack stack) {
-		return "";
-	}
-
-	@Override
-	public List<ItemStack> deserializeItemStackList(String str) {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public String serializeItemStackList(List<ItemStack> stacks) {
-		return "";
-	}
-
-	@Override
-	public Ingredient deserializeIngredient(String str) {
-		return Ingredient.EMPTY;
-	}
-
-	@Override
-	public String serializeIngredient(Ingredient ingredient) {
-		return "";
-	}
-
-	@Override
 	public IMultiblock getMultiblock(Identifier res) {
 		return null;
 	}
