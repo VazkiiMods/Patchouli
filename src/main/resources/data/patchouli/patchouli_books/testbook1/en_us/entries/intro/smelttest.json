@@ -15,7 +15,24 @@
             "type": "spotlight",
             "title": "Testeroni",
             "text": "This is just a test but it's cool, you know what else is cool? ICE!!! Ha gottem",
-            "item": "minecraft:diamond_sword:293{display:{Lore:['This has lore!!!', 'I even added escaped \\'quotes\\'!']}}"
+            "item": {
+                "item": "minecraft:diamond_sword",
+                "count": 293,
+                "nbt": {
+                    "Enchantments": [
+                        {
+                            "id": "minecraft:sharpness",
+                            "lvl": 3
+                        }
+                    ],
+                    "display": {
+                        "Lore": [
+                            "\"This has lore!!!\"",
+                            "\"Whoever redesigned this system to take \\\"stringified JSON\\\" should be fed to Ravagers on sight!\""
+                        ]
+                    }
+                }
+            }
         },
         {
             "type": "text",

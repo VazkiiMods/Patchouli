@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.text.Text;
 
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
@@ -18,14 +19,18 @@ import java.util.List;
 
 public class PageSpotlight extends PageWithText {
 
-	String item, title;
+	IVariable item;
+	String title;
 	@SerializedName("link_recipe") boolean linkRecipe;
 
 	transient List<ItemStack> itemStacks;
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
+  //FIXME
 		itemStacks = ItemStackUtil.loadStackListFromString(item);
+
+		itemStack = item.as(ItemStack.class);
 
 		if (linkRecipe) {
 			itemStacks.forEach((stack) -> entry.addRelevantStack(stack, pageNum));

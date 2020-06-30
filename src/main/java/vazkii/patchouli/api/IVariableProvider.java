@@ -1,15 +1,15 @@
 package vazkii.patchouli.api;
 
 /**
- * A provider of variables to a template. Usually from json.
+ * A provider of variables to a template. Probably a JSON.
  */
-public interface IVariableProvider<T> {
+public interface IVariableProvider {
 
 	/**
 	 * Gets the value assigned to the variable passed in.
 	 * May throw an exception if it doesn't exist.
 	 */
-	T get(String key);
+	IVariable get(String key);
 
 	/**
 	 * Returns if a variable exists or not.

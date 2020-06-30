@@ -4,29 +4,32 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class ComponentHeader extends TemplateComponent {
 
-	public String text;
+	public IVariable text;
 
-	@SerializedName("color") public String colorStr;
+	@SerializedName("color") public IVariable colorStr;
 
 	boolean centered = true;
 	float scale = 1F;
 
+	transient Text actualText;
 	transient int color;
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
 		try {
-			color = Integer.parseInt(colorStr, 16);
+			color = Integer.parseInt(colorStr.asString(""), 16);
 		} catch (NumberFormatException e) {
 			color = page.book.headerColor;
 		}
@@ -46,17 +49,17 @@ public class ComponentHeader extends TemplateComponent {
 		ms.scale(scale, scale, scale);
 
 		if (centered) {
-			page.parent.drawCenteredStringNoShadow(ms, page.i18n(text), 0, 0, color);
+			page.parent.drawCenteredStringNoShadow(ms, page.i18n(actualText.getString()), 0, 0, color);
 		} else {
-			page.fontRenderer.draw(ms, page.i18n(text), 0, 0, color);
+			page.fontRenderer.draw(ms, page.i18n(actualText.getString()), 0, 0, color);
 		}
 		ms.pop();
 	}
 
 	@Override
-	public void onVariablesAvailable(Function<String, String> lookup) {
+	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
-		text = lookup.apply(text);
+		actualText = lookup.apply(text).as(Text.class);
 		colorStr = lookup.apply(colorStr);
 	}
 }
