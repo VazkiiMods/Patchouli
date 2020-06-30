@@ -12,12 +12,14 @@ import vazkii.patchouli.api.IVariableSerializer;
 import vazkii.patchouli.api.VariableHelper;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VariableHelperImpl implements VariableHelper {
 
 	public VariableHelperImpl() {
 		registerSerializer(new ItemStackVariableSerializer(), ItemStack.class);
+		registerSerializer(new ItemStackListVariableSerializer(), List.class);
 		registerSerializer(new IngredientVariableSerializer(), Ingredient.class);
 		registerSerializer(new TextComponentVariableSerializer(), Text.class);
 	}

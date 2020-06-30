@@ -2,6 +2,7 @@ package vazkii.patchouli.common.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -224,6 +225,27 @@ public class ItemStackUtil {
 		}
 
 		return stack;
+	}
+
+	public static List<ItemStack> loadStackListFromJson(JsonObject json) {
+		List<ItemStack> stacks = new ArrayList<>();
+		if (json.has("item")) {
+			stacks.add(loadStackFromJson(json));
+		} else if (json.has("items") && json.get("items").isJsonArray()) {
+			JsonArray items = json.getAsJsonArray("items");
+			return loadStackListFromJson(items);
+		}
+		return stacks;
+	}
+
+	public static List<ItemStack> loadStackListFromJson(JsonArray json) {
+		List<ItemStack> stacks = new ArrayList<>();
+		for (JsonElement item : json) {
+			if (item.isJsonObject()) {
+				stacks.add(loadStackFromJson((JsonObject) item));
+			}
+		}
+		return stacks;
 	}
 
 }

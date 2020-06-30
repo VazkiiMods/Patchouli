@@ -27,10 +27,7 @@ public class PageSpotlight extends PageWithText {
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
-  //FIXME
-		itemStacks = ItemStackUtil.loadStackListFromString(item);
-
-		itemStack = item.as(ItemStack.class);
+		itemStacks = (List<ItemStack>) item.as(List.class);
 
 		if (linkRecipe) {
 			itemStacks.forEach((stack) -> entry.addRelevantStack(stack, pageNum));
