@@ -6,7 +6,8 @@
     "MixinIngredient",
     "MixinMinecraftServer",
     "MixinPlayerManager",
-    "MixinRecipeManager"
+    "MixinRecipeManager",
+    "MixinSmithingRecipe"
   ],
   "client": [
   ],

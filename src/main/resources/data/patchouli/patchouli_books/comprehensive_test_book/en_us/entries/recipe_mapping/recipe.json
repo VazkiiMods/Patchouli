@@ -11,6 +11,28 @@
     {
       "type": "smelting",
       "recipe": "minecraft:cooked_cod"
+    },
+    {
+      "type": "blasting",
+      "recipe": "minecraft:iron_ingot_from_blasting"
+    },
+    {
+      "type": "smoking",
+      "recipe": "minecraft:cooked_cod_from_smoking"
+    },
+    {
+      "type": "campfire",
+      "recipe": "minecraft:cooked_cod_from_campfire_cooking"
+    },
+    {
+      "type": "stonecutting",
+      "recipe": "minecraft:andesite_slab_from_andesite_stonecutting"
+    },
+    {
+      "type": "smithing",
+      "recipe": "minecraft:netherite_axe_smithing",
+      "recipe2": "minecraft:netherite_pickaxe_smithing",
+      "text": "Smithing table recipes"
     }
   ]
 }

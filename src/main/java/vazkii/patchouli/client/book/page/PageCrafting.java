@@ -25,13 +25,13 @@ public class PageCrafting extends PageDoubleRecipeRegistry<CraftingRecipe> {
 	protected void drawRecipe(MatrixStack ms, CraftingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		mc.getTextureManager().bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
-		DrawableHelper.drawTexture(ms, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 128);
+		DrawableHelper.drawTexture(ms, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 256);
 
 		boolean shaped = recipe instanceof ShapedRecipe;
 		if (!shaped) {
 			int iconX = recipeX + 62;
 			int iconY = recipeY + 2;
-			DrawableHelper.drawTexture(ms, iconX, iconY, 0, 64, 11, 11, 128, 128);
+			DrawableHelper.drawTexture(ms, iconX, iconY, 0, 64, 11, 11, 256, 256);
 			if (parent.isMouseInRelativeRange(mouseX, mouseY, iconX, iconY, 11, 11)) {
 				parent.setTooltip(new TranslatableText("patchouli.gui.lexicon.shapeless"));
 			}
@@ -50,6 +50,8 @@ public class PageCrafting extends PageDoubleRecipeRegistry<CraftingRecipe> {
 		for (int i = 0; i < ingredients.size(); i++) {
 			parent.renderIngredient(ms, recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
 		}
+
+		parent.renderItemStack(ms, recipeX + 79, recipeY + 41, mouseX, mouseY, recipe.getRecipeKindIcon());
 	}
 
 	@Override
