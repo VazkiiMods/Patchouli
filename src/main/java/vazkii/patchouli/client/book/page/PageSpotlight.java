@@ -23,14 +23,16 @@ public class PageSpotlight extends PageWithText {
 	String title;
 	@SerializedName("link_recipe") boolean linkRecipe;
 
-	transient List<ItemStack> itemStacks;
+	transient Ingredient ingredient;
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
-		itemStacks = (List<ItemStack>) item.as(List.class);
+		ingredient = item.as(Ingredient.class);
 
 		if (linkRecipe) {
-			itemStacks.forEach((stack) -> entry.addRelevantStack(stack, pageNum));
+			for(ItemStack stack:ingredient.getMatchingStacksClient()) {
+				entry.addRelevantStack(stack, pageNum);
+			}
 		}
 	}
 
@@ -47,11 +49,11 @@ public class PageSpotlight extends PageWithText {
 		if (title != null && !title.isEmpty()) {
 			toDraw = i18nText(title);
 		} else {
-			toDraw = itemStacks.get(0).getName();
+			toDraw = ingredient.getMatchingStacksClient()[0].getName();
 		}
 
 		parent.drawCenteredStringNoShadow(ms, toDraw, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
-		parent.renderIngredient(ms, GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, Ingredient.ofStacks(itemStacks.toArray(new ItemStack[0])));
+		parent.renderIngredient(ms, GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, ingredient);
 
 		super.render(ms, mouseX, mouseY, pticks);
 	}
