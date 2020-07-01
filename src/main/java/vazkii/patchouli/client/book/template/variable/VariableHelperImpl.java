@@ -12,6 +12,7 @@ import vazkii.patchouli.api.IVariableSerializer;
 import vazkii.patchouli.api.VariableHelper;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VariableHelperImpl implements VariableHelper {

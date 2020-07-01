@@ -9,6 +9,7 @@ import net.minecraft.util.SoundEvent;
 import vazkii.patchouli.client.book.page.*;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.TemplateComponent;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -22,7 +23,7 @@ import java.util.Map;
 
 public class ClientBookRegistry {
 
-	public final Map<String, Class<? extends BookPage>> pageTypes = new HashMap<>();
+	public final Map<ResourceLocation, Class<? extends BookPage>> pageTypes = new HashMap<>();
 
 	public final Gson gson = new GsonBuilder()
 			.registerTypeHierarchyAdapter(BookPage.class, new LexiconPageAdapter())
@@ -39,17 +40,22 @@ public class ClientBookRegistry {
 	}
 
 	private void addPageTypes() {
-		pageTypes.put("text", PageText.class);
-		pageTypes.put("crafting", PageCrafting.class);
-		pageTypes.put("smelting", PageSmelting.class);
-		pageTypes.put("image", PageImage.class);
-		pageTypes.put("spotlight", PageSpotlight.class);
-		pageTypes.put("empty", PageEmpty.class);
-		pageTypes.put("multiblock", PageMultiblock.class);
-		pageTypes.put("link", PageLink.class);
-		pageTypes.put("relations", PageRelations.class);
-		pageTypes.put("entity", PageEntity.class);
-		pageTypes.put("quest", PageQuest.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "text"), PageText.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "crafting"), PageCrafting.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "smelting"), PageSmelting.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "blasting"), PageBlasting.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "smoking"), PageSmoking.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "campfire"), PageCampfireCooking.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "smithing"), PageSmithing.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "stonecutting"), PageStonecutting.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "image"), PageImage.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "spotlight"), PageSpotlight.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "empty"), PageEmpty.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "multiblock"), PageMultiblock.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "link"), PageLink.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "relations"), PageRelations.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "entity"), PageEntity.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "quest"), PageQuest.class);
 	}
 
 	public void reload() {
@@ -93,7 +99,11 @@ public class ClientBookRegistry {
 		public BookPage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			JsonObject obj = json.getAsJsonObject();
 			JsonPrimitive prim = (JsonPrimitive) obj.get("type");
-			String type = prim.getAsString();
+			String string = prim.getAsString();
+			if (string.indexOf(':') < 0) {
+				string = Patchouli.MOD_ID + ":" + string;
+			}
+			ResourceLocation type = new ResourceLocation(string);
 			Class<? extends BookPage> clazz = ClientBookRegistry.INSTANCE.pageTypes.get(type);
 			if (clazz == null) {
 				clazz = PageTemplate.class;
