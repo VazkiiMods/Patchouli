@@ -19,7 +19,6 @@ public class VariableHelperImpl implements VariableHelper {
 
 	public VariableHelperImpl() {
 		registerSerializer(new ItemStackVariableSerializer(), ItemStack.class);
-		registerSerializer(new ItemStackListVariableSerializer(), List.class);
 		registerSerializer(new IngredientVariableSerializer(), Ingredient.class);
 		registerSerializer(new TextComponentVariableSerializer(), Text.class);
 	}
