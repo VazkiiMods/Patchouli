@@ -10,7 +10,7 @@ pipeline {
                 sh './gradlew clean --no-daemon'
             }
         }
-        stage('Tag Detection Test') {
+        stage('Build and Deploy Release') {
             when {
                 tag 'release-*'
             }
@@ -18,7 +18,7 @@ pipeline {
                 RELEASE_MODE = '1'
             }
             steps {
-                echo 'Detected tag ${env.TAG_NAME}, not building snapshot'
+                sh './gradlew build sortArtifacts publish --no-daemon'
             }
         }
         stage('Build and Deploy Snapshot') {
@@ -34,7 +34,7 @@ pipeline {
     }
     post {
         always {
-            archive 'build/libs/**.jar'
+            archiveArtifacts 'build/libs/**.jar'
         }
     }
 }
