@@ -17,12 +17,10 @@ ext.config = configFile.withReader {
 	return (new ConfigSlurper().parse(prop))
 }
 
-version = "${config.version}-${config.build_number}"
-if (System.getenv().BUILD_NUMBER != null) { 
-    //adds the build number to the end of the version string if on a build server
-    version += ".${System.getenv().BUILD_NUMBER}"
+version = "${config.version}-${config.build_number}-FABRIC"
+if (System.getenv().RELEASE_MODE == null) {
+    version += '-SNAPSHOT'
 }
-version += "-FABRIC"
 
 group = "vazkii.${config.mod_id}"
 archivesBaseName = "${config.mod_name}"

@@ -10,16 +10,31 @@ pipeline {
                 sh './gradlew clean --no-daemon'
             }
         }
-        stage('Build and Deploy') {
+        stage('Build and Deploy Release') {
+            when {
+                tag 'release-*'
+            }
+            environment {
+                RELEASE_MODE = '1'
+            }
             steps {
-                echo 'Building and Deploying to Maven'
-					sh './gradlew build publish --no-daemon'
-                }
+                sh './gradlew build sortArtifacts publish --no-daemon'
             }
         }
+        stage('Build and Deploy Snapshot') {
+            when {
+                not {
+                    tag 'release-*'
+                }
+            }
+            steps {
+                sh './gradlew build sortArtifacts publish --no-daemon'
+            }
+        }
+    }
     post {
         always {
-            archive 'build/libs/**.jar'
+            archiveArtifacts 'build/libs/**.jar'
         }
     }
 }
