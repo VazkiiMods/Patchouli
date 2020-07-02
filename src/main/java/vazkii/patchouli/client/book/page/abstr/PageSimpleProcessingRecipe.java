@@ -5,9 +5,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;
-
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 public abstract class PageSimpleProcessingRecipe<T extends IRecipe<?>> extends PageDoubleRecipeRegistry<T> {

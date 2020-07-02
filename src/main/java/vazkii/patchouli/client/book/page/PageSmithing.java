@@ -5,11 +5,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;
-
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.SmithingRecipe;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 
