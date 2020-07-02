@@ -23,9 +23,8 @@ ext.config = parseConfig(configFile)
 
 def mc_version = '1.16.1'
 version = "${config.version}-${config.build_number}"
-if (System.getenv().BUILD_NUMBER != null) { 
-    //adds the build number to the end of the version string if on a build server
-    version += ".${System.getenv().BUILD_NUMBER}"
+if (System.getenv().RELEASE_MODE == null) {
+    version += '-SNAPSHOT'
 }
 
 group = "vazkii.${config.mod_id}"
