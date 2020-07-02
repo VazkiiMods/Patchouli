@@ -18,7 +18,7 @@ pipeline {
                 RELEASE_MODE = '1'
             }
             steps {
-                sh 'echo Detected tag ${env.TAG_NAME}!'
+                echo 'Detected tag ${env.TAG_NAME}, not building snapshot'
             }
         }
         stage('Build and Deploy Snapshot') {
