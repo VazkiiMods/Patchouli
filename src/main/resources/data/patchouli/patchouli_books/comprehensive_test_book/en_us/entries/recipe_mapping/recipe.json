@@ -6,7 +6,7 @@
     {
       "type": "crafting",
       "recipe": "minecraft:diamond_sword",
-      "recipe2": "minecraft:oak_slab"
+      "recipe2": "minecraft:flint_and_steel"
     },
     {
       "type": "smelting",
