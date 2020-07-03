@@ -38,10 +38,6 @@ public class Variable implements IVariable {
 
 	@Override
 	public JsonElement unwrap() {
-		if (sourceClass != null) {
-			Patchouli.LOGGER.warn("You're trying to unwrap an object serialized as type {} directly as JSON. This is likely not what you want!", sourceClass);
-		}
-
 		return value;
 	}
 

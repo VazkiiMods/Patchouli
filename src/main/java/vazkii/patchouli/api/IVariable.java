@@ -1,6 +1,5 @@
 package vazkii.patchouli.api;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -9,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
@@ -115,14 +115,14 @@ public interface IVariable {
 	/**
 	 * Convenience method to create an IVariable from {@link VariableHelper#createFromObject}.
 	 */
-	static <T> IVariable from(T object) {
+	static <T> IVariable from(@Nullable T object) {
 		return object != null ? VariableHelper.instance().createFromObject(object) : empty();
 	}
 
 	/**
 	 * Convenience method to create an IVariable from a JsonElement with {@link VariableHelper#createFromJson}.
 	 */
-	static IVariable wrap(JsonElement elem) {
+	static IVariable wrap(@Nullable JsonElement elem) {
 		return elem != null ? VariableHelper.instance().createFromJson(elem) : empty();
 	}
 
@@ -137,15 +137,15 @@ public interface IVariable {
 		return wrap(arr);
 	}
 
-	static IVariable wrap(Number n) {
+	static IVariable wrap(@Nullable Number n) {
 		return n != null ? wrap(new JsonPrimitive(n)) : empty();
 	}
 
-	static IVariable wrap(Boolean b) {
+	static IVariable wrap(@Nullable Boolean b) {
 		return b != null ? wrap(new JsonPrimitive(b)) : empty();
 	}
 
-	static IVariable wrap(String s) {
+	static IVariable wrap(@Nullable String s) {
 		return s != null ? wrap(new JsonPrimitive(s)) : empty();
 	}
 
