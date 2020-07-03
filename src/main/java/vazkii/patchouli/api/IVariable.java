@@ -9,6 +9,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 
 import javax.annotation.Nullable;
+
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
