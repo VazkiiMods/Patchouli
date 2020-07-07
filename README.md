@@ -8,6 +8,15 @@ https://en.touhouwiki.net/wiki/Patchouli_Knowledge
 
 ## Maven info
 
+Maven artifacts are located [here](https://maven.blamejared.com/vazkii/patchouli/Patchouli/), each folder representing a version.
+
+Note: As of 1.16, Maven builds are no longer persisted while a new version of Patchouli is in development.
+That is, you must either depend on a *released* version of Patchouli, e.g. `1.16-37` or `1.16-37-FABRIC`, or specifically opt in to the bleeding-edge
+build of the next version. For example, `1.16-38-SNAPSHOT` or `1.16-38-SNAPSHOT-FABRIC` is the current bleeding edge version of future version `1.16-38`.
+
+Note that `-SNAPSHOT` versions can be broken from time to time, and you are strongly discouraged from using them unless you are helping dogfood, test, or contribute to Patchouli.
+
+In Forge, add the following to your `build.gradle`
 ```gradle
 repositories {
     maven { url 'https://maven.blamejared.com' }
@@ -18,12 +27,9 @@ dependencies {
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:[VERSION]:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:[VERSION]")
 
-    compile "vazkii.patchouli:Patchouli:[VERSION]"           // 1.12
+    // 1.12
+    compile "vazkii.patchouli:Patchouli:[VERSION]"
 }
 ```
-
-Don't forget to replace `[VERSION]` with the version of the mod that you want to work with!
-The available versions are the folder names seen on [Jared's maven](https://maven.blamejared.com/vazkii/patchouli/Patchouli/).
-For 1.14 and up, the version is prepended with the Minecraft version.
 
 Note to mod developers porting a Patchouli book from 1.12 to 1.14: Patchouli book data now goes into `modid/data/patchouli_books` instead of `modid/assets/patchouli_books`.
