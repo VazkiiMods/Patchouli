@@ -2,9 +2,6 @@
 This is the Fabric port of Patchouli, it will receive support for the latest stable version of Minecraft available on Fabric.
 Snapshot releases may happen depending on my mood, but don't count on them.
 
-Maven builds: https://maven.blamejared.com/vazkii/patchouli/Patchouli_1.16-fabric/
-(The info below is for forge and I'm too lazy to update it)
-
 # Patchouli
 Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers
 
@@ -23,7 +20,7 @@ build of the next version. For example, `1.16-38-SNAPSHOT` or `1.16-38-SNAPSHOT-
 
 Note that `-SNAPSHOT` versions can be broken from time to time, and you are strongly discouraged from using them unless you are helping dogfood, test, or contribute to Patchouli.
 
-In Forge, add the following to your `build.gradle`
+In Fabric, add the following to your `build.gradle`
 ```gradle
 repositories {
     maven { url 'https://maven.blamejared.com' }
@@ -31,11 +28,8 @@ repositories {
 
 dependencies {
     // 1.14+
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:[VERSION]:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:[VERSION]")
-
-    // 1.12
-    compile "vazkii.patchouli:Patchouli:[VERSION]"
+    modCompile "vazkii.patchouli:Patchouli:[VERSION]:api"
+    modImplementation "vazkii.patchouli:Patchouli:[VERSION]"
 }
 ```
 
