@@ -14,11 +14,11 @@ https://en.touhouwiki.net/wiki/Patchouli_Knowledge
 
 Maven artifacts are located [here](https://maven.blamejared.com/vazkii/patchouli/Patchouli/), each folder representing a version.
 
-Note: As of 1.16, Maven builds are no longer persisted while a new version of Patchouli is in development.
+Note: As of 1.16, intermediate (non-release) Maven builds are no longer persisted.
 That is, you must either depend on a *released* version of Patchouli, e.g. `1.16-37` or `1.16-37-FABRIC`, or specifically opt in to the bleeding-edge
-build of the next version. For example, `1.16-38-SNAPSHOT` or `1.16-38-SNAPSHOT-FABRIC` is the current bleeding edge version of future version `1.16-38`.
+build of the next version. For example, `1.16-38-SNAPSHOT` or `1.16-38-FABRIC-SNAPSHOT` would be the current bleeding edge version of future version `1.16-38`. 
 
-Note that `-SNAPSHOT` versions can be broken from time to time, and you are strongly discouraged from using them unless you are helping dogfood, test, or contribute to Patchouli.
+Note that `-SNAPSHOT` versions can be broken from time to time, and you are strongly discouraged from using them unless you are helping dogfood, test, or contribute to Patchouli. They may also be pruned from time to time to save disk space on the server. Do *not* rely on `-SNAPSHOT` versions for anything important!
 
 In Fabric, add the following to your `build.gradle`
 ```gradle
