@@ -24,6 +24,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.base.Patchouli;
@@ -91,7 +92,7 @@ public class ItemModBook extends Item {
 
 	@Override
 	public void fillItemGroup(ItemGroup tab, NonNullList<ItemStack> items) {
-		String tabName = tab.getTabLabel();
+		String tabName = ObfuscationReflectionHelper.getPrivateValue(ItemGroup.class, tab, "field_78034_o");
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
 			if (!b.noBook && !b.isExtension && (tab == ItemGroup.SEARCH || b.creativeTab.equals(tabName))) {
 				items.add(forBook(b));
