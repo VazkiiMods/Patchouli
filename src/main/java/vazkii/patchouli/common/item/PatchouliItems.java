@@ -3,6 +3,7 @@ package vazkii.patchouli.common.item;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -15,12 +16,14 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.ObjectHolder;
 
 import vazkii.patchouli.client.base.BookModel;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.BookRegistry;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class PatchouliItems {
 
-	@ObjectHolder("patchouli:guide_book") public static Item book;
+	private static final ResourceLocation BOOK_ID = new ResourceLocation(Patchouli.MOD_ID, "guide_book");
+	public static final Item book = new ItemModBook().setRegistryName(BOOK_ID);
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
@@ -33,13 +36,15 @@ public class PatchouliItems {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void replaceModel(ModelBakeEvent event) {
-		ModelResourceLocation key = new ModelResourceLocation(book.getRegistryName(), "inventory");
+		ModelResourceLocation key = new ModelResourceLocation(BOOK_ID, "inventory");
 		IBakedModel oldModel = event.getModelRegistry().get(key);
-		event.getModelRegistry().put(key, new BookModel(oldModel));
+		if (oldModel != null) {
+			event.getModelRegistry().put(key, new BookModel(oldModel));
+		}
 	}
 
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Item> event) {
-		event.getRegistry().register(new ItemModBook());
+		event.getRegistry().register(book);
 	}
 }

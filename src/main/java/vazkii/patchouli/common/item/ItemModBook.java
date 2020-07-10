@@ -46,8 +46,6 @@ public class ItemModBook extends Item {
 				.maxStackSize(1)
 				.group(ItemGroup.MISC));
 
-		setRegistryName(new ResourceLocation(Patchouli.MOD_ID, "guide_book"));
-
 		addPropertyOverride(new ResourceLocation("completion"), new IItemPropertyGetter() {
 
 			@OnlyIn(Dist.CLIENT)
