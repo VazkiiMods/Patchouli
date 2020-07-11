@@ -83,8 +83,8 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-32.0.23"
 
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:6.0.0.2:api")
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:6.0.0.2")
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:7.0.0.6:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:7.0.0.6")
 }
 
 processResources {
