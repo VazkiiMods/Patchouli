@@ -14,8 +14,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.base.PatchouliSounds;
