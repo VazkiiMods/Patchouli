@@ -1,4 +1,4 @@
-package vazkii.patchouli.common.base;
+package vazkii.patchouli.common.handler;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LecternBlock;
