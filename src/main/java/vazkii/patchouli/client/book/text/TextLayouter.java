@@ -1,20 +1,15 @@
 package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.MinecraftForgeClient;
 
+import vazkii.patchouli.api.ISpan;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The {@code TextLayouter} is responsible for taking a series of {@link Span spans}
- * and computing its layout and positioning, producing a collection of {@link Word words}.
- */
 public class TextLayouter {
 	private final List<Word> words = new ArrayList<>();
 	private final GuiBook gui;
@@ -33,9 +28,9 @@ public class TextLayouter {
 
 	private int y;
 	private List<Word> linkCluster = null;
-	private List<Span> spanCluster = null;
+	private List<ISpan> spanCluster = null;
 
-	private final List<SpanTail> pending = new ArrayList<>();
+	private List<SpanTail> pending = new ArrayList<>();
 	private int lineStart = 0;
 	private int widthSoFar = 0;
 
@@ -46,11 +41,11 @@ public class TextLayouter {
 
 		List<Span> paragraph = new ArrayList<>();
 		for (Span span : spans) {
-			if (span.lineBreaks > 0) {
+			if (span.getLineBreaks() > 0) {
 				layoutParagraph(paragraph);
 
 				widthSoFar = 0;
-				y += span.lineBreaks * lineHeight;
+				y += span.getLineBreaks() * lineHeight;
 				paragraph.clear();
 			}
 
@@ -69,16 +64,16 @@ public class TextLayouter {
 		lineStart = 0;
 
 		for (Span span : paragraph) {
-			layoutSpan(iterator, span);
+			append(iterator, span);
 		}
 
 		flush();
 	}
 
-	private void layoutSpan(BreakIterator iterator, Span span) {
-		if (spanCluster != span.linkCluster) {
-			linkCluster = span.linkCluster == null ? null : new ArrayList<>();
-			spanCluster = span.linkCluster;
+	private void append(BreakIterator iterator, Span span) {
+		if (spanCluster != span.getLinkCluster()) {
+			linkCluster = span.getLinkCluster() == null ? null : new ArrayList<>();
+			spanCluster = span.getLinkCluster();
 		}
 
 		SpanTail last = new SpanTail(span, 0, linkCluster);
@@ -107,11 +102,10 @@ public class TextLayouter {
 		width -= last.width;
 		offset -= last.length;
 
-		char[] characters = last.span.text.toCharArray();
+		char[] characters = last.span.getText().toCharArray();
 		for (int i = last.start; i < characters.length; i++) {
-			ITextComponent tmp = new StringTextComponent(String.valueOf(characters[i])).func_230530_a_(last.span.style);
-			width += font.func_238414_a_(tmp);
-			if (last.span.bold) {
+			width += font.getCharWidth(characters[i]);
+			if (last.span.isBold()) {
 				width++;
 			}
 
@@ -140,7 +134,7 @@ public class TextLayouter {
 	private String toString(List<Span> paragraph) {
 		StringBuilder result = new StringBuilder();
 		for (Span span : paragraph) {
-			result.append(span.text);
+			result.append(span.getText());
 		}
 		return result.toString();
 	}
@@ -197,14 +191,14 @@ public class TextLayouter {
 		public SpanTail(Span span, int start, List<Word> cluster) {
 			this.span = span;
 			this.start = start;
-			this.width = font.func_238414_a_(span.styledSubstring(start)) + span.spacingLeft + span.spacingRight;
+			this.width = font.getStringWidth(span.getCodes() + span.getText().substring(start)) + span.getSpacingLeft() + span.getSpacingRight();
 			this.cluster = cluster;
-			this.length = span.text.length() - start;
+			this.length = span.getText().length() - start;
 		}
 
 		public Word position(GuiBook gui, int x, int y, int length) {
-			x += span.spacingLeft;
-			Word result = new Word(gui, span, span.styledSubstring(start, start + length), x, y, width, cluster);
+			x += span.getSpacingLeft();
+			Word result = new Word(gui, span, span.getText().substring(start, start + length), x, y, width, cluster);
 			if (cluster != null) {
 				cluster.add(result);
 			}

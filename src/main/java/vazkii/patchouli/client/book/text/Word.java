@@ -1,13 +1,7 @@
 package vazkii.patchouli.client.book.text;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.event.HoverEvent;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
@@ -15,44 +9,45 @@ import vazkii.patchouli.common.book.Book;
 import java.util.List;
 import java.util.function.Supplier;
 
-/**
- * A {@code Word} is the smallest textual unit of rendering in Patchouli, and knows its
- * position, dimensions, and formatting.
- */
 public class Word {
 	private final Book book;
 	private final GuiBook gui;
 	private final int x, y, width, height;
-	private final ITextComponent text;
+	private final String text;
+	private final int color;
+	private final String codes;
 	private final List<Word> linkCluster;
+	private final ITextComponent tooltip;
 	private final Supplier<Boolean> onClick;
 
-	public Word(GuiBook gui, Span span, IFormattableTextComponent text, int x, int y, int strWidth, List<Word> cluster) {
+	public Word(GuiBook gui, Span span, String text, int x, int y, int strWidth, List<Word> cluster) {
 		this.book = gui.book;
 		this.gui = gui;
 		this.x = x;
 		this.y = y;
 		this.width = strWidth;
 		this.height = 8;
-		this.onClick = span.onClick;
-		this.linkCluster = cluster;
-		if (!span.tooltip.getString().isEmpty()) {
-			text = text.func_240700_a_(s -> s.func_240716_a_(new HoverEvent(HoverEvent.Action.field_230550_a_, span.tooltip)));
-		}
 		this.text = text;
+		this.color = span.getColor();
+		this.codes = span.getCodes();
+		this.onClick = span.getOnClick();
+		this.linkCluster = cluster;
+		this.tooltip = span.getTooltip();
 	}
 
-	public void render(MatrixStack ms, FontRenderer font, Style styleOverride, int mouseX, int mouseY) {
-		IFormattableTextComponent toRender = text.func_230532_e_().func_240703_c_(styleOverride);
+	public void render(FontRenderer font, int mouseX, int mouseY) {
+		String renderTarget = codes + text;
+		int renderColor = color;
 		if (isClusterHovered(mouseX, mouseY)) {
 			if (onClick != null) {
-				toRender.func_240700_a_(s -> s.func_240718_a_(Color.func_240743_a_(book.linkHoverColor)));
+				renderColor = book.linkHoverColor;
 			}
-
-			gui.func_238653_a_(ms, text.getStyle(), (int) gui.getRelativeX(mouseX), (int) gui.getRelativeY(mouseY));
+			if (!tooltip.getString().isEmpty()) {
+				gui.setTooltip(tooltip);
+			}
 		}
 
-		font.func_238422_b_(ms, toRender, x, y, -1);
+		font.drawString(renderTarget, x, y, renderColor);
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {

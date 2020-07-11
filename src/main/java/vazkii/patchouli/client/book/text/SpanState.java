@@ -1,78 +1,207 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.Style;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
+import vazkii.patchouli.api.ISpan;
+import vazkii.patchouli.api.ISpanState;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import javax.annotation.Nullable;
+
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class SpanState {
-	public final GuiBook gui;
-	public final Book book;
+public class SpanState implements ISpanState {
+	private final GuiBook gui;
+	private final Book book;
+	private final FontRenderer font;
+	private final int baseColor;
 
-	private final Style baseStyle;
-	private final Deque<Style> styleStack = new ArrayDeque<>();
-	public IFormattableTextComponent tooltip = BookTextParser.EMPTY_STRING_COMPONENT;
-	public Supplier<Boolean> onClick = null;
-	public List<Span> cluster = null;
-	public boolean isExternalLink = false; // will show the "external link" symbol next to the link as soon as the link is closed
-	public boolean endingExternal = false; // will show the "external link" symbol next to the link immediately
-	public int lineBreaks = 0; // force line breaks
-	public int spacingLeft = 0; // add extra spacing
-	public int spacingRight = 0;
+	private int color;
+	private int prevColor;
+	private String codes = "";
+	private ITextComponent tooltip = BookTextParser.EMPTY_STRING_COMPONENT;
+	private Supplier<Boolean> onClick = null;
+	private List<ISpan> cluster = null;
+	private boolean isExternalLink = false; // will show the "external link" symbol next to the link as soon as the link is closed
+	private boolean endingExternal = false; // will show the "external link" symbol next to the link immediately
+	private int lineBreaks = 0; // force line breaks
+	private int spacingLeft = 0; // add extra spacing
+	private int spacingRight = 0;
 
-	public SpanState(GuiBook gui, Book book, Style baseStyle) {
+	public SpanState(GuiBook gui, Book book, int baseColor, FontRenderer font) {
 		this.gui = gui;
 		this.book = book;
-		this.baseStyle = baseStyle;
-		this.styleStack.push(baseStyle);
+		this.baseColor = baseColor;
+		this.font = font;
+
+		this.setColor(baseColor);
+		this.setPrevColor(baseColor);
 	}
 
-	public String color(Color color) {
-		return modifyStyle(s -> s.func_240718_a_(color));
+	/*@Override
+	public GuiBook getGui() {
+		return gui;
+	}*/
+
+	@Override
+	public ResourceLocation getBook() {
+		return book.id;
 	}
 
-	public String baseColor() {
-		return color(baseStyle.func_240711_a_());
+	@Override
+	public FontRenderer getFont() {
+		return font;
 	}
 
-	public String modifyStyle(Function<Style, Style> f) {
-		Style top = styleStack.pop();
-		styleStack.push(f.apply(top));
+	@Override
+	public int getBaseColor() {
+		return baseColor;
+	}
+
+	@Override
+	public int getColor() {
+		return color;
+	}
+
+	@Override
+	public int getPrevColor() {
+		return prevColor;
+	}
+
+	@Override
+	public String getCodes() {
+		return codes;
+	}
+
+	@Override
+	public ITextComponent getTooltip() {
+		return tooltip;
+	}
+
+	@Override
+	public Supplier<Boolean> getOnClick() {
+		return onClick;
+	}
+
+	@Override
+	public List<ISpan> getCluster() {
+		return cluster;
+	}
+
+	@Override
+	public boolean isExternalLink() {
+		return isExternalLink;
+	}
+
+	@Override
+	public boolean isEndingExternal() {
+		return endingExternal;
+	}
+
+	@Override
+	public int getLineBreaks() {
+		return lineBreaks;
+	}
+
+	@Override
+	public int getSpacingLeft() {
+		return spacingLeft;
+	}
+
+	@Override
+	public int getSpacingRight() {
+		return spacingRight;
+	}
+
+	@Override
+	public int getLinkColor() {
+		return this.book.linkColor;
+	}
+
+	@Override
+	public Minecraft getMinecraft() {
+		return this.gui.getMinecraft();
+	}
+
+	@Override
+	public String setCodes(String codes) {
+		this.codes = codes;
 		return "";
 	}
 
-	public void pushStyle(Style style) {
-		Style top = styleStack.peek();
-		styleStack.push(style.func_240717_a_(top));
+	@Override
+	public String setColor(int color) {
+		this.color = color;
+		return "";
 	}
 
-	public Style popStyle() {
-		Style ret = styleStack.pop();
-		if (styleStack.isEmpty()) {
-			throw new IllegalStateException("Underflow in style stack");
-		}
-		return ret;
+	@Override
+	public String setPrevColor(int prevColor) {
+		this.prevColor = prevColor;
+		return "";
 	}
 
+	@Override
+	public String setTooltip(ITextComponent tooltip) {
+		this.tooltip = tooltip;
+		return "";
+	}
+
+	@Override
+	public String setOnClick(@Nullable Supplier<Boolean> onClick) {
+		this.onClick = onClick;
+		return "";
+	}
+
+	@Override
+	public String setCluster(@Nullable List<ISpan> cluster) {
+		this.cluster = cluster;
+		return "";
+	}
+
+	@Override
+	public String setExternalLink(boolean externalLink) {
+		isExternalLink = externalLink;
+		return "";
+	}
+
+	@Override
+	public String setEndingExternal(boolean endingExternal) {
+		this.endingExternal = endingExternal;
+		return "";
+	}
+
+	@Override
+	public String setLineBreaks(int lineBreaks) {
+		this.lineBreaks = lineBreaks;
+		return "";
+	}
+
+	@Override
+	public String setSpacingLeft(int spacingLeft) {
+		this.spacingLeft = spacingLeft;
+		return "";
+	}
+
+	@Override
+	public String setSpacingRight(int spacingRight) {
+		this.spacingRight = spacingRight;
+		return "";
+	}
+
+	@Override
 	public void reset() {
-		endingExternal = isExternalLink;
-		styleStack.clear();
-		styleStack.push(baseStyle);
-		cluster = null;
-		tooltip = BookTextParser.EMPTY_STRING_COMPONENT;
-		onClick = null;
-		isExternalLink = false;
-	}
-
-	public Style peekStyle() {
-		return styleStack.getFirst();
+		setEndingExternal(isExternalLink());
+		setColor(getBaseColor());
+		setCodes("");
+		setCluster(null);
+		setTooltip(BookTextParser.EMPTY_STRING_COMPONENT);
+		setOnClick(null);
+		setExternalLink(false);
 	}
 }
