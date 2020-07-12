@@ -53,8 +53,8 @@ public class LecternEventHandler {
 	}
 
 	private static void takeBook(PlayerEntity player, LecternTileEntity tileEntity) {
-		ItemStack itemstack = tileEntity.field_214048_a.removeStackFromSlot(0);
-		tileEntity.field_214048_a.markDirty();
+		ItemStack itemstack = tileEntity.inventory.removeStackFromSlot(0);
+		tileEntity.inventory.markDirty();
 		if (!player.inventory.addItemStackToInventory(itemstack)) {
 			player.dropItem(itemstack, false);
 		}
