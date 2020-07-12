@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.text;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
 
 import vazkii.patchouli.api.ISpan;
@@ -21,8 +22,8 @@ public class SpanState implements ISpanState {
 	private final FontRenderer font;
 	private final int baseColor;
 
-	private int color;
-	private int prevColor;
+	private Color color;
+	private Color prevColor;
 	private String codes = "";
 	private ITextComponent tooltip = BookTextParser.EMPTY_STRING_COMPONENT;
 	private Supplier<Boolean> onClick = null;
@@ -64,12 +65,12 @@ public class SpanState implements ISpanState {
 	}
 
 	@Override
-	public int getColor() {
+	public Color getColor() {
 		return color;
 	}
 
 	@Override
-	public int getPrevColor() {
+	public Color getPrevColor() {
 		return prevColor;
 	}
 
@@ -135,14 +136,26 @@ public class SpanState implements ISpanState {
 	}
 
 	@Override
-	public String setColor(int color) {
+	public String setColor(Color color) {
 		this.color = color;
 		return "";
 	}
 
 	@Override
-	public String setPrevColor(int prevColor) {
+	public String setColor(int color) {
+		this.color = Color.func_240743_a_(color);
+		return "";
+	}
+
+	@Override
+	public String setPrevColor(Color prevColor) {
 		this.prevColor = prevColor;
+		return "";
+	}
+
+	@Override
+	public String setPrevColor(int prevColor) {
+		this.prevColor = Color.func_240743_a_(prevColor);
 		return "";
 	}
 

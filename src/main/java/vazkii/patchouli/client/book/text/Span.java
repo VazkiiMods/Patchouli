@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book.text;
 
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -11,7 +12,7 @@ import java.util.function.Supplier;
 public class Span implements ISpan {
 
 	private final String text;
-	private final int color;
+	private final Color color;
 	private final String codes;
 	private final List<ISpan> linkCluster;
 	private final ITextComponent tooltip;
@@ -38,7 +39,7 @@ public class Span implements ISpan {
 		state.setSpacingRight(0);
 	}
 
-	private Span(SpanState state, String text, int color, String codes) {
+	private Span(SpanState state, String text, Color color, String codes) {
 		this.text = text;
 		this.color = color;
 		this.codes = codes;
@@ -56,7 +57,7 @@ public class Span implements ISpan {
 	}
 
 	public static Span error(SpanState state, String message) {
-		return new Span(state, message, 0xFF0000, "");
+		return new Span(state, message, Color.func_240743_a_(0xFF0000), "");
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class Span implements ISpan {
 	}
 
 	@Override
-	public int getColor() {
+	public Color getColor() {
 		return color;
 	}
 

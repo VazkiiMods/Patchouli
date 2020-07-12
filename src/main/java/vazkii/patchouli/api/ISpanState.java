@@ -3,6 +3,7 @@ package vazkii.patchouli.api;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
@@ -19,9 +20,9 @@ public interface ISpanState {
 
 	int getBaseColor();
 
-	int getColor();
+	Color getColor();
 
-	int getPrevColor();
+	Color getPrevColor();
 
 	String getCodes();
 
@@ -49,7 +50,11 @@ public interface ISpanState {
 
 	String setColor(int color);
 
+	String setColor(Color color);
+
 	String setPrevColor(int prevColor);
+
+	String setPrevColor(Color prevColor);
 
 	String setTooltip(ITextComponent tooltip);
 

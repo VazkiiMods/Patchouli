@@ -1,5 +1,6 @@
 package vazkii.patchouli.api;
 
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.function.Supplier;
 public interface ISpan {
 	String getText();
 
-	int getColor();
+	Color getColor();
 
 	String getCodes();
 

@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.text;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -15,7 +16,7 @@ public class Word {
 	private final GuiBook gui;
 	private final int x, y, width, height;
 	private final String text;
-	private final int color;
+	private final Color color;
 	private final String codes;
 	private final List<Word> linkCluster;
 	private final ITextComponent tooltip;
@@ -38,17 +39,17 @@ public class Word {
 
 	public void render(MatrixStack matrixStack, FontRenderer font, float mouseX, float mouseY) {
 		String renderTarget = codes + text;
-		int renderColor = color;
+		Color renderColor = color;
 		if (isClusterHovered(mouseX, mouseY)) {
 			if (onClick != null) {
-				renderColor = book.linkHoverColor;
+				renderColor = Color.func_240743_a_(book.linkHoverColor);
 			}
 			if (!tooltip.getString().isEmpty()) {
 				gui.setTooltip(tooltip);
 			}
 		}
 
-		font.func_238405_a_(matrixStack, renderTarget, x, y, renderColor);
+		font.func_238405_a_(matrixStack, renderTarget, x, y, renderColor.func_240742_a_());
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {

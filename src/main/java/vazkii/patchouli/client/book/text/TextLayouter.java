@@ -104,7 +104,7 @@ public class TextLayouter {
 
 		char[] characters = last.span.getText().toCharArray();
 		for (int i = last.start; i < characters.length; i++) {
-			width += font.getCharWidth(characters[i]);
+			width += font.getStringWidth(Character.toString(characters[i]));
 			if (last.span.isBold()) {
 				width++;
 			}
