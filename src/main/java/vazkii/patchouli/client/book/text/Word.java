@@ -6,9 +6,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
-
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.event.HoverEvent;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
 
