@@ -1,6 +1,7 @@
 package vazkii.patchouli.common.book;
 
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.BookItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.*;
 
@@ -71,7 +72,7 @@ public class MacroRegistry {
 			state.setTooltip(EMPTY_STRING_COMPONENT);
 			return "";
 		}, "/t");
-		register(state -> state.getMinecraft().player.getDisplayName().getFormattedText(), "playername");
+		register(state -> state.getMinecraft().player.getName().getString(), "playername");
 		register(state -> state.setCodes("\u00A7k"), "k", "obf");
 		register(state -> state.setCodes("\u00A7l"), "l", "bold");
 		register(state -> state.setCodes("\u00A7m"), "m", "strike");
@@ -90,13 +91,12 @@ public class MacroRegistry {
 			}
 
 			state.setTooltip(new TranslationTextComponent("patchouli.gui.lexicon.keybind", new TranslationTextComponent(result.getKeyDescription())));
-			return result.getLocalizedName();
+			return result.func_238171_j_().getString();
 		}, "k");
 		register((parameter, state) -> {
 			state.setCluster(new LinkedList<>());
 
-			state.setPrevColor(state.getColor());
-			state.setColor(state.getLinkColor());
+			state.setColor(BookRegistry.INSTANCE.books.get(state.getBook()).linkColor);
 			boolean isExternal = parameter.matches("^https?\\:.*");
 
 			if (isExternal) {
@@ -115,29 +115,24 @@ public class MacroRegistry {
 					parameter = parameter.substring(0, hash);
 				}
 
-				Book book = BookRegistry.INSTANCE.books.get(state.getBook());
-				ResourceLocation href = parameter.contains(":") ? new ResourceLocation(parameter) : new ResourceLocation(book.getModNamespace(), parameter);
-				BookEntry entry = book.contents.entries.get(href);
+				ResourceLocation href = parameter.contains(":") ? new ResourceLocation(parameter) : new ResourceLocation(state.getBook().getNamespace(), parameter);
+				BookEntry entry = BookRegistry.INSTANCE.books.get(state.getBook()).contents.entries.get(href);
 				if (entry != null) {
 					state.setTooltip(entry.isLocked()
-							? new TranslationTextComponent("patchouli.gui.lexicon.locked").applyTextStyle(TextFormatting.GRAY)
-							: new StringTextComponent(entry.getName()));
-//					GuiBook gui = state.getGui();
+							? new TranslationTextComponent("patchouli.gui.lexicon.locked").func_240699_a_(TextFormatting.GRAY)
+							: entry.getName());
 					int page = 0;
 					if (anchor != null) {
 						int anchorPage = entry.getPageFromAnchor(anchor);
 						if (anchorPage >= 0) {
 							page = anchorPage / 2;
 						} else {
-							state.getTooltip().appendText(" (INVALID ANCHOR:" + anchor + ")");
+							state.getTooltip().func_230531_f_().func_240702_b_(" (INVALID ANCHOR:" + anchor + ")");
 						}
 					}
 					int finalPage = page;
 					state.setOnClick(() -> {
-						PatchouliAPI.instance.openBookEntry(book.id, entry.getId(), finalPage);
-						/*GuiBookEntry entryGui = new GuiBookEntry(book, entry, finalPage);
-						gui.displayLexiconGui(entryGui, true);*/
-//						GuiBook.playBookFlipSound(book);
+						PatchouliAPI.instance.openBookEntry(state.getBook(), entry.getId(), finalPage);
 						return true;
 					});
 				} else {
@@ -173,7 +168,7 @@ public class MacroRegistry {
 			state.setOnClick(null);
 			return "";
 		}, "/c");
-		register((parameter, state) -> ItemStackUtil.loadStackFromString(parameter).getDisplayName().getFormattedText(), "iname");
+		register((parameter, state) -> ItemStackUtil.loadStackFromString(parameter).getDisplayName().func_230531_f_().getString(), "iname");
 	}
 
 	private static KeyBinding getKeybindKey(ISpanState state, String keybind) {

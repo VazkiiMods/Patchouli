@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book.text;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -35,7 +36,7 @@ public class BookTextParser {
 		this.lineHeight = lineHeight;
 		this.baseColor = baseColor;
 
-		this.font = book.getFont();
+		this.font = Minecraft.getInstance().fontRenderer;
 		this.spaceWidth = font.getStringWidth(" ");
 	}
 
