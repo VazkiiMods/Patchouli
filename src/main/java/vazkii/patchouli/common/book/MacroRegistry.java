@@ -11,6 +11,8 @@ import vazkii.patchouli.api.ISpanState;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
+import vazkii.patchouli.client.book.text.SpanState;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 import java.util.*;
@@ -56,11 +58,17 @@ public class MacroRegistry {
 	}
 
 	public void init() {
-		register(state -> state.setLineBreaks(1), "br");
-		register(state -> state.setLineBreaks(2), "br2", "2br", "p");
+		register(state -> {
+			state.setLineBreaks(1);
+			return "";
+		}, "br");
+		register(state -> {
+			state.setLineBreaks(2);
+			return "";
+		}, "br2", "2br", "p");
 		register(state -> {
 			state.setEndingExternal(state.isExternalLink());
-			state.setColor(state.getPrevColor());
+			state.popStyle();
 			state.setCluster(null);
 			state.setTooltip(EMPTY_STRING_COMPONENT);
 			state.setOnClick(null);
@@ -72,16 +80,16 @@ public class MacroRegistry {
 			state.setTooltip(EMPTY_STRING_COMPONENT);
 			return "";
 		}, "/t");
-		register(state -> state.getMinecraft().player.getName().getString(), "playername");
-		register(state -> state.setCodes("\u00A7k"), "k", "obf");
-		register(state -> state.setCodes("\u00A7l"), "l", "bold");
-		register(state -> state.setCodes("\u00A7m"), "m", "strike");
-		register(state -> state.setCodes("\u00A7o"), "o", "italic", "italics");
+		register(state -> state.getGui().getMinecraft().player.getName().getString(), "playername"); // TODO 1.16: dropped format codes
+		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.OBFUSCATED)), "k", "obf");
+		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.BOLD)), "l", "bold");
+		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.STRIKETHROUGH)), "m", "strike");
+		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.ITALIC)), "o", "italic", "italics");
 		register(state -> {
 			state.reset();
 			return "";
 		}, "", "reset", "clear");
-		register(state -> state.setColor(state.getBaseColor()), "nocolor");
+		register(state -> state.baseColor(), "nocolor");
 
 		register((parameter, state) -> {
 			KeyBinding result = getKeybindKey(state, parameter);
@@ -90,13 +98,13 @@ public class MacroRegistry {
 				return "N/A";
 			}
 
-			state.setTooltip(new TranslationTextComponent("patchouli.gui.lexicon.keybind", new TranslationTextComponent(result.getKeyDescription())));
+			state.setTooltip(new TranslationTextComponent("patchouli.gui.lexicon.keybind", new TranslationTextComponent(result.getTranslationKey())));
 			return result.func_238171_j_().getString();
 		}, "k");
 		register((parameter, state) -> {
 			state.setCluster(new LinkedList<>());
 
-			state.setColor(BookRegistry.INSTANCE.books.get(state.getBook()).linkColor);
+			state.pushStyle(Style.field_240709_b_.func_240718_a_(Color.func_240743_a_(state.getLinkColor())));
 			boolean isExternal = parameter.matches("^https?\\:.*");
 
 			if (isExternal) {
@@ -115,8 +123,9 @@ public class MacroRegistry {
 					parameter = parameter.substring(0, hash);
 				}
 
-				ResourceLocation href = parameter.contains(":") ? new ResourceLocation(parameter) : new ResourceLocation(state.getBook().getNamespace(), parameter);
-				BookEntry entry = BookRegistry.INSTANCE.books.get(state.getBook()).contents.entries.get(href);
+				Book book = BookRegistry.INSTANCE.books.get(state.getBook());
+				ResourceLocation href = parameter.contains(":") ? new ResourceLocation(parameter) : new ResourceLocation(book.getModNamespace(), parameter);
+				BookEntry entry = book.contents.entries.get(href);
 				if (entry != null) {
 					state.setTooltip(entry.isLocked()
 							? new TranslationTextComponent("patchouli.gui.lexicon.locked").func_240699_a_(TextFormatting.GRAY)
@@ -127,12 +136,12 @@ public class MacroRegistry {
 						if (anchorPage >= 0) {
 							page = anchorPage / 2;
 						} else {
-							state.getTooltip().func_230531_f_().func_240702_b_(" (INVALID ANCHOR:" + anchor + ")");
+							state.getTooltip().func_240702_b_(" (INVALID ANCHOR:" + anchor + ")");
 						}
 					}
 					int finalPage = page;
 					state.setOnClick(() -> {
-						PatchouliAPI.instance.openBookEntry(state.getBook(), entry.getId(), finalPage);
+						PatchouliAPI.instance.openBookEntry(book.id, entry.getId(), finalPage);
 						return true;
 					});
 				} else {
@@ -147,8 +156,7 @@ public class MacroRegistry {
 			return "";
 		}, "tooltip", "t");
 		register((parameter, state) -> {
-			state.setPrevColor(state.getColor());
-			state.setColor(state.getLinkColor());
+			state.pushStyle(Style.field_240709_b_.func_240718_a_(Color.func_240743_a_(state.getLinkColor())));
 			state.setCluster(new LinkedList<>());
 			if (!parameter.startsWith("/")) {
 				state.setTooltip(new StringTextComponent("INVALID COMMAND (must begin with /)"));
@@ -162,7 +170,7 @@ public class MacroRegistry {
 			return "";
 		}, "command", "c");
 		register(state -> {
-			state.setColor(state.getPrevColor());
+			state.popStyle();
 			state.setCluster(null);
 			state.setTooltip(EMPTY_STRING_COMPONENT);
 			state.setOnClick(null);

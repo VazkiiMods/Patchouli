@@ -4,73 +4,75 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Color;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import vazkii.patchouli.client.book.gui.GuiBook;
 
 import javax.annotation.Nullable;
 
+import java.util.Deque;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface ISpanState {
-	/*GuiBook getGui();*/
 
-	ResourceLocation getBook();
+	GuiBook getGui();
 
-	FontRenderer getFont();
+	abstract ResourceLocation getBook();
 
-	int getBaseColor();
+	Style getBaseStyle();
 
-	Color getColor();
+	Deque<Style> getStyleStack();
 
-	Color getPrevColor();
+	abstract IFormattableTextComponent getTooltip();
 
-	String getCodes();
+	void setTooltip(IFormattableTextComponent tooltip);
 
-	ITextComponent getTooltip();
+	abstract Supplier<Boolean> getOnClick();
 
-	Supplier<Boolean> getOnClick();
+	abstract List<ISpan> getCluster();
 
-	List<ISpan> getCluster();
+	abstract boolean isExternalLink();
 
-	boolean isExternalLink();
+	abstract boolean isEndingExternal();
 
-	boolean isEndingExternal();
+	abstract int getLineBreaks();
 
-	int getLineBreaks();
+	abstract int getSpacingLeft();
 
-	int getSpacingLeft();
+	abstract int getSpacingRight();
 
-	int getSpacingRight();
+	abstract String setOnClick(Supplier<Boolean> onClick);
+
+	abstract String setCluster(List<ISpan> cluster);
+
+	abstract String setExternalLink(boolean externalLink);
+
+	abstract String setEndingExternal(boolean endingExternal);
+
+	abstract String setLineBreaks(int lineBreaks);
+
+	abstract String setSpacingLeft(int spacingLeft);
+
+	abstract void setSpacingRight(int spacingRight);
+
+	String color(Color color);
+
+	String baseColor();
+
+	abstract String modifyStyle(Function<Style, Style> f);
+
+	abstract void pushStyle(Style style);
+
+	abstract Style popStyle();
+
+	abstract void reset();
+
+	abstract Style peekStyle();
 
 	int getLinkColor();
 
 	Minecraft getMinecraft();
-
-	String setCodes(String codes);
-
-	String setColor(int color);
-
-	String setColor(Color color);
-
-	String setPrevColor(int prevColor);
-
-	String setPrevColor(Color prevColor);
-
-	String setTooltip(ITextComponent tooltip);
-
-	String setOnClick(@Nullable Supplier<Boolean> onClick);
-
-	String setCluster(@Nullable List<ISpan> cluster);
-
-	String setExternalLink(boolean externalLink);
-
-	String setEndingExternal(boolean endingExternal);
-
-	String setLineBreaks(int lineBreaks);
-
-	String setSpacingLeft(int spacingLeft);
-
-	String setSpacingRight(int spacingRight);
-
-	void reset();
 }

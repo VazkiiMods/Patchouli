@@ -2,16 +2,16 @@ package vazkii.patchouli.api;
 
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 public interface ISpan {
+
 	String getText();
 
-	Color getColor();
-
-	String getCodes();
+	Style getStyle();
 
 	List<ISpan> getLinkCluster();
 

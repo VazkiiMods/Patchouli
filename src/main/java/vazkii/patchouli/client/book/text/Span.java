@@ -1,8 +1,6 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.*;
 
 import vazkii.patchouli.api.ISpan;
 
@@ -10,10 +8,12 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class Span implements ISpan {
+	public static Span error(SpanState state, String message) {
+		return new Span(state, message, Style.field_240709_b_.func_240712_a_(TextFormatting.RED));
+	}
 
 	private final String text;
-	private final Color color;
-	private final String codes;
+	private final Style style;
 	private final List<ISpan> linkCluster;
 	private final ITextComponent tooltip;
 	private final Supplier<Boolean> onClick;
@@ -24,40 +24,34 @@ public class Span implements ISpan {
 
 	public Span(SpanState state, String text) {
 		this.text = text;
-		this.color = state.getColor();
-		this.codes = state.getCodes();
+		this.style = state.peekStyle();
 		this.onClick = state.getOnClick();
 		this.linkCluster = state.getCluster();
 		this.tooltip = state.getTooltip();
 		this.lineBreaks = state.getLineBreaks();
 		this.spacingLeft = state.getSpacingLeft();
 		this.spacingRight = state.getSpacingRight();
-		this.bold = getCodes().contains("\u00A7l");
+		this.bold = style.getBold();
 
 		state.setLineBreaks(0);
 		state.setSpacingLeft(0);
 		state.setSpacingRight(0);
 	}
 
-	private Span(SpanState state, String text, Color color, String codes) {
+	private Span(SpanState state, String text, Style style) {
 		this.text = text;
-		this.color = color;
-		this.codes = codes;
+		this.style = style;
 		this.onClick = null;
 		this.linkCluster = null;
 		this.tooltip = new StringTextComponent("");
 		this.lineBreaks = state.getLineBreaks();
 		this.spacingLeft = state.getSpacingLeft();
 		this.spacingRight = state.getSpacingRight();
-		this.bold = codes.contains("\u00A7l");
+		this.bold = style.getBold();
 
 		state.setLineBreaks(0);
 		state.setSpacingLeft(0);
 		state.setSpacingRight(0);
-	}
-
-	public static Span error(SpanState state, String message) {
-		return new Span(state, message, Color.func_240743_a_(0xFF0000), "");
 	}
 
 	@Override
@@ -66,13 +60,8 @@ public class Span implements ISpan {
 	}
 
 	@Override
-	public Color getColor() {
-		return color;
-	}
-
-	@Override
-	public String getCodes() {
-		return codes;
+	public Style getStyle() {
+		return style;
 	}
 
 	@Override
