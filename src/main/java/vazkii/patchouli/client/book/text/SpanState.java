@@ -6,8 +6,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
-
 import net.minecraft.util.text.Style;
+
 import vazkii.patchouli.api.ISpan;
 import vazkii.patchouli.api.ISpanState;
 import vazkii.patchouli.client.book.gui.GuiBook;

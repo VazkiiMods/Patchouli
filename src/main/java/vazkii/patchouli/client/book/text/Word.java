@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.text;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.ITextComponent;

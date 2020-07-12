@@ -7,6 +7,7 @@ import net.minecraft.util.text.Color;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 import javax.annotation.Nullable;
