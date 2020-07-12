@@ -45,11 +45,6 @@ public class SpanState implements ISpanState {
 	}
 
 	@Override
-	public GuiBook getGui() {
-		return gui;
-	}
-
-	@Override
 	public ResourceLocation getBook() {
 		return book.id;
 	}

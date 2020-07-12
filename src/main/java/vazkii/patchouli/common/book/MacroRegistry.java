@@ -80,7 +80,7 @@ public class MacroRegistry {
 			state.setTooltip(EMPTY_STRING_COMPONENT);
 			return "";
 		}, "/t");
-		register(state -> state.getGui().getMinecraft().player.getName().getString(), "playername"); // TODO 1.16: dropped format codes
+		register(state -> state.getMinecraft().player.getName().getString(), "playername"); // TODO 1.16: dropped format codes
 		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.OBFUSCATED)), "k", "obf");
 		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.BOLD)), "l", "bold");
 		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.STRIKETHROUGH)), "m", "strike");

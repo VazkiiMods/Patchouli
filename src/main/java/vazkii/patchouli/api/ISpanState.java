@@ -8,8 +8,6 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 
-import vazkii.patchouli.client.book.gui.GuiBook;
-
 import javax.annotation.Nullable;
 
 import java.util.Deque;
@@ -18,8 +16,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface ISpanState {
-
-	GuiBook getGui();
 
 	abstract ResourceLocation getBook();
 
