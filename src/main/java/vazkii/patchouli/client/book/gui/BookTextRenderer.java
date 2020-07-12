@@ -46,14 +46,14 @@ public class BookTextRenderer {
 	}
 
 	private void build() {
-		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, baseStyle.func_240711_a_().func_240742_a_());
+		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, baseStyle);
 		words = parser.parse(text);
 	}
 
 	public void render(MatrixStack ms, int mouseX, int mouseY) {
 		FontRenderer font = Minecraft.getInstance().fontRenderer;
 		Style style = book.getFontStyle();
-		words.forEach(word -> word.render(ms, font, mouseX, mouseY));
+		words.forEach(word -> word.render(ms, font, style, mouseX, mouseY));
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {

@@ -2,19 +2,21 @@ package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 
+import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.MacroRegistry;
 
 import javax.annotation.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BookTextParser {
 	public static final StringTextComponent EMPTY_STRING_COMPONENT = new StringTextComponent("");
@@ -23,21 +25,21 @@ public class BookTextParser {
 	private final Book book;
 	private final int x, y, width;
 	private final int lineHeight;
-	private final int baseColor;
+	private final Style baseStyle;
 	private final FontRenderer font;
 	private final int spaceWidth;
 
-	public BookTextParser(GuiBook gui, Book book, int x, int y, int width, int lineHeight, int baseColor) {
+	public BookTextParser(GuiBook gui, Book book, int x, int y, int width, int lineHeight, Style baseStyle) {
 		this.gui = gui;
 		this.book = book;
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.lineHeight = lineHeight;
-		this.baseColor = baseColor;
+		this.baseStyle = baseStyle;
 
 		this.font = Minecraft.getInstance().fontRenderer;
-		this.spaceWidth = font.getStringWidth(" ");
+		this.spaceWidth = font.func_238414_a_(new StringTextComponent(" ").func_230530_a_(baseStyle));
 	}
 
 	public List<Word> parse(@Nullable String text) {
@@ -78,8 +80,11 @@ public class BookTextParser {
 		return layouter.getWords();
 	}
 
+	/**
+	 * Takes in the raw book source and computes a collection of spans from it.
+	 */
 	private List<Span> processCommands(String text) {
-		SpanState state = new SpanState(gui, book, baseColor, font);
+		SpanState state = new SpanState(gui, book, baseStyle);
 		List<Span> spans = new ArrayList<>();
 
 		int from = 0;
@@ -125,19 +130,19 @@ public class BookTextParser {
 		String result = "";
 
 		if (cmd.length() == 1 && cmd.matches("^[0123456789abcdef]$")) { // Vanilla colors
-			state.setColor(TextFormatting.fromFormattingCode(cmd.charAt(0)).getColor());
-			return "";
+			return state.modifyStyle(s -> s.func_240712_a_(TextFormatting.fromFormattingCode(cmd.charAt(0))));
 		} else if (cmd.startsWith("#") && (cmd.length() == 4 || cmd.length() == 7)) { // Hex colors
+			Color color;
 			String parse = cmd.substring(1);
 			if (parse.length() == 3) {
 				parse = "" + parse.charAt(0) + parse.charAt(0) + parse.charAt(1) + parse.charAt(1) + parse.charAt(2) + parse.charAt(2);
 			}
 			try {
-				state.setColor(Integer.parseInt(parse, 16));
+				color = Color.func_240743_a_(Integer.parseInt(parse, 16));
 			} catch (NumberFormatException e) {
-				state.setColor(baseColor);
+				color = baseStyle.func_240711_a_();
 			}
-			return "";
+			return state.color(color);
 		} else if (cmd.matches("li\\d?")) { // List Element
 			char c = cmd.length() > 2 ? cmd.charAt(2) : '1';
 			int dist = Character.isDigit(c) ? Character.digit(c, 10) : 1;

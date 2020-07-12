@@ -1,8 +1,6 @@
 package vazkii.patchouli.api;
 
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
+import net.minecraft.util.text.*;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -26,4 +24,12 @@ public interface ISpan {
 	int getSpacingRight();
 
 	boolean isBold();
+
+	default IFormattableTextComponent styledSubstring(int start) {
+		return new StringTextComponent(getText().substring(start)).func_230530_a_(getStyle());
+	}
+
+	default IFormattableTextComponent styledSubstring(int start, int end) {
+		return new StringTextComponent(getText().substring(start, end)).func_230530_a_(getStyle());
+	}
 }

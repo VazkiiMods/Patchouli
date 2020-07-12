@@ -1,6 +1,8 @@
 package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.MinecraftForgeClient;
 
 import vazkii.patchouli.api.ISpan;
@@ -30,7 +32,7 @@ public class TextLayouter {
 	private List<Word> linkCluster = null;
 	private List<ISpan> spanCluster = null;
 
-	private List<SpanTail> pending = new ArrayList<>();
+	private final List<SpanTail> pending = new ArrayList<>();
 	private int lineStart = 0;
 	private int widthSoFar = 0;
 
@@ -64,13 +66,13 @@ public class TextLayouter {
 		lineStart = 0;
 
 		for (Span span : paragraph) {
-			append(iterator, span);
+			layoutSpan(iterator, span);
 		}
 
 		flush();
 	}
 
-	private void append(BreakIterator iterator, Span span) {
+	private void layoutSpan(BreakIterator iterator, Span span) {
 		if (spanCluster != span.getLinkCluster()) {
 			linkCluster = span.getLinkCluster() == null ? null : new ArrayList<>();
 			spanCluster = span.getLinkCluster();
@@ -104,7 +106,8 @@ public class TextLayouter {
 
 		char[] characters = last.span.getText().toCharArray();
 		for (int i = last.start; i < characters.length; i++) {
-			width += font.getStringWidth(Character.toString(characters[i]));
+			ITextComponent tmp = new StringTextComponent(String.valueOf(characters[i])).func_230530_a_(last.span.getStyle());
+			width += font.func_238414_a_(tmp);
 			if (last.span.isBold()) {
 				width++;
 			}
@@ -191,14 +194,14 @@ public class TextLayouter {
 		public SpanTail(Span span, int start, List<Word> cluster) {
 			this.span = span;
 			this.start = start;
-			this.width = font.getStringWidth(span.getCodes() + span.getText().substring(start)) + span.getSpacingLeft() + span.getSpacingRight();
+			this.width = font.func_238414_a_(span.styledSubstring(start)) + span.getSpacingLeft() + span.getSpacingRight();
 			this.cluster = cluster;
 			this.length = span.getText().length() - start;
 		}
 
 		public Word position(GuiBook gui, int x, int y, int length) {
 			x += span.getSpacingLeft();
-			Word result = new Word(gui, span, span.getText().substring(start, start + length), x, y, width, cluster);
+			Word result = new Word(gui, span, span.styledSubstring(start, start + length), x, y, width, cluster);
 			if (cluster != null) {
 				cluster.add(result);
 			}
