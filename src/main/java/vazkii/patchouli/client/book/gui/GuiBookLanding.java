@@ -32,8 +32,8 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	@Override
-	public void func_231160_c_() {
-		super.func_231160_c_();
+	public void init() {
+		super.init();
 
 		text = new BookTextRenderer(this, I18n.format(book.landingText), LEFT_PAGE_X, TOP_PADDING + 25);
 
@@ -46,15 +46,15 @@ public class GuiBookLanding extends GuiBook {
 
 		// Resize
 		if (maxScale > 2) {
-			func_230480_a_(new GuiButtonBookResize(this, x + (pos++) * dist, y, true, this::handleButtonResize));
+			addButton(new GuiButtonBookResize(this, x + (pos++) * dist, y, true, this::handleButtonResize));
 		}
 
 		// History
-		func_230480_a_(new GuiButtonBookHistory(this, x + (pos++) * dist, y, this::handleButtonHistory));
+		addButton(new GuiButtonBookHistory(this, x + (pos++) * dist, y, this::handleButtonHistory));
 
 		// Advancements
 		if (book.advancementsTab != null) {
-			func_230480_a_(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y, this::handleButtonAdvancements));
+			addButton(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y, this::handleButtonAdvancements));
 		}
 
 		// Config
@@ -65,7 +65,7 @@ public class GuiBookLanding extends GuiBook {
 		//		}
 
 		if (Minecraft.getInstance().player.isCreative()) {
-			func_230480_a_(new GuiButtonBookEdit(this, x + (pos++) * dist, y, this::handleButtonEdit));
+			addButton(new GuiButtonBookEdit(this, x + (pos++) * dist, y, this::handleButtonEdit));
 		}
 
 		int i = 0;
@@ -89,9 +89,9 @@ public class GuiBookLanding extends GuiBook {
 		int y = TOP_PADDING + 25 + (i / 4) * 24;
 
 		if (category == null) {
-			func_230480_a_(new GuiButtonIndex(this, x, y, this::handleButtonIndex));
+			addButton(new GuiButtonIndex(this, x, y, this::handleButtonIndex));
 		} else {
-			func_230480_a_(new GuiButtonCategory(this, x, y, category, this::handleButtonCategory));
+			addButton(new GuiButtonCategory(this, x, y, category, this::handleButtonCategory));
 		}
 	}
 
@@ -134,9 +134,9 @@ public class GuiBookLanding extends GuiBook {
 		drawFromTexture(ms, book, -8, 12, 0, 180, 140, 31);
 
 		int color = book.nameplateColor;
-		field_230712_o_.func_238422_b_(ms, book.getBookItem().getDisplayName(), 13, 16, color);
+		font.func_238422_b_(ms, book.getBookItem().getDisplayName(), 13, 16, color);
 		ITextComponent toDraw = book.getSubtitle().func_240703_c_(book.getFontStyle());
-		field_230712_o_.func_238422_b_(ms, toDraw, 24, 24, color);
+		font.func_238422_b_(ms, toDraw, 24, 24, color);
 	}
 
 	void makeErrorTooltip() {
@@ -186,12 +186,12 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	public void handleButtonEdit(Button button) {
-		if (func_231173_s_()) {
+		if (hasShiftDown()) {
 			long time = System.currentTimeMillis();
 			book.reloadContentsAndExtensions();
 			book.reloadLocks(false);
 			displayLexiconGui(new GuiBookLanding(book), false);
-			getMinecraft().player.sendMessage(new TranslationTextComponent("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)), Util.field_240973_b_);
+			getMinecraft().player.sendMessage(new TranslationTextComponent("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)), Util.DUMMY_UUID);
 		} else {
 			displayLexiconGui(new GuiBookWriter(book), true);
 		}

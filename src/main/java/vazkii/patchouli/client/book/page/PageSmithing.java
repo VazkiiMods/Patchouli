@@ -16,14 +16,14 @@ import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 
 	public PageSmithing() {
-		super(IRecipeType.field_234827_g_);
+		super(IRecipeType.SMITHING);
 	}
 
 	@Override
 	protected void drawRecipe(MatrixStack ms, SmithingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		mc.getTextureManager().bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
-		AbstractGui.func_238463_a_(ms, recipeX, recipeY, 11, 135, 96, 43, 128, 256);
+		AbstractGui.blit(ms, recipeX, recipeY, 11, 135, 96, 43, 128, 256);
 		parent.drawCenteredStringNoShadow(ms, getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
 		Ingredient base = ObfuscationReflectionHelper.getPrivateValue(SmithingRecipe.class, recipe, "field_234837_a_");

@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  */
 public class Span {
 	public static Span error(SpanState state, String message) {
-		return new Span(state, message, Style.field_240709_b_.func_240712_a_(TextFormatting.RED));
+		return new Span(state, message, Style.EMPTY.applyFormatting(TextFormatting.RED));
 	}
 
 	public final String text;

@@ -235,9 +235,9 @@ public class Book {
 	@OnlyIn(Dist.CLIENT)
 	public Style getFontStyle() {
 		if (useBlockyFont) {
-			return Style.field_240709_b_;
+			return Style.EMPTY;
 		} else {
-			return Style.field_240709_b_.func_240719_a_(UNICODE_FONT_ID);
+			return Style.EMPTY.setFontId(UNICODE_FONT_ID);
 		}
 	}
 

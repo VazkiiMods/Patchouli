@@ -47,8 +47,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public void func_231160_c_() {
-		super.func_231160_c_();
+	public void init() {
+		super.init();
 
 		maxSpreads = (int) Math.ceil((float) entry.getPages().size() / 2);
 		setupPages();
@@ -209,7 +209,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		Book book = currGui.book;
 		GuiBookEntry gui = new GuiBookEntry(currGui.book, entry);
 
-		if (Screen.func_231173_s_()) {
+		if (Screen.hasShiftDown()) {
 			BookData data = PersistentData.data.getBookData(book);
 
 			if (gui.isBookmarkedAlready()) {
@@ -246,7 +246,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 		RenderHelper.transferMsToGl(ms, () -> {
 			getMinecraft().getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
-			getMinecraft().getItemRenderer().renderItemOverlays(field_230712_o_, stack, x, y);
+			getMinecraft().getItemRenderer().renderItemOverlays(font, stack, x, y);
 		});
 
 		if (isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
@@ -279,11 +279,11 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void registerButton(Button button, int pageNum, Runnable onClick) {
-		button.field_230690_l_ += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
-		button.field_230691_m_ += bookTop;
+		button.x += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
+		button.y += bookTop;
 
 		customButtons.put(button, onClick);
-		func_230480_a_(button);
+		addButton(button);
 	}
 
 	@Override

@@ -77,7 +77,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	@Override
-	public void func_231160_c_() {
+	public void init() {
 		MainWindow res = getMinecraft().getMainWindow();
 		double oldGuiScale = res.calcGuiScale(getMinecraft().gameSettings.guiScale, getMinecraft().getForceUnicodeFont());
 
@@ -89,27 +89,27 @@ public abstract class GuiBook extends Screen {
 			scaleFactor = (float) newGuiScale / (float) res.getGuiScaleFactor();
 
 			res.setGuiScale(newGuiScale);
-			field_230708_k_ = res.getScaledWidth();
-			field_230709_l_ = res.getScaledHeight();
+			width = res.getScaledWidth();
+			height = res.getScaledHeight();
 			res.setGuiScale(oldGuiScale);
 		} else {
 			scaleFactor = 1;
 		}
 
-		bookLeft = field_230708_k_ / 2 - FULL_WIDTH / 2;
-		bookTop = field_230709_l_ / 2 - FULL_HEIGHT / 2;
+		bookLeft = width / 2 - FULL_WIDTH / 2;
+		bookTop = height / 2 - FULL_HEIGHT / 2;
 
 		book.contents.currentGui = this;
 
-		func_230480_a_(new GuiButtonBookBack(this, field_230708_k_ / 2 - 9, bookTop + FULL_HEIGHT - 5));
-		func_230480_a_(new GuiButtonBookArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
-		func_230480_a_(new GuiButtonBookArrow(this, bookLeft + FULL_WIDTH - 14, bookTop + FULL_HEIGHT - 6, false));
+		addButton(new GuiButtonBookBack(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5));
+		addButton(new GuiButtonBookArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
+		addButton(new GuiButtonBookArrow(this, bookLeft + FULL_WIDTH - 14, bookTop + FULL_HEIGHT - 6, false));
 
 		addBookmarkButtons();
 	}
 
 	@Override
-	public final void func_230430_a_(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public final void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		ms.push();
 		if (scaleFactor != 1) {
 			ms.scale(scaleFactor, scaleFactor, scaleFactor);
@@ -124,7 +124,7 @@ public abstract class GuiBook extends Screen {
 
 	final void drawScreenAfterScale(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		resetTooltip();
-		func_230446_a_(ms);
+		renderBackground(ms);
 
 		ms.push();
 		ms.translate(bookLeft, bookTop, 0);
@@ -133,7 +133,7 @@ public abstract class GuiBook extends Screen {
 		drawForegroundElements(ms, mouseX, mouseY, partialTicks);
 		ms.pop();
 
-		super.func_230430_a_(ms, mouseX, mouseY, partialTicks);
+		super.render(ms, mouseX, mouseY, partialTicks);
 
 		MinecraftForge.EVENT_BUS.post(new BookDrawScreenEvent(this, this.book.id, mouseX, mouseY, partialTicks, ms));
 
@@ -146,23 +146,23 @@ public abstract class GuiBook extends Screen {
 		int y = 0;
 		List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
 		for (Bookmark bookmark : bookmarks) {
-			func_230480_a_(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
+			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
 			y += 12;
 		}
 
 		y += (y == 0 ? 0 : 2);
 		if (shouldAddAddBookmarkButton() && bookmarks.size() <= MAX_BOOKMARKS) {
-			func_230480_a_(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
+			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
 		}
 
 		if (MultiblockVisualizationHandler.hasMultiblock && MultiblockVisualizationHandler.bookmark != null) {
-			func_230480_a_(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.bookmark, true));
+			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.bookmark, true));
 		}
 	}
 
 	public void removeButtonsIf(Predicate<IGuiEventListener> pred) {
-		field_230710_m_.removeIf(pred);
-		field_230705_e_.removeIf(pred);
+		buttons.removeIf(pred);
+		children.removeIf(pred);
 	}
 
 	public void removeButtonsIn(Collection<?> coll) {
@@ -170,13 +170,13 @@ public abstract class GuiBook extends Screen {
 	}
 
 	@Override // make public
-	public <T extends Widget> T func_230480_a_(T widget) {
-		return super.func_230480_a_(widget);
+	public <T extends Widget> T addButton(T widget) {
+		return super.addButton(widget);
 	}
 
 	@Override // make public
-	public void func_238653_a_(MatrixStack matrices, @Nullable Style style, int mouseX, int mouseY) {
-		super.func_238653_a_(matrices, style, mouseX, mouseY);
+	public void renderComponentHoverEffect(MatrixStack matrices, @Nullable Style style, int mouseX, int mouseY) {
+		super.renderComponentHoverEffect(matrices, style, mouseX, mouseY);
 	}
 
 	protected boolean shouldAddAddBookmarkButton() {
@@ -192,8 +192,8 @@ public abstract class GuiBook extends Screen {
 	}
 
 	@Override
-	public void func_231023_e_() {
-		if (!func_231173_s_()) {
+	public void tick() {
+		if (!hasShiftDown()) {
 			ticksInBook++;
 		}
 
@@ -211,7 +211,7 @@ public abstract class GuiBook extends Screen {
 
 	final void drawTooltip(MatrixStack ms, int mouseX, int mouseY) {
 		if (tooltipStack != null) {
-			List<ITextComponent> tooltip = this.func_231151_a_(tooltipStack);
+			List<ITextComponent> tooltip = this.getTooltipFromItem(tooltipStack);
 
 			Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
 			if (provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
@@ -224,10 +224,10 @@ public abstract class GuiBook extends Screen {
 			}
 
 			GuiUtils.preItemToolTip(tooltipStack);
-			this.func_238654_b_(ms, tooltip, mouseX, mouseY);
+			this.renderTooltip(ms, tooltip, mouseX, mouseY);
 			GuiUtils.postItemToolTip();
 		} else if (tooltip != null && !tooltip.isEmpty()) {
-			this.func_238654_b_(ms, tooltip, mouseX, mouseY);
+			this.renderTooltip(ms, tooltip, mouseX, mouseY);
 		}
 	}
 
@@ -239,11 +239,11 @@ public abstract class GuiBook extends Screen {
 
 	public static void drawFromTexture(MatrixStack ms, Book book, int x, int y, int u, int v, int w, int h) {
 		Minecraft.getInstance().textureManager.bindTexture(book.bookTexture);
-		AbstractGui.func_238463_a_(ms, x, y, u, v, w, h, 512, 256);
+		AbstractGui.blit(ms, x, y, u, v, w, h, 512, 256);
 	}
 
 	@Override
-	public boolean func_231177_au__() {
+	public boolean isPauseScreen() {
 		return book.pauseGame;
 	}
 
@@ -261,7 +261,7 @@ public abstract class GuiBook extends Screen {
 		if (bookmark == null || bookmark.getEntry(book) == null) {
 			bookmarkThis();
 		} else {
-			if (func_231173_s_() && !bookmarkButton.multiblock) {
+			if (hasShiftDown() && !bookmarkButton.multiblock) {
 				List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
 				bookmarks.remove(bookmark);
 				PersistentData.save();
@@ -273,14 +273,14 @@ public abstract class GuiBook extends Screen {
 	}
 
 	@Override
-	public final boolean func_231044_a_(double mouseX, double mouseY, int mouseButton) {
+	public final boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		return mouseClickedScaled(mouseX / scaleFactor, mouseY / scaleFactor, mouseButton);
 	}
 
 	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
 		switch (mouseButton) {
 		case GLFW.GLFW_MOUSE_BUTTON_LEFT:
-			if (targetPage != null && func_231173_s_()) {
+			if (targetPage != null && hasShiftDown()) {
 				displayLexiconGui(new GuiBookEntry(book, targetPage.getFirst(), targetPage.getSecond()), true);
 				playBookFlipSound(book);
 				return true;
@@ -297,21 +297,21 @@ public abstract class GuiBook extends Screen {
 			return true;
 		}
 
-		return super.func_231044_a_(mouseX, mouseY, mouseButton);
+		return super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
-	public boolean func_231046_a_(int keyCode, int scanCode, int modifiers) {
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
 			back(true);
 			return true;
 		} else {
-			return super.func_231046_a_(keyCode, scanCode, modifiers);
+			return super.keyPressed(keyCode, scanCode, modifiers);
 		}
 	}
 
 	@Override
-	public boolean func_231043_a_(double mouseX, double mouseY, double scroll) {
+	public boolean mouseScrolled(double mouseX, double mouseY, double scroll) {
 		if (scroll < 0) {
 			changePage(false, true);
 		} else if (scroll > 0) {
@@ -323,7 +323,7 @@ public abstract class GuiBook extends Screen {
 
 	void back(boolean sfx) {
 		if (!book.contents.guiStack.isEmpty()) {
-			if (func_231173_s_()) {
+			if (hasShiftDown()) {
 				displayLexiconGui(new GuiBookLanding(book), false);
 				book.contents.guiStack.clear();
 			} else {
@@ -439,12 +439,12 @@ public abstract class GuiBook extends Screen {
 		float unlockFract = (float) unlockedEntries / Math.max(1, (float) totalEntries);
 		int progressWidth = (int) (((float) barWidth - 1) * unlockFract);
 
-		AbstractGui.func_238467_a_(ms, barLeft, barTop, barLeft + barWidth, barTop + barHeight, book.headerColor);
+		AbstractGui.fill(ms, barLeft, barTop, barLeft + barWidth, barTop + barHeight, book.headerColor);
 
 		drawGradient(ms, barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, book.progressBarBackground);
 		drawGradient(ms, barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, book.progressBarColor);
 
-		field_230712_o_.func_238422_b_(ms, new TranslationTextComponent("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
+		font.func_238422_b_(ms, new TranslationTextComponent("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
 
 		if (isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
 			List<ITextComponent> tooltip = new ArrayList<>();
@@ -469,15 +469,15 @@ public abstract class GuiBook extends Screen {
 
 	private void drawGradient(MatrixStack ms, int x, int y, int w, int h, int color) {
 		int darkerColor = new Color(color).darker().getRGB();
-		func_238468_a_(ms, x, y, w, h, color, darkerColor);
+		fillGradient(ms, x, y, w, h, color, darkerColor);
 	}
 
 	public void drawCenteredStringNoShadow(MatrixStack ms, ITextProperties s, int x, int y, int color) {
-		field_230712_o_.func_238422_b_(ms, s, x - field_230712_o_.func_238414_a_(s) / 2.0F, y, color);
+		font.func_238422_b_(ms, s, x - font.func_238414_a_(s) / 2.0F, y, color);
 	}
 
 	public void drawCenteredStringNoShadow(MatrixStack ms, String s, int x, int y, int color) {
-		field_230712_o_.func_238421_b_(ms, s, x - field_230712_o_.getStringWidth(s) / 2.0F, y, color);
+		font.drawString(ms, s, x - font.getStringWidth(s) / 2.0F, y, color);
 	}
 
 	private int getMaxAllowedScale() {
@@ -525,7 +525,7 @@ public abstract class GuiBook extends Screen {
 		RenderSystem.enableBlend();
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		Minecraft.getInstance().textureManager.bindTexture(book.fillerTexture);
-		AbstractGui.func_238463_a_(ms, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
+		AbstractGui.blit(ms, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 
 	public static void playBookFlipSound(Book book) {

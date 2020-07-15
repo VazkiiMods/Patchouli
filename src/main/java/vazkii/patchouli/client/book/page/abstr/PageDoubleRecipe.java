@@ -36,9 +36,9 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 		title1 = !customTitle ? getRecipeOutput(recipe1).getDisplayName() : i18nText(title);
 		title2 = new StringTextComponent("-");
 		if (recipe2 != null) {
-			title2 = !customTitle ? getRecipeOutput(recipe2).getDisplayName() : StringTextComponent.field_240750_d_;
+			title2 = !customTitle ? getRecipeOutput(recipe2).getDisplayName() : StringTextComponent.EMPTY;
 			if (title1.equals(title2)) {
-				title2 = StringTextComponent.field_240750_d_;
+				title2 = StringTextComponent.EMPTY;
 			}
 		}
 	}

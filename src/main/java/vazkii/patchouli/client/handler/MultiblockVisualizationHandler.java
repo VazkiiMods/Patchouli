@@ -127,11 +127,11 @@ public class MultiblockVisualizationHandler {
 				String s = I18n.format("patchouli.gui.lexicon.structure_complete");
 				ms.push();
 				ms.translate(0, Math.min(height + 5, animTime), 0);
-				mc.fontRenderer.func_238405_a_(ms, s, x - mc.fontRenderer.getStringWidth(s) / 2, top + height - 10, 0x00FF00);
+				mc.fontRenderer.drawStringWithShadow(ms, s, x - mc.fontRenderer.getStringWidth(s) / 2, top + height - 10, 0x00FF00);
 				ms.pop();
 			}
 
-			AbstractGui.func_238467_a_(ms, left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
+			AbstractGui.fill(ms, left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
 			drawGradientRect(ms, left, top, left + width, top + height, 0xFF666666, 0xFF555555);
 
 			float fract = (float) blocksDone / Math.max(1, blocks);
@@ -142,7 +142,7 @@ public class MultiblockVisualizationHandler {
 
 			if (!isAnchored) {
 				String s = I18n.format("patchouli.gui.lexicon.not_anchored");
-				mc.fontRenderer.func_238405_a_(ms, s, x - mc.fontRenderer.getStringWidth(s) / 2, top + height + 8, 0xFFFFFF);
+				mc.fontRenderer.drawStringWithShadow(ms, s, x - mc.fontRenderer.getStringWidth(s) / 2, top + height + 8, 0xFFFFFF);
 			} else {
 				if (lookingState != null) {
 					// try-catch around here because the state isn't necessarily present in the world in this instance,
@@ -173,7 +173,7 @@ public class MultiblockVisualizationHandler {
 						posy += 2;
 					}
 
-					mc.fontRenderer.func_238405_a_(ms, progress, posx - mc.fontRenderer.getStringWidth(progress) / mult, posy, color);
+					mc.fontRenderer.drawStringWithShadow(ms, progress, posx - mc.fontRenderer.getStringWidth(progress) / mult, posy, color);
 				}
 			}
 

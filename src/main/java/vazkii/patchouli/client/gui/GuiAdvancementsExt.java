@@ -23,12 +23,12 @@ public class GuiAdvancementsExt extends AdvancementsScreen {
 	}
 
 	@Override
-	public boolean func_231046_a_(int key, int scanCode, int modifiers) {
+	public boolean keyPressed(int key, int scanCode, int modifiers) {
 		if (getMinecraft().gameSettings.keyBindAdvancements.matchesKey(key, scanCode) || scanCode == 1) {
 			getMinecraft().displayGuiScreen(parent);
 			return true;
 		} else {
-			return super.func_231046_a_(key, scanCode, modifiers);
+			return super.keyPressed(key, scanCode, modifiers);
 		}
 	}
 

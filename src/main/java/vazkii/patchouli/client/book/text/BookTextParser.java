@@ -57,10 +57,10 @@ public class BookTextParser {
 			return "";
 		}, "/t");
 		register(state -> state.gui.getMinecraft().player.getName().getString(), "playername"); // TODO 1.16: dropped format codes
-		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.OBFUSCATED)), "k", "obf");
-		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.BOLD)), "l", "bold");
-		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.STRIKETHROUGH)), "m", "strike");
-		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.ITALIC)), "o", "italic", "italics");
+		register(state -> state.modifyStyle(s -> s.applyFormatting(TextFormatting.OBFUSCATED)), "k", "obf");
+		register(state -> state.modifyStyle(s -> s.applyFormatting(TextFormatting.BOLD)), "l", "bold");
+		register(state -> state.modifyStyle(s -> s.applyFormatting(TextFormatting.STRIKETHROUGH)), "m", "strike");
+		register(state -> state.modifyStyle(s -> s.applyFormatting(TextFormatting.ITALIC)), "o", "italic", "italics");
 		register(state -> {
 			state.reset();
 			return "";
@@ -80,7 +80,7 @@ public class BookTextParser {
 		register((parameter, state) -> {
 			state.cluster = new LinkedList<>();
 
-			state.pushStyle(Style.field_240709_b_.func_240718_a_(Color.func_240743_a_(state.book.linkColor)));
+			state.pushStyle(Style.EMPTY.setColor(Color.func_240743_a_(state.book.linkColor)));
 			boolean isExternal = parameter.matches("^https?\\:.*");
 
 			if (isExternal) {
@@ -135,7 +135,7 @@ public class BookTextParser {
 			return "";
 		}, "tooltip", "t");
 		register((parameter, state) -> {
-			state.pushStyle(Style.field_240709_b_.func_240718_a_(Color.func_240743_a_(state.book.linkColor)));
+			state.pushStyle(Style.EMPTY.setColor(Color.func_240743_a_(state.book.linkColor)));
 			state.cluster = new LinkedList<>();
 			if (!parameter.startsWith("/")) {
 				state.tooltip = new StringTextComponent("INVALID COMMAND (must begin with /)");
@@ -266,7 +266,7 @@ public class BookTextParser {
 		String result = "";
 
 		if (cmd.length() == 1 && cmd.matches("^[0123456789abcdef]$")) { // Vanilla colors
-			return state.modifyStyle(s -> s.func_240712_a_(TextFormatting.fromFormattingCode(cmd.charAt(0))));
+			return state.modifyStyle(s -> s.applyFormatting(TextFormatting.fromFormattingCode(cmd.charAt(0))));
 		} else if (cmd.startsWith("#") && (cmd.length() == 4 || cmd.length() == 7)) { // Hex colors
 			Color color;
 			String parse = cmd.substring(1);
@@ -276,7 +276,7 @@ public class BookTextParser {
 			try {
 				color = Color.func_240743_a_(Integer.parseInt(parse, 16));
 			} catch (NumberFormatException e) {
-				color = baseStyle.func_240711_a_();
+				color = baseStyle.getColor();
 			}
 			return state.color(color);
 		} else if (cmd.matches("li\\d?")) { // List Element

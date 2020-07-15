@@ -40,7 +40,7 @@ public class BookTextRenderer {
 		this.y = y;
 		this.width = width;
 		this.lineHeight = lineHeight;
-		this.baseStyle = book.getFontStyle().func_240718_a_(Color.func_240743_a_(baseColor));
+		this.baseStyle = book.getFontStyle().setColor(Color.func_240743_a_(baseColor));
 
 		build();
 	}

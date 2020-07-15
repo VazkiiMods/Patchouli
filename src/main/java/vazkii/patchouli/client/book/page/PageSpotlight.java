@@ -43,7 +43,7 @@ public class PageSpotlight extends PageWithText {
 
 		mc.textureManager.bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
-		AbstractGui.func_238463_a_(ms, GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 256);
+		AbstractGui.blit(ms, GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 256);
 
 		ITextComponent toDraw;
 		if (title != null && !title.isEmpty()) {

@@ -116,7 +116,7 @@ public class ItemStackUtil {
 			if (stacksSerialized[i].startsWith("tag:")) {
 				ITag<Item> tag = ItemTags.getCollection().get(new ResourceLocation(stacksSerialized[i].substring(4)));
 				if (tag != null) {
-					for (Item item : tag.func_230236_b_()) {
+					for (Item item : tag.getAllElements()) {
 						stacks.add(new ItemStack(item));
 					}
 				}

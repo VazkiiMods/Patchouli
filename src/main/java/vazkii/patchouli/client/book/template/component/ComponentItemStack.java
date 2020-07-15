@@ -53,7 +53,7 @@ public class ComponentItemStack extends TemplateComponent {
 			RenderSystem.enableBlend();
 			RenderSystem.color4f(1F, 1F, 1F, 1F);
 			page.mc.textureManager.bindTexture(page.book.craftingTexture);
-			AbstractGui.func_238463_a_(ms, x - 4, y - 4, 83, 71, 24, 24, 128, 128);
+			AbstractGui.blit(ms, x - 4, y - 4, 83, 71, 24, 24, 128, 128);
 		}
 
 		page.parent.renderItemStack(ms, x, y, mouseX, mouseY, items.get((page.parent.ticksInBook / 20) % items.size()));

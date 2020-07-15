@@ -39,8 +39,8 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 
 	@Override
-	public void func_231160_c_() {
-		super.func_231160_c_();
+	public void init() {
+		super.init();
 
 		text = new BookTextRenderer(this, getDescriptionText(), LEFT_PAGE_X, TOP_PADDING + 22);
 
@@ -51,7 +51,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 			Collections.sort(allEntries);
 		}
 
-		searchField = new TextFieldWidget(field_230712_o_, 160, 170, 90, 12, StringTextComponent.field_240750_d_);
+		searchField = new TextFieldWidget(font, 160, 170, 90, 12, StringTextComponent.EMPTY);
 		searchField.setMaxStringLength(32);
 		searchField.setEnableBackgroundDrawing(false);
 		searchField.setCanLoseFocus(false);
@@ -85,7 +85,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		super.drawForegroundElements(ms, mouseX, mouseY, partialTicks);
 
 		if (spread == 0) {
-			drawCenteredStringNoShadow(ms, func_231171_q_(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawCenteredStringNoShadow(ms, getTitle(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 			drawCenteredStringNoShadow(ms, I18n.format("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
 			drawSeparator(ms, book, LEFT_PAGE_X, TOP_PADDING + 12);
@@ -101,9 +101,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 
 		if (!searchField.getText().isEmpty()) {
 			RenderSystem.color4f(1F, 1F, 1F, 1F);
-			drawFromTexture(ms, book, searchField.field_230690_l_ - 8, searchField.field_230691_m_, 140, 183, 99, 14);
+			drawFromTexture(ms, book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
 			ITextComponent toDraw = new StringTextComponent(searchField.getText()).func_230530_a_(book.getFontStyle());
-			field_230712_o_.func_238422_b_(ms, toDraw, searchField.field_230690_l_ + 7, searchField.field_230691_m_ + 1, 0);
+			font.func_238422_b_(ms, toDraw, searchField.x + 7, searchField.y + 1, 0);
 		}
 
 		if (visibleEntries.isEmpty()) {
@@ -121,14 +121,14 @@ public abstract class GuiBookEntryList extends GuiBook {
 	@Override
 	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
 		return text.click(mouseX, mouseY, mouseButton)
-				|| searchField.func_231044_a_(mouseX - bookLeft, mouseY - bookTop, mouseButton)
+				|| searchField.mouseClicked(mouseX - bookLeft, mouseY - bookTop, mouseButton)
 				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
-	public boolean func_231042_a_(char c, int i) {
+	public boolean charTyped(char c, int i) {
 		String currQuery = searchField.getText();
-		if (searchField.func_231042_a_(c, i)) {
+		if (searchField.charTyped(c, i)) {
 			if (!searchField.getText().equals(currQuery)) {
 				buildEntryButtons();
 			}
@@ -136,11 +136,11 @@ public abstract class GuiBookEntryList extends GuiBook {
 			return true;
 		}
 
-		return super.func_231042_a_(c, i);
+		return super.charTyped(c, i);
 	}
 
 	@Override
-	public boolean func_231046_a_(int key, int scanCode, int modifiers) {
+	public boolean keyPressed(int key, int scanCode, int modifiers) {
 		String currQuery = searchField.getText();
 
 		if (key == GLFW.GLFW_KEY_ENTER) {
@@ -148,7 +148,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 				displayLexiconGui(new GuiBookEntry(book, visibleEntries.get(0)), true);
 				return true;
 			}
-		} else if (searchField.func_231046_a_(key, scanCode, modifiers)) {
+		} else if (searchField.keyPressed(key, scanCode, modifiers)) {
 			if (!searchField.getText().equals(currQuery)) {
 				buildEntryButtons();
 			}
@@ -156,7 +156,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 			return true;
 		}
 
-		return super.func_231046_a_(key, scanCode, modifiers);
+		return super.keyPressed(key, scanCode, modifiers);
 	}
 
 	public void handleButtonCategory(Button button) {
@@ -214,7 +214,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	void addEntryButtons(int x, int y, int start, int count) {
 		for (int i = 0; i < count && (i + start) < visibleEntries.size(); i++) {
 			Button button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, visibleEntries.get(start + i), this::handleButtonEntry);
-			func_230480_a_(button);
+			addButton(button);
 			dependentButtons.add(button);
 		}
 	}
