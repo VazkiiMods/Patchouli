@@ -1,6 +1,6 @@
 {
   "name": "Spotlights",
-  "category": "spotlights",
+  "category": "page_types",
   "icon": "minecraft:oak_sapling",
   "pages": [
     {
