@@ -1,0 +1,11 @@
+{
+  "name": "Manual Quest",
+  "category": "page_types",
+  "icon": "minecraft:totem_of_undying",
+  "pages": [
+    {
+      "type": "quest",
+      "text": "This quest is completed manually by clicking the button."
+    }
+  ]
+}
