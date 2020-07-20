@@ -81,10 +81,10 @@ public class MacroRegistry {
 			return "";
 		}, "/t");
 		register(state -> state.getMinecraft().player.getName().getString(), "playername"); // TODO 1.16: dropped format codes
-		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.OBFUSCATED)), "k", "obf");
-		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.BOLD)), "l", "bold");
-		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.STRIKETHROUGH)), "m", "strike");
-		register(state -> state.modifyStyle(s -> s.func_240712_a_(TextFormatting.ITALIC)), "o", "italic", "italics");
+		register(state -> state.modifyStyle(s -> s.applyFormatting(TextFormatting.OBFUSCATED)), "k", "obf");
+		register(state -> state.modifyStyle(s -> s.applyFormatting(TextFormatting.BOLD)), "l", "bold");
+		register(state -> state.modifyStyle(s -> s.applyFormatting(TextFormatting.STRIKETHROUGH)), "m", "strike");
+		register(state -> state.modifyStyle(s -> s.applyFormatting(TextFormatting.ITALIC)), "o", "italic", "italics");
 		register(state -> {
 			state.reset();
 			return "";
@@ -104,7 +104,7 @@ public class MacroRegistry {
 		register((parameter, state) -> {
 			state.setCluster(new LinkedList<>());
 
-			state.pushStyle(Style.field_240709_b_.func_240718_a_(Color.func_240743_a_(state.getLinkColor())));
+			state.pushStyle(Style.EMPTY.setColor(Color.func_240743_a_(state.getLinkColor())));
 			boolean isExternal = parameter.matches("^https?\\:.*");
 
 			if (isExternal) {
@@ -156,7 +156,7 @@ public class MacroRegistry {
 			return "";
 		}, "tooltip", "t");
 		register((parameter, state) -> {
-			state.pushStyle(Style.field_240709_b_.func_240718_a_(Color.func_240743_a_(state.getLinkColor())));
+			state.pushStyle(Style.EMPTY.setColor(Color.func_240743_a_(state.getLinkColor())));
 			state.setCluster(new LinkedList<>());
 			if (!parameter.startsWith("/")) {
 				state.setTooltip(new StringTextComponent("INVALID COMMAND (must begin with /)"));
@@ -176,7 +176,7 @@ public class MacroRegistry {
 			state.setOnClick(null);
 			return "";
 		}, "/c");
-		register((parameter, state) -> ItemStackUtil.loadStackFromString(parameter).getDisplayName().func_230531_f_().getString(), "iname");
+		register((parameter, state) -> ItemStackUtil.loadStackFromString(parameter).getDisplayName().getString(), "iname");
 	}
 
 	private static KeyBinding getKeybindKey(ISpanState state, String keybind) {
