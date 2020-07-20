@@ -47,7 +47,7 @@ public class ComponentEntity extends TemplateComponent {
 	@Override
 	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (errored) {
-			page.fontRenderer.func_238405_a_(ms, I18n.format("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
+			page.fontRenderer.drawStringWithShadow(ms, I18n.format("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
 		}
 
 		if (entity != null) {

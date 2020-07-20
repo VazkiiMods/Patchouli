@@ -34,7 +34,7 @@ public class InventoryBookButtonHandler {
 		List<Widget> buttons = event.getWidgetList();
 		for (Widget button : buttons) {
 			if (button instanceof ImageButton) {
-				Button newButton = new GuiButtonInventoryBook(book, button.field_230690_l_, button.field_230691_m_ - 1);
+				Button newButton = new GuiButtonInventoryBook(book, button.x, button.y - 1);
 				event.removeWidget(button);
 				event.addWidget(newButton);
 				return;

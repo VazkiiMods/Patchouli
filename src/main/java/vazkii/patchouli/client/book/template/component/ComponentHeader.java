@@ -50,7 +50,7 @@ public class ComponentHeader extends TemplateComponent {
 		if (centered) {
 			page.parent.drawCenteredStringNoShadow(ms, page.i18n(actualText.getString()), 0, 0, color);
 		} else {
-			page.fontRenderer.func_238421_b_(ms, page.i18n(actualText.getString()), 0, 0, color);
+			page.fontRenderer.drawString(ms, page.i18n(actualText.getString()), 0, 0, color);
 		}
 		ms.pop();
 	}

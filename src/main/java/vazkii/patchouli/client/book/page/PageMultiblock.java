@@ -156,7 +156,7 @@ public class PageMultiblock extends PageWithText {
 		float offZ = (float) -sizeZ / 2 + 1;
 
 		float time = parent.ticksInBook * 0.5F;
-		if (!Screen.func_231173_s_()) {
+		if (!Screen.hasShiftDown()) {
 			time += ClientTicker.partialTicks;
 		}
 		ms.translate(-offX, 0, -offZ);

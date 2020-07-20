@@ -59,10 +59,10 @@ public abstract class BookPage {
 	}
 
 	protected void addButton(Button button) {
-		button.field_230690_l_ += (parent.bookLeft + left);
-		button.field_230691_m_ += (parent.bookTop + top);
+		button.x += (parent.bookLeft + left);
+		button.y += (parent.bookTop + top);
 		buttons.add(button);
-		parent.func_230480_a_(button);
+		parent.addButton(button);
 	}
 
 	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {}

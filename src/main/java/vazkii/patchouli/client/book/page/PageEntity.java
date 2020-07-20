@@ -74,7 +74,7 @@ public class PageEntity extends PageWithText {
 		}
 
 		if (errored) {
-			fontRenderer.func_238405_a_(ms, I18n.format("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
+			fontRenderer.drawStringWithShadow(ms, I18n.format("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
 		}
 
 		if (entity != null) {

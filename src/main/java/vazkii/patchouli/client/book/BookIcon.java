@@ -55,7 +55,7 @@ public class BookIcon {
 		case RESOURCE:
 			RenderSystem.color4f(1F, 1F, 1F, 1F);
 			mc.textureManager.bindTexture(res);
-			AbstractGui.func_238463_a_(ms, x, y, 0, 0, 16, 16, 16, 16);
+			AbstractGui.blit(ms, x, y, 0, 0, 16, 16, 16, 16);
 			break;
 		}
 	}

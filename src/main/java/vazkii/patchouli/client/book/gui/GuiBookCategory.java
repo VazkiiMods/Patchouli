@@ -44,7 +44,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 			int y = TOP_PADDING + PAGE_HEIGHT - (!book.advancementsEnabled() ? 46 : 68);
 
 			Button button = new GuiButtonCategory(this, x, y, ocategory, this::handleButtonCategory);
-			func_230480_a_(button);
+			addButton(button);
 			dependentButtons.add(button);
 
 			i++;

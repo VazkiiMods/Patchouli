@@ -48,7 +48,7 @@ public class PageQuest extends PageWithText {
 		super.onDisplayed(parent, left, top);
 
 		if (isManual) {
-			Button button = new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, StringTextComponent.field_240750_d_, this::questButtonClicked);
+			Button button = new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, StringTextComponent.EMPTY, this::questButtonClicked);
 			addButton(button);
 			updateButtonText(button);
 		}
@@ -57,7 +57,7 @@ public class PageQuest extends PageWithText {
 	private void updateButtonText(Button button) {
 		boolean completed = isCompleted(parent.book);
 		ITextComponent s = new TranslationTextComponent(completed ? "patchouli.gui.lexicon.mark_incomplete" : "patchouli.gui.lexicon.mark_complete");
-		button.func_238482_a_(s);
+		button.setMessage(s);
 	}
 
 	protected void questButtonClicked(Button button) {

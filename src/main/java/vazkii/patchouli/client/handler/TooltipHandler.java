@@ -68,10 +68,10 @@ public class TooltipHandler {
 				int x = tooltipX - 34;
 				RenderSystem.disableDepthTest();
 
-				AbstractGui.func_238467_a_(ms, x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
-				AbstractGui.func_238467_a_(ms, x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
+				AbstractGui.fill(ms, x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
+				AbstractGui.fill(ms, x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
 
-				if (PatchouliConfig.useShiftForQuickLookup.get() ? Screen.func_231173_s_() : Screen.func_231172_r_()) {
+				if (PatchouliConfig.useShiftForQuickLookup.get() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
 					lexiconLookupTime += ClientTicker.delta;
 
 					int cx = x + 8;
@@ -120,7 +120,7 @@ public class TooltipHandler {
 
 				ms.push();
 				ms.translate(0, 0, 500);
-				mc.fontRenderer.func_238405_a_(ms, "?", x + 10, tooltipY + 8, 0xFFFFFFFF);
+				mc.fontRenderer.drawStringWithShadow(ms, "?", x + 10, tooltipY + 8, 0xFFFFFFFF);
 
 				ms.scale(0.5F, 0.5F, 1F);
 				boolean mac = Minecraft.IS_RUNNING_ON_MAC;

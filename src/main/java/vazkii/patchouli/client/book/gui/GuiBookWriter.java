@@ -20,19 +20,19 @@ public class GuiBookWriter extends GuiBook {
 	private static boolean drawHeader;
 
 	public GuiBookWriter(Book book) {
-		super(book, StringTextComponent.field_240750_d_);
+		super(book, StringTextComponent.EMPTY);
 	}
 
 	@Override
-	public void func_231160_c_() {
-		super.func_231160_c_();
+	public void init() {
+		super.init();
 
 		text = new BookTextRenderer(this, I18n.format("patchouli.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
-		textfield = new TextFieldWidget(field_230712_o_, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20, StringTextComponent.field_240750_d_);
+		textfield = new TextFieldWidget(font, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20, StringTextComponent.EMPTY);
 		textfield.setMaxStringLength(Integer.MAX_VALUE);
 		textfield.setText(savedText);
 
-		func_230480_a_(new GuiButtonBookResize(this, bookLeft + 115, bookTop + PAGE_HEIGHT - 36, false, this::handleButtonResize));
+		addButton(new GuiButtonBookResize(this, bookLeft + 115, bookTop + PAGE_HEIGHT - 36, false, this::handleButtonResize));
 		refreshText();
 	}
 
@@ -48,37 +48,37 @@ public class GuiBookWriter extends GuiBook {
 			drawSeparator(ms, book, RIGHT_PAGE_X, TOP_PADDING + 12);
 		}
 
-		textfield.func_230430_a_(ms, mouseX, mouseY, partialTicks);
+		textfield.render(ms, mouseX, mouseY, partialTicks);
 		text.render(ms, mouseX, mouseY);
 		editableText.render(ms, mouseX, mouseY);
 	}
 
 	@Override
 	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-		return textfield.func_231044_a_(getRelativeX(mouseX), getRelativeY(mouseY), mouseButton)
+		return textfield.mouseClicked(getRelativeX(mouseX), getRelativeY(mouseY), mouseButton)
 				|| text.click(mouseX, mouseY, mouseButton)
 				|| editableText.click(mouseX, mouseY, mouseButton)
 				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 
 	@Override
-	public boolean func_231046_a_(int key, int scanCode, int modifiers) {
-		if (textfield.func_231046_a_(key, scanCode, modifiers)) {
+	public boolean keyPressed(int key, int scanCode, int modifiers) {
+		if (textfield.keyPressed(key, scanCode, modifiers)) {
 			refreshText();
 			return true;
 		}
 
-		return super.func_231046_a_(key, scanCode, modifiers);
+		return super.keyPressed(key, scanCode, modifiers);
 	}
 
 	@Override
-	public boolean func_231042_a_(char c, int i) {
-		if (textfield.func_231042_a_(c, i)) {
+	public boolean charTyped(char c, int i) {
+		if (textfield.charTyped(c, i)) {
 			refreshText();
 			return true;
 		}
 
-		return super.func_231042_a_(c, i);
+		return super.charTyped(c, i);
 	}
 
 	public void handleButtonResize(Button button) {

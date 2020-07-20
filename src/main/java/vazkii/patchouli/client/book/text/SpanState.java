@@ -147,12 +147,12 @@ public class SpanState implements ISpanState {
 
 	@Override
 	public String color(Color color) {
-		return modifyStyle(s -> s.func_240718_a_(color));
+		return modifyStyle(s -> s.setColor(color));
 	}
 
 	@Override
 	public String baseColor() {
-		return color(baseStyle.func_240711_a_());
+		return color(baseStyle.getColor());
 	}
 
 	@Override
@@ -165,7 +165,7 @@ public class SpanState implements ISpanState {
 	@Override
 	public void pushStyle(Style style) {
 		Style top = styleStack.peek();
-		styleStack.push(style.func_240717_a_(top));
+		styleStack.push(style.mergeStyle(top));
 	}
 
 	@Override

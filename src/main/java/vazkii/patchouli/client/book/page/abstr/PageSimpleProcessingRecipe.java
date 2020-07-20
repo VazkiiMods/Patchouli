@@ -20,7 +20,7 @@ public abstract class PageSimpleProcessingRecipe<T extends IRecipe<?>> extends P
 	protected void drawRecipe(MatrixStack ms, T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		mc.getTextureManager().bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
-		AbstractGui.func_238463_a_(ms, recipeX, recipeY, 11, 71, 96, 24, 128, 256);
+		AbstractGui.blit(ms, recipeX, recipeY, 11, 71, 96, 24, 128, 256);
 		parent.drawCenteredStringNoShadow(ms, getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
 		parent.renderIngredient(ms, recipeX + 4, recipeY + 4, mouseX, mouseY, recipe.getIngredients().get(0));

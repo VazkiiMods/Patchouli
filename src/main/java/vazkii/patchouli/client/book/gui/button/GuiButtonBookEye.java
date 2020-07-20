@@ -19,11 +19,11 @@ public class GuiButtonBookEye extends GuiButtonBook {
 	}
 
 	@Override
-	public void func_230431_b_(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.func_230431_b_(ms, mouseX, mouseY, partialTicks);
+	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		super.renderButton(ms, mouseX, mouseY, partialTicks);
 
 		if (!PersistentData.data.clickedVisualize && (ClientTicker.ticksInGame) % 20 < 10) {
-			parent.getMinecraft().fontRenderer.func_238405_a_(ms, "!", field_230690_l_, field_230691_m_, 0xFF3333);
+			parent.getMinecraft().fontRenderer.drawStringWithShadow(ms, "!", x, y, 0xFF3333);
 		}
 	}
 

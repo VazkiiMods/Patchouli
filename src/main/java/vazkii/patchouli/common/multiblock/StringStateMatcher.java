@@ -101,7 +101,7 @@ public class StringStateMatcher {
 
 		@Override
 		public BlockState getDisplayedState(int ticks) {
-			List<Block> all = new ArrayList<>(tag.func_230236_b_());
+			List<Block> all = new ArrayList<>(tag.getAllElements());
 			if (all.isEmpty()) {
 				return Blocks.BEDROCK.getDefaultState(); // show something impossible
 			} else {
@@ -112,7 +112,7 @@ public class StringStateMatcher {
 
 		@Override
 		public TriPredicate<IBlockReader, BlockPos, BlockState> getStatePredicate() {
-			return (w, p, s) -> tag.func_230235_a_(s.getBlock()) && checkProps(s);
+			return (w, p, s) -> tag.contains(s.getBlock()) && checkProps(s);
 		}
 
 		private boolean checkProps(BlockState state) {
@@ -143,13 +143,13 @@ public class StringStateMatcher {
 				return false;
 			}
 			TagMatcher that = (TagMatcher) o;
-			return Objects.equals(tag.func_230234_a_(), that.tag.func_230234_a_()) &&
+			return Objects.equals(tag.getName(), that.tag.getName()) &&
 					Objects.equals(props, that.props);
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(tag.func_230234_a_(), props);
+			return Objects.hash(tag.getName(), props);
 		}
 	}
 }

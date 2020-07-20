@@ -130,7 +130,7 @@ public class BookTextParser {
 		String result = "";
 
 		if (cmd.length() == 1 && cmd.matches("^[0123456789abcdef]$")) { // Vanilla colors
-			return state.modifyStyle(s -> s.func_240712_a_(TextFormatting.fromFormattingCode(cmd.charAt(0))));
+			return state.modifyStyle(s -> s.applyFormatting(TextFormatting.fromFormattingCode(cmd.charAt(0))));
 		} else if (cmd.startsWith("#") && (cmd.length() == 4 || cmd.length() == 7)) { // Hex colors
 			Color color;
 			String parse = cmd.substring(1);
@@ -140,7 +140,7 @@ public class BookTextParser {
 			try {
 				color = Color.func_240743_a_(Integer.parseInt(parse, 16));
 			} catch (NumberFormatException e) {
-				color = baseStyle.func_240711_a_();
+				color = baseStyle.getColor();
 			}
 			return state.color(color);
 		} else if (cmd.matches("li\\d?")) { // List Element

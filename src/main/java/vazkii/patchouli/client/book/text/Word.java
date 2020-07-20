@@ -37,19 +37,19 @@ public class Word {
 		this.onClick = span.getOnClick();
 		this.linkCluster = cluster;
 		if (!span.getTooltip().getString().isEmpty()) {
-			text = text.func_240700_a_(s -> s.func_240716_a_(new HoverEvent(HoverEvent.Action.field_230550_a_, span.getTooltip())));
+			text = text.func_240700_a_(s -> s.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, span.getTooltip())));
 		}
 		this.text = text;
 	}
 
 	public void render(MatrixStack ms, FontRenderer font, Style styleOverride, int mouseX, int mouseY) {
-		IFormattableTextComponent toRender = text.func_230532_e_().func_240703_c_(styleOverride);
+		IFormattableTextComponent toRender = text.deepCopy().func_240703_c_(styleOverride);
 		if (isClusterHovered(mouseX, mouseY)) {
 			if (onClick != null) {
-				toRender.func_240700_a_(s -> s.func_240718_a_(Color.func_240743_a_(book.linkHoverColor)));
+				toRender.func_240700_a_(s -> s.setColor(Color.func_240743_a_(book.linkHoverColor)));
 			}
 
-			gui.func_238653_a_(ms, text.getStyle(), (int) gui.getRelativeX(mouseX), (int) gui.getRelativeY(mouseY));
+			gui.renderComponentHoverEffect(ms, text.getStyle(), (int) gui.getRelativeX(mouseX), (int) gui.getRelativeY(mouseY));
 		}
 
 		font.func_238422_b_(ms, toRender, x, y, -1);

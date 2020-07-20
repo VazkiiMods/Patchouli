@@ -54,7 +54,7 @@ public class ComponentImage extends TemplateComponent {
 		ms.scale(scale, scale, scale);
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		RenderSystem.enableBlend();
-		AbstractGui.func_238463_a_(ms, 0, 0, u, v, width, height, textureWidth, textureHeight);
+		AbstractGui.blit(ms, 0, 0, u, v, width, height, textureWidth, textureHeight);
 		ms.pop();
 	}
 

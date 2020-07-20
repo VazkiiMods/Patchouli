@@ -34,22 +34,22 @@ public class GuiButtonBook extends Button {
 	}
 
 	@Override
-	public final void func_230430_a_(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		field_230693_o_ = field_230694_p_ = displayCondition.get();
-		super.func_230430_a_(ms, mouseX, mouseY, partialTicks);
+	public final void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+		active = visible = displayCondition.get();
+		super.render(ms, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	public void func_230431_b_(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.color3f(1F, 1F, 1F);
-		GuiBook.drawFromTexture(ms, parent.book, field_230690_l_, field_230691_m_, u + (func_230449_g_() ? field_230688_j_ : 0), v, field_230688_j_, field_230689_k_);
-		if (func_230449_g_()) {
+		GuiBook.drawFromTexture(ms, parent.book, x, y, u + (isHovered() ? width : 0), v, width, height);
+		if (isHovered()) {
 			parent.setTooltip(getTooltip());
 		}
 	}
 
 	@Override
-	public void func_230988_a_(SoundHandler soundHandlerIn) {
+	public void playDownSound(SoundHandler soundHandlerIn) {
 		GuiBook.playBookFlipSound(parent.book);
 	}
 

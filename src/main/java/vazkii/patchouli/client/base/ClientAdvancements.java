@@ -92,10 +92,10 @@ public class ClientAdvancements {
 			Minecraft mc = Minecraft.getInstance();
 			mc.getTextureManager().bindTexture(TEXTURE_TOASTS);
 			RenderSystem.color3f(1.0F, 1.0F, 1.0F);
-			toastGui.func_238474_b_(ms, 0, 0, 0, 32, 160, 32);
+			toastGui.blit(ms, 0, 0, 0, 32, 160, 32);
 
-			toastGui.getMinecraft().fontRenderer.func_238421_b_(ms, I18n.format(book.name), 30, 7, -11534256);
-			toastGui.getMinecraft().fontRenderer.func_238421_b_(ms, I18n.format("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
+			toastGui.getMinecraft().fontRenderer.drawString(ms, I18n.format(book.name), 30, 7, -11534256);
+			toastGui.getMinecraft().fontRenderer.drawString(ms, I18n.format("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
 
 			RenderHelper.renderItemStackInGui(ms, book.getBookItem(), 8, 8);
 
