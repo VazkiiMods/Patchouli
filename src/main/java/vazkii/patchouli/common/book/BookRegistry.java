@@ -130,35 +130,34 @@ public class BookRegistry {
 		}
 
 		try {
-			Path root = null;
-
 			if (Files.isRegularFile(source)) {
 				try (FileSystem fs = FileSystems.newFileSystem(source, null)) {
-					root = fs.getPath("/" + base);
+					walk(fs.getPath("/" + base), rootFilter, processor, visitAllFiles);
 				}
-			} else if (Files.isDirectory(source)) {
-				root = source.resolve(base);
-			}
-
-			if (root == null || !Files.exists(root) || !rootFilter.test(root)) {
-				return;
-			}
-
-			if (processor != null) {
-				Iterator<Path> itr = Files.walk(root).iterator();
-
-				while (itr.hasNext()) {
-					boolean cont = processor.apply(root, itr.next());
-
-					if (!visitAllFiles && !cont) {
-						return;
-					}
-				}
+			} else {
+				walk(source.resolve(base), rootFilter, processor, visitAllFiles);
 			}
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
+	}
 
+	private static void walk(Path root, Predicate<Path> rootFilter, BiFunction<Path, Path, Boolean> processor, boolean visitAllFiles) throws IOException {
+		if (root == null || !Files.exists(root) || !rootFilter.test(root)) {
+			return;
+		}
+
+		if (processor != null) {
+			Iterator<Path> itr = Files.walk(root).iterator();
+
+			while (itr.hasNext()) {
+				boolean cont = processor.apply(root, itr.next());
+
+				if (!visitAllFiles && !cont) {
+					return;
+				}
+			}
+		}
 	}
 
 }
