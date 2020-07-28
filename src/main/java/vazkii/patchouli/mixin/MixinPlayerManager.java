@@ -1,4 +1,4 @@
-package vazkii.patchouli.common.mixin;
+package vazkii.patchouli.mixin;
 
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;

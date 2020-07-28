@@ -33,11 +33,11 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookEye;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
-import vazkii.patchouli.client.mixin.MixinBlockEntity;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
+import vazkii.patchouli.mixin.client.MixinBlockEntity;
 
 import javax.annotation.Nonnull;
 

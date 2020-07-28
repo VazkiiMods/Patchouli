@@ -1,4 +1,4 @@
-package vazkii.patchouli.client.mixin;
+package vazkii.patchouli.mixin.client;
 
 import net.minecraft.client.network.ClientAdvancementManager;
 import net.minecraft.network.packet.s2c.play.AdvancementUpdateS2CPacket;

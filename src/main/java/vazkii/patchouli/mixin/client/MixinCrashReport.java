@@ -1,4 +1,4 @@
-package vazkii.patchouli.client.mixin;
+package vazkii.patchouli.mixin.client;
 
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;

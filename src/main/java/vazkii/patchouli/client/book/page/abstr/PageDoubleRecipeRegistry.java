@@ -7,7 +7,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.common.mixin.MixinRecipeManager;
+import vazkii.patchouli.mixin.MixinRecipeManager;
 
 import javax.annotation.Nullable;
 

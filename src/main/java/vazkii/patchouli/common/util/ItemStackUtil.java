@@ -20,7 +20,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.registry.Registry;
 
-import vazkii.patchouli.common.mixin.MixinIngredient;
+import vazkii.patchouli.mixin.MixinIngredient;
 
 import java.util.ArrayList;
 import java.util.List;

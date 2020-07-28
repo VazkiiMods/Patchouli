@@ -10,7 +10,7 @@ import net.minecraft.recipe.SmithingRecipe;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
-import vazkii.patchouli.common.mixin.MixinSmithingRecipe;
+import vazkii.patchouli.mixin.MixinSmithingRecipe;
 
 public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 

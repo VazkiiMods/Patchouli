@@ -38,10 +38,10 @@ import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
-import vazkii.patchouli.client.mixin.MixinVertexConsumerProviderImmediate;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
+import vazkii.patchouli.mixin.client.MixinVertexConsumerProviderImmediate;
 
 import javax.annotation.Nullable;
 

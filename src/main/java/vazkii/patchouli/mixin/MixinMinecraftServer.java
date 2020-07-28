@@ -1,4 +1,4 @@
-package vazkii.patchouli.common.mixin;
+package vazkii.patchouli.mixin;
 
 import net.minecraft.resource.ServerResourceManager;
 import net.minecraft.server.MinecraftServer;

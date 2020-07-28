@@ -5,8 +5,8 @@ import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.resource.SynchronousResourceReloadListener;
 import net.minecraft.server.MinecraftServer;
 
-import vazkii.patchouli.common.mixin.MixinMinecraftServer;
 import vazkii.patchouli.common.network.message.MessageReloadBookContents;
+import vazkii.patchouli.mixin.MixinMinecraftServer;
 
 public class ReloadContentsHandler {
 	public static void init() {

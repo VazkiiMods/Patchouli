@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "vazkii.patchouli.common.mixin",
+  "package": "vazkii.patchouli.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MixinIngredient",
@@ -10,6 +10,17 @@
     "MixinSmithingRecipe"
   ],
   "client": [
+    "client.MixinBakedModelManager",
+    "client.MixinBlockEntity",
+    "client.MixinClientAdvancementManager",
+    "client.MixinClientAdvancementManagerAccessor",
+    "client.MixinCrashReport",
+    "client.MixinGameRenderer",
+    "client.MixinInventoryScreen",
+    "client.MixinMinecraftClient",
+    "client.MixinScreen",
+    "client.MixinVertexConsumerProviderImmediate",
+    "client.MixinWorldRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

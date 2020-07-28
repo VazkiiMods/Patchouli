@@ -1,4 +1,4 @@
-package vazkii.patchouli.client.mixin;
+package vazkii.patchouli.mixin.client;
 
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementProgress;

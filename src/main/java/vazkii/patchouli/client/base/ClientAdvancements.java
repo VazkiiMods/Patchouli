@@ -15,8 +15,8 @@ import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.ClientBookRegistry;
-import vazkii.patchouli.client.mixin.MixinClientAdvancementManagerAccessor;
 import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.mixin.client.MixinClientAdvancementManagerAccessor;
 
 import javax.annotation.Nonnull;
 

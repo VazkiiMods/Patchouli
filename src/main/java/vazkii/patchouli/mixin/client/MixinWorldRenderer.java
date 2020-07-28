@@ -1,4 +1,4 @@
-package vazkii.patchouli.client.mixin;
+package vazkii.patchouli.mixin.client;
 
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;

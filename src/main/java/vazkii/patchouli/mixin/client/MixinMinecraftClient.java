@@ -1,4 +1,4 @@
-package vazkii.patchouli.client.mixin;
+package vazkii.patchouli.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;

@@ -26,8 +26,7 @@
     ]
   },
   "mixins": [
-    "patchouli.mixins.json",
-    "patchouli.client_mixins.json"
+    "patchouli.mixins.json"
   ],
 
   "depends": {

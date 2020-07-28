@@ -1,4 +1,4 @@
-package vazkii.patchouli.client.mixin;
+package vazkii.patchouli.mixin.client;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

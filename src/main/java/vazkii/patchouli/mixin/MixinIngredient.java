@@ -1,4 +1,4 @@
-package vazkii.patchouli.common.mixin;
+package vazkii.patchouli.mixin;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
