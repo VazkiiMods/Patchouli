@@ -23,9 +23,7 @@ public abstract class PageDoubleRecipeRegistry<T extends IRecipe<?>> extends Pag
 	@Nullable
 	private T getRecipe(ResourceLocation id) {
 		RecipeManager manager = Minecraft.getInstance().world.getRecipeManager();
-		@SuppressWarnings("unchecked")
-		Map<ResourceLocation, T> recipes = (Map<ResourceLocation, T>) ((AccessorRecipeManager) manager).callGetRecipes(recipeType);
-		return recipes.get(id);
+		return (T) ((AccessorRecipeManager) manager).callGetRecipes((IRecipeType<?>) recipeType).get(id);
 	}
 
 	@Override
