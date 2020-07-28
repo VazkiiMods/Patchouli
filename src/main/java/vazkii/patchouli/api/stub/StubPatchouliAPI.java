@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.state.Property;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
@@ -18,8 +17,6 @@ import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
 import javax.annotation.Nullable;
 
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;

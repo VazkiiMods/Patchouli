@@ -10,7 +10,6 @@ import net.minecraft.util.ResourceLocation;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
-import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class RecipeTestProcessor implements IComponentProcessor {
 

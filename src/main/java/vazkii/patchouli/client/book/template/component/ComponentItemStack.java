@@ -11,11 +11,8 @@ import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.template.TemplateComponent;
-import vazkii.patchouli.common.util.ItemStackUtil;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 

@@ -1,8 +1,5 @@
 package vazkii.patchouli.client.book.template;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
@@ -13,7 +10,6 @@ import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.IVariablesAvailableCallback;
 import vazkii.patchouli.common.util.EntityUtil;
-import vazkii.patchouli.common.util.ItemStackUtil;
 
 import javax.annotation.Nullable;
 

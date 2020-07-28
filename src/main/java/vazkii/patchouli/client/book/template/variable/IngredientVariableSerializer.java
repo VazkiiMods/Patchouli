@@ -3,7 +3,6 @@ package vazkii.patchouli.client.book.template.variable;
 import com.google.gson.JsonElement;
 
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraftforge.common.crafting.CraftingHelper;
 
 import vazkii.patchouli.api.IVariableSerializer;
 import vazkii.patchouli.common.util.ItemStackUtil;
