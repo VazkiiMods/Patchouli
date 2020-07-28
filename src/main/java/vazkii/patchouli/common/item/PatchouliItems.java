@@ -8,7 +8,7 @@ import vazkii.patchouli.common.base.Patchouli;
 
 public class PatchouliItems {
 
-    public static final Identifier BOOK_ID = new Identifier(Patchouli.MOD_ID, "guide_book");
+	public static final Identifier BOOK_ID = new Identifier(Patchouli.MOD_ID, "guide_book");
 	public static Item book;
 
 	public static void init() {

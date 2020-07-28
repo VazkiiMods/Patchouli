@@ -3,7 +3,6 @@ package vazkii.patchouli.api.stub;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
@@ -18,8 +17,6 @@ import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
 import javax.annotation.Nullable;
 
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.function.Supplier;

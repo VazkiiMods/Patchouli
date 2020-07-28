@@ -12,7 +12,6 @@ import javax.annotation.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -155,6 +154,7 @@ public interface IVariable {
 	}
 
 	static class Serializer implements JsonDeserializer<IVariable> {
+		@Override
 		public IVariable deserialize(JsonElement elem, Type t, JsonDeserializationContext c) {
 			return IVariable.wrap(elem);
 		}

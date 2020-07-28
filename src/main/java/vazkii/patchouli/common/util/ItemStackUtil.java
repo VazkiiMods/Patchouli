@@ -2,7 +2,6 @@ package vazkii.patchouli.common.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -220,7 +219,7 @@ public class ItemStackUtil {
 				}
 				stack.setTag(nbt);
 			} catch (CommandSyntaxException e) {
-				throw new IllegalArgumentException("Invalid NBT Entry: " + e.toString());
+				throw new IllegalArgumentException("Invalid NBT Entry: " + e.toString(), e);
 			}
 		}
 

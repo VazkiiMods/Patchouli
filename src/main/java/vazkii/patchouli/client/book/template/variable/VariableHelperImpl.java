@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.template.variable;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
@@ -12,7 +11,6 @@ import vazkii.patchouli.api.IVariableSerializer;
 import vazkii.patchouli.api.VariableHelper;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class VariableHelperImpl implements VariableHelper {

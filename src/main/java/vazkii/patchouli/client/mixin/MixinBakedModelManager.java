@@ -7,7 +7,6 @@ import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
-import net.minecraft.util.registry.Registry;
 
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,8 +28,8 @@ public class MixinBakedModelManager {
 	public void insertBookModel(ModelLoader loader, ResourceManager manager, Profiler profiler, CallbackInfo info) {
 		ModelIdentifier key = new ModelIdentifier(PatchouliItems.BOOK_ID, "inventory");
 		BakedModel oldModel = models.get(key);
-        if (oldModel != null) {
-            models.put(key, new BookModel(oldModel));
-        }
+		if (oldModel != null) {
+			models.put(key, new BookModel(oldModel));
+		}
 	}
 }

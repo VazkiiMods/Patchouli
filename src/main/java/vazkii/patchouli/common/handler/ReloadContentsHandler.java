@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.resource.SynchronousResourceReloadListener;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.integrated.IntegratedServer;
 
 import vazkii.patchouli.common.mixin.MixinMinecraftServer;
 import vazkii.patchouli.common.network.message.MessageReloadBookContents;

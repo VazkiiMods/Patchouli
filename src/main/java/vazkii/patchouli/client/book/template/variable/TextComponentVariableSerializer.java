@@ -7,7 +7,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.Text.Serializer;
 
 import vazkii.patchouli.api.IVariableSerializer;
-import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class TextComponentVariableSerializer implements IVariableSerializer<Text> {
 	@Override

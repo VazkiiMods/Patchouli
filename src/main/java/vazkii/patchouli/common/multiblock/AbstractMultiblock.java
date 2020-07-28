@@ -2,7 +2,6 @@ package vazkii.patchouli.common.multiblock;
 
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -150,6 +149,7 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 		return Fluids.EMPTY.getDefaultState();
 	}
 
+	@Override
 	public abstract Vec3i getSize();
 
 	@Override

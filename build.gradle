@@ -1,7 +1,7 @@
 plugins {
 	id 'fabric-loom' version '0.4-SNAPSHOT'
 	id 'maven-publish'
-	id "com.diffplug.gradle.spotless" version "3.27.2"
+	id "com.diffplug.spotless" version "5.1.0"
 }
 
 apply plugin: 'pmd'
@@ -32,15 +32,18 @@ spotless {
 	enforceCheck = false // workaround around jenkins having wrong line endings in some files
 	// we explicitly check in github actions builds
 	java {
-		target '**/vazkii/patchouli/**/*.java'
-
 		indentWithTabs()
 		eclipse().configFile 'spotless/eclipseformat.xml'
+		removeUnusedImports()
 		importOrderFile 'spotless/eclipse.importorder'
 	}
 }
+
 pmd {
-	ruleSets = ["java-braces"]
+	toolVersion '6.22.0'
+	incrementalAnalysis.set(true)
+	ruleSets.clear()
+	ruleSetFiles = files("spotless/pmd-ruleset.xml")
 }
 
 task checkSyntax {

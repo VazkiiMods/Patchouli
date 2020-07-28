@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.book.page;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;

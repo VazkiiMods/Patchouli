@@ -4,13 +4,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ChatUtil;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.client.base.ClientAdvancements;
