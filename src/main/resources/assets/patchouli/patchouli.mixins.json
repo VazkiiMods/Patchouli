@@ -3,8 +3,13 @@
   "package": "vazkii.patchouli.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AccessorRecipeManager",
+    "AccessorSmithingRecipe"
   ],
   "client": [
+    "client.AccessorClientAdvancementManager",
+    "client.AccessorIRenderTypeBufferImpl",
+    "client.AccessorTileEntity",
     "client.MixinClientAdvancementManager"
   ],
   "injectors": {

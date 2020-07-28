@@ -40,7 +40,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.RenderHelper;
@@ -49,6 +48,7 @@ import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
+import vazkii.patchouli.mixin.client.AccessorIRenderTypeBufferImpl;
 
 import javax.annotation.Nullable;
 
@@ -359,8 +359,8 @@ public class MultiblockVisualizationHandler {
 	}
 
 	private static IRenderTypeBuffer.Impl initBuffers(IRenderTypeBuffer.Impl original) {
-		BufferBuilder fallback = ObfuscationReflectionHelper.getPrivateValue(IRenderTypeBuffer.Impl.class, original, "field_228457_a_");
-		Map<RenderType, BufferBuilder> layerBuffers = ObfuscationReflectionHelper.getPrivateValue(IRenderTypeBuffer.Impl.class, original, "field_228458_b_");
+		BufferBuilder fallback = ((AccessorIRenderTypeBufferImpl) original).getBuffer();
+		Map<RenderType, BufferBuilder> layerBuffers = ((AccessorIRenderTypeBufferImpl) original).getFixedBuffers();
 		Map<RenderType, BufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
 		for (Map.Entry<RenderType, BufferBuilder> e : layerBuffers.entrySet()) {
 			remapped.put(GhostRenderType.remap(e.getKey()), e.getValue());

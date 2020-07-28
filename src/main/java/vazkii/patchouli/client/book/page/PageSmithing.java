@@ -8,10 +8,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.SmithingRecipe;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
+import vazkii.patchouli.mixin.AccessorSmithingRecipe;
 
 public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 
@@ -26,8 +26,8 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 		AbstractGui.blit(ms, recipeX, recipeY, 11, 135, 96, 43, 128, 256);
 		parent.drawCenteredStringNoShadow(ms, getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-		Ingredient base = ObfuscationReflectionHelper.getPrivateValue(SmithingRecipe.class, recipe, "field_234837_a_");
-		Ingredient addition = ObfuscationReflectionHelper.getPrivateValue(SmithingRecipe.class, recipe, "field_234838_b_");
+		Ingredient base = ((AccessorSmithingRecipe) recipe).getBase();
+		Ingredient addition = ((AccessorSmithingRecipe) recipe).getAddition();
 		parent.renderIngredient(ms, recipeX + 4, recipeY + 4, mouseX, mouseY, base);
 		parent.renderIngredient(ms, recipeX + 4, recipeY + 23, mouseX, mouseY, addition);
 		parent.renderItemStack(ms, recipeX + 40, recipeY + 13, mouseX, mouseY, recipe.getIcon());

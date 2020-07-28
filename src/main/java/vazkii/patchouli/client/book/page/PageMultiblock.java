@@ -24,7 +24,6 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
@@ -40,6 +39,7 @@ import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
+import vazkii.patchouli.mixin.client.AccessorTileEntity;
 
 import javax.annotation.Nonnull;
 
@@ -220,7 +220,7 @@ public class PageMultiblock extends PageWithText {
 				te.setWorldAndPos(mc.world, pos);
 
 				// fake cached state in case the renderer checks it as we don't want to query the actual world
-				ObfuscationReflectionHelper.setPrivateValue(TileEntity.class, te, mb.getBlockState(pos), "field_195045_e");
+				((AccessorTileEntity) te).setCachedBlockState(mb.getBlockState(pos));
 
 				ms.push();
 				ms.translate(pos.getX(), pos.getY(), pos.getZ());

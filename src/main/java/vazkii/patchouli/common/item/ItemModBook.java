@@ -14,7 +14,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
@@ -75,7 +74,7 @@ public class ItemModBook extends Item {
 
 	@Override
 	public void fillItemGroup(ItemGroup tab, NonNullList<ItemStack> items) {
-		String tabName = ObfuscationReflectionHelper.getPrivateValue(ItemGroup.class, tab, "field_78034_o");
+		String tabName = tab.getPath();
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
 			if (!b.noBook && !b.isExtension && (tab == ItemGroup.SEARCH || b.creativeTab.equals(tabName))) {
 				items.add(forBook(b));
