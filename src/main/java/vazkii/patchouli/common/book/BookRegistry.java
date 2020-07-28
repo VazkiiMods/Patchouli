@@ -129,14 +129,13 @@ public class BookRegistry {
 			return;
 		}
 
-		FileSystem fs = null;
-
 		try {
 			Path root = null;
 
 			if (Files.isRegularFile(source)) {
-				fs = FileSystems.newFileSystem(source, null);
-				root = fs.getPath("/" + base);
+				try (FileSystem fs = FileSystems.newFileSystem(source, null)) {
+					root = fs.getPath("/" + base);
+				}
 			} else if (Files.isDirectory(source)) {
 				root = source.resolve(base);
 			}
@@ -158,8 +157,6 @@ public class BookRegistry {
 			}
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
-		} finally {
-			IOUtils.closeQuietly(fs);
 		}
 
 	}

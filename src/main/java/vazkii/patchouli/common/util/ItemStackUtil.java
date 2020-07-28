@@ -215,7 +215,7 @@ public class ItemStackUtil {
 				}
 				stack.setTag(nbt);
 			} catch (CommandSyntaxException e) {
-				throw new IllegalArgumentException("Invalid NBT Entry: " + e.toString());
+				throw new IllegalArgumentException("Invalid NBT Entry: " + e.toString(), e);
 			}
 		}
 
