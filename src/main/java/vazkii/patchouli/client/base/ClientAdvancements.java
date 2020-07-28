@@ -16,11 +16,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.mixin.client.AccessorClientAdvancementManager;
 
 import javax.annotation.Nonnull;
 
@@ -52,7 +52,7 @@ public class ClientAdvancements {
 				ClientAdvancementManager cm = conn.getAdvancementManager();
 				Advancement adv = cm.getAdvancementList().getAdvancement(id);
 				if (adv != null) {
-					Map<Advancement, AdvancementProgress> progressMap = ((AccessorClientAdvancementManager) cm).getAdvancementToProgress();
+					Map<Advancement, AdvancementProgress> progressMap = ObfuscationReflectionHelper.getPrivateValue(ClientAdvancementManager.class, cm, "field_192803_d");
 					AdvancementProgress progress = progressMap.get(adv);
 					return progress != null && progress.isDone();
 				}

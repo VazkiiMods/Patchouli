@@ -5,15 +5,19 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.mixin.AccessorRecipeManager;
+import vazkii.patchouli.common.base.Patchouli;
 
 import javax.annotation.Nullable;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 public abstract class PageDoubleRecipeRegistry<T extends IRecipe<?>> extends PageDoubleRecipe<T> {
+	private static final Method GET_RECIPE_MAP = ObfuscationReflectionHelper.findMethod(RecipeManager.class, "func_215366_a", IRecipeType.class);
 	private final IRecipeType<T> recipeType;
 
 	public PageDoubleRecipeRegistry(IRecipeType<T> recipeType) {
@@ -23,7 +27,14 @@ public abstract class PageDoubleRecipeRegistry<T extends IRecipe<?>> extends Pag
 	@Nullable
 	private T getRecipe(ResourceLocation id) {
 		RecipeManager manager = Minecraft.getInstance().world.getRecipeManager();
-		return (T) ((AccessorRecipeManager) manager).callGetRecipes((IRecipeType<?>) recipeType).get(id);
+		try {
+			@SuppressWarnings("unchecked")
+			Map<ResourceLocation, T> recipes = (Map<ResourceLocation, T>) GET_RECIPE_MAP.invoke(manager, recipeType);
+			return recipes.get(id);
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			Patchouli.LOGGER.error("Failed to get recipe map", e);
+			return null;
+		}
 	}
 
 	@Override
