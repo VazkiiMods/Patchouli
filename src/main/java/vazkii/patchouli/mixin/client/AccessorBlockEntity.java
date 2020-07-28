@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(BlockEntity.class)
-public interface MixinBlockEntity {
+public interface AccessorBlockEntity {
 	@Accessor
 	void setCachedState(BlockState state);
 }

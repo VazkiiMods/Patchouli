@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(MinecraftServer.class)
-public interface MixinMinecraftServer {
+public interface AccessorMinecraftServer {
 	@Accessor
 	ServerResourceManager getServerResourceManager();
 }

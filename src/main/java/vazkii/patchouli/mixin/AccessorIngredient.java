@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Ingredient.class)
-public interface MixinIngredient {
+public interface AccessorIngredient {
 	@Invoker
 	void callCacheMatchingStacks();
 

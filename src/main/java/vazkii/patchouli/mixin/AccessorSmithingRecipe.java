@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(SmithingRecipe.class)
-public interface MixinSmithingRecipe {
+public interface AccessorSmithingRecipe {
 	@Accessor
 	Ingredient getBase();
 

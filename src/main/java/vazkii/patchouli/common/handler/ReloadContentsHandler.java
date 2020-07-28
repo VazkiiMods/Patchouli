@@ -6,7 +6,7 @@ import net.minecraft.resource.SynchronousResourceReloadListener;
 import net.minecraft.server.MinecraftServer;
 
 import vazkii.patchouli.common.network.message.MessageReloadBookContents;
-import vazkii.patchouli.mixin.MixinMinecraftServer;
+import vazkii.patchouli.mixin.AccessorMinecraftServer;
 
 public class ReloadContentsHandler {
 	public static void init() {
@@ -16,7 +16,7 @@ public class ReloadContentsHandler {
 	private static void serverStart(MinecraftServer server) {
 		// Also reload contents when someone types /reload
 		SynchronousResourceReloadListener listener = m -> MessageReloadBookContents.sendToAll(server);
-		((ReloadableResourceManager) ((MixinMinecraftServer) server).getServerResourceManager().getResourceManager())
+		((ReloadableResourceManager) ((AccessorMinecraftServer) server).getServerResourceManager().getResourceManager())
 				.registerListener(listener);
 	}
 }

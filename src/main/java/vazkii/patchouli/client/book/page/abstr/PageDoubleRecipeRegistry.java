@@ -7,7 +7,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.mixin.MixinRecipeManager;
+import vazkii.patchouli.mixin.AccessorRecipeManager;
 
 import javax.annotation.Nullable;
 
@@ -23,7 +23,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 	@Nullable
 	private T getRecipe(Identifier id) {
 		RecipeManager manager = MinecraftClient.getInstance().world.getRecipeManager();
-		Map<Identifier, T> recipes = (Map<Identifier, T>) ((MixinRecipeManager) manager).callGetAllOfType(recipeType);
+		Map<Identifier, T> recipes = (Map<Identifier, T>) ((AccessorRecipeManager) manager).callGetAllOfType(recipeType);
 		return recipes.get(id);
 	}
 

@@ -16,7 +16,7 @@ import net.minecraft.util.Identifier;
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.mixin.client.MixinClientAdvancementManagerAccessor;
+import vazkii.patchouli.mixin.client.AccessorClientAdvancementManager;
 
 import javax.annotation.Nonnull;
 
@@ -47,7 +47,7 @@ public class ClientAdvancements {
 				ClientAdvancementManager cm = conn.getAdvancementHandler();
 				Advancement adv = cm.getManager().get(id);
 				if (adv != null) {
-					Map<Advancement, AdvancementProgress> progressMap = ((MixinClientAdvancementManagerAccessor) cm).getAdvancementProgresses();
+					Map<Advancement, AdvancementProgress> progressMap = ((AccessorClientAdvancementManager) cm).getAdvancementProgresses();
 					AdvancementProgress progress = progressMap.get(adv);
 					return progress != null && progress.isDone();
 				}

@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.Map;
 
 @Mixin(ClientAdvancementManager.class)
-public interface MixinClientAdvancementManagerAccessor {
+public interface AccessorClientAdvancementManager {
 	@Accessor
 	Map<Advancement, AdvancementProgress> getAdvancementProgresses();
 }

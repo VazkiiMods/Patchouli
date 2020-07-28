@@ -37,7 +37,7 @@ import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
-import vazkii.patchouli.mixin.client.MixinBlockEntity;
+import vazkii.patchouli.mixin.client.AccessorBlockEntity;
 
 import javax.annotation.Nonnull;
 
@@ -212,7 +212,7 @@ public class PageMultiblock extends PageWithText {
 				te.setLocation(mc.world, pos);
 
 				// fake cached state in case the renderer checks it as we don't want to query the actual world
-				((MixinBlockEntity) te).setCachedState(mb.getBlockState(pos));
+				((AccessorBlockEntity) te).setCachedState(mb.getBlockState(pos));
 
 				ms.push();
 				ms.translate(pos.getX(), pos.getY(), pos.getZ());

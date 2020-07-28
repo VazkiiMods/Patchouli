@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import java.util.Map;
 
 @Mixin(VertexConsumerProvider.Immediate.class)
-public interface MixinVertexConsumerProviderImmediate {
+public interface AccessorVertexConsumerProviderImmediate {
 	@Accessor
 	BufferBuilder getFallbackBuffer();
 

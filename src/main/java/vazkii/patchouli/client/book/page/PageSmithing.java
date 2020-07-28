@@ -10,7 +10,7 @@ import net.minecraft.recipe.SmithingRecipe;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
-import vazkii.patchouli.mixin.MixinSmithingRecipe;
+import vazkii.patchouli.mixin.AccessorSmithingRecipe;
 
 public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 
@@ -25,8 +25,8 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 		DrawableHelper.drawTexture(ms, recipeX, recipeY, 11, 135, 96, 43, 128, 256);
 		parent.drawCenteredStringNoShadow(ms, getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-		parent.renderIngredient(ms, recipeX + 4, recipeY + 4, mouseX, mouseY, ((MixinSmithingRecipe) recipe).getBase());
-		parent.renderIngredient(ms, recipeX + 4, recipeY + 23, mouseX, mouseY, ((MixinSmithingRecipe) recipe).getAddition());
+		parent.renderIngredient(ms, recipeX + 4, recipeY + 4, mouseX, mouseY, ((AccessorSmithingRecipe) recipe).getBase());
+		parent.renderIngredient(ms, recipeX + 4, recipeY + 23, mouseX, mouseY, ((AccessorSmithingRecipe) recipe).getAddition());
 		parent.renderItemStack(ms, recipeX + 40, recipeY + 13, mouseX, mouseY, recipe.getRecipeKindIcon());
 		parent.renderItemStack(ms, recipeX + 76, recipeY + 13, mouseX, mouseY, recipe.getOutput());
 	}

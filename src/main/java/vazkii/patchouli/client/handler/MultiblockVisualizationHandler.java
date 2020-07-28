@@ -41,7 +41,7 @@ import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
-import vazkii.patchouli.mixin.client.MixinVertexConsumerProviderImmediate;
+import vazkii.patchouli.mixin.client.AccessorVertexConsumerProviderImmediate;
 
 import javax.annotation.Nullable;
 
@@ -359,8 +359,8 @@ public class MultiblockVisualizationHandler {
 	}
 
 	private static VertexConsumerProvider.Immediate initBuffers(VertexConsumerProvider.Immediate original) {
-		BufferBuilder fallback = ((MixinVertexConsumerProviderImmediate) original).getFallbackBuffer();
-		Map<RenderLayer, BufferBuilder> layerBuffers = ((MixinVertexConsumerProviderImmediate) original).getLayerBuffers();
+		BufferBuilder fallback = ((AccessorVertexConsumerProviderImmediate) original).getFallbackBuffer();
+		Map<RenderLayer, BufferBuilder> layerBuffers = ((AccessorVertexConsumerProviderImmediate) original).getLayerBuffers();
 		Map<RenderLayer, BufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
 		for (Map.Entry<RenderLayer, BufferBuilder> e : layerBuffers.entrySet()) {
 			remapped.put(GhostRenderLayer.remap(e.getKey()), e.getValue());

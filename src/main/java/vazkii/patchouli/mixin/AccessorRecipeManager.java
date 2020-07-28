@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import java.util.Map;
 
 @Mixin(RecipeManager.class)
-public interface MixinRecipeManager {
+public interface AccessorRecipeManager {
 	@Invoker
 	Map<Identifier, Recipe<?>> callGetAllOfType(RecipeType<?> type);
 }

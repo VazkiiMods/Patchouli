@@ -20,7 +20,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.registry.Registry;
 
-import vazkii.patchouli.mixin.MixinIngredient;
+import vazkii.patchouli.mixin.AccessorIngredient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,8 +90,8 @@ public class ItemStackUtil {
 	}
 
 	public static String serializeIngredient(Ingredient ingredient) {
-		((MixinIngredient) (Object) ingredient).callCacheMatchingStacks();
-		ItemStack[] stacks = ((MixinIngredient) (Object) ingredient).getMatchingStacks();
+		((AccessorIngredient) (Object) ingredient).callCacheMatchingStacks();
+		ItemStack[] stacks = ((AccessorIngredient) (Object) ingredient).getMatchingStacks();
 		String[] stacksSerialized = new String[stacks.length];
 		for (int i = 0; i < stacks.length; i++) {
 			stacksSerialized[i] = serializeStack(stacks[i]);
