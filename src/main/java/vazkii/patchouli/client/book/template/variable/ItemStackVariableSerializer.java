@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.registry.Registry;
 
 import vazkii.patchouli.api.IVariableSerializer;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -27,7 +28,7 @@ public class ItemStackVariableSerializer implements IVariableSerializer<ItemStac
 	public JsonElement toJson(ItemStack stack) {
 		// Adapted from net.minecraftforge.common.crafting.StackList::toJson
 		JsonObject ret = new JsonObject();
-		ret.addProperty("item", stack.getItem().getName().toString());
+		ret.addProperty("item", Registry.ITEM.getId(stack.getItem()).toString());
 		if (stack.getCount() != 1) {
 			ret.addProperty("count", stack.getCount());
 		}
