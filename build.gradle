@@ -62,7 +62,6 @@ dependencies {
 	modImplementation "me.zeroeightsix:fiber:0.23.0-1"
 	include "me.zeroeightsix:fiber:0.23.0-1"
 
-	//to change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:1.16.2"
 	mappings "net.fabricmc:yarn:1.16.2+build.1:v2"
 	modCompile "net.fabricmc:fabric-loader:0.9.1+build.205"
