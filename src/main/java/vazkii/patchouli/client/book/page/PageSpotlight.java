@@ -24,6 +24,7 @@ public class PageSpotlight extends PageWithText {
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
+		super.build(entry, pageNum);
 		ingredient = item.as(Ingredient.class);
 
 		if (linkRecipe) {

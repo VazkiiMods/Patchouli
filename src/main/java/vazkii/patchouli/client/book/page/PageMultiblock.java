@@ -63,6 +63,7 @@ public class PageMultiblock extends PageWithText {
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
+		super.build(entry, pageNum);
 		if (multiblockId != null) {
 			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(multiblockId);
 

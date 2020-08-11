@@ -19,6 +19,7 @@ public class PageLink extends PageText {
 
 	@Override
 	public void build(BookEntry entry, int pageNum) {
+		super.build(entry, pageNum);
 		realText = linkText.as(ITextComponent.class);
 	}
 
