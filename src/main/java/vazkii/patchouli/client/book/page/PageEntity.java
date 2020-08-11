@@ -67,7 +67,7 @@ public class PageEntity extends PageWithText {
 
 		if (name == null || name.isEmpty()) {
 			if (entity != null) {
-				parent.drawCenteredStringNoShadow(ms, entity.getName(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+				parent.drawCenteredStringNoShadow(ms, entity.getName().asOrderedText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 			}
 		} else {
 			parent.drawCenteredStringNoShadow(ms, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
@@ -94,7 +94,7 @@ public class PageEntity extends PageWithText {
 		ms.translate(0, offset, 0);
 		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
 		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(rotation));
-		EntityRenderDispatcher erd = MinecraftClient.getInstance().getEntityRenderManager();
+		EntityRenderDispatcher erd = MinecraftClient.getInstance().getEntityRenderDispatcher();
 		VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
 		erd.setRenderShadows(false);
 		erd.render(entity, 0, 0, 0, 0, 1, ms, immediate, 0xF000F0);

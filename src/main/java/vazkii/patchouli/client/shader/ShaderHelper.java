@@ -47,8 +47,8 @@ public class ShaderHelper implements SynchronousResourceReloadListener, Identifi
 		Identifier fragPath = new Identifier(Patchouli.MOD_ID, "shaders/" + name + ".fsh");
 		try (Resource vert = manager.getResource(vertPath);
 				Resource frag = manager.getResource(fragPath)) {
-			GlShader vertShader = GlShader.createFromResource(GlShader.Type.VERTEX, vertPath.toString(), vert.getInputStream());
-			GlShader fragShader = GlShader.createFromResource(GlShader.Type.FRAGMENT, fragPath.toString(), frag.getInputStream());
+			GlShader vertShader = GlShader.createFromResource(GlShader.Type.VERTEX, vertPath.toString(), vert.getInputStream(), Patchouli.MOD_ID);
+			GlShader fragShader = GlShader.createFromResource(GlShader.Type.FRAGMENT, fragPath.toString(), frag.getInputStream(), Patchouli.MOD_ID);
 			GlProgram prog = new Program(GlProgramManager.createProgram(), vertShader, fragShader);
 			GlProgramManager.linkProgram(prog);
 			return prog;

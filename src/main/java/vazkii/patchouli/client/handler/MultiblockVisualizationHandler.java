@@ -232,7 +232,7 @@ public class MultiblockVisualizationHandler {
 			facingRotation = BlockRotation.NONE;
 		}
 
-		EntityRenderDispatcher erd = mc.getEntityRenderManager();
+		EntityRenderDispatcher erd = mc.getEntityRenderDispatcher();
 		double renderPosX = erd.camera.getPos().getX();
 		double renderPosY = erd.camera.getPos().getY();
 		double renderPosZ = erd.camera.getPos().getZ();

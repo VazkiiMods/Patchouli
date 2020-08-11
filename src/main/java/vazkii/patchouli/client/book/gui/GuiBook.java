@@ -472,7 +472,7 @@ public abstract class GuiBook extends Screen {
 		fillGradient(ms, x, y, w, h, color, darkerColor);
 	}
 
-	public void drawCenteredStringNoShadow(MatrixStack ms, StringRenderable s, int x, int y, int color) {
+	public void drawCenteredStringNoShadow(MatrixStack ms, OrderedText s, int x, int y, int color) {
 		textRenderer.draw(ms, s, x - textRenderer.getWidth(s) / 2.0F, y, color);
 	}
 

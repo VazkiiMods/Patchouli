@@ -8,10 +8,10 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 
-import net.minecraft.datafixer.NbtOps;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.tag.ItemTags;
@@ -117,7 +117,7 @@ public class ItemStackUtil {
 		List<ItemStack> stacks = new ArrayList<>();
 		for (int i = 0; i < stacksSerialized.length; i++) {
 			if (stacksSerialized[i].startsWith("tag:")) {
-				Tag<Item> tag = ItemTags.getContainer().get(new Identifier(stacksSerialized[i].substring(4)));
+				Tag<Item> tag = ItemTags.getTagGroup().getTag(new Identifier(stacksSerialized[i].substring(4)));
 				if (tag != null) {
 					for (Item item : tag.values()) {
 						stacks.add(new ItemStack(item));

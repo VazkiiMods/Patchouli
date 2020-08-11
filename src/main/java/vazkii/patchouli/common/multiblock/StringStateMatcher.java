@@ -7,7 +7,7 @@ import net.fabricmc.fabric.impl.tag.extension.TagDelegate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.command.arguments.BlockArgumentParser;
+import net.minecraft.command.argument.BlockArgumentParser;
 import net.minecraft.state.property.Property;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.Tag;
@@ -39,7 +39,7 @@ public class StringStateMatcher {
 		if (state != null) {
 			return new ExactMatcher(state, parser.getBlockProperties());
 		} else {
-			Tag.Identified<Block> tag = new TagDelegate<>(Objects.requireNonNull(parser.getTagId()), BlockTags::getContainer);
+			Tag.Identified<Block> tag = new TagDelegate<>(Objects.requireNonNull(parser.getTagId()), BlockTags::getTagGroup);
 			return new TagMatcher(tag, parser.getProperties());
 		}
 	}
