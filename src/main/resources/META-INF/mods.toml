@@ -1,5 +1,6 @@
 modLoader="javafml"
-loaderVersion="[32,)"
+license="CC BY-NC-SA 3.0"
+loaderVersion="[33,)"
 issueTrackerURL="https://github.com/Vazkii/Patchouli"
 logoFile="logo.png"
 
@@ -15,4 +16,4 @@ Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and
 [[dependencies.patchouli]]
     modId="forge"
     mandatory=true
-    versionRange="[32.0.0,)"
+    versionRange="[33.0.0,)"

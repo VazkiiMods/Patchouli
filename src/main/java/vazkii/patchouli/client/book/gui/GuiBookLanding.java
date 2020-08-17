@@ -134,9 +134,9 @@ public class GuiBookLanding extends GuiBook {
 		drawFromTexture(ms, book, -8, 12, 0, 180, 140, 31);
 
 		int color = book.nameplateColor;
-		font.func_238422_b_(ms, book.getBookItem().getDisplayName(), 13, 16, color);
-		ITextComponent toDraw = book.getSubtitle().func_240703_c_(book.getFontStyle());
-		font.func_238422_b_(ms, toDraw, 24, 24, color);
+		font.func_238422_b_(ms, book.getBookItem().getDisplayName().func_241878_f(), 13, 16, color);
+		ITextComponent toDraw = book.getSubtitle().setStyle(book.getFontStyle());
+		font.func_238422_b_(ms, toDraw.func_241878_f(), 24, 24, color);
 	}
 
 	void makeErrorTooltip() {
@@ -152,7 +152,7 @@ public class GuiBookLanding extends GuiBook {
 		}
 
 		if (!lines.isEmpty()) {
-			lines.add(new TranslationTextComponent("patchouli.gui.lexicon.loading_error_log").func_240699_a_(TextFormatting.GREEN));
+			lines.add(new TranslationTextComponent("patchouli.gui.lexicon.loading_error_log").mergeStyle(TextFormatting.GREEN));
 			setTooltip(lines);
 		}
 	}

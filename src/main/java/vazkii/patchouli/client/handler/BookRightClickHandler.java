@@ -57,13 +57,13 @@ public class BookRightClickHandler {
 						RenderHelper.renderItemStackInGui(ms, bookStack, (x + 8) * 2, (y + 8) * 2);
 						ms.scale(2F, 2F, 1F);
 
-						mc.fontRenderer.func_238422_b_(ms, entry.getName(), x + 18, y + 3, 0xFFFFFF);
+						mc.fontRenderer.func_238422_b_(ms, entry.getName().func_241878_f(), x + 18, y + 3, 0xFFFFFF);
 
 						ms.push();
 						ms.scale(0.75F, 0.75F, 1F);
 						ITextComponent s = new TranslationTextComponent("patchouli.gui.lexicon." + (player.isSneaking() ? "view" : "sneak"))
-								.func_240699_a_(TextFormatting.ITALIC);
-						mc.fontRenderer.func_238422_b_(ms, s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
+								.mergeStyle(TextFormatting.ITALIC);
+						mc.fontRenderer.func_238422_b_(ms, s.func_241878_f(), (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
 						ms.pop();
 					}
 				}

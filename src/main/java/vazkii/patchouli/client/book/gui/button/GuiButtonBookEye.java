@@ -15,7 +15,7 @@ public class GuiButtonBookEye extends GuiButtonBook {
 	public GuiButtonBookEye(GuiBook parent, int x, int y, Button.IPressable onPress) {
 		super(parent, x, y, 308, 31, 11, 11, onPress,
 				new TranslationTextComponent("patchouli.gui.lexicon.button.visualize"),
-				new TranslationTextComponent("patchouli.gui.lexicon.button.visualize.info").func_240699_a_(TextFormatting.GRAY));
+				new TranslationTextComponent("patchouli.gui.lexicon.button.visualize.info").mergeStyle(TextFormatting.GRAY));
 	}
 
 	@Override

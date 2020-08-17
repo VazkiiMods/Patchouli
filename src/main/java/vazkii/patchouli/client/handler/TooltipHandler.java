@@ -125,8 +125,8 @@ public class TooltipHandler {
 				ms.scale(0.5F, 0.5F, 1F);
 				boolean mac = Minecraft.IS_RUNNING_ON_MAC;
 				ITextComponent key = new StringTextComponent(PatchouliConfig.useShiftForQuickLookup.get() ? "Shift" : mac ? "Cmd" : "Ctrl")
-						.func_240699_a_(TextFormatting.BOLD);
-				mc.fontRenderer.func_238407_a_(ms, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
+						.mergeStyle(TextFormatting.BOLD);
+				mc.fontRenderer.func_238407_a_(ms, key.func_241878_f(), (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
 				ms.pop();
 
 				RenderSystem.enableDepthTest();

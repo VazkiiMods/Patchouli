@@ -50,7 +50,7 @@ public class PageSpotlight extends PageWithText {
 			toDraw = ingredient.getMatchingStacks()[0].getDisplayName();
 		}
 
-		parent.drawCenteredStringNoShadow(ms, toDraw, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		parent.drawCenteredStringNoShadow(ms, toDraw.func_241878_f(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		parent.renderIngredient(ms, GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, ingredient);
 
 		super.render(ms, mouseX, mouseY, pticks);

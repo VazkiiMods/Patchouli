@@ -58,10 +58,10 @@ public class Span {
 	}
 
 	public IFormattableTextComponent styledSubstring(int start) {
-		return new StringTextComponent(text.substring(start)).func_230530_a_(style);
+		return new StringTextComponent(text.substring(start)).setStyle(style);
 	}
 
 	public IFormattableTextComponent styledSubstring(int start, int end) {
-		return new StringTextComponent(text.substring(start, end)).func_230530_a_(style);
+		return new StringTextComponent(text.substring(start, end)).setStyle(style);
 	}
 }

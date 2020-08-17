@@ -120,7 +120,7 @@ public class ItemModBook extends Item {
 
 		Book book = getBook(stack);
 		if (book != null && book.contents != null) {
-			tooltip.add(book.getSubtitle().func_240699_a_(TextFormatting.GRAY));
+			tooltip.add(book.getSubtitle().mergeStyle(TextFormatting.GRAY));
 		}
 	}
 

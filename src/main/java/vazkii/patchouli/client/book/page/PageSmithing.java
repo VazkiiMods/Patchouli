@@ -24,7 +24,7 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 		mc.getTextureManager().bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
 		AbstractGui.blit(ms, recipeX, recipeY, 11, 135, 96, 43, 128, 256);
-		parent.drawCenteredStringNoShadow(ms, getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
+		parent.drawCenteredStringNoShadow(ms, getTitle(second).func_241878_f(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
 		Ingredient base = ObfuscationReflectionHelper.getPrivateValue(SmithingRecipe.class, recipe, "field_234837_a_");
 		Ingredient addition = ObfuscationReflectionHelper.getPrivateValue(SmithingRecipe.class, recipe, "field_234838_b_");

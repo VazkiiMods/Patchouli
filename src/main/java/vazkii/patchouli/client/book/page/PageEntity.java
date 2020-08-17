@@ -67,7 +67,7 @@ public class PageEntity extends PageWithText {
 
 		if (name == null || name.isEmpty()) {
 			if (entity != null) {
-				parent.drawCenteredStringNoShadow(ms, entity.getName(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+				parent.drawCenteredStringNoShadow(ms, entity.getName().func_241878_f(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 			}
 		} else {
 			parent.drawCenteredStringNoShadow(ms, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);

@@ -53,11 +53,11 @@ public class StateMatcher implements IStateMatcher {
 			if (state.getBlock() != state1.getBlock()) {
 				return false;
 			}
-			return state1.func_235904_r_()
+			return state1.getProperties()
 					.stream()
 					.filter(filter)
-					.allMatch(property -> state1.func_235901_b_(property) &&
-							state.func_235901_b_(property) &&
+					.allMatch(property -> state1.hasProperty(property) &&
+							state.hasProperty(property) &&
 							Objects.equals(state.get(property), state1.get(property)));
 		});
 	}

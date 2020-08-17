@@ -25,7 +25,7 @@ public class GuiButtonBookResize extends GuiButtonBook {
 	public List<ITextComponent> getTooltip() {
 		return !uiscale ? tooltip : Arrays.asList(
 				tooltip.get(0),
-				new TranslationTextComponent("patchouli.gui.lexicon.button.resize.size" + PersistentData.data.bookGuiScale).func_240699_a_(TextFormatting.GRAY));
+				new TranslationTextComponent("patchouli.gui.lexicon.button.resize.size" + PersistentData.data.bookGuiScale).mergeStyle(TextFormatting.GRAY));
 	}
 
 }

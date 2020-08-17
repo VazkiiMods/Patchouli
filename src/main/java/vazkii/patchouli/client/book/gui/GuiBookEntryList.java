@@ -85,7 +85,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		super.drawForegroundElements(ms, mouseX, mouseY, partialTicks);
 
 		if (spread == 0) {
-			drawCenteredStringNoShadow(ms, getTitle(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawCenteredStringNoShadow(ms, getTitle().func_241878_f(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 			drawCenteredStringNoShadow(ms, I18n.format("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
 			drawSeparator(ms, book, LEFT_PAGE_X, TOP_PADDING + 12);
@@ -102,8 +102,8 @@ public abstract class GuiBookEntryList extends GuiBook {
 		if (!searchField.getText().isEmpty()) {
 			RenderSystem.color4f(1F, 1F, 1F, 1F);
 			drawFromTexture(ms, book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
-			ITextComponent toDraw = new StringTextComponent(searchField.getText()).func_230530_a_(book.getFontStyle());
-			font.func_238422_b_(ms, toDraw, searchField.x + 7, searchField.y + 1, 0);
+			ITextComponent toDraw = new StringTextComponent(searchField.getText()).setStyle(book.getFontStyle());
+			font.func_238422_b_(ms, toDraw.func_241878_f(), searchField.x + 7, searchField.y + 1, 0);
 		}
 
 		if (visibleEntries.isEmpty()) {

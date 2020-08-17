@@ -65,7 +65,7 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 				entry.getName(),
 				new TranslationTextComponent(multiblock
 						? "patchouli.gui.lexicon.multiblock_bookmark"
-						: "patchouli.gui.lexicon.remove_bookmark").func_240699_a_(TextFormatting.GRAY)
+						: "patchouli.gui.lexicon.remove_bookmark").mergeStyle(TextFormatting.GRAY)
 		};
 	}
 

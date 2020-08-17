@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.BiomeRegistry;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.lighting.WorldLightManager;
 
@@ -152,7 +152,7 @@ public abstract class AbstractMultiblock implements IMultiblock, IBlockDisplayRe
 
 	@Override
 	public int getBlockColor(BlockPos pos, ColorResolver color) {
-		return color.getColor(Biomes.PLAINS, pos.getX(), pos.getZ());
+		return color.getColor(BiomeRegistry.field_244200_a, pos.getX(), pos.getZ());
 	}
 
 	@Override

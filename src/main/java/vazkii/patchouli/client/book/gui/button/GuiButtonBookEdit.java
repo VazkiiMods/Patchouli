@@ -11,7 +11,7 @@ public class GuiButtonBookEdit extends GuiButtonBook {
 	public GuiButtonBookEdit(GuiBook parent, int x, int y, Button.IPressable onPress) {
 		super(parent, x, y, 308, 9, 11, 11, onPress,
 				new TranslationTextComponent("patchouli.gui.lexicon.button.editor"),
-				new TranslationTextComponent("patchouli.gui.lexicon.button.editor.info").func_240699_a_(TextFormatting.GRAY));
+				new TranslationTextComponent("patchouli.gui.lexicon.button.editor.info").mergeStyle(TextFormatting.GRAY));
 	}
 
 }

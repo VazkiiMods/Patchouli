@@ -103,7 +103,7 @@ public class BookTextParser {
 				BookEntry entry = state.book.contents.entries.get(href);
 				if (entry != null) {
 					state.tooltip = entry.isLocked()
-							? new TranslationTextComponent("patchouli.gui.lexicon.locked").func_240699_a_(TextFormatting.GRAY)
+							? new TranslationTextComponent("patchouli.gui.lexicon.locked").mergeStyle(TextFormatting.GRAY)
 							: entry.getName();
 					GuiBook gui = state.gui;
 					Book book = state.book;
@@ -113,7 +113,7 @@ public class BookTextParser {
 						if (anchorPage >= 0) {
 							page = anchorPage / 2;
 						} else {
-							state.tooltip.func_240702_b_(" (INVALID ANCHOR:" + anchor + ")");
+							state.tooltip.appendString(" (INVALID ANCHOR:" + anchor + ")");
 						}
 					}
 					int finalPage = page;
@@ -175,7 +175,7 @@ public class BookTextParser {
 		this.baseStyle = baseStyle;
 
 		this.font = Minecraft.getInstance().fontRenderer;
-		this.spaceWidth = font.func_238414_a_(new StringTextComponent(" ").func_230530_a_(baseStyle));
+		this.spaceWidth = font.func_238414_a_(new StringTextComponent(" ").setStyle(baseStyle));
 	}
 
 	public List<Word> parse(@Nullable String text) {

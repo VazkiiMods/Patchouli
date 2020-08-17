@@ -25,7 +25,7 @@ public class ReloadContentsHandler {
 		IResourceManagerReloadListener listener = m -> NetworkHandler.sendToAll(new MessageReloadBookContents());
 		Field f = ObfuscationReflectionHelper.findField(MinecraftServer.class, "field_195576_ac");
 		try {
-			IResourceManager manager = ((DataPackRegistries) f.get(evt.getServer())).func_240970_h_();
+			IResourceManager manager = ((DataPackRegistries) f.get(evt.getServer())).getResourceManager();
 			((IReloadableResourceManager) manager).addReloadListener(listener);
 		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);

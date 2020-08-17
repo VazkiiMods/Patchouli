@@ -73,7 +73,7 @@ public class GuiButtonCategory extends Button {
 
 			if (isHovered()) {
 				parent.setTooltip(locked
-						? new TranslationTextComponent("patchouli.gui.lexicon.locked").func_240699_a_(TextFormatting.GRAY)
+						? new TranslationTextComponent("patchouli.gui.lexicon.locked").mergeStyle(TextFormatting.GRAY)
 						: name);
 			}
 		}

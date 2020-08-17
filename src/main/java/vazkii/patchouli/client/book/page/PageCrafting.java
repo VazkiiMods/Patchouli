@@ -37,7 +37,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<ICraftingRecipe> {
 			}
 		}
 
-		parent.drawCenteredStringNoShadow(ms, getTitle(second), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
+		parent.drawCenteredStringNoShadow(ms, getTitle(second).func_241878_f(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
 		parent.renderItemStack(ms, recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getRecipeOutput());
 

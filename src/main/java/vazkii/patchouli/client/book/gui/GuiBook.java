@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.*;
@@ -41,6 +42,7 @@ import java.awt.Color;
 import java.util.*;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public abstract class GuiBook extends Screen {
 
@@ -216,18 +218,18 @@ public abstract class GuiBook extends Screen {
 			Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
 			if (provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
 				ITextComponent t = new StringTextComponent("(")
-						.func_230529_a_(new TranslationTextComponent("patchouli.gui.lexicon.shift_for_recipe"))
-						.func_240702_b_(")")
-						.func_240699_a_(TextFormatting.GOLD);
+						.append(new TranslationTextComponent("patchouli.gui.lexicon.shift_for_recipe"))
+						.appendString(")")
+						.mergeStyle(TextFormatting.GOLD);
 				tooltip.add(t);
 				targetPage = provider;
 			}
 
 			GuiUtils.preItemToolTip(tooltipStack);
-			this.renderTooltip(ms, tooltip, mouseX, mouseY);
+			this.renderTooltip(ms, tooltip.stream().map(ITextComponent::func_241878_f).collect(Collectors.toList()), mouseX, mouseY);
 			GuiUtils.postItemToolTip();
 		} else if (tooltip != null && !tooltip.isEmpty()) {
-			this.renderTooltip(ms, tooltip, mouseX, mouseY);
+			this.renderTooltip(ms, tooltip.stream().map(ITextComponent::func_241878_f).collect(Collectors.toList()), mouseX, mouseY);
 		}
 	}
 
@@ -444,7 +446,7 @@ public abstract class GuiBook extends Screen {
 		drawGradient(ms, barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, book.progressBarBackground);
 		drawGradient(ms, barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, book.progressBarColor);
 
-		font.func_238422_b_(ms, new TranslationTextComponent("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
+		font.func_238422_b_(ms, new TranslationTextComponent("patchouli.gui.lexicon.progress_meter").func_241878_f(), barLeft, barTop - 9, book.headerColor);
 
 		if (isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
 			List<ITextComponent> tooltip = new ArrayList<>();
@@ -453,14 +455,14 @@ public abstract class GuiBook extends Screen {
 
 			if (unlockedSecretEntries > 0) {
 				if (unlockedSecretEntries == 1) {
-					tooltip.add(new TranslationTextComponent("patchouli.gui.lexicon.progress_tooltip.secret1").func_240699_a_(TextFormatting.GRAY));
+					tooltip.add(new TranslationTextComponent("patchouli.gui.lexicon.progress_tooltip.secret1").mergeStyle(TextFormatting.GRAY));
 				} else {
-					tooltip.add(new TranslationTextComponent("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries).func_240699_a_(TextFormatting.GRAY));
+					tooltip.add(new TranslationTextComponent("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries).mergeStyle(TextFormatting.GRAY));
 				}
 			}
 
 			if (unlockedEntries != totalEntries) {
-				tooltip.add(new TranslationTextComponent("patchouli.gui.lexicon.progress_tooltip.info").func_240699_a_(TextFormatting.GRAY));
+				tooltip.add(new TranslationTextComponent("patchouli.gui.lexicon.progress_tooltip.info").mergeStyle(TextFormatting.GRAY));
 			}
 
 			setTooltip(tooltip);
@@ -472,8 +474,8 @@ public abstract class GuiBook extends Screen {
 		fillGradient(ms, x, y, w, h, color, darkerColor);
 	}
 
-	public void drawCenteredStringNoShadow(MatrixStack ms, ITextProperties s, int x, int y, int color) {
-		font.func_238422_b_(ms, s, x - font.func_238414_a_(s) / 2.0F, y, color);
+	public void drawCenteredStringNoShadow(MatrixStack ms, IReorderingProcessor s, int x, int y, int color) {
+		font.func_238422_b_(ms, s, x - font.func_243245_a(s) / 2.0F, y, color);
 	}
 
 	public void drawCenteredStringNoShadow(MatrixStack ms, String s, int x, int y, int color) {

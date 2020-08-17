@@ -26,8 +26,8 @@ public class ComponentCustomTest implements ICustomComponent {
 
 	@Override
 	public void render(MatrixStack ms, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
-		ITextComponent toRender = new StringTextComponent(text).func_230530_a_(context.getFont());
-		Minecraft.getInstance().fontRenderer.func_238407_a_(ms, toRender, x, y, -1);
+		ITextComponent toRender = new StringTextComponent(text).mergeStyle(context.getFont());
+		Minecraft.getInstance().fontRenderer.func_238407_a_(ms, toRender.func_241878_f(), x, y, -1);
 	}
 
 	@Override

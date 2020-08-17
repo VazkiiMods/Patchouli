@@ -37,22 +37,22 @@ public class Word {
 		this.onClick = span.onClick;
 		this.linkCluster = cluster;
 		if (!span.tooltip.getString().isEmpty()) {
-			text = text.func_240700_a_(s -> s.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, span.tooltip)));
+			text = text.modifyStyle(s -> s.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, span.tooltip)));
 		}
 		this.text = text;
 	}
 
 	public void render(MatrixStack ms, FontRenderer font, Style styleOverride, int mouseX, int mouseY) {
-		IFormattableTextComponent toRender = text.deepCopy().func_240703_c_(styleOverride);
+		IFormattableTextComponent toRender = text.deepCopy().mergeStyle(styleOverride);
 		if (isClusterHovered(mouseX, mouseY)) {
 			if (onClick != null) {
-				toRender.func_240700_a_(s -> s.setColor(Color.func_240743_a_(book.linkHoverColor)));
+				toRender.modifyStyle(s -> s.setColor(Color.func_240743_a_(book.linkHoverColor)));
 			}
 
 			gui.renderComponentHoverEffect(ms, text.getStyle(), (int) gui.getRelativeX(mouseX), (int) gui.getRelativeY(mouseY));
 		}
 
-		font.func_238422_b_(ms, toRender, x, y, -1);
+		font.func_238422_b_(ms, toRender.func_241878_f(), x, y, -1);
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {

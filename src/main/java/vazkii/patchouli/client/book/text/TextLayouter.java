@@ -109,7 +109,7 @@ public class TextLayouter {
 
 		char[] characters = last.span.text.toCharArray();
 		for (int i = last.start; i < characters.length; i++) {
-			ITextComponent tmp = new StringTextComponent(String.valueOf(characters[i])).func_230530_a_(last.span.style);
+			ITextComponent tmp = new StringTextComponent(String.valueOf(characters[i])).setStyle(last.span.style);
 			width += font.func_238414_a_(tmp);
 			if (last.span.bold) {
 				width++;

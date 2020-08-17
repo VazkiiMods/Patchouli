@@ -61,12 +61,12 @@ public class GuiButtonEntry extends Button {
 			} else {
 				name = entry.getName();
 				if (entry.isPriority()) {
-					name = name.func_240699_a_(TextFormatting.ITALIC);
+					name = name.mergeStyle(TextFormatting.ITALIC);
 				}
 			}
 
-			name = name.func_240703_c_(entry.getBook().getFontStyle());
-			Minecraft.getInstance().fontRenderer.func_238422_b_(ms, name, x + 12, y, getColor());
+			name = name.mergeStyle(entry.getBook().getFontStyle());
+			Minecraft.getInstance().fontRenderer.func_238422_b_(ms, name.func_241878_f(), x + 12, y, getColor());
 
 			if (!entry.isLocked()) {
 				GuiBook.drawMarking(ms, parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());
