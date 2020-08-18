@@ -18,10 +18,16 @@ public class ComponentImage extends TemplateComponent {
 
 	public String image;
 
-	public int u, v, width, height;
+	@SerializedName("u") public IVariable u;
+	@SerializedName("v") public IVariable v;
+	@SerializedName("width") public IVariable width;
+	@SerializedName("height") public IVariable height;
 
-	@SerializedName("texture_width") public int textureWidth = 256;
-	@SerializedName("texture_height") public int textureHeight = 256;
+	@SerializedName("texture_width") public IVariable textureWidth;
+	@SerializedName("texture_height") public IVariable textureHeight;
+
+	public int tWidth;
+	public int tHeight;
 
 	public float scale = 1F;
 
@@ -29,6 +35,18 @@ public class ComponentImage extends TemplateComponent {
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
+		try {
+			tWidth = textureWidth.asNumber().intValue();
+		} catch (NumberFormatException e) {
+			tWidth = 256;
+		}
+
+		try {
+			tHeight = textureHeight.asNumber().intValue();
+		} catch (NumberFormatException e) {
+			tHeight = 256;
+		}
+
 		if (image.contains(":")) {
 			resource = new Identifier(image);
 		} else {
@@ -40,6 +58,12 @@ public class ComponentImage extends TemplateComponent {
 	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
 		image = lookup.apply(IVariable.wrap(image)).asString();
+		u = lookup.apply(u);
+		v = lookup.apply(u);
+		width = lookup.apply(width);
+		height = lookup.apply(height);
+		textureWidth = lookup.apply(width);
+		textureHeight = lookup.apply(height);
 	}
 
 	@Override
@@ -54,7 +78,7 @@ public class ComponentImage extends TemplateComponent {
 		ms.scale(scale, scale, scale);
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		RenderSystem.enableBlend();
-		DrawableHelper.drawTexture(ms, 0, 0, u, v, width, height, textureWidth, textureHeight);
+		DrawableHelper.drawTexture(ms, 0, 0, u.asNumber().floatValue(), v.asNumber().floatValue(), width.asNumber().intValue(), height.asNumber().intValue(), tWidth, tHeight);
 		ms.pop();
 	}
 
