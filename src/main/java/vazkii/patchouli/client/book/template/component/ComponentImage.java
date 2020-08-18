@@ -26,8 +26,7 @@ public class ComponentImage extends TemplateComponent {
 	@SerializedName("texture_width") public IVariable textureWidth;
 	@SerializedName("texture_height") public IVariable textureHeight;
 
-	public int tWidth;
-	public int tHeight;
+	public int uInt,vInt,widthInt,heightInt,textureWidthInt,textureHeightInt;
 
 	public float scale = 1F;
 
@@ -35,18 +34,6 @@ public class ComponentImage extends TemplateComponent {
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		try {
-			tWidth = textureWidth.asNumber().intValue();
-		} catch (NumberFormatException e) {
-			tWidth = 256;
-		}
-
-		try {
-			tHeight = textureHeight.asNumber().intValue();
-		} catch (NumberFormatException e) {
-			tHeight = 256;
-		}
-
 		if (image.contains(":")) {
 			resource = new Identifier(image);
 		} else {
@@ -62,8 +49,8 @@ public class ComponentImage extends TemplateComponent {
 		v = lookup.apply(u);
 		width = lookup.apply(width);
 		height = lookup.apply(height);
-		textureWidth = lookup.apply(width);
-		textureHeight = lookup.apply(height);
+		textureWidth = lookup.apply(textureWidth);
+		textureHeight = lookup.apply(textureHeight);
 	}
 
 	@Override
@@ -72,14 +59,55 @@ public class ComponentImage extends TemplateComponent {
 			return;
 		}
 
+		checkValues();
+
 		page.mc.getTextureManager().bindTexture(resource);
 		ms.push();
 		ms.translate(x, y, 0);
 		ms.scale(scale, scale, scale);
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		RenderSystem.enableBlend();
-		DrawableHelper.drawTexture(ms, 0, 0, u.asNumber().floatValue(), v.asNumber().floatValue(), width.asNumber().intValue(), height.asNumber().intValue(), tWidth, tHeight);
+		DrawableHelper.drawTexture(ms, 0, 0, uInt,vInt,widthInt,heightInt,textureWidthInt,textureHeightInt);
 		ms.pop();
+	}
+
+	//prepares all the Ivariables and defaults them if they are of improper type
+	private void checkValues(){
+		try {
+			textureWidthInt = textureWidth.asNumber().intValue();
+		} catch (Exception e) {
+			textureWidthInt = 256;
+		}
+
+		try {
+			textureHeightInt = textureHeight.asNumber().intValue();
+		} catch (Exception e) {
+			textureHeightInt = 256;
+		}
+
+		try {
+			uInt = u.asNumber().intValue();
+		} catch (Exception e) {
+			uInt = 0;
+		}
+
+		try {
+			vInt = v.asNumber().intValue();
+		} catch (Exception e) {
+			vInt = 0;
+		}
+
+		try {
+			widthInt = width.asNumber().intValue();
+		} catch (Exception e) {
+			widthInt = 0;
+		}
+
+		try {
+			heightInt = height.asNumber().intValue();
+		} catch (Exception e) {
+			heightInt = 0;
+		}
 	}
 
 }
