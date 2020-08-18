@@ -26,7 +26,7 @@ public class ComponentImage extends TemplateComponent {
 	@SerializedName("texture_width") public IVariable textureWidth;
 	@SerializedName("texture_height") public IVariable textureHeight;
 
-	public int uInt,vInt,widthInt,heightInt,textureWidthInt,textureHeightInt;
+	public int uInt, vInt, widthInt, heightInt, textureWidthInt, textureHeightInt;
 
 	public float scale = 1F;
 
@@ -67,12 +67,12 @@ public class ComponentImage extends TemplateComponent {
 		ms.scale(scale, scale, scale);
 		RenderSystem.color4f(1F, 1F, 1F, 1F);
 		RenderSystem.enableBlend();
-		DrawableHelper.drawTexture(ms, 0, 0, uInt,vInt,widthInt,heightInt,textureWidthInt,textureHeightInt);
+		DrawableHelper.drawTexture(ms, 0, 0, uInt, vInt, widthInt, heightInt, textureWidthInt, textureHeightInt);
 		ms.pop();
 	}
 
 	//prepares all the Ivariables and defaults them if they are of improper type
-	private void checkValues(){
+	private void checkValues() {
 		try {
 			textureWidthInt = textureWidth.asNumber().intValue();
 		} catch (Exception e) {
