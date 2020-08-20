@@ -10,13 +10,13 @@ import net.minecraft.command.arguments.BlockStateParser;
 import net.minecraft.state.Property;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.util.TriPredicate;
 
 import vazkii.patchouli.api.IStateMatcher;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -38,8 +38,7 @@ public class StringStateMatcher {
 		if (state != null) {
 			return new ExactMatcher(state, parser.getProperties());
 		} else {
-			ITag.INamedTag<Block> tag = BlockTags.makeWrapperTag(parser.getTag().toString());
-			return new TagMatcher(tag, parser.getStringProperties());
+			return new TagMatcher(parser.getTag(), parser.getStringProperties());
 		}
 	}
 
@@ -91,17 +90,21 @@ public class StringStateMatcher {
 	}
 
 	private static class TagMatcher implements IStateMatcher {
-		private final ITag.INamedTag<Block> tag;
+		private final ResourceLocation tag;
 		private final Map<String, String> props;
 
-		private TagMatcher(ITag.INamedTag<Block> tag, Map<String, String> props) {
+		private TagMatcher(ResourceLocation tag, Map<String, String> props) {
 			this.tag = tag;
 			this.props = props;
 		}
 
+		private ITag<Block> resolve() {
+			return BlockTags.getCollection().func_241834_b(tag);
+		}
+
 		@Override
 		public BlockState getDisplayedState(int ticks) {
-			List<Block> all = new ArrayList<>(tag.getAllElements());
+			List<Block> all = resolve().getAllElements();
 			if (all.isEmpty()) {
 				return Blocks.BEDROCK.getDefaultState(); // show something impossible
 			} else {
@@ -112,7 +115,7 @@ public class StringStateMatcher {
 
 		@Override
 		public TriPredicate<IBlockReader, BlockPos, BlockState> getStatePredicate() {
-			return (w, p, s) -> tag.contains(s.getBlock()) && checkProps(s);
+			return (w, p, s) -> resolve().contains(s.getBlock()) && checkProps(s);
 		}
 
 		private boolean checkProps(BlockState state) {
@@ -143,13 +146,13 @@ public class StringStateMatcher {
 				return false;
 			}
 			TagMatcher that = (TagMatcher) o;
-			return Objects.equals(tag.getName(), that.tag.getName()) &&
+			return Objects.equals(tag, that.tag) &&
 					Objects.equals(props, that.props);
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(tag.getName(), props);
+			return Objects.hash(tag, props);
 		}
 	}
 }
