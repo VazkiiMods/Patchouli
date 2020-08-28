@@ -29,7 +29,7 @@ public class MixinBakedModelManager {
 		ModelIdentifier key = new ModelIdentifier(PatchouliItems.BOOK_ID, "inventory");
 		BakedModel oldModel = models.get(key);
 		if (oldModel != null) {
-			models.put(key, new BookModel(oldModel));
+			models.put(key, new BookModel(oldModel, loader));
 		}
 	}
 }

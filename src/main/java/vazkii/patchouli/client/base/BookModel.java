@@ -4,6 +4,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.ModelLoader;
+import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
@@ -25,23 +27,24 @@ import java.util.Random;
 
 public class BookModel implements BakedModel {
 	private final BakedModel original;
+	private final ModelOverrideList itemHandler;
 
-	public BookModel(BakedModel original) {
+	public BookModel(BakedModel original, ModelLoader loader) {
 		this.original = original;
-	}
-
-	private final ModelOverrideList itemHandler = new ModelOverrideList(null, null, null, Collections.emptyList()) {
-		@Override
-		public BakedModel apply(@Nonnull BakedModel original, @Nonnull ItemStack stack,
-				@Nullable ClientWorld world, @Nullable LivingEntity entity) {
-			Book book = ItemModBook.getBook(stack);
-			if (book != null) {
-				ModelIdentifier modelPath = new ModelIdentifier(book.model, "inventory");
-				return MinecraftClient.getInstance().getBakedModelManager().getModel(modelPath);
+		JsonUnbakedModel missing = (JsonUnbakedModel) loader.getOrLoadModel(ModelLoader.MISSING);
+		this.itemHandler = new ModelOverrideList(loader, missing, id -> missing, Collections.emptyList()) {
+			@Override
+			public BakedModel apply(@Nonnull BakedModel original, @Nonnull ItemStack stack,
+					@Nullable ClientWorld world, @Nullable LivingEntity entity) {
+				Book book = ItemModBook.getBook(stack);
+				if (book != null) {
+					ModelIdentifier modelPath = new ModelIdentifier(book.model, "inventory");
+					return MinecraftClient.getInstance().getBakedModelManager().getModel(modelPath);
+				}
+				return original;
 			}
-			return original;
-		}
-	};
+		};
+	}
 
 	@Nonnull
 	@Override
