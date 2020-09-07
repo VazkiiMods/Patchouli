@@ -85,11 +85,12 @@ public class PatchouliConfig {
 
 		Boolean b = CONFIG_FLAGS.get(name);
 		if (b == null) {
-			Patchouli.LOGGER.warn("Queried for unknown config flag: {}", name);
-			return false;
-		} else {
-			return b == target;
+			if (!name.startsWith("mod:")) {
+				Patchouli.LOGGER.warn("Queried for unknown config flag: {}", name);
+			}
+			b = false;
 		}
+		return b == target;
 	}
 
 	public static boolean getConfigFlagAND(String[] tokens) {
