@@ -28,7 +28,7 @@ repositories {
 
 dependencies {
     // 1.14+
-    modCompile "vazkii.patchouli:Patchouli:[VERSION]:api"
+    modCompileOnly "vazkii.patchouli:Patchouli:[VERSION]:api"
     modImplementation "vazkii.patchouli:Patchouli:[VERSION]"
 }
 ```
