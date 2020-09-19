@@ -17,7 +17,8 @@ ext.config = configFile.withReader {
 	return (new ConfigSlurper().parse(prop))
 }
 
-version = "${config.version}-${config.build_number}-FABRIC"
+def mc_version = '1.16.2'
+version = "${mc_version}-${config.build_number}-FABRIC"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
 }
