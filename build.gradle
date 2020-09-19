@@ -29,7 +29,7 @@ ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
 
 def mc_version = '1.16.2'
-version = "${config.version}-${config.build_number}"
+version = "${mc_version}-${config.build_number}"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
 }
