@@ -12,6 +12,7 @@ import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.shader.ShaderHelper;
+import vazkii.patchouli.client.gui.GoVoteHandler;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
@@ -21,6 +22,7 @@ import vazkii.patchouli.common.network.NetworkHandler;
 public class ClientProxy implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		GoVoteHandler.init();
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
 		ClientTicker.init();
