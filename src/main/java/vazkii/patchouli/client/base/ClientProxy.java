@@ -9,10 +9,10 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.client.gui.GoVoteHandler;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.shader.ShaderHelper;
-import vazkii.patchouli.client.gui.GoVoteHandler;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
