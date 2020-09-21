@@ -74,7 +74,7 @@ public class GoVoteHandler {
 			Files.createFile(path);
 
 			// Set it to hidden on windows to avoid clutter
-			if (Util.getOSType() == Util.OS.WINDOWS) {
+			if (Util.getOperatingSystem() == Util.OperatingSystem.WINDOWS) {
 				Files.setAttribute(path, "dos:hidden", true);
 			}
 		} catch (IOException ex) {
