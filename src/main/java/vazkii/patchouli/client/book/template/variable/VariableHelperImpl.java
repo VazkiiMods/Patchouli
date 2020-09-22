@@ -30,11 +30,12 @@ public class VariableHelperImpl implements VariableHelper {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public <T> IVariable createFromObject(T object) {
 		Class<?> clazz = object.getClass();
-		for (Class<?> c : serializers.keySet()) {
-			if (c.isAssignableFrom(clazz)) {
-				return create(serializerForClass(c).toJson(object), clazz);
+		for (Map.Entry<Class<?>, IVariableSerializer<?>> e : serializers.entrySet()) {
+			if (e.getKey().isAssignableFrom(clazz)) {
+				return create(((IVariableSerializer<T>) e.getValue()).toJson(object), clazz);
 			}
 		}
 

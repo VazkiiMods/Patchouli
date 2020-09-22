@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 
 import net.minecraft.util.Lazy;
 
+import javax.annotation.Nullable;
+
 /**
  * API endpoint for serializing/deserializing arbitrary objects to/from JsonElements.
  */
@@ -42,6 +44,7 @@ public interface VariableHelper {
 	 * Get an {@link IVariableSerializer} for the given class.
 	 * If we don't know how to deserialize this class, return {@code null}.
 	 */
+	@Nullable
 	default <T> IVariableSerializer<T> serializerForClass(Class<?> clazz) {
 		return null;
 	}
