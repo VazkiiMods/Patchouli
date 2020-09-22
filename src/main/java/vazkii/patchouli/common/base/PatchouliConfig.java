@@ -10,6 +10,7 @@ import net.minecraftforge.fml.loading.moddiscovery.ModInfo;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PatchouliConfig {
 
@@ -19,15 +20,14 @@ public class PatchouliConfig {
 	public static ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
 	public static ForgeConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
 
-	private static final Map<String, Boolean> CONFIG_FLAGS = new HashMap<>();
+	private static final Map<String, Boolean> CONFIG_FLAGS = new ConcurrentHashMap<>();
 
 	public static void setup() {
 		Pair<ClientLoader, ForgeConfigSpec> clientSpec = new ForgeConfigSpec.Builder().configure(ClientLoader::new);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, clientSpec.getRight());
 	}
 
-	public static void reloadFlags() {
-		CONFIG_FLAGS.clear();
+	public static void reloadBuiltinFlags() {
 		List<ModInfo> mods = ModList.get().getMods();
 		for (ModInfo info : mods) {
 			setFlag("mod:" + info.getModId(), true);
