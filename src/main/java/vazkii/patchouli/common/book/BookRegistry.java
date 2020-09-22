@@ -93,7 +93,7 @@ public class BookRegistry {
 
 	@Environment(EnvType.CLIENT)
 	public void reloadContents() {
-		PatchouliConfig.reloadFlags();
+		PatchouliConfig.reloadBuiltinFlags();
 		books.values().forEach(Book::reloadContents);
 		books.values().forEach(Book::reloadExtensionContents);
 		ClientBookRegistry.INSTANCE.reloadLocks(false);

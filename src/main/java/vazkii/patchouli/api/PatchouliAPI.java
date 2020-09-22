@@ -47,6 +47,7 @@ public class PatchouliAPI {
 
 		/**
 		 * Sets a config flag to the value passed.<br>
+		 * This is safe to call during parallel mod loading.<br>
 		 * IMPORTANT: DO NOT call this without your flag being prefixed with your
 		 * mod id. There is no protection against that, but don't be a jerk.
 		 */

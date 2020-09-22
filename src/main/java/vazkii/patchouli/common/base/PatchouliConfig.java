@@ -6,6 +6,7 @@ import net.fabricmc.loader.api.ModContainer;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import io.github.fablabsmc.fablabs.api.fiber.v1.exception.ValueDeserializationException;
 import io.github.fablabsmc.fablabs.api.fiber.v1.schema.type.derived.ConfigTypes;
@@ -21,7 +22,7 @@ public class PatchouliConfig {
 	public static PropertyMirror<String> inventoryButtonBook = PropertyMirror.create(ConfigTypes.STRING);
 	public static PropertyMirror<Boolean> useShiftForQuickLookup = PropertyMirror.create(ConfigTypes.BOOLEAN);
 
-	private static final Map<String, Boolean> CONFIG_FLAGS = new HashMap<>();
+	private static final Map<String, Boolean> CONFIG_FLAGS = new ConcurrentHashMap<>();
 
 	private static final ConfigTree CONFIG = ConfigTree.builder()
 			.beginValue("disableAdvancementLocking", ConfigTypes.BOOLEAN, false)
@@ -65,8 +66,7 @@ public class PatchouliConfig {
 		}
 	}
 
-	public static void reloadFlags() {
-		CONFIG_FLAGS.clear();
+	public static void reloadBuiltinFlags() {
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
 		for (ModContainer info : mods) {
 			setFlag("mod:" + info.getMetadata().getId(), true);
