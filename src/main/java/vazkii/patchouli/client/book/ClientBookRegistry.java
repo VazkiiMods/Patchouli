@@ -18,6 +18,7 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.page.PageCrafting;
 import vazkii.patchouli.client.book.page.PageEmpty;
@@ -82,8 +83,13 @@ public class ClientBookRegistry implements IResourceManagerReloadListener {
 
 	@Override
 	public void onResourceManagerReload(IResourceManager resourceManager) {
-		currentLang = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
-		
+		try {
+			currentLang = Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().getLanguageCode();
+		} catch (Exception e) {
+			LogManager.getLogger().error("Could not obtain language code, defaulting to en_us", e);
+			currentLang = BookContents.DEFAULT_LANG;
+		}
+
 		if(!firstLoad)
 			BookRegistry.INSTANCE.reload();
 		firstLoad = false;
