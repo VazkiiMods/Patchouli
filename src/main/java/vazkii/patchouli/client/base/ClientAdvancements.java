@@ -28,6 +28,7 @@ import java.util.Map;
 
 public class ClientAdvancements {
 	private static final MethodHandle ADVANCEMENT_TO_PROGRESS;
+	public static boolean refreshOnFirstOpen = true;
 
 	static {
 		Field field = ObfuscationReflectionHelper.findField(ClientAdvancementManager.class, "field_192803_d");
@@ -81,6 +82,7 @@ public class ClientAdvancements {
 	@SubscribeEvent
 	public static void onLogout(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
 		updateLockStatus(true);
+		refreshOnFirstOpen = true;
 	}
 
 	private static void sendBookToast(Book book) {

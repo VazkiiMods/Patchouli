@@ -29,9 +29,12 @@ public class PatchouliConfig {
 	@Name("Inventory Button Book")
 	@Comment("Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.")
 	public static String inventoryButtonBook = "";
-	
+
+	@Name("Enable reload on first book open")
+	@Comment("Enable if you experience problems with Patchouli not seeing advancements in books.")
+	public static boolean enableFirstOpenReload = false;
+
 	@Ignore private static Map<String, Boolean> configFlags = new HashMap<>();
-	@Ignore private transient static boolean firstChange = true;
 	
 	public static void preInit() {
 		MinecraftForge.EVENT_BUS.register(ChangeListener.class);
