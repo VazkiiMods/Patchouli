@@ -34,9 +34,10 @@ public final class AdvancementSyncHandler {
 
 	@SubscribeEvent
 	public static void onLogin(PlayerLoggedInEvent event) {
-		if (event.player instanceof EntityPlayerMP) {
-			syncPlayer((EntityPlayerMP) event.player, false);
-		}
+		EntityPlayerMP player = (EntityPlayerMP) event.player;
+		// Vanilla loads advancements on first tick after join, so we have to force it to do it a bit earlier.
+		event.player.world.getMinecraftServer().getPlayerList().getPlayerAdvancements(player).flushDirty(player);
+		syncPlayer(player, false);
 	}
 
 	public static void syncPlayer(EntityPlayerMP player, boolean showToast) {
