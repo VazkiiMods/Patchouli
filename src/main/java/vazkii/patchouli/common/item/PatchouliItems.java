@@ -27,6 +27,12 @@ public class PatchouliItems {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void registerModels(ModelRegistryEvent event) {
+		// Ensure books are done loading by the time model loading begins
+		try {
+			BookRegistry.INSTANCE.loadingBarrier.await();
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
 			ModelLoader.addSpecialModel(new ModelResourceLocation(b.model, "inventory"));
 		});

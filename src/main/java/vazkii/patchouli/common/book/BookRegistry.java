@@ -26,6 +26,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
@@ -34,6 +35,7 @@ public class BookRegistry {
 	public static final BookRegistry INSTANCE = new BookRegistry();
 	public static final String BOOKS_LOCATION = Patchouli.MOD_ID + "_books";
 
+	public final CountDownLatch loadingBarrier = new CountDownLatch(1);
 	public final Map<ResourceLocation, Book> books = new HashMap<>();
 	public static final Gson GSON = new GsonBuilder()
 			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
@@ -88,6 +90,7 @@ public class BookRegistry {
 		});
 
 		BookFolderLoader.findBooks();
+		loadingBarrier.countDown();
 	}
 
 	public void loadBook(IModInfo mod, Class<?> ownerClass, ResourceLocation res, InputStream stream,
