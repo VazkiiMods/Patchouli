@@ -1,5 +1,7 @@
 package vazkii.patchouli.common.item;
 
+import com.google.common.base.Stopwatch;
+
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -18,6 +20,8 @@ import vazkii.patchouli.client.base.BookModel;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.BookRegistry;
 
+import java.util.concurrent.TimeUnit;
+
 @EventBusSubscriber(bus = Bus.MOD)
 public class PatchouliItems {
 
@@ -27,14 +31,6 @@ public class PatchouliItems {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void registerModels(ModelRegistryEvent event) {
-		// This event is fired whenever and on whatever thread the vanilla model loader begins running on
-		// It is on the async pool and concurrent with all other things like mods running Common/ClientSetup
-		// Thus, we need to ensure books are done loading by the time model loading begins
-		try {
-			BookRegistry.INSTANCE.loadingBarrier.await();
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
 			ModelLoader.addSpecialModel(new ModelResourceLocation(b.model, "inventory"));
 		});
@@ -53,5 +49,12 @@ public class PatchouliItems {
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Item> event) {
 		event.getRegistry().register(book);
+		// Load book jsons here.
+		// Any later (e.g. CommonSetupEvent) and it overlaps concurrently with registerModels above and properly waiting for the former in the latter
+		// is truly a world of pain. Don't try.
+		Stopwatch timer = Stopwatch.createStarted();
+		BookRegistry.INSTANCE.init();
+		Patchouli.LOGGER.info("Loaded book jsons on {} in {} ms", Thread.currentThread(), timer.elapsed(TimeUnit.MILLISECONDS));
+
 	}
 }
