@@ -27,7 +27,9 @@ public class PatchouliItems {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void registerModels(ModelRegistryEvent event) {
-		// Ensure books are done loading by the time model loading begins
+		// This event is fired whenever and on whatever thread the vanilla model loader begins running on
+		// It is on the async pool and concurrent with all other things like mods running Common/ClientSetup
+		// Thus, we need to ensure books are done loading by the time model loading begins
 		try {
 			BookRegistry.INSTANCE.loadingBarrier.await();
 		} catch (InterruptedException e) {
