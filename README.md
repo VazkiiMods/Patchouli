@@ -39,6 +39,7 @@ Patchouli uses Mixin to inject a small hook to detect advancements clientside.
 This may cause issues when depending on Patchouli in-dev, since ForgeGradle/MixinGradle
 do not yet properly support this in-dev like Fabric does.
 As a workaround, disable refmaps by defining the `mixin.env.disableRefMap`
-JVM argument to `true`.
+JVM argument to `true`. [Example](https://github.com/Vazkii/Botania/blob/2916f3e1154106cd598e97241d84916926943bb9/build.gradle#L54).
+You need to regenerate your run configurations in the IDE after making this change.
 
 Note to mod developers porting a Patchouli book from 1.12 to 1.14: Patchouli book data now goes into `modid/data/patchouli_books` instead of `modid/assets/patchouli_books`.
