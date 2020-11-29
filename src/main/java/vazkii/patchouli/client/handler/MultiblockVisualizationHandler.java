@@ -6,8 +6,8 @@ import com.mojang.datafixers.util.Pair;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -210,7 +210,7 @@ public class MultiblockVisualizationHandler {
 
 	public static void init() {
 		UseBlockCallback.EVENT.register(MultiblockVisualizationHandler::onPlayerInteract);
-		ClientTickCallback.EVENT.register(MultiblockVisualizationHandler::onClientTick);
+		ClientTickEvents.END_CLIENT_TICK.register(MultiblockVisualizationHandler::onClientTick);
 		HudRenderCallback.EVENT.register(MultiblockVisualizationHandler::onRenderHUD);
 	}
 

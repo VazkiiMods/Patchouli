@@ -16,7 +16,7 @@ import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.BuiltinBiomes;
 import net.minecraft.world.chunk.light.LightingProvider;
 import net.minecraft.world.level.ColorResolver;
 
@@ -164,7 +164,7 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 
 	@Override
 	public int getColor(BlockPos pos, ColorResolver color) {
-		return color.getColor(Biomes.PLAINS, pos.getX(), pos.getZ());
+		return color.getColor(BuiltinBiomes.PLAINS, pos.getX(), pos.getZ());
 	}
 
 	@Override

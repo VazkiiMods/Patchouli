@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.base;
 
-import net.fabricmc.fabric.api.event.client.ClientTickCallback;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 
 /**
  * Counts ticks passed in-game, does <b>not</b> stop counting when paused.
@@ -27,7 +27,7 @@ public final class ClientTicker {
 	}
 
 	public static void init() {
-		ClientTickCallback.EVENT.register(mc -> {
+		ClientTickEvents.END_CLIENT_TICK.register(mc -> {
 			ticksInGame++;
 			partialTicks = 0;
 

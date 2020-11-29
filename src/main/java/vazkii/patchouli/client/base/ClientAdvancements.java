@@ -84,7 +84,7 @@ public class ClientAdvancements {
 		@Override
 		public Visibility draw(MatrixStack ms, ToastManager toastGui, long delta) {
 			MinecraftClient mc = MinecraftClient.getInstance();
-			mc.getTextureManager().bindTexture(TOASTS_TEX);
+			mc.getTextureManager().bindTexture(TEXTURE);
 			RenderSystem.color3f(1.0F, 1.0F, 1.0F);
 			toastGui.drawTexture(ms, 0, 0, 0, 32, 160, 32);
 

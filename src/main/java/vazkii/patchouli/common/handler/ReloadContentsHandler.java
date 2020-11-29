@@ -1,6 +1,6 @@
 package vazkii.patchouli.common.handler;
 
-import net.fabricmc.fabric.api.event.server.ServerStartCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.resource.SynchronousResourceReloadListener;
 import net.minecraft.server.MinecraftServer;
@@ -10,7 +10,7 @@ import vazkii.patchouli.mixin.AccessorMinecraftServer;
 
 public class ReloadContentsHandler {
 	public static void init() {
-		ServerStartCallback.EVENT.register(ReloadContentsHandler::serverStart);
+		ServerLifecycleEvents.SERVER_STARTED.register(ReloadContentsHandler::serverStart);
 	}
 
 	private static void serverStart(MinecraftServer server) {
