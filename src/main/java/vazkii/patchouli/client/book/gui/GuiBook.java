@@ -42,7 +42,6 @@ import java.awt.Color;
 import java.util.*;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public abstract class GuiBook extends Screen {
 
@@ -226,10 +225,10 @@ public abstract class GuiBook extends Screen {
 			}
 
 			GuiUtils.preItemToolTip(tooltipStack);
-			this.renderTooltip(ms, tooltip.stream().map(ITextComponent::func_241878_f).collect(Collectors.toList()), mouseX, mouseY);
+			this.func_243308_b(ms, tooltip, mouseX, mouseY);
 			GuiUtils.postItemToolTip();
 		} else if (tooltip != null && !tooltip.isEmpty()) {
-			this.renderTooltip(ms, tooltip.stream().map(ITextComponent::func_241878_f).collect(Collectors.toList()), mouseX, mouseY);
+			this.func_243308_b(ms, tooltip, mouseX, mouseY);
 		}
 	}
 
