@@ -31,7 +31,7 @@ public class ClientProxy extends CommonProxy {
 		CrashReportExtender.registerCrashCallable(new BookCrashHandler());
 
 		IItemPropertyGetter prop = (stack, world, entity) -> ItemModBook.getCompletion(stack);
-		ItemModelsProperties.func_239418_a_(PatchouliItems.book, new ResourceLocation(Patchouli.MOD_ID, "completion"), prop);
+		ItemModelsProperties.registerProperty(PatchouliItems.book, new ResourceLocation(Patchouli.MOD_ID, "completion"), prop);
 	}
 
 	@Override

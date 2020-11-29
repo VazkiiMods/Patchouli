@@ -22,7 +22,7 @@ public class BookModel extends BakedModelWrapper<IBakedModel> {
 
 	private final ItemOverrideList itemHandler = new ItemOverrideList() {
 		@Override
-		public IBakedModel func_239290_a_(@Nonnull IBakedModel original, @Nonnull ItemStack stack,
+		public IBakedModel getOverrideModel(@Nonnull IBakedModel original, @Nonnull ItemStack stack,
 				@Nullable ClientWorld world, @Nullable LivingEntity entity) {
 			Book book = ItemModBook.getBook(stack);
 			if (book != null) {

@@ -115,7 +115,7 @@ public class MultiblockVisualizationHandler {
 			int x = event.getWindow().getScaledWidth() / 2;
 			int y = 12;
 
-			mc.fontRenderer.func_238407_a_(ms, name.func_241878_f(), x - mc.fontRenderer.func_238414_a_(name) / 2, y, 0xFFFFFF);
+			mc.fontRenderer.func_238407_a_(ms, name.func_241878_f(), x - mc.fontRenderer.getStringPropertyWidth(name) / 2, y, 0xFFFFFF);
 
 			int width = 180;
 			int height = 9;

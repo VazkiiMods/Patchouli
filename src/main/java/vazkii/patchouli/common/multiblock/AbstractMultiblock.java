@@ -152,7 +152,7 @@ public abstract class AbstractMultiblock implements IMultiblock, IBlockDisplayRe
 
 	@Override
 	public int getBlockColor(BlockPos pos, ColorResolver color) {
-		return color.getColor(BiomeRegistry.field_244200_a, pos.getX(), pos.getZ());
+		return color.getColor(BiomeRegistry.PLAINS, pos.getX(), pos.getZ());
 	}
 
 	@Override

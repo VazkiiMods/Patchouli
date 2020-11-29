@@ -80,7 +80,7 @@ public class BookTextParser {
 		register((parameter, state) -> {
 			state.cluster = new LinkedList<>();
 
-			state.pushStyle(Style.EMPTY.setColor(Color.func_240743_a_(state.book.linkColor)));
+			state.pushStyle(Style.EMPTY.setColor(Color.fromInt(state.book.linkColor)));
 			boolean isExternal = parameter.matches("^https?\\:.*");
 
 			if (isExternal) {
@@ -135,7 +135,7 @@ public class BookTextParser {
 			return "";
 		}, "tooltip", "t");
 		register((parameter, state) -> {
-			state.pushStyle(Style.EMPTY.setColor(Color.func_240743_a_(state.book.linkColor)));
+			state.pushStyle(Style.EMPTY.setColor(Color.fromInt(state.book.linkColor)));
 			state.cluster = new LinkedList<>();
 			if (!parameter.startsWith("/")) {
 				state.tooltip = new StringTextComponent("INVALID COMMAND (must begin with /)");
@@ -175,7 +175,7 @@ public class BookTextParser {
 		this.baseStyle = baseStyle;
 
 		this.font = Minecraft.getInstance().fontRenderer;
-		this.spaceWidth = font.func_238414_a_(new StringTextComponent(" ").setStyle(baseStyle));
+		this.spaceWidth = font.getStringPropertyWidth(new StringTextComponent(" ").setStyle(baseStyle));
 	}
 
 	public List<Word> parse(@Nullable String text) {
@@ -274,7 +274,7 @@ public class BookTextParser {
 				parse = "" + parse.charAt(0) + parse.charAt(0) + parse.charAt(1) + parse.charAt(1) + parse.charAt(2) + parse.charAt(2);
 			}
 			try {
-				color = Color.func_240743_a_(Integer.parseInt(parse, 16));
+				color = Color.fromInt(Integer.parseInt(parse, 16));
 			} catch (NumberFormatException e) {
 				color = baseStyle.getColor();
 			}

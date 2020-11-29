@@ -110,7 +110,7 @@ public class TextLayouter {
 		char[] characters = last.span.text.toCharArray();
 		for (int i = last.start; i < characters.length; i++) {
 			ITextComponent tmp = new StringTextComponent(String.valueOf(characters[i])).setStyle(last.span.style);
-			width += font.func_238414_a_(tmp);
+			width += font.getStringPropertyWidth(tmp);
 			if (last.span.bold) {
 				width++;
 			}
@@ -197,7 +197,7 @@ public class TextLayouter {
 		public SpanTail(Span span, int start, List<Word> cluster) {
 			this.span = span;
 			this.start = start;
-			this.width = font.func_238414_a_(span.styledSubstring(start)) + span.spacingLeft + span.spacingRight;
+			this.width = font.getStringPropertyWidth(span.styledSubstring(start)) + span.spacingLeft + span.spacingRight;
 			this.cluster = cluster;
 			this.length = span.text.length() - start;
 		}

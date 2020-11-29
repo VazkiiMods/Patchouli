@@ -17,7 +17,7 @@ public class TextComponentVariableSerializer implements IVariableSerializer<ITex
 		if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isString()) {
 			return new StringTextComponent(json.getAsString());
 		}
-		ITextComponent c = Serializer.func_240641_a_(json);
+		ITextComponent c = Serializer.getComponentFromJson(json);
 		return c;
 	}
 

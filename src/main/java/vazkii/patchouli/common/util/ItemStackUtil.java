@@ -199,7 +199,7 @@ public class ItemStackUtil {
 		// Adapted from net.minecraftforge.common.crafting.CraftingHelper::getItemStack
 		String itemName = json.get("item").getAsString();
 
-		Item item = Registry.ITEM.func_241873_b(new ResourceLocation(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'"));
+		Item item = Registry.ITEM.getOptional(new ResourceLocation(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'"));
 
 		ItemStack stack = new ItemStack(item, JSONUtils.getInt(json, "count", 1));
 

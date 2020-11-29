@@ -46,7 +46,7 @@ public class Word {
 		IFormattableTextComponent toRender = text.deepCopy().mergeStyle(styleOverride);
 		if (isClusterHovered(mouseX, mouseY)) {
 			if (onClick != null) {
-				toRender.modifyStyle(s -> s.setColor(Color.func_240743_a_(book.linkHoverColor)));
+				toRender.modifyStyle(s -> s.setColor(Color.fromInt(book.linkHoverColor)));
 			}
 
 			gui.renderComponentHoverEffect(ms, text.getStyle(), (int) gui.getRelativeX(mouseX), (int) gui.getRelativeY(mouseY));
