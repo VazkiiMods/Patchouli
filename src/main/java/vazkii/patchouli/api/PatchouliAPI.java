@@ -11,6 +11,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.Lazy;
+
+import org.apache.logging.log4j.LogManager;
 
 import vazkii.patchouli.api.stub.StubPatchouliAPI;
 
@@ -22,13 +25,33 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class PatchouliAPI {
+	/**
+	 * @deprecated Use {@link #get()} instead as this field does not properly handle being accessed before Patchouli
+	 *             initializes.
+	 */
+	// todo 1.17 remove
+	@Deprecated public static volatile IPatchouliAPI instance = StubPatchouliAPI.INSTANCE;
+
+	private static final Lazy<IPatchouliAPI> LAZY_INSTANCE = Lazy.concurrentOf(() -> {
+		try {
+			IPatchouliAPI ret = (IPatchouliAPI) Class.forName("vazkii.patchouli.common.base.PatchouliAPIImpl").newInstance();
+			instance = ret;
+			return ret;
+		} catch (ReflectiveOperationException e) {
+			LogManager.getLogger().warn("Unable to find PatchouliAPIImpl, using a dummy");
+			return StubPatchouliAPI.INSTANCE;
+		}
+	});
 
 	/**
-	 * This is loaded by Patchouli to be a proper one at mod construction time.<br>
-	 * Note that books are initialized by patchouli on in common setup, but contents are not loaded until
-	 * the client logs in to a world.
+	 * Obtain the Patchouli API, either a valid implementation if Patchouli is present, else
+	 * a no-op stub instance if Patchouli is absent.
+	 * Note that many API functions make no sense to call before books are loaded (which is on login),
+	 * please use common sense and your best judgment.
 	 */
-	public static IPatchouliAPI instance = StubPatchouliAPI.INSTANCE;
+	public static IPatchouliAPI get() {
+		return LAZY_INSTANCE.get();
+	}
 
 	public interface IPatchouliAPI {
 

@@ -133,7 +133,7 @@ public class ItemModBook extends Item {
 		}
 
 		if (playerIn instanceof ServerPlayerEntity) {
-			PatchouliAPI.instance.openBookGUI((ServerPlayerEntity) playerIn, book.id);
+			PatchouliAPI.get().openBookGUI((ServerPlayerEntity) playerIn, book.id);
 
 			// This plays the sound to others nearby, playing to the actual opening player handled from the packet
 			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open);

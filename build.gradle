@@ -93,6 +93,13 @@ dependencies {
 
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}:7.6.0.58:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:7.6.0.58")
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.1'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 processResources {

@@ -55,9 +55,9 @@ public class OpenBookCommand {
 	private static int doIt(Collection<ServerPlayerEntity> players, ResourceLocation book, @Nullable ResourceLocation entry, int page) {
 		for (ServerPlayerEntity player : players) {
 			if (entry != null) {
-				PatchouliAPI.instance.openBookEntry(player, book, entry, page);
+				PatchouliAPI.get().openBookEntry(player, book, entry, page);
 			} else {
-				PatchouliAPI.instance.openBookGUI(player, book);
+				PatchouliAPI.get().openBookGUI(player, book);
 			}
 		}
 		return players.size();

@@ -19,7 +19,7 @@ public class CommonProxy {
 		MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
 
 		PatchouliConfig.setup();
-		PatchouliAPI.instance = PatchouliAPIImpl.INSTANCE;
+		PatchouliAPI.get(); // Force this so that legacy instance field gets assigned at about the same time it used to be. TODO 1.17 remove this.
 	}
 
 	private void registerCommands(RegisterCommandsEvent evt) {
