@@ -44,10 +44,6 @@ import java.util.function.Supplier;
 
 public class PatchouliAPIImpl implements IPatchouliAPI {
 
-	public static final PatchouliAPIImpl INSTANCE = new PatchouliAPIImpl();
-
-	private PatchouliAPIImpl() {}
-
 	@Override
 	public boolean isStub() {
 		return false;

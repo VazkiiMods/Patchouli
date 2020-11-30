@@ -17,7 +17,7 @@ public class CommonProxy implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		PatchouliConfig.setup();
-		PatchouliAPI.instance = PatchouliAPIImpl.INSTANCE;
+		PatchouliAPI.get(); // Force this so that legacy instance field gets assigned at about the same time it used to be. TODO 1.17 remove this.
 		CommandRegistrationCallback.EVENT.register(this::registerCommands);
 
 		PatchouliSounds.preInit();
