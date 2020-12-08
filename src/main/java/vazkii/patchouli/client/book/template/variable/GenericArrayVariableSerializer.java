@@ -3,14 +3,13 @@ package vazkii.patchouli.client.book.template.variable;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
+import vazkii.patchouli.api.IVariableSerializer;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import vazkii.patchouli.api.IVariableSerializer;
-
 public class GenericArrayVariableSerializer<T> implements IVariableSerializer<T[]> {
-	@SuppressWarnings("unchecked")
-	public final T[] EMPTY = (T[]) new Object[0];
+	@SuppressWarnings("unchecked") public final T[] EMPTY = (T[]) new Object[0];
 	private final IVariableSerializer<T> inner;
 
 	public GenericArrayVariableSerializer(IVariableSerializer<T> inner) {
