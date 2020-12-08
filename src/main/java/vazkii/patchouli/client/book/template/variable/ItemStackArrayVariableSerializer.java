@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ItemStackArrayVariableSerializer extends GenericArrayVariableSerializer<ItemStack> {
 	public ItemStackArrayVariableSerializer() {
-		super(new ItemStackVariableSerializer());
+		super(new ItemStackVariableSerializer(), ItemStack.class);
 	}
 
 	@Override
@@ -24,17 +24,17 @@ public class ItemStackArrayVariableSerializer extends GenericArrayVariableSerial
 			for (JsonElement e : array) {
 				stacks.addAll(Arrays.asList(fromNonArray(e)));
 			}
-			return stacks.toArray(EMPTY);
+			return stacks.toArray(empty);
 		}
 		return fromNonArray(json);
 	}
 
 	public ItemStack[] fromNonArray(JsonElement json) {
 		if (json.isJsonNull()) {
-			return EMPTY;
+			return empty;
 		}
 		if (json.isJsonPrimitive()) {
-			return ItemStackUtil.loadStackListFromString(json.getAsString()).toArray(EMPTY);
+			return ItemStackUtil.loadStackListFromString(json.getAsString()).toArray(empty);
 		}
 		if (json.isJsonObject()) {
 			return new ItemStack[] { ItemStackUtil.loadStackFromJson(json.getAsJsonObject()) };

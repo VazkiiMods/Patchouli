@@ -5,14 +5,17 @@ import com.google.gson.JsonElement;
 
 import vazkii.patchouli.api.IVariableSerializer;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GenericArrayVariableSerializer<T> implements IVariableSerializer<T[]> {
-	@SuppressWarnings("unchecked") public final T[] EMPTY = (T[]) new Object[0];
+	protected final T[] empty;
 	private final IVariableSerializer<T> inner;
 
-	public GenericArrayVariableSerializer(IVariableSerializer<T> inner) {
+	@SuppressWarnings("unchecked")
+	public GenericArrayVariableSerializer(IVariableSerializer<T> inner, Class<T> type) {
+		this.empty = (T[]) Array.newInstance(type, 0);
 		this.inner = inner;
 	}
 
@@ -24,7 +27,7 @@ public class GenericArrayVariableSerializer<T> implements IVariableSerializer<T[
 			for (JsonElement e : array) {
 				stacks.add(inner.fromJson(e));
 			}
-			return stacks.toArray(EMPTY);
+			return stacks.toArray(empty);
 		}
 		throw new IllegalArgumentException("Can't create an array of objects from a non-array JSON!");
 	}

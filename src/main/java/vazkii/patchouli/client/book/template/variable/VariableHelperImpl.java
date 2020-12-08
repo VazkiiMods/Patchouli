@@ -17,6 +17,7 @@ public class VariableHelperImpl implements VariableHelper {
 
 	public VariableHelperImpl() {
 		registerSerializer(new ItemStackVariableSerializer(), ItemStack.class);
+		registerSerializer(new ItemStackArrayVariableSerializer(), ItemStack[].class);
 		registerSerializer(new IngredientVariableSerializer(), Ingredient.class);
 		registerSerializer(new TextComponentVariableSerializer(), ITextComponent.class);
 	}
@@ -24,14 +25,15 @@ public class VariableHelperImpl implements VariableHelper {
 	public Map<Class<?>, IVariableSerializer<?>> serializers = new HashMap<>();
 
 	@Override
-	public <T> IVariableSerializer<T> serializerForClass(Class<?> clazz) {
+	public <T> IVariableSerializer<T> serializerForClass(Class<T> clazz) {
 		@SuppressWarnings("unchecked")
 		IVariableSerializer<T> serializer = (IVariableSerializer<T>) serializers.get(clazz);
 		if (serializer == null && clazz.isArray()) {
-			IVariableSerializer<?> componentSerializer = serializerForClass(clazz.getComponentType());
+			Class<?> componentType = clazz.getComponentType();
+			IVariableSerializer<?> componentSerializer = serializerForClass(componentType);
 			if (componentSerializer != null) {
-				@SuppressWarnings("unchecked")
-				IVariableSerializer<T> arraySerializer = (IVariableSerializer<T>) new GenericArrayVariableSerializer<>(componentSerializer);
+				@SuppressWarnings({ "unchecked", "rawtypes" })
+				IVariableSerializer<T> arraySerializer = (IVariableSerializer<T>) new GenericArrayVariableSerializer(componentSerializer, componentType);
 				serializers.put(clazz, arraySerializer);
 				return arraySerializer;
 			}
