@@ -24,9 +24,19 @@ public class VariableHelperImpl implements VariableHelper {
 	public Map<Class<?>, IVariableSerializer<?>> serializers = new HashMap<>();
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public <T> IVariableSerializer<T> serializerForClass(Class<?> clazz) {
-		return (IVariableSerializer<T>) serializers.get(clazz);
+		@SuppressWarnings("unchecked")
+		IVariableSerializer<T> serializer = (IVariableSerializer<T>) serializers.get(clazz);
+		if (serializer == null && clazz.isArray()) {
+			IVariableSerializer<?> componentSerializer = serializerForClass(clazz.getComponentType());
+			if (componentSerializer != null) {
+				@SuppressWarnings("unchecked")
+				IVariableSerializer<T> arraySerializer = (IVariableSerializer<T>) new GenericArrayVariableSerializer<>(componentSerializer);
+				serializers.put(clazz, arraySerializer);
+				return arraySerializer;
+			}
+		}
+		return serializer;
 	}
 
 	@Override
