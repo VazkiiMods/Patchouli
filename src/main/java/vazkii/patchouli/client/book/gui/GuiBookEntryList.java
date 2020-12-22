@@ -51,14 +51,18 @@ public abstract class GuiBookEntryList extends GuiBook {
 			Collections.sort(allEntries);
 		}
 
-		searchField = new TextFieldWidget(textRenderer, 160, 170, 90, 12, LiteralText.EMPTY);
-		searchField.setMaxLength(32);
-		searchField.setHasBorder(false);
-		searchField.setFocusUnlocked(false);
-		searchField.changeFocus(true);
-
+		this.searchField = createSearchBar();
 		dependentButtons = new ArrayList<>();
 		buildEntryButtons();
+	}
+
+	protected TextFieldWidget createSearchBar() {
+		TextFieldWidget field = new TextFieldWidget(textRenderer, 160, 170, 90, 12, LiteralText.EMPTY);
+		field.setMaxLength(32);
+		field.setHasBorder(false);
+		field.setFocusUnlocked(false);
+		field.setSelected(true);
+		return field;
 	}
 
 	protected abstract String getDescriptionText();
@@ -86,7 +90,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 
 		if (spread == 0) {
 			drawCenteredStringNoShadow(ms, getTitle().asOrderedText(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-			drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawCenteredStringNoShadow(ms, getChapterListTitle(), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
 			drawSeparator(ms, book, LEFT_PAGE_X, TOP_PADDING + 12);
 			drawSeparator(ms, book, RIGHT_PAGE_X, TOP_PADDING + 12);
@@ -113,9 +117,17 @@ public abstract class GuiBookEntryList extends GuiBook {
 				drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
 				ms.scale(0.5F, 0.5F, 0.5F);
 			} else {
-				drawCenteredStringNoShadow(ms, I18n.translate("patchouli.gui.lexicon.no_entries"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
+				drawCenteredStringNoShadow(ms, getNoEntryMessage(), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
 			}
 		}
+	}
+
+	protected String getChapterListTitle() {
+		return I18n.translate("patchouli.gui.lexicon.chapters");
+	}
+
+	protected String getNoEntryMessage() {
+		return I18n.translate("patchouli.gui.lexicon.no_entries");
 	}
 
 	@Override
