@@ -1,0 +1,6 @@
+{
+  "name": "Empty Subcategory 2",
+  "parent": "patchouli:subcategories",
+  "description": "Empty subcategory with no entries",
+  "icon": "minecraft:baked_potato"
+}
