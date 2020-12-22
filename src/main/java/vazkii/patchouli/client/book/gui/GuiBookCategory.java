@@ -40,7 +40,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 
 		for (BookCategory ocategory : categories) {
 			int x = LEFT_PAGE_X + 10 + (i % 4) * 24;
-			int y = baseY + (i / 4) * 20 ;
+			int y = baseY + (i / 4) * 20;
 
 			ButtonWidget button = new GuiButtonCategory(this, x, y, ocategory, this::handleButtonCategory);
 			addButton(button);
