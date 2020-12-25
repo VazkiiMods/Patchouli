@@ -19,6 +19,8 @@
     },
     {
       "type": "item",
+      "x": 20,
+      "y": 80,
       "item": "#item",
       "framed": true
     },
