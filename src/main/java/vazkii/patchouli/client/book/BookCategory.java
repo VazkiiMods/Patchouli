@@ -125,7 +125,11 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 		if(!PatchouliConfig.disableAdvancementLocking && o.locked != this.locked)
 			return this.locked ? 1 : -1;
 
-		return this.sortnum - o.sortnum;
+		if (this.sortnum != o.sortnum) {
+			return Integer.compare(this.sortnum, o.sortnum);
+		}
+
+		return this.getName().compareTo(o.getName());
 	}
 
 	public void setBook(Book book) {

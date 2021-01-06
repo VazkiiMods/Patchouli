@@ -41,14 +41,14 @@ public class GuiBookCategory extends GuiBookEntryList {
 	protected void addSubcategoryButtons() {
 		int i = 0;
 		List<BookCategory> categories = new ArrayList<>(book.contents.categories.values());
+		categories.removeIf(cat -> cat.getParentCategory() != category || cat.shouldHide());
 		Collections.sort(categories);
-		
-		for(BookCategory ocategory : categories) {
-			if(ocategory.getParentCategory() != category || ocategory.shouldHide())
-				continue;
-			
+
+		int baseY = TOP_PADDING + PAGE_HEIGHT - (categories.size() / 4) * 20 - (PatchouliConfig.disableAdvancementLocking ? 46 : 68);
+
+		for (BookCategory ocategory : categories) {
 			int x = LEFT_PAGE_X + 10 + (i % 4) * 24;
-			int y = TOP_PADDING + PAGE_HEIGHT - (PatchouliConfig.disableAdvancementLocking ? 46 : 68);
+			int y = baseY + (i / 4) * 20 ;
 			
 			GuiButton button = new GuiButtonCategory(this, x, y, ocategory);
 			buttonList.add(button);
