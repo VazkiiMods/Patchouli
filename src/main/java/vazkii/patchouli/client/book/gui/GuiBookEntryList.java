@@ -43,15 +43,20 @@ public abstract class GuiBookEntryList extends GuiBook {
 		allEntries.removeIf(BookEntry::shouldHide);
 		if(shouldSortEntryList())
 			Collections.sort(allEntries);
-		
-		searchField = new GuiTextField(0, fontRenderer, 160, 170, 90, 12);
-		searchField.setMaxStringLength(32);
-		searchField.setEnableBackgroundDrawing(false);
-		searchField.setCanLoseFocus(false);
-		searchField.setFocused(true);
-		
+
+		this.searchField = createSearchBar();
+
 		dependentButtons = new ArrayList<>();
 		buildEntryButtons();
+	}
+
+	protected GuiTextField createSearchBar() {
+		GuiTextField field = new GuiTextField(0, fontRenderer, 160, 170, 90, 12);
+		field.setMaxStringLength(32);
+		field.setEnableBackgroundDrawing(false);
+		field.setCanLoseFocus(false);
+		field.setFocused(true);
+		return field;
 	}
 	
 	protected abstract String getName();
@@ -80,7 +85,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		
 		if(page == 0) {
 			drawCenteredStringNoShadow(getName(), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.chapters"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawCenteredStringNoShadow(getChapterListTitle(), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
 			drawSeparator(book, LEFT_PAGE_X, TOP_PADDING + 12);
 			drawSeparator(book, RIGHT_PAGE_X, TOP_PADDING + 12);
@@ -102,11 +107,17 @@ public abstract class GuiBookEntryList extends GuiBook {
 		}
 		
 		if(visibleEntries.isEmpty()) {
-			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
-			GlStateManager.scale(2F, 2F, 2F);
-			drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
-			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+			if (searchField.getVisible()) {
+				drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
+				GlStateManager.scale(2F, 2F, 2F);
+				drawCenteredStringNoShadow(I18n.format("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
+				GlStateManager.scale(0.5F, 0.5F, 0.5F);
+			}
 		}
+	}
+
+	protected String getChapterListTitle() {
+		return I18n.format("patchouli.gui.lexicon.chapters");
 	}
 	
 	@Override
