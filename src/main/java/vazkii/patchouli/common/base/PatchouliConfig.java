@@ -34,6 +34,11 @@ public class PatchouliConfig {
 	@Comment("Enable if you experience problems with Patchouli not seeing advancements in books.")
 	public static boolean enableFirstOpenReload = false;
 
+	@Name("Override Triumph advancement visibility")
+	@Comment("If Triumph is installed, hidden advancements are not synced properly, breaking gating entries with them.\n" +
+			"If this is set to true, advancements without display info (missing an icon, name or description) will be detected and synced if they are completed.")
+	public static boolean triumphOverride = true;
+
 	@Ignore private static Map<String, Boolean> configFlags = new HashMap<>();
 	
 	public static void preInit() {

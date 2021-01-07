@@ -34,6 +34,15 @@ if (System.getenv('BUILD_NUMBER') != null) {
 group = "vazkii.patchouli" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = config.mod_name
 
+repositories {
+    maven {
+        url "https://www.cursemaven.com"
+    }
+}
+dependencies {
+    compileOnly 'curse.maven:bnbgamingcore-274341:2991671'
+}
+
 minecraft {
     version = "${config.mc_version}-${config.forge_version}"
     runDir = "eclipse/assets"
