@@ -56,7 +56,7 @@
 	"patchouli.gui.lexicon.external_link": "(Внешняя ссылка)",
 	"patchouli.gui.lexicon.loading_error": "Ошибка загрузки!",
 	"patchouli.gui.lexicon.loading_error_hover": "(Наведите курсор для подробной информации)",
-	"patchouli.gui.lexicon.loading_error_log": "Проверьте Ваш журнал (логи)",
+	"patchouli.gui.lexicon.loading_error_log": "Проверьте ваш журнал (логи)",
 	"patchouli.gui.lexicon.dev_edition": "Писательское",
 	"patchouli.gui.lexicon.edition_str": "%s издание",
 	"patchouli.gui.lexicon.added_by": "Добавлено %s",
