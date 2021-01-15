@@ -45,7 +45,7 @@ public interface VariableHelper {
 	 * If we don't know how to deserialize this class, return {@code null}.
 	 */
 	@Nullable
-	default <T> IVariableSerializer<T> serializerForClass(Class<?> clazz) {
+	default <T> IVariableSerializer<T> serializerForClass(Class<T> clazz) {
 		return null;
 	}
 
