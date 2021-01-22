@@ -251,6 +251,9 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public void addRelevantStack(ItemStack stack, int page) {
+		if (stack.isEmpty()) {
+			return;
+		}
 		StackWrapper wrapper = ItemStackUtil.wrapStack(stack);
 		relevantStacks.add(wrapper);
 
