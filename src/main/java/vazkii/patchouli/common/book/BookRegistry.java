@@ -51,7 +51,8 @@ public class BookRegistry {
 			String id = mod.getModId();
 			findFiles(mod, String.format("data/%s/%s", id, BOOKS_LOCATION), (path) -> Files.exists(path),
 					(path, file) -> {
-						if (file.toString().endsWith("book.json")) {
+						if (Files.isRegularFile(file)
+								&& file.getFileName().toString().equals("book.json")) {
 							String fileStr = file.toString().replaceAll("\\\\", "/");
 							String relPath = fileStr
 									.substring(fileStr.indexOf(BOOKS_LOCATION) + BOOKS_LOCATION.length() + 1);
@@ -68,7 +69,7 @@ public class BookRegistry {
 						}
 
 						return true;
-					}, true);
+					}, true, 2);
 		});
 
 		foundBooks.forEach((pair, file) -> {
@@ -115,6 +116,11 @@ public class BookRegistry {
 
 	public static void findFiles(IModInfo mod, String base, Predicate<Path> rootFilter,
 			BiFunction<Path, Path, Boolean> processor, boolean visitAllFiles) {
+		findFiles(mod, base, rootFilter, processor, visitAllFiles, Integer.MAX_VALUE);
+	}
+
+	public static void findFiles(IModInfo mod, String base, Predicate<Path> rootFilter,
+			BiFunction<Path, Path, Boolean> processor, boolean visitAllFiles, int maxDepth) {
 		if (mod.getModId().equals("minecraft") || mod.getModId().equals("forge")) {
 			return;
 		}
@@ -131,23 +137,24 @@ public class BookRegistry {
 		try {
 			if (Files.isRegularFile(source)) {
 				try (FileSystem fs = FileSystems.newFileSystem(source, null)) {
-					walk(fs.getPath("/" + base), rootFilter, processor, visitAllFiles);
+					walk(fs.getPath("/" + base), rootFilter, processor, visitAllFiles, maxDepth);
 				}
 			} else {
-				walk(source.resolve(base), rootFilter, processor, visitAllFiles);
+				walk(source.resolve(base), rootFilter, processor, visitAllFiles, maxDepth);
 			}
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
 	}
 
-	private static void walk(Path root, Predicate<Path> rootFilter, BiFunction<Path, Path, Boolean> processor, boolean visitAllFiles) throws IOException {
+	private static void walk(Path root, Predicate<Path> rootFilter, BiFunction<Path, Path, Boolean> processor,
+			boolean visitAllFiles, int maxDepth) throws IOException {
 		if (root == null || !Files.exists(root) || !rootFilter.test(root)) {
 			return;
 		}
 
 		if (processor != null) {
-			Iterator<Path> itr = Files.walk(root).iterator();
+			Iterator<Path> itr = Files.walk(root, maxDepth).iterator();
 
 			while (itr.hasNext()) {
 				boolean cont = processor.apply(root, itr.next());
