@@ -23,10 +23,7 @@ import vazkii.patchouli.api.BookDrawScreenCallback;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
-import vazkii.patchouli.client.book.BookCategory;
-import vazkii.patchouli.client.book.BookContents;
-import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.EntryDisplayState;
+import vazkii.patchouli.client.book.*;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBack;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark;
@@ -163,8 +160,7 @@ public abstract class GuiBook extends Screen {
 			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 22, MultiblockVisualizationHandler.bookmark, true));
 		}
 
-		BookContents contents = book.contents;
-		if (!contents.currentGui.canSeeBackButton() && contents.entries.values().stream().anyMatch(v -> !v.isLocked() && v.getReadState().equals(EntryDisplayState.UNREAD))) {
+		if (!shouldAddAddBookmarkButton() && book.contents.entries.values().stream().anyMatch(v -> !v.isLocked() && v.getReadState().equals(EntryDisplayState.UNREAD))) {
 			addButton(new GuiButtonBookMarkRead(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 10));
 		}
 	}

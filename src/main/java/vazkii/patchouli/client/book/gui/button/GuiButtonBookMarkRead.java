@@ -2,8 +2,10 @@ package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import vazkii.patchouli.client.base.PersistentData;
+import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -14,7 +16,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	private final Book book;
 
 	public GuiButtonBookMarkRead(GuiBook parent, int x, int y) {
-		super(parent, x, y, 308, 31, 11, 11, ButtonWidget::onPress, new TranslatableText("patchouli.gui.lexicon.button.mark_read"));
+		super(parent, x, y, 308, 31, 11, 11, ButtonWidget::onPress, getTooltip(parent.book));
 		this.book = parent.book;
 	}
 
@@ -33,21 +35,48 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 
 	@Override
 	public void onPress() {
-		boolean dirty = false;
 		for (BookEntry entry : this.book.contents.entries.values()) {
-			String key = entry.getId().toString();
-			if (!entry.isLocked() && entry.getReadState().equals(EntryDisplayState.UNREAD)) {
-				PersistentData.DataHolder.BookData data = PersistentData.data.getBookData(book);
-				if (!data.viewedEntries.contains(key)) {
-					data.viewedEntries.add(key);
-					dirty = true;
-					entry.markReadStateDirty();
-				}
+			if (isMainPage(this.book)) {
+				markEntry(entry);
+			} else {
+				markCategoryAsRead(entry, entry.getCategory());
+			}
+		}
+	}
+
+	private void markCategoryAsRead(BookEntry entry, BookCategory category) {
+		if (category.getName().equals(this.book.contents.getCurrentGui().getTitle())) {
+			markEntry(entry);
+		} else if (!category.isRootCategory()) {
+			markCategoryAsRead(entry, entry.getCategory().getParentCategory());
+		}
+	}
+
+	private void markEntry(BookEntry entry) {
+		boolean dirty = false;
+		String key = entry.getId().toString();
+
+		if (!entry.isLocked() && entry.getReadState().equals(EntryDisplayState.UNREAD)) {
+			PersistentData.DataHolder.BookData data = PersistentData.data.getBookData(book);
+
+			if (!data.viewedEntries.contains(key)) {
+				data.viewedEntries.add(key);
+				dirty = true;
+				entry.markReadStateDirty();
 			}
 		}
 
 		if (dirty) {
 			PersistentData.save();
 		}
+	}
+
+	private static Text getTooltip(Book book) {
+		String text = isMainPage(book) ? "patchouli.gui.lexicon.button.mark_all_read" : "patchouli.gui.lexicon.button.mark_category_read";
+		return new TranslatableText(text);
+	}
+
+	private static boolean isMainPage(Book book) {
+		return !book.contents.currentGui.canSeeBackButton();
 	}
 }
