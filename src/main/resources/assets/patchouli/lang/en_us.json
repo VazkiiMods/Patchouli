@@ -89,5 +89,6 @@
 	"patchouli.gui.lexicon.button.visualize": "Visualize",
 	"patchouli.gui.lexicon.button.visualize.info": "(Click again to clear)",
 	"patchouli.gui.lexicon.button.history": "History",
-	"patchouli.gui.lexicon.button.mark_read": "Mark all as read"
+	"patchouli.gui.lexicon.button.mark_all_read": "Mark all as read",
+	"patchouli.gui.lexicon.button.mark_category_read": "Mark this category as read"
 }
