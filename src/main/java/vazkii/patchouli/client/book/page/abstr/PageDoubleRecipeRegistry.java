@@ -14,9 +14,9 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends PageDoubleRecipe<T> {
-	private final RecipeType<T> recipeType;
+	private final RecipeType<? extends T> recipeType;
 
-	public PageDoubleRecipeRegistry(RecipeType<T> recipeType) {
+	public PageDoubleRecipeRegistry(RecipeType<? extends T> recipeType) {
 		this.recipeType = recipeType;
 	}
 
