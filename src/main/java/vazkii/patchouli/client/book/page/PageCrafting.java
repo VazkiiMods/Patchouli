@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.NonNullList;
@@ -15,14 +15,14 @@ import net.minecraftforge.common.crafting.IShapedRecipe;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 
-public class PageCrafting extends PageDoubleRecipeRegistry<ICraftingRecipe> {
+public class PageCrafting extends PageDoubleRecipeRegistry<IRecipe<?>> {
 
 	public PageCrafting() {
 		super(IRecipeType.CRAFTING);
 	}
 
 	@Override
-	protected void drawRecipe(MatrixStack ms, ICraftingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
+	protected void drawRecipe(MatrixStack ms, IRecipe<?> recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		mc.textureManager.bindTexture(book.craftingTexture);
 		RenderSystem.enableBlend();
 		AbstractGui.blit(ms, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 256);
@@ -60,7 +60,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<ICraftingRecipe> {
 	}
 
 	@Override
-	protected ItemStack getRecipeOutput(ICraftingRecipe recipe) {
+	protected ItemStack getRecipeOutput(IRecipe<?> recipe) {
 		if (recipe == null) {
 			return ItemStack.EMPTY;
 		}

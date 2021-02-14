@@ -18,9 +18,9 @@ import java.util.Map;
 
 public abstract class PageDoubleRecipeRegistry<T extends IRecipe<?>> extends PageDoubleRecipe<T> {
 	private static final Method GET_RECIPE_MAP = ObfuscationReflectionHelper.findMethod(RecipeManager.class, "func_215366_a", IRecipeType.class);
-	private final IRecipeType<T> recipeType;
+	private final IRecipeType<? extends T> recipeType;
 
-	public PageDoubleRecipeRegistry(IRecipeType<T> recipeType) {
+	public PageDoubleRecipeRegistry(IRecipeType<? extends T> recipeType) {
 		this.recipeType = recipeType;
 	}
 
