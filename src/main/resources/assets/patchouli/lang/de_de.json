@@ -1,5 +1,5 @@
 {
-	"item.patchouli:guide_book.name": "Handbuch",
+	"item.patchouli.guide_book.name": "Handbuch",
 	
 	"item.patchouli:test_book_1.name": "Testbuch 1",
 	"item.patchouli:test_book_1.landing": "Nicht so toll wie eine Einführung, ist aber trotzdem präsent.",

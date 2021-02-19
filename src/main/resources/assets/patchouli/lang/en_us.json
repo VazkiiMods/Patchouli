@@ -1,5 +1,7 @@
 {
-	"item.patchouli:guide_book.name": "Guide Book",
+	"item.patchouli.guide_book": "Guide Book",
+	"item.patchouli.guide_book.undefined": "Invalid book: no ID defined",
+	"item.patchouli.guide_book.invalid": "Invalid book: %s",
 
 	"item.patchouli.comprehensive_test_book.name": "Comprehensive Test Book",
 	"item.patchouli.comprehensive_test_book.landing": "What will hopefully become a comprehensive test book for all of Patchouli, instead of the mishmash of random spaghetti we have right now.",

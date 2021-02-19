@@ -1,5 +1,5 @@
 {
-	"item.patchouli:guide_book.name": "Руководство",
+	"item.patchouli.guide_book.name": "Руководство",
 
 	"item.patchouli.comprehensive_test_book.name": "Общая тестовая книга",
 	"item.patchouli.comprehensive_test_book.landing": "Мы надеемся, что это станет всеобъемлющим тестом для всего Patchouli, а не мешаниной из случайных спагетти, которые есть сейчас.",

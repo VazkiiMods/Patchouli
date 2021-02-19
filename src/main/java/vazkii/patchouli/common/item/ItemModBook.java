@@ -82,13 +82,20 @@ public class ItemModBook extends Item {
 	}
 
 	public static Book getBook(ItemStack stack) {
+		Identifier res = getBookId(stack);
+		if (res == null) {
+			return null;
+		}
+		return BookRegistry.INSTANCE.books.get(res);
+	}
+
+	private static Identifier getBookId(ItemStack stack) {
 		if (!stack.hasTag() || !stack.getTag().contains(TAG_BOOK)) {
 			return null;
 		}
 
 		String bookStr = stack.getTag().getString(TAG_BOOK);
-		Identifier res = Identifier.tryParse(bookStr);
-		return res == null ? null : BookRegistry.INSTANCE.books.get(res);
+		return Identifier.tryParse(bookStr);
 	}
 
 	/* TODO fabric
@@ -121,6 +128,15 @@ public class ItemModBook extends Item {
 		Book book = getBook(stack);
 		if (book != null && book.contents != null) {
 			tooltip.add(book.getSubtitle().formatted(Formatting.GRAY));
+		} else if (book == null) {
+			Identifier rl = getBookId(stack);
+			if (rl == null) {
+				tooltip.add(new TranslatableText("item.patchouli.guide_book.undefined")
+						.formatted(Formatting.DARK_GRAY));
+			} else {
+				tooltip.add(new TranslatableText("item.patchouli.guide_book.invalid", rl)
+						.formatted(Formatting.DARK_GRAY));
+			}
 		}
 	}
 
