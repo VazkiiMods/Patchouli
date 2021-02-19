@@ -48,8 +48,6 @@ public class ItemModBook extends Item {
 					if (!entry.isLocked()) {
 						unlockedEntries++;
 					}
-
-					progression = ((float) unlockedEntries) / Math.max(1f, (float) totalEntries);
 				}
 			}
 
@@ -84,13 +82,20 @@ public class ItemModBook extends Item {
 	}
 
 	public static Book getBook(ItemStack stack) {
+		ResourceLocation res = getBookId(stack);
+		if (res == null) {
+			return null;
+		}
+		return BookRegistry.INSTANCE.books.get(res);
+	}
+
+	private static ResourceLocation getBookId(ItemStack stack) {
 		if (!stack.hasTag() || !stack.getTag().contains(TAG_BOOK)) {
 			return null;
 		}
 
 		String bookStr = stack.getTag().getString(TAG_BOOK);
-		ResourceLocation res = ResourceLocation.tryCreate(bookStr);
-		return res == null ? null : BookRegistry.INSTANCE.books.get(res);
+		return ResourceLocation.tryCreate(bookStr);
 	}
 
 	@Override
@@ -121,6 +126,15 @@ public class ItemModBook extends Item {
 		Book book = getBook(stack);
 		if (book != null && book.contents != null) {
 			tooltip.add(book.getSubtitle().mergeStyle(TextFormatting.GRAY));
+		} else if (book == null) {
+			ResourceLocation rl = getBookId(stack);
+			if (rl == null) {
+				tooltip.add(new TranslationTextComponent("item.patchouli.guide_book.undefined")
+						.mergeStyle(TextFormatting.DARK_GRAY));
+			} else {
+				tooltip.add(new TranslationTextComponent("item.patchouli.guide_book.invalid", rl)
+						.mergeStyle(TextFormatting.DARK_GRAY));
+			}
 		}
 	}
 
