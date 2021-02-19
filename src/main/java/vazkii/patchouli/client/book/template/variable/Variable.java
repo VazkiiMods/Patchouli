@@ -23,7 +23,8 @@ public class Variable implements IVariable {
 
 	@Override
 	public <T> T as(Class<T> clazz) {
-		if (sourceClass != null && !clazz.isAssignableFrom(sourceClass)) {
+		if (sourceClass != null && !clazz.isAssignableFrom(sourceClass)
+				&& (!clazz.isArray() || sourceClass != clazz.getComponentType())) {
 			Patchouli.LOGGER.warn("You're trying to deserialize an object of type {} from one of type {}. This is likely not what you want!", clazz, sourceClass);
 		}
 
