@@ -1,0 +1,21 @@
+{
+  "name": "Basic Test",
+  "category": "deserialization",
+  "flag": "!mod:gardenofglass",
+  "icon": "minecraft:oak_sapling",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Old-style $(l)formatting codes$(/l) should be supported, but the text on the following page should be localized!"
+    },
+    {
+      "type": "text",
+      "text": {
+        "translate": "patchouli.gui.lexicon.edition_str",
+        "with": [
+          "Really $(4)cool text that shouldn't leak its formatting!"
+        ]
+      }
+    }
+  ]
+}

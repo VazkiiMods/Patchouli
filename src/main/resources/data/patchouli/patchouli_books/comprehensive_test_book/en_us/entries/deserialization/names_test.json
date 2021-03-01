@@ -1,0 +1,33 @@
+{
+  "name": "Names Test",
+  "category": "deserialization",
+  "flag": "!mod:gardenofglass",
+  "icon": "minecraft:oak_sapling",
+  "pages": [
+    {
+      "type": "text",
+      "text": "The names on the following page should be localized!"
+    },
+    {
+      "type": "text",
+      "text": {
+        "translate": "%s pressed %s with their %s on a %s and got some %s",
+        "with": [
+          "$(playername)",
+          {
+            "keybind": "key.use"
+          },
+          {
+            "translate": "item.minecraft.shears"
+          },
+          {
+            "translate": "entity.minecraft.sheep"
+          },
+          {
+            "translate": "block.minecraft.white_wool"
+          }
+        ]
+      }
+    }
+  ]
+}
