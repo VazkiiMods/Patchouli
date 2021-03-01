@@ -178,7 +178,15 @@ public class BookTextParser {
 		this.spaceWidth = font.getStringPropertyWidth(new StringTextComponent(" ").setStyle(baseStyle));
 	}
 
-	public List<Word> parse(@Nullable String text) {
+	public List<Word> parse(ITextComponent text) {
+		List<Span> spans = new ArrayList<>();
+		text.func_230534_b_((string, style) -> {
+			spans.addAll(processCommands(expandMacros(string), style));
+		}, baseStyle);
+		List<Word> words = layout(spans);
+		return words;
+	}
+	public String expandMacros(@Nullable String text) {
 		String actualText = text;
 		if (actualText == null) {
 			actualText = "[ERROR]";
@@ -204,10 +212,7 @@ public class BookTextParser {
 					"Make sure you don't have circular macro invocations", expansionCap);
 		}
 
-		List<Span> spans = processCommands(actualText);
-		List<Word> words = layout(spans);
-
-		return words;
+		return actualText;
 	}
 
 	private List<Word> layout(List<Span> spans) {

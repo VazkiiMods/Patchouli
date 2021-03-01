@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.Color;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 
 import vazkii.patchouli.client.book.text.BookTextParser;
@@ -17,22 +19,22 @@ import java.util.List;
 public class BookTextRenderer {
 	private final Book book;
 	private final GuiBook gui;
-	private final String text;
+	private final ITextComponent text;
 	private final int x, y, width;
 	private final int lineHeight;
 	private final Style baseStyle;
 
 	private List<Word> words;
 
-	public BookTextRenderer(GuiBook gui, String text, int x, int y) {
+	public BookTextRenderer(GuiBook gui, ITextComponent text, int x, int y) {
 		this(gui, text, x, y, GuiBook.PAGE_WIDTH, GuiBook.TEXT_LINE_HEIGHT, gui.book.textColor);
 	}
 
-	public BookTextRenderer(GuiBook gui, String text, int x, int y, int width, int lineHeight, int baseColor) {
+	public BookTextRenderer(GuiBook gui, ITextComponent text, int x, int y, int width, int lineHeight, int baseColor) {
 		this.book = gui.book;
 		this.gui = gui;
-		if (book.i18n) {
-			this.text = I18n.format(text);
+		if (book.i18n && text instanceof StringTextComponent) {
+			this.text = new StringTextComponent(I18n.format(((StringTextComponent) text).getText()));
 		} else {
 			this.text = text;
 		}
