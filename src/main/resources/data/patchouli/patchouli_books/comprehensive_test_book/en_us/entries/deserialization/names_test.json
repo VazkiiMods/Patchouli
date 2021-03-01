@@ -6,19 +6,20 @@
   "pages": [
     {
       "type": "text",
-      "text": "The names on the following page should be localized!"
+      "text": "The names on the following page should be both colored and localized!"
     },
     {
       "type": "text",
       "text": {
-        "translate": "%s pressed %s with their %s on a %s and got some %s",
+        "translate": "$(l)%s$() pressed %s with their $(6)%s on a %s$(0) and got some $(8)%s$(0)",
         "with": [
           "$(playername)",
           {
             "keybind": "key.use"
           },
           {
-            "translate": "item.minecraft.shears"
+            "translate": "item.minecraft.shears",
+            "italic": true
           },
           {
             "translate": "entity.minecraft.sheep"

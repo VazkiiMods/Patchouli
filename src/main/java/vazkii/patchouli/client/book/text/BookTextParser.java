@@ -195,8 +195,9 @@ public class BookTextParser {
 
 	public List<Word> parse(ITextComponent text) {
 		List<Span> spans = new ArrayList<>();
+		SpanState state = new SpanState(gui, book, baseStyle);
 		text.func_230534_b_((style, string) -> {
-			spans.addAll(processCommands(expandMacros(string), style));
+			spans.addAll(processCommands(expandMacros(string), state, style));
 			return Optional.empty();
 		}, baseStyle);
 		List<Word> words = layout(spans);
@@ -244,7 +245,8 @@ public class BookTextParser {
 	/**
 	 * Takes in the raw book source and computes a collection of spans from it.
 	 */
-	private List<Span> processCommands(String text, Style style) {
+	private List<Span> processCommands(String text, SpanState state, Style style) {
+		state.changeBaseStyle(style);
 		List<Span> spans = new ArrayList<>();
 		Matcher match = COMMAND_PATTERN.matcher(text);
 
