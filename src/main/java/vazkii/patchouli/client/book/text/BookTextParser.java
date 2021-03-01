@@ -224,48 +224,36 @@ public class BookTextParser {
 		return layouter.getWords();
 	}
 
+	private Pattern COMMAND_PATTERN = Pattern.compile("\\$\\(([^)]*)\\)");
 	/**
 	 * Takes in the raw book source and computes a collection of spans from it.
 	 */
-	private List<Span> processCommands(String text) {
-		SpanState state = new SpanState(gui, book, baseStyle);
+	private List<Span> processCommands(String text, Style style) {
+		SpanState state = new SpanState(gui, book, style);
 		List<Span> spans = new ArrayList<>();
+		Matcher match = COMMAND_PATTERN.matcher(text);
 
-		int from = 0;
-		char[] chars = text.toCharArray();
-		for (int i = 0; i < chars.length; i++) {
-			if (chars[i] == '$' && i + 1 < chars.length && chars[i + 1] == '(') {
-				if (i > from) {
-					spans.add(new Span(state, text.substring(from, i)));
-				}
+		while (matcher.find()) {
+			StringBuffer sb = new StringBuffer();
+			// Extract the portion before the match to sb
+			match.appendReplacement(sb, "");
+			spans.add(new Span(state, sb.toString()));
 
-				from = i;
-				while (i < chars.length && chars[i] != ')') {
-					i++;
-				}
+			try {
+				String processed = processCommand(state, text.group());
+				if (!processed.isEmpty()) {
+					spans.add(new Span(state, processed));
 
-				if (i == chars.length) {
-					spans.add(Span.error(state, "[ERROR: UNFINISHED COMMAND]"));
-					break;
-				}
-
-				try {
-					String processed = processCommand(state, text.substring(from + 2, i));
-					if (!processed.isEmpty()) {
-						spans.add(new Span(state, processed));
-
-						if (state.cluster == null) {
-							state.tooltip = EMPTY_STRING_COMPONENT;
-						}
+					if (state.cluster == null) {
+						state.tooltip = EMPTY_STRING_COMPONENT;
 					}
-				} catch (Exception ex) {
-					spans.add(Span.error(state, "[ERROR]"));
 				}
-
-				from = i + 1;
+			} catch (Exception ex) {
+				spans.add(Span.error(state, "[ERROR]"));
 			}
 		}
-		spans.add(new Span(state, text.substring(from)));
+		// Extract the portion after all matches
+		spans.add(new Span(state, matcher.appendTail(new StringBuffer())));
 		return spans;
 	}
 
