@@ -11,7 +11,9 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 
 import vazkii.patchouli.client.book.text.BookTextParser;
+import vazkii.patchouli.client.book.text.TextLayouter;
 import vazkii.patchouli.client.book.text.Word;
+import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
 import java.util.List;
@@ -50,11 +52,10 @@ public class BookTextRenderer {
 
 	private void build() {
 		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, baseStyle);
-		List<Span> words = parser.parse(text);
 		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width, PatchouliConfig.overflowMode.get());
-		layouter.layout(font, spans);
+		layouter.layout(Minecraft.getInstance().fontRenderer, parser.parse(text));
 		scale = layouter.getScale();
-		return layouter.getWords();
+		words = layouter.getWords();
 	}
 
 	private double rescale(double in, double origin) {

@@ -10,7 +10,6 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.Patchouli;
-import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nullable;
@@ -193,7 +192,6 @@ public class BookTextParser {
 	private final int x, y, width;
 	private final int lineHeight;
 	private final Style baseStyle;
-	private final FontRenderer font;
 
 	public BookTextParser(GuiBook gui, Book book, int x, int y, int width, int lineHeight, Style baseStyle) {
 		this.gui = gui;
@@ -203,8 +201,6 @@ public class BookTextParser {
 		this.width = width;
 		this.lineHeight = lineHeight;
 		this.baseStyle = baseStyle;
-
-		this.font = Minecraft.getInstance().fontRenderer;
 	}
 
 	public List<Span> parse(ITextComponent text) {
@@ -242,12 +238,6 @@ public class BookTextParser {
 		}
 
 		return actualText;
-	}
-
-	private List<Word> layout(List<Span> spans) {
-		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width, PatchouliConfig.overflowMode.get());
-		layouter.layout(font, spans);
-		return layouter.getWords();
 	}
 
 	private Pattern COMMAND_PATTERN = Pattern.compile("\\$\\(([^)]*)\\)");
