@@ -15,19 +15,22 @@ import vazkii.patchouli.common.book.Book;
 import javax.annotation.Nullable;
 
 import java.util.*;
+import java.util.regex.*;
+import java.util.function.Function;
+import java.util.function.BiFunction;
 
 public class BookTextParser {
 	public static final StringTextComponent EMPTY_STRING_COMPONENT = new StringTextComponent("");
-	private static final Map<String, CommandProcessor> COMMANDS = new HashMap<>();
-	private static final Map<String, FunctionProcessor> FUNCTIONS = new HashMap<>();
+	private static final Map<String, Function<SpanState, String>> COMMANDS = new HashMap<>();
+	private static final Map<String, BiFunction<String, SpanState, String>> FUNCTIONS = new HashMap<>();
 
-	private static void register(CommandProcessor handler, String... names) {
+	public static void register(Function<SpanState, String> handler, String... names) {
 		for (String name : names) {
 			COMMANDS.put(name, handler);
 		}
 	}
 
-	private static void register(FunctionProcessor function, String... names) {
+	public static void register(BiFunction<String, SpanState, String> function, String... names) {
 		for (String name : names) {
 			FUNCTIONS.put(name, function);
 		}
@@ -300,12 +303,12 @@ public class BookTextParser {
 			String function = cmd.substring(0, index);
 			String parameter = cmd.substring(index + 1);
 			if (FUNCTIONS.containsKey(function)) {
-				result = FUNCTIONS.get(function).process(parameter, state);
+				result = FUNCTIONS.get(function).apply(parameter, state);
 			} else {
 				result = "[MISSING FUNCTION: " + function + "]";
 			}
 		} else if (COMMANDS.containsKey(cmd)) {
-			result = COMMANDS.get(cmd).process(state);
+			result = COMMANDS.get(cmd).apply(state);
 		}
 
 		if (state.endingExternal) {
@@ -327,14 +330,6 @@ public class BookTextParser {
 		}
 
 		return null;
-	}
-
-	public interface CommandProcessor {
-		String process(SpanState state);
-	}
-
-	public interface FunctionProcessor {
-		String process(String parameter, SpanState state);
 	}
 
 }
