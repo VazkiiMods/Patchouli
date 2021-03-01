@@ -10,6 +10,7 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.Patchouli;
+import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nullable;
@@ -27,8 +28,8 @@ public class BookTextParser {
 	private static final Map<String, CommandProcessor> COMMANDS = new HashMap<>();
 	private static final Map<String, FunctionProcessor> FUNCTIONS = new HashMap<>();
 
-	private static void registerProcessor(BiFunction<String, SpanState, Optional<String>> processor) {
-		COMMAND_PROCESSORS.add(processor);
+	private static void registerProcessor(CommandLookup processor) {
+		COMMAND_LOOKUPS.add(processor);
 	}
 
 	private static void register(CommandProcessor handler, String... names) {
@@ -178,7 +179,7 @@ public class BookTextParser {
 	private final int lineHeight;
 	private final Style baseStyle;
 	private final FontRenderer font;
-	private final int spaceWidth;
+	private float scale;
 
 	public BookTextParser(GuiBook gui, Book book, int x, int y, int width, int lineHeight, Style baseStyle) {
 		this.gui = gui;
@@ -190,16 +191,19 @@ public class BookTextParser {
 		this.baseStyle = baseStyle;
 
 		this.font = Minecraft.getInstance().fontRenderer;
-		this.spaceWidth = font.getStringPropertyWidth(new StringTextComponent(" ").setStyle(baseStyle));
 	}
 
 	public List<Word> parse(ITextComponent text) {
 		List<Span> spans = new ArrayList<>();
-		text.func_230534_b_((string, style) -> {
+		text.func_230534_b_((style, string) -> {
 			spans.addAll(processCommands(expandMacros(string), style));
+			return Optional.empty();
 		}, baseStyle);
 		List<Word> words = layout(spans);
 		return words;
+	}
+	public float getScale() {
+		return scale;
 	}
 	public String expandMacros(@Nullable String text) {
 		String actualText = text;
@@ -217,9 +221,8 @@ public class BookTextParser {
 
 			if (newText.equals(actualText)) {
 				break;
-			} else {
-				actualText = newText;
 			}
+			actualText = newText;
 		}
 
 		if (i == expansionCap) {
@@ -231,8 +234,9 @@ public class BookTextParser {
 	}
 
 	private List<Word> layout(List<Span> spans) {
-		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width);
+		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width, PatchouliConfig.overflowMode.get());
 		layouter.layout(font, spans);
+		scale = layouter.getScale();
 		return layouter.getWords();
 	}
 
@@ -241,18 +245,17 @@ public class BookTextParser {
 	 * Takes in the raw book source and computes a collection of spans from it.
 	 */
 	private List<Span> processCommands(String text, Style style) {
-		SpanState state = new SpanState(gui, book, style);
 		List<Span> spans = new ArrayList<>();
 		Matcher match = COMMAND_PATTERN.matcher(text);
 
-		while (matcher.find()) {
+		while (match.find()) {
 			StringBuffer sb = new StringBuffer();
 			// Extract the portion before the match to sb
 			match.appendReplacement(sb, "");
 			spans.add(new Span(state, sb.toString()));
 
 			try {
-				String processed = processCommand(state, text.group());
+				String processed = processCommand(state, match.group(1));
 				if (!processed.isEmpty()) {
 					spans.add(new Span(state, processed));
 
@@ -265,14 +268,14 @@ public class BookTextParser {
 			}
 		}
 		// Extract the portion after all matches
-		spans.add(new Span(state, matcher.appendTail(new StringBuffer())));
+		spans.add(new Span(state, match.appendTail(new StringBuffer()).toString()));
 		return spans;
 	}
 
 	private String processCommand(SpanState state, String cmd) {
 		state.endingExternal = false;
 
-		Optional<String> optResult;
+		Optional<String> optResult = Optional.empty();
 		for (CommandLookup lookup : COMMAND_LOOKUPS) {
 			optResult = lookup.process(cmd, state);
 			if (optResult.isPresent()) {
@@ -304,7 +307,7 @@ public class BookTextParser {
 			try {
 				color = Color.fromInt(Integer.parseInt(parse, 16));
 			} catch (NumberFormatException e) {
-				color = baseStyle.getColor();
+				color = state.getBase().getColor();
 			}
 			return Optional.of(state.color(color));
 		}
@@ -319,15 +322,15 @@ public class BookTextParser {
 			char bullet = dist % 2 == 0 ? '\u25E6' : '\u2022';
 			state.lineBreaks = 1;
 			state.spacingLeft = pad;
-			state.spacingRight = spaceWidth;
+			state.spacingRight = state.spaceWidth;
 			return Optional.of(TextFormatting.BLACK.toString() + bullet);
 		}
 		return Optional.empty();
 	}
 
 	private static Optional<String> lookupFunctionProcessor(String functionName, SpanState state) {
-		int colonIndex = functionName.indexOf(':');
-		if (colonIndex > 0) {
+		int index = functionName.indexOf(':');
+		if (index > 0) {
 			String fname = functionName.substring(0, index), param = functionName.substring(index + 1);
 			return Optional.of(
 				Optional.ofNullable(FUNCTIONS.get(fname))
@@ -338,7 +341,7 @@ public class BookTextParser {
 	}
 
 	private static Optional<String> lookupCommandProcessor(String functionName, SpanState state) {
-		return Optional.ofNullable(COMMANDS.get(functionName)).map(CommandProcessor::process);
+		return Optional.ofNullable(COMMANDS.get(functionName)).map(c -> c.process(state));
 	}
 
 	private static KeyBinding getKeybindKey(SpanState state, String keybind) {

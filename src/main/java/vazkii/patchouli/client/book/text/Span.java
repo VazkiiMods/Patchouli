@@ -26,6 +26,7 @@ public class Span {
 	public final boolean bold;
 
 	public Span(SpanState state, String text) {
+    System.out.println("new Span called with " + state + ", text = " + text);
 		this.text = text;
 		this.style = state.peekStyle();
 		this.onClick = state.onClick;

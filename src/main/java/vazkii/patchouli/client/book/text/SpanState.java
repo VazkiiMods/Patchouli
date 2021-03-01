@@ -1,7 +1,9 @@
 package vazkii.patchouli.client.book.text;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.Color;
 import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -27,12 +29,18 @@ public class SpanState {
 	public int lineBreaks = 0; // force line breaks
 	public int spacingLeft = 0; // add extra spacing
 	public int spacingRight = 0;
+	public final int spaceWidth;
 
 	public SpanState(GuiBook gui, Book book, Style baseStyle) {
 		this.gui = gui;
 		this.book = book;
 		this.baseStyle = baseStyle;
 		this.styleStack.push(baseStyle);
+		this.spaceWidth = Minecraft.getInstance().fontRenderer.getStringPropertyWidth(new StringTextComponent(" ").setStyle(baseStyle));
+	}
+
+	public Style getBase() {
+		return baseStyle;
 	}
 
 	public String color(Color color) {
@@ -55,10 +63,10 @@ public class SpanState {
 	}
 
 	public Style popStyle() {
-		Style ret = styleStack.pop();
-		if (styleStack.isEmpty()) {
+		if (styleStack.size() <= 1) {
 			throw new IllegalStateException("Underflow in style stack");
 		}
+		Style ret = styleStack.pop();
 		return ret;
 	}
 
