@@ -19,6 +19,7 @@ public class PatchouliConfig {
 	public static ForgeConfigSpec.ConfigValue<Boolean> testingMode;
 	public static ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
 	public static ForgeConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
+	public static ForgeConfigSpec.EnumValue<TextOverflowMode> overflowMode;
 
 	private static final Map<String, Boolean> CONFIG_FLAGS = new ConcurrentHashMap<>();
 
@@ -63,6 +64,10 @@ public class PatchouliConfig {
 			useShiftForQuickLookup = builder
 					.comment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
 					.define("quickLookupShift", false);
+
+			overflowMode = builder
+					.comment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit.")
+					.defineEnum("textOverflowMode", TextOverflowMode.OVERFLOW);
 
 			builder.pop();
 		}
@@ -115,6 +120,12 @@ public class PatchouliConfig {
 
 	public static void setFlag(String flag, boolean value) {
 		CONFIG_FLAGS.put(flag.trim().toLowerCase(Locale.ROOT), value);
+	}
+
+	public enum TextOverflowMode {
+		OVERFLOW,
+		TRUNCATE,
+		RESIZE;
 	}
 
 }

@@ -25,6 +25,7 @@ public class BookTextRenderer {
 	private final Style baseStyle;
 
 	private List<Word> words;
+	private float scale;
 
 	public BookTextRenderer(GuiBook gui, ITextComponent text, int x, int y) {
 		this(gui, text, x, y, GuiBook.PAGE_WIDTH, GuiBook.TEXT_LINE_HEIGHT, gui.book.textColor);
@@ -50,18 +51,38 @@ public class BookTextRenderer {
 	private void build() {
 		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, baseStyle);
 		words = parser.parse(text);
+		scale = parser.getScale();
+	}
+
+	private double rescale(double in, double origin) {
+		return origin + (in - origin) / scale;
 	}
 
 	public void render(MatrixStack ms, int mouseX, int mouseY) {
-		FontRenderer font = Minecraft.getInstance().fontRenderer;
-		Style style = book.getFontStyle();
-		words.forEach(word -> word.render(ms, font, style, mouseX, mouseY));
+		if (!words.isEmpty()) {
+			FontRenderer font = Minecraft.getInstance().fontRenderer;
+			Style style = book.getFontStyle();
+			Word first = words.get(0);
+			ms.push();
+			ms.translate(first.x, first.y, 0);
+			ms.scale(scale, scale, 1.0f);
+			ms.translate(-first.x, -first.y, 0);
+			int scaledX = (int) rescale(mouseX, first.x);
+			int scaledY = (int) rescale(mouseY, first.y);
+			words.forEach(word -> word.render(ms, font, style, scaledX, scaledY));
+			ms.pop();
+		}
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {
-		for (Word word : words) {
-			if (word.click(mouseX, mouseY, mouseButton)) {
-				return true;
+		if (!words.isEmpty()) {
+			Word first = words.get(0);
+			double scaledX = rescale(mouseX, first.x);
+			double scaledY = rescale(mouseY, first.y);
+			for (Word word : words) {
+				if (word.click(scaledX, scaledY, mouseButton)) {
+					return true;
+				}
 			}
 		}
 
