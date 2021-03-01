@@ -16,27 +16,39 @@ import javax.annotation.Nullable;
 
 import java.util.*;
 import java.util.regex.*;
-import java.util.function.Function;
-import java.util.function.BiFunction;
 
 public class BookTextParser {
 	public static final StringTextComponent EMPTY_STRING_COMPONENT = new StringTextComponent("");
-	private static final Map<String, Function<SpanState, String>> COMMANDS = new HashMap<>();
-	private static final Map<String, BiFunction<String, SpanState, String>> FUNCTIONS = new HashMap<>();
+	// A command lookup takes the body of a command $(...) and the current span state.
+	// If it understands the command, it can modify the span state and return Optional.of(command replacement).
+	// Otherwise, it just returns Optional.empty().
+	// TODO: Make this part of the API, perhaps?
+	private static final List<CommandLookup> COMMAND_LOOKUPS = new ArrayList<>();
+	private static final Map<String, CommandProcessor> COMMANDS = new HashMap<>();
+	private static final Map<String, FunctionProcessor> FUNCTIONS = new HashMap<>();
 
-	public static void register(Function<SpanState, String> handler, String... names) {
+	private static void registerProcessor(BiFunction<String, SpanState, Optional<String>> processor) {
+		COMMAND_PROCESSORS.add(processor);
+	}
+
+	private static void register(CommandProcessor handler, String... names) {
 		for (String name : names) {
 			COMMANDS.put(name, handler);
 		}
 	}
 
-	public static void register(BiFunction<String, SpanState, String> function, String... names) {
+	private static void register(FunctionProcessor function, String... names) {
 		for (String name : names) {
 			FUNCTIONS.put(name, function);
 		}
 	}
 
 	static {
+		registerProcessor(BookTextParser::colorCodeProcessor);
+		registerProcessor(BookTextParser::colorHexProcessor);
+		registerProcessor(BookTextParser::listProcessor);
+		registerProcessor(BookTextParser::lookupFunctionProcessor);
+		registerProcessor(BookTextParser::lookupCommandProcessor);
 		register(state -> {
 			state.lineBreaks = 1;
 			return "";
@@ -259,13 +271,33 @@ public class BookTextParser {
 
 	private String processCommand(SpanState state, String cmd) {
 		state.endingExternal = false;
-		String result = "";
 
-		if (cmd.length() == 1 && cmd.matches("^[0123456789abcdef]$")) { // Vanilla colors
-			return state.modifyStyle(s -> s.applyFormatting(TextFormatting.fromFormattingCode(cmd.charAt(0))));
-		} else if (cmd.startsWith("#") && (cmd.length() == 4 || cmd.length() == 7)) { // Hex colors
+		Optional<String> optResult;
+		for (CommandLookup lookup : COMMAND_LOOKUPS) {
+			optResult = lookup.process(cmd, state);
+			if (optResult.isPresent()) {
+				break;
+			}
+		}
+		String result = optResult.orElse("$(" + cmd + ")");
+
+		if (state.endingExternal) {
+			result += TextFormatting.GRAY + "\u21AA";
+		}
+
+		return result;
+	}
+
+	private static Optional<String> colorCodeProcessor(String functionName, SpanState state) {
+		if (functionName.length() == 1 && functionName.matches("^[0123456789abcdef]$")) {
+			return Optional.of(state.modifyStyle(s -> s.applyFormatting(TextFormatting.fromFormattingCode(functionName.charAt(0)))));
+		}
+		return Optional.empty();
+	}
+	private static Optional<String> colorHexProcessor(String functionName, SpanState state) {
+		if (functionName.startsWith("#") && (functionName.length() == 4 || functionName.length() == 7)) {
 			Color color;
-			String parse = cmd.substring(1);
+			String parse = functionName.substring(1);
 			if (parse.length() == 3) {
 				parse = "" + parse.charAt(0) + parse.charAt(0) + parse.charAt(1) + parse.charAt(1) + parse.charAt(2) + parse.charAt(2);
 			}
@@ -274,36 +306,39 @@ public class BookTextParser {
 			} catch (NumberFormatException e) {
 				color = baseStyle.getColor();
 			}
-			return state.color(color);
-		} else if (cmd.matches("li\\d?")) { // List Element
-			char c = cmd.length() > 2 ? cmd.charAt(2) : '1';
+			return Optional.of(state.color(color));
+		}
+		return Optional.empty();
+	}
+
+	private static Optional<String> listProcessor(String functionName, SpanState state) {
+		if (functionName.matches("li\\d?")) {
+			char c = functionName.length() > 2 ? functionName.charAt(2) : '1';
 			int dist = Character.isDigit(c) ? Character.digit(c, 10) : 1;
 			int pad = dist * 4;
 			char bullet = dist % 2 == 0 ? '\u25E6' : '\u2022';
 			state.lineBreaks = 1;
 			state.spacingLeft = pad;
 			state.spacingRight = spaceWidth;
-			return TextFormatting.BLACK.toString() + bullet;
+			return Optional.of(TextFormatting.BLACK.toString() + bullet);
 		}
+		return Optional.empty();
+	}
 
-		if (cmd.indexOf(':') > 0) {
-			int index = cmd.indexOf(':');
-			String function = cmd.substring(0, index);
-			String parameter = cmd.substring(index + 1);
-			if (FUNCTIONS.containsKey(function)) {
-				result = FUNCTIONS.get(function).apply(parameter, state);
-			} else {
-				result = "[MISSING FUNCTION: " + function + "]";
-			}
-		} else if (COMMANDS.containsKey(cmd)) {
-			result = COMMANDS.get(cmd).apply(state);
+	private static Optional<String> lookupFunctionProcessor(String functionName, SpanState state) {
+		int colonIndex = functionName.indexOf(':');
+		if (colonIndex > 0) {
+			String fname = functionName.substring(0, index), param = functionName.substring(index + 1);
+			return Optional.of(
+				Optional.ofNullable(FUNCTIONS.get(fname))
+						.map(f -> f.process(param, state))
+						.orElse("[MISSING FUNCTION: " + fname + "]"));
 		}
+		return Optional.empty();
+	}
 
-		if (state.endingExternal) {
-			result += TextFormatting.GRAY + "\u21AA";
-		}
-
-		return result;
+	private static Optional<String> lookupCommandProcessor(String functionName, SpanState state) {
+		return Optional.ofNullable(COMMANDS.get(functionName)).map(CommandProcessor::process);
 	}
 
 	private static KeyBinding getKeybindKey(SpanState state, String keybind) {
@@ -318,6 +353,18 @@ public class BookTextParser {
 		}
 
 		return null;
+	}
+
+	public interface CommandLookup {
+		Optional<String> process(String commandName, SpanState state);
+	}
+
+	public interface CommandProcessor {
+		String process(SpanState state);
+	}
+
+	public interface FunctionProcessor {
+		String process(String parameter, SpanState state);
 	}
 
 }
