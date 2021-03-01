@@ -50,8 +50,11 @@ public class BookTextRenderer {
 
 	private void build() {
 		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, baseStyle);
-		words = parser.parse(text);
-		scale = parser.getScale();
+		List<Span> words = parser.parse(text);
+		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width, PatchouliConfig.overflowMode.get());
+		layouter.layout(font, spans);
+		scale = layouter.getScale();
+		return layouter.getWords();
 	}
 
 	private double rescale(double in, double origin) {

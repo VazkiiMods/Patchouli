@@ -179,7 +179,6 @@ public class BookTextParser {
 	private final int lineHeight;
 	private final Style baseStyle;
 	private final FontRenderer font;
-	private float scale;
 
 	public BookTextParser(GuiBook gui, Book book, int x, int y, int width, int lineHeight, Style baseStyle) {
 		this.gui = gui;
@@ -193,18 +192,14 @@ public class BookTextParser {
 		this.font = Minecraft.getInstance().fontRenderer;
 	}
 
-	public List<Word> parse(ITextComponent text) {
+	public List<Span> parse(ITextComponent text) {
 		List<Span> spans = new ArrayList<>();
 		SpanState state = new SpanState(gui, book, baseStyle);
 		text.func_230534_b_((style, string) -> {
 			spans.addAll(processCommands(expandMacros(string), state, style));
 			return Optional.empty();
 		}, baseStyle);
-		List<Word> words = layout(spans);
-		return words;
-	}
-	public float getScale() {
-		return scale;
+		return spans;
 	}
 	public String expandMacros(@Nullable String text) {
 		String actualText = text;
@@ -237,7 +232,6 @@ public class BookTextParser {
 	private List<Word> layout(List<Span> spans) {
 		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width, PatchouliConfig.overflowMode.get());
 		layouter.layout(font, spans);
-		scale = layouter.getScale();
 		return layouter.getWords();
 	}
 

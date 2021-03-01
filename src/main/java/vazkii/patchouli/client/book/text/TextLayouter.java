@@ -79,7 +79,9 @@ public class TextLayouter {
 	}
 
 	private boolean adjustScale() {
-		pageWidth = Math.min(smallestOverstep, (int) (basePageWidth * getOverflow()) + 1);
+                // If we can just fit everything by downscaling height to fit in bounds, do that,
+                // otherwise find the smallest size that would reflow text and try it.
+		pageWidth = 1 + Math.min(smallestOverstep, (int) (basePageWidth * getOverflow()));
 		return true;
 	}
 	/**
@@ -91,7 +93,7 @@ public class TextLayouter {
 	} 
 	/** Return how much we're overrunning the current page by, as a float. */
 	private float getOverflow() {
-		return (float) (y - pageY) / (GuiBook.PAGE_HEIGHT - pageY);
+		return (float) (y + lineHeight - pageY) / (GuiBook.PAGE_HEIGHT - pageY);
 	}
 
 	// a paragraph is a series of spans without explicit line break

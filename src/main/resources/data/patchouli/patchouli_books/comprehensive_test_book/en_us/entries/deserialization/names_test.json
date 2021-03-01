@@ -2,7 +2,7 @@
   "name": "Names Test",
   "category": "deserialization",
   "flag": "!mod:gardenofglass",
-  "icon": "minecraft:oak_sapling",
+  "icon": "minecraft:name_tag",
   "pages": [
     {
       "type": "text",
