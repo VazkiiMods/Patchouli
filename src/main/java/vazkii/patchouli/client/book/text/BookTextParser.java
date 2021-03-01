@@ -32,13 +32,13 @@ public class BookTextParser {
 		COMMAND_LOOKUPS.add(processor);
 	}
 
-	private static void register(CommandProcessor handler, String... names) {
+	public static void register(CommandProcessor handler, String... names) {
 		for (String name : names) {
 			COMMANDS.put(name, handler);
 		}
 	}
 
-	private static void register(FunctionProcessor function, String... names) {
+	public static void register(FunctionProcessor function, String... names) {
 		for (String name : names) {
 			FUNCTIONS.put(name, function);
 		}
@@ -73,15 +73,30 @@ public class BookTextParser {
 			return "";
 		}, "/t");
 		register(state -> state.gui.getMinecraft().player.getName().getString(), "playername"); // TODO 1.16: dropped format codes
-		register(state -> state.modifyStyle(s -> s.applyFormatting(TextFormatting.OBFUSCATED)), "k", "obf");
-		register(state -> state.modifyStyle(s -> s.applyFormatting(TextFormatting.BOLD)), "l", "bold");
-		register(state -> state.modifyStyle(s -> s.applyFormatting(TextFormatting.STRIKETHROUGH)), "m", "strike");
-		register(state -> state.modifyStyle(s -> s.applyFormatting(TextFormatting.ITALIC)), "o", "italic", "italics");
+		register(state -> {
+			state.modifyStyle(s -> s.applyFormatting(TextFormatting.OBFUSCATED));
+			return "";
+		}, "k", "obf");
+		register(state -> {
+			state.modifyStyle(s -> s.applyFormatting(TextFormatting.BOLD));
+			return "";
+		}, "l", "bold");
+		register(state -> {
+			state.modifyStyle(s -> s.applyFormatting(TextFormatting.STRIKETHROUGH));
+			return "";
+		}, "m", "strike");
+		register(state -> {
+			state.modifyStyle(s -> s.applyFormatting(TextFormatting.ITALIC));
+			return "";
+		}, "o", "italic", "italics");
 		register(state -> {
 			state.reset();
 			return "";
 		}, "", "reset", "clear");
-		register(SpanState::baseColor, "nocolor");
+		register(state -> {
+			state.baseColor();
+			return "";
+		}, "nocolor");
 
 		register((parameter, state) -> {
 			KeyBinding result = getKeybindKey(state, parameter);
@@ -289,7 +304,8 @@ public class BookTextParser {
 
 	private static Optional<String> colorCodeProcessor(String functionName, SpanState state) {
 		if (functionName.length() == 1 && functionName.matches("^[0123456789abcdef]$")) {
-			return Optional.of(state.modifyStyle(s -> s.applyFormatting(TextFormatting.fromFormattingCode(functionName.charAt(0)))));
+			state.modifyStyle(s -> s.applyFormatting(TextFormatting.fromFormattingCode(functionName.charAt(0))));
+			return Optional.of("");
 		}
 		return Optional.empty();
 	}
@@ -305,7 +321,8 @@ public class BookTextParser {
 			} catch (NumberFormatException e) {
 				color = state.getBase().getColor();
 			}
-			return Optional.of(state.color(color));
+			state.color(color);
+			return Optional.of("");
 		}
 		return Optional.empty();
 	}
