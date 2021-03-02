@@ -12,10 +12,10 @@ import vazkii.patchouli.common.book.Book;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.List;
 import java.util.LinkedList;
-import java.util.function.UnaryOperator;
+import java.util.List;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class SpanState implements IRenderingStyle {
 	public final GuiBook gui;

@@ -70,27 +70,29 @@ public class TextLayouter {
 			if (!paragraph.isEmpty()) {
 				layoutParagraph(paragraph);
 			}
-		// Only downscale if TextOverflowMode is RESIZE
+			// Only downscale if TextOverflowMode is RESIZE
 		} while (mode == TextOverflowMode.RESIZE && getOverflow() * getScale() > 1 && adjustScale());
 		// if TextOverflowMode is TRUNCATE, yeet everything below baseline
 		if (mode == TextOverflowMode.TRUNCATE) {
-			words.removeIf(word -> word.y > GuiBook.PAGE_HEIGHT);
+			words.removeIf(word -> word.y + lineHeight > GuiBook.PAGE_HEIGHT);
 		}
 	}
 
 	private boolean adjustScale() {
-                // If we can just fit everything by downscaling height to fit in bounds, do that,
-                // otherwise find the smallest size that would reflow text and try it.
+		// If we can just fit everything by downscaling height to fit in bounds, do that,
+		// otherwise find the smallest size that would reflow text and try it.
 		pageWidth = 1 + Math.min(smallestOverstep, (int) (basePageWidth * getOverflow()));
 		return true;
 	}
+
 	/**
 	 * In RESIZE mode, return how much we're downscaling by.
 	 * Will be 1.0f in all other modes.
 	 */
 	public float getScale() {
 		return (float) basePageWidth / pageWidth;
-	} 
+	}
+
 	/** Return how much we're overrunning the current page by, as a float. */
 	private float getOverflow() {
 		return (float) (y + lineHeight - pageY) / (GuiBook.PAGE_HEIGHT - pageY);

@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.*;
@@ -212,6 +210,7 @@ public class BookTextParser {
 		}, baseStyle);
 		return spans;
 	}
+
 	public String expandMacros(@Nullable String text) {
 		String actualText = text;
 		if (actualText == null) {
@@ -241,6 +240,7 @@ public class BookTextParser {
 	}
 
 	private Pattern COMMAND_PATTERN = Pattern.compile("\\$\\(([^)]*)\\)");
+
 	/**
 	 * Takes in the raw book source and computes a collection of spans from it.
 	 */
@@ -299,6 +299,7 @@ public class BookTextParser {
 		}
 		return Optional.empty();
 	}
+
 	private static Optional<String> colorHexProcessor(String functionName, SpanState state) {
 		if (functionName.startsWith("#") && (functionName.length() == 4 || functionName.length() == 7)) {
 			Color color;
@@ -336,9 +337,9 @@ public class BookTextParser {
 		if (index > 0) {
 			String fname = functionName.substring(0, index), param = functionName.substring(index + 1);
 			return Optional.of(
-				Optional.ofNullable(FUNCTIONS.get(fname))
-						.map(f -> f.process(param, state))
-						.orElse("[MISSING FUNCTION: " + fname + "]"));
+					Optional.ofNullable(FUNCTIONS.get(fname))
+							.map(f -> f.process(param, state))
+							.orElse("[MISSING FUNCTION: " + fname + "]"));
 		}
 		return Optional.empty();
 	}
