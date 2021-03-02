@@ -6,7 +6,6 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 
-import vazkii.patchouli.api.IRenderingStyle;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
 
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-public class SpanState implements IRenderingStyle {
+public class SpanState {
 	public final GuiBook gui;
 	public final Book book;
 
@@ -65,21 +64,18 @@ public class SpanState implements IRenderingStyle {
 		color(baseStyle.getColor());
 	}
 
-	@Override
 	public void modifyStyle(UnaryOperator<Style> f) {
 		Style top = styleStack.pop();
 		styleStack.push(f.apply(top));
 		modifiersStack.peek().addModification(f);
 	}
 
-	@Override
 	public void pushStyle(Style style) {
 		Style top = styleStack.peek();
 		modifiersStack.push(new SpanPartialState(style));
 		styleStack.push(style.mergeStyle(top));
 	}
 
-	@Override
 	public Style popStyle() {
 		if (styleStack.size() <= 1) {
 			throw new IllegalStateException("Underflow in style stack");
@@ -89,7 +85,6 @@ public class SpanState implements IRenderingStyle {
 		return ret;
 	}
 
-	@Override
 	public void reset() {
 		endingExternal = isExternalLink;
 		styleStack.clear();
@@ -102,7 +97,6 @@ public class SpanState implements IRenderingStyle {
 		isExternalLink = false;
 	}
 
-	@Override
 	public Style peekStyle() {
 		return styleStack.getFirst();
 	}

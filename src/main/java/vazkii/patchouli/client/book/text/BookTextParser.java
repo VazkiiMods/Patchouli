@@ -29,13 +29,13 @@ public class BookTextParser {
 		COMMAND_LOOKUPS.add(processor);
 	}
 
-	public static void register(CommandProcessor handler, String... names) {
+	private static void register(CommandProcessor handler, String... names) {
 		for (String name : names) {
 			COMMANDS.put(name, handler);
 		}
 	}
 
-	public static void register(FunctionProcessor function, String... names) {
+	private static void register(FunctionProcessor function, String... names) {
 		for (String name : names) {
 			FUNCTIONS.put(name, function);
 		}

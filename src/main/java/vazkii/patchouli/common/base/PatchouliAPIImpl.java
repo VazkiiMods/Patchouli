@@ -17,14 +17,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.io.IOUtils;
 
 import vazkii.patchouli.api.IMultiblock;
-import vazkii.patchouli.api.IRenderingStyle;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.template.BookTemplate;
-import vazkii.patchouli.client.book.text.BookTextParser;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -43,8 +41,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -106,18 +102,6 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 			throw new IllegalArgumentException("Book not found: " + bookId);
 		}
 		return book.getSubtitle();
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void registerCommand(String name, Function<IRenderingStyle, String> command) {
-		BookTextParser.register(style -> command.apply(style), name);
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void registerFunction(String name, BiFunction<String, IRenderingStyle, String> function) {
-		BookTextParser.register((arg, style) -> function.apply(arg, style), name);
 	}
 
 	@Override
