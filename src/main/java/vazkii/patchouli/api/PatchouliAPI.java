@@ -21,6 +21,8 @@ import javax.annotation.Nullable;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -132,6 +134,18 @@ public class PatchouliAPI {
 		 */
 		@OnlyIn(Dist.CLIENT)
 		void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider);
+
+		/**
+		 * Register a Patchouli command, of the type $(cmdname).
+		 */
+		@OnlyIn(Dist.CLIENT)
+		void registerCommand(String name, Function<IRenderingStyle, String> command);
+
+		/**
+		 * Register a Patchouli function, of the type $(funcname:arg).
+		 */
+		@OnlyIn(Dist.CLIENT)
+		void registerFunction(String name, BiFunction<String, IRenderingStyle, String> function);
 
 		// ================================================================================================
 		// Multiblocks
