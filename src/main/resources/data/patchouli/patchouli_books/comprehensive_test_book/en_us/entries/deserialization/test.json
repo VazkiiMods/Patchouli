@@ -13,7 +13,7 @@
       "text": {
         "translate": "patchouli.gui.lexicon.edition_str",
         "with": [
-          "Really $(4)cool text that shouldn't leak its formatting!"
+          "Really $(4)cool text that should propagate its formatting to the rest of the string!"
         ]
       }
     }
