@@ -46,7 +46,7 @@ public class ComponentText extends TemplateComponent {
 
 	@Override
 	public void onDisplayed(BookPage page, GuiBookEntry parent, int left, int top) {
-		textRenderer = new BookTextRenderer(parent, actualText.getString(), x, y, maxWidth, lineHeight, color);
+		textRenderer = new BookTextRenderer(parent, actualText, x, y, maxWidth, lineHeight, color);
 	}
 
 	@Override
