@@ -1,5 +1,6 @@
 package vazkii.patchouli.common.base;
 
+import io.github.fablabsmc.fablabs.api.fiber.v1.schema.type.derived.EnumConfigType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
@@ -21,6 +22,8 @@ public class PatchouliConfig {
 	public static PropertyMirror<Boolean> testingMode = PropertyMirror.create(ConfigTypes.BOOLEAN);
 	public static PropertyMirror<String> inventoryButtonBook = PropertyMirror.create(ConfigTypes.STRING);
 	public static PropertyMirror<Boolean> useShiftForQuickLookup = PropertyMirror.create(ConfigTypes.BOOLEAN);
+	private static final EnumConfigType<TextOverflowMode> OVERFLOW_TYPE =  ConfigTypes.makeEnum(TextOverflowMode.class);
+	public static PropertyMirror<TextOverflowMode> overflowMode = PropertyMirror.create(OVERFLOW_TYPE);
 
 	private static final Map<String, Boolean> CONFIG_FLAGS = new ConcurrentHashMap<>();
 
@@ -44,6 +47,10 @@ public class PatchouliConfig {
 			.beginValue("useShiftForQuickLookup", ConfigTypes.BOOLEAN, false)
 			.withComment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
 			.finishValue(useShiftForQuickLookup::mirror)
+
+			.beginValue("textOverflowMode", OVERFLOW_TYPE, TextOverflowMode.OVERFLOW)
+			.withComment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit.")
+			.finishValue(overflowMode::mirror)
 
 			.build();
 
@@ -128,6 +135,12 @@ public class PatchouliConfig {
 
 	public static void setFlag(String flag, boolean value) {
 		CONFIG_FLAGS.put(flag.trim().toLowerCase(Locale.ROOT), value);
+	}
+
+	public enum TextOverflowMode {
+		OVERFLOW,
+		TRUNCATE,
+		RESIZE;
 	}
 
 }

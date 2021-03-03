@@ -22,7 +22,7 @@ public abstract class PageWithText extends BookPage {
 			text = IVariable.wrap("");
 		}
 
-		textRender = new BookTextRenderer(parent, text.as(Text.class).getString(), 0, getTextHeight());
+		textRender = new BookTextRenderer(parent, text.as(Text.class), 0, getTextHeight());
 	}
 
 	public abstract int getTextHeight();

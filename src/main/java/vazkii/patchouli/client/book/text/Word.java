@@ -17,10 +17,10 @@ import java.util.function.Supplier;
 public class Word {
 	private final Book book;
 	private final GuiBook gui;
-	private final int x, y, width, height;
 	private final Text text;
 	private final List<Word> linkCluster;
 	private final Supplier<Boolean> onClick;
+	public final int x, y, width, height;
 
 	public Word(GuiBook gui, Span span, MutableText text, int x, int y, int strWidth, List<Word> cluster) {
 		this.book = gui.book;

@@ -34,7 +34,7 @@ public class GuiBookLanding extends GuiBook {
 	public void init() {
 		super.init();
 
-		text = new BookTextRenderer(this, I18n.translate(book.landingText), LEFT_PAGE_X, TOP_PADDING + 25);
+		text = new BookTextRenderer(this, new TranslatableText(book.landingText), LEFT_PAGE_X, TOP_PADDING + 25);
 
 		boolean disableBar = !book.showProgress || !book.advancementsEnabled();
 

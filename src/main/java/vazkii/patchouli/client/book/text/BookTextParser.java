@@ -3,10 +3,7 @@ package vazkii.patchouli.client.book.text;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.options.KeyBinding;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextColor;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
@@ -19,11 +16,21 @@ import vazkii.patchouli.common.book.Book;
 import javax.annotation.Nullable;
 
 import java.util.*;
+import java.util.regex.*;
 
 public class BookTextParser {
 	public static final LiteralText EMPTY_STRING_COMPONENT = new LiteralText("");
+	// A command lookup takes the body of a command $(...) and the current span state.
+	// If it understands the command, it can modify the span state and return Optional.of(command replacement).
+	// Otherwise, it just returns Optional.empty().
+	// TODO: Make this part of the API, perhaps?
+	private static final List<CommandLookup> COMMAND_LOOKUPS = new ArrayList<>();
 	private static final Map<String, CommandProcessor> COMMANDS = new HashMap<>();
 	private static final Map<String, FunctionProcessor> FUNCTIONS = new HashMap<>();
+
+	private static void registerProcessor(CommandLookup processor) {
+		COMMAND_LOOKUPS.add(processor);
+	}
 
 	private static void register(CommandProcessor handler, String... names) {
 		for (String name : names) {
@@ -38,6 +45,11 @@ public class BookTextParser {
 	}
 
 	static {
+		registerProcessor(BookTextParser::colorCodeProcessor);
+		registerProcessor(BookTextParser::colorHexProcessor);
+		registerProcessor(BookTextParser::listProcessor);
+		registerProcessor(BookTextParser::lookupFunctionProcessor);
+		registerProcessor(BookTextParser::lookupCommandProcessor);
 		register(state -> {
 			state.lineBreaks = 1;
 			return "";
@@ -61,15 +73,30 @@ public class BookTextParser {
 			return "";
 		}, "/t");
 		register(state -> state.gui.getMinecraft().player.getName().getString(), "playername"); // TODO 1.16: dropped format codes
-		register(state -> state.modifyStyle(s -> s.withFormatting(Formatting.OBFUSCATED)), "k", "obf");
-		register(state -> state.modifyStyle(s -> s.withFormatting(Formatting.BOLD)), "l", "bold");
-		register(state -> state.modifyStyle(s -> s.withFormatting(Formatting.STRIKETHROUGH)), "m", "strike");
-		register(state -> state.modifyStyle(s -> s.withFormatting(Formatting.ITALIC)), "o", "italic", "italics");
+		register(state -> {
+			state.modifyStyle(s -> s.withFormatting(Formatting.OBFUSCATED));
+			return "";
+		}, "k", "obf");
+		register(state -> {
+			state.modifyStyle(s -> s.withFormatting(Formatting.BOLD));
+			return "";
+		}, "l", "bold");
+		register(state -> {
+			state.modifyStyle(s -> s.withFormatting(Formatting.STRIKETHROUGH));
+			return "";
+		}, "m", "strike");
+		register(state -> {
+			state.modifyStyle(s -> s.withFormatting(Formatting.ITALIC));
+			return "";
+		}, "o", "italic", "italics");
 		register(state -> {
 			state.reset();
 			return "";
 		}, "", "reset", "clear");
-		register(SpanState::baseColor, "nocolor");
+		register(state -> {
+			state.baseColor();
+			return "";
+		}, "nocolor");
 
 		register((parameter, state) -> {
 			KeyBinding result = getKeybindKey(state, parameter);
@@ -166,8 +193,6 @@ public class BookTextParser {
 	private final int x, y, width;
 	private final int lineHeight;
 	private final Style baseStyle;
-	private final TextRenderer font;
-	private final int spaceWidth;
 
 	public BookTextParser(GuiBook gui, Book book, int x, int y, int width, int lineHeight, Style baseStyle) {
 		this.gui = gui;
@@ -177,12 +202,19 @@ public class BookTextParser {
 		this.width = width;
 		this.lineHeight = lineHeight;
 		this.baseStyle = baseStyle;
-
-		this.font = MinecraftClient.getInstance().textRenderer;
-		this.spaceWidth = font.getWidth(new LiteralText(" ").setStyle(baseStyle));
 	}
 
-	public List<Word> parse(@Nullable String text) {
+	public List<Span> parse(Text text) {
+		List<Span> spans = new ArrayList<>();
+		SpanState state = new SpanState(gui, book, baseStyle);
+		text.visitSelf((style, string) -> {
+			spans.addAll(processCommands(expandMacros(string), state, style));
+			return Optional.empty();
+		}, baseStyle);
+		return spans;
+	}
+
+	public String expandMacros(@Nullable String text) {
 		String actualText = text;
 		if (actualText == null) {
 			actualText = "[ERROR]";
@@ -198,9 +230,8 @@ public class BookTextParser {
 
 			if (newText.equals(actualText)) {
 				break;
-			} else {
-				actualText = newText;
 			}
+			actualText = newText;
 		}
 
 		if (i == expansionCap) {
@@ -208,110 +239,116 @@ public class BookTextParser {
 					"Make sure you don't have circular macro invocations", expansionCap);
 		}
 
-		List<Span> spans = processCommands(actualText);
-		List<Word> words = layout(spans);
-
-		return words;
+		return actualText;
 	}
 
-	private List<Word> layout(List<Span> spans) {
-		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width);
-		layouter.layout(font, spans);
-		return layouter.getWords();
-	}
+	private Pattern COMMAND_PATTERN = Pattern.compile("\\$\\(([^)]*)\\)");
 
 	/**
 	 * Takes in the raw book source and computes a collection of spans from it.
 	 */
-	private List<Span> processCommands(String text) {
-		SpanState state = new SpanState(gui, book, baseStyle);
+	private List<Span> processCommands(String text, SpanState state, Style style) {
+		state.changeBaseStyle(style);
 		List<Span> spans = new ArrayList<>();
+		Matcher match = COMMAND_PATTERN.matcher(text);
 
-		int from = 0;
-		char[] chars = text.toCharArray();
-		for (int i = 0; i < chars.length; i++) {
-			if (chars[i] == '$' && i + 1 < chars.length && chars[i + 1] == '(') {
-				if (i > from) {
-					spans.add(new Span(state, text.substring(from, i)));
-				}
+		while (match.find()) {
+			StringBuffer sb = new StringBuffer();
+			// Extract the portion before the match to sb
+			match.appendReplacement(sb, "");
+			spans.add(new Span(state, sb.toString()));
 
-				from = i;
-				while (i < chars.length && chars[i] != ')') {
-					i++;
-				}
+			try {
+				String processed = processCommand(state, match.group(1));
+				if (!processed.isEmpty()) {
+					spans.add(new Span(state, processed));
 
-				if (i == chars.length) {
-					spans.add(Span.error(state, "[ERROR: UNFINISHED COMMAND]"));
-					break;
-				}
-
-				try {
-					String processed = processCommand(state, text.substring(from + 2, i));
-					if (!processed.isEmpty()) {
-						spans.add(new Span(state, processed));
-
-						if (state.cluster == null) {
-							state.tooltip = EMPTY_STRING_COMPONENT;
-						}
+					if (state.cluster == null) {
+						state.tooltip = EMPTY_STRING_COMPONENT;
 					}
-				} catch (Exception ex) {
-					spans.add(Span.error(state, "[ERROR]"));
 				}
-
-				from = i + 1;
+			} catch (Exception ex) {
+				spans.add(Span.error(state, "[ERROR]"));
 			}
 		}
-		spans.add(new Span(state, text.substring(from)));
+		// Extract the portion after all matches
+		spans.add(new Span(state, match.appendTail(new StringBuffer()).toString()));
 		return spans;
 	}
 
 	private String processCommand(SpanState state, String cmd) {
 		state.endingExternal = false;
-		String result = "";
 
-		if (cmd.length() == 1 && cmd.matches("^[0123456789abcdef]$")) { // Vanilla colors
-			return state.modifyStyle(s -> s.withColor(Formatting.byCode(cmd.charAt(0))));
-		} else if (cmd.startsWith("#") && (cmd.length() == 4 || cmd.length() == 7)) { // Hex colors
-			TextColor color;
-			String parse = cmd.substring(1);
-			if (parse.length() == 3) {
-				parse = "" + parse.charAt(0) + parse.charAt(0) + parse.charAt(1) + parse.charAt(1) + parse.charAt(2) + parse.charAt(2);
+		Optional<String> optResult = Optional.empty();
+		for (CommandLookup lookup : COMMAND_LOOKUPS) {
+			optResult = lookup.process(cmd, state);
+			if (optResult.isPresent()) {
+				break;
 			}
-			try {
-				color = TextColor.fromRgb(Integer.parseInt(parse, 16));
-			} catch (NumberFormatException e) {
-				color = baseStyle.getColor();
-			}
-			return state.color(color);
-		} else if (cmd.matches("li\\d?")) { // List Element
-			char c = cmd.length() > 2 ? cmd.charAt(2) : '1';
-			int dist = Character.isDigit(c) ? Character.digit(c, 10) : 1;
-			int pad = dist * 4;
-			char bullet = dist % 2 == 0 ? '\u25E6' : '\u2022';
-			state.lineBreaks = 1;
-			state.spacingLeft = pad;
-			state.spacingRight = spaceWidth;
-			return Formatting.BLACK.toString() + bullet;
 		}
-
-		if (cmd.indexOf(':') > 0) {
-			int index = cmd.indexOf(':');
-			String function = cmd.substring(0, index);
-			String parameter = cmd.substring(index + 1);
-			if (FUNCTIONS.containsKey(function)) {
-				result = FUNCTIONS.get(function).process(parameter, state);
-			} else {
-				result = "[MISSING FUNCTION: " + function + "]";
-			}
-		} else if (COMMANDS.containsKey(cmd)) {
-			result = COMMANDS.get(cmd).process(state);
-		}
+		String result = optResult.orElse("$(" + cmd + ")");
 
 		if (state.endingExternal) {
 			result += Formatting.GRAY + "\u21AA";
 		}
 
 		return result;
+	}
+
+	private static Optional<String> colorCodeProcessor(String functionName, SpanState state) {
+		if (functionName.length() == 1 && functionName.matches("^[0123456789abcdef]$")) {
+			state.modifyStyle(s -> s.withFormatting(Formatting.byCode(functionName.charAt(0))));
+			return Optional.of("");
+		}
+		return Optional.empty();
+	}
+
+	private static Optional<String> colorHexProcessor(String functionName, SpanState state) {
+		if (functionName.startsWith("#") && (functionName.length() == 4 || functionName.length() == 7)) {
+			TextColor color;
+			String parse = functionName.substring(1);
+			if (parse.length() == 3) {
+				parse = "" + parse.charAt(0) + parse.charAt(0) + parse.charAt(1) + parse.charAt(1) + parse.charAt(2) + parse.charAt(2);
+			}
+			try {
+				color = TextColor.fromRgb(Integer.parseInt(parse, 16));
+			} catch (NumberFormatException e) {
+				color = state.getBase().getColor();
+			}
+			state.color(color);
+			return Optional.of("");
+		}
+		return Optional.empty();
+	}
+
+	private static Optional<String> listProcessor(String functionName, SpanState state) {
+		if (functionName.matches("li\\d?")) {
+			char c = functionName.length() > 2 ? functionName.charAt(2) : '1';
+			int dist = Character.isDigit(c) ? Character.digit(c, 10) : 1;
+			int pad = dist * 4;
+			char bullet = dist % 2 == 0 ? '\u25E6' : '\u2022';
+			state.lineBreaks = 1;
+			state.spacingLeft = pad;
+			state.spacingRight = state.spaceWidth;
+			return Optional.of(Formatting.BLACK.toString() + bullet);
+		}
+		return Optional.empty();
+	}
+
+	private static Optional<String> lookupFunctionProcessor(String functionName, SpanState state) {
+		int index = functionName.indexOf(':');
+		if (index > 0) {
+			String fname = functionName.substring(0, index), param = functionName.substring(index + 1);
+			return Optional.of(
+					Optional.ofNullable(FUNCTIONS.get(fname))
+							.map(f -> f.process(param, state))
+							.orElse("[MISSING FUNCTION: " + fname + "]"));
+		}
+		return Optional.empty();
+	}
+
+	private static Optional<String> lookupCommandProcessor(String functionName, SpanState state) {
+		return Optional.ofNullable(COMMANDS.get(functionName)).map(c -> c.process(state));
 	}
 
 	private static KeyBinding getKeybindKey(SpanState state, String keybind) {
@@ -326,6 +363,10 @@ public class BookTextParser {
 		}
 
 		return null;
+	}
+
+	public interface CommandLookup {
+		Optional<String> process(String commandName, SpanState state);
 	}
 
 	public interface CommandProcessor {
