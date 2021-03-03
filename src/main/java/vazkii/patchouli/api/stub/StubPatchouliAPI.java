@@ -11,8 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
 import vazkii.patchouli.api.IMultiblock;
-import vazkii.patchouli.api.IRenderingStyle;
 import vazkii.patchouli.api.IStateMatcher;
+import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
 
 import javax.annotation.Nullable;
@@ -74,12 +74,12 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 
 	@Override
-	public void registerCommand(String name, Function<IRenderingStyle, String> command) {
+	public void registerCommand(String name, Function<IStyleStack, String> command) {
 		// NO-OP
 	}
 
 	@Override
-	public void registerFunction(String name, BiFunction<String, IRenderingStyle, String> function) {
+	public void registerFunction(String name, BiFunction<String, IStyleStack, String> function) {
 		// NO-OP
 	}
 

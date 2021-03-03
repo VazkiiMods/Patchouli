@@ -137,15 +137,22 @@ public class PatchouliAPI {
 
 		/**
 		 * Register a Patchouli command, of the type $(cmdname).
+		 * A command gets an IStyleStack if it wishes to modify it (for example, $(o) italicizes),
+		 * and returns the text that should replace the command (for example, $(playername) is replaced
+		 * with the current player's username). Commands that only modify style should return "".
 		 */
 		@OnlyIn(Dist.CLIENT)
-		void registerCommand(String name, Function<IRenderingStyle, String> command);
+		void registerCommand(String name, Function<IStyleStack, String> command);
 
 		/**
 		 * Register a Patchouli function, of the type $(funcname:arg).
+		 * A function is like a command,
+		 * except it gets an additional argument (the text after the colon),
+		 * for things like conditional formatting or differing return values.
+		 * For example, $(k:use) is replaced by Right Button by default.
 		 */
 		@OnlyIn(Dist.CLIENT)
-		void registerFunction(String name, BiFunction<String, IRenderingStyle, String> function);
+		void registerFunction(String name, BiFunction<String, IStyleStack, String> function);
 
 		// ================================================================================================
 		// Multiblocks

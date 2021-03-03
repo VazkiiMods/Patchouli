@@ -6,7 +6,7 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 
-import vazkii.patchouli.api.IRenderingStyle;
+import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
 
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-public class SpanState implements IRenderingStyle {
+public class SpanState implements IStyleStack {
 	public final GuiBook gui;
 	public final Book book;
 

@@ -5,9 +5,9 @@ import net.minecraft.util.text.Style;
 import java.util.function.UnaryOperator;
 
 /**
- * Represents a style (or style stack) when rendering book text.
+ * Represents a stack of styles when rendering book text.
  */
-public interface IRenderingStyle {
+public interface IStyleStack {
 	/** Modify the style at the top of the stack. */
 	void modifyStyle(UnaryOperator<Style> f);
 

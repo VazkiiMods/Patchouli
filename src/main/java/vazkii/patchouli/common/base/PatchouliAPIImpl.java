@@ -17,8 +17,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.io.IOUtils;
 
 import vazkii.patchouli.api.IMultiblock;
-import vazkii.patchouli.api.IRenderingStyle;
 import vazkii.patchouli.api.IStateMatcher;
+import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -110,13 +110,13 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void registerCommand(String name, Function<IRenderingStyle, String> command) {
+	public void registerCommand(String name, Function<IStyleStack, String> command) {
 		BookTextParser.register(style -> command.apply(style), name);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void registerFunction(String name, BiFunction<String, IRenderingStyle, String> function) {
+	public void registerFunction(String name, BiFunction<String, IStyleStack, String> function) {
 		BookTextParser.register((arg, style) -> function.apply(arg, style), name);
 	}
 
