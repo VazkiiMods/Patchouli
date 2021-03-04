@@ -140,6 +140,7 @@ public class PatchouliAPI {
 		 * A command gets an IStyleStack if it wishes to modify it (for example, $(o) italicizes),
 		 * and returns the text that should replace the command (for example, $(playername) is replaced
 		 * with the current player's username). Commands that only modify style should return "".
+		 * This is not thread safe.
 		 */
 		@OnlyIn(Dist.CLIENT)
 		void registerCommand(String name, Function<IStyleStack, String> command);
@@ -150,6 +151,7 @@ public class PatchouliAPI {
 		 * except it gets an additional argument (the text after the colon),
 		 * for things like conditional formatting or differing return values.
 		 * For example, $(k:use) is replaced by Right Button by default.
+		 * This is not thread safe.
 		 */
 		@OnlyIn(Dist.CLIENT)
 		void registerFunction(String name, BiFunction<String, IStyleStack, String> function);
