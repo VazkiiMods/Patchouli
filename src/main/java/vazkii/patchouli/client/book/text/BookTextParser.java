@@ -13,6 +13,7 @@ import vazkii.patchouli.common.book.Book;
 import javax.annotation.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.*;
 
 public class BookTextParser {
@@ -22,20 +23,20 @@ public class BookTextParser {
 	// Otherwise, it just returns Optional.empty().
 	// TODO: Make this part of the API, perhaps?
 	private static final List<CommandLookup> COMMAND_LOOKUPS = new ArrayList<>();
-	private static final Map<String, CommandProcessor> COMMANDS = new HashMap<>();
-	private static final Map<String, FunctionProcessor> FUNCTIONS = new HashMap<>();
+	private static final Map<String, CommandProcessor> COMMANDS = new ConcurrentHashMap<>();
+	private static final Map<String, FunctionProcessor> FUNCTIONS = new ConcurrentHashMap<>();
 
 	private static void registerProcessor(CommandLookup processor) {
 		COMMAND_LOOKUPS.add(processor);
 	}
 
-	private static void register(CommandProcessor handler, String... names) {
+	public static void register(CommandProcessor handler, String... names) {
 		for (String name : names) {
 			COMMANDS.put(name, handler);
 		}
 	}
 
-	private static void register(FunctionProcessor function, String... names) {
+	public static void register(FunctionProcessor function, String... names) {
 		for (String name : names) {
 			FUNCTIONS.put(name, function);
 		}

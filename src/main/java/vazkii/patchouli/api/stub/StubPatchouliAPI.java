@@ -12,12 +12,15 @@ import net.minecraft.util.text.ITextComponent;
 
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
+import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
 
 import javax.annotation.Nullable;
 
 import java.io.InputStream;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
@@ -68,6 +71,16 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	@Override
 	public ITextComponent getSubtitle(ResourceLocation bookId) {
 		throw new IllegalArgumentException("Patchouli is not loaded");
+	}
+
+	@Override
+	public void registerCommand(String name, Function<IStyleStack, String> command) {
+		// NO-OP
+	}
+
+	@Override
+	public void registerFunction(String name, BiFunction<String, IStyleStack, String> function) {
+		// NO-OP
 	}
 
 	@Override
