@@ -49,7 +49,7 @@ public class PatchouliConfig {
 			.finishValue(useShiftForQuickLookup::mirror)
 
 			.beginValue("textOverflowMode", OVERFLOW_TYPE, TextOverflowMode.OVERFLOW)
-			.withComment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit.")
+			.withComment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit. Relogin after changing.")
 			.finishValue(overflowMode::mirror)
 
 			.build();

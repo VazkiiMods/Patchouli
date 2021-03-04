@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "The names on the following page should be both colored and localized!"
+      "text": "The following page should read \"<playername> pressed <use binding> with their <shears name> on a <sheep name> and got some <wool name>\""
     },
     {
       "type": "text",
