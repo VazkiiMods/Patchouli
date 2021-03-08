@@ -1,8 +1,14 @@
 buildscript {
     repositories {
-        maven { url 'https://files.minecraftforge.net/maven' }
-        maven { url = 'https://dist.creeper.host/Sponge/maven' }
-        jcenter()
+        maven {
+            name "Forge"
+            url "https://files.minecraftforge.net/maven"
+        }
+        maven {
+            name "Sponge"
+            url "https://repo.spongepowered.org/repository/maven-public/"
+            content { includeGroup "org.spongepowered" }
+        }
         mavenCentral()
     }
     dependencies {
