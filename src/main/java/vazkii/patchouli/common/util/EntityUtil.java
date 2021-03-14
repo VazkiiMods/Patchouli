@@ -16,7 +16,9 @@ import vazkii.patchouli.common.base.Patchouli;
 
 import java.util.function.Function;
 
-public class EntityUtil {
+public final class EntityUtil {
+
+	private EntityUtil() {}
 
 	public static String getEntityName(String entityId) {
 		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
@@ -71,5 +73,4 @@ public class EntityUtil {
 
 		return Pair.of(entityId, nbtStr);
 	}
-
 }
