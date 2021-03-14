@@ -20,13 +20,20 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.registries.ForgeRegistries;
+import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.book.BookRegistry;
+import vazkii.patchouli.common.item.ItemModBook;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
 
 public class ItemStackUtil {
 	private static final Gson GSON = new GsonBuilder().create();
+
+	private ItemStackUtil() {}
 
 	public static String serializeStack(ItemStack stack) {
 		StringBuilder builder = new StringBuilder();
@@ -130,7 +137,23 @@ public class ItemStackUtil {
 		return stack.isEmpty() ? StackWrapper.EMPTY_WRAPPER : new StackWrapper(stack);
 	}
 
-	public static class StackWrapper {
+    @Nullable
+    public static Book getBookFromStack(ItemStack stack) {
+        if (stack.getItem() instanceof ItemModBook) {
+            return ItemModBook.getBook(stack);
+        }
+
+        Collection<Book> books = BookRegistry.INSTANCE.books.values();
+        for (Book b : books) {
+            if (b.getBookItem().isItemEqual(stack)) {
+                return b;
+            }
+        }
+
+        return null;
+    }
+
+    public static class StackWrapper {
 
 		public static final StackWrapper EMPTY_WRAPPER = new StackWrapper(ItemStack.EMPTY);
 

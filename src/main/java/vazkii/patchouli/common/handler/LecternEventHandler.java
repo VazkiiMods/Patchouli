@@ -15,8 +15,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.util.ItemStackUtil;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class LecternEventHandler {
@@ -34,15 +34,15 @@ public class LecternEventHandler {
 					if (player.isSneaking()) {
 						takeBook(player, (LecternTileEntity) tileEntity);
 					} else {
-						Book book = BookRightClickHandler.getBookFromStack(((LecternTileEntity) tileEntity).getBook());
+						Book book = ItemStackUtil.getBookFromStack(((LecternTileEntity) tileEntity).getBook());
 						if (book != null) {
-							PatchouliAPI.instance.openBookGUI((ServerPlayerEntity) player, book.id);
+							PatchouliAPI.get().openBookGUI((ServerPlayerEntity) player, book.id);
 							event.setUseBlock(Event.Result.DENY);
 						}
 					}
 				} else {
 					ItemStack stack = event.getItemStack();
-					if (BookRightClickHandler.getBookFromStack(stack) != null) {
+					if (ItemStackUtil.getBookFromStack(stack) != null) {
 						if (LecternBlock.tryPlaceBook(world, pos, state, stack)) {
 							event.setUseItem(Event.Result.ALLOW);
 						}
