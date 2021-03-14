@@ -53,8 +53,9 @@ public class LecternEventHandler {
 	}
 
 	private static void takeBook(PlayerEntity player, LecternTileEntity tileEntity) {
-		ItemStack itemstack = tileEntity.inventory.removeStackFromSlot(0);
-		tileEntity.inventory.markDirty();
+		ItemStack itemstack = tileEntity.getBook();
+		tileEntity.setBook(ItemStack.EMPTY);
+		LecternBlock.setHasBook(tileEntity.getWorld(), tileEntity.getPos(), tileEntity.getBlockState(), false);
 		if (!player.inventory.addItemStackToInventory(itemstack)) {
 			player.dropItem(itemstack, false);
 		}
