@@ -26,26 +26,26 @@ public class LecternEventHandler {
 		World world = event.getWorld();
 		BlockPos pos = event.getPos();
 		BlockState state = world.getBlockState(pos);
-		if (!world.isRemote) {
-			TileEntity tileEntity = world.getTileEntity(pos);
-			if (tileEntity instanceof LecternTileEntity) {
-				PlayerEntity player = event.getPlayer();
-				if (state.get(LecternBlock.HAS_BOOK)) {
-					if (player.isSneaking()) {
-						takeBook(player, (LecternTileEntity) tileEntity);
-					} else {
-						Book book = ItemStackUtil.getBookFromStack(((LecternTileEntity) tileEntity).getBook());
-						if (book != null) {
-							PatchouliAPI.get().openBookGUI((ServerPlayerEntity) player, book.id);
-							event.setUseBlock(Event.Result.DENY);
-						}
-					}
+		TileEntity tileEntity = world.getTileEntity(pos);
+		if (tileEntity instanceof LecternTileEntity) {
+			PlayerEntity player = event.getPlayer();
+			if (state.get(LecternBlock.HAS_BOOK)) {
+				if (player.isSneaking()) {
+					takeBook(player, (LecternTileEntity) tileEntity);
 				} else {
-					ItemStack stack = event.getItemStack();
-					if (ItemStackUtil.getBookFromStack(stack) != null) {
-						if (LecternBlock.tryPlaceBook(world, pos, state, stack)) {
-							event.setUseItem(Event.Result.ALLOW);
+					Book book = ItemStackUtil.getBookFromStack(((LecternTileEntity) tileEntity).getBook());
+					if (book != null) {
+						if (!world.isRemote) {
+							PatchouliAPI.get().openBookGUI((ServerPlayerEntity) player, book.id);
 						}
+						event.setUseBlock(Event.Result.DENY);
+					}
+				}
+			} else {
+				ItemStack stack = event.getItemStack();
+				if (ItemStackUtil.getBookFromStack(stack) != null) {
+					if (LecternBlock.tryPlaceBook(world, pos, state, stack)) {
+						event.setUseItem(Event.Result.ALLOW);
 					}
 				}
 			}
