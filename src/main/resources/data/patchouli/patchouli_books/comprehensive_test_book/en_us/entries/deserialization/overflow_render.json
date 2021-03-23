@@ -1,7 +1,6 @@
 {
   "name": "Overflow Render Test",
   "category": "deserialization",
-  "flag": "!mod:gardenofglass",
   "icon": "minecraft:water_bucket",
   "pages": [
     {

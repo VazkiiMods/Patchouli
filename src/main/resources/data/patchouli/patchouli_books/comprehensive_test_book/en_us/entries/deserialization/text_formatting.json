@@ -1,11 +1,11 @@
 {
-  "name": "Basic Test",
+  "name": "Text Formatting",
   "category": "deserialization",
-  "icon": "minecraft:oak_sapling",
+  "icon": "minecraft:writable_book",
   "pages": [
     {
       "type": "text",
-      "text": "Error-safety: a stray /l command renders as an error: $(/l)"
+      "text": "The key bound for jumping: $(k:jump) (tooltip should say \"Keybind: Jump\")"
     },
     {
       "type": "text",

@@ -1,7 +1,6 @@
 {
   "name": "Names Test",
   "category": "deserialization",
-  "flag": "!mod:gardenofglass",
   "icon": "minecraft:name_tag",
   "pages": [
     {

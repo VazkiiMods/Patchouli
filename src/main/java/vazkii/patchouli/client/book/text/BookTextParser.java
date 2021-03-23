@@ -103,7 +103,7 @@ public class BookTextParser {
 				return "N/A";
 			}
 
-			state.tooltip = new TranslationTextComponent("patchouli.gui.lexicon.keybind", new TranslationTextComponent(result.getTranslationKey()));
+			state.tooltip = new TranslationTextComponent("patchouli.gui.lexicon.keybind", new TranslationTextComponent(result.getKeyDescription()));
 			return result.func_238171_j_().getString();
 		}, "k");
 		register((parameter, state) -> {
