@@ -39,7 +39,7 @@ public class PageSpotlight extends PageWithText {
 		int w = 66;
 		int h = 26;
 
-		mc.getTextureManager().bindTexture(book.craftingTexture);
+		RenderSystem.setShaderTexture(0, book.craftingTexture);
 		RenderSystem.enableBlend();
 		DrawableHelper.drawTexture(ms, GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 256);
 

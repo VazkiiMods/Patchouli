@@ -238,7 +238,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public static void drawFromTexture(MatrixStack ms, Book book, int x, int y, int u, int v, int w, int h) {
-		MinecraftClient.getInstance().getTextureManager().bindTexture(book.bookTexture);
+		RenderSystem.setShaderTexture(0, book.bookTexture);
 		drawTexture(ms, x, y, u, v, w, h, 512, 256);
 	}
 
@@ -524,7 +524,7 @@ public abstract class GuiBook extends Screen {
 	public static void drawPageFiller(MatrixStack ms, Book book, int x, int y) {
 		RenderSystem.enableBlend();
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-		MinecraftClient.getInstance().getTextureManager().bindTexture(book.fillerTexture);
+		RenderSystem.setShaderTexture(0, book.fillerTexture);
 		drawTexture(ms, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 

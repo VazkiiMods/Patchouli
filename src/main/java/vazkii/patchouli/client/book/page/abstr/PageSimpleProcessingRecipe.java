@@ -18,7 +18,7 @@ public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends Pa
 
 	@Override
 	protected void drawRecipe(MatrixStack ms, T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-		mc.getTextureManager().bindTexture(book.craftingTexture);
+		RenderSystem.setShaderTexture(0, book.craftingTexture);
 		RenderSystem.enableBlend();
 		DrawableHelper.drawTexture(ms, recipeX, recipeY, 11, 71, 96, 24, 128, 256);
 		parent.drawCenteredStringNoShadow(ms, getTitle(second).asOrderedText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);

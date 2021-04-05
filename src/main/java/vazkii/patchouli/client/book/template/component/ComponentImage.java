@@ -48,7 +48,7 @@ public class ComponentImage extends TemplateComponent {
 			return;
 		}
 
-		page.mc.getTextureManager().bindTexture(resource);
+		RenderSystem.setShaderTexture(0, resource);
 		ms.push();
 		ms.translate(x, y, 0);
 		ms.scale(scale, scale, scale);

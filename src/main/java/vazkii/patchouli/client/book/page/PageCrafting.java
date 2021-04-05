@@ -20,7 +20,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 
 	@Override
 	protected void drawRecipe(MatrixStack ms, Recipe<?> recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-		mc.getTextureManager().bindTexture(book.craftingTexture);
+		RenderSystem.setShaderTexture(0, book.craftingTexture);
 		RenderSystem.enableBlend();
 		DrawableHelper.drawTexture(ms, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 256);
 

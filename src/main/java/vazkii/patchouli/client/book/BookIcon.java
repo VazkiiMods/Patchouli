@@ -54,7 +54,7 @@ public class BookIcon {
 
 		case RESOURCE:
 			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-			mc.getTextureManager().bindTexture(res);
+			RenderSystem.setShaderTexture(0, res);
 			DrawableHelper.drawTexture(ms, x, y, 0, 0, 16, 16, 16, 16);
 			break;
 		}

@@ -32,7 +32,7 @@ public class PageImage extends PageWithText {
 
 	@Override
 	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
-		mc.getTextureManager().bindTexture(images[index]);
+		RenderSystem.setShaderTexture(0, images[index]);
 
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
