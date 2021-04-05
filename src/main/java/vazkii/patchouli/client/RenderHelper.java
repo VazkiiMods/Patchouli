@@ -22,10 +22,11 @@ public class RenderHelper {
 	 * won't work.
 	 */
 	public static void transferMsToGl(MatrixStack ms, Runnable toRun) {
-		ms.push();
-		// TODO not sure what to do about this
-		//RenderSystem.multMatrix(ms.peek().getModel());
+		MatrixStack mvs = RenderSystem.getModelViewStack();
+		mvs.push();
+		mvs.method_34425(ms.peek().getModel());
 		toRun.run();
-		ms.pop();
+		mvs.pop();
+		RenderSystem.applyModelViewMatrix();
 	}
 }
