@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -40,7 +41,7 @@ public class TooltipHandler {
 			Pair<BookEntry, Integer> lexiconEntry = null;
 
 			for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
-				ItemStack stackAt = mc.player.inventory.getStack(i);
+				ItemStack stackAt = mc.player.getInventory().getStack(i);
 				if (!stackAt.isEmpty()) {
 					Book book = BookRightClickHandler.getBookFromStack(stackAt);
 					if (book != null) {
@@ -72,14 +73,14 @@ public class TooltipHandler {
 					float time = 20F;
 					float angles = lexiconLookupTime / time * 360F;
 
-					RenderSystem.disableLighting();
+					//RenderSystem.disableLighting();
 					RenderSystem.disableTexture();
-					RenderSystem.shadeModel(GL11.GL_SMOOTH);
+					//RenderSystem.shadeModel(GL11.GL_SMOOTH);
 					RenderSystem.enableBlend();
 					RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 					BufferBuilder buf = Tessellator.getInstance().getBuffer();
-					buf.begin(GL11.GL_TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
+					buf.begin(DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
 
 					float a = 0.5F + 0.2F * ((float) Math.cos(ClientTicker.total / 10) * 0.5F + 0.5F);
 					buf.vertex(cx, cy, 0).color(0F, 0.5F, 0F, a).next();
@@ -94,10 +95,10 @@ public class TooltipHandler {
 
 					RenderSystem.disableBlend();
 					RenderSystem.enableTexture();
-					RenderSystem.shadeModel(GL11.GL_FLAT);
+					//RenderSystem.shadeModel(GL11.GL_FLAT);
 
 					if (lexiconLookupTime >= time) {
-						mc.player.inventory.selectedSlot = lexSlot;
+						mc.player.getInventory().selectedSlot = lexSlot;
 						int spread = lexiconEntry.getSecond();
 						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), spread * 2);
 					}
@@ -108,7 +109,7 @@ public class TooltipHandler {
 				mc.getItemRenderer().zOffset = 300;
 				RenderHelper.renderItemStackInGui(ms, lexiconStack, x, tooltipY);
 				mc.getItemRenderer().zOffset = 0;
-				RenderSystem.disableLighting();
+				//RenderSystem.disableLighting();
 
 				ms.push();
 				ms.translate(0, 0, 500);

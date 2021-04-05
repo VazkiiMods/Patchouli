@@ -7,7 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
@@ -64,7 +64,7 @@ public class ItemModBook extends Item {
 	public static ItemStack forBook(Identifier book) {
 		ItemStack stack = new ItemStack(PatchouliItems.book);
 
-		CompoundTag cmp = new CompoundTag();
+		NbtCompound cmp = new NbtCompound();
 		cmp.putString(TAG_BOOK, book.toString());
 		stack.setTag(cmp);
 

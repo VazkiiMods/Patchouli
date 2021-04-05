@@ -41,7 +41,7 @@ public class GuiButtonBook extends ButtonWidget {
 
 	@Override
 	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		RenderSystem.color3f(1F, 1F, 1F);
+		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		GuiBook.drawFromTexture(ms, parent.book, x, y, u + (isHovered() ? width : 0), v, width, height);
 		if (isHovered()) {
 			parent.setTooltip(getTooltip());

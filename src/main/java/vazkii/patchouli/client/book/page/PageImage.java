@@ -36,7 +36,7 @@ public class PageImage extends PageWithText {
 
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
-		RenderSystem.color3f(1F, 1F, 1F);
+		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		RenderSystem.enableBlend();
 		ms.scale(0.5F, 0.5F, 0.5F);
 		parent.drawTexture(ms, x * 2 + 6, y * 2 + 6, 0, 0, 200, 200);

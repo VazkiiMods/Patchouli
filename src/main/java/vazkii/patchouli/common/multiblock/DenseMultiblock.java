@@ -184,4 +184,15 @@ public class DenseMultiblock extends AbstractMultiblock {
 	public Vec3i getSize() {
 		return size;
 	}
+
+	// These heights were assumed based being derivative of old behavior, but it may be ideal to change
+	@Override
+	public int getHeight() {
+		return 255;
+	}
+
+	@Override
+	public int getBottomY() {
+		return 0;
+	}
 }

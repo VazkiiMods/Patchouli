@@ -59,9 +59,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 	protected TextFieldWidget createSearchBar() {
 		TextFieldWidget field = new TextFieldWidget(textRenderer, 160, 170, 90, 12, LiteralText.EMPTY);
 		field.setMaxLength(32);
-		field.setHasBorder(false);
+		//field.setHasBorder(false);
 		field.setFocusUnlocked(false);
-		field.setSelected(true);
+		field.changeFocus(true);
 		return field;
 	}
 
@@ -104,7 +104,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		}
 
 		if (!searchField.getText().isEmpty()) {
-			RenderSystem.color4f(1F, 1F, 1F, 1F);
+			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 			drawFromTexture(ms, book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
 			Text toDraw = new LiteralText(searchField.getText()).setStyle(book.getFontStyle());
 			textRenderer.draw(ms, toDraw, searchField.x + 7, searchField.y + 1, 0);

@@ -47,7 +47,7 @@ public class GuiButtonEntry extends ButtonWidget {
 			RenderSystem.enableBlend();
 
 			if (locked) {
-				RenderSystem.color4f(1F, 1F, 1F, 0.7F);
+				RenderSystem.setShaderColor(1F, 1F, 1F, 0.7F);
 				GuiBook.drawLock(ms, parent.book, x * 2 + 2, y * 2 + 2);
 			} else {
 				entry.getIcon().render(ms, x * 2 + 2, y * 2 + 2);

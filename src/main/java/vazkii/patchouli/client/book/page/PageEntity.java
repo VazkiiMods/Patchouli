@@ -8,8 +8,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 
 import vazkii.patchouli.client.base.ClientTicker;
@@ -62,7 +62,7 @@ public class PageEntity extends PageWithText {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
 		RenderSystem.enableBlend();
-		RenderSystem.color3f(1F, 1F, 1F);
+		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		GuiBook.drawFromTexture(ms, book, x, y, 405, 149, 106, 106);
 
 		if (name == null || name.isEmpty()) {
@@ -92,8 +92,8 @@ public class PageEntity extends PageWithText {
 		ms.translate(x, y, 50);
 		ms.scale(renderScale, renderScale, renderScale);
 		ms.translate(0, offset, 0);
-		ms.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180));
-		ms.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(rotation));
+		ms.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180));
+		ms.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rotation));
 		EntityRenderDispatcher erd = MinecraftClient.getInstance().getEntityRenderDispatcher();
 		VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
 		erd.setRenderShadows(false);

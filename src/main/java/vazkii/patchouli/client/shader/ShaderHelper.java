@@ -1,26 +1,27 @@
 package vazkii.patchouli.client.shader;
 
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.minecraft.client.gl.GlProgram;
+import net.minecraft.client.gl.GLImportProcessor;
 import net.minecraft.client.gl.GlProgramManager;
 import net.minecraft.client.gl.GlShader;
 import net.minecraft.client.gl.GlUniform;
+import net.minecraft.client.gl.Program;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.SynchronousResourceReloadListener;
+import net.minecraft.resource.SynchronousResourceReloader;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.common.base.Patchouli;
 
 import java.io.IOException;
 
-public class ShaderHelper implements SynchronousResourceReloadListener, IdentifiableResourceReloadListener {
+public class ShaderHelper implements SynchronousResourceReloader, IdentifiableResourceReloadListener {
 	public static final ShaderHelper INSTANCE = new ShaderHelper();
 	public static final Identifier ID = new Identifier(Patchouli.MOD_ID, "shaders");
 
 	private ShaderHelper() {}
 
-	public GlProgram alpha = null;
+	public GlShader alpha = null;
 	public GlUniform alphaUniform = null;
 
 	private void cleanup() {
@@ -35,21 +36,28 @@ public class ShaderHelper implements SynchronousResourceReloadListener, Identifi
 	}
 
 	@Override
-	public void apply(ResourceManager manager) {
+	public void reload(ResourceManager manager) {
 		cleanup();
 		alpha = loadProgram(manager, "alpha");
 		alphaUniform = new GlUniform("alpha", 4 /* one float */, 1, alpha);
 		alphaUniform.setLoc(GlUniform.getUniformLocation(alpha.getProgramRef(), "alpha"));
 	}
 
-	private static GlProgram loadProgram(ResourceManager manager, String name) {
+	private static GlShader loadProgram(ResourceManager manager, String name) {
+		GLImportProcessor processor = new GLImportProcessor() {
+
+			@Override
+			public String loadImport(boolean inline, String name) {
+				return "change this :tater:";
+			}	
+		};
 		Identifier vertPath = new Identifier(Patchouli.MOD_ID, "shaders/" + name + ".vsh");
 		Identifier fragPath = new Identifier(Patchouli.MOD_ID, "shaders/" + name + ".fsh");
 		try (Resource vert = manager.getResource(vertPath);
 				Resource frag = manager.getResource(fragPath)) {
-			GlShader vertShader = GlShader.createFromResource(GlShader.Type.VERTEX, vertPath.toString(), vert.getInputStream(), Patchouli.MOD_ID);
-			GlShader fragShader = GlShader.createFromResource(GlShader.Type.FRAGMENT, fragPath.toString(), frag.getInputStream(), Patchouli.MOD_ID);
-			GlProgram prog = new Program(GlProgramManager.createProgram(), vertShader, fragShader);
+			Program vertShader = Program.createFromResource(Program.Type.VERTEX, vertPath.toString(), vert.getInputStream(), Patchouli.MOD_ID, processor);
+			Program fragShader = Program.createFromResource(Program.Type.FRAGMENT, fragPath.toString(), frag.getInputStream(), Patchouli.MOD_ID, processor);
+			GlShader prog = new InnerProgram(GlProgramManager.createProgram(), vertShader, fragShader);
 			GlProgramManager.linkProgram(prog);
 			return prog;
 		} catch (IOException ex) {
@@ -63,12 +71,12 @@ public class ShaderHelper implements SynchronousResourceReloadListener, Identifi
 		return ID;
 	}
 
-	private static class Program implements GlProgram {
+	private static class InnerProgram implements GlShader {
 		private final int program;
-		private final GlShader vert;
-		private final GlShader frag;
+		private final Program vert;
+		private final Program frag;
 
-		private Program(int program, GlShader vert, GlShader frag) {
+		private InnerProgram(int program, Program vert, Program frag) {
 			this.program = program;
 			this.vert = vert;
 			this.frag = frag;
@@ -85,13 +93,19 @@ public class ShaderHelper implements SynchronousResourceReloadListener, Identifi
 		}
 
 		@Override
-		public GlShader getVertexShader() {
+		public Program getVertexShader() {
 			return vert;
 		}
 
 		@Override
-		public GlShader getFragmentShader() {
+		public Program getFragmentShader() {
 			return frag;
+		}
+
+		@Override
+		public void attachReferencedShaders() {
+			vert.attachTo(this);
+			frag.attachTo(this);
 		}
 	}
 }

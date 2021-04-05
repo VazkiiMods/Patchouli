@@ -52,7 +52,7 @@ public class ComponentImage extends TemplateComponent {
 		ms.push();
 		ms.translate(x, y, 0);
 		ms.scale(scale, scale, scale);
-		RenderSystem.color4f(1F, 1F, 1F, 1F);
+		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		RenderSystem.enableBlend();
 		DrawableHelper.drawTexture(ms, 0, 0, u, v, width, height, textureWidth, textureHeight);
 		ms.pop();

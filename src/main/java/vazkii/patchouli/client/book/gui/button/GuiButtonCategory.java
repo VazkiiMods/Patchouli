@@ -53,7 +53,7 @@ public class GuiButtonCategory extends ButtonWidget {
 			boolean locked = category != null && category.isLocked();
 
 			if (locked) {
-				RenderSystem.color4f(1F, 1F, 1F, 0.7F);
+				RenderSystem.setShaderColor(1F, 1F, 1F, 0.7F);
 				GuiBook.drawLock(ms, parent.book, x + 2, y + 2);
 			} else {
 				icon.render(ms, x + 2, y + 2);
@@ -61,10 +61,10 @@ public class GuiButtonCategory extends ButtonWidget {
 
 			ms.push();
 			RenderSystem.enableBlend();
-			RenderSystem.color4f(1F, 1F, 1F, transparency);
+			RenderSystem.setShaderColor(1F, 1F, 1F, transparency);
 			ms.translate(0, 0, 200);
 			GuiBook.drawFromTexture(ms, parent.book, x, y, u, v, width, height);
-			RenderSystem.color4f(1F, 1F, 1F, 1F);
+			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
 			if (category != null && !category.isLocked()) {
 				GuiBook.drawMarking(ms, parent.book, x, y, 0, category.getReadState());

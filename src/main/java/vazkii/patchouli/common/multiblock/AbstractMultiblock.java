@@ -138,8 +138,8 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 	@Nullable
 	public BlockEntity getBlockEntity(BlockPos pos) {
 		BlockState state = getBlockState(pos);
-		if (state.getBlock().hasBlockEntity()) {
-			return teCache.computeIfAbsent(pos.toImmutable(), p -> ((BlockEntityProvider) state.getBlock()).createBlockEntity(world));
+		if (state.getBlock() instanceof BlockEntityProvider) {
+			return teCache.computeIfAbsent(pos.toImmutable(), p -> ((BlockEntityProvider) state.getBlock()).createBlockEntity(pos, state));
 		}
 		return null;
 	}
@@ -175,5 +175,16 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 	@Override
 	public int getBaseLightLevel(BlockPos pos, int ambientDarkening) {
 		return 15 - ambientDarkening;
+	}
+
+	// These heights were assumed based being derivative of old behavior, but it may be ideal to change
+	@Override
+	public int getHeight() {
+		return 255;
+	}
+
+	@Override
+	public int getBottomY() {
+		return 0;
 	}
 }

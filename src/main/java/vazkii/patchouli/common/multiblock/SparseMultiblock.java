@@ -73,4 +73,15 @@ public class SparseMultiblock extends AbstractMultiblock {
 		IStateMatcher matcher = data.getOrDefault(new BlockPos(x, y, z), StateMatcher.ANY);
 		return matcher.getStatePredicate().test(world, checkPos, state);
 	}
+
+	// These heights were assumed based being derivative of old behavior, but it may be ideal to change
+	@Override
+	public int getHeight() {
+		return 255;
+	}
+
+	@Override
+	public int getBottomY() {
+		return 0;
+	}
 }

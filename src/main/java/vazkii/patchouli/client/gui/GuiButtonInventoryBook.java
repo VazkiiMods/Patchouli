@@ -33,7 +33,7 @@ public class GuiButtonInventoryBook extends ButtonWidget {
 	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float pticks) {
 		MinecraftClient mc = MinecraftClient.getInstance();
 		mc.getTextureManager().bindTexture(new Identifier(Patchouli.MOD_ID, "textures/gui/inventory_button.png"));
-		RenderSystem.color3f(1F, 1F, 1F);
+		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
 		boolean hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 		DrawableHelper.drawTexture(ms, x, y, (hovered ? 20 : 0), 0, width, height, 64, 64);

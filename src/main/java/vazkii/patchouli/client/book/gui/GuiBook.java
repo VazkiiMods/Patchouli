@@ -130,7 +130,7 @@ public abstract class GuiBook extends Screen {
 
 		ms.push();
 		ms.translate(bookLeft, bookTop, 0);
-		RenderSystem.color3f(1F, 1F, 1F);
+		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		drawBackgroundElements(ms, mouseX, mouseY, partialTicks);
 		drawForegroundElements(ms, mouseX, mouseY, partialTicks);
 		ms.pop();
@@ -494,9 +494,9 @@ public abstract class GuiBook extends Screen {
 		int rx = x + PAGE_WIDTH / 2 - w / 2;
 
 		RenderSystem.enableBlend();
-		RenderSystem.color4f(1F, 1F, 1F, 0.8F);
+		RenderSystem.setShaderColor(1F, 1F, 1F, 0.8F);
 		drawFromTexture(ms, book, rx, y, 140, 180, w, h);
-		RenderSystem.color4f(1F, 1F, 1F, 1F);
+		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 	}
 
 	public static void drawLock(MatrixStack ms, Book book, int x, int y) {
@@ -509,12 +509,12 @@ public abstract class GuiBook extends Screen {
 		}
 
 		RenderSystem.enableBlend();
-		RenderSystem.disableAlphaTest();
+		//RenderSystem.disableAlphaTest();
 		float alpha = state.hasAnimation ? ((float) Math.sin(ClientTicker.total * 0.2F) * 0.3F + 0.7F) : 1F;
-		RenderSystem.color4f(1F, 1F, 1F, alpha);
+		RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
 		drawFromTexture(ms, book, x, y, state.u, 197, 8, 8);
-		RenderSystem.enableAlphaTest();
-		RenderSystem.color3f(1F, 1F, 1F);
+		//RenderSystem.enableAlphaTest();
+		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 	}
 
 	public static void drawPageFiller(MatrixStack ms, Book book) {
@@ -523,7 +523,7 @@ public abstract class GuiBook extends Screen {
 
 	public static void drawPageFiller(MatrixStack ms, Book book, int x, int y) {
 		RenderSystem.enableBlend();
-		RenderSystem.color4f(1F, 1F, 1F, 1F);
+		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		MinecraftClient.getInstance().getTextureManager().bindTexture(book.fillerTexture);
 		drawTexture(ms, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}

@@ -129,7 +129,7 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	void drawHeader(MatrixStack ms) {
-		RenderSystem.color4f(1F, 1F, 1F, 1F);
+		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		drawFromTexture(ms, book, -8, 12, 0, 180, 140, 31);
 
 		int color = book.nameplateColor;

@@ -85,7 +85,7 @@ public class ClientAdvancements {
 		public Visibility draw(MatrixStack ms, ToastManager toastGui, long delta) {
 			MinecraftClient mc = MinecraftClient.getInstance();
 			mc.getTextureManager().bindTexture(TEXTURE);
-			RenderSystem.color3f(1.0F, 1.0F, 1.0F);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			toastGui.drawTexture(ms, 0, 0, 0, 32, 160, 32);
 
 			toastGui.getGame().textRenderer.draw(ms, I18n.translate(book.name), 30, 7, -11534256);

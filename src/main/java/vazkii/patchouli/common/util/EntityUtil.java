@@ -4,7 +4,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -30,7 +30,7 @@ public class EntityUtil {
 		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
 		entityId = nameAndNbt.getLeft();
 		String nbtStr = nameAndNbt.getRight();
-		CompoundTag nbt = null;
+		NbtCompound nbt = null;
 
 		if (!nbtStr.isEmpty()) {
 			try {
@@ -46,14 +46,14 @@ public class EntityUtil {
 			throw new RuntimeException("Unknown entity id: " + entityId);
 		}
 		EntityType<?> type = maybeType.get();
-		final CompoundTag useNbt = nbt;
+		final NbtCompound useNbt = nbt;
 		final String useId = entityId;
 		return (world) -> {
 			Entity entity;
 			try {
 				entity = type.create(world);
 				if (useNbt != null) {
-					entity.fromTag(useNbt);
+					entity.readNbt(useNbt);
 				}
 
 				return entity;

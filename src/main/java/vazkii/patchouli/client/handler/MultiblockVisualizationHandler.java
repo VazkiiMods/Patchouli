@@ -15,6 +15,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -333,21 +334,21 @@ public class MultiblockVisualizationHandler {
 		float f7 = (float) (endColor & 255) / 255.0F;
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
-		RenderSystem.disableAlphaTest();
+		//RenderSystem.disableAlphaTest();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-		RenderSystem.shadeModel(7425);
+		//RenderSystem.shadeModel(7425);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
-		bufferbuilder.begin(7, VertexFormats.POSITION_COLOR);
+		bufferbuilder.begin(DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 		Matrix4f mat = ms.peek().getModel();
 		bufferbuilder.vertex(mat, right, top, 0).color(f1, f2, f3, f).next();
 		bufferbuilder.vertex(mat, left, top, 0).color(f1, f2, f3, f).next();
 		bufferbuilder.vertex(mat, left, bottom, 0).color(f5, f6, f7, f4).next();
 		bufferbuilder.vertex(mat, right, bottom, 0).color(f5, f6, f7, f4).next();
 		tessellator.draw();
-		RenderSystem.shadeModel(7424);
+		//RenderSystem.shadeModel(7424);
 		RenderSystem.disableBlend();
-		RenderSystem.enableAlphaTest();
+		//RenderSystem.enableAlphaTest();
 		RenderSystem.enableTexture();
 	}
 
@@ -390,9 +391,9 @@ public class MultiblockVisualizationHandler {
 				RenderSystem.disableDepthTest();
 				RenderSystem.enableBlend();
 				RenderSystem.blendFunc(GlStateManager.SrcFactor.CONSTANT_ALPHA, GlStateManager.DstFactor.ONE_MINUS_CONSTANT_ALPHA);
-				RenderSystem.blendColor(1, 1, 1, 0.4F);
+				//RenderSystem.blendColor(1, 1, 1, 0.4F);
 			}, () -> {
-				RenderSystem.blendColor(1, 1, 1, 1);
+				//RenderSystem.blendColor(1, 1, 1, 1);
 				RenderSystem.defaultBlendFunc();
 				RenderSystem.disableBlend();
 				RenderSystem.enableDepthTest();

@@ -10,7 +10,7 @@ import com.mojang.serialization.JsonOps;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.recipe.Ingredient;
@@ -211,7 +211,7 @@ public class ItemStackUtil {
 		if (json.has("nbt")) {
 			try {
 				JsonElement element = json.get("nbt");
-				CompoundTag nbt;
+				NbtCompound nbt;
 				if (element.isJsonObject()) {
 					nbt = StringNbtReader.parse(GSON.toJson(element));
 				} else {

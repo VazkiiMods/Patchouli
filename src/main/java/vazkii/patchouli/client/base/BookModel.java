@@ -32,10 +32,11 @@ public class BookModel implements BakedModel {
 	public BookModel(BakedModel original, ModelLoader loader) {
 		this.original = original;
 		JsonUnbakedModel missing = (JsonUnbakedModel) loader.getOrLoadModel(ModelLoader.MISSING);
+		
 		this.itemHandler = new ModelOverrideList(loader, missing, id -> missing, Collections.emptyList()) {
 			@Override
 			public BakedModel apply(@Nonnull BakedModel original, @Nonnull ItemStack stack,
-					@Nullable ClientWorld world, @Nullable LivingEntity entity) {
+					@Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
 				Book book = ItemModBook.getBook(stack);
 				if (book != null) {
 					ModelIdentifier modelPath = new ModelIdentifier(book.model, "inventory");
@@ -45,7 +46,7 @@ public class BookModel implements BakedModel {
 			}
 		};
 	}
-
+	
 	@Nonnull
 	@Override
 	public ModelOverrideList getOverrides() {

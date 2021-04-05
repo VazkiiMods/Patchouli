@@ -46,7 +46,7 @@ public class ComponentItemStack extends TemplateComponent {
 
 		if (framed) {
 			RenderSystem.enableBlend();
-			RenderSystem.color4f(1F, 1F, 1F, 1F);
+			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 			page.mc.getTextureManager().bindTexture(page.book.craftingTexture);
 			DrawableHelper.drawTexture(ms, x - 5, y - 5, 20, 102, 26, 26, 128, 256);
 		}

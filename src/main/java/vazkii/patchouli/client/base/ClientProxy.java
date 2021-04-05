@@ -40,6 +40,6 @@ public class ClientProxy implements ClientModInitializer {
 
 		FabricModelPredicateProviderRegistry.register(PatchouliItems.book,
 				new Identifier("completion"),
-				(stack, world, entity) -> ItemModBook.getCompletion(stack));
+				(stack, world, entity, seed) -> ItemModBook.getCompletion(stack));
 	}
 }
