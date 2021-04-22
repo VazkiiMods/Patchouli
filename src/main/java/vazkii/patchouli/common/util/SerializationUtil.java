@@ -12,13 +12,15 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Supplier;
 
-public class SerializationUtil {
+public final class SerializationUtil {
 
 	public static final Gson RAW_GSON = new GsonBuilder()
 			.registerTypeAdapter(Identifier.class, new Identifier.Serializer())
 			.registerTypeAdapter(IVariable.class, new IVariable.Serializer())
 			.create();
 	public static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
+
+	private SerializationUtil() {}
 
 	public static <T> T loadFromFile(File f, Class<? extends T> clazz, Supplier<T> baseCase) {
 		return loadFromFile(RAW_GSON, f, clazz, baseCase);
@@ -56,5 +58,4 @@ public class SerializationUtil {
 			Patchouli.LOGGER.error("Failed to save file", e);
 		}
 	}
-
 }

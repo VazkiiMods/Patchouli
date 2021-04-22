@@ -25,6 +25,7 @@ import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class TooltipHandler {
 	private static float lexiconLookupTime = 0;
@@ -42,7 +43,7 @@ public class TooltipHandler {
 			for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 				ItemStack stackAt = mc.player.inventory.getStack(i);
 				if (!stackAt.isEmpty()) {
-					Book book = BookRightClickHandler.getBookFromStack(stackAt);
+					Book book = ItemStackUtil.getBookFromStack(stackAt);
 					if (book != null) {
 						Pair<BookEntry, Integer> entry = book.contents.getEntryForStack(stack);
 
