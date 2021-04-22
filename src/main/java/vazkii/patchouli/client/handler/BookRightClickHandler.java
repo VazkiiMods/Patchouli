@@ -25,12 +25,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.common.book.BookRegistry;
-import vazkii.patchouli.common.item.ItemModBook;
-
-import javax.annotation.Nullable;
-
-import java.util.Collection;
+import vazkii.patchouli.common.util.ItemStackUtil;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class BookRightClickHandler {
@@ -42,7 +37,7 @@ public class BookRightClickHandler {
 		PlayerEntity player = mc.player;
 		ItemStack bookStack = player.getHeldItemMainhand();
 		if (event.getType() == ElementType.ALL && mc.currentScreen == null) {
-			Book book = getBookFromStack(bookStack);
+			Book book = ItemStackUtil.getBookFromStack(bookStack);
 
 			if (book != null) {
 				Pair<BookEntry, Integer> hover = getHoveredEntry(book);
@@ -76,7 +71,7 @@ public class BookRightClickHandler {
 		PlayerEntity player = event.getPlayer();
 
 		if (event.getWorld().isRemote && player.isSneaking()) {
-			Book book = getBookFromStack(event.getItemStack());
+			Book book = ItemStackUtil.getBookFromStack(event.getItemStack());
 
 			if (book != null) {
 				Pair<BookEntry, Integer> hover = getHoveredEntry(book);
@@ -86,22 +81,6 @@ public class BookRightClickHandler {
 				}
 			}
 		}
-	}
-
-	@Nullable
-	public static Book getBookFromStack(ItemStack stack) {
-		if (stack.getItem() instanceof ItemModBook) {
-			return ItemModBook.getBook(stack);
-		}
-
-		Collection<Book> books = BookRegistry.INSTANCE.books.values();
-		for (Book b : books) {
-			if (b.getBookItem().isItemEqual(stack)) {
-				return b;
-			}
-		}
-
-		return null;
 	}
 
 	private static Pair<BookEntry, Integer> getHoveredEntry(Book book) {

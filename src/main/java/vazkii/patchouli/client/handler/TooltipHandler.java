@@ -30,6 +30,7 @@ import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.util.ItemStackUtil;
 
 @Mod.EventBusSubscriber(modid = Patchouli.MOD_ID, value = Dist.CLIENT)
 public class TooltipHandler {
@@ -50,7 +51,7 @@ public class TooltipHandler {
 			for (int i = 0; i < PlayerInventory.getHotbarSize(); i++) {
 				ItemStack stackAt = mc.player.inventory.getStackInSlot(i);
 				if (!stackAt.isEmpty()) {
-					Book book = BookRightClickHandler.getBookFromStack(stackAt);
+					Book book = ItemStackUtil.getBookFromStack(stackAt);
 					if (book != null) {
 						Pair<BookEntry, Integer> entry = book.contents.getEntryForStack(evt.getStack());
 
