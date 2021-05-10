@@ -306,7 +306,10 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
+		if (Minecraft.getInstance().gameSettings.keyBindInventory.matchesKey(keyCode, scanCode)) {
+			this.closeScreen();
+			return true;
+		} else if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
 			back(true);
 			return true;
 		} else {
