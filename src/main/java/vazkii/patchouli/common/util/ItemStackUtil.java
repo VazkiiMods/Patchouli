@@ -20,11 +20,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.registry.Registry;
 
-import vazkii.patchouli.mixin.AccessorIngredient;
-
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
+import vazkii.patchouli.mixin.AccessorIngredient;
 
 import javax.annotation.Nullable;
 

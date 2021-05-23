@@ -5,8 +5,8 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-
 import net.minecraft.text.TranslatableText;
+
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;

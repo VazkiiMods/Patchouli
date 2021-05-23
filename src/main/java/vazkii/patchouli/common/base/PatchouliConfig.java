@@ -1,6 +1,5 @@
 package vazkii.patchouli.common.base;
 
-import io.github.fablabsmc.fablabs.api.fiber.v1.schema.type.derived.EnumConfigType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 
@@ -11,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import io.github.fablabsmc.fablabs.api.fiber.v1.exception.ValueDeserializationException;
 import io.github.fablabsmc.fablabs.api.fiber.v1.schema.type.derived.ConfigTypes;
+import io.github.fablabsmc.fablabs.api.fiber.v1.schema.type.derived.EnumConfigType;
 import io.github.fablabsmc.fablabs.api.fiber.v1.serialization.FiberSerialization;
 import io.github.fablabsmc.fablabs.api.fiber.v1.serialization.JanksonValueSerializer;
 import io.github.fablabsmc.fablabs.api.fiber.v1.tree.ConfigTree;
@@ -22,7 +22,7 @@ public class PatchouliConfig {
 	public static PropertyMirror<Boolean> testingMode = PropertyMirror.create(ConfigTypes.BOOLEAN);
 	public static PropertyMirror<String> inventoryButtonBook = PropertyMirror.create(ConfigTypes.STRING);
 	public static PropertyMirror<Boolean> useShiftForQuickLookup = PropertyMirror.create(ConfigTypes.BOOLEAN);
-	private static final EnumConfigType<TextOverflowMode> OVERFLOW_TYPE =  ConfigTypes.makeEnum(TextOverflowMode.class);
+	private static final EnumConfigType<TextOverflowMode> OVERFLOW_TYPE = ConfigTypes.makeEnum(TextOverflowMode.class);
 	public static PropertyMirror<TextOverflowMode> overflowMode = PropertyMirror.create(OVERFLOW_TYPE);
 
 	private static final Map<String, Boolean> CONFIG_FLAGS = new ConcurrentHashMap<>();
