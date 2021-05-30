@@ -98,7 +98,7 @@ public final class ItemStackUtil {
 	}
 
 	public static String serializeIngredient(Ingredient ingredient) {
-		((AccessorIngredient) (Object) ingredient).callCacheMatchingStacks();
+		((AccessorIngredient) (Object) ingredient).patchouli_callCacheMatchingStacks();
 		ItemStack[] stacks = ((AccessorIngredient) (Object) ingredient).getMatchingStacks();
 		String[] stacksSerialized = new String[stacks.length];
 		for (int i = 0; i < stacks.length; i++) {

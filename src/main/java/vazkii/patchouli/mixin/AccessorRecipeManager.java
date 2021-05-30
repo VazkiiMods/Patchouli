@@ -13,5 +13,5 @@ import java.util.Map;
 @Mixin(RecipeManager.class)
 public interface AccessorRecipeManager {
 	@Invoker("getAllOfType")
-	Map<Identifier, Recipe<?>> callGetAllOfType(RecipeType<?> type);
+	Map<Identifier, Recipe<?>> patchouli_callGetAllOfType(RecipeType<?> type);
 }
