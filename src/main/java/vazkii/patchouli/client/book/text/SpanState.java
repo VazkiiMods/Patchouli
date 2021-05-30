@@ -1,24 +1,33 @@
 package vazkii.patchouli.client.book.text;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextColor;
 
+import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
 
+import javax.annotation.Nullable;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
-public class SpanState {
+public class SpanState implements IStyleStack {
 	public final GuiBook gui;
 	public final Book book;
 
-	private final Style baseStyle;
-	private final Deque<Style> styleStack = new ArrayDeque<>();
+	private Style baseStyle;
+	// In addition to caching the computed style for quick lookup,
+	// this keeps a list of all modifications made to the style at each layer,
+	// so that when we replace the base style, we can reconstruct the style stack.
+	private final Deque<SpanPartialState> stateStack = new ArrayDeque<>();
 	public MutableText tooltip = BookTextParser.EMPTY_STRING_COMPONENT;
 	public Supplier<Boolean> onClick = null;
 	public List<Span> cluster = null;
@@ -27,52 +36,110 @@ public class SpanState {
 	public int lineBreaks = 0; // force line breaks
 	public int spacingLeft = 0; // add extra spacing
 	public int spacingRight = 0;
+	public final int spaceWidth;
 
 	public SpanState(GuiBook gui, Book book, Style baseStyle) {
 		this.gui = gui;
 		this.book = book;
 		this.baseStyle = baseStyle;
-		this.styleStack.push(baseStyle);
+		this.stateStack.push(new SpanPartialState(baseStyle, null));
+		this.spaceWidth = MinecraftClient.getInstance().textRenderer.getWidth(new LiteralText(" ").setStyle(baseStyle));
 	}
 
-	public String color(TextColor color) {
-		return modifyStyle(s -> s.withColor(color));
+	public Style getBase() {
+		return baseStyle;
 	}
 
-	public String baseColor() {
-		return color(baseStyle.getColor());
+	public void changeBaseStyle(Style newStyle) {
+		baseStyle = newStyle;
+		for (SpanPartialState state : stateStack) {
+			state.replaceBase(newStyle);
+			newStyle = state.getCurrentStyle();
+		}
 	}
 
-	public String modifyStyle(Function<Style, Style> f) {
-		Style top = styleStack.pop();
-		styleStack.push(f.apply(top));
-		return "";
+	public void color(TextColor color) {
+		modifyStyle(s -> s.withColor(color));
 	}
 
+	public void baseColor() {
+		color(baseStyle.getColor());
+	}
+
+	@Override
+	public void modifyStyle(UnaryOperator<Style> f) {
+		stateStack.peek().addModification(f);
+	}
+
+	@Override
 	public void pushStyle(Style style) {
-		Style top = styleStack.peek();
-		styleStack.push(style.withParent(top));
+		stateStack.push(new SpanPartialState(stateStack.peek().getCurrentStyle(), style));
 	}
 
+	@Override
 	public Style popStyle() {
-		Style ret = styleStack.pop();
-		if (styleStack.isEmpty()) {
+		if (stateStack.size() <= 1) {
 			throw new IllegalStateException("Underflow in style stack");
 		}
-		return ret;
+		return stateStack.pop().getCurrentStyle();
 	}
 
+	@Override
 	public void reset() {
 		endingExternal = isExternalLink;
-		styleStack.clear();
-		styleStack.push(baseStyle);
+		stateStack.clear();
+		stateStack.push(new SpanPartialState(baseStyle, null));
 		cluster = null;
 		tooltip = BookTextParser.EMPTY_STRING_COMPONENT;
 		onClick = null;
 		isExternalLink = false;
 	}
 
+	@Override
 	public Style peekStyle() {
-		return styleStack.getFirst();
+		return stateStack.peek().getCurrentStyle();
+	}
+
+	// Represents the styling applied to a single stack frame.
+	private class SpanPartialState {
+		// This is the current style of the frame.
+		private Style currentStyle;
+		// This is null iff this frame represents the base state (i.e. nothing to merge),
+		@Nullable private final Style mergeStyle;
+		// List of all the transformations that are applied to this frame.
+		@Nullable private List<UnaryOperator<Style>> transformations = null;
+
+		// Takes the current style state from downstream
+		// and a style to merge onto it.
+		public SpanPartialState(Style currentStyle, Style mergeStyle) {
+			this.currentStyle = currentStyle;
+			this.mergeStyle = mergeStyle;
+		}
+
+		public Style getCurrentStyle() {
+			return currentStyle;
+		}
+
+		public void addModification(UnaryOperator<Style> f) {
+			if (transformations == null) {
+				// We use a linked list because this list is likely to be very small
+				// in order to skimp on space.
+				transformations = new LinkedList<>();
+			}
+			transformations.add(f);
+			this.currentStyle = f.apply(currentStyle);
+		}
+
+		public void replaceBase(Style style) {
+			if (mergeStyle != null) {
+				style = mergeStyle.withParent(style);
+			}
+			if (transformations != null) {
+				for (UnaryOperator<Style> f : transformations) {
+					style = f.apply(style);
+				}
+			}
+			this.currentStyle = style;
+		}
 	}
 }

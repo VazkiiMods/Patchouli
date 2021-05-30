@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableSerializer;
 import vazkii.patchouli.api.VariableHelper;
-import vazkii.patchouli.common.base.Patchouli;
 
 import javax.annotation.Nullable;
 
@@ -23,14 +22,10 @@ public class Variable implements IVariable {
 
 	@Override
 	public <T> T as(Class<T> clazz) {
-		if (sourceClass != null && !clazz.isAssignableFrom(sourceClass)) {
-			Patchouli.LOGGER.warn("You're trying to deserialize an object of type {} from one of type {}. This is likely not what you want!", clazz, sourceClass);
-		}
-
 		IVariableSerializer<T> serializer = VariableHelper.instance().<T>serializerForClass(clazz);
 
 		if (serializer == null) {
-			throw new IllegalArgumentException(String.format("Can't deserialize object of class {} from IVariable", clazz));
+			throw new IllegalArgumentException(String.format("Can't deserialize object of class %s from IVariable", clazz));
 		}
 
 		return serializer.fromJson(value);
