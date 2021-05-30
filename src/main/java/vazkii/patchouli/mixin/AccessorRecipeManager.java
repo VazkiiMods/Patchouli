@@ -12,6 +12,6 @@ import java.util.Map;
 
 @Mixin(RecipeManager.class)
 public interface AccessorRecipeManager {
-	@Invoker
+	@Invoker("getAllOfType")
 	Map<Identifier, Recipe<?>> callGetAllOfType(RecipeType<?> type);
 }
