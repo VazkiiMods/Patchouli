@@ -3,7 +3,9 @@ package vazkii.patchouli.common.util;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.Direction;
 
-public class RotationUtil {
+public final class RotationUtil {
+
+	private RotationUtil() {}
 
 	public static BlockRotation rotationFromFacing(Direction facing) {
 		switch (facing) {
@@ -29,5 +31,4 @@ public class RotationUtil {
 			return rot;
 		}
 	}
-
 }

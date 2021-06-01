@@ -5,6 +5,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
 import vazkii.patchouli.common.base.Patchouli;
@@ -26,7 +27,7 @@ public class GuiBookWriter extends GuiBook {
 	public void init() {
 		super.init();
 
-		text = new BookTextRenderer(this, I18n.translate("patchouli.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
+		text = new BookTextRenderer(this, new TranslatableText("patchouli.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
 		textfield = new TextFieldWidget(textRenderer, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20, LiteralText.EMPTY);
 		textfield.setMaxLength(Integer.MAX_VALUE);
 		textfield.setText(savedText);
@@ -90,9 +91,9 @@ public class GuiBookWriter extends GuiBook {
 
 		savedText = textfield.getText();
 		try {
-			editableText = new BookTextRenderer(this, savedText, RIGHT_PAGE_X, yPos);
+			editableText = new BookTextRenderer(this, new LiteralText(savedText), RIGHT_PAGE_X, yPos);
 		} catch (Throwable e) {
-			editableText = new BookTextRenderer(this, "[ERROR]", RIGHT_PAGE_X, yPos);
+			editableText = new BookTextRenderer(this, new LiteralText("[ERROR]"), RIGHT_PAGE_X, yPos);
 			Patchouli.LOGGER.catching(e);
 		}
 	}

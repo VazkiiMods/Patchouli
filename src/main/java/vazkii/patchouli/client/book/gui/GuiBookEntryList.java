@@ -42,7 +42,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	public void init() {
 		super.init();
 
-		text = new BookTextRenderer(this, getDescriptionText(), LEFT_PAGE_X, TOP_PADDING + 22);
+		text = new BookTextRenderer(this, new LiteralText(getDescriptionText()), LEFT_PAGE_X, TOP_PADDING + 22);
 
 		visibleEntries = new ArrayList<>();
 		allEntries = new ArrayList<>(getEntries());

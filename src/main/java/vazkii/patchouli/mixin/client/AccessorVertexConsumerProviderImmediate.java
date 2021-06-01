@@ -11,9 +11,9 @@ import java.util.Map;
 
 @Mixin(VertexConsumerProvider.Immediate.class)
 public interface AccessorVertexConsumerProviderImmediate {
-	@Accessor
+	@Accessor("fallbackBuffer")
 	BufferBuilder getFallbackBuffer();
 
-	@Accessor
+	@Accessor("layerBuffers")
 	Map<RenderLayer, BufferBuilder> getLayerBuffers();
 }

@@ -1,5 +1,5 @@
 {
-	"item.patchouli:guide_book.name": "Przewodnik",
+	"item.patchouli.guide_book.name": "Przewodnik",
 	
 	"item.patchouli:test_book_1.name": "Testowa książka 1",
 	"item.patchouli:test_book_1.landing": "To nie jest fajny osadzony tekst, ale jest tutaj.",

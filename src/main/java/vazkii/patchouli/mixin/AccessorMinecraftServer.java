@@ -8,6 +8,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(MinecraftServer.class)
 public interface AccessorMinecraftServer {
-	@Accessor
+	@Accessor("serverResourceManager")
 	ServerResourceManager getServerResourceManager();
 }

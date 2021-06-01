@@ -1,0 +1,25 @@
+{
+  "name": "Basic Test",
+  "category": "deserialization",
+  "flag": "!mod:gardenofglass",
+  "icon": "minecraft:oak_sapling",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Error-safety: a stray /l command renders as an error: $(/l)"
+    },
+    {
+      "type": "text",
+      "text": "Old-style $(l)formatting codes$() should be supported, but the text on the following page should be localized!"
+    },
+    {
+      "type": "text",
+      "text": {
+        "translate": "patchouli.gui.lexicon.edition_str",
+        "with": [
+          "Using the edition translation string with $(4)cool text that should propagate its formatting to the rest of the string!"
+        ]
+      }
+    }
+  ]
+}

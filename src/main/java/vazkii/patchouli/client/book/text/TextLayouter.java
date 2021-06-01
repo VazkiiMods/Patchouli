@@ -7,6 +7,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.common.base.PatchouliConfig.TextOverflowMode;
 
 import java.text.BreakIterator;
 import java.util.ArrayList;
@@ -21,21 +22,26 @@ public class TextLayouter {
 	private final List<Word> words = new ArrayList<>();
 	private final GuiBook gui;
 	private final int pageX;
+	private final int pageY;
 	private final int lineHeight;
-	private final int pageWidth;
+	private final int basePageWidth;
 
-	public TextLayouter(GuiBook gui, int pageX, int pageY, int lineHeight, int pageWidth) {
+	public TextLayouter(GuiBook gui, int pageX, int pageY, int lineHeight, int pageWidth, TextOverflowMode mode) {
 		this.gui = gui;
 		this.pageX = pageX;
 		this.lineHeight = lineHeight;
-		this.pageWidth = pageWidth;
-
-		y = pageY;
+		this.basePageWidth = pageWidth;
+		this.mode = mode;
+		this.pageY = pageY;
 	}
 
 	private int y;
+	private int pageWidth;
 	private List<Word> linkCluster = null;
 	private List<Span> spanCluster = null;
+
+	private final TextOverflowMode mode;
+	private int smallestOverstep;
 
 	private final List<SpanTail> pending = new ArrayList<>();
 	private int lineStart = 0;
@@ -44,23 +50,54 @@ public class TextLayouter {
 	private TextRenderer font;
 
 	public void layout(TextRenderer font, List<Span> spans) {
+		this.pageWidth = basePageWidth;
 		this.font = font;
 
-		List<Span> paragraph = new ArrayList<>();
-		for (Span span : spans) {
-			if (span.lineBreaks > 0) {
-				layoutParagraph(paragraph);
+		do {
+			y = pageY;
+			words.clear();
+			smallestOverstep = Integer.MAX_VALUE;
+			List<Span> paragraph = new ArrayList<>();
+			for (Span span : spans) {
+				if (span.lineBreaks > 0) {
+					layoutParagraph(paragraph);
 
-				widthSoFar = 0;
-				y += span.lineBreaks * lineHeight;
-				paragraph.clear();
+					widthSoFar = 0;
+					y += span.lineBreaks * lineHeight;
+					paragraph.clear();
+				}
+
+				paragraph.add(span);
 			}
+			if (!paragraph.isEmpty()) {
+				layoutParagraph(paragraph);
+			}
+			// Only downscale if TextOverflowMode is RESIZE
+		} while (mode == TextOverflowMode.RESIZE && getOverflow() * getScale() > 1 && adjustScale());
+		// if TextOverflowMode is TRUNCATE, yeet everything below baseline
+		if (mode == TextOverflowMode.TRUNCATE) {
+			words.removeIf(word -> word.y + lineHeight > GuiBook.PAGE_HEIGHT);
+		}
+	}
 
-			paragraph.add(span);
-		}
-		if (!paragraph.isEmpty()) {
-			layoutParagraph(paragraph);
-		}
+	private boolean adjustScale() {
+		// If we can just fit everything by downscaling height to fit in bounds, do that,
+		// otherwise find the smallest size that would reflow text and try it.
+		pageWidth = 1 + Math.min(smallestOverstep, (int) (basePageWidth * getOverflow()));
+		return true;
+	}
+
+	/**
+	 * In RESIZE mode, return how much we're downscaling by.
+	 * Will be 1.0f in all other modes.
+	 */
+	public float getScale() {
+		return (float) basePageWidth / pageWidth;
+	}
+
+	/** Return how much we're overrunning the current page by, as a float. */
+	private float getOverflow() {
+		return (float) (y + lineHeight - pageY) / (GuiBook.PAGE_HEIGHT - pageY);
 	}
 
 	// a paragraph is a series of spans without explicit line break
@@ -127,6 +164,7 @@ public class TextLayouter {
 			}
 
 			if (width > pageWidth) {
+				smallestOverstep = Math.min(width, smallestOverstep);
 				int overflowOffset = lineStart + offset + i - last.start;
 				int breakOffset = overflowOffset + 1;
 				if (!Character.isWhitespace(characters[i])) {

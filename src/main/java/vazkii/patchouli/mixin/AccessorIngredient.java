@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(Ingredient.class)
 public interface AccessorIngredient {
-	@Invoker
+	@Invoker("cacheMatchingStacks")
 	void callCacheMatchingStacks();
 
-	@Accessor
+	@Accessor("matchingStacks")
 	ItemStack[] getMatchingStacks();
 }

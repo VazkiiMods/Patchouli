@@ -8,9 +8,9 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(SmithingRecipe.class)
 public interface AccessorSmithingRecipe {
-	@Accessor
+	@Accessor("base")
 	Ingredient getBase();
 
-	@Accessor
+	@Accessor("addition")
 	Ingredient getAddition();
 }
