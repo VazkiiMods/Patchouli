@@ -4,10 +4,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
@@ -32,6 +33,7 @@ import vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.mixin.client.AccessorScreen;
 
 import javax.annotation.Nullable;
 
@@ -99,9 +101,9 @@ public abstract class GuiBook extends Screen {
 
 		book.contents.currentGui = this;
 
-		addButton(new GuiButtonBookBack(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5));
-		addButton(new GuiButtonBookArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
-		addButton(new GuiButtonBookArrow(this, bookLeft + FULL_WIDTH - 14, bookTop + FULL_HEIGHT - 6, false));
+		addDrawable(new GuiButtonBookBack(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5));
+		addDrawable(new GuiButtonBookArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
+		addDrawable(new GuiButtonBookArrow(this, bookLeft + FULL_WIDTH - 14, bookTop + FULL_HEIGHT - 6, false));
 
 		addBookmarkButtons();
 	}
@@ -143,37 +145,36 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public void addBookmarkButtons() {
-		removeButtonsIf((b) -> b instanceof GuiButtonBookBookmark);
+		removeDrawablesIf((b) -> b instanceof GuiButtonBookBookmark);
 
 		int y = 0;
 		List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
 		for (Bookmark bookmark : bookmarks) {
-			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
+			addDrawable(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, bookmark));
 			y += 12;
 		}
 
 		y += (y == 0 ? 0 : 2);
 		if (shouldAddAddBookmarkButton() && bookmarks.size() <= MAX_BOOKMARKS) {
-			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
+			addDrawable(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
 		}
 
 		if (MultiblockVisualizationHandler.hasMultiblock && MultiblockVisualizationHandler.bookmark != null) {
-			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.bookmark, true));
+			addDrawable(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.bookmark, true));
 		}
 	}
 
-	public void removeButtonsIf(Predicate<Element> pred) {
-		buttons.removeIf(pred);
-		children.removeIf(pred);
+	public void removeDrawablesIf(Predicate<Drawable> pred) {
+		((AccessorScreen) (this)).getDrawables().removeIf(pred);
 	}
 
-	public void removeButtonsIn(Collection<?> coll) {
-		removeButtonsIf(coll::contains);
+	public void removeDrawablesIn(Collection<?> coll) {
+		removeDrawablesIf(coll::contains);
 	}
 
 	@Override // make public
-	public <T extends AbstractButtonWidget> T addButton(T p_addButton_1_) {
-		return super.addButton(p_addButton_1_);
+	public <T extends net.minecraft.client.gui.Drawable> T addDrawable(T p_addButton_1_) {
+		return super.addDrawable(p_addButton_1_);
 	}
 
 	@Override // make public

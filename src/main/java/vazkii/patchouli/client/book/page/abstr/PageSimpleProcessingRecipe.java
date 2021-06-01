@@ -23,8 +23,8 @@ public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends Pa
 		DrawableHelper.drawTexture(ms, recipeX, recipeY, 11, 71, 96, 24, 128, 256);
 		parent.drawCenteredStringNoShadow(ms, getTitle(second).asOrderedText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-		parent.renderIngredient(ms, recipeX + 4, recipeY + 4, mouseX, mouseY, recipe.getPreviewInputs().get(0));
-		parent.renderItemStack(ms, recipeX + 40, recipeY + 4, mouseX, mouseY, recipe.getRecipeKindIcon());
+		parent.renderIngredient(ms, recipeX + 4, recipeY + 4, mouseX, mouseY, recipe.getIngredients().get(0));
+		parent.renderItemStack(ms, recipeX + 40, recipeY + 4, mouseX, mouseY, recipe.createIcon());
 		parent.renderItemStack(ms, recipeX + 76, recipeY + 4, mouseX, mouseY, recipe.getOutput());
 	}
 

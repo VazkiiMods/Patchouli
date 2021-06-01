@@ -27,7 +27,7 @@ public class RecipeTestProcessor implements IComponentProcessor {
 	public IVariable process(String key) {
 		if (key.startsWith("item")) {
 			int index = Integer.parseInt(key.substring(4)) - 1;
-			Ingredient ingredient = recipe.getPreviewInputs().get(index);
+			Ingredient ingredient = recipe.getIngredients().get(index);
 			ItemStack[] stacks = ingredient.getMatchingStacksClient();
 			ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
 

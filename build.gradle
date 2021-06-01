@@ -1,14 +1,10 @@
 plugins {
-	id 'fabric-loom' version '0.4-SNAPSHOT'
+	id 'fabric-loom' version '0.8-SNAPSHOT'
 	id 'maven-publish'
 	id "com.diffplug.spotless" version "5.1.0"
 }
 
 apply plugin: 'pmd'
-
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
 
 ext.configFile = file('build.properties')
 ext.config = configFile.withReader {
@@ -17,7 +13,7 @@ ext.config = configFile.withReader {
 	return (new ConfigSlurper().parse(prop))
 }
 
-def mc_version = '1.16.4'
+def mc_version = '1.17'
 version = "${mc_version}-${config.build_number}-FABRIC"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
@@ -59,16 +55,16 @@ repositories {
 }
 
 dependencies {
-	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+	modImplementation "com.google.code.findbugs:jsr305:3.0.2"
 	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
 	include "me.zeroeightsix:fiber:0.23.0-2"
 
-	minecraft "com.mojang:minecraft:21w13a"
-	mappings "net.fabricmc:yarn:21w13a+build.47:v2"
-	modCompile "net.fabricmc:fabric-loader:0.11.3"
+	minecraft "com.mojang:minecraft:1.17-pre2"
+	mappings "net.fabricmc:yarn:1.17-pre2+build.5:v2"
+	modImplementation "net.fabricmc:fabric-loader:0.11.3"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modCompile "net.fabricmc.fabric-api:fabric-api:0.32.6+1.17"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.34.8+1.17"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.

@@ -55,14 +55,14 @@ public abstract class BookPage {
 	}
 
 	public void onHidden(GuiBookEntry parent) {
-		parent.removeButtonsIn(buttons);
+		parent.removeDrawablesIn(buttons);
 	}
 
 	protected void addButton(ButtonWidget button) {
 		button.x += (parent.bookLeft + left);
 		button.y += (parent.bookTop + top);
 		buttons.add(button);
-		parent.addButton(button);
+		parent.addDrawable(button);
 	}
 
 	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {}

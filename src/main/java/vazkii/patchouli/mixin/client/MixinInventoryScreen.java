@@ -1,8 +1,8 @@
 package vazkii.patchouli.mixin.client;
 
+import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.entity.player.PlayerInventory;
@@ -34,21 +34,21 @@ public abstract class MixinInventoryScreen extends AbstractInventoryScreen<Playe
 			return;
 		}
 
-		AbstractButtonWidget replaced = null;
+		Drawable replaced = null;
 		ButtonWidget replacement = null;
-		for (int i = 0; i < buttons.size(); i++) {
-			AbstractButtonWidget button = buttons.get(i);
-			if (button instanceof TexturedButtonWidget) {
+		for (int i = 0; i < ((AccessorScreen) this).getDrawables().size(); i++) {
+			Drawable button = ((AccessorScreen) this).getDrawables().get(i);
+			if (button instanceof TexturedButtonWidget tex) {
 				replaced = button;
-				replacement = new GuiButtonInventoryBook(book, button.x, button.y - 1);
-				buttons.set(i, replacement);
+				replacement = new GuiButtonInventoryBook(book, tex.x, tex.y - 1);
+				((AccessorScreen) this).getDrawables().set(i, replacement);
 				break;
 			}
 		}
 
-		int i = children.indexOf(replaced);
+		int i = ((AccessorScreen) this).getChildren().indexOf(replaced);
 		if (i >= 0) {
-			children.set(i, replacement);
+			((AccessorScreen) this).getChildren().set(i, replacement);
 		}
 	}
 }

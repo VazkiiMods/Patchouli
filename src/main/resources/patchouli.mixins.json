@@ -12,6 +12,7 @@
   ],
   "client": [
     "client.MixinBakedModelManager",
+    "client.AccessorScreen",
     "client.AccessorBlockEntity",
     "client.MixinClientAdvancementManager",
     "client.AccessorClientAdvancementManager",

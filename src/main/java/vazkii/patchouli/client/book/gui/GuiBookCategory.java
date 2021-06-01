@@ -65,7 +65,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 			int y = baseY + (i / 4) * (rightPageFree ? 24 : 20);
 
 			ButtonWidget button = new GuiButtonCategory(this, x, y, ocategory, this::handleButtonCategory);
-			addButton(button);
+			addDrawable(button);
 			dependentButtons.add(button);
 
 			i++;

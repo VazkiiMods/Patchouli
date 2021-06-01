@@ -196,18 +196,6 @@ public class GoVoteHandler {
 			}
 		}
 
-		@Nonnull
-		@Override
-		public String getNarrationMessage() {
-			StringBuilder builder = new StringBuilder();
-			for (List<Text> group : message) {
-				for (Text line : group) {
-					builder.append(line.getString());
-				}
-			}
-			return builder.toString();
-		}
-
 		@Override
 		public boolean keyPressed(int keycode, int scanCode, int modifiers) {
 			if (keycode == GLFW.GLFW_KEY_ESCAPE) {

@@ -31,7 +31,7 @@ public class BookModel implements BakedModel {
 
 	public BookModel(BakedModel original, ModelLoader loader) {
 		this.original = original;
-		JsonUnbakedModel missing = (JsonUnbakedModel) loader.getOrLoadModel(ModelLoader.MISSING);
+		JsonUnbakedModel missing = (JsonUnbakedModel) loader.getOrLoadModel(ModelLoader.MISSING_ID);
 		
 		this.itemHandler = new ModelOverrideList(loader, missing, id -> missing, Collections.emptyList()) {
 			@Override

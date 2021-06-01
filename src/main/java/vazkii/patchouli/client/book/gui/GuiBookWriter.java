@@ -31,7 +31,7 @@ public class GuiBookWriter extends GuiBook {
 		textfield.setMaxLength(Integer.MAX_VALUE);
 		textfield.setText(savedText);
 
-		addButton(new GuiButtonBookResize(this, bookLeft + 115, bookTop + PAGE_HEIGHT - 36, false, this::handleButtonResize));
+		addDrawable(new GuiButtonBookResize(this, bookLeft + 115, bookTop + PAGE_HEIGHT - 36, false, this::handleButtonResize));
 		refreshText();
 	}
 

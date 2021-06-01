@@ -282,7 +282,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		button.y += bookTop;
 
 		customButtons.put(button, onClick);
-		addButton(button);
+		addDrawable(button);
 	}
 
 	@Override
