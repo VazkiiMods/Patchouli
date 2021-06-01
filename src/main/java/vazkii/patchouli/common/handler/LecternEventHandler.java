@@ -39,7 +39,7 @@ public class LecternEventHandler {
 			} else {
 				ItemStack stack = player.getStackInHand(hand);
 				if (ItemStackUtil.getBookFromStack(stack) != null) {
-					if (LecternBlock.putBookIfAbsent(world, pos, state, stack)) {
+					if (LecternBlock.putBookIfAbsent(player, world, pos, state, stack)) {
 						return ActionResult.SUCCESS;
 					}
 				}
@@ -52,7 +52,7 @@ public class LecternEventHandler {
 		ItemStack itemstack = tileEntity.getBook();
 		tileEntity.setBook(ItemStack.EMPTY);
 		LecternBlock.setHasBook(tileEntity.getWorld(), tileEntity.getPos(), tileEntity.getCachedState(), false);
-		if (!player.inventory.insertStack(itemstack)) {
+		if (!player.getInventory().insertStack(itemstack)) {
 			player.dropItem(itemstack, false);
 		}
 	}
