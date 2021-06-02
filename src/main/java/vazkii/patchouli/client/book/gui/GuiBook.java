@@ -159,7 +159,7 @@ public abstract class GuiBook extends Screen {
 			addButton(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 22, MultiblockVisualizationHandler.bookmark, true));
 		}
 
-		if (!shouldAddAddBookmarkButton() && book.contents.entries.values().stream().anyMatch(v -> !v.isLocked() && v.getReadState().equals(EntryDisplayState.UNREAD))) {
+		if (shouldAddMarkReadButton()) {
 			addButton(new GuiButtonBookMarkRead(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 10));
 		}
 	}
@@ -185,6 +185,13 @@ public abstract class GuiBook extends Screen {
 
 	protected boolean shouldAddAddBookmarkButton() {
 		return false;
+	}
+
+	protected boolean shouldAddMarkReadButton() {
+		if (this instanceof GuiBookIndex || shouldAddAddBookmarkButton()) {
+			return false;
+		}
+		return book.contents.entries.values().stream().anyMatch(v -> !v.isLocked() && v.getReadState().equals(EntryDisplayState.UNREAD));
 	}
 
 	public void bookmarkThis() {
@@ -306,7 +313,10 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
+		if (Minecraft.getInstance().gameSettings.keyBindInventory.matchesKey(keyCode, scanCode)) {
+			this.closeScreen();
+			return true;
+		} else if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
 			back(true);
 			return true;
 		} else {
