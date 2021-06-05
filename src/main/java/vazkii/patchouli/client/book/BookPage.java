@@ -62,7 +62,7 @@ public abstract class BookPage {
 		button.x += (parent.bookLeft + left);
 		button.y += (parent.bookTop + top);
 		buttons.add(button);
-		parent.addDrawable(button);
+		parent.addDrawableChild(button);
 	}
 
 	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {}

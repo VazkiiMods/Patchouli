@@ -226,7 +226,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	void addEntryButtons(int x, int y, int start, int count) {
 		for (int i = 0; i < count && (i + start) < visibleEntries.size(); i++) {
 			ButtonWidget button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, visibleEntries.get(start + i), this::handleButtonEntry);
-			addDrawable(button);
+			addDrawableChild(button);
 			dependentButtons.add(button);
 		}
 	}

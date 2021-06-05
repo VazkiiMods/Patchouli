@@ -45,15 +45,15 @@ public class GuiBookLanding extends GuiBook {
 
 		// Resize
 		if (maxScale > 2) {
-			addDrawable(new GuiButtonBookResize(this, x + (pos++) * dist, y, true, this::handleButtonResize));
+			addDrawableChild(new GuiButtonBookResize(this, x + (pos++) * dist, y, true, this::handleButtonResize));
 		}
 
 		// History
-		addDrawable(new GuiButtonBookHistory(this, x + (pos++) * dist, y, this::handleButtonHistory));
+		addDrawableChild(new GuiButtonBookHistory(this, x + (pos++) * dist, y, this::handleButtonHistory));
 
 		// Advancements
 		if (book.advancementsTab != null) {
-			addDrawable(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y, this::handleButtonAdvancements));
+			addDrawableChild(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y, this::handleButtonAdvancements));
 		}
 
 		// Config
@@ -64,7 +64,7 @@ public class GuiBookLanding extends GuiBook {
 		//		}
 
 		if (MinecraftClient.getInstance().player.isCreative()) {
-			addDrawable(new GuiButtonBookEdit(this, x + (pos++) * dist, y, this::handleButtonEdit));
+			addDrawableChild(new GuiButtonBookEdit(this, x + (pos++) * dist, y, this::handleButtonEdit));
 		}
 
 		int i = 0;
@@ -88,9 +88,9 @@ public class GuiBookLanding extends GuiBook {
 		int y = TOP_PADDING + 25 + (i / 4) * 24;
 
 		if (category == null) {
-			addDrawable(new GuiButtonIndex(this, x, y, this::handleButtonIndex));
+			addDrawableChild(new GuiButtonIndex(this, x, y, this::handleButtonIndex));
 		} else {
-			addDrawable(new GuiButtonCategory(this, x, y, category, this::handleButtonCategory));
+			addDrawableChild(new GuiButtonCategory(this, x, y, category, this::handleButtonCategory));
 		}
 	}
 
