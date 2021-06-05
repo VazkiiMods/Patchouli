@@ -25,6 +25,7 @@ public class RenderHelper {
 		MatrixStack mvs = RenderSystem.getModelViewStack();
 		mvs.push();
 		mvs.method_34425(ms.peek().getModel());
+		RenderSystem.applyModelViewMatrix();
 		toRun.run();
 		mvs.pop();
 		RenderSystem.applyModelViewMatrix();
