@@ -1,21 +1,24 @@
 package vazkii.patchouli.api;
 
+import com.google.common.base.Suppliers;
 import com.google.gson.JsonElement;
 
 import net.minecraft.util.Lazy;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * API endpoint for serializing/deserializing arbitrary objects to/from JsonElements.
  */
 public interface VariableHelper {
 
-	Lazy<VariableHelper> INSTANCE = new Lazy<>(() -> {
+	Supplier<VariableHelper> INSTANCE = Suppliers.memoize(() -> {
 		try {
 			return (VariableHelper) Class.forName("vazkii.patchouli.client.book.template.variable.VariableHelperImpl").newInstance();
 		} catch (ReflectiveOperationException e) {
-			return new VariableHelper() {};
+			return new VariableHelper() {
+			};
 		}
 	});
 

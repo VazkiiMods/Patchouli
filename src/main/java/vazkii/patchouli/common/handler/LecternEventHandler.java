@@ -23,12 +23,12 @@ public class LecternEventHandler {
 		BlockPos pos = hit.getBlockPos();
 		BlockState state = world.getBlockState(pos);
 		BlockEntity tileEntity = world.getBlockEntity(pos);
-		if (tileEntity instanceof LecternBlockEntity) {
+		if (tileEntity instanceof LecternBlockEntity lectern) {
 			if (state.get(LecternBlock.HAS_BOOK)) {
 				if (player.isSneaking()) {
-					takeBook(player, (LecternBlockEntity) tileEntity);
+					takeBook(player, lectern);
 				} else {
-					Book book = ItemStackUtil.getBookFromStack(((LecternBlockEntity) tileEntity).getBook());
+					Book book = ItemStackUtil.getBookFromStack(lectern.getBook());
 					if (book != null) {
 						if (!world.isClient) {
 							PatchouliAPI.get().openBookGUI((ServerPlayerEntity) player, book.id);

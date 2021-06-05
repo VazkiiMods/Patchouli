@@ -227,7 +227,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		}
 
 		if (extraRecipeMappings != null) {
-			for (Map.Entry<String, Integer> entry : extraRecipeMappings.entrySet()) {
+			for (var entry : extraRecipeMappings.entrySet()) {
 				String key = entry.getKey();
 				List<ItemStack> stacks;
 				int pageNumber = entry.getValue();

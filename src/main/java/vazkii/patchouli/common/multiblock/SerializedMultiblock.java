@@ -29,7 +29,7 @@ public class SerializedMultiblock {
 
 	private static Map<Character, IStateMatcher> deserializeMapping(Map<String, String> mapping) {
 		Map<Character, IStateMatcher> ret = new HashMap<>(mapping.size());
-		for (Map.Entry<String, String> e : mapping.entrySet()) {
+		for (var e : mapping.entrySet()) {
 			char key = assertValidMappingKey(e.getKey());
 			String value = e.getValue();
 
@@ -57,7 +57,7 @@ public class SerializedMultiblock {
 	private SparseMultiblock deserializeSparse() {
 		Map<Character, IStateMatcher> matchers = deserializeMapping(mapping);
 		Map<BlockPos, IStateMatcher> data = new HashMap<>();
-		for (Map.Entry<String, List<List<Integer>>> e : sparsePattern.entrySet()) {
+		for (var e : sparsePattern.entrySet()) {
 			char key = assertValidMappingKey(e.getKey());
 			assertMappingContains(key);
 

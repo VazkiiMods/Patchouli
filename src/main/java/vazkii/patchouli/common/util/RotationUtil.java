@@ -8,27 +8,20 @@ public final class RotationUtil {
 	private RotationUtil() {}
 
 	public static BlockRotation rotationFromFacing(Direction facing) {
-		switch (facing) {
-		case EAST:
-			return BlockRotation.CLOCKWISE_90;
-		case SOUTH:
-			return BlockRotation.CLOCKWISE_180;
-		case WEST:
-			return BlockRotation.COUNTERCLOCKWISE_90;
-		default:
-			return BlockRotation.NONE;
-		}
+		return switch (facing) {
+			case EAST -> BlockRotation.CLOCKWISE_90;
+			case SOUTH -> BlockRotation.CLOCKWISE_180;
+			case WEST -> BlockRotation.COUNTERCLOCKWISE_90;
+			default -> BlockRotation.NONE;
+		};
 	}
 
 	// TODO figure out why this is needed and document it.
 	public static BlockRotation fixHorizontal(BlockRotation rot) {
-		switch (rot) {
-		case CLOCKWISE_90:
-			return BlockRotation.COUNTERCLOCKWISE_90;
-		case COUNTERCLOCKWISE_90:
-			return BlockRotation.CLOCKWISE_90;
-		default:
-			return rot;
-		}
+		return switch (rot) {
+			case CLOCKWISE_90 -> BlockRotation.COUNTERCLOCKWISE_90;
+			case COUNTERCLOCKWISE_90 -> BlockRotation.CLOCKWISE_90;
+			default -> rot;
+		};
 	}
 }

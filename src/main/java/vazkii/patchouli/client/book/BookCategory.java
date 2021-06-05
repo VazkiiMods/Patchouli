@@ -187,8 +187,8 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 	@Override
 	protected EntryDisplayState computeReadState() {
-		Stream<EntryDisplayState> entryStream = entries.stream().filter(e -> !e.isLocked()).map(BookEntry::getReadState);
-		Stream<EntryDisplayState> childrenStream = children.stream().map(BookCategory::getReadState);
+		var entryStream = entries.stream().filter(e -> !e.isLocked()).map(BookEntry::getReadState);
+		var childrenStream = children.stream().map(BookCategory::getReadState);
 		return mostImportantState(Streams.concat(entryStream, childrenStream));
 	}
 

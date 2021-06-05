@@ -79,7 +79,7 @@ public final class ItemStackUtil {
 
 		int countn = Integer.parseInt(count);
 		Identifier key = new Identifier(tokens[0], tokens[1]);
-		Optional<Item> maybeItem = Registry.ITEM.getOrEmpty(key);
+		var maybeItem = Registry.ITEM.getOrEmpty(key);
 		if (!maybeItem.isPresent()) {
 			throw new RuntimeException("Unknown item ID: " + key);
 		}

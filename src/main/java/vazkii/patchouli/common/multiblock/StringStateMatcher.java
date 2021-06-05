@@ -64,7 +64,7 @@ public class StringStateMatcher {
 		}
 
 		private boolean checkProps(BlockState state) {
-			for (Map.Entry<Property<?>, Comparable<?>> e : props.entrySet()) {
+			for (var e : props.entrySet()) {
 				if (!state.get(e.getKey()).equals(e.getValue())) {
 					return false;
 				}
@@ -117,7 +117,7 @@ public class StringStateMatcher {
 		}
 
 		private boolean checkProps(BlockState state) {
-			for (Map.Entry<String, String> entry : props.entrySet()) {
+			for (var entry : props.entrySet()) {
 				Property<?> prop = state.getBlock().getStateManager().getProperty(entry.getKey());
 				if (prop == null) {
 					return false;

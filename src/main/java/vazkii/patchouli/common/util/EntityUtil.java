@@ -22,14 +22,14 @@ public final class EntityUtil {
 	private EntityUtil() {}
 
 	public static String getEntityName(String entityId) {
-		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
-		EntityType<?> type = Registry.ENTITY_TYPE.get(new Identifier(nameAndNbt.getLeft()));
+		var nameAndNbt = splitNameAndNBT(entityId);
+		var type = Registry.ENTITY_TYPE.get(new Identifier(nameAndNbt.getLeft()));
 
 		return type.getTranslationKey();
 	}
 
 	public static Function<World, Entity> loadEntity(String entityId) {
-		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
+		var nameAndNbt = splitNameAndNBT(entityId);
 		entityId = nameAndNbt.getLeft();
 		String nbtStr = nameAndNbt.getRight();
 		NbtCompound nbt = null;
@@ -43,7 +43,7 @@ public final class EntityUtil {
 		}
 
 		Identifier key = new Identifier(entityId);
-		Optional<EntityType<?>> maybeType = Registry.ENTITY_TYPE.getOrEmpty(key);
+		var maybeType = Registry.ENTITY_TYPE.getOrEmpty(key);
 		if (!maybeType.isPresent()) {
 			throw new RuntimeException("Unknown entity id: " + entityId);
 		}

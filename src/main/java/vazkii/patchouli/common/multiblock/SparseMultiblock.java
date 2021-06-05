@@ -57,7 +57,7 @@ public class SparseMultiblock extends AbstractMultiblock {
 		// the local origin of this multiblock, in world coordinates
 		BlockPos origin = anchor.add(disp);
 		List<SimulateResult> ret = new ArrayList<>();
-		for (Map.Entry<BlockPos, IStateMatcher> e : data.entrySet()) {
+		for (var e : data.entrySet()) {
 			BlockPos currDisp = e.getKey().rotate(rotation);
 			BlockPos actionPos = origin.add(currDisp);
 			ret.add(new SimulateResultImpl(actionPos, e.getValue(), null));

@@ -1,5 +1,6 @@
 package vazkii.patchouli.api;
 
+import com.google.common.base.Suppliers;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -27,18 +28,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class PatchouliAPI {
-	/**
-	 * @deprecated Use {@link #get()} instead as this field does not properly handle being accessed before Patchouli
-	 *             initializes.
-	 */
-	// todo 1.17 remove
-	@Deprecated public static IPatchouliAPI instance = StubPatchouliAPI.INSTANCE;
-
-	private static final Lazy<IPatchouliAPI> LAZY_INSTANCE = new Lazy<>(() -> {
+	private static final Supplier<IPatchouliAPI> LAZY_INSTANCE = Suppliers.memoize(() -> {
 		try {
-			IPatchouliAPI ret = (IPatchouliAPI) Class.forName("vazkii.patchouli.common.base.PatchouliAPIImpl").newInstance();
-			instance = ret;
-			return ret;
+			return (IPatchouliAPI) Class.forName("vazkii.patchouli.common.base.PatchouliAPIImpl").newInstance();
 		} catch (ReflectiveOperationException e) {
 			LogManager.getLogger().warn("Unable to find PatchouliAPIImpl, using a dummy");
 			return StubPatchouliAPI.INSTANCE;

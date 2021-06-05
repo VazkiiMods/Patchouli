@@ -69,11 +69,6 @@ public class MultiblockVisualizationHandler {
 	private static BlockPos lookingPos;
 	private static VertexConsumerProvider.Immediate buffers = null;
 
-	// Legacy compat with older botanias. TODO 1.16 remove
-	public static void setMultiblock(IMultiblock multiblock, String name, Bookmark bookmark, boolean flip) {
-		setMultiblock(multiblock, new LiteralText(name == null ? "" : name), bookmark, flip);
-	}
-
 	public static void setMultiblock(IMultiblock multiblock, Text name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos -> pos);
 	}

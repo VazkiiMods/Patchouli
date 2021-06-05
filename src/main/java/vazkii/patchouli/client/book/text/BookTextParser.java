@@ -356,7 +356,7 @@ public class BookTextParser {
 		String alt = "key." + keybind;
 
 		KeyBinding[] keys = state.gui.getMinecraft().options.keysAll;
-		for (KeyBinding k : keys) {
+		for (var k : keys) {
 			String name = k.getTranslationKey();
 			if (name.equals(keybind) || name.equals(alt)) {
 				return k;

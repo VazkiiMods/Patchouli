@@ -53,7 +53,7 @@ public class OpenBookCommand {
 	}
 
 	private static int doIt(Collection<ServerPlayerEntity> players, Identifier book, @Nullable Identifier entry, int page) {
-		for (ServerPlayerEntity player : players) {
+		for (var player : players) {
 			if (entry != null) {
 				PatchouliAPI.get().openBookEntry(player, book, entry, page);
 			} else {
