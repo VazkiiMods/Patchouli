@@ -13,13 +13,12 @@ import vazkii.patchouli.client.handler.BookCrashHandler;
 
 @Mixin(CrashReport.class)
 public abstract class MixinCrashReport {
-	@Shadow
-	public abstract CrashReportSection getSystemDetailsSection();
+	@Shadow public abstract CrashReportSection addElement(String name);
 
-	@Inject(at = @At("RETURN"), method = "fillSystemDetails")
+	@Inject(at = @At("RETURN"), method = "<init>")
 	private void fillPatchouliContext(CallbackInfo info) {
-		BookCrashHandler crashInfo = new BookCrashHandler();
-		getSystemDetailsSection().add(crashInfo.getLabel(), crashInfo);
-
+		CrashReportSection section = this.addElement("Patchouli Book Info");
+		var crashInfo = new BookCrashHandler();
+		section.add(crashInfo.getLabel(), crashInfo);
 	}
 }

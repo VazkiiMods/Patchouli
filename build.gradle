@@ -80,6 +80,10 @@ test {
 processResources {
 	inputs.property "version", project.version
 
+	// We don't actually copy duplicate files below but Gradle is dumb and thinks we do
+	// Suppress the error and warning by telling it to "overwrite"
+	duplicatesStrategy DuplicatesStrategy.INCLUDE
+
 	from(sourceSets.main.resources.srcDirs) {
 		include "fabric.mod.json"
 		expand "version": project.version
