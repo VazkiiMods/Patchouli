@@ -5,6 +5,9 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '10'))
     }
     agent any
+    tools {
+        jdk "jdk-16.0.1+9"
+    }
     stages {
         stage('Clean') {
             steps {
