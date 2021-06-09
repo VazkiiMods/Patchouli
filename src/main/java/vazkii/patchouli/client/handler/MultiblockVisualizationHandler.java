@@ -43,8 +43,6 @@ import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 import vazkii.patchouli.mixin.client.AccessorVertexConsumerProviderImmediate;
 
-import javax.annotation.Nullable;
-
 import java.awt.*;
 import java.util.Collection;
 import java.util.IdentityHashMap;
@@ -328,9 +326,7 @@ public class MultiblockVisualizationHandler {
 		float f7 = (float) (endColor & 255) / 255.0F;
 		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
-		//RenderSystem.disableAlphaTest();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-		//RenderSystem.shadeModel(7425);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuffer();
 		bufferbuilder.begin(DrawMode.QUADS, VertexFormats.POSITION_COLOR);
@@ -340,9 +336,7 @@ public class MultiblockVisualizationHandler {
 		bufferbuilder.vertex(mat, left, bottom, 0).color(f5, f6, f7, f4).next();
 		bufferbuilder.vertex(mat, right, bottom, 0).color(f5, f6, f7, f4).next();
 		tessellator.draw();
-		//RenderSystem.shadeModel(7424);
 		RenderSystem.disableBlend();
-		//RenderSystem.enableAlphaTest();
 		RenderSystem.enableTexture();
 	}
 
@@ -381,29 +375,16 @@ public class MultiblockVisualizationHandler {
 			super(String.format("%s_%s_ghost", original.toString(), Patchouli.MOD_ID), original.getVertexFormat(), original.getDrawMode(), original.getExpectedBufferSize(), original.hasCrumbling(), true, () -> {
 				original.startDrawing();
 
-				// Alter GL state
 				RenderSystem.disableDepthTest();
 				RenderSystem.enableBlend();
-				RenderSystem.blendFunc(GlStateManager.SrcFactor.CONSTANT_ALPHA, GlStateManager.DstFactor.ONE_MINUS_CONSTANT_ALPHA);
 				RenderSystem.setShaderColor(1, 1, 1, 0.4F);
 			}, () -> {
 				RenderSystem.setShaderColor(1, 1, 1, 1);
-				RenderSystem.defaultBlendFunc();
 				RenderSystem.disableBlend();
 				RenderSystem.enableDepthTest();
 
 				original.endDrawing();
 			});
-		}
-
-		@Override
-		public boolean equals(@Nullable Object other) {
-			return this == other;
-		}
-
-		@Override
-		public int hashCode() {
-			return System.identityHashCode(this);
 		}
 
 		public static RenderLayer remap(RenderLayer in) {
