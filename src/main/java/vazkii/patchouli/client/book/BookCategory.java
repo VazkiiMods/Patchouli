@@ -13,7 +13,6 @@ import vazkii.patchouli.common.book.Book;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class BookCategory extends AbstractReadStateHolder implements Comparable<BookCategory> {
 

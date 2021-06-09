@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;

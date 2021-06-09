@@ -19,8 +19,6 @@ import org.lwjgl.glfw.GLFW;
 
 import vazkii.patchouli.common.base.Patchouli;
 
-import javax.annotation.Nonnull;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;

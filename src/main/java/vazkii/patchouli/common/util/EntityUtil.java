@@ -14,7 +14,6 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import vazkii.patchouli.common.base.Patchouli;
 
-import java.util.Optional;
 import java.util.function.Function;
 
 public final class EntityUtil {

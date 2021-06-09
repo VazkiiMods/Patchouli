@@ -1,12 +1,5 @@
 package vazkii.patchouli.client.book.page;
 
-import java.util.Collections;
-import java.util.Random;
-import java.util.Set;
-import java.util.WeakHashMap;
-
-import javax.annotation.Nonnull;
-
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -28,6 +21,7 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.Vector4f;
+
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
@@ -43,6 +37,13 @@ import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
 import vazkii.patchouli.mixin.client.AccessorBlockEntity;
+
+import javax.annotation.Nonnull;
+
+import java.util.Collections;
+import java.util.Random;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 public class PageMultiblock extends PageWithText {
 	private static final Random RAND = new Random();

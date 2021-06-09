@@ -22,7 +22,8 @@ import java.util.Map;
 
 @Mixin(BakedModelManager.class)
 public class MixinBakedModelManager {
-	@Shadow @Final private Map<Identifier, BakedModel> models;
+	@Shadow
+	@Final private Map<Identifier, BakedModel> models;
 
 	@Inject(at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/render/model/ModelLoader;getBakedModelMap()Ljava/util/Map;", shift = At.Shift.AFTER), method = "apply(Lnet/minecraft/client/render/model/ModelLoader;Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/util/profiler/Profiler;)V")
 	public void insertBookModel(ModelLoader loader, ResourceManager manager, Profiler profiler, CallbackInfo info) {

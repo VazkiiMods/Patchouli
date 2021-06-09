@@ -49,7 +49,7 @@ public class ShaderHelper implements SynchronousResourceReloader, IdentifiableRe
 			@Override
 			public String loadImport(boolean inline, String name) {
 				return "change this :tater:";
-			}	
+			}
 		};
 		Identifier vertPath = new Identifier(Patchouli.MOD_ID, "shaders/" + name + ".vsh");
 		Identifier fragPath = new Identifier(Patchouli.MOD_ID, "shaders/" + name + ".fsh");

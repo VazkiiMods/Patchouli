@@ -1,6 +1,7 @@
 package vazkii.patchouli.api;
 
 import com.google.common.base.Suppliers;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -11,7 +12,6 @@ import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Lazy;
 import net.minecraft.util.math.BlockPos;
 
 import org.apache.logging.log4j.LogManager;
