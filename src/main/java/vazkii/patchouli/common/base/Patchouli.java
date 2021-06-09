@@ -1,13 +1,13 @@
 package vazkii.patchouli.common.base;
 
+import net.fabricmc.loader.api.FabricLoader;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.management.ManagementFactory;
-
 public class Patchouli {
 
-	public static boolean debug = ManagementFactory.getRuntimeMXBean().getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+	public static boolean debug = FabricLoader.getInstance().isDevelopmentEnvironment();
 
 	// Mod Constants
 	public static final String MOD_ID = "patchouli";
