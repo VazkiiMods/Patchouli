@@ -1,9 +1,11 @@
 package vazkii.patchouli.common.network.message;
 
-import net.fabricmc.fabric.api.network.PacketContext;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.minecraft.entity.player.PlayerEntity;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -17,15 +19,15 @@ import io.netty.buffer.Unpooled;
 public class MessageOpenBookGui {
 	public static final Identifier ID = new Identifier(Patchouli.MOD_ID, "open_book");
 
-	public static void send(PlayerEntity player, Identifier book, @Nullable Identifier entry, int page) {
+	public static void send(ServerPlayerEntity player, Identifier book, @Nullable Identifier entry, int page) {
 		PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
 		buf.writeIdentifier(book);
 		buf.writeString(entry == null ? "" : entry.toString());
 		buf.writeVarInt(page);
-		ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, ID, buf);
+		ServerPlayNetworking.send(player, ID, buf);
 	}
 
-	public static void handle(PacketContext context, PacketByteBuf buf) {
+	public static void handle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
 		Identifier book = buf.readIdentifier();
 		Identifier entry;
 		String tmp = buf.readString();
@@ -36,7 +38,7 @@ public class MessageOpenBookGui {
 		}
 
 		int page = buf.readVarInt();
-		context.getTaskQueue().submit(() -> {
+		client.submit(() -> {
 			ClientBookRegistry.INSTANCE.displayBookGui(book, entry, page);
 		});
 	}
