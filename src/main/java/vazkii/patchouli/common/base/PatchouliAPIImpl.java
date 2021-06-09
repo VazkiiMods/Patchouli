@@ -108,13 +108,13 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void registerCommand(String name, Function<IStyleStack, String> command) {
-		BookTextParser.register(style -> command.apply(style), name);
+		BookTextParser.register(command::apply, name);
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
 	public void registerFunction(String name, BiFunction<String, IStyleStack, String> function) {
-		BookTextParser.register((arg, style) -> function.apply(arg, style), name);
+		BookTextParser.register(function::apply, name);
 	}
 
 	@Override

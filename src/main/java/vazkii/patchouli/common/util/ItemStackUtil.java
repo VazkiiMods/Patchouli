@@ -122,16 +122,16 @@ public final class ItemStackUtil {
 	public static List<ItemStack> loadStackListFromString(String ingredientString) {
 		String[] stacksSerialized = splitStacksFromSerializedIngredient(ingredientString);
 		List<ItemStack> stacks = new ArrayList<>();
-		for (int i = 0; i < stacksSerialized.length; i++) {
-			if (stacksSerialized[i].startsWith("tag:")) {
-				Tag<Item> tag = ItemTags.getTagGroup().getTag(new Identifier(stacksSerialized[i].substring(4)));
+		for (String s : stacksSerialized) {
+			if (s.startsWith("tag:")) {
+				Tag<Item> tag = ItemTags.getTagGroup().getTag(new Identifier(s.substring(4)));
 				if (tag != null) {
 					for (Item item : tag.values()) {
 						stacks.add(new ItemStack(item));
 					}
 				}
 			} else {
-				stacks.add(loadStackFromString(stacksSerialized[i]));
+				stacks.add(loadStackFromString(s));
 			}
 		}
 		return stacks;

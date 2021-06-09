@@ -252,7 +252,7 @@ public class BookTextParser {
 		Matcher match = COMMAND_PATTERN.matcher(text);
 
 		while (match.find()) {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			// Extract the portion before the match to sb
 			match.appendReplacement(sb, "");
 			spans.add(new Span(state, sb.toString()));

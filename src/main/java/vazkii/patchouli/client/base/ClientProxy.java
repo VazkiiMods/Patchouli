@@ -32,14 +32,12 @@ public class ClientProxy implements ClientModInitializer {
 		Patchouli.reloadBookHandler = ClientBookRegistry.INSTANCE::reload;
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(ShaderHelper.INSTANCE);
 
-		ModelLoadingRegistry.INSTANCE.registerAppender((manager, register) -> {
-			BookRegistry.INSTANCE.books.values().stream()
-					.map(b -> new ModelIdentifier(b.model, "inventory"))
-					.forEach(register);
-		});
+		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, register) -> BookRegistry.INSTANCE.books.values().stream()
+				.map(b -> new ModelIdentifier(b.model, "inventory"))
+				.forEach(register));
 
 		FabricModelPredicateProviderRegistry.register(PatchouliItems.book,
-				new Identifier("completion"),
+				new Identifier(Patchouli.MOD_ID, "completion"),
 				(stack, world, entity, seed) -> ItemModBook.getCompletion(stack));
 	}
 }

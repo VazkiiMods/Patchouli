@@ -46,7 +46,7 @@ public class BookRegistry {
 
 		mods.forEach(mod -> {
 			String id = mod.getMetadata().getId();
-			findFiles(mod, String.format("data/%s/%s", id, BOOKS_LOCATION), (path) -> Files.exists(path),
+			findFiles(mod, String.format("data/%s/%s", id, BOOKS_LOCATION), Files::exists,
 					(path, file) -> {
 						if (Files.isRegularFile(file)
 								&& file.getFileName().toString().equals("book.json")) {

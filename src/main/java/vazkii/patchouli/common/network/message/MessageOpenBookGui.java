@@ -38,9 +38,7 @@ public class MessageOpenBookGui {
 		}
 
 		int page = buf.readVarInt();
-		client.submit(() -> {
-			ClientBookRegistry.INSTANCE.displayBookGui(book, entry, page);
-		});
+		client.submit(() -> ClientBookRegistry.INSTANCE.displayBookGui(book, entry, page));
 	}
 
 }
