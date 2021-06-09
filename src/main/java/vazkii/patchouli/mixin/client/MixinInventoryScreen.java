@@ -50,5 +50,10 @@ public abstract class MixinInventoryScreen extends AbstractInventoryScreen<Playe
 		if (i >= 0) {
 			((AccessorScreen) this).getChildren().set(i, replacement);
 		}
+
+		i = ((AccessorScreen) this).getSelectables().indexOf(replaced);
+		if (i >= 0) {
+			((AccessorScreen) this).getSelectables().set(i, replacement);
+		}
 	}
 }
