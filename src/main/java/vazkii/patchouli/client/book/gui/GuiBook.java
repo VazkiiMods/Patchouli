@@ -98,7 +98,7 @@ public abstract class GuiBook extends Screen {
 		bookLeft = width / 2 - FULL_WIDTH / 2;
 		bookTop = height / 2 - FULL_HEIGHT / 2;
 
-		book.contents.currentGui = this;
+		book.getContents().currentGui = this;
 
 		addDrawableChild(new GuiButtonBookBack(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5));
 		addDrawableChild(new GuiButtonBookArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
@@ -162,7 +162,7 @@ public abstract class GuiBook extends Screen {
 			addDrawableChild(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.bookmark, true));
 		}
 
-		if (!shouldAddAddBookmarkButton() && book.contents.entries.values().stream().anyMatch(v -> !v.isLocked() && v.getReadState().equals(EntryDisplayState.UNREAD))) {
+		if (!shouldAddAddBookmarkButton() && book.getContents().entries.values().stream().anyMatch(v -> !v.isLocked() && v.getReadState().equals(EntryDisplayState.UNREAD))) {
 			addDrawableChild(new GuiButtonBookMarkRead(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 10));
 		}
 	}
@@ -219,7 +219,7 @@ public abstract class GuiBook extends Screen {
 		if (tooltipStack != null) {
 			List<Text> tooltip = this.getTooltipFromItem(tooltipStack);
 
-			Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
+			Pair<BookEntry, Integer> provider = book.getContents().getEntryForStack(tooltipStack);
 			if (provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
 				Text t = new LiteralText("(")
 						.append(new TranslatableText("patchouli.gui.lexicon.shift_for_recipe"))
@@ -326,12 +326,12 @@ public abstract class GuiBook extends Screen {
 	}
 
 	void back(boolean sfx) {
-		if (!book.contents.guiStack.isEmpty()) {
+		if (!book.getContents().guiStack.isEmpty()) {
 			if (hasShiftDown()) {
 				displayLexiconGui(new GuiBookLanding(book), false);
-				book.contents.guiStack.clear();
+				book.getContents().guiStack.clear();
 			} else {
-				displayLexiconGui(book.contents.guiStack.pop(), false);
+				displayLexiconGui(book.getContents().guiStack.pop(), false);
 			}
 
 			if (sfx) {
@@ -368,7 +368,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public boolean canSeeBackButton() {
-		return !book.contents.guiStack.isEmpty();
+		return !book.getContents().guiStack.isEmpty();
 	}
 
 	public void setTooltip(Text... strings) {
@@ -420,7 +420,7 @@ public abstract class GuiBook extends Screen {
 
 		int unlockedSecretEntries = 0;
 
-		for (BookEntry entry : book.contents.entries.values()) {
+		for (BookEntry entry : book.getContents().entries.values()) {
 			if (filter.test(entry)) {
 				if (entry.isSecret()) {
 					if (!entry.isLocked()) {
@@ -545,7 +545,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public void displayLexiconGui(GuiBook gui, boolean push) {
-		book.contents.openLexiconGui(gui, push);
+		book.getContents().openLexiconGui(gui, push);
 	}
 
 }

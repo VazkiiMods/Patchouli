@@ -30,7 +30,7 @@ public class PageRelations extends PageWithText {
 
 		entryObjs = entries.stream()
 				.map((s) -> s.contains(":") ? new Identifier(s) : new Identifier(book.getModNamespace(), s))
-				.map((res) -> book.contents.entries.get(res))
+				.map((res) -> book.getContents().entries.get(res))
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}

@@ -42,7 +42,7 @@ public class ItemModBook extends Item {
 			int totalEntries = 0;
 			int unlockedEntries = 0;
 
-			for (BookEntry entry : book.contents.entries.values()) {
+			for (BookEntry entry : book.getContents().entries.values()) {
 				if (!entry.isSecret()) {
 					totalEntries++;
 					if (!entry.isLocked()) {
@@ -126,7 +126,7 @@ public class ItemModBook extends Item {
 		super.appendTooltip(stack, worldIn, tooltip, flagIn);
 
 		Book book = getBook(stack);
-		if (book != null && book.contents != null) {
+		if (book != null && book.getContents() != null) {
 			tooltip.add(book.getSubtitle().formatted(Formatting.GRAY));
 		} else if (book == null) {
 			Identifier rl = getBookId(stack);

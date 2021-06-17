@@ -23,7 +23,7 @@ public class GuiButtonInventoryBook extends ButtonWidget {
 
 	public GuiButtonInventoryBook(Book book, int x, int y) {
 		super(x, y, 20, 20, LiteralText.EMPTY, (b) -> {
-			BookContents contents = book.contents;
+			BookContents contents = book.getContents();
 			contents.openLexiconGui(contents.getCurrentGui(), false);
 		});
 		this.book = book;
@@ -41,7 +41,7 @@ public class GuiButtonInventoryBook extends ButtonWidget {
 		ItemStack stack = book.getBookItem();
 		RenderHelper.renderItemStackInGui(ms, stack, x + 2, y + 2);
 
-		EntryDisplayState readState = book.contents.getReadState();
+		EntryDisplayState readState = book.getContents().getReadState();
 		if (readState.hasIcon && readState.showInInventory) {
 			GuiBook.drawMarking(ms, book, x, y, 0, readState);
 		}

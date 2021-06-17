@@ -68,7 +68,7 @@ public class GuiBookLanding extends GuiBook {
 		}
 
 		int i = 0;
-		List<BookCategory> categories = new ArrayList<>(book.contents.categories.values());
+		List<BookCategory> categories = new ArrayList<>(book.getContents().categories.values());
 		Collections.sort(categories);
 
 		for (BookCategory category : categories) {
@@ -110,7 +110,7 @@ public class GuiBookLanding extends GuiBook {
 			drawSeparator(ms, book, RIGHT_PAGE_X, bottomSeparator);
 		}
 
-		if (book.contents.isErrored()) {
+		if (book.getContents().isErrored()) {
 			int x = RIGHT_PAGE_X + PAGE_WIDTH / 2;
 			int y = bottomSeparator + 12;
 
@@ -139,7 +139,7 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	void makeErrorTooltip() {
-		Throwable e = book.contents.getException();
+		Throwable e = book.getContents().getException();
 
 		List<Text> lines = new ArrayList<>();
 		while (e != null) {

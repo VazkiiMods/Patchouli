@@ -66,7 +66,7 @@ public final class PersistentData {
 
 				public BookEntry getEntry(Book book) {
 					Identifier res = new Identifier(entry);
-					return book.contents.entries.get(res);
+					return book.getContents().entries.get(res);
 				}
 
 			}

@@ -130,7 +130,7 @@ public class BookTextParser {
 				}
 
 				Identifier href = parameter.contains(":") ? new Identifier(parameter) : new Identifier(state.book.getModNamespace(), parameter);
-				BookEntry entry = state.book.contents.entries.get(href);
+				BookEntry entry = state.book.getContents().entries.get(href);
 				if (entry != null) {
 					state.tooltip = entry.isLocked()
 							? new TranslatableText("patchouli.gui.lexicon.locked").formatted(Formatting.GRAY)

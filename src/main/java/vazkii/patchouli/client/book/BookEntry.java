@@ -94,15 +94,15 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	public BookCategory getCategory() {
 		if (lcategory == null) {
 			if (category.contains(":")) { // full category ID
-				lcategory = book.contents.categories.get(new Identifier(category));
+				lcategory = book.getContents().categories.get(new Identifier(category));
 			} else {
 				// if we are an extension, guess the extension book's domain first, then the parent book's domain
 				if (isExtension()) {
-					lcategory = book.contents.categories.get(new Identifier(trueProvider.getModNamespace(), category));
+					lcategory = book.getContents().categories.get(new Identifier(trueProvider.getModNamespace(), category));
 				}
 
 				if (lcategory == null) {
-					lcategory = book.contents.categories.get(new Identifier(book.getModNamespace(), category));
+					lcategory = book.getContents().categories.get(new Identifier(book.getModNamespace(), category));
 				}
 			}
 		}
@@ -257,8 +257,8 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		StackWrapper wrapper = ItemStackUtil.wrapStack(stack);
 		relevantStacks.add(wrapper);
 
-		if (!book.contents.recipeMappings.containsKey(wrapper)) {
-			book.contents.recipeMappings.put(wrapper, Pair.of(this, page / 2));
+		if (!book.getContents().recipeMappings.containsKey(wrapper)) {
+			book.getContents().recipeMappings.put(wrapper, Pair.of(this, page / 2));
 		}
 	}
 

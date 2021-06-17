@@ -21,7 +21,7 @@ public class GuiBookIndex extends GuiBookEntryList {
 
 	@Override
 	protected Collection<BookEntry> getEntries() {
-		return book.contents.entries.values();
+		return book.getContents().entries.values();
 	}
 
 }

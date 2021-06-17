@@ -288,7 +288,7 @@ public class BookContents extends AbstractReadStateHolder {
 				}
 			}
 
-			entry.getBook().contents.guiStack.push(prevGui);
+			entry.getBook().getContents().guiStack.push(prevGui);
 		}
 	}
 

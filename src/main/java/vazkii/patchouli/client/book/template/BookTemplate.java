@@ -62,7 +62,7 @@ public class BookTemplate {
 			key = new Identifier(book.getModNamespace(), type);
 		}
 
-		Supplier<BookTemplate> supplier = book.contents.templates.get(key);
+		Supplier<BookTemplate> supplier = book.getContents().templates.get(key);
 		if (supplier == null) {
 			throw new IllegalArgumentException("Template " + key + " does not exist");
 		}

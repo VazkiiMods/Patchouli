@@ -42,7 +42,7 @@ public class Book {
 		return ret;
 	});
 
-	public transient BookContents contents;
+	private transient BookContents contents;
 
 	private transient boolean wasUpdated = false;
 
@@ -257,5 +257,13 @@ public class Book {
 
 	private static String numberToOrdinal(int i) {
 		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
+	}
+
+	public BookContents getContents() {
+		if (isExtension) {
+			return extensionTarget.getContents();
+		} else {
+			return contents;
+		}
 	}
 }

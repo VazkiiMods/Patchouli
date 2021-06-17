@@ -36,7 +36,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 
 	@Override
 	public void onPress() {
-		for (BookEntry entry : this.book.contents.entries.values()) {
+		for (BookEntry entry : this.book.getContents().entries.values()) {
 			if (isMainPage(this.book)) {
 				markEntry(entry);
 			} else {
@@ -46,7 +46,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	}
 
 	private void markCategoryAsRead(BookEntry entry, BookCategory category) {
-		if (category.getName().equals(this.book.contents.getCurrentGui().getTitle())) {
+		if (category.getName().equals(this.book.getContents().getCurrentGui().getTitle())) {
 			markEntry(entry);
 		} else if (!category.isRootCategory()) {
 			markCategoryAsRead(entry, entry.getCategory().getParentCategory());
@@ -78,6 +78,6 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	}
 
 	private static boolean isMainPage(Book book) {
-		return !book.contents.currentGui.canSeeBackButton();
+		return !book.getContents().currentGui.canSeeBackButton();
 	}
 }

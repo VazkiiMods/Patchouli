@@ -39,7 +39,7 @@ public class GuiBookHistory extends GuiBookEntryList {
 
 		return data.history.stream()
 				.map(Identifier::new)
-				.map((res) -> book.contents.entries.get(res))
+				.map((res) -> book.getContents().entries.get(res))
 				.filter((e) -> e != null && !e.isLocked())
 				.collect(Collectors.toList());
 	}

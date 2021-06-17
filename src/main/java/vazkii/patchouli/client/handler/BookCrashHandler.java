@@ -37,8 +37,8 @@ public class BookCrashHandler implements CrashCallable<String> {
 			builder.append(INDENT).append("Search query: ").append(((GuiBookEntryList) gui).getSearchQuery());
 		}
 		builder.append(INDENT).append("Current page spread: ").append(gui.getSpread());
-		if (book.contents.isErrored()) {
-			Exception ex = book.contents.getException();
+		if (book.getContents().isErrored()) {
+			Exception ex = book.getContents().getException();
 			builder.append(INDENT).append("Book loading error: ");
 			try (StringWriter sw = new StringWriter();
 					PrintWriter pw = new PrintWriter(sw)) {

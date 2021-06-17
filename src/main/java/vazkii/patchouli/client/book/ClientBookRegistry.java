@@ -78,13 +78,13 @@ public class ClientBookRegistry {
 		Book book = BookRegistry.INSTANCE.books.get(bookStr);
 
 		if (book != null && !book.isExtension) {
-			book.contents.checkValidCurrentEntry();
+			book.getContents().checkValidCurrentEntry();
 
 			if (entryId != null) {
-				book.contents.setTopEntry(entryId, page);
+				book.getContents().setTopEntry(entryId, page);
 			}
 
-			book.contents.openLexiconGui(book.contents.getCurrentGui(), false);
+			book.getContents().openLexiconGui(book.getContents().getCurrentGui(), false);
 
 			if (mc.player != null) {
 				SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open);

@@ -77,7 +77,7 @@ public class BookRightClickHandler {
 				Pair<BookEntry, Integer> hover = getHoveredEntry(book);
 				if (hover != null) {
 					int page = hover.getSecond() * 2;
-					book.contents.setTopEntry(hover.getFirst().getId(), page);
+					book.getContents().setTopEntry(hover.getFirst().getId(), page);
 				}
 			}
 		}
@@ -94,7 +94,7 @@ public class BookRightClickHandler {
 			ItemStack picked = block.getPickStack(mc.world, pos, state);
 
 			if (!picked.isEmpty()) {
-				return book.contents.getEntryForStack(picked);
+				return book.getContents().getEntryForStack(picked);
 			}
 		}
 

@@ -224,7 +224,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 			}
 		}
 
-		book.contents.openLexiconGui(gui, true);
+		book.getContents().openLexiconGui(gui, true);
 	}
 
 	@Override

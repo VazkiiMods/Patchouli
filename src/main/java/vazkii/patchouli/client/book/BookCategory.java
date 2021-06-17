@@ -63,15 +63,15 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	public BookCategory getParentCategory() {
 		if (!checkedParent && !isRootCategory()) {
 			if (parent.contains(":")) {
-				parentCategory = book.contents.categories.get(new Identifier(parent));
+				parentCategory = book.getContents().categories.get(new Identifier(parent));
 			} else {
 				// if we are an extension, guess the extension book's domain first, then the parent book's domain
 				if (isExtension()) {
-					parentCategory = book.contents.categories.get(new Identifier(trueProvider.getModNamespace(), parent));
+					parentCategory = book.getContents().categories.get(new Identifier(trueProvider.getModNamespace(), parent));
 				}
 
 				if (parentCategory == null) {
-					parentCategory = book.contents.categories.get(new Identifier(book.getModNamespace(), parent));
+					parentCategory = book.getContents().categories.get(new Identifier(book.getModNamespace(), parent));
 				}
 			}
 
@@ -198,7 +198,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 		if (parentCategory != null) {
 			parentCategory.markReadStateDirty();
 		} else {
-			book.contents.markReadStateDirty();
+			book.getContents().markReadStateDirty();
 		}
 	}
 

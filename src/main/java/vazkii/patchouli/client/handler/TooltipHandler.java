@@ -46,7 +46,7 @@ public class TooltipHandler {
 				if (!stackAt.isEmpty()) {
 					Book book = ItemStackUtil.getBookFromStack(stackAt);
 					if (book != null) {
-						Pair<BookEntry, Integer> entry = book.contents.getEntryForStack(stack);
+						Pair<BookEntry, Integer> entry = book.getContents().getEntryForStack(stack);
 
 						if (entry != null && !entry.getFirst().isLocked()) {
 							lexiconStack = stackAt;

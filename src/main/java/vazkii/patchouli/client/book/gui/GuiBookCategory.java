@@ -45,7 +45,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 	@Override
 	protected void addSubcategoryButtons() {
 		int i = 0;
-		List<BookCategory> categories = new ArrayList<>(book.contents.categories.values());
+		List<BookCategory> categories = new ArrayList<>(book.getContents().categories.values());
 		categories.removeIf(cat -> cat.getParentCategory() != category || cat.shouldHide());
 		Collections.sort(categories);
 		subcategoryButtonCount = categories.size();
