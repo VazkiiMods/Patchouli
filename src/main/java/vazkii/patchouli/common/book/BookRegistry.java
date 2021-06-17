@@ -82,6 +82,20 @@ public class BookRegistry {
 		});
 
 		BookFolderLoader.findBooks();
+
+		for (var book : books.values()) {
+			if (book.isExtension) {
+				book.extensionTarget = books.get(book.extend);
+
+				if (book.extensionTarget == null) {
+					throw new IllegalArgumentException("Extension Book " + book.id + " has no valid target");
+				} else if (!book.extensionTarget.allowExtensions) {
+					throw new IllegalArgumentException("Book " + book.extensionTarget.id + " doesn't allow extensions, so " + book.id + " can't modify it");
+				}
+
+				book.extensionTarget.extensions.add(book);
+			}
+		}
 	}
 
 	public void loadBook(ModContainer mod, Identifier res, InputStream stream,
@@ -96,7 +110,6 @@ public class BookRegistry {
 	public void reloadContents() {
 		PatchouliConfig.reloadBuiltinFlags();
 		books.values().forEach(Book::reloadContents);
-		books.values().forEach(Book::reloadExtensionContents);
 		ClientBookRegistry.INSTANCE.reloadLocks(false);
 		loaded = true;
 	}

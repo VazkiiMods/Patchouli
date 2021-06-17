@@ -10,6 +10,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.text.Text;
 
 import vazkii.patchouli.api.IVariable;
+import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
@@ -23,8 +24,8 @@ public class PageSpotlight extends PageWithText {
 	transient Ingredient ingredient;
 
 	@Override
-	public void build(BookEntry entry, int pageNum) {
-		super.build(entry, pageNum);
+	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(entry, builder, pageNum);
 		ingredient = item.as(Ingredient.class);
 
 		if (linkRecipe) {

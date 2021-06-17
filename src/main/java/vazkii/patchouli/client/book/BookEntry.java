@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class BookEntry extends AbstractReadStateHolder implements Comparable<BookEntry> {
@@ -91,10 +92,10 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		return icon;
 	}
 
-	public BookCategory getCategory() {
+	public void initCategory(Function<Identifier, BookCategory> categories) {
 		if (lcategory == null) {
 			if (category.contains(":")) { // full category ID
-				lcategory = book.getContents().categories.get(new Identifier(category));
+				lcategory = categories.apply(new Identifier(category));
 			} else {
 				String hint = String.format("`%s:%s`", book.getModNamespace(), category);
 				if (isExtension() && !trueProvider.getModNamespace().equals(book.getModNamespace())) {
@@ -103,7 +104,9 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 				throw new IllegalArgumentException("`category` must be fully qualified (domain:name). Hint: Try " + hint);
 			}
 		}
+	}
 
+	public BookCategory getCategory() {
 		return lcategory;
 	}
 
@@ -202,7 +205,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		this.id = id;
 	}
 
-	public void build() {
+	public void build(BookContentsBuilder builder) {
 		if (built) {
 			return;
 		}
@@ -215,7 +218,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		for (int i = 0; i < pages.length; i++) {
 			if (pages[i].canAdd(book)) {
 				try {
-					pages[i].build(this, i);
+					pages[i].build(this, builder, i);
 					realPages.add(pages[i]);
 				} catch (Exception e) {
 					throw new RuntimeException("Error while loading entry " + id + " page " + i, e);

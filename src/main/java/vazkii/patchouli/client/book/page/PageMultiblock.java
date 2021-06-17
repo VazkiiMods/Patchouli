@@ -26,6 +26,7 @@ import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
+import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -59,8 +60,8 @@ public class PageMultiblock extends PageWithText {
 	private transient ButtonWidget visualizeButton;
 
 	@Override
-	public void build(BookEntry entry, int pageNum) {
-		super.build(entry, pageNum);
+	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(entry, builder, pageNum);
 		if (multiblockId != null) {
 			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(multiblockId);
 

@@ -5,8 +5,10 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import vazkii.patchouli.client.book.BookEntry;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.mixin.AccessorRecipeManager;
 
 import javax.annotation.Nullable;
@@ -43,6 +45,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 			return tempRecipe;
 		}
 
+		Patchouli.LOGGER.warn("Recipe {} (of type {}) not found", res, Registry.RECIPE_TYPE.getId(recipeType));
 		return null;
 	}
 

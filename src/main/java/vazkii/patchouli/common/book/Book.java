@@ -10,11 +10,8 @@ import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
-import vazkii.patchouli.api.BookContentsReloadCallback;
 import vazkii.patchouli.client.base.ClientAdvancements;
-import vazkii.patchouli.client.book.BookContents;
-import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.ExternalBookContents;
+import vazkii.patchouli.client.book.*;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.item.ItemModBook;
@@ -42,7 +39,7 @@ public class Book {
 		return ret;
 	});
 
-	private transient BookContents contents;
+	private transient BookContents contents = BookContents.empty(this, null);
 
 	private transient boolean wasUpdated = false;
 
@@ -165,48 +162,30 @@ public class Book {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void reloadContentsAndExtensions() {
-		reloadContents();
-
-		for (Book b : extensions) {
-			b.reloadExtensionContents();
-		}
-	}
-
-	@Environment(EnvType.CLIENT)
 	public void reloadContents() {
-		if (contents == null) {
-			contents = isExternal ? new ExternalBookContents(this) : new BookContents(this);
-		}
-
 		if (!isExtension) {
-			contents.reload(false);
-			BookContentsReloadCallback.EVENT.invoker().trigger(this.id);
-		}
-	}
-
-	@Environment(EnvType.CLIENT)
-	public void reloadExtensionContents() {
-		if (isExtension) {
-			if (extensionTarget == null) {
-				extensionTarget = BookRegistry.INSTANCE.books.get(extend);
-
-				if (extensionTarget == null) {
-					throw new IllegalArgumentException("Extension Book " + id + " has no valid target");
-				} else if (!extensionTarget.allowExtensions) {
-					throw new IllegalArgumentException("Book " + extensionTarget.id + " doesn't allow extensions, so " + id + " can't resolve");
-				}
-
-				extensionTarget.extensions.add(this);
-
-				contents.categories = extensionTarget.contents.categories;
-				contents.entries = extensionTarget.contents.entries;
-				contents.templates = extensionTarget.contents.templates;
-				contents.recipeMappings = extensionTarget.contents.recipeMappings;
+			BookContentsBuilder builder = new BookContentsBuilder();
+			try {
+				builder.loadFrom(this);
+			} catch (Exception e) {
+				Patchouli.LOGGER.error("Error loading book {}, using empty contents and ignoring extensions", id);
+				contents = BookContents.empty(this, e);
 			}
 
-			contents.reload(true);
-			BookContentsReloadCallback.EVENT.invoker().trigger(this.id);
+			for (Book extension : extensions) {
+				try {
+					builder.loadFrom(extension);
+				} catch (Exception e) {
+					Patchouli.LOGGER.error("Error loading extending book {} with addon book {}, skipping", id, extension.id);
+				}
+			}
+
+			try {
+				contents = builder.build(this);
+			} catch (Exception e) {
+				Patchouli.LOGGER.error("Error compiling book {}, using empty contents", id, e);
+				contents = BookContents.empty(this, e);
+			}
 		}
 	}
 
@@ -253,6 +232,15 @@ public class Book {
 		}
 
 		return new TranslatableText("patchouli.gui.lexicon.edition_str", editionStr);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public BookIcon getIcon() {
+		if (indexIconRaw == null || indexIconRaw.isEmpty()) {
+			return new BookIcon(getBookItem());
+		} else {
+			return BookIcon.from(indexIconRaw);
+		}
 	}
 
 	private static String numberToOrdinal(int i) {

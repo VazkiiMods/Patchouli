@@ -7,6 +7,7 @@ import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
+import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -55,7 +56,7 @@ public class BookTemplate {
 	transient boolean compiled = false;
 	transient boolean attemptedCreatingProcessor = false;
 
-	public static BookTemplate createTemplate(Book book, String type, @Nullable TemplateInclusion inclusion) {
+	public static BookTemplate createTemplate(Book book, BookContentsBuilder builder, String type, @Nullable TemplateInclusion inclusion) {
 		Identifier key;
 		if (type.contains(":")) {
 			key = new Identifier(type);
@@ -63,7 +64,7 @@ public class BookTemplate {
 			key = new Identifier(book.getModNamespace(), type);
 		}
 
-		Supplier<BookTemplate> supplier = book.getContents().templates.get(key);
+		Supplier<BookTemplate> supplier = builder.getTemplate(key);
 		if (supplier == null) {
 			throw new IllegalArgumentException("Template " + key + " does not exist");
 		}
@@ -75,7 +76,7 @@ public class BookTemplate {
 		return template;
 	}
 
-	public void compile(IVariableProvider variables) {
+	public void compile(BookContentsBuilder builder, IVariableProvider variables) {
 		if (compiled) {
 			return;
 		}
@@ -104,8 +105,8 @@ public class BookTemplate {
 			include.upperMerge(encapsulation);
 			include.process(processor);
 
-			BookTemplate template = createTemplate(book, include.template, include);
-			template.compile(variables);
+			BookTemplate template = createTemplate(book, builder, include.template, include);
+			template.compile(builder, variables);
 			components.addAll(template.components);
 		}
 

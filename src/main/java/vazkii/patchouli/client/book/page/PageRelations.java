@@ -5,6 +5,7 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -25,12 +26,12 @@ public class PageRelations extends PageWithText {
 	transient List<BookEntry> entryObjs;
 
 	@Override
-	public void build(BookEntry entry, int pageNum) {
-		super.build(entry, pageNum);
+	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(entry, builder, pageNum);
 
 		entryObjs = entries.stream()
 				.map(Identifier::new)
-				.map(book.getContents().entries::get)
+				.map(builder::getEntry)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}
