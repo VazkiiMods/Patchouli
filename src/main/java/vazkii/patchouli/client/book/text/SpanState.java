@@ -73,7 +73,7 @@ public class SpanState implements IStyleStack {
 
 	@Override
 	public void pushStyle(Style style) {
-		stateStack.push(new SpanPartialState(stateStack.peek().getCurrentStyle(), style));
+		stateStack.push(new SpanPartialState(style.mergeStyle(peekStyle()), style));
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class SpanState implements IStyleStack {
 		// Takes the current style state from downstream
 		// and a style to merge onto it.
 		public SpanPartialState(Style currentStyle, Style mergeStyle) {
-			this.currentStyle = mergeStyle.mergeStyle(currentStyle);
+			this.currentStyle = currentStyle;
 			this.mergeStyle = mergeStyle;
 		}
 
