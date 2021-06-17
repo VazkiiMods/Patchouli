@@ -1,21 +1,21 @@
 {
     "name": "Test Entry",
     "icon": "minecraft:writable_book",
-    "category": "test",
+    "category": "patchouli:test",
     "priority": true,
     "read_by_default": false,
     "advancement": "patchouli:test_book",
     "pages": [
         {
-            "type": "text",
+            "type": "patchouli:text",
             "text": "THIS IS A TEST ENTRY"
         },
         {
-            "type": "text",
+            "type": "patchouli:text",
             "text": "IF YOU SEE THIS THEN SHIT IS WORKING YO $(l:intro/preface)test$()"
         },
         {
-            "type": "spotlight",
+            "type": "patchouli:spotlight",
             "item": "minecraft:stone",
             "text": "spaget"
         }

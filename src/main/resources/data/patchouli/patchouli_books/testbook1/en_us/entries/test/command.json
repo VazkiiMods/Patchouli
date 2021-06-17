@@ -1,10 +1,10 @@
 {
   "name": "Command test",
   "icon": "minecraft:command_block",
-  "category": "test",
+  "category": "patchouli:test",
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "Click $(c:/tell @s hi, me!)this$(/l) to say hi to yourself."
     }
   ]

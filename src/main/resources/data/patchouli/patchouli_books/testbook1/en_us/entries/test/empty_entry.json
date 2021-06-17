@@ -1,7 +1,7 @@
 {
   "name": "Empty Entry Test",
   "icon": "minecraft:textures/item/carrot.png",
-  "category": "test",
+  "category": "patchouli:test",
   "pages": [],
   "__info": "This entry is a test! It intentionally has no pages!"
 }

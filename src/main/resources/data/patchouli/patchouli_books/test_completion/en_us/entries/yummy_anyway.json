@@ -1,7 +1,7 @@
 {
   "name": "2 - Pigman?",
   "icon": "minecraft:rotten_flesh",
-  "category": "regret",
+  "category": "patchouli:regret",
   "advancement": "patchouli:yummy_anyway",
   "pages": [
     {

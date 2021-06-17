@@ -4,7 +4,7 @@
   "icon": "minecraft:carrot_on_a_stick",
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "hello world"
     }
   ]

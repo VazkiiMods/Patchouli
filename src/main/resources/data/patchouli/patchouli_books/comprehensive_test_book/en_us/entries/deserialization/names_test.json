@@ -1,15 +1,15 @@
 {
   "name": "Names Test",
-  "category": "deserialization",
+  "category": "patchouli:deserialization",
   "flag": "!mod:gardenofglass",
   "icon": "minecraft:name_tag",
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "The following page should read \"<playername> pressed <use binding> with their <shears name> on a <sheep name> and got some <wool name>\""
     },
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": {
         "translate": "$(l)%s$() pressed %s with their $(6)%s on a %s$(0) and got some $(8)%s$(0)",
         "with": [

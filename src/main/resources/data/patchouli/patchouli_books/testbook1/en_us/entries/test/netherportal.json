@@ -1,10 +1,10 @@
 {
   "name": "Some Test Quests",
   "icon": "minecraft:obsidian",
-  "category": "intro/butts",
+  "category": "patchouli:intro/butts",
   "pages": [
     {
-      "type": "multiblock",
+      "type": "patchouli:multiblock",
       "name": "Nether Portal!",
       "text": "This portal frame can be any size but this is the minimum size required.",
       "multiblock": {
@@ -26,12 +26,12 @@
         "view_offset": [0, 0, 0]
       }
     }, {
-      "type": "spotlight",
+      "type": "patchouli:spotlight",
       "title": "Make it Lit!",
       "text": "Just set a top face of one of two bottom obsidian blocks on fire and BOOM! you got yourself a ticket to hell!",
       "item": "minecraft:flint_and_steel#10"
     }, {
-      "type": "multiblock",
+      "type": "patchouli:multiblock",
       "name": "The Result!",
       "text": "I've added unobtainable blocks so I disabled the visualization button! Time to punch some pigmen!",
       "enable_visualize": false,
@@ -55,15 +55,15 @@
       }
     },
     {
-        "type": "empty"
+        "type": "patchouli:empty"
     },
     {
-        "type": "quest",
+        "type": "patchouli:quest",
         "text": "This a quest to acquire some $(item)Magenta Wool!$().",
         "trigger": "patchouli:mcp_035_2" 
     },
     {
-        "type": "quest",
+        "type": "patchouli:quest",
         "text": "Quests may also be manual like this one for build challenges.$(br2)Did you know you can automate a quarry using only Botania? Try it out!"
     }
   ]

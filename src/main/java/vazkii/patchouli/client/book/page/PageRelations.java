@@ -29,8 +29,8 @@ public class PageRelations extends PageWithText {
 		super.build(entry, pageNum);
 
 		entryObjs = entries.stream()
-				.map((s) -> s.contains(":") ? new Identifier(s) : new Identifier(book.getModNamespace(), s))
-				.map((res) -> book.getContents().entries.get(res))
+				.map(Identifier::new)
+				.map(book.getContents().entries::get)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
 	}

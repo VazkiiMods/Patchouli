@@ -1,14 +1,14 @@
 {
     "include": [
         {
-            "template": "include/recipetest",
+            "template": "patchouli:include/recipetest",
             "as": "recipe1",
             "using": {
                 "recipe": "#foo" 
             }
         },
         {
-            "template": "include/recipetest",
+            "template": "patchouli:include/recipetest",
             "as": "recipe2",
             "using": {
                 "recipe": "#bar"
@@ -18,7 +18,7 @@
     ],
     "components": [
         {
-            "type": "header",
+            "type": "patchouli:header",
             "text": "Two Recipes!",
             "x": -1
         }

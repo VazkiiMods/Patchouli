@@ -1,10 +1,10 @@
 {
   "name": "Relations",
-  "category": "page_types",
+  "category": "patchouli:page_types",
   "icon": "minecraft:vindicator_spawn_egg",
   "pages": [
     {
-      "type": "relations",
+      "type": "patchouli:relations",
       "entries": [
         "patchouli:page_types/link",
         "patchouli:multiblocks/dense"

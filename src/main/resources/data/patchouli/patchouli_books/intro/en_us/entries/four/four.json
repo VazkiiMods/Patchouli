@@ -1,7 +1,7 @@
 {
 	"name": "Haha yes",
 	"icon": "minecraft:writable_book",
-	"category": "four",
+	"category": "patchouli:four",
 	"pages": [
 		{
 			"type": "text",

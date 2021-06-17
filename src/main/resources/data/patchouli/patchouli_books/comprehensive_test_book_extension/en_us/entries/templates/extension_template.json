@@ -1,20 +1,20 @@
 {
   "name": "Extensions and Templates",
-  "category": "templates",
+  "category": "patchouli:templates",
   "icon": "minecraft:written_book",
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "This entry was added from an extension book into an existing category in the parent."
     },
     {
-      "type": "builtin_components_2",
+      "type": "patchouli:builtin_components_2",
       "entity": "minecraft:horse",
       "tip1": "Using the parent's templates from an extension book",
       "tip2": "Horses were added in 1.6!"
     },
     {
-      "type": "extension_template",
+      "type": "patchouli:extension_template",
       "text": "Using a template from our own extension book"
     }
   ]

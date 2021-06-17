@@ -1,11 +1,11 @@
 {
   "name": "Appears if GoG is missing",
-  "category": "config_flags",
+  "category": "patchouli:config_flags",
   "flag": "!mod:gardenofglass",
   "icon": "minecraft:oak_sapling",
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "If this page doesn't appear, Botania will be sad because Orechid won't appear in its lexicon either."
     }
   ]

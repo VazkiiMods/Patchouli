@@ -1,10 +1,10 @@
 {
   "name": "A Crafting Yes Haha",
   "icon": "minecraft:crafting_table",
-  "category": "kraft_dab",
+  "category": "patchouli:kraft_dab",
   "pages": [
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "text": "Haha yes",
       "recipe": "minecraft:furnace",
       "recipe2": "minecraft:i_very_erroring_right_now"

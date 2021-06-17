@@ -1,18 +1,18 @@
 {
   "components": [
     {
-      "type": "entity",
+      "type": "patchouli:entity",
       "entity": "#entity",
       "x": 50,
       "y": 50
     },
     {
-      "type": "frame",
+      "type": "patchouli:frame",
       "x": -1,
       "y": -1
     },
     {
-      "type": "tooltip",
+      "type": "patchouli:tooltip",
       "tooltip": [
         "#tip1",
         "#tip2"

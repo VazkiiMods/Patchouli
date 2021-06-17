@@ -1,11 +1,11 @@
 {
   "name": "nEntry",
   "icon": "minecraft:textures/item/clock_62.png",
-  "category": "test_sort0",
+  "category": "patchouli:test_sort0",
   "sortnum": -1,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "Sortnum test! This contents of this page doesn't matter. Where it ends up on the category listing does. This has a negative sortnum value too."
     }
   ]

@@ -1,13 +1,13 @@
 {
 	"components": [
 		{
-			"type": "text",
+			"type": "patchouli:text",
 			"text": "#text",
 			"x": 20,
 			"y": 30
 		},
 		{
-			"type": "text",
+			"type": "patchouli:text",
 			"text": "#text2",
 			"x": 6,
 			"y": 55,
@@ -16,7 +16,7 @@
 			"color": "007700"
 		},
 		{
-			"type": "item",
+			"type": "patchouli:item",
 			"item": "#item",
 			"x": 60,
 			"y": 50,
@@ -24,13 +24,13 @@
 			"link_recipe": true
 		},
 		{
-			"type": "item",
+			"type": "patchouli:item",
 			"item": "minecraft:gold_ingot",
 			"x": 60,
 			"y": 80
 		},
 		{
-			"type": "image",
+			"type": "patchouli:image",
 			"image": "minecraft:textures/painting/paintings_kristoffer_zetterstrand.png",
 			"x": 50,
 			"y": 100,
@@ -41,13 +41,13 @@
 		},
 		{
 			"group": "header",
-			"type": "header",
+			"type": "patchouli:header",
 			"text": "Template Test",
 			"x": -1
 		},
 		{
 			"group": "header",
-			"type": "separator",
+			"type": "patchouli:separator",
 			"y": 12
 		}
 	]

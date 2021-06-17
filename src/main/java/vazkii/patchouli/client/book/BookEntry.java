@@ -96,14 +96,11 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 			if (category.contains(":")) { // full category ID
 				lcategory = book.getContents().categories.get(new Identifier(category));
 			} else {
-				// if we are an extension, guess the extension book's domain first, then the parent book's domain
-				if (isExtension()) {
-					lcategory = book.getContents().categories.get(new Identifier(trueProvider.getModNamespace(), category));
+				String hint = String.format("`%s:%s`", book.getModNamespace(), category);
+				if (isExtension() && !trueProvider.getModNamespace().equals(book.getModNamespace())) {
+					hint += String.format("or `%s:%s`", trueProvider.getModNamespace(), category);
 				}
-
-				if (lcategory == null) {
-					lcategory = book.getContents().categories.get(new Identifier(book.getModNamespace(), category));
-				}
+				throw new IllegalArgumentException("`category` must be fully qualified (domain:name). Hint: Try " + hint);
 			}
 		}
 

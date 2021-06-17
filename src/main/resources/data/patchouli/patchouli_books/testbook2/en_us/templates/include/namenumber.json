@@ -1,12 +1,12 @@
 {
     "components": [
         {
-            "type": "header",
+            "type": "patchouli:header",
             "text": "#icount",
             "x": 8
         }, 
         {
-            "type": "text",
+            "type": "patchouli:text",
             "text": "#iname",
             "color": "000000",
             "y": 12

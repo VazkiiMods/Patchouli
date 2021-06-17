@@ -123,7 +123,7 @@ public class ClientBookRegistry {
 		public TemplateComponent deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			JsonObject obj = json.getAsJsonObject();
 			JsonPrimitive prim = (JsonPrimitive) obj.get("type");
-			String type = prim.getAsString();
+			Identifier type = new Identifier(prim.getAsString());
 			Class<? extends TemplateComponent> clazz = BookTemplate.componentTypes.get(type);
 
 			if (clazz == null) {

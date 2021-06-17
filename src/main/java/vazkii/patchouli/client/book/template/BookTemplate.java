@@ -11,6 +11,7 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.component.*;
+import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nullable;
@@ -23,18 +24,18 @@ import java.util.function.Supplier;
 
 public class BookTemplate {
 
-	public static final HashMap<String, Class<? extends TemplateComponent>> componentTypes = new HashMap<>();
+	public static final HashMap<Identifier, Class<? extends TemplateComponent>> componentTypes = new HashMap<>();
 
 	static {
-		registerComponent("text", ComponentText.class);
-		registerComponent("item", ComponentItemStack.class);
-		registerComponent("image", ComponentImage.class);
-		registerComponent("header", ComponentHeader.class);
-		registerComponent("separator", ComponentSeparator.class);
-		registerComponent("frame", ComponentFrame.class);
-		registerComponent("entity", ComponentEntity.class);
-		registerComponent("tooltip", ComponentTooltip.class);
-		registerComponent("custom", ComponentCustom.class);
+		registerComponent(new Identifier(Patchouli.MOD_ID, "text"), ComponentText.class);
+		registerComponent(new Identifier(Patchouli.MOD_ID, "item"), ComponentItemStack.class);
+		registerComponent(new Identifier(Patchouli.MOD_ID, "image"), ComponentImage.class);
+		registerComponent(new Identifier(Patchouli.MOD_ID, "header"), ComponentHeader.class);
+		registerComponent(new Identifier(Patchouli.MOD_ID, "separator"), ComponentSeparator.class);
+		registerComponent(new Identifier(Patchouli.MOD_ID, "frame"), ComponentFrame.class);
+		registerComponent(new Identifier(Patchouli.MOD_ID, "entity"), ComponentEntity.class);
+		registerComponent(new Identifier(Patchouli.MOD_ID, "tooltip"), ComponentTooltip.class);
+		registerComponent(new Identifier(Patchouli.MOD_ID, "custom"), ComponentCustom.class);
 	}
 
 	@SerializedName("include") List<TemplateInclusion> inclusions = new ArrayList<>();
@@ -154,7 +155,7 @@ public class BookTemplate {
 		return false;
 	}
 
-	public static void registerComponent(String name, Class<? extends TemplateComponent> clazz) {
+	public static void registerComponent(Identifier name, Class<? extends TemplateComponent> clazz) {
 		componentTypes.put(name, clazz);
 	}
 

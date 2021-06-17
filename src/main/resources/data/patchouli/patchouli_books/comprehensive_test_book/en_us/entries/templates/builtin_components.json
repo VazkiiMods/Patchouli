@@ -1,17 +1,17 @@
 {
   "name": "Basic Template Components",
-  "category": "templates",
+  "category": "patchouli:templates",
   "icon": "minecraft:written_book",
   "pages": [
     {
-      "type": "builtin_components_1",
+      "type": "patchouli:builtin_components_1",
       "headertext": "Header component",
       "texttext": "Text component section",
       "item": "minecraft:poisonous_potato",
       "image": "minecraft:textures/item/end_crystal.png"
     },
     {
-      "type": "builtin_components_2",
+      "type": "patchouli:builtin_components_2",
       "entity": "minecraft:drowned",
       "tip1": "The Drowned is a special zombie that spawns in oceans.",
       "tip2": "It can also be created by manually drowning standard zombies."

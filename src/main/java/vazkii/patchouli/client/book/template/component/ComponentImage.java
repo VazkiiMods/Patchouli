@@ -29,11 +29,7 @@ public class ComponentImage extends TemplateComponent {
 
 	@Override
 	public void build(BookPage page, BookEntry entry, int pageNum) {
-		if (image.contains(":")) {
-			resource = new Identifier(image);
-		} else {
-			resource = new Identifier(page.book.getModNamespace(), image);
-		}
+		resource = new Identifier(image);
 	}
 
 	@Override

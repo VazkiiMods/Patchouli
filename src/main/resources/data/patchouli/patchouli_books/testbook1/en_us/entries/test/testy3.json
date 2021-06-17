@@ -1,17 +1,17 @@
 {
 	"name": "Test Entry 3",
 	"icon": "minecraft:textures/item/clock_06.png",
-	"category": "test",
+	"category": "patchouli:test",
 	"priority": true,
 	"read_by_default": false,
 	"advancement": "patchouli:test_invis",
 	"pages": [
 		{
-			"type": "text",
+			"type": "patchouli:text",
 			"text": "THIS IS A TEST ENTRY"
 		},
 		{
-			"type": "multiblock",
+			"type": "patchouli:multiblock",
 			"multiblock_id": "",
 			"name": "Cool Crucible",
 			"text": "Testing multiblocks loaded from json!",

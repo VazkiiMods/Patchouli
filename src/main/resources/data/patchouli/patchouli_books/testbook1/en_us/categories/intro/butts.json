@@ -2,6 +2,6 @@
     "name": "Butts",
     "description": "I like big butts and I can not lie",
     "icon": "minecraft:apple",
-    "parent": "intro",
+    "parent": "patchouli:intro",
     "sortnum": 0
 }

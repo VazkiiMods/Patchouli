@@ -1,10 +1,10 @@
 {
   "name": "Sparse Multiblocks",
-  "category": "multiblocks",
+  "category": "patchouli:multiblocks",
   "icon": "minecraft:stone_brick_stairs",
   "pages": [
     {
-      "type": "multiblock",
+      "type": "patchouli:multiblock",
       "name": "stair end portal (sparse)",
       "multiblock": {
         "sparse_pattern": {

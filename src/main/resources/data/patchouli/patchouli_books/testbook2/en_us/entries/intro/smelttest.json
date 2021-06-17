@@ -1,12 +1,12 @@
 {
     "name": "ur mom gay",
     "icon": "minecraft:furnace",
-    "category": "intro",
+    "category": "patchouli:intro",
     "priority": true,
     "entry_color": "114fbf",
     "pages": [
         {
-            "type": "doublerecipe",
+            "type": "patchouli:doublerecipe",
             "foo": "minecraft:piston",
             "bar": "minecraft:clock",
             "recipe1.blarg": "blarg",
@@ -15,7 +15,7 @@
             "recipe2.nn.output": "bbbbb"
         },
         {
-            "type": "multiblock",
+            "type": "patchouli:multiblock",
             "name": "Goldzebo",
             "multiblock": {
                 "pattern": [

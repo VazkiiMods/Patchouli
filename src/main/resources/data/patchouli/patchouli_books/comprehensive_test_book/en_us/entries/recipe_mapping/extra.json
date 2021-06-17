@@ -1,17 +1,17 @@
 {
   "name": "Extra Recipe Mapping",
-  "category": "recipe_mapping",
+  "category": "patchouli:recipe_mapping",
   "icon": "minecraft:tropical_fish",
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": {"translate":"patchouli.gui.lexicon.reloaded","with":[69]}
     },
     {
-      "type": "empty"
+      "type": "patchouli:empty"
     },
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "Logs should be mapped here"
     }
   ],

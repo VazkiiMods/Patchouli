@@ -1,13 +1,13 @@
 {
 	"name": "Very large multiblock",
 	"icon": "minecraft:textures/item/lapis_lazuli.png",
-	"category": "intro/butts",
+	"category": "patchouli:intro/butts",
 	"priority": true,
 	"read_by_default": false,
 	"advancement": "patchouli:test_book",
 	"pages": [
 		{
-			"type": "multiblock",
+			"type": "patchouli:multiblock",
 			"multiblock_id": "",
 			"name": "I cannot even",
 			"text": "Testing multiblocks loaded from json!",

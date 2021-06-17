@@ -1,31 +1,31 @@
 {
   "components": [
     {
-      "type": "header",
+      "type": "patchouli:header",
       "text": "#headertext",
       "x": -1,
       "y": -1
     },
     {
-      "type": "separator",
+      "type": "patchouli:separator",
       "x": -1,
       "y": -1
     },
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "#texttext",
       "x": 20,
       "y": 30
     },
     {
-      "type": "item",
+      "type": "patchouli:item",
       "x": 20,
       "y": 80,
       "item": "#item",
       "framed": true
     },
     {
-      "type": "image",
+      "type": "patchouli:image",
       "image": "#image",
       "x": 20,
       "y": 50,

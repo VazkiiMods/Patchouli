@@ -1,10 +1,10 @@
 {
   "name": "Template Nesting",
-  "category": "templates",
+  "category": "patchouli:templates",
   "icon": "minecraft:written_book",
   "pages": [
     {
-      "type": "nesting",
+      "type": "patchouli:nesting",
       "texttext": "Text component text defined in entry json",
       "child1.item": "minecraft:barrier",
       "child1.image": "minecraft:textures/item/end_crystal.png"

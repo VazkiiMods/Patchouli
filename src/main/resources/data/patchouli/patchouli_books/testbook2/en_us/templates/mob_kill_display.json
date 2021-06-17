@@ -2,19 +2,19 @@
 	"processor": "vazkii.patchouli.client.book.template.test.EntityTestProcessor",
 	"components": [
 		{
-			"type": "frame",
+			"type": "patchouli:frame",
 			"x": -1,
 			"y": 7
 		},
 		{
-			"type": "header",
+			"type": "patchouli:header",
 			"text": "#name",
 			"x": -1
 		},
 		{
 			"advancement": "#adv",
 			"negate_advancement": true,
-			"type": "header",
+			"type": "patchouli:header",
 			"text": "?",
 			"x": -1,
 			"y": 40,
@@ -24,26 +24,26 @@
 		{
 			"advancement": "#adv",
 			"negate_advancement": true,
-            "type": "text",
+            "type": "patchouli:text",
             "text": "#locked_text",
             "y": 120
 		},
 		{
 			"advancement": "#adv",
-			"type": "entity",
+			"type": "patchouli:entity",
 			"entity": "#entity",
 			"x": 58,
 			"y": 60
 		},
 		{
 			"advancement": "#adv",
-            "type": "text",
+            "type": "patchouli:text",
             "text": "#unlocked_text",
             "y": 120
 		},
 		{
 			"flag": "mod:quark",
-            "type": "text",
+            "type": "patchouli:text",
             "text": "Quark is loaded!!",
             "color": "000066",
             "y": 140

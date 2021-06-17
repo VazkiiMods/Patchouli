@@ -2,7 +2,7 @@
     "processor": "vazkii.patchouli.client.book.template.test.RecipeTestProcessor",
     "include": [
         {
-            "template": "include/namenumber",
+            "template": "patchouli:include/namenumber",
             "as": "nn",
             "using": {
                 "iname": "#iname",
@@ -14,31 +14,31 @@
     ],
 	"components": [
 		{
-			"type": "item", "item": "#item1", "x": 4, "y": 10
+			"type": "patchouli:item", "item": "#item1", "x": 4, "y": 10
 		},
 		{
-			"type": "item", "item": "#item2", "x": 24, "y": 10
+			"type": "patchouli:item", "item": "#item2", "x": 24, "y": 10
 		},
 		{
-			"type": "item", "item": "#item3", "x": 44, "y": 10
+			"type": "patchouli:item", "item": "#item3", "x": 44, "y": 10
 		},
 		{
-			"type": "item", "item": "#item4", "x": 4, "y": 30
+			"type": "patchouli:item", "item": "#item4", "x": 4, "y": 30
 		},
 		{
-			"type": "item", "item": "#item5", "x": 24, "y": 30
+			"type": "patchouli:item", "item": "#item5", "x": 24, "y": 30
 		},
 		{
-			"type": "item", "item": "#item6", "x": 44, "y": 30
+			"type": "patchouli:item", "item": "#item6", "x": 44, "y": 30
 		},
 		{
-			"type": "item", "item": "#item7", "x": 4, "y": 50
+			"type": "patchouli:item", "item": "#item7", "x": 4, "y": 50
 		},
 		{
-			"type": "item", "item": "#item8", "x": 24, "y": 50
+			"type": "patchouli:item", "item": "#item8", "x": 24, "y": 50
 		},
 		{
-			"type": "item", "item": "#item9", "x": 44, "y": 50
+			"type": "patchouli:item", "item": "#item9", "x": 44, "y": 50
 		}
 	]
 }

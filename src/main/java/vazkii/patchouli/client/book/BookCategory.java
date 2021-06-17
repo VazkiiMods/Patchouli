@@ -65,14 +65,8 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 			if (parent.contains(":")) {
 				parentCategory = book.getContents().categories.get(new Identifier(parent));
 			} else {
-				// if we are an extension, guess the extension book's domain first, then the parent book's domain
-				if (isExtension()) {
-					parentCategory = book.getContents().categories.get(new Identifier(trueProvider.getModNamespace(), parent));
-				}
-
-				if (parentCategory == null) {
-					parentCategory = book.getContents().categories.get(new Identifier(book.getModNamespace(), parent));
-				}
+				String hint = String.format("`%s:%s`", book.getModNamespace(), parent);
+				throw new IllegalArgumentException("`parent` must be fully qualified (domain:name). Hint: Try " + hint);
 			}
 
 			checkedParent = true;

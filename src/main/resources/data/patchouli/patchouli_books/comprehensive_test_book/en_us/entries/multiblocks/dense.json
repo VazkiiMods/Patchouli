@@ -1,10 +1,10 @@
 {
   "name": "Dense Multiblocks",
-  "category": "multiblocks",
+  "category": "patchouli:multiblocks",
   "icon": "minecraft:oak_stairs",
   "pages": [
     {
-      "type": "multiblock",
+      "type": "patchouli:multiblock",
       "name": "stair end portal (dense)",
       "multiblock": {
         "pattern": [
@@ -25,7 +25,7 @@
       }
     },
     {
-      "type": "multiblock",
+      "type": "patchouli:multiblock",
       "name": "issue 233",
       "multiblock": {
         "pattern": [

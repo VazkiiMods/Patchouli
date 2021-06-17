@@ -1,7 +1,7 @@
 {
   "name": "3 - Bacon!",
   "icon": "minecraft:cooked_porkchop",
-  "category": "why_tho",
+  "category": "patchouli:why_tho",
   "advancement": "patchouli:yummy",
   "pages": [
     {

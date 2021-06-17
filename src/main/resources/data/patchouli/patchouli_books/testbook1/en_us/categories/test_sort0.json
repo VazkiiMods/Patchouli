@@ -1,6 +1,6 @@
 {
   "name": "Sortnum 1",
-  "parent": "sortnum",
+  "parent": "patchouli:sortnum",
   "description": "Testing Sortnum - Entries with Sortnum only",
   "icon": "minecraft:textures/item/carrot_on_a_stick.png",
   "sortnum": 10000
