@@ -187,7 +187,7 @@ public class GuiBookLanding extends GuiBook {
 	public void handleButtonEdit(ButtonWidget button) {
 		if (hasShiftDown()) {
 			long time = System.currentTimeMillis();
-			book.reloadContentsAndExtensions();
+			book.reloadContents();
 			book.reloadLocks(false);
 			displayLexiconGui(new GuiBookLanding(book), false);
 			client.player.sendMessage(new TranslatableText("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)), false);

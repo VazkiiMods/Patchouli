@@ -22,7 +22,6 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	private boolean secret = false;
 
 	private transient Book book, trueProvider;
-	private transient boolean checkedParent = false;
 	private transient BookCategory parentCategory;
 	private transient List<BookCategory> children = new ArrayList<>();
 	private transient List<BookEntry> entries = new ArrayList<>();
@@ -61,17 +60,6 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	}
 
 	public BookCategory getParentCategory() {
-		if (!checkedParent && !isRootCategory()) {
-			if (parent.contains(":")) {
-				parentCategory = book.getContents().categories.get(new Identifier(parent));
-			} else {
-				String hint = String.format("`%s:%s`", book.getModNamespace(), parent);
-				throw new IllegalArgumentException("`parent` must be fully qualified (domain:name). Hint: Try " + hint);
-			}
-
-			checkedParent = true;
-		}
-
 		return parentCategory;
 	}
 
@@ -152,15 +140,24 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 		}
 	}
 
-	public void build(Identifier id) {
+	public void build(Identifier id, BookContentsBuilder builder) {
 		if (built) {
 			return;
 		}
 
 		this.id = id;
-		BookCategory parent = getParentCategory();
-		if (parent != null) {
-			parent.addChildCategory(this);
+
+		if (!isRootCategory()) {
+			if (parent.contains(":")) {
+				parentCategory = builder.getCategory(new Identifier(parent));
+			} else {
+				String hint = String.format("`%s:%s`", book.getModNamespace(), parent);
+				throw new IllegalArgumentException("`parent` must be fully qualified (domain:name). Hint: Try " + hint);
+			}
+		}
+
+		if (parentCategory != null) {
+			parentCategory.addChildCategory(this);
 		}
 
 		built = true;

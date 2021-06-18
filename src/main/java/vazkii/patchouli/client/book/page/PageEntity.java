@@ -13,6 +13,7 @@ import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 
 import vazkii.patchouli.client.base.ClientTicker;
+import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -39,8 +40,8 @@ public class PageEntity extends PageWithText {
 	transient float renderScale, offset;
 
 	@Override
-	public void build(BookEntry entry, int pageNum) {
-		super.build(entry, pageNum);
+	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(entry, builder, pageNum);
 
 		creator = EntityUtil.loadEntity(entityId);
 	}

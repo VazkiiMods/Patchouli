@@ -11,6 +11,7 @@ import net.minecraft.util.Identifier;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
+import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -30,8 +31,8 @@ public class PageQuest extends PageWithText {
 	}
 
 	@Override
-	public void build(BookEntry entry, int pageNum) {
-		super.build(entry, pageNum);
+	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(entry, builder, pageNum);
 
 		isManual = trigger == null;
 	}

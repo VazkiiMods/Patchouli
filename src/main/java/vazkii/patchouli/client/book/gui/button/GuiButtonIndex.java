@@ -8,7 +8,7 @@ import vazkii.patchouli.client.book.gui.GuiBook;
 public class GuiButtonIndex extends GuiButtonCategory {
 
 	public GuiButtonIndex(GuiBook parent, int x, int y, ButtonWidget.PressAction onPress) {
-		super(parent, x, y, parent.book.getContents().indexIcon, new TranslatableText("patchouli.gui.lexicon.index"), onPress);
+		super(parent, x, y, parent.book.getIcon(), new TranslatableText("patchouli.gui.lexicon.index"), onPress);
 	}
 
 }

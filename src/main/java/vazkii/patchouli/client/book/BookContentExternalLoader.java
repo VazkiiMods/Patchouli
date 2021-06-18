@@ -14,16 +14,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-public class ExternalBookContents extends BookContents {
+public final class BookContentExternalLoader implements BookContentLoader {
+	public static final BookContentExternalLoader INSTANCE = new BookContentExternalLoader();
 
-	public ExternalBookContents(Book book) {
-		super(book);
-	}
+	private BookContentExternalLoader() {}
 
 	@Override
-	protected void findFiles(String dir, List<Identifier> list) {
+	public void findFiles(Book book, String dir, List<Identifier> list) {
 		File root = new File(BookFolderLoader.loadDir, book.id.getPath());
-		File enUs = new File(root, DEFAULT_LANG);
+		File enUs = new File(root, BookContentsBuilder.DEFAULT_LANG);
 		if (enUs.exists()) {
 			File searchDir = new File(enUs, dir);
 			if (searchDir.exists()) {
@@ -52,7 +51,7 @@ public class ExternalBookContents extends BookContents {
 	}
 
 	@Override
-	protected InputStream loadJson(Identifier resloc, Identifier fallback) {
+	public InputStream loadJson(Book book, Identifier resloc, Identifier fallback) {
 		String realPath = resloc.getPath().substring(BookFolderLoader.loadDir.getName().length());
 		File targetFile = new File(BookFolderLoader.loadDir, realPath);
 
@@ -68,7 +67,7 @@ public class ExternalBookContents extends BookContents {
 
 		if (fallback != null) {
 			Patchouli.LOGGER.warn("Failed to load " + resloc + ". Switching to fallback.");
-			return loadJson(fallback, null);
+			return loadJson(book, fallback, null);
 		}
 
 		return null;

@@ -2,25 +2,30 @@ package vazkii.patchouli.client.book.page;
 
 import net.minecraft.client.util.math.MatrixStack;
 
+import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.JsonVariableWrapper;
-import vazkii.patchouli.common.book.Book;
 
 public class PageTemplate extends BookPage {
 
-	transient BookTemplate template = null;
-	transient boolean resolved = false;
+	private transient BookTemplate template = null;
+	private transient boolean resolved = false;
 
 	@Override
-	public void build(BookEntry entry, int pageNum) {
-		super.build(entry, pageNum);
+	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(entry, builder, pageNum);
+
+		if (!resolved) {
+			template = BookTemplate.createTemplate(book, builder, type, null);
+			resolved = true;
+		}
 
 		JsonVariableWrapper wrapper = new JsonVariableWrapper(sourceObject);
 
-		template.compile(wrapper);
+		template.compile(builder, wrapper);
 		template.build(this, entry, pageNum);
 	}
 
@@ -39,15 +44,5 @@ public class PageTemplate extends BookPage {
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		return template.mouseClicked(this, mouseX, mouseY, mouseButton);
-	}
-
-	@Override
-	public boolean canAdd(Book book) {
-		if (!resolved) {
-			template = BookTemplate.createTemplate(book, type, null);
-			resolved = true;
-		}
-
-		return template != null && super.canAdd(book);
 	}
 }
