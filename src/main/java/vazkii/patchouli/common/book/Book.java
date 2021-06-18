@@ -168,7 +168,7 @@ public class Book {
 			try {
 				builder.loadFrom(this);
 			} catch (Exception e) {
-				Patchouli.LOGGER.error("Error loading book {}, using empty contents and ignoring extensions", id);
+				Patchouli.LOGGER.error("Error loading book {}, using empty contents and ignoring extensions", id, e);
 				contents = BookContents.empty(this, e);
 			}
 
@@ -176,7 +176,7 @@ public class Book {
 				try {
 					builder.loadFrom(extension);
 				} catch (Exception e) {
-					Patchouli.LOGGER.error("Error loading extending book {} with addon book {}, skipping", id, extension.id);
+					Patchouli.LOGGER.error("Error loading extending book {} with addon book {}, skipping", id, extension.id, e);
 				}
 			}
 
