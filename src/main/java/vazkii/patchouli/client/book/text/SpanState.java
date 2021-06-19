@@ -112,7 +112,7 @@ public class SpanState implements IStyleStack {
 		// Takes the current style state from downstream
 		// and a style to merge onto it.
 		public SpanPartialState(Style currentStyle, Style mergeStyle) {
-			this.currentStyle = currentStyle;
+			this.currentStyle = mergeStyle.mergeStyle(currentStyle);
 			this.mergeStyle = mergeStyle;
 		}
 
