@@ -10,6 +10,7 @@ import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.IVariablesAvailableCallback;
 import vazkii.patchouli.client.base.ClientAdvancements;
+import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -71,7 +72,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 		return true;
 	}
 
-	public void build(BookPage page, BookEntry entry, int pageNum) {
+	public void build(BookContentsBuilder builder, BookPage page, BookEntry entry, int pageNum) {
 		// NO-OP
 	}
 

@@ -8,6 +8,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.api.IVariable;
+import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.template.TemplateComponent;
@@ -28,7 +29,7 @@ public class ComponentImage extends TemplateComponent {
 	transient Identifier resource;
 
 	@Override
-	public void build(BookPage page, BookEntry entry, int pageNum) {
+	public void build(BookContentsBuilder builder, BookPage page, BookEntry entry, int pageNum) {
 		resource = new Identifier(image);
 	}
 

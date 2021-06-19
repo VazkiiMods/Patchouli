@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.base.ClientTicker;
+import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -35,7 +36,7 @@ public class ComponentEntity extends TemplateComponent {
 	transient float renderScale, offset;
 
 	@Override
-	public void build(BookPage page, BookEntry entry, int pageNum) {
+	public void build(BookContentsBuilder builder, BookPage page, BookEntry entry, int pageNum) {
 		creator = EntityUtil.loadEntity(entityId.asString());
 	}
 

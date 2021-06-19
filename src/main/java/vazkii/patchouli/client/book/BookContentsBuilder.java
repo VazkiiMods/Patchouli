@@ -1,12 +1,14 @@
 package vazkii.patchouli.client.book;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.util.Identifier;
 
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
+import vazkii.patchouli.common.util.ItemStackUtil;
 
 import javax.annotation.Nullable;
 
@@ -28,6 +30,7 @@ public class BookContentsBuilder {
 	private final Map<Identifier, BookCategory> categories = new HashMap<>();
 	private final Map<Identifier, BookEntry> entries = new HashMap<>();
 	private final Map<Identifier, Supplier<BookTemplate>> templates = new HashMap<>();
+	private final Map<ItemStackUtil.StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap<>();
 
 	private interface LoadFunc<T> {
 		@Nullable
@@ -51,6 +54,10 @@ public class BookContentsBuilder {
 	@Nullable
 	public Supplier<BookTemplate> getTemplate(Identifier id) {
 		return templates.get(id);
+	}
+
+	public void addRecipeMapping(ItemStackUtil.StackWrapper stack, BookEntry entry, int spread) {
+		recipeMappings.put(stack, Pair.of(entry, spread));
 	}
 
 	/**
@@ -86,7 +93,8 @@ public class BookContentsBuilder {
 				book,
 				ImmutableMap.copyOf(categories),
 				ImmutableMap.copyOf(entries),
-				ImmutableMap.copyOf(templates)
+				ImmutableMap.copyOf(templates),
+				ImmutableMap.copyOf(recipeMappings)
 		);
 	}
 

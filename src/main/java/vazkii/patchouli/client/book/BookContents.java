@@ -31,7 +31,7 @@ public class BookContents extends AbstractReadStateHolder {
 	public final Map<Identifier, BookCategory> categories;
 	public final Map<Identifier, BookEntry> entries;
 	public final Map<Identifier, Supplier<BookTemplate>> templates;
-	public final Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap<>();
+	private final Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings;
 	private final boolean errored;
 	@Nullable private final Exception exception;
 
@@ -45,6 +45,7 @@ public class BookContents extends AbstractReadStateHolder {
 		this.categories = Collections.emptyMap();
 		this.entries = Collections.emptyMap();
 		this.templates = Collections.emptyMap();
+		this.recipeMappings = Collections.emptyMap();
 	}
 
 	public static BookContents empty(Book book, @Nullable Exception e) {
@@ -54,11 +55,13 @@ public class BookContents extends AbstractReadStateHolder {
 	public BookContents(Book book,
 			ImmutableMap<Identifier, BookCategory> categories,
 			ImmutableMap<Identifier, BookEntry> entries,
-			ImmutableMap<Identifier, Supplier<BookTemplate>> templates) {
+			ImmutableMap<Identifier, Supplier<BookTemplate>> templates,
+			ImmutableMap<StackWrapper, Pair<BookEntry, Integer>> recipeMappings) {
 		this.book = book;
 		this.categories = categories;
 		this.entries = entries;
 		this.templates = templates;
+		this.recipeMappings = recipeMappings;
 		this.errored = false;
 		this.exception = null;
 	}

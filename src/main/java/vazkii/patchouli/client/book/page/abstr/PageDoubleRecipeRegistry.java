@@ -7,6 +7,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.mixin.AccessorRecipeManager;
@@ -30,7 +31,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 	}
 
 	@Override
-	protected T loadRecipe(BookEntry entry, Identifier res) {
+	protected T loadRecipe(BookContentsBuilder builder, BookEntry entry, Identifier res) {
 		if (res == null) {
 			return null;
 		}
@@ -41,7 +42,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 		}
 
 		if (tempRecipe != null) {
-			entry.addRelevantStack(tempRecipe.getOutput(), pageNum);
+			entry.addRelevantStack(builder, tempRecipe.getOutput(), pageNum);
 			return tempRecipe;
 		}
 

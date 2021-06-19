@@ -25,8 +25,8 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
 		super.build(entry, builder, pageNum);
 
-		recipe1 = loadRecipe(entry, recipeId);
-		recipe2 = loadRecipe(entry, recipe2Id);
+		recipe1 = loadRecipe(builder, entry, recipeId);
+		recipe2 = loadRecipe(builder, entry, recipe2Id);
 
 		if (recipe1 == null && recipe2 != null) {
 			recipe1 = recipe2;
@@ -70,7 +70,7 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	}
 
 	protected abstract void drawRecipe(MatrixStack ms, T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
-	protected abstract T loadRecipe(BookEntry entry, Identifier loc);
+	protected abstract T loadRecipe(BookContentsBuilder builder, BookEntry entry, Identifier loc);
 	protected abstract ItemStack getRecipeOutput(T recipe);
 	protected abstract int getRecipeHeight();
 

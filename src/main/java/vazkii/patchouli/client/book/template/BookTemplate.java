@@ -117,9 +117,9 @@ public class BookTemplate {
 		compiled = true;
 	}
 
-	public void build(BookPage page, BookEntry entry, int pageNum) {
+	public void build(BookContentsBuilder builder, BookPage page, BookEntry entry, int pageNum) {
 		if (compiled) {
-			components.forEach(c -> c.build(page, entry, pageNum));
+			components.forEach(c -> c.build(builder, page, entry, pageNum));
 		}
 	}
 

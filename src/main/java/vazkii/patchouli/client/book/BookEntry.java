@@ -2,7 +2,6 @@ package vazkii.patchouli.client.book;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
-import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
@@ -49,8 +48,8 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	private transient Book trueProvider;
 	private transient BookCategory lcategory = null;
 	private transient BookIcon icon = null;
-	private transient List<BookPage> realPages = new ArrayList<>();
-	private transient List<StackWrapper> relevantStacks = new LinkedList<>();
+	private final transient List<BookPage> realPages = new ArrayList<>();
+	private final transient List<StackWrapper> relevantStacks = new LinkedList<>();
 	private transient boolean locked;
 	private transient int entryColor;
 
@@ -239,7 +238,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 				}
 				if (!stacks.isEmpty() && pageNumber < pages.length) {
 					for (ItemStack stack : stacks) {
-						addRelevantStack(stack, pageNumber);
+						addRelevantStack(builder, stack, pageNumber);
 					}
 				} else {
 					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: Empty entry or page out of bounds", key, pageNumber, id);
@@ -250,20 +249,14 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		built = true;
 	}
 
-	public void addRelevantStack(ItemStack stack, int page) {
+	public void addRelevantStack(BookContentsBuilder builder, ItemStack stack, int page) {
 		if (stack.isEmpty()) {
 			return;
 		}
 		StackWrapper wrapper = ItemStackUtil.wrapStack(stack);
 		relevantStacks.add(wrapper);
 
-		if (!book.getContents().recipeMappings.containsKey(wrapper)) {
-			book.getContents().recipeMappings.put(wrapper, Pair.of(this, page / 2));
-		}
-	}
-
-	public boolean isStackRelevant(ItemStack stack) {
-		return relevantStacks.contains(ItemStackUtil.wrapStack(stack));
+		builder.addRecipeMapping(wrapper, this, page / 2);
 	}
 
 	/**

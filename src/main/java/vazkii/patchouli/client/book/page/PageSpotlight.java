@@ -30,7 +30,7 @@ public class PageSpotlight extends PageWithText {
 
 		if (linkRecipe) {
 			for (ItemStack stack : ingredient.getMatchingStacksClient()) {
-				entry.addRelevantStack(stack, pageNum);
+				entry.addRelevantStack(builder, stack, pageNum);
 			}
 		}
 	}
