@@ -93,7 +93,9 @@ public class BookContentsBuilder {
 	private <T> void load(Book book, String thing, LoadFunc<T> loader, Map<Identifier, T> builder) {
 		BookContentLoader contentLoader = book.isExternal
 				? BookContentExternalLoader.INSTANCE
-				: BookContentClasspathLoader.INSTANCE;
+				: book.useResourcePack
+					? BookContentResourceLoader.INSTANCE
+					: BookContentClasspathLoader.INSTANCE;
 		List<Identifier> foundIds = new ArrayList<>();
 		contentLoader.findFiles(book, thing, foundIds);
 

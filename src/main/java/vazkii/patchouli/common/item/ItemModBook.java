@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
@@ -125,11 +126,15 @@ public class ItemModBook extends Item {
 	public void appendTooltip(ItemStack stack, World worldIn, List<Text> tooltip, TooltipContext flagIn) {
 		super.appendTooltip(stack, worldIn, tooltip, flagIn);
 
+		Identifier rl = getBookId(stack);
+		if (flagIn.isAdvanced()) {
+			tooltip.add(new LiteralText("Book ID: " + rl).formatted(Formatting.GRAY));
+		}
+
 		Book book = getBook(stack);
-		if (book != null && book.getContents() != null) {
+		if (book != null && !book.getContents().isErrored()) {
 			tooltip.add(book.getSubtitle().formatted(Formatting.GRAY));
 		} else if (book == null) {
-			Identifier rl = getBookId(stack);
 			if (rl == null) {
 				tooltip.add(new TranslatableText("item.patchouli.guide_book.undefined")
 						.formatted(Formatting.DARK_GRAY));
