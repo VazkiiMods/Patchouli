@@ -8,9 +8,14 @@ import vazkii.patchouli.api.IVariableSerializer;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class IngredientVariableSerializer implements IVariableSerializer<Ingredient> {
+	public static final IngredientVariableSerializer INSTANCE = new IngredientVariableSerializer();
+
 	@Override
 	public Ingredient fromJson(JsonElement json) {
-		return (json.isJsonPrimitive()) ? ItemStackUtil.loadIngredientFromString(json.getAsString()) : Ingredient.fromJson(json);
+		if (json.isJsonPrimitive()) {
+			return Ingredient.ofStacks(ItemStackUtil.loadStackFromJson(json));
+		}
+		return Ingredient.fromJson(json);
 	}
 
 	@Override

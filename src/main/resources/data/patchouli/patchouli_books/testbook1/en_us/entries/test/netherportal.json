@@ -29,7 +29,10 @@
       "type": "patchouli:spotlight",
       "title": "Make it Lit!",
       "text": "Just set a top face of one of two bottom obsidian blocks on fire and BOOM! you got yourself a ticket to hell!",
-      "item": "minecraft:flint_and_steel#10"
+      "item": {
+        "item": "minecraft:flint_and_steel",
+        "count": 10
+      }
     }, {
       "type": "patchouli:multiblock",
       "name": "The Result!",

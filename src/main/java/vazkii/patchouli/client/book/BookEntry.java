@@ -1,9 +1,13 @@
 package vazkii.patchouli.client.book;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.TranslatableText;
@@ -20,10 +24,7 @@ import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 
 	private String name, category, flag;
 
-	@SerializedName("icon") private String iconRaw;
+	@SerializedName("icon") private JsonElement iconRaw;
 
 	private boolean priority = false;
 	private boolean secret = false;
@@ -41,7 +42,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	private int sortnum;
 	@SerializedName("entry_color") private String entryColorRaw;
 
-	@SerializedName("extra_recipe_mappings") private Map<String, Integer> extraRecipeMappings;
+	@SerializedName("extra_recipe_mappings") private List<JsonObject> extraRecipeMappings;
 
 	private transient Identifier id;
 	private transient Book book;
@@ -226,22 +227,22 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		}
 
 		if (extraRecipeMappings != null) {
-			for (var entry : extraRecipeMappings.entrySet()) {
-				String key = entry.getKey();
-				List<ItemStack> stacks;
-				int pageNumber = entry.getValue();
-				try {
-					stacks = ItemStackUtil.loadStackListFromString(key);
-				} catch (Exception e) {
-					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: {}", key, pageNumber, id, e.getMessage());
-					continue;
+			for (var obj : extraRecipeMappings) {
+				ItemStack[] stacks;
+				if (obj.has("item")) {
+					stacks =  new ItemStack[] { ItemStackUtil.loadStackFromJson(obj.get("item")) };
+				} else {
+					Ingredient ingr = Ingredient.fromJson(obj.get("items"));
+					stacks = ingr.getMatchingStacksClient();
 				}
-				if (!stacks.isEmpty() && pageNumber < pages.length) {
+
+				int pageNumber = obj.getAsJsonPrimitive("page").getAsInt();
+				if (stacks.length > 0 && pageNumber < pages.length) {
 					for (ItemStack stack : stacks) {
 						addRelevantStack(builder, stack, pageNumber);
 					}
 				} else {
-					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: Empty entry or page out of bounds", key, pageNumber, id);
+					Patchouli.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: Empty entry or page out of bounds", Arrays.toString(stacks), pageNumber, id);
 				}
 			}
 		}

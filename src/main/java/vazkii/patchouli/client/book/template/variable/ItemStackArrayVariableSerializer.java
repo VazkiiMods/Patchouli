@@ -22,7 +22,7 @@ public class ItemStackArrayVariableSerializer extends GenericArrayVariableSerial
 			JsonArray array = json.getAsJsonArray();
 			List<ItemStack> stacks = new ArrayList<>();
 			for (JsonElement e : array) {
-				stacks.addAll(Arrays.asList(fromNonArray(e)));
+				stacks.add(inner.fromJson(e));
 			}
 			return stacks.toArray(empty);
 		}
@@ -33,13 +33,7 @@ public class ItemStackArrayVariableSerializer extends GenericArrayVariableSerial
 		if (json.isJsonNull()) {
 			return empty;
 		}
-		if (json.isJsonPrimitive()) {
-			return ItemStackUtil.loadStackListFromString(json.getAsString()).toArray(empty);
-		}
-		if (json.isJsonObject()) {
-			return new ItemStack[] { ItemStackUtil.loadStackFromJson(json.getAsJsonObject()) };
-		}
-		throw new IllegalArgumentException("Can't make an ItemStack from an array!");
+		return new ItemStack[] { inner.fromJson(json) };
 	}
 
 }
