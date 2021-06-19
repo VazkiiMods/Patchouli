@@ -93,7 +93,6 @@ public class BookContentsBuilder {
 				book,
 				ImmutableMap.copyOf(categories),
 				ImmutableMap.copyOf(entries),
-				ImmutableMap.copyOf(templates),
 				ImmutableMap.copyOf(recipeMappings)
 		);
 	}
