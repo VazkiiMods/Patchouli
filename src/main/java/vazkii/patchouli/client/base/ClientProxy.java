@@ -24,7 +24,6 @@ public class ClientProxy implements ClientModInitializer {
 		BookRightClickHandler.init();
 		MultiblockVisualizationHandler.init();
 		NetworkHandler.registerMessages();
-		Patchouli.reloadBookHandler = ClientBookRegistry.INSTANCE::reload;
 
 		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, register) -> BookRegistry.INSTANCE.books.values().stream()
 				.map(b -> new ModelIdentifier(b.model, "inventory"))

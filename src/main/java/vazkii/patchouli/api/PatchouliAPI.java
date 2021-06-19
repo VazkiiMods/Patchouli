@@ -105,12 +105,6 @@ public class PatchouliAPI {
 		Text getSubtitle(Identifier bookId);
 
 		/**
-		 * Reloads the contents of all books. Call sparingly and only if you
-		 * really need it for whatever reason.
-		 */
-		void reloadBookContents();
-
-		/**
 		 * Returns a book item with its NBT set to the book passed in.
 		 */
 		ItemStack getBookStack(Identifier book);

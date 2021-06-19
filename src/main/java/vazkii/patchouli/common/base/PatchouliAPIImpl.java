@@ -118,11 +118,6 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	public void reloadBookContents() {
-		Patchouli.reloadBookHandler.run();
-	}
-
-	@Override
 	public ItemStack getBookStack(Identifier book) {
 		return ItemModBook.forBook(book);
 	}

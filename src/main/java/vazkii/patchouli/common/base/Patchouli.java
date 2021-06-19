@@ -14,6 +14,4 @@ public class Patchouli {
 	public static final String PREFIX = MOD_ID + ":";
 
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-
-	public static Runnable reloadBookHandler = () -> {};
 }

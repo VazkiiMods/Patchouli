@@ -84,11 +84,6 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 
 	@Override
-	public void reloadBookContents() {
-		// NO-OP
-	}
-
-	@Override
 	public ItemStack getBookStack(Identifier book) {
 		return ItemStack.EMPTY;
 	}
