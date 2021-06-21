@@ -5,10 +5,7 @@ import com.google.gson.JsonElement;
 
 import net.minecraft.item.ItemStack;
 
-import vazkii.patchouli.common.util.ItemStackUtil;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ItemStackArrayVariableSerializer extends GenericArrayVariableSerializer<ItemStack> {

@@ -17,11 +17,13 @@
   ],
   "extra_recipe_mappings": [
     {
-      "item": "minecraft:grass_block",
+      "match": {
+        "item": "minecraft:grass_block"
+      },
       "page": 0
     },
     {
-      "items": {
+      "match": {
         "tag": "minecraft:logs"
       },
       "page": 2

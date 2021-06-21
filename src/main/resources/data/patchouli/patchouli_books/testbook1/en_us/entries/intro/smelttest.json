@@ -53,31 +53,31 @@
     ],
     "extra_recipe_mappings": [
         {
-            "items": {
+            "match": {
                 "item": "minecraft:dirt"
             },
             "page": 1
         },
         {
-            "items": {
+            "match": {
                 "item": "minecraft:stone"
             },
             "page": 3
         },
         {
-            "items": {
+            "match": {
                 "item": "minecraft:diamond_ore"
             },
             "page": 5
         },
         {
-            "items": {
+            "match": {
                 "tag": "minecraft:logs"
             },
             "page": 1
         },
         {
-            "items": {
+            "match": {
                 "item": "minecraft:diamond"
             },
             "page": 888

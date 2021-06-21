@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
@@ -228,13 +227,8 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 
 		if (extraRecipeMappings != null) {
 			for (var obj : extraRecipeMappings) {
-				ItemStack[] stacks;
-				if (obj.has("item")) {
-					stacks =  new ItemStack[] { ItemStackUtil.loadStackFromJson(obj.get("item")) };
-				} else {
-					Ingredient ingr = Ingredient.fromJson(obj.get("items"));
-					stacks = ingr.getMatchingStacksClient();
-				}
+				Ingredient ingr = Ingredient.fromJson(obj.get("match"));
+				ItemStack[] stacks = ingr.getMatchingStacksClient();
 
 				int pageNumber = obj.getAsJsonPrimitive("page").getAsInt();
 				if (stacks.length > 0 && pageNumber < pages.length) {
