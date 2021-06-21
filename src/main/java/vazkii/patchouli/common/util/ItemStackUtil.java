@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.StringNbtReader;
+import net.minecraft.recipe.ShapedRecipe;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.registry.Registry;
@@ -104,34 +105,7 @@ public final class ItemStackUtil {
 			Item item = Registry.ITEM.getOrEmpty(id).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + id + "'"));
 			return new ItemStack(item);
 		} else {
-			return loadStackFromJsonObject(json.getAsJsonObject());
+			return ShapedRecipe.outputFromJson(json.getAsJsonObject());
 		}
-	}
-
-	private static ItemStack loadStackFromJsonObject(JsonObject json) {
-		// Adapted from net.minecraftforge.common.crafting.CraftingHelper::getItemStack
-		String itemName = json.get("item").getAsString();
-
-		Item item = Registry.ITEM.getOrEmpty(new Identifier(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'")
-		);
-
-		ItemStack stack = new ItemStack(item, JsonHelper.getInt(json, "count", 1));
-
-		if (json.has("nbt")) {
-			try {
-				JsonElement element = json.get("nbt");
-				NbtCompound nbt;
-				if (element.isJsonObject()) {
-					nbt = StringNbtReader.parse(GSON.toJson(element));
-				} else {
-					nbt = StringNbtReader.parse(element.getAsString());
-				}
-				stack.setTag(nbt);
-			} catch (CommandSyntaxException e) {
-				throw new IllegalArgumentException("Invalid NBT Entry: " + e.toString(), e);
-			}
-		}
-
-		return stack;
 	}
 }
