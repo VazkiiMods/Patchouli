@@ -6,7 +6,6 @@
   "mixins": [
     "AccessorIngredient",
     "AccessorMinecraftServer",
-    "MixinPlayerManager",
     "AccessorRecipeManager",
     "AccessorSmithingRecipe"
   ],
