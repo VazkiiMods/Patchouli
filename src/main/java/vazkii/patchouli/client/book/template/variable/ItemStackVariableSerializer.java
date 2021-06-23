@@ -12,7 +12,16 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 public class ItemStackVariableSerializer implements IVariableSerializer<ItemStack> {
 	@Override
 	public ItemStack fromJson(JsonElement json) {
-		return ItemStackUtil.loadStackFromJson(json);
+		if (json.isJsonNull()) {
+			return ItemStack.EMPTY;
+		}
+		if (json.isJsonPrimitive()) {
+			return ItemStackUtil.loadStackFromString(json.getAsString());
+		}
+		if (json.isJsonObject()) {
+			return ItemStackUtil.loadStackFromJson(json.getAsJsonObject());
+		}
+		throw new IllegalArgumentException("Can't make an ItemStack from an array!");
 	}
 
 	@Override

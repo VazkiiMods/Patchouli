@@ -7,9 +7,7 @@
       "type": "patchouli:builtin_components_1",
       "headertext": "Header component",
       "texttext": "Text component section",
-      "item": {
-        "item": "minecraft:poisonous_potato"
-      },
+      "item": "minecraft:poisonous_potato",
       "image": "minecraft:textures/item/end_crystal.png"
     },
     {

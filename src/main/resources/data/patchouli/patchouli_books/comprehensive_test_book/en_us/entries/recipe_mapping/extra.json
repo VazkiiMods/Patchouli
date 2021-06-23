@@ -15,18 +15,8 @@
       "text": "Logs should be mapped here"
     }
   ],
-  "extra_recipe_mappings": [
-    {
-      "match": {
-        "item": "minecraft:grass_block"
-      },
-      "page": 0
-    },
-    {
-      "match": {
-        "tag": "minecraft:logs"
-      },
-      "page": 2
-    }
-  ]
+  "extra_recipe_mappings": {
+    "minecraft:grass_block": 0,
+    "tag:minecraft:logs": 2
+  }
 }

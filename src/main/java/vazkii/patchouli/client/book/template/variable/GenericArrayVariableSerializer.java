@@ -11,7 +11,7 @@ import java.util.List;
 
 public class GenericArrayVariableSerializer<T> implements IVariableSerializer<T[]> {
 	protected final T[] empty;
-	protected final IVariableSerializer<T> inner;
+	private final IVariableSerializer<T> inner;
 
 	@SuppressWarnings("unchecked")
 	public GenericArrayVariableSerializer(IVariableSerializer<T> inner, Class<T> type) {

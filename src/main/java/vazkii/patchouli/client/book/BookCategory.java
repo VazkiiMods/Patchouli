@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book;
 
 import com.google.common.collect.Streams;
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.text.LiteralText;
@@ -18,7 +17,7 @@ import java.util.List;
 public class BookCategory extends AbstractReadStateHolder implements Comparable<BookCategory> {
 
 	private String name, description, parent, flag;
-	@SerializedName("icon") private JsonElement iconRaw;
+	@SerializedName("icon") private String iconRaw;
 	private int sortnum;
 	private boolean secret = false;
 

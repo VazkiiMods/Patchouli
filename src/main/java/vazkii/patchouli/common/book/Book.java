@@ -1,6 +1,5 @@
 package vazkii.patchouli.common.book;
 
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import net.fabricmc.api.EnvType;
@@ -86,7 +85,7 @@ public class Book {
 
 	@SerializedName("show_progress") public boolean showProgress = true;
 
-	@SerializedName("index_icon") public JsonElement indexIconRaw;
+	@SerializedName("index_icon") public String indexIconRaw = "";
 
 	public String version = "0";
 	public String subtitle = "";
@@ -97,7 +96,7 @@ public class Book {
 
 	@SerializedName("dont_generate_book") public boolean noBook = false;
 
-	@SerializedName("custom_book_item") public JsonElement customBookItem;
+	@SerializedName("custom_book_item") public String customBookItem = "";
 
 	@SerializedName("show_toasts") public boolean showToasts = true;
 
@@ -142,7 +141,7 @@ public class Book {
 	public ItemStack getBookItem() {
 		if (bookItem == null) {
 			if (noBook) {
-				bookItem = ItemStackUtil.loadStackFromJson(customBookItem);
+				bookItem = ItemStackUtil.loadStackFromString(customBookItem);
 			} else {
 				bookItem = ItemModBook.forBook(this);
 			}
@@ -237,7 +236,7 @@ public class Book {
 
 	@Environment(EnvType.CLIENT)
 	public BookIcon getIcon() {
-		if (indexIconRaw == null) {
+		if (indexIconRaw == null || indexIconRaw.isEmpty()) {
 			return new BookIcon(getBookItem());
 		} else {
 			return BookIcon.from(indexIconRaw);

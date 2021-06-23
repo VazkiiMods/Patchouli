@@ -1,6 +1,5 @@
 package vazkii.patchouli.client.book;
 
-import com.google.gson.JsonElement;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.MinecraftClient;
@@ -20,12 +19,13 @@ public class BookIcon {
 	private final ItemStack stack;
 	private final Identifier res;
 
-	public static BookIcon from(JsonElement json) {
-		if (json.isJsonPrimitive() && json.getAsString().endsWith(".png")) {
-			return new BookIcon(new Identifier(json.getAsString()));
+	public static BookIcon from(String str) {
+		if (str.endsWith(".png")) {
+			return new BookIcon(new Identifier(str));
 		} else {
 			try {
-				return new BookIcon(ItemStackUtil.loadStackFromJson(json));
+				ItemStack stack = ItemStackUtil.loadStackFromString(str);
+				return new BookIcon(stack);
 			} catch (Exception e) {
 				Patchouli.LOGGER.warn("Invalid icon item stack: {}", e.getMessage());
 				return EMPTY;
