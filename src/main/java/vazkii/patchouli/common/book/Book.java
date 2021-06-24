@@ -39,7 +39,7 @@ public class Book {
 		return ret;
 	});
 
-	private transient BookContents contents = BookContents.empty(this, null);
+	private transient BookContents contents;
 
 	private transient boolean wasUpdated = false;
 
@@ -250,11 +250,12 @@ public class Book {
 		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
 	}
 
+	@Environment(EnvType.CLIENT)
 	public BookContents getContents() {
 		if (isExtension) {
 			return extensionTarget.getContents();
 		} else {
-			return contents;
+			return contents != null ? contents : BookContents.empty(this, null);
 		}
 	}
 }
