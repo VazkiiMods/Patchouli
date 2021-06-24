@@ -40,16 +40,16 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 			if (isMainPage(this.book)) {
 				markEntry(entry);
 			} else {
-				markCategoryAsRead(entry, entry.getCategory());
+				markCategoryAsRead(entry, entry.getCategory(), this.book.getContents().entries.size());
 			}
 		}
 	}
 
-	private void markCategoryAsRead(BookEntry entry, BookCategory category) {
+	private void markCategoryAsRead(BookEntry entry, BookCategory category, int maxRecursion) {
 		if (category.getName().equals(this.book.getContents().getCurrentGui().getTitle())) {
 			markEntry(entry);
-		} else if (!category.isRootCategory()) {
-			markCategoryAsRead(entry, entry.getCategory().getParentCategory());
+		} else if (!category.isRootCategory() && maxRecursion > 0) {
+			markCategoryAsRead(entry, entry.getCategory().getParentCategory(), maxRecursion - 1);
 		}
 	}
 

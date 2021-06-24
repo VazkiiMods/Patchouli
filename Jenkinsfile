@@ -4,6 +4,9 @@ pipeline {
     options {
         buildDiscarder(logRotator(numToKeepStr: '10'))
     }
+    tools {
+        jdk "jdk8u292-b10"
+    }
     agent any
     tools {
         jdk "jdk-16.0.1+9"

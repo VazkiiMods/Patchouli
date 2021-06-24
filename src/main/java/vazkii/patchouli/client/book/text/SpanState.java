@@ -73,7 +73,7 @@ public class SpanState implements IStyleStack {
 
 	@Override
 	public void pushStyle(Style style) {
-		stateStack.push(new SpanPartialState(stateStack.peek().getCurrentStyle(), style));
+		stateStack.push(new SpanPartialState(style.withParent(peekStyle()), style));
 	}
 
 	@Override

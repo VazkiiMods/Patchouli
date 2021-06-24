@@ -70,10 +70,7 @@ public class ComponentEntity extends TemplateComponent {
 				float width = entity.getWidth();
 				float height = entity.getHeight();
 
-				float entitySize = width;
-				if (width < height) {
-					entitySize = height;
-				}
+				float entitySize = Math.max(width, height);
 				entitySize = Math.max(1F, entitySize);
 
 				renderScale = renderSize / entitySize * 0.8F;
