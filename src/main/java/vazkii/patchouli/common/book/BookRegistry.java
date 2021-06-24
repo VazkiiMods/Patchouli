@@ -86,8 +86,8 @@ public class BookRegistry {
 		for (var book : books.values()) {
 			if (book.useResourcePack && !book.allowExtensions) {
 				throw new IllegalArgumentException(
-					String.format("Book %s uses resource pack loading but doesn't allow extensions. "
-						+ "All resource pack books allow extensions by definition.", book.id)
+						String.format("Book %s uses resource pack loading but doesn't allow extensions. "
+								+ "All resource pack books allow extensions by definition.", book.id)
 				);
 			}
 			if (book.isExtension) {

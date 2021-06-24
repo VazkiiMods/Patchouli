@@ -106,8 +106,7 @@ public class Book {
 
 	@SerializedName("pause_game") public boolean pauseGame = false;
 
-	@SerializedName("use_resource_pack")
-	public boolean useResourcePack = false;
+	@SerializedName("use_resource_pack") public boolean useResourcePack = false;
 
 	public boolean i18n = false;
 

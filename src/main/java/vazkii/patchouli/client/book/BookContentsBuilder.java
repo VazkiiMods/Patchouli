@@ -101,8 +101,8 @@ public class BookContentsBuilder {
 		BookContentLoader contentLoader = book.isExternal
 				? BookContentExternalLoader.INSTANCE
 				: book.useResourcePack
-					? BookContentResourceLoader.INSTANCE
-					: BookContentClasspathLoader.INSTANCE;
+						? BookContentResourceLoader.INSTANCE
+				: BookContentClasspathLoader.INSTANCE;
 		List<Identifier> foundIds = new ArrayList<>();
 		contentLoader.findFiles(book, thing, foundIds);
 

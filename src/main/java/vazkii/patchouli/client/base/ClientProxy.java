@@ -3,7 +3,6 @@ package vazkii.patchouli.client.base;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
@@ -12,7 +11,6 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 
-import net.minecraft.util.profiler.Profiler;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
@@ -21,9 +19,6 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.common.network.NetworkHandler;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 public class ClientProxy implements ClientModInitializer {
 	@Override

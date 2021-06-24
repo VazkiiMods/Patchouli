@@ -32,5 +32,3 @@ dependencies {
 }
 ```
 Note: Any code not located in the package `vazkii.patchouli.api` is strictly implementation detail, and you should not rely on it as it will change without warning.
-
-Note to mod developers porting a Patchouli book from 1.12 to 1.14: Patchouli book data now goes into `modid/data/patchouli_books` instead of `modid/assets/patchouli_books`.
