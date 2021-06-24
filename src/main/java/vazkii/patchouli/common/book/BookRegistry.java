@@ -84,6 +84,12 @@ public class BookRegistry {
 		BookFolderLoader.findBooks();
 
 		for (var book : books.values()) {
+			if (book.useResourcePack && !book.allowExtensions) {
+				throw new IllegalArgumentException(
+					String.format("Book %s uses resource pack loading but doesn't allow extensions. "
+						+ "All resource pack books allow extensions by definition.", book.id)
+				);
+			}
 			if (book.isExtension) {
 				book.extensionTarget = books.get(book.extend);
 
@@ -107,9 +113,14 @@ public class BookRegistry {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public void reloadContents() {
+	public void reloadContents(boolean resourcePackBooksOnly) {
 		PatchouliConfig.reloadBuiltinFlags();
-		books.values().forEach(Book::reloadContents);
+		for (var book : books.values()) {
+			if (resourcePackBooksOnly && !book.useResourcePack) {
+				continue;
+			}
+			book.reloadContents();
+		}
 		ClientBookRegistry.INSTANCE.reloadLocks(false);
 		loaded = true;
 	}

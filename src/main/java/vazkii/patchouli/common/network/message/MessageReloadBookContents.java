@@ -29,6 +29,6 @@ public class MessageReloadBookContents {
 	}
 
 	public static void handle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-		client.submit(ClientBookRegistry.INSTANCE::reload);
+		client.submit(() -> ClientBookRegistry.INSTANCE.reload(false));
 	}
 }

@@ -3,6 +3,5 @@
 	"landing_text": "item.patchouli:intro_book.landing",
 	"subtitle": "item.patchouli:intro_book.subtitle",
 	"creative_tab": "decorations",
-	"advancements_tab": "patchouli",
-	"use_resource_pack": true
+	"advancements_tab": "patchouli"
 }

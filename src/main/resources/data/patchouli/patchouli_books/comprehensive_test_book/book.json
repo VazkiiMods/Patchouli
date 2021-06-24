@@ -5,5 +5,6 @@
   "version": "50",
   "subtitle": "Comprehensive Test Book Subtitle",
   "creative_tab": "tools",
+  "use_resource_pack": true,
   "pause_game": true
 }
