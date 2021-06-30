@@ -287,6 +287,20 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if (Minecraft.getInstance().gameSettings.keyBindInventory.matchesKey(keyCode, scanCode)) {
+			this.closeScreen();
+			return true;
+		}
+		return super.keyPressed(keyCode, scanCode, modifiers);
+	}
+
+	@Override
+	protected boolean shouldAddMarkReadButton() {
+		return false;
+	}
+
+	@Override
 	public ResourceLocation getBookTexture() {
 		return book.bookTexture;
 	}
