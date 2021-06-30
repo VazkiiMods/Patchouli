@@ -190,7 +190,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	protected boolean shouldAddMarkReadButton() {
-		if (this instanceof GuiBookIndex || shouldAddAddBookmarkButton()) {
+		if (this instanceof GuiBookIndex) {
 			return false;
 		}
 		return book.getContents().entries.values().stream().anyMatch(v -> !v.isLocked() && v.getReadState().equals(EntryDisplayState.UNREAD));
@@ -313,7 +313,7 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		if (MinecraftClient.getInstance().options.keyInventory.matchesKey(keyCode, scanCode)) {
+		if (MinecraftClient.getInstance().options.keyInventory.matchesKey(keyCode, scanCode) && !this.canSeeBackButton()) {
 			this.onClose();
 			return true;
 		} else if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
