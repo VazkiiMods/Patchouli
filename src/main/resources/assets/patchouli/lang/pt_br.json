@@ -1,5 +1,7 @@
 {
 	"item.patchouli.guide_book.name": "Livro Guia",
+	"item.patchouli.guide_book.undefined": "Livro Inválido: Nenhum ID Definido",
+	"item.patchouli.guide_book.invalid": "Livro Inválid: %s",
 
 	"item.patchouli.comprehensive_test_book.name": "Livro de Teste Abrangente",
 	"item.patchouli.comprehensive_test_book.landing": "O que esperançosamente se tornará um livro de teste abrangente para todos Patchouli, em vez da confusão de espaguete aleatório que temos agora.",
@@ -88,5 +90,7 @@
 	"patchouli.gui.lexicon.button.config": "Configuração",
 	"patchouli.gui.lexicon.button.visualize": "Visualizar",
 	"patchouli.gui.lexicon.button.visualize.info": "(Clique novamente para limpar)",
-	"patchouli.gui.lexicon.button.history": "História"
+	"patchouli.gui.lexicon.button.history": "História",
+	"patchouli.gui.lexicon.button.mark_all_read": "Marcar tudo como lido",
+	"patchouli.gui.lexicon.button.mark_category_read": "Marcar esta categoria como lida"
 }
