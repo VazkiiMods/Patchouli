@@ -195,9 +195,11 @@ public class Book {
 				extensionTarget = BookRegistry.INSTANCE.books.get(extend);
 
 				if (extensionTarget == null) {
-					throw new IllegalArgumentException("Extension Book " + id + " has no valid target");
+					Patchouli.LOGGER.error("Extension Book {} has no valid target", id);
+					return;
 				} else if (!extensionTarget.allowExtensions) {
-					throw new IllegalArgumentException("Book " + extensionTarget.id + " doesn't allow extensions, so " + id + " can't resolve");
+					Patchouli.LOGGER.error("Book {} doesn't allow extensions, so {} can't resolve", extensionTarget.id, id);
+					return;
 				}
 
 				extensionTarget.extensions.add(this);
