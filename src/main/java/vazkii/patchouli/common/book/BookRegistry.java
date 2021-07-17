@@ -97,6 +97,10 @@ public class BookRegistry {
 					throw new IllegalArgumentException("Extension Book " + book.id + " has no valid target");
 				} else if (!book.extensionTarget.allowExtensions) {
 					throw new IllegalArgumentException("Book " + book.extensionTarget.id + " doesn't allow extensions, so " + book.id + " can't modify it");
+				} else if (book.useResourcePack) {
+					Patchouli.LOGGER.warn("Book {} is a resource-pack-based book. Extension books are unnecessary for resource-pack-based books. "
+							+ "You should simply create a resource pack with the extra content you want to add or override.",
+							book.extensionTarget.id);
 				}
 
 				book.extensionTarget.extensions.add(book);
