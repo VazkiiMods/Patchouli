@@ -5,7 +5,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import vazkii.patchouli.common.base.Patchouli;
-import vazkii.patchouli.common.recipe.BookRecipe;
 import vazkii.patchouli.common.recipe.ShapedBookRecipe;
 import vazkii.patchouli.common.recipe.ShapelessBookRecipe;
 
