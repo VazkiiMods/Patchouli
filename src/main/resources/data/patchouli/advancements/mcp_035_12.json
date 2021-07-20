@@ -8,7 +8,7 @@
   "criteria": {
     "wool": {
       "trigger": "minecraft:inventory_changed",
-      "conditions": { "items": [{ "item": "minecraft:brown_wool" }] }
+      "conditions": { "items": [{ "items": [ "minecraft:brown_wool" ]}] }
     }
   }
 }

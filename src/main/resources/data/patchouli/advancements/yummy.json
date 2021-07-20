@@ -14,7 +14,7 @@
   "criteria": {
     "book": {
       "trigger": "minecraft:consume_item",
-      "conditions": { "items": [{ "item": "minecraft:cooked_porkchop" }] }
+      "conditions": { "items": [{ "items": [ "minecraft:cooked_porkchop" ]}] }
     }
   }
 }
