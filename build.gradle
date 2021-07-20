@@ -129,6 +129,7 @@ jar {
 	// exclude test data
 	exclude "**/data/patchouli/patchouli_books/**"
 	exclude "**/data/patchouli/advancements/**"
+	exclude "**/data/patchouli/recipes/**"
 }
 
 task apiJar(type: Jar, dependsOn: classes) {

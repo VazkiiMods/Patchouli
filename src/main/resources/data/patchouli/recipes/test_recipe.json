@@ -1,0 +1,12 @@
+{
+  "type": "patchouli:shaped_book_recipe",
+  "pattern": [
+    "##"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:dirt"
+    }
+  },
+  "book": "patchouli:comprehensive_test_book"
+}
