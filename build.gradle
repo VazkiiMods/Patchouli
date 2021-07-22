@@ -108,6 +108,8 @@ test {
     useJUnitPlatform()
 }
 
+sourceSets.main.resources.srcDirs(sourceSets.test.resources.srcDirs) // include test books
+
 processResources {
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
@@ -121,8 +123,6 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'META-INF/mods.toml', '**/psd/**'
     }
-
-    from(sourceSets.test.resources.srcDirs)
 }
 
 task incrementBuildNumber {
