@@ -92,6 +92,8 @@ processResources {
 	from(sourceSets.main.resources.srcDirs) {
 		exclude "fabric.mod.json"
 	}
+
+	from(sourceSets.test.resources.srcDirs)
 }
 
 task incrementBuildNumber {
