@@ -121,6 +121,8 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'META-INF/mods.toml', '**/psd/**'
     }
+
+    from(sourceSets.test.resources.srcDirs)
 }
 
 task incrementBuildNumber {
