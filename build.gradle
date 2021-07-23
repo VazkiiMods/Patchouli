@@ -13,7 +13,7 @@ ext.config = configFile.withReader {
 	return (new ConfigSlurper().parse(prop))
 }
 
-def mc_version = '1.17'
+def mc_version = '1.17.1'
 version = "${mc_version}-${config.build_number}-FABRIC"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
@@ -59,12 +59,12 @@ dependencies {
 	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
 	include "me.zeroeightsix:fiber:0.23.0-2"
 
-	minecraft "com.mojang:minecraft:1.17"
+	minecraft "com.mojang:minecraft:1.17.1"
 	mappings minecraft.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:0.11.3"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.34.8+1.17"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.37.0+1.17"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
@@ -80,17 +80,8 @@ test {
 processResources {
 	inputs.property "version", project.version
 
-	// We don't actually copy duplicate files below but Gradle is dumb and thinks we do
-	// Suppress the error and warning by telling it to "overwrite"
-	duplicatesStrategy DuplicatesStrategy.INCLUDE
-
-	from(sourceSets.main.resources.srcDirs) {
-		include "fabric.mod.json"
+	filesMatching("fabric.mod.json") {
 		expand "version": project.version
-	}
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude "fabric.mod.json"
 	}
 }
 
@@ -103,19 +94,22 @@ task incrementBuildNumber {
 	}
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
-	options.encoding = "UTF-8"
+tasks.withType(JavaCompile).configureEach {
+	// ensure that the encoding is set to UTF-8, no matter what the system default is
+	// this fixes some edge cases with special characters not displaying correctly
+	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+	// If Javadoc is generated, this must be specified in that task too.
+	it.options.encoding = "UTF-8"
+
+	// Minecraft 1.17 (21w19a) upwards uses Java 16.
+	it.options.release = 16
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = "sources"
-	from sourceSets.main.allSource
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
 }
 
 jar {
@@ -136,7 +130,7 @@ task apiJar(type: Jar, dependsOn: classes) {
 	from(sourceSets.main.output)
 	include 'vazkii/patchouli/api/**'
 
-	classifier = "api"
+	archiveClassifier = "api"
 }
 
 // configure the maven publication
