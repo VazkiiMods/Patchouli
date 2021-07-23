@@ -1,8 +1,8 @@
 package vazkii.patchouli.api;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * A composite element of a rendering block state, and a predicate
@@ -24,6 +24,6 @@ public interface IStateMatcher {
 	 * acceptable. This should check the passed in blockstate instead of requerying it from the world,
 	 * for both performance and correctness reasons -- the state may be rotated for multiblock matching.
 	 */
-	TriPredicate<BlockView, BlockPos, BlockState> getStatePredicate();
+	TriPredicate<BlockGetter, BlockPos, BlockState> getStatePredicate();
 
 }

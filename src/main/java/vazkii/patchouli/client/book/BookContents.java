@@ -3,9 +3,9 @@ package vazkii.patchouli.client.book;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -24,12 +24,12 @@ import java.util.stream.Stream;
 
 public class BookContents extends AbstractReadStateHolder {
 
-	public static final Map<Identifier, Supplier<BookTemplate>> addonTemplates = new ConcurrentHashMap<>();
+	public static final Map<ResourceLocation, Supplier<BookTemplate>> addonTemplates = new ConcurrentHashMap<>();
 
 	private final Book book;
 
-	public final Map<Identifier, BookCategory> categories;
-	public final Map<Identifier, BookEntry> entries;
+	public final Map<ResourceLocation, BookCategory> categories;
+	public final Map<ResourceLocation, BookEntry> entries;
 	private final Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings;
 	private final boolean errored;
 	@Nullable private final Exception exception;
@@ -51,8 +51,8 @@ public class BookContents extends AbstractReadStateHolder {
 	}
 
 	public BookContents(Book book,
-			ImmutableMap<Identifier, BookCategory> categories,
-			ImmutableMap<Identifier, BookEntry> entries,
+			ImmutableMap<ResourceLocation, BookCategory> categories,
+			ImmutableMap<ResourceLocation, BookEntry> entries,
 			ImmutableMap<StackWrapper, Pair<BookEntry, Integer>> recipeMappings) {
 		this.book = book;
 		this.categories = categories;
@@ -85,12 +85,12 @@ public class BookContents extends AbstractReadStateHolder {
 
 	public void openLexiconGui(GuiBook gui, boolean push) {
 		if (gui.canBeOpened()) {
-			MinecraftClient mc = MinecraftClient.getInstance();
-			if (push && mc.currentScreen instanceof GuiBook && gui != mc.currentScreen) {
-				guiStack.push((GuiBook) mc.currentScreen);
+			Minecraft mc = Minecraft.getInstance();
+			if (push && mc.screen instanceof GuiBook && gui != mc.screen) {
+				guiStack.push((GuiBook) mc.screen);
 			}
 
-			mc.openScreen(gui);
+			mc.setScreen(gui);
 			gui.onFirstOpened();
 		}
 	}
@@ -111,7 +111,7 @@ public class BookContents extends AbstractReadStateHolder {
 	/**
 	 * Set the given entry to be one on top of the stack, i.e. will be shown next time the book is opened
 	 */
-	public final void setTopEntry(Identifier entryId, int page) {
+	public final void setTopEntry(ResourceLocation entryId, int page) {
 		BookEntry entry = entries.get(entryId);
 		if (!entry.isLocked()) {
 			GuiBook prevGui = getCurrentGui();

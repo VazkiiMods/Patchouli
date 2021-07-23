@@ -4,24 +4,22 @@
   "package": "vazkii.patchouli.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "AccessorIngredient",
-    "AccessorMinecraftServer",
     "AccessorRecipeManager",
     "AccessorSmithingRecipe"
   ],
   "client": [
-    "client.MixinBakedModelManager",
-    "client.AccessorScreen",
     "client.AccessorBlockEntity",
-    "client.MixinClientAdvancementManager",
-    "client.AccessorClientAdvancementManager",
+    "client.AccessorClientAdvancements",
+    "client.AccessorMultiBufferSource",
+    "client.AccessorScreen",
+    "client.MixinClientAdvancements",
     "client.MixinCrashReport",
     "client.MixinGameRenderer",
     "client.MixinInventoryScreen",
-    "client.MixinMinecraftClient",
-    "client.MixinScreen",
-    "client.AccessorVertexConsumerProviderImmediate",
-    "client.MixinWorldRenderer"
+    "client.MixinLevelRenderer",
+    "client.MixinMinecraft",
+    "client.MixinModelManager",
+    "client.MixinScreen"
   ],
   "injectors": {
     "defaultRequire": 1

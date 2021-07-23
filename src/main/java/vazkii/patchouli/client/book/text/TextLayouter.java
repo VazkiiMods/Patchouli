@@ -1,10 +1,10 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.resource.language.LanguageDefinition;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.resources.language.LanguageInfo;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.PatchouliConfig.TextOverflowMode;
@@ -47,9 +47,9 @@ public class TextLayouter {
 	private int lineStart = 0;
 	private int widthSoFar = 0;
 
-	private TextRenderer font;
+	private Font font;
 
-	public void layout(TextRenderer font, List<Span> spans) {
+	public void layout(Font font, List<Span> spans) {
 		this.pageWidth = basePageWidth;
 		this.font = font;
 
@@ -104,7 +104,7 @@ public class TextLayouter {
 	private void layoutParagraph(List<Span> paragraph) {
 		String text = toString(paragraph);
 		// todo fabric is there a helper to do this?
-		LanguageDefinition language = MinecraftClient.getInstance().getLanguageManager().getLanguage();
+		LanguageInfo language = Minecraft.getInstance().getLanguageManager().getSelected();
 		Locale locale;
 		String[] splitLangCode = language.getName().split("_", 2);
 		if (splitLangCode.length == 1) {
@@ -157,8 +157,8 @@ public class TextLayouter {
 
 		char[] characters = last.span.text.toCharArray();
 		for (int i = last.start; i < characters.length; i++) {
-			Text tmp = new LiteralText(String.valueOf(characters[i])).setStyle(last.span.style);
-			width += font.getWidth(tmp);
+			Component tmp = new TextComponent(String.valueOf(characters[i])).setStyle(last.span.style);
+			width += font.width(tmp);
 			if (last.span.bold) {
 				width++;
 			}
@@ -246,7 +246,7 @@ public class TextLayouter {
 		public SpanTail(Span span, int start, List<Word> cluster) {
 			this.span = span;
 			this.start = start;
-			this.width = font.getWidth(span.styledSubstring(start)) + span.spacingLeft + span.spacingRight;
+			this.width = font.width(span.styledSubstring(start)) + span.spacingLeft + span.spacingRight;
 			this.cluster = cluster;
 			this.length = span.text.length() - start;
 		}

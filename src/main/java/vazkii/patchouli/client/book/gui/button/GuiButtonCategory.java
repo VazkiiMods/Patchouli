@@ -1,36 +1,36 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.sound.SoundManager;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookIcon;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
-public class GuiButtonCategory extends ButtonWidget {
+public class GuiButtonCategory extends Button {
 
 	private static final int ANIM_TIME = 5;
 
 	final GuiBook parent;
 	BookCategory category;
 	final BookIcon icon;
-	final Text name;
+	final Component name;
 	final int u, v;
 	float timeHovered;
 
-	public GuiButtonCategory(GuiBook parent, int x, int y, BookCategory category, ButtonWidget.PressAction onPress) {
+	public GuiButtonCategory(GuiBook parent, int x, int y, BookCategory category, Button.OnPress onPress) {
 		this(parent, x, y, category.getIcon(), category.getName(), onPress);
 		this.category = category;
 	}
 
-	public GuiButtonCategory(GuiBook parent, int x, int y, BookIcon icon, Text name, ButtonWidget.PressAction onPress) {
+	public GuiButtonCategory(GuiBook parent, int x, int y, BookIcon icon, Component name, Button.OnPress onPress) {
 		super(parent.bookLeft + x, parent.bookTop + y, 20, 20, name, onPress);
 		this.parent = parent;
 		this.u = x;
@@ -40,7 +40,7 @@ public class GuiButtonCategory extends ButtonWidget {
 	}
 
 	@Override
-	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (active) {
 			if (isHovered()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
@@ -59,7 +59,7 @@ public class GuiButtonCategory extends ButtonWidget {
 				icon.render(ms, x + 2, y + 2);
 			}
 
-			ms.push();
+			ms.pushPose();
 			RenderSystem.enableBlend();
 			RenderSystem.setShaderColor(1F, 1F, 1F, transparency);
 			ms.translate(0, 0, 200);
@@ -69,11 +69,11 @@ public class GuiButtonCategory extends ButtonWidget {
 			if (category != null && !category.isLocked()) {
 				GuiBook.drawMarking(ms, parent.book, x, y, 0, category.getReadState());
 			}
-			ms.pop();
+			ms.popPose();
 
 			if (isHovered()) {
 				parent.setTooltip(locked
-						? new TranslatableText("patchouli.gui.lexicon.locked").formatted(Formatting.GRAY)
+						? new TranslatableComponent("patchouli.gui.lexicon.locked").withStyle(ChatFormatting.GRAY)
 						: name);
 			}
 		}

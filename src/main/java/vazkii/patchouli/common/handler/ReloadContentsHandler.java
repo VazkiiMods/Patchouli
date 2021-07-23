@@ -1,12 +1,11 @@
 package vazkii.patchouli.common.handler;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.resource.ReloadableResourceManager;
-import net.minecraft.resource.SynchronousResourceReloader;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 
 import vazkii.patchouli.common.network.message.MessageReloadBookContents;
-import vazkii.patchouli.mixin.AccessorMinecraftServer;
 
 public class ReloadContentsHandler {
 	public static void init() {
@@ -15,8 +14,7 @@ public class ReloadContentsHandler {
 
 	private static void serverStart(MinecraftServer server) {
 		// Also reload contents when someone types /reload
-		SynchronousResourceReloader listener = m -> MessageReloadBookContents.sendToAll(server);
-		((ReloadableResourceManager) ((AccessorMinecraftServer) server).getServerResourceManager().getResourceManager())
-				.registerReloader(listener);
+		ResourceManagerReloadListener listener = m -> MessageReloadBookContents.sendToAll(server);
+		((ReloadableResourceManager) server.getResourceManager()).registerReloadListener(listener);
 	}
 }

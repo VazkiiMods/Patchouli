@@ -2,20 +2,25 @@ package vazkii.patchouli.common.item;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.*;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
@@ -30,9 +35,9 @@ public class ItemModBook extends Item {
 	private static final String TAG_BOOK = "patchouli:book";
 
 	public ItemModBook() {
-		super(new Item.Settings()
-				.maxCount(1)
-				.group(ItemGroup.MISC));
+		super(new Item.Properties()
+				.stacksTo(1)
+				.tab(CreativeModeTab.TAB_MISC));
 	}
 
 	public static float getCompletion(ItemStack stack) {
@@ -62,10 +67,10 @@ public class ItemModBook extends Item {
 		return forBook(book.id);
 	}
 
-	public static ItemStack forBook(Identifier book) {
+	public static ItemStack forBook(ResourceLocation book) {
 		ItemStack stack = new ItemStack(PatchouliItems.book);
 
-		NbtCompound cmp = new NbtCompound();
+		CompoundTag cmp = new CompoundTag();
 		cmp.putString(TAG_BOOK, book.toString());
 		stack.setTag(cmp);
 
@@ -73,30 +78,30 @@ public class ItemModBook extends Item {
 	}
 
 	@Override
-	public void appendStacks(ItemGroup tab, DefaultedList<ItemStack> items) {
-		String tabName = tab.getName();
+	public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {
+		String tabName = tab.getRecipeFolderName();
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			if (!b.noBook && !b.isExtension && (tab == ItemGroup.SEARCH || b.creativeTab.equals(tabName))) {
+			if (!b.noBook && !b.isExtension && (tab == CreativeModeTab.TAB_SEARCH || b.creativeTab.equals(tabName))) {
 				items.add(forBook(b));
 			}
 		});
 	}
 
 	public static Book getBook(ItemStack stack) {
-		Identifier res = getBookId(stack);
+		ResourceLocation res = getBookId(stack);
 		if (res == null) {
 			return null;
 		}
 		return BookRegistry.INSTANCE.books.get(res);
 	}
 
-	private static Identifier getBookId(ItemStack stack) {
+	private static ResourceLocation getBookId(ItemStack stack) {
 		if (!stack.hasTag() || !stack.getTag().contains(TAG_BOOK)) {
 			return null;
 		}
 
 		String bookStr = stack.getTag().getString(TAG_BOOK);
-		return Identifier.tryParse(bookStr);
+		return ResourceLocation.tryParse(bookStr);
 	}
 
 	/* TODO fabric
@@ -112,10 +117,10 @@ public class ItemModBook extends Item {
 	*/
 
 	@Override
-	public Text getName(ItemStack stack) {
+	public Component getName(ItemStack stack) {
 		Book book = getBook(stack);
 		if (book != null) {
-			return new TranslatableText(book.name);
+			return new TranslatableComponent(book.name);
 		}
 
 		return super.getName(stack);
@@ -123,45 +128,45 @@ public class ItemModBook extends Item {
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void appendTooltip(ItemStack stack, World worldIn, List<Text> tooltip, TooltipContext flagIn) {
-		super.appendTooltip(stack, worldIn, tooltip, flagIn);
+	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
-		Identifier rl = getBookId(stack);
+		ResourceLocation rl = getBookId(stack);
 		if (flagIn.isAdvanced()) {
-			tooltip.add(new LiteralText("Book ID: " + rl).formatted(Formatting.GRAY));
+			tooltip.add(new TextComponent("Book ID: " + rl).withStyle(ChatFormatting.GRAY));
 		}
 
 		Book book = getBook(stack);
 		if (book != null && !book.getContents().isErrored()) {
-			tooltip.add(book.getSubtitle().formatted(Formatting.GRAY));
+			tooltip.add(book.getSubtitle().withStyle(ChatFormatting.GRAY));
 		} else if (book == null) {
 			if (rl == null) {
-				tooltip.add(new TranslatableText("item.patchouli.guide_book.undefined")
-						.formatted(Formatting.DARK_GRAY));
+				tooltip.add(new TranslatableComponent("item.patchouli.guide_book.undefined")
+						.withStyle(ChatFormatting.DARK_GRAY));
 			} else {
-				tooltip.add(new TranslatableText("item.patchouli.guide_book.invalid", rl)
-						.formatted(Formatting.DARK_GRAY));
+				tooltip.add(new TranslatableComponent("item.patchouli.guide_book.invalid", rl)
+						.withStyle(ChatFormatting.DARK_GRAY));
 			}
 		}
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		ItemStack stack = playerIn.getStackInHand(handIn);
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+		ItemStack stack = playerIn.getItemInHand(handIn);
 		Book book = getBook(stack);
 		if (book == null) {
-			return new TypedActionResult<>(ActionResult.FAIL, stack);
+			return new InteractionResultHolder<>(InteractionResult.FAIL, stack);
 		}
 
-		if (playerIn instanceof ServerPlayerEntity) {
-			PatchouliAPI.get().openBookGUI((ServerPlayerEntity) playerIn, book.id);
+		if (playerIn instanceof ServerPlayer) {
+			PatchouliAPI.get().openBookGUI((ServerPlayer) playerIn, book.id);
 
 			// This plays the sound to others nearby, playing to the actual opening player handled from the packet
 			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open);
 			playerIn.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
 		}
 
-		return new TypedActionResult<>(ActionResult.SUCCESS, stack);
+		return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 	}
 
 }

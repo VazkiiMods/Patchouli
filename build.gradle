@@ -60,7 +60,7 @@ dependencies {
 	include "me.zeroeightsix:fiber:0.23.0-2"
 
 	minecraft "com.mojang:minecraft:1.17"
-	mappings "net.fabricmc:yarn:1.17+build.5:v2"
+	mappings minecraft.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:0.11.3"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.

@@ -3,13 +3,14 @@ package vazkii.patchouli.common.multiblock;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 import vazkii.patchouli.api.IStateMatcher;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class SerializedMultiblock {
 
@@ -29,7 +30,7 @@ public class SerializedMultiblock {
 
 	private static Map<Character, IStateMatcher> deserializeMapping(Map<String, String> mapping) {
 		Map<Character, IStateMatcher> ret = new HashMap<>(mapping.size());
-		for (var e : mapping.entrySet()) {
+		for (Entry<String, String> e : mapping.entrySet()) {
 			char key = assertValidMappingKey(e.getKey());
 			String value = e.getValue();
 
@@ -57,7 +58,7 @@ public class SerializedMultiblock {
 	private SparseMultiblock deserializeSparse() {
 		Map<Character, IStateMatcher> matchers = deserializeMapping(mapping);
 		Map<BlockPos, IStateMatcher> data = new HashMap<>();
-		for (var e : sparsePattern.entrySet()) {
+		for (Entry<String, List<List<Integer>>> e : sparsePattern.entrySet()) {
 			char key = assertValidMappingKey(e.getKey());
 			assertMappingContains(key);
 

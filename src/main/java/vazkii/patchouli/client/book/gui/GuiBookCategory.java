@@ -1,10 +1,11 @@
 package vazkii.patchouli.client.book.gui;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.resources.language.I18n;
 
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookEntry;
@@ -34,7 +35,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 	}
 
 	@Override
-	void drawForegroundElements(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	void drawForegroundElements(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.drawForegroundElements(ms, mouseX, mouseY, partialTicks);
 		if (getEntries().isEmpty() && subcategoryButtonCount <= 16 && subcategoryButtonCount > 0) {
 			int bottomSeparator = TOP_PADDING + 37 + 24 * ((subcategoryButtonCount - 1) / 4 + 1);
@@ -64,8 +65,8 @@ public class GuiBookCategory extends GuiBookEntryList {
 			int x = baseX + (i % 4) * 24;
 			int y = baseY + (i / 4) * (rightPageFree ? 24 : 20);
 
-			ButtonWidget button = new GuiButtonCategory(this, x, y, ocategory, this::handleButtonCategory);
-			addDrawableChild(button);
+			Button button = new GuiButtonCategory(this, x, y, ocategory, this::handleButtonCategory);
+			addRenderableWidget(button);
 			dependentButtons.add(button);
 
 			i++;
@@ -75,7 +76,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 	@Override
 	protected String getChapterListTitle() {
 		if (getEntries().isEmpty() && subcategoryButtonCount > 0) {
-			return I18n.translate("patchouli.gui.lexicon.categories");
+			return I18n.get("patchouli.gui.lexicon.categories");
 		}
 		return super.getChapterListTitle();
 	}
@@ -89,8 +90,8 @@ public class GuiBookCategory extends GuiBookEntryList {
 	}
 
 	@Override
-	protected TextFieldWidget createSearchBar() {
-		TextFieldWidget widget = super.createSearchBar();
+	protected EditBox createSearchBar() {
+		EditBox widget = super.createSearchBar();
 		if (getEntries().isEmpty()) {
 			widget.active = false;
 			widget.setEditable(false);
@@ -116,7 +117,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 
 	@Override
 	public boolean canBeOpened() {
-		return !category.isLocked() && !equals(MinecraftClient.getInstance().currentScreen);
+		return !category.isLocked() && !equals(Minecraft.getInstance().screen);
 	}
 
 }

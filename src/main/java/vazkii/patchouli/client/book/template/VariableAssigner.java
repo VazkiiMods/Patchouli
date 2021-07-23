@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.template;
 
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.item.ItemStack;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -35,7 +35,7 @@ public class VariableAssigner {
 		FUNCTIONS.put("trim", wrapStringFunc(String::trim));
 		FUNCTIONS.put("capital", wrapStringFunc(WordUtils::capitalize));
 		FUNCTIONS.put("fcapital", wrapStringFunc(WordUtils::capitalizeFully));
-		FUNCTIONS.put("i18n", wrapStringFunc(I18n::translate));
+		FUNCTIONS.put("i18n", wrapStringFunc(I18n::get));
 		FUNCTIONS.put("exists", VariableAssigner::exists);
 		FUNCTIONS.put("iexists", VariableAssigner::iexists);
 		FUNCTIONS.put("inv", VariableAssigner::inv);
@@ -144,7 +144,7 @@ public class VariableAssigner {
 
 	private static IVariable iname(IVariable arg) {
 		ItemStack stack = arg.as(ItemStack.class);
-		return IVariable.wrap(stack.getName().getString());
+		return IVariable.wrap(stack.getHoverName().getString());
 	}
 
 	private static IVariable icount(IVariable arg) {

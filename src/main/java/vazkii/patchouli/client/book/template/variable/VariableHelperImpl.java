@@ -2,9 +2,9 @@ package vazkii.patchouli.client.book.template.variable;
 
 import com.google.gson.JsonElement;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableSerializer;
@@ -12,6 +12,7 @@ import vazkii.patchouli.api.VariableHelper;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class VariableHelperImpl implements VariableHelper {
 
@@ -19,7 +20,7 @@ public class VariableHelperImpl implements VariableHelper {
 		registerSerializer(new ItemStackVariableSerializer(), ItemStack.class);
 		registerSerializer(new ItemStackArrayVariableSerializer(), ItemStack[].class);
 		registerSerializer(new IngredientVariableSerializer(), Ingredient.class);
-		registerSerializer(new TextComponentVariableSerializer(), Text.class);
+		registerSerializer(new TextComponentVariableSerializer(), Component.class);
 	}
 
 	public Map<Class<?>, IVariableSerializer<?>> serializers = new HashMap<>();
@@ -45,7 +46,7 @@ public class VariableHelperImpl implements VariableHelper {
 	@SuppressWarnings("unchecked")
 	public <T> IVariable createFromObject(T object) {
 		Class<?> clazz = object.getClass();
-		for (var e : serializers.entrySet()) {
+		for (Entry<Class<?>, IVariableSerializer<?>> e : serializers.entrySet()) {
 			if (e.getKey().isAssignableFrom(clazz)) {
 				return create(((IVariableSerializer<T>) e.getValue()).toJson(object), clazz);
 			}

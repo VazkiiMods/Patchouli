@@ -5,10 +5,14 @@ import com.google.gson.annotations.SerializedName;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.*;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.*;
@@ -25,8 +29,8 @@ import java.util.Map;
 public class Book {
 
 	private static final String[] ORDINAL_SUFFIXES = new String[] { "th", "st", "nd", "rd", "th", "th", "th", "th", "th", "th" };
-	public static final Identifier DEFAULT_MODEL = new Identifier(Patchouli.MOD_ID, "book_brown");
-	private static final Identifier UNICODE_FONT_ID = new Identifier(Patchouli.MOD_ID, "unicode_font");
+	public static final ResourceLocation DEFAULT_MODEL = new ResourceLocation(Patchouli.MOD_ID, "book_brown");
+	private static final ResourceLocation UNICODE_FONT_ID = new ResourceLocation(Patchouli.MOD_ID, "unicode_font");
 
 	private static final Map<String, String> DEFAULT_MACROS = Util.make(() -> {
 		Map<String, String> ret = new HashMap<>();
@@ -44,7 +48,7 @@ public class Book {
 	private transient boolean wasUpdated = false;
 
 	public transient ModContainer owner;
-	public transient Identifier id;
+	public transient ResourceLocation id;
 	private transient ItemStack bookItem;
 
 	public transient int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
@@ -60,13 +64,13 @@ public class Book {
 	public String name = "";
 	@SerializedName("landing_text") public String landingText = "patchouli.gui.lexicon.landing_info";
 
-	@SerializedName("book_texture") public Identifier bookTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/book_brown.png");
+	@SerializedName("book_texture") public ResourceLocation bookTexture = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/book_brown.png");
 
-	@SerializedName("filler_texture") public Identifier fillerTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/page_filler.png");
+	@SerializedName("filler_texture") public ResourceLocation fillerTexture = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/page_filler.png");
 
-	@SerializedName("crafting_texture") public Identifier craftingTexture = new Identifier(Patchouli.MOD_ID, "textures/gui/crafting.png");
+	@SerializedName("crafting_texture") public ResourceLocation craftingTexture = new ResourceLocation(Patchouli.MOD_ID, "textures/gui/crafting.png");
 
-	public Identifier model = DEFAULT_MODEL;
+	public ResourceLocation model = DEFAULT_MODEL;
 
 	@SerializedName("text_color") public String textColorRaw = "000000";
 	@SerializedName("header_color") public String headerColorRaw = "333333";
@@ -79,9 +83,9 @@ public class Book {
 	@SerializedName("progress_bar_color") public String progressBarColorRaw = "FFFF55";
 	@SerializedName("progress_bar_background") public String progressBarBackgroundRaw = "DDDDDD";
 
-	@SerializedName("open_sound") public Identifier openSound = new Identifier(Patchouli.MOD_ID, "book_open");
+	@SerializedName("open_sound") public ResourceLocation openSound = new ResourceLocation(Patchouli.MOD_ID, "book_open");
 
-	@SerializedName("flip_sound") public Identifier flipSound = new Identifier(Patchouli.MOD_ID, "book_flip");
+	@SerializedName("flip_sound") public ResourceLocation flipSound = new ResourceLocation(Patchouli.MOD_ID, "book_flip");
 
 	@SerializedName("show_progress") public boolean showProgress = true;
 
@@ -92,7 +96,7 @@ public class Book {
 
 	@SerializedName("creative_tab") public String creativeTab = "misc";
 
-	@SerializedName("advancements_tab") public Identifier advancementsTab;
+	@SerializedName("advancements_tab") public ResourceLocation advancementsTab;
 
 	@SerializedName("dont_generate_book") public boolean noBook = false;
 
@@ -100,7 +104,7 @@ public class Book {
 
 	@SerializedName("show_toasts") public boolean showToasts = true;
 
-	@SerializedName("extend") public Identifier extend;
+	@SerializedName("extend") public ResourceLocation extend;
 
 	@SerializedName("allow_extensions") public boolean allowExtensions = true;
 
@@ -112,7 +116,7 @@ public class Book {
 
 	public Map<String, String> macros = new HashMap<>();
 
-	public void build(ModContainer owner, Identifier resource, boolean external) {
+	public void build(ModContainer owner, ResourceLocation resource, boolean external) {
 		this.owner = owner;
 		this.id = resource;
 		this.isExternal = external;
@@ -219,21 +223,21 @@ public class Book {
 		}
 	}
 
-	public MutableText getSubtitle() {
-		Text editionStr;
+	public MutableComponent getSubtitle() {
+		Component editionStr;
 
 		try {
 			int ver = Integer.parseInt(version);
 			if (ver == 0) {
-				return new TranslatableText(subtitle);
+				return new TranslatableComponent(subtitle);
 			}
 
-			editionStr = new LiteralText(numberToOrdinal(ver));
+			editionStr = new TextComponent(numberToOrdinal(ver));
 		} catch (NumberFormatException e) {
-			editionStr = new TranslatableText("patchouli.gui.lexicon.dev_edition");
+			editionStr = new TranslatableComponent("patchouli.gui.lexicon.dev_edition");
 		}
 
-		return new TranslatableText("patchouli.gui.lexicon.edition_str", editionStr);
+		return new TranslatableComponent("patchouli.gui.lexicon.edition_str", editionStr);
 	}
 
 	@Environment(EnvType.CLIENT)

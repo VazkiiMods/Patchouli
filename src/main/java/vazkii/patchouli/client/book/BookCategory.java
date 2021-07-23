@@ -3,16 +3,17 @@ package vazkii.patchouli.client.book;
 import com.google.common.collect.Streams;
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class BookCategory extends AbstractReadStateHolder implements Comparable<BookCategory> {
 
@@ -27,12 +28,12 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	private transient List<BookEntry> entries = new ArrayList<>();
 	private transient boolean locked;
 	private transient BookIcon icon = null;
-	private transient Identifier id;
+	private transient ResourceLocation id;
 
 	private transient boolean built;
 
-	public Text getName() {
-		return book.i18n ? new TranslatableText(name) : new LiteralText(name);
+	public Component getName() {
+		return book.i18n ? new TranslatableComponent(name) : new TextComponent(name);
 	}
 
 	public String getDescription() {
@@ -110,7 +111,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 		return parent == null || parent.isEmpty();
 	}
 
-	public Identifier getId() {
+	public ResourceLocation getId() {
 		return id;
 	}
 
@@ -140,7 +141,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 		}
 	}
 
-	public void build(Identifier id, BookContentsBuilder builder) {
+	public void build(ResourceLocation id, BookContentsBuilder builder) {
 		if (built) {
 			return;
 		}
@@ -149,7 +150,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 		if (!isRootCategory()) {
 			if (parent.contains(":")) {
-				parentCategory = builder.getCategory(new Identifier(parent));
+				parentCategory = builder.getCategory(new ResourceLocation(parent));
 			} else {
 				String hint = String.format("`%s:%s`", book.getModNamespace(), parent);
 				throw new IllegalArgumentException("`parent` must be fully qualified (domain:name). Hint: Try " + hint);
@@ -177,8 +178,8 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 	@Override
 	protected EntryDisplayState computeReadState() {
-		var entryStream = entries.stream().filter(e -> !e.isLocked()).map(BookEntry::getReadState);
-		var childrenStream = children.stream().map(BookCategory::getReadState);
+		Stream entryStream = entries.stream().filter(e -> !e.isLocked()).map(BookEntry::getReadState);
+		Stream childrenStream = children.stream().map(BookCategory::getReadState);
 		return mostImportantState(Streams.concat(entryStream, childrenStream));
 	}
 

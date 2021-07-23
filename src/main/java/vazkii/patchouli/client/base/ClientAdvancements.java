@@ -1,22 +1,21 @@
 package vazkii.patchouli.client.base;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementProgress;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientAdvancementManager;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.toast.Toast;
-import net.minecraft.client.toast.ToastManager;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.toasts.Toast;
+import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.mixin.client.AccessorClientAdvancementManager;
+import vazkii.patchouli.mixin.client.AccessorClientAdvancements;
 
 import javax.annotation.Nonnull;
 
@@ -40,14 +39,14 @@ public class ClientAdvancements {
 	}
 
 	public static boolean hasDone(String advancement) {
-		Identifier id = Identifier.tryParse(advancement);
+		ResourceLocation id = ResourceLocation.tryParse(advancement);
 		if (id != null) {
-			ClientPlayNetworkHandler conn = MinecraftClient.getInstance().getNetworkHandler();
+			ClientPacketListener conn = Minecraft.getInstance().getConnection();
 			if (conn != null) {
-				ClientAdvancementManager cm = conn.getAdvancementHandler();
-				Advancement adv = cm.getManager().get(id);
+				net.minecraft.client.multiplayer.ClientAdvancements cm = conn.getAdvancements();
+				Advancement adv = cm.getAdvancements().get(id);
 				if (adv != null) {
-					Map<Advancement, AdvancementProgress> progressMap = ((AccessorClientAdvancementManager) cm).getAdvancementProgresses();
+					Map<Advancement, AdvancementProgress> progressMap = ((AccessorClientAdvancements) cm).getProgress();
 					AdvancementProgress progress = progressMap.get(adv);
 					return progress != null && progress.isDone();
 				}
@@ -61,9 +60,9 @@ public class ClientAdvancements {
 	}
 
 	public static void sendBookToast(Book book) {
-		ToastManager gui = MinecraftClient.getInstance().getToastManager();
+		ToastComponent gui = Minecraft.getInstance().getToasts();
 		if (gui.getToast(LexiconToast.class, book) == null) {
-			gui.add(new LexiconToast(book));
+			gui.addToast(new LexiconToast(book));
 		}
 	}
 
@@ -76,20 +75,20 @@ public class ClientAdvancements {
 
 		@Nonnull
 		@Override
-		public Book getType() {
+		public Book getToken() {
 			return book;
 		}
 
 		@Nonnull
 		@Override
-		public Visibility draw(MatrixStack ms, ToastManager toastGui, long delta) {
+		public Visibility render(PoseStack ms, ToastComponent toastGui, long delta) {
 			RenderSystem.setShaderTexture(0, TEXTURE);
 
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			toastGui.drawTexture(ms, 0, 0, 0, 32, 160, 32);
+			toastGui.blit(ms, 0, 0, 0, 32, 160, 32);
 
-			toastGui.getGame().textRenderer.draw(ms, I18n.translate(book.name), 30, 7, -11534256);
-			toastGui.getGame().textRenderer.draw(ms, I18n.translate("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
+			toastGui.getMinecraft().font.draw(ms, I18n.get(book.name), 30, 7, -11534256);
+			toastGui.getMinecraft().font.draw(ms, I18n.get("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
 
 			RenderHelper.renderItemStackInGui(ms, book.getBookItem(), 8, 8);
 

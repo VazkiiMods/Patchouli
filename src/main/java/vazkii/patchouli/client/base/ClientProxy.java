@@ -5,11 +5,11 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
@@ -31,24 +31,24 @@ public class ClientProxy implements ClientModInitializer {
 		NetworkHandler.registerMessages();
 
 		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, register) -> BookRegistry.INSTANCE.books.values().stream()
-				.map(b -> new ModelIdentifier(b.model, "inventory"))
+				.map(b -> new ModelResourceLocation(b.model, "inventory"))
 				.forEach(register));
 
 		FabricModelPredicateProviderRegistry.register(PatchouliItems.book,
-				new Identifier(Patchouli.MOD_ID, "completion"),
+				new ResourceLocation(Patchouli.MOD_ID, "completion"),
 				(stack, world, entity, seed) -> ItemModBook.getCompletion(stack));
 
-		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-			private final Identifier id = new Identifier(Patchouli.MOD_ID, "resource_pack_books");
+		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+			private final ResourceLocation id = new ResourceLocation(Patchouli.MOD_ID, "resource_pack_books");
 
 			@Override
-			public Identifier getFabricId() {
+			public ResourceLocation getFabricId() {
 				return id;
 			}
 
 			@Override
-			public void reload(ResourceManager manager) {
-				if (MinecraftClient.getInstance().world != null) {
+			public void onResourceManagerReload(ResourceManager manager) {
+				if (Minecraft.getInstance().level != null) {
 					Patchouli.LOGGER.info("Reloading resource pack-based books, world is nonnull");
 					ClientBookRegistry.INSTANCE.reload(true);
 				} else {

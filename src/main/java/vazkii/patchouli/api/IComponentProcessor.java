@@ -1,6 +1,6 @@
 package vazkii.patchouli.api;
 
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.Screen;
 
 /**
  * Implement this on a class designed to process a template and the variables bound

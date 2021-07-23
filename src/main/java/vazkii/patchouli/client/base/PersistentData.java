@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.base;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
@@ -65,7 +65,7 @@ public final class PersistentData {
 				}
 
 				public BookEntry getEntry(Book book) {
-					Identifier res = new Identifier(entry);
+					ResourceLocation res = new ResourceLocation(entry);
 					return book.getContents().entries.get(res);
 				}
 

@@ -1,14 +1,14 @@
 package vazkii.patchouli.api.stub;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.state.property.Property;
-import net.minecraft.text.Text;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
@@ -46,30 +46,30 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 
 	@Override
-	public void openBookGUI(ServerPlayerEntity player, Identifier book) {
+	public void openBookGUI(ServerPlayer player, ResourceLocation book) {
 		// NO-OP
 	}
 
 	@Override
-	public void openBookEntry(ServerPlayerEntity player, Identifier book, Identifier entry, int page) {
+	public void openBookEntry(ServerPlayer player, ResourceLocation book, ResourceLocation entry, int page) {
 
 	}
 
 	@Override
-	public void openBookGUI(Identifier book) {
+	public void openBookGUI(ResourceLocation book) {
 		// NO-OP
 	}
 
 	@Override
-	public void openBookEntry(Identifier book, Identifier entry, int page) {}
+	public void openBookEntry(ResourceLocation book, ResourceLocation entry, int page) {}
 
 	@Override
-	public Identifier getOpenBookGui() {
+	public ResourceLocation getOpenBookGui() {
 		return null;
 	}
 
 	@Override
-	public Text getSubtitle(Identifier bookId) {
+	public Component getSubtitle(ResourceLocation bookId) {
 		throw new IllegalArgumentException("Patchouli is not loaded");
 	}
 
@@ -84,22 +84,22 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 
 	@Override
-	public ItemStack getBookStack(Identifier book) {
+	public ItemStack getBookStack(ResourceLocation book) {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public void registerTemplateAsBuiltin(Identifier res, Supplier<InputStream> streamProvider) {
+	public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider) {
 		// NO-OP
 	}
 
 	@Override
-	public IMultiblock getMultiblock(Identifier res) {
+	public IMultiblock getMultiblock(ResourceLocation res) {
 		return null;
 	}
 
 	@Override
-	public IMultiblock registerMultiblock(Identifier res, IMultiblock mb) {
+	public IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb) {
 		return mb;
 	}
 
@@ -110,7 +110,7 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	}
 
 	@Override
-	public void showMultiblock(IMultiblock multiblock, Text displayName, BlockPos center, BlockRotation rotation) {
+	public void showMultiblock(IMultiblock multiblock, Component displayName, BlockPos center, Rotation rotation) {
 
 	}
 

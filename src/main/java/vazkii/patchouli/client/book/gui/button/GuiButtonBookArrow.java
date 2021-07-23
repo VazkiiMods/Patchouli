@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import net.minecraft.text.TranslatableText;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 
@@ -10,7 +10,7 @@ public class GuiButtonBookArrow extends GuiButtonBook {
 
 	public GuiButtonBookArrow(GuiBook parent, int x, int y, boolean left) {
 		super(parent, x, y, 272, left ? 10 : 0, 18, 10, () -> parent.canSeePageButton(left), parent::handleButtonArrow,
-				new TranslatableText(left ? "patchouli.gui.lexicon.button.prev_page" : "patchouli.gui.lexicon.button.next_page"));
+				new TranslatableComponent(left ? "patchouli.gui.lexicon.button.prev_page" : "patchouli.gui.lexicon.button.next_page"));
 		this.left = left;
 	}
 

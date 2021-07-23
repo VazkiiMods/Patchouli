@@ -2,10 +2,10 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -40,7 +40,7 @@ public class ComponentItemStack extends TemplateComponent {
 	}
 
 	@Override
-	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (items.length == 0) {
 			return;
 		}
@@ -50,7 +50,7 @@ public class ComponentItemStack extends TemplateComponent {
 			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
 			RenderSystem.setShaderTexture(0, page.book.craftingTexture);
-			DrawableHelper.drawTexture(ms, x - 5, y - 5, 20, 102, 26, 26, 128, 256);
+			GuiComponent.blit(ms, x - 5, y - 5, 20, 102, 26, 26, 128, 256);
 		}
 
 		page.parent.renderItemStack(ms, x, y, mouseX, mouseY, items[(page.parent.ticksInBook / 20) % items.length]);

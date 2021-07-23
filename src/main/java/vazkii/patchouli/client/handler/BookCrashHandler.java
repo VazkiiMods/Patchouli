@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.handler;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.crash.CrashCallable;
+import net.minecraft.CrashReportDetail;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public class BookCrashHandler implements CrashCallable<String> {
+public class BookCrashHandler implements CrashReportDetail<String> {
 	private static final String INDENT = "\n\t\t";
 
 	public String getLabel() {
@@ -22,7 +22,7 @@ public class BookCrashHandler implements CrashCallable<String> {
 
 	@Override
 	public String call() {
-		Screen screen = MinecraftClient.getInstance().currentScreen;
+		Screen screen = Minecraft.getInstance().screen;
 		if (!(screen instanceof GuiBook)) {
 			return "n/a";
 		}

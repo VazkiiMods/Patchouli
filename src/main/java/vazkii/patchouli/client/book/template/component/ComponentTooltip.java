@@ -1,9 +1,9 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookPage;
@@ -20,7 +20,7 @@ public class ComponentTooltip extends TemplateComponent {
 
 	int width, height;
 
-	transient List<Text> tooltip;
+	transient List<Component> tooltip;
 
 	@Override
 	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
@@ -40,12 +40,12 @@ public class ComponentTooltip extends TemplateComponent {
 			//if (!s.isEmpty()) {
 			//	tooltip.add(new LiteralText(s));
 			//}
-			tooltip.add(s.as(Text.class));
+			tooltip.add(s.as(Component.class));
 		}
 	}
 
 	@Override
-	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (page.parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)) {
 			page.parent.setTooltip(tooltip);
 		}

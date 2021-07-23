@@ -1,12 +1,12 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
@@ -32,12 +32,12 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	}
 
 	@Override
-	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		super.renderButton(ms, mouseX, mouseY, partialTicks);
 
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 		if (bookmark != null && entry != null) {
-			ms.push();
+			ms.pushPose();
 			ms.scale(0.5F, 0.5F, 0.5F);
 			int px = x * 2 + (isHovered() ? 6 : 2);
 			int py = y * 2 + 2;
@@ -46,26 +46,26 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 			RenderSystem.disableDepthTest();
 			String s = Integer.toString(bookmark.page + 1);
 			if (multiblock) {
-				s = I18n.translate("patchouli.gui.lexicon.visualize_letter");
+				s = I18n.get("patchouli.gui.lexicon.visualize_letter");
 			}
-			parent.getMinecraft().textRenderer.drawWithShadow(ms, s, px + 12, py + 10, 0xFFFFFF);
+			parent.getMinecraft().font.drawShadow(ms, s, px + 12, py + 10, 0xFFFFFF);
 			RenderSystem.enableDepthTest();
-			ms.pop();
+			ms.popPose();
 		}
 	}
 
-	private static Text[] getTooltip(Book book, Bookmark bookmark, boolean multiblock) {
+	private static Component[] getTooltip(Book book, Bookmark bookmark, boolean multiblock) {
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 
 		if (bookmark == null || entry == null) {
-			return new Text[] { new TranslatableText("patchouli.gui.lexicon.add_bookmark") };
+			return new Component[] { new TranslatableComponent("patchouli.gui.lexicon.add_bookmark") };
 		}
 
-		return new Text[] {
+		return new Component[] {
 				entry.getName(),
-				new TranslatableText(multiblock
+				new TranslatableComponent(multiblock
 						? "patchouli.gui.lexicon.multiblock_bookmark"
-						: "patchouli.gui.lexicon.remove_bookmark").formatted(Formatting.GRAY)
+						: "patchouli.gui.lexicon.remove_bookmark").withStyle(ChatFormatting.GRAY)
 		};
 	}
 

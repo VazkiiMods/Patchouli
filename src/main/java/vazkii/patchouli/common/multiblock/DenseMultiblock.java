@@ -3,14 +3,14 @@ package vazkii.patchouli.common.multiblock;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
 
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.TriPredicate;
@@ -35,18 +35,18 @@ public class DenseMultiblock extends AbstractMultiblock {
 	}
 
 	@Override
-	public Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, BlockRotation rotation, boolean forView) {
+	public Pair<BlockPos, Collection<SimulateResult>> simulate(Level world, BlockPos anchor, Rotation rotation, boolean forView) {
 		BlockPos disp = forView
 				? new BlockPos(-viewOffX, -viewOffY + 1, -viewOffZ).rotate(rotation)
 				: new BlockPos(-offX, -offY, -offZ).rotate(rotation);
 		// the local origin of this multiblock, in world coordinates
-		BlockPos origin = anchor.add(disp);
+		BlockPos origin = anchor.offset(disp);
 		List<SimulateResult> ret = new ArrayList<>();
 		for (int x = 0; x < size.getX(); x++) {
 			for (int y = 0; y < size.getY(); y++) {
 				for (int z = 0; z < size.getZ(); z++) {
 					BlockPos currDisp = new BlockPos(x, y, z).rotate(rotation);
-					BlockPos actionPos = origin.add(currDisp);
+					BlockPos actionPos = origin.offset(currDisp);
 					char currC = pattern[y][x].charAt(z);
 					ret.add(new SimulateResultImpl(actionPos, stateTargets[x][y][z], currC));
 				}
@@ -56,13 +56,13 @@ public class DenseMultiblock extends AbstractMultiblock {
 	}
 
 	@Override
-	public boolean test(World world, BlockPos start, int x, int y, int z, BlockRotation rotation) {
+	public boolean test(Level world, BlockPos start, int x, int y, int z, Rotation rotation) {
 		setWorld(world);
 		if (x < 0 || y < 0 || z < 0 || x >= size.getX() || y >= size.getY() || z >= size.getZ()) {
 			return false;
 		}
-		BlockPos checkPos = start.add(new BlockPos(x, y, z).rotate(RotationUtil.fixHorizontal(rotation)));
-		TriPredicate<BlockView, BlockPos, BlockState> pred = stateTargets[x][y][z].getStatePredicate();
+		BlockPos checkPos = start.offset(new BlockPos(x, y, z).rotate(RotationUtil.fixHorizontal(rotation)));
+		TriPredicate<BlockGetter, BlockPos, BlockState> pred = stateTargets[x][y][z].getStatePredicate();
 		BlockState state = world.getBlockState(checkPos).rotate(rotation);
 
 		return pred.test(world, checkPos, state);
@@ -174,9 +174,9 @@ public class DenseMultiblock extends AbstractMultiblock {
 		int y = pos.getY();
 		int z = pos.getZ();
 		if (x < 0 || y < 0 || z < 0 || x >= size.getX() || y >= size.getY() || z >= size.getZ()) {
-			return Blocks.AIR.getDefaultState();
+			return Blocks.AIR.defaultBlockState();
 		}
-		int ticks = world != null ? (int) world.getTimeOfDay() : 0;
+		int ticks = world != null ? (int) world.getDayTime() : 0;
 		return stateTargets[x][y][z].getDisplayedState(ticks);
 	}
 
@@ -192,7 +192,7 @@ public class DenseMultiblock extends AbstractMultiblock {
 	}
 
 	@Override
-	public int getBottomY() {
+	public int getMinBuildHeight() {
 		return 0;
 	}
 }

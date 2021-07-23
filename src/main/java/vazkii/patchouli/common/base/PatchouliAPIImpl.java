@@ -2,17 +2,17 @@ package vazkii.patchouli.common.base;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.state.property.Property;
-import net.minecraft.text.Text;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 
 import org.apache.commons.io.IOUtils;
 
@@ -64,31 +64,31 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	public void openBookGUI(ServerPlayerEntity player, Identifier book) {
+	public void openBookGUI(ServerPlayer player, ResourceLocation book) {
 		MessageOpenBookGui.send(player, book, null, 0);
 	}
 
 	@Override
-	public void openBookEntry(ServerPlayerEntity player, Identifier book, Identifier entry, int page) {
+	public void openBookEntry(ServerPlayer player, ResourceLocation book, ResourceLocation entry, int page) {
 		MessageOpenBookGui.send(player, book, entry, page);
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void openBookGUI(Identifier book) {
+	public void openBookGUI(ResourceLocation book) {
 		ClientBookRegistry.INSTANCE.displayBookGui(book, null, 0);
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void openBookEntry(Identifier book, Identifier entry, int page) {
+	public void openBookEntry(ResourceLocation book, ResourceLocation entry, int page) {
 		ClientBookRegistry.INSTANCE.displayBookGui(book, entry, page);
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public Identifier getOpenBookGui() {
-		Screen gui = MinecraftClient.getInstance().currentScreen;
+	public ResourceLocation getOpenBookGui() {
+		Screen gui = Minecraft.getInstance().screen;
 		if (gui instanceof GuiBook) {
 			return ((GuiBook) gui).book.id;
 		}
@@ -97,7 +97,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	@Nonnull
 	@Override
-	public Text getSubtitle(@Nonnull Identifier bookId) {
+	public Component getSubtitle(@Nonnull ResourceLocation bookId) {
 		Book book = BookRegistry.INSTANCE.books.get(bookId);
 		if (book == null) {
 			throw new IllegalArgumentException("Book not found: " + bookId);
@@ -118,12 +118,12 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	public ItemStack getBookStack(Identifier book) {
+	public ItemStack getBookStack(ResourceLocation book) {
 		return ItemModBook.forBook(book);
 	}
 
 	@Override
-	public void registerTemplateAsBuiltin(Identifier res, Supplier<InputStream> streamProvider) {
+	public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider) {
 		InputStream testStream = streamProvider.get();
 		if (testStream == null) {
 			throw new NullPointerException("Stream provider can't return a null stream");
@@ -142,12 +142,12 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	public IMultiblock getMultiblock(Identifier res) {
+	public IMultiblock getMultiblock(ResourceLocation res) {
 		return MultiblockRegistry.MULTIBLOCKS.get(res);
 	}
 
 	@Override
-	public IMultiblock registerMultiblock(Identifier res, IMultiblock mb) {
+	public IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb) {
 		return MultiblockRegistry.registerMultiblock(res, mb);
 	}
 
@@ -159,14 +159,14 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void showMultiblock(@Nonnull IMultiblock multiblock, @Nonnull Text displayName, @Nonnull BlockPos center, @Nonnull BlockRotation rotation) {
+	public void showMultiblock(@Nonnull IMultiblock multiblock, @Nonnull Component displayName, @Nonnull BlockPos center, @Nonnull Rotation rotation) {
 		MultiblockVisualizationHandler.setMultiblock(multiblock, displayName, null, false);
 		MultiblockVisualizationHandler.anchorTo(center, rotation);
 	}
 
 	@Override
 	public void clearMultiblock() {
-		MultiblockVisualizationHandler.setMultiblock(null, (Text) null, null, false);
+		MultiblockVisualizationHandler.setMultiblock(null, (Component) null, null, false);
 	}
 
 	@Override

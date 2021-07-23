@@ -7,7 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -31,9 +31,9 @@ public class BookRegistry {
 	public static final BookRegistry INSTANCE = new BookRegistry();
 	public static final String BOOKS_LOCATION = Patchouli.MOD_ID + "_books";
 
-	public final Map<Identifier, Book> books = new HashMap<>();
+	public final Map<ResourceLocation, Book> books = new HashMap<>();
 	public static final Gson GSON = new GsonBuilder()
-			.registerTypeAdapter(Identifier.class, new Identifier.Serializer())
+			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
 			.create();
 
 	private boolean loaded = false;
@@ -42,7 +42,7 @@ public class BookRegistry {
 
 	public void init() {
 		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
-		Map<Pair<ModContainer, Identifier>, String> foundBooks = new HashMap<>();
+		Map<Pair<ModContainer, ResourceLocation>, String> foundBooks = new HashMap<>();
 
 		mods.forEach(mod -> {
 			String id = mod.getMetadata().getId();
@@ -61,7 +61,7 @@ public class BookRegistry {
 							}
 
 							String assetPath = fileStr.substring(fileStr.indexOf("data/"));
-							Identifier bookId = new Identifier(id, bookName);
+							ResourceLocation bookId = new ResourceLocation(id, bookName);
 							foundBooks.put(Pair.of(mod, bookId), assetPath);
 						}
 
@@ -71,7 +71,7 @@ public class BookRegistry {
 
 		foundBooks.forEach((pair, file) -> {
 			ModContainer mod = pair.getLeft();
-			Identifier res = pair.getRight();
+			ResourceLocation res = pair.getRight();
 
 			try (InputStream stream = Files.newInputStream(mod.getPath(file))) {
 				loadBook(mod, res, stream, false);
@@ -83,7 +83,7 @@ public class BookRegistry {
 
 		BookFolderLoader.findBooks();
 
-		for (var book : books.values()) {
+		for (Book book : books.values()) {
 			if (book.useResourcePack && !book.allowExtensions) {
 				throw new IllegalArgumentException(
 						String.format("Book %s uses resource pack loading but doesn't allow extensions. "
@@ -108,7 +108,7 @@ public class BookRegistry {
 		}
 	}
 
-	public void loadBook(ModContainer mod, Identifier res, InputStream stream,
+	public void loadBook(ModContainer mod, ResourceLocation res, InputStream stream,
 			boolean external) {
 		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		Book book = GSON.fromJson(reader, Book.class);
@@ -119,7 +119,7 @@ public class BookRegistry {
 	@Environment(EnvType.CLIENT)
 	public void reloadContents(boolean resourcePackBooksOnly) {
 		PatchouliConfig.reloadBuiltinFlags();
-		for (var book : books.values()) {
+		for (Book book : books.values()) {
 			if (resourcePackBooksOnly && !book.useResourcePack) {
 				continue;
 			}

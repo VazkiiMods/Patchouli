@@ -1,9 +1,9 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -25,7 +25,7 @@ public class ComponentText extends TemplateComponent {
 	@SerializedName("max_width") int maxWidth = GuiBook.PAGE_WIDTH;
 	@SerializedName("line_height") int lineHeight = GuiBook.TEXT_LINE_HEIGHT;
 
-	transient Text actualText;
+	transient Component actualText;
 	transient BookTextRenderer textRenderer;
 	transient int color;
 
@@ -41,7 +41,7 @@ public class ComponentText extends TemplateComponent {
 	@Override
 	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
-		actualText = lookup.apply(text).as(Text.class);
+		actualText = lookup.apply(text).as(Component.class);
 		colorStr = lookup.apply(colorStr);
 	}
 
@@ -51,7 +51,7 @@ public class ComponentText extends TemplateComponent {
 	}
 
 	@Override
-	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
 		textRenderer.render(ms, mouseX, mouseY);
 	}
 

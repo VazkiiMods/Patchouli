@@ -1,26 +1,26 @@
 package vazkii.patchouli.common.util;
 
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Rotation;
 
 public final class RotationUtil {
 
 	private RotationUtil() {}
 
-	public static BlockRotation rotationFromFacing(Direction facing) {
+	public static Rotation rotationFromFacing(Direction facing) {
 		return switch (facing) {
-		case EAST -> BlockRotation.CLOCKWISE_90;
-		case SOUTH -> BlockRotation.CLOCKWISE_180;
-		case WEST -> BlockRotation.COUNTERCLOCKWISE_90;
-		default -> BlockRotation.NONE;
+		case EAST -> Rotation.CLOCKWISE_90;
+		case SOUTH -> Rotation.CLOCKWISE_180;
+		case WEST -> Rotation.COUNTERCLOCKWISE_90;
+		default -> Rotation.NONE;
 		};
 	}
 
 	// TODO figure out why this is needed and document it.
-	public static BlockRotation fixHorizontal(BlockRotation rot) {
+	public static Rotation fixHorizontal(Rotation rot) {
 		return switch (rot) {
-		case CLOCKWISE_90 -> BlockRotation.COUNTERCLOCKWISE_90;
-		case COUNTERCLOCKWISE_90 -> BlockRotation.CLOCKWISE_90;
+		case CLOCKWISE_90 -> Rotation.COUNTERCLOCKWISE_90;
+		case COUNTERCLOCKWISE_90 -> Rotation.CLOCKWISE_90;
 		default -> rot;
 		};
 	}

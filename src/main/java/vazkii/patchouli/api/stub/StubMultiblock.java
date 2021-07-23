@@ -2,11 +2,11 @@ package vazkii.patchouli.api.stub;
 
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Rotation;
 
 import vazkii.patchouli.api.IMultiblock;
 
@@ -35,12 +35,12 @@ public class StubMultiblock implements IMultiblock {
 	}
 
 	@Override
-	public Identifier getID() {
-		return new Identifier("patchouli", "stub");
+	public ResourceLocation getID() {
+		return new ResourceLocation("patchouli", "stub");
 	}
 
 	@Override
-	public IMultiblock setId(Identifier res) {
+	public IMultiblock setId(ResourceLocation res) {
 		return this;
 	}
 
@@ -50,27 +50,27 @@ public class StubMultiblock implements IMultiblock {
 	}
 
 	@Override
-	public void place(World world, BlockPos pos, BlockRotation rotation) {
+	public void place(Level world, BlockPos pos, Rotation rotation) {
 		// NO-OP
 	}
 
 	@Override
-	public Pair<BlockPos, Collection<SimulateResult>> simulate(World world, BlockPos anchor, BlockRotation rotation, boolean forView) {
-		return Pair.of(BlockPos.ORIGIN, Collections.emptyList());
+	public Pair<BlockPos, Collection<SimulateResult>> simulate(Level world, BlockPos anchor, Rotation rotation, boolean forView) {
+		return Pair.of(BlockPos.ZERO, Collections.emptyList());
 	}
 
 	@Override
-	public BlockRotation validate(World world, BlockPos pos) {
+	public Rotation validate(Level world, BlockPos pos) {
 		return null;
 	}
 
 	@Override
-	public boolean validate(World world, BlockPos pos, BlockRotation rotation) {
+	public boolean validate(Level world, BlockPos pos, Rotation rotation) {
 		return false;
 	}
 
 	@Override
-	public boolean test(World world, BlockPos start, int x, int y, int z, BlockRotation rotation) {
+	public boolean test(Level world, BlockPos start, int x, int y, int z, Rotation rotation) {
 		return false;
 	}
 

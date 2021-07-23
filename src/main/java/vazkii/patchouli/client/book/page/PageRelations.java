@@ -1,9 +1,10 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
@@ -30,7 +31,7 @@ public class PageRelations extends PageWithText {
 		super.build(entry, builder, pageNum);
 
 		entryObjs = entries.stream()
-				.map(Identifier::new)
+				.map(ResourceLocation::new)
 				.map(builder::getEntry)
 				.filter(Objects::nonNull)
 				.collect(Collectors.toList());
@@ -44,18 +45,18 @@ public class PageRelations extends PageWithText {
 		displayedEntries.removeIf(BookEntry::shouldHide);
 		Collections.sort(displayedEntries);
 		for (int i = 0; i < displayedEntries.size(); i++) {
-			ButtonWidget button = new GuiButtonEntry(parent, 0, 20 + i * 11, displayedEntries.get(i), this::handleButtonEntry);
+			Button button = new GuiButtonEntry(parent, 0, 20 + i * 11, displayedEntries.get(i), this::handleButtonEntry);
 			addButton(button);
 		}
 	}
 
-	public void handleButtonEntry(ButtonWidget button) {
+	public void handleButtonEntry(Button button) {
 		GuiBookEntry.displayOrBookmark(parent, ((GuiButtonEntry) button).getEntry());
 	}
 
 	@Override
-	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
-		parent.drawCenteredStringNoShadow(ms, title == null || title.isEmpty() ? I18n.translate("patchouli.gui.lexicon.relations") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+	public void render(PoseStack ms, int mouseX, int mouseY, float pticks) {
+		parent.drawCenteredStringNoShadow(ms, title == null || title.isEmpty() ? I18n.get("patchouli.gui.lexicon.relations") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		GuiBook.drawSeparator(ms, book, 0, 12);
 
 		super.render(ms, mouseX, mouseY, pticks);

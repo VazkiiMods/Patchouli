@@ -1,19 +1,19 @@
 package vazkii.patchouli.client.base;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelLoader;
-import net.minecraft.client.render.model.json.JsonUnbakedModel;
-import net.minecraft.client.render.model.json.ModelOverrideList;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Direction;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
@@ -27,20 +27,20 @@ import java.util.Random;
 
 public class BookModel implements BakedModel {
 	private final BakedModel original;
-	private final ModelOverrideList itemHandler;
+	private final ItemOverrides itemHandler;
 
-	public BookModel(BakedModel original, ModelLoader loader) {
+	public BookModel(BakedModel original, ModelBakery loader) {
 		this.original = original;
-		JsonUnbakedModel missing = (JsonUnbakedModel) loader.getOrLoadModel(ModelLoader.MISSING_ID);
+		BlockModel missing = (BlockModel) loader.getModel(ModelBakery.MISSING_MODEL_LOCATION);
 
-		this.itemHandler = new ModelOverrideList(loader, missing, id -> missing, Collections.emptyList()) {
+		this.itemHandler = new ItemOverrides(loader, missing, id -> missing, Collections.emptyList()) {
 			@Override
-			public BakedModel apply(@Nonnull BakedModel original, @Nonnull ItemStack stack,
-					@Nullable ClientWorld world, @Nullable LivingEntity entity, int seed) {
+			public BakedModel resolve(@Nonnull BakedModel original, @Nonnull ItemStack stack,
+					@Nullable ClientLevel world, @Nullable LivingEntity entity, int seed) {
 				Book book = ItemModBook.getBook(stack);
 				if (book != null) {
-					ModelIdentifier modelPath = new ModelIdentifier(book.model, "inventory");
-					return MinecraftClient.getInstance().getBakedModelManager().getModel(modelPath);
+					ModelResourceLocation modelPath = new ModelResourceLocation(book.model, "inventory");
+					return Minecraft.getInstance().getModelManager().getModel(modelPath);
 				}
 				return original;
 			}
@@ -49,7 +49,7 @@ public class BookModel implements BakedModel {
 
 	@Nonnull
 	@Override
-	public ModelOverrideList getOverrides() {
+	public ItemOverrides getOverrides() {
 		return itemHandler;
 	}
 
@@ -65,28 +65,28 @@ public class BookModel implements BakedModel {
 	}
 
 	@Override
-	public boolean hasDepth() {
-		return original.hasDepth();
+	public boolean isGui3d() {
+		return original.isGui3d();
 	}
 
 	@Override
-	public boolean isSideLit() {
-		return original.isSideLit();
+	public boolean usesBlockLight() {
+		return original.usesBlockLight();
 	}
 
 	@Override
-	public boolean isBuiltin() {
-		return original.isBuiltin();
+	public boolean isCustomRenderer() {
+		return original.isCustomRenderer();
 	}
 
 	@Nonnull
 	@Override
-	public Sprite getSprite() {
-		return original.getSprite();
+	public TextureAtlasSprite getParticleIcon() {
+		return original.getParticleIcon();
 	}
 
 	@Override
-	public ModelTransformation getTransformation() {
-		return original.getTransformation();
+	public ItemTransforms getTransforms() {
+		return original.getTransforms();
 	}
 }

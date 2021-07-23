@@ -1,10 +1,10 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextColor;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.TextComponent;
 
 import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -28,7 +28,7 @@ public class SpanState implements IStyleStack {
 	// this keeps a list of all modifications made to the style at each layer,
 	// so that when we replace the base style, we can reconstruct the style stack.
 	private final Deque<SpanPartialState> stateStack = new ArrayDeque<>();
-	public MutableText tooltip = BookTextParser.EMPTY_STRING_COMPONENT;
+	public MutableComponent tooltip = BookTextParser.EMPTY_STRING_COMPONENT;
 	public Supplier<Boolean> onClick = null;
 	public List<Span> cluster = null;
 	public boolean isExternalLink = false; // will show the "external link" symbol next to the link as soon as the link is closed
@@ -43,7 +43,7 @@ public class SpanState implements IStyleStack {
 		this.book = book;
 		this.baseStyle = baseStyle;
 		this.stateStack.push(new SpanPartialState(baseStyle, null));
-		this.spaceWidth = MinecraftClient.getInstance().textRenderer.getWidth(new LiteralText(" ").setStyle(baseStyle));
+		this.spaceWidth = Minecraft.getInstance().font.width(new TextComponent(" ").setStyle(baseStyle));
 	}
 
 	public Style getBase() {
@@ -73,7 +73,7 @@ public class SpanState implements IStyleStack {
 
 	@Override
 	public void pushStyle(Style style) {
-		stateStack.push(new SpanPartialState(style.withParent(peekStyle()), style));
+		stateStack.push(new SpanPartialState(style.applyTo(peekStyle()), style));
 	}
 
 	@Override
@@ -132,7 +132,7 @@ public class SpanState implements IStyleStack {
 
 		public void replaceBase(Style style) {
 			if (mergeStyle != null) {
-				style = mergeStyle.withParent(style);
+				style = mergeStyle.applyTo(style);
 			}
 			if (transformations != null) {
 				for (UnaryOperator<Style> f : transformations) {

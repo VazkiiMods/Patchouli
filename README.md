@@ -32,3 +32,16 @@ dependencies {
 }
 ```
 Note: Any code not located in the package `vazkii.patchouli.api` is strictly implementation detail, and you should not rely on it as it will change without warning.
+
+# License Information
+
+Patchouli's original code and assets are licensed under the CC-BY-NC-SA 3.0 Unported license.
+We recognize that this is not ideal, and are open to changing the licensing of the code in the future.
+
+Please note that this mod uses official Mojang mappings (Mojmap). If you depend on Patchouli as normal,
+or only consume Patchouli's API, there should be no licensing concerns, as the mod is remapped to Intermediary (or SRG, for Forge) on compile.
+
+There is a license concern, however, if you bundle Patchouli with your mod using Jar-in-Jar.
+Building a mod with mixin inserts a refmap, which contains raw Mojang mappings in a JSON file.
+If this presents a licensing problem to you, then do not bundle Patchouli and just depend on it externally.
+I recommend using normal dependencies either way, as Jar-in-Jar inflates your archive sizes to store a mod that will probably be in most modpacks anyways.

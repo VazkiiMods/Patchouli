@@ -1,13 +1,16 @@
 package vazkii.patchouli.client.book.page;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.*;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
@@ -19,26 +22,26 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 	}
 
 	@Override
-	protected void drawRecipe(MatrixStack ms, Recipe<?> recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
+	protected void drawRecipe(PoseStack ms, Recipe<?> recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		RenderSystem.setShaderTexture(0, book.craftingTexture);
 		RenderSystem.enableBlend();
-		DrawableHelper.drawTexture(ms, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 256);
+		GuiComponent.blit(ms, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 256);
 
 		boolean shaped = recipe instanceof ShapedRecipe;
 		if (!shaped) {
 			int iconX = recipeX + 62;
 			int iconY = recipeY + 2;
-			DrawableHelper.drawTexture(ms, iconX, iconY, 0, 64, 11, 11, 128, 256);
+			GuiComponent.blit(ms, iconX, iconY, 0, 64, 11, 11, 128, 256);
 			if (parent.isMouseInRelativeRange(mouseX, mouseY, iconX, iconY, 11, 11)) {
-				parent.setTooltip(new TranslatableText("patchouli.gui.lexicon.shapeless"));
+				parent.setTooltip(new TranslatableComponent("patchouli.gui.lexicon.shapeless"));
 			}
 		}
 
-		parent.drawCenteredStringNoShadow(ms, getTitle(second).asOrderedText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
+		parent.drawCenteredStringNoShadow(ms, getTitle(second).getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-		parent.renderItemStack(ms, recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getOutput());
+		parent.renderItemStack(ms, recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getResultItem());
 
-		DefaultedList<Ingredient> ingredients = recipe.getIngredients();
+		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		int wrap = 3;
 		if (shaped) {
 			wrap = ((ShapedRecipe) recipe).getWidth();
@@ -48,7 +51,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 			parent.renderIngredient(ms, recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
 		}
 
-		parent.renderItemStack(ms, recipeX + 79, recipeY + 41, mouseX, mouseY, recipe.createIcon());
+		parent.renderItemStack(ms, recipeX + 79, recipeY + 41, mouseX, mouseY, recipe.getToastSymbol());
 	}
 
 	@Override
@@ -62,7 +65,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 			return ItemStack.EMPTY;
 		}
 
-		return recipe.getOutput();
+		return recipe.getResultItem();
 	}
 
 }

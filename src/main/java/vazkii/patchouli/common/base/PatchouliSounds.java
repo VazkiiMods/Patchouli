@@ -1,8 +1,8 @@
 package vazkii.patchouli.common.base;
 
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 public class PatchouliSounds {
 
@@ -15,14 +15,14 @@ public class PatchouliSounds {
 	}
 
 	public static SoundEvent register(String name) {
-		Identifier loc = new Identifier(Patchouli.MOD_ID, name);
+		ResourceLocation loc = new ResourceLocation(Patchouli.MOD_ID, name);
 		SoundEvent e = new SoundEvent(loc);
 		Registry.register(Registry.SOUND_EVENT, loc, e);
 		return e;
 	}
 
-	public static SoundEvent getSound(Identifier key, SoundEvent fallback) {
-		return Registry.SOUND_EVENT.getOrEmpty(key).orElse(fallback);
+	public static SoundEvent getSound(ResourceLocation key, SoundEvent fallback) {
+		return Registry.SOUND_EVENT.getOptional(key).orElse(fallback);
 	}
 
 }

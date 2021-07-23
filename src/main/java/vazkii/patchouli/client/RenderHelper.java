@@ -1,19 +1,19 @@
 package vazkii.patchouli.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.ItemStack;
 
 public class RenderHelper {
-	public static void renderItemStackInGui(MatrixStack ms, ItemStack stack, int x, int y) {
-		transferMsToGl(ms, () -> MinecraftClient.getInstance().getItemRenderer().renderInGuiWithOverrides(stack, x, y));
+	public static void renderItemStackInGui(PoseStack ms, ItemStack stack, int x, int y) {
+		transferMsToGl(ms, () -> Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, x, y));
 	}
 
 	/**
 	 * Temporary shim to allow methods such as
-	 * {@link net.minecraft.client.render.item.ItemRenderer#renderInGuiWithOverrides}
+	 * {@link net.minecraft.client.renderer.entity.ItemRenderer#renderAndDecorateItem}
 	 * to support matrixstack transformations. Hopefully Mojang finishes this migration up...
 	 * Transfers the current CPU matrixstack to the openGL matrix stack, then runs the provided function
 	 * Assumption: the "root" state of the MatrixStack is same as the currently GL state,
@@ -21,13 +21,13 @@ public class RenderHelper {
 	 * If there have been intervening changes to the GL matrix state since the MatrixStack was constructed, then this
 	 * won't work.
 	 */
-	public static void transferMsToGl(MatrixStack ms, Runnable toRun) {
-		MatrixStack mvs = RenderSystem.getModelViewStack();
-		mvs.push();
-		mvs.method_34425(ms.peek().getModel());
+	public static void transferMsToGl(PoseStack ms, Runnable toRun) {
+		PoseStack mvs = RenderSystem.getModelViewStack();
+		mvs.pushPose();
+		mvs.mulPoseMatrix(ms.last().pose());
 		RenderSystem.applyModelViewMatrix();
 		toRun.run();
-		mvs.pop();
+		mvs.popPose();
 		RenderSystem.applyModelViewMatrix();
 	}
 }

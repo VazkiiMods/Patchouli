@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.client.util.math.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
@@ -37,7 +37,7 @@ public class PageTemplate extends BookPage {
 	}
 
 	@Override
-	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack ms, int mouseX, int mouseY, float pticks) {
 		template.render(ms, this, mouseX, mouseY, pticks);
 	}
 

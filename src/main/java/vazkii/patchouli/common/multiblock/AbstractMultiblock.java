@@ -2,23 +2,23 @@ package vazkii.patchouli.common.multiblock;
 
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.LightType;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BuiltinBiomes;
-import net.minecraft.world.chunk.light.LightingProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.data.worldgen.biome.Biomes;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ColorResolver;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.lighting.LevelLightEngine;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.TriPredicate;
@@ -30,12 +30,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView {
-	public Identifier id;
+public abstract class AbstractMultiblock implements IMultiblock, BlockAndTintGetter {
+	public ResourceLocation id;
 	protected int offX, offY, offZ;
 	protected int viewOffX, viewOffY, viewOffZ;
 	private boolean symmetrical;
-	World world;
+	Level world;
 
 	private final transient Map<BlockPos, BlockEntity> teCache = new HashMap<>();
 
@@ -74,35 +74,35 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 	}
 
 	@Override
-	public Identifier getID() {
+	public ResourceLocation getID() {
 		return id;
 	}
 
 	@Override
-	public IMultiblock setId(Identifier res) {
+	public IMultiblock setId(ResourceLocation res) {
 		this.id = res;
 		return this;
 	}
 
 	@Override
-	public void place(World world, BlockPos pos, BlockRotation rotation) {
+	public void place(Level world, BlockPos pos, Rotation rotation) {
 		setWorld(world);
 		simulate(world, pos, rotation, false).getSecond().forEach(r -> {
 			BlockPos placePos = r.getWorldPosition();
-			BlockState targetState = r.getStateMatcher().getDisplayedState((int) world.getTimeOfDay()).rotate(rotation);
+			BlockState targetState = r.getStateMatcher().getDisplayedState((int) world.getDayTime()).rotate(rotation);
 
-			if (!targetState.isAir() && targetState.canPlaceAt(world, placePos) && world.getBlockState(placePos).getMaterial().isReplaceable()) {
-				world.setBlockState(placePos, targetState);
+			if (!targetState.isAir() && targetState.canSurvive(world, placePos) && world.getBlockState(placePos).getMaterial().isReplaceable()) {
+				world.setBlockAndUpdate(placePos, targetState);
 			}
 		});
 	}
 
 	@Override
-	public BlockRotation validate(World world, BlockPos pos) {
-		if (isSymmetrical() && validate(world, pos, BlockRotation.NONE)) {
-			return BlockRotation.NONE;
+	public Rotation validate(Level world, BlockPos pos) {
+		if (isSymmetrical() && validate(world, pos, Rotation.NONE)) {
+			return Rotation.NONE;
 		} else {
-			for (BlockRotation rot : BlockRotation.values()) {
+			for (Rotation rot : Rotation.values()) {
 				if (validate(world, pos, rot)) {
 					return rot;
 				}
@@ -112,13 +112,13 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 	}
 
 	@Override
-	public boolean validate(World world, BlockPos pos, BlockRotation rotation) {
+	public boolean validate(Level world, BlockPos pos, Rotation rotation) {
 		setWorld(world);
 		Pair<BlockPos, Collection<SimulateResult>> sim = simulate(world, pos, rotation, false);
 
 		return sim.getSecond().stream().allMatch(r -> {
 			BlockPos checkPos = r.getWorldPosition();
-			TriPredicate<BlockView, BlockPos, BlockState> pred = r.getStateMatcher().getStatePredicate();
+			TriPredicate<BlockGetter, BlockPos, BlockState> pred = r.getStateMatcher().getStatePredicate();
 			BlockState state = world.getBlockState(checkPos).rotate(RotationUtil.fixHorizontal(rotation));
 
 			return pred.test(world, checkPos, state);
@@ -130,7 +130,7 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 		return symmetrical;
 	}
 
-	public void setWorld(World world) {
+	public void setWorld(Level world) {
 		this.world = world;
 	}
 
@@ -138,42 +138,42 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 	@Nullable
 	public BlockEntity getBlockEntity(BlockPos pos) {
 		BlockState state = getBlockState(pos);
-		if (state.getBlock() instanceof BlockEntityProvider) {
-			return teCache.computeIfAbsent(pos.toImmutable(), p -> ((BlockEntityProvider) state.getBlock()).createBlockEntity(pos, state));
+		if (state.getBlock() instanceof EntityBlock) {
+			return teCache.computeIfAbsent(pos.immutable(), p -> ((EntityBlock) state.getBlock()).newBlockEntity(pos, state));
 		}
 		return null;
 	}
 
 	@Override
 	public FluidState getFluidState(BlockPos pos) {
-		return Fluids.EMPTY.getDefaultState();
+		return Fluids.EMPTY.defaultFluidState();
 	}
 
 	@Override
 	public abstract Vec3i getSize();
 
 	@Override
-	public float getBrightness(Direction direction, boolean shaded) {
+	public float getShade(Direction direction, boolean shaded) {
 		return 1.0F;
 	}
 
 	@Override
-	public LightingProvider getLightingProvider() {
+	public LevelLightEngine getLightEngine() {
 		return null;
 	}
 
 	@Override
-	public int getColor(BlockPos pos, ColorResolver color) {
-		return color.getColor(BuiltinBiomes.PLAINS, pos.getX(), pos.getZ());
+	public int getBlockTint(BlockPos pos, ColorResolver color) {
+		return color.getColor(Biomes.PLAINS, pos.getX(), pos.getZ());
 	}
 
 	@Override
-	public int getLightLevel(LightType type, BlockPos pos) {
+	public int getBrightness(LightLayer type, BlockPos pos) {
 		return 15;
 	}
 
 	@Override
-	public int getBaseLightLevel(BlockPos pos, int ambientDarkening) {
+	public int getRawBrightness(BlockPos pos, int ambientDarkening) {
 		return 15 - ambientDarkening;
 	}
 
@@ -184,7 +184,7 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockRenderView
 	}
 
 	@Override
-	public int getBottomY() {
+	public int getMinBuildHeight() {
 		return 0;
 	}
 }

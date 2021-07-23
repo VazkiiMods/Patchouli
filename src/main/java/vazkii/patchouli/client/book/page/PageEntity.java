@@ -2,15 +2,15 @@ package vazkii.patchouli.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -36,7 +36,7 @@ public class PageEntity extends PageWithText {
 
 	transient boolean errored;
 	transient Entity entity;
-	transient Function<World, Entity> creator;
+	transient Function<Level, Entity> creator;
 	transient float renderScale, offset;
 
 	@Override
@@ -50,7 +50,7 @@ public class PageEntity extends PageWithText {
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 
-		loadEntity(parent.getMinecraft().world);
+		loadEntity(parent.getMinecraft().level);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class PageEntity extends PageWithText {
 	}
 
 	@Override
-	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack ms, int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
 		RenderSystem.enableBlend();
@@ -68,49 +68,49 @@ public class PageEntity extends PageWithText {
 
 		if (name == null || name.isEmpty()) {
 			if (entity != null) {
-				parent.drawCenteredStringNoShadow(ms, entity.getName().asOrderedText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+				parent.drawCenteredStringNoShadow(ms, entity.getName().getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 			}
 		} else {
 			parent.drawCenteredStringNoShadow(ms, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		}
 
 		if (errored) {
-			fontRenderer.drawWithShadow(ms, I18n.translate("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
+			fontRenderer.drawShadow(ms, I18n.get("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
 		}
 
 		if (entity != null) {
 			float rotation = rotate ? ClientTicker.total : defaultRotation;
-			renderEntity(ms, entity, parent.getMinecraft().world, 58, 60, rotation, renderScale, offset);
+			renderEntity(ms, entity, parent.getMinecraft().level, 58, 60, rotation, renderScale, offset);
 		}
 
 		super.render(ms, mouseX, mouseY, pticks);
 	}
 
-	public static void renderEntity(MatrixStack ms, Entity entity, World world, float x, float y, float rotation, float renderScale, float offset) {
-		entity.world = world;
+	public static void renderEntity(PoseStack ms, Entity entity, Level world, float x, float y, float rotation, float renderScale, float offset) {
+		entity.level = world;
 
-		ms.push();
+		ms.pushPose();
 		ms.translate(x, y, 50);
 		ms.scale(renderScale, renderScale, renderScale);
 		ms.translate(0, offset, 0);
-		ms.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180));
-		ms.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rotation));
-		EntityRenderDispatcher erd = MinecraftClient.getInstance().getEntityRenderDispatcher();
-		VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-		erd.setRenderShadows(false);
+		ms.mulPose(Vector3f.ZP.rotationDegrees(180));
+		ms.mulPose(Vector3f.YP.rotationDegrees(rotation));
+		EntityRenderDispatcher erd = Minecraft.getInstance().getEntityRenderDispatcher();
+		MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();
+		erd.setRenderShadow(false);
 		erd.render(entity, 0, 0, 0, 0, 1, ms, immediate, 0xF000F0);
-		erd.setRenderShadows(true);
-		immediate.draw();
-		ms.pop();
+		erd.setRenderShadow(true);
+		immediate.endBatch();
+		ms.popPose();
 	}
 
-	private void loadEntity(World world) {
+	private void loadEntity(Level world) {
 		if (!errored && (entity == null || !entity.isAlive())) {
 			try {
 				entity = creator.apply(world);
 
-				float width = entity.getWidth();
-				float height = entity.getHeight();
+				float width = entity.getBbWidth();
+				float height = entity.getBbHeight();
 
 				float entitySize = width;
 				if (width < height) {

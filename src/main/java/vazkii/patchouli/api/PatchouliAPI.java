@@ -4,15 +4,15 @@ import com.google.common.base.Suppliers;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.state.property.Property;
-import net.minecraft.text.Text;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -78,36 +78,36 @@ public class PatchouliAPI {
 		/**
 		 * Opens the given book to the last page that was open, or the landing page otherwise.
 		 */
-		void openBookGUI(ServerPlayerEntity player, Identifier book);
+		void openBookGUI(ServerPlayer player, ResourceLocation book);
 
 		/**
 		 * Opens the book to the given entry
 		 */
-		void openBookEntry(ServerPlayerEntity player, Identifier book, Identifier entry, int page);
+		void openBookEntry(ServerPlayer player, ResourceLocation book, ResourceLocation entry, int page);
 
 		/**
-		 * Client version of {@link #openBookGUI(ServerPlayerEntity, Identifier)}.
+		 * Client version of {@link #openBookGUI(ServerPlayer, ResourceLocation)}.
 		 */
-		void openBookGUI(Identifier book);
+		void openBookGUI(ResourceLocation book);
 
 		/**
-		 * Client version of {@link #openBookEntry(ServerPlayerEntity, Identifier, Identifier, int)}
+		 * Client version of {@link #openBookEntry(ServerPlayer, ResourceLocation, ResourceLocation, int)}
 		 */
-		void openBookEntry(Identifier book, Identifier entry, int page);
+		void openBookEntry(ResourceLocation book, ResourceLocation entry, int page);
 
-		Identifier getOpenBookGui();
+		ResourceLocation getOpenBookGui();
 
 		/**
 		 * @return                          The subtitle (edition string/what appears under the title in the landing
 		 *                                  page) of the book.
 		 * @throws IllegalArgumentException if the book id given cannot be found
 		 */
-		Text getSubtitle(Identifier bookId);
+		Component getSubtitle(ResourceLocation bookId);
 
 		/**
 		 * Returns a book item with its NBT set to the book passed in.
 		 */
-		ItemStack getBookStack(Identifier book);
+		ItemStack getBookStack(ResourceLocation book);
 
 		/**
 		 * Register a template you made as a built in template to be used with all books
@@ -115,7 +115,7 @@ public class PatchouliAPI {
 		 * reads a full json file, containing a template.
 		 */
 		@Environment(EnvType.CLIENT)
-		void registerTemplateAsBuiltin(Identifier res, Supplier<InputStream> streamProvider);
+		void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider);
 
 		/**
 		 * Register a Patchouli command, of the type $(cmdname).
@@ -145,13 +145,13 @@ public class PatchouliAPI {
 		/**
 		 * Gets a multiblock by its resource location, or null if none exists for it.
 		 */
-		IMultiblock getMultiblock(Identifier res);
+		IMultiblock getMultiblock(ResourceLocation res);
 
 		/**
 		 * Registers a multiblock given its resource location. This takes care of both registering it
 		 * and setting its resource location to the one passed.
 		 */
-		IMultiblock registerMultiblock(Identifier res, IMultiblock mb);
+		IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb);
 
 		/**
 		 * @return The multiblock currently being visualized in-world or null if no multiblock is visualized. Only works
@@ -170,7 +170,7 @@ public class PatchouliAPI {
 		 * @param center      Where to place the multiblock's center
 		 * @param rotation    Orientation to visualize
 		 */
-		void showMultiblock(IMultiblock multiblock, Text displayName, BlockPos center, BlockRotation rotation);
+		void showMultiblock(IMultiblock multiblock, Component displayName, BlockPos center, Rotation rotation);
 
 		/**
 		 * Clears the currently visualized multiblock. Only works clientside.

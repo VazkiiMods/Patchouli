@@ -1,13 +1,14 @@
 package vazkii.patchouli.api;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
 
@@ -20,22 +21,22 @@ public interface IComponentRenderContext {
 
 	Style getFont();
 
-	void renderItemStack(MatrixStack ms, int x, int y, int mouseX, int mouseY, ItemStack stack);
+	void renderItemStack(PoseStack ms, int x, int y, int mouseX, int mouseY, ItemStack stack);
 
-	void renderIngredient(MatrixStack ms, int x, int y, int mouseX, int mouseY, Ingredient ingredient);
+	void renderIngredient(PoseStack ms, int x, int y, int mouseX, int mouseY, Ingredient ingredient);
 
 	boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h);
 
 	@Deprecated // use setHoverTooltipComponents
 	void setHoverTooltip(List<String> tooltip);
 
-	void setHoverTooltipComponents(List<Text> tooltip);
+	void setHoverTooltipComponents(List<Component> tooltip);
 
-	void registerButton(ButtonWidget button, int pageNum, Runnable onClick);
+	void registerButton(Button button, int pageNum, Runnable onClick);
 
-	Identifier getBookTexture();
+	ResourceLocation getBookTexture();
 
-	Identifier getCraftingTexture();
+	ResourceLocation getCraftingTexture();
 
 	int getTextColor();
 

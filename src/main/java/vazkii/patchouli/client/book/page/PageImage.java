@@ -1,11 +1,11 @@
 package vazkii.patchouli.client.book.page;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -14,7 +14,7 @@ import vazkii.patchouli.client.book.page.abstr.PageWithText;
 
 public class PageImage extends PageWithText {
 
-	Identifier[] images;
+	ResourceLocation[] images;
 	String title;
 	boolean border;
 
@@ -31,7 +31,7 @@ public class PageImage extends PageWithText {
 	}
 
 	@Override
-	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack ms, int mouseX, int mouseY, float pticks) {
 		RenderSystem.setShaderTexture(0, images[index]);
 
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
@@ -39,7 +39,7 @@ public class PageImage extends PageWithText {
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		RenderSystem.enableBlend();
 		ms.scale(0.5F, 0.5F, 0.5F);
-		parent.drawTexture(ms, x * 2 + 6, y * 2 + 6, 0, 0, 200, 200);
+		parent.blit(ms, x * 2 + 6, y * 2 + 6, 0, 0, 200, 200);
 		ms.scale(2F, 2F, 2F);
 
 		if (border) {
@@ -53,14 +53,14 @@ public class PageImage extends PageWithText {
 		if (images.length > 1 && border) {
 			int xs = x + 83;
 			int ys = y + 92;
-			DrawableHelper.fill(ms, xs, ys, xs + 20, ys + 11, 0x44000000);
-			DrawableHelper.fill(ms, xs - 1, ys - 1, xs + 20, ys + 11, 0x44000000);
+			GuiComponent.fill(ms, xs, ys, xs + 20, ys + 11, 0x44000000);
+			GuiComponent.fill(ms, xs - 1, ys - 1, xs + 20, ys + 11, 0x44000000);
 		}
 
 		super.render(ms, mouseX, mouseY, pticks);
 	}
 
-	public void handleButtonArrow(ButtonWidget button) {
+	public void handleButtonArrow(Button button) {
 		boolean left = ((GuiButtonBookArrowSmall) button).left;
 		if (left) {
 			index--;

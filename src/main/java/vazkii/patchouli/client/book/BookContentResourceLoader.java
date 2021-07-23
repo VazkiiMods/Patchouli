@@ -2,9 +2,9 @@ package vazkii.patchouli.client.book;
 
 import com.google.common.base.Preconditions;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +15,7 @@ import vazkii.patchouli.common.book.BookRegistry;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.util.Collection;
 import java.util.List;
 
 public final class BookContentResourceLoader implements BookContentLoader {
@@ -23,9 +24,9 @@ public final class BookContentResourceLoader implements BookContentLoader {
 	private BookContentResourceLoader() {}
 
 	@Override
-	public void findFiles(Book book, String dir, List<Identifier> list) {
+	public void findFiles(Book book, String dir, List<ResourceLocation> list) {
 		String prefix = String.format("%s/%s/%s/%s", BookRegistry.BOOKS_LOCATION, book.id.getPath(), BookContentsBuilder.DEFAULT_LANG, dir);
-		var files = MinecraftClient.getInstance().getResourceManager().findResources(prefix, p -> p.endsWith(".json"));
+		Collection<ResourceLocation> files = Minecraft.getInstance().getResourceManager().listResources(prefix, p -> p.endsWith(".json"));
 
 		files.stream()
 				.distinct()
@@ -41,20 +42,20 @@ public final class BookContentResourceLoader implements BookContentLoader {
 					if (newPath.startsWith("/")) {
 						newPath = newPath.substring(1);
 					}
-					return new Identifier(file.getNamespace(), newPath);
+					return new ResourceLocation(file.getNamespace(), newPath);
 				})
 				.forEach(list::add);
 	}
 
 	@Nullable
 	@Override
-	public InputStream loadJson(Book book, Identifier file, @Nullable Identifier fallback) {
+	public InputStream loadJson(Book book, ResourceLocation file, @Nullable ResourceLocation fallback) {
 		Patchouli.LOGGER.debug("Loading {}", file);
-		ResourceManager manager = MinecraftClient.getInstance().getResourceManager();
+		ResourceManager manager = Minecraft.getInstance().getResourceManager();
 		try {
-			if (manager.containsResource(file)) {
+			if (manager.hasResource(file)) {
 				return manager.getResource(file).getInputStream();
-			} else if (fallback != null && manager.containsResource(fallback)) {
+			} else if (fallback != null && manager.hasResource(fallback)) {
 				return manager.getResource(fallback).getInputStream();
 			} else {
 				return null;

@@ -1,9 +1,9 @@
 package vazkii.patchouli.api.stub;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.TriPredicate;
@@ -12,7 +12,7 @@ public final class StubMatcher implements IStateMatcher {
 
 	public static final StubMatcher INSTANCE = new StubMatcher();
 
-	private final BlockState state = Blocks.AIR.getDefaultState();
+	private final BlockState state = Blocks.AIR.defaultBlockState();
 
 	private StubMatcher() {}
 
@@ -22,7 +22,7 @@ public final class StubMatcher implements IStateMatcher {
 	}
 
 	@Override
-	public TriPredicate<BlockView, BlockPos, BlockState> getStatePredicate() {
+	public TriPredicate<BlockGetter, BlockPos, BlockState> getStatePredicate() {
 		return (w, p, s) -> false;
 	}
 

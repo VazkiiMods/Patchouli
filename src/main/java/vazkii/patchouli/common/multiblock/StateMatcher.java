@@ -1,11 +1,11 @@
 package vazkii.patchouli.common.multiblock;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.Property;
 
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.TriPredicate;
@@ -15,13 +15,13 @@ import java.util.function.Predicate;
 
 public class StateMatcher implements IStateMatcher {
 
-	public static final StateMatcher ANY = displayOnly(Blocks.AIR.getDefaultState());
-	public static final StateMatcher AIR = fromPredicate(Blocks.AIR.getDefaultState(), (w, p, s) -> s.isAir());
+	public static final StateMatcher ANY = displayOnly(Blocks.AIR.defaultBlockState());
+	public static final StateMatcher AIR = fromPredicate(Blocks.AIR.defaultBlockState(), (w, p, s) -> s.isAir());
 
 	private final BlockState displayState;
-	private final TriPredicate<BlockView, BlockPos, BlockState> statePredicate;
+	private final TriPredicate<BlockGetter, BlockPos, BlockState> statePredicate;
 
-	private StateMatcher(BlockState displayState, TriPredicate<BlockView, BlockPos, BlockState> statePredicate) {
+	private StateMatcher(BlockState displayState, TriPredicate<BlockGetter, BlockPos, BlockState> statePredicate) {
 		this.displayState = displayState;
 		this.statePredicate = statePredicate;
 	}
@@ -31,15 +31,15 @@ public class StateMatcher implements IStateMatcher {
 	}
 
 	public static StateMatcher fromPredicate(Block display, Predicate<BlockState> predicate) {
-		return fromPredicate(display.getDefaultState(), predicate);
+		return fromPredicate(display.defaultBlockState(), predicate);
 	}
 
-	public static StateMatcher fromPredicate(BlockState display, TriPredicate<BlockView, BlockPos, BlockState> predicate) {
+	public static StateMatcher fromPredicate(BlockState display, TriPredicate<BlockGetter, BlockPos, BlockState> predicate) {
 		return new StateMatcher(display, predicate);
 	}
 
-	public static StateMatcher fromPredicate(Block display, TriPredicate<BlockView, BlockPos, BlockState> predicate) {
-		return new StateMatcher(display.getDefaultState(), predicate);
+	public static StateMatcher fromPredicate(Block display, TriPredicate<BlockGetter, BlockPos, BlockState> predicate) {
+		return new StateMatcher(display.defaultBlockState(), predicate);
 	}
 
 	public static StateMatcher fromState(BlockState displayState, boolean strict) {
@@ -56,9 +56,9 @@ public class StateMatcher implements IStateMatcher {
 			return state1.getProperties()
 					.stream()
 					.filter(filter)
-					.allMatch(property -> state1.contains(property) &&
-							state.contains(property) &&
-							Objects.equals(state.get(property), state1.get(property)));
+					.allMatch(property -> state1.hasProperty(property) &&
+							state.hasProperty(property) &&
+							Objects.equals(state.getValue(property), state1.getValue(property)));
 		});
 	}
 
@@ -67,11 +67,11 @@ public class StateMatcher implements IStateMatcher {
 	}
 
 	public static StateMatcher fromBlockLoose(Block block) {
-		return fromState(block.getDefaultState(), false);
+		return fromState(block.defaultBlockState(), false);
 	}
 
 	public static StateMatcher fromBlockStrict(Block block) {
-		return fromState(block.getDefaultState(), true);
+		return fromState(block.defaultBlockState(), true);
 	}
 
 	public static StateMatcher displayOnly(BlockState state) {
@@ -79,7 +79,7 @@ public class StateMatcher implements IStateMatcher {
 	}
 
 	public static StateMatcher displayOnly(Block block) {
-		return displayOnly(block.getDefaultState());
+		return displayOnly(block.defaultBlockState());
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class StateMatcher implements IStateMatcher {
 	}
 
 	@Override
-	public TriPredicate<BlockView, BlockPos, BlockState> getStatePredicate() {
+	public TriPredicate<BlockGetter, BlockPos, BlockState> getStatePredicate() {
 		return statePredicate;
 	}
 

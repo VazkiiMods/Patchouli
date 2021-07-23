@@ -1,15 +1,15 @@
 package vazkii.patchouli.client.book;
 
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -21,14 +21,14 @@ import java.util.List;
 
 public abstract class BookPage {
 
-	public transient MinecraftClient mc;
-	public transient TextRenderer fontRenderer;
+	public transient Minecraft mc;
+	public transient Font fontRenderer;
 	public transient GuiBookEntry parent;
 
 	public transient Book book;
 	protected transient BookEntry entry;
 	protected transient int pageNum;
-	private transient List<ButtonWidget> buttons;
+	private transient List<Button> buttons;
 	public transient int left, top;
 	public transient JsonObject sourceObject;
 
@@ -43,7 +43,7 @@ public abstract class BookPage {
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		mc = parent.getMinecraft();
 		book = parent.book;
-		fontRenderer = mc.textRenderer;
+		fontRenderer = mc.font;
 		this.parent = parent;
 		this.left = left;
 		this.top = top;
@@ -58,14 +58,14 @@ public abstract class BookPage {
 		parent.removeDrawablesIn(buttons);
 	}
 
-	protected void addButton(ButtonWidget button) {
+	protected void addButton(Button button) {
 		button.x += (parent.bookLeft + left);
 		button.y += (parent.bookTop + top);
 		buttons.add(button);
-		parent.addDrawableChild(button);
+		parent.addRenderableWidget(button);
 	}
 
-	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {}
+	public void render(PoseStack ms, int mouseX, int mouseY, float pticks) {}
 
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		return false;
@@ -76,10 +76,10 @@ public abstract class BookPage {
 	}
 
 	public String i18n(String text) {
-		return book.i18n ? I18n.translate(text) : text;
+		return book.i18n ? I18n.get(text) : text;
 	}
 
-	public Text i18nText(String text) {
-		return book.i18n ? new TranslatableText(text) : new LiteralText(text);
+	public Component i18nText(String text) {
+		return book.i18n ? new TranslatableComponent(text) : new TextComponent(text);
 	}
 }

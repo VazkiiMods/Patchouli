@@ -2,9 +2,9 @@ package vazkii.patchouli.client.book;
 
 import com.google.gson.*;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 import vazkii.patchouli.client.book.page.*;
 import vazkii.patchouli.client.book.template.BookTemplate;
@@ -23,7 +23,7 @@ import java.util.Map;
 
 public class ClientBookRegistry {
 
-	public final Map<Identifier, Class<? extends BookPage>> pageTypes = new HashMap<>();
+	public final Map<ResourceLocation, Class<? extends BookPage>> pageTypes = new HashMap<>();
 
 	public final Gson gson = new GsonBuilder()
 			.registerTypeHierarchyAdapter(BookPage.class, new LexiconPageAdapter())
@@ -40,26 +40,26 @@ public class ClientBookRegistry {
 	}
 
 	private void addPageTypes() {
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "text"), PageText.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "crafting"), PageCrafting.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "smelting"), PageSmelting.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "blasting"), PageBlasting.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "smoking"), PageSmoking.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "campfire"), PageCampfireCooking.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "smithing"), PageSmithing.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "stonecutting"), PageStonecutting.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "image"), PageImage.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "spotlight"), PageSpotlight.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "empty"), PageEmpty.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "multiblock"), PageMultiblock.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "link"), PageLink.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "relations"), PageRelations.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "entity"), PageEntity.class);
-		pageTypes.put(new Identifier(Patchouli.MOD_ID, "quest"), PageQuest.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "text"), PageText.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "crafting"), PageCrafting.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "smelting"), PageSmelting.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "blasting"), PageBlasting.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "smoking"), PageSmoking.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "campfire"), PageCampfireCooking.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "smithing"), PageSmithing.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "stonecutting"), PageStonecutting.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "image"), PageImage.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "spotlight"), PageSpotlight.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "empty"), PageEmpty.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "multiblock"), PageMultiblock.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "link"), PageLink.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "relations"), PageRelations.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "entity"), PageEntity.class);
+		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "quest"), PageQuest.class);
 	}
 
 	public void reload(boolean resourcePackBooksOnly) {
-		currentLang = MinecraftClient.getInstance().getLanguageManager().getLanguage().getCode();
+		currentLang = Minecraft.getInstance().getLanguageManager().getSelected().getCode();
 		BookRegistry.INSTANCE.reloadContents(resourcePackBooksOnly);
 	}
 
@@ -71,9 +71,9 @@ public class ClientBookRegistry {
 	 * @param entryId Entry to force to the top of the stack
 	 * @param page    Page in the entry to force. Ignored if {@code entryId} is null.
 	 */
-	public void displayBookGui(Identifier bookStr, @Nullable Identifier entryId, int page) {
-		MinecraftClient mc = MinecraftClient.getInstance();
-		currentLang = mc.getLanguageManager().getLanguage().getCode();
+	public void displayBookGui(ResourceLocation bookStr, @Nullable ResourceLocation entryId, int page) {
+		Minecraft mc = Minecraft.getInstance();
+		currentLang = mc.getLanguageManager().getSelected().getCode();
 
 		Book book = BookRegistry.INSTANCE.books.get(bookStr);
 
@@ -103,7 +103,7 @@ public class ClientBookRegistry {
 			if (string.indexOf(':') < 0) {
 				string = Patchouli.MOD_ID + ":" + string;
 			}
-			Identifier type = new Identifier(string);
+			ResourceLocation type = new ResourceLocation(string);
 			Class<? extends BookPage> clazz = ClientBookRegistry.INSTANCE.pageTypes.get(type);
 			if (clazz == null) {
 				clazz = PageTemplate.class;
@@ -123,7 +123,7 @@ public class ClientBookRegistry {
 		public TemplateComponent deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			JsonObject obj = json.getAsJsonObject();
 			JsonPrimitive prim = (JsonPrimitive) obj.get("type");
-			Identifier type = new Identifier(prim.getAsString());
+			ResourceLocation type = new ResourceLocation(prim.getAsString());
 			Class<? extends TemplateComponent> clazz = BookTemplate.componentTypes.get(type);
 
 			if (clazz == null) {

@@ -1,12 +1,13 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
@@ -20,7 +21,7 @@ import vazkii.patchouli.common.book.Book;
 
 public class PageQuest extends PageWithText {
 
-	Identifier trigger;
+	ResourceLocation trigger;
 	String title;
 
 	transient boolean isManual;
@@ -48,19 +49,19 @@ public class PageQuest extends PageWithText {
 		super.onDisplayed(parent, left, top);
 
 		if (isManual) {
-			ButtonWidget button = new ButtonWidget(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, LiteralText.EMPTY, this::questButtonClicked);
+			Button button = new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, TextComponent.EMPTY, this::questButtonClicked);
 			addButton(button);
 			updateButtonText(button);
 		}
 	}
 
-	private void updateButtonText(ButtonWidget button) {
+	private void updateButtonText(Button button) {
 		boolean completed = isCompleted(parent.book);
-		Text s = new TranslatableText(completed ? "patchouli.gui.lexicon.mark_incomplete" : "patchouli.gui.lexicon.mark_complete");
+		Component s = new TranslatableComponent(completed ? "patchouli.gui.lexicon.mark_incomplete" : "patchouli.gui.lexicon.mark_complete");
 		button.setMessage(s);
 	}
 
-	protected void questButtonClicked(ButtonWidget button) {
+	protected void questButtonClicked(Button button) {
 		String res = entry.getId().toString();
 		BookData data = PersistentData.data.getBookData(parent.book);
 
@@ -76,17 +77,17 @@ public class PageQuest extends PageWithText {
 	}
 
 	@Override
-	public void render(MatrixStack ms, int mouseX, int mouseY, float pticks) {
+	public void render(PoseStack ms, int mouseX, int mouseY, float pticks) {
 		super.render(ms, mouseX, mouseY, pticks);
 
-		parent.drawCenteredStringNoShadow(ms, title == null || title.isEmpty() ? I18n.translate("patchouli.gui.lexicon.objective") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		parent.drawCenteredStringNoShadow(ms, title == null || title.isEmpty() ? I18n.get("patchouli.gui.lexicon.objective") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		GuiBook.drawSeparator(ms, book, 0, 12);
 
 		if (!isManual) {
 			GuiBook.drawSeparator(ms, book, 0, GuiBook.PAGE_HEIGHT - 25);
 
 			boolean completed = isCompleted(parent.book);
-			String s = I18n.translate(completed ? "patchouli.gui.lexicon.complete" : "patchouli.gui.lexicon.incomplete");
+			String s = I18n.get(completed ? "patchouli.gui.lexicon.complete" : "patchouli.gui.lexicon.incomplete");
 			int color = completed ? 0x008b1a : book.headerColor;
 
 			parent.drawCenteredStringNoShadow(ms, s, GuiBook.PAGE_WIDTH / 2, GuiBook.PAGE_HEIGHT - 17, color);

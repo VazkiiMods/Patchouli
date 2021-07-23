@@ -1,7 +1,7 @@
 package vazkii.patchouli.mixin.client;
 
-import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.crash.CrashReportSection;
+import net.minecraft.CrashReport;
+import net.minecraft.CrashReportCategory;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,12 +14,12 @@ import vazkii.patchouli.client.handler.BookCrashHandler;
 @Mixin(CrashReport.class)
 public abstract class MixinCrashReport {
 	@Shadow
-	public abstract CrashReportSection addElement(String name);
+	public abstract CrashReportCategory addCategory(String name);
 
 	@Inject(at = @At("RETURN"), method = "<init>")
 	private void fillPatchouliContext(CallbackInfo info) {
-		CrashReportSection section = this.addElement("Patchouli Book Info");
-		var crashInfo = new BookCrashHandler();
-		section.add(crashInfo.getLabel(), crashInfo);
+		CrashReportCategory section = this.addCategory("Patchouli Book Info");
+		BookCrashHandler crashInfo = new BookCrashHandler();
+		section.setDetail(crashInfo.getLabel(), crashInfo);
 	}
 }

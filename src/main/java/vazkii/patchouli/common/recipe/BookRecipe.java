@@ -2,13 +2,14 @@ package vazkii.patchouli.common.recipe;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.*;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.base.Patchouli;
@@ -17,35 +18,35 @@ import vazkii.patchouli.common.item.PatchouliItems;
 
 public abstract class BookRecipe<T extends CraftingRecipe> implements CraftingRecipe {
 	protected final T compose;
-	private final Identifier outputBook;
+	private final ResourceLocation outputBook;
 
-	protected BookRecipe(T compose, Identifier outputBook) {
+	protected BookRecipe(T compose, ResourceLocation outputBook) {
 		this.compose = compose;
 		this.outputBook = outputBook;
 	}
 
 	@Override
-	public boolean matches(CraftingInventory inventory, World world) {
+	public boolean matches(CraftingContainer inventory, Level world) {
 		return compose.matches(inventory, world);
 	}
 
 	@Override
-	public ItemStack craft(CraftingInventory inventory) {
-		return getOutput();
+	public ItemStack assemble(CraftingContainer inventory) {
+		return getResultItem();
 	}
 
 	@Override
-	public boolean fits(int width, int height) {
-		return compose.fits(width, height);
+	public boolean canCraftInDimensions(int width, int height) {
+		return compose.canCraftInDimensions(width, height);
 	}
 
 	@Override
-	public ItemStack getOutput() {
+	public ItemStack getResultItem() {
 		return PatchouliAPI.get().getBookStack(outputBook);
 	}
 
 	@Override
-	public Identifier getId() {
+	public ResourceLocation getId() {
 		return compose.getId();
 	}
 
@@ -55,18 +56,18 @@ public abstract class BookRecipe<T extends CraftingRecipe> implements CraftingRe
 	protected abstract static class WrapperSerializer<R extends CraftingRecipe, T extends BookRecipe<R>> implements RecipeSerializer<T> {
 		protected abstract RecipeSerializer<R> getSerializer();
 
-		protected abstract T getRecipe(R recipe, Identifier outputBook);
+		protected abstract T getRecipe(R recipe, ResourceLocation outputBook);
 
 		@Override
-		public T read(Identifier id, JsonObject json) {
+		public T fromJson(ResourceLocation id, JsonObject json) {
 			if (!json.has("result")) {
 				JsonObject object = new JsonObject();
 				object.addProperty("item", PatchouliItems.BOOK_ID.toString());
 				json.add("result", object);
 			}
-			R recipe = getSerializer().read(id, json);
+			R recipe = getSerializer().fromJson(id, json);
 
-			Identifier outputBook = new Identifier(JsonHelper.getString(json, "book"));
+			ResourceLocation outputBook = new ResourceLocation(GsonHelper.getAsString(json, "book"));
 			if (!BookRegistry.INSTANCE.books.containsKey(outputBook)) {
 				Patchouli.LOGGER.warn("Book {} in recipe {} does not exist!", outputBook, id);
 			}
@@ -75,17 +76,17 @@ public abstract class BookRecipe<T extends CraftingRecipe> implements CraftingRe
 		}
 
 		@Override
-		public T read(Identifier id, PacketByteBuf buf) {
-			R recipe = getSerializer().read(id, buf);
-			Identifier outputBook = buf.readIdentifier();
+		public T fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+			R recipe = getSerializer().fromNetwork(id, buf);
+			ResourceLocation outputBook = buf.readResourceLocation();
 
 			return getRecipe(recipe, outputBook);
 		}
 
 		@Override
-		public void write(PacketByteBuf buf, T recipe) {
-			getSerializer().write(buf, recipe.compose);
-			buf.writeIdentifier(recipe.getId());
+		public void toNetwork(FriendlyByteBuf buf, T recipe) {
+			getSerializer().toNetwork(buf, recipe.compose);
+			buf.writeResourceLocation(recipe.getId());
 		}
 	}
 }

@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.recipe.BlastingRecipe;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.world.item.crafting.BlastingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
 
 import vazkii.patchouli.client.book.page.abstr.PageSimpleProcessingRecipe;
 

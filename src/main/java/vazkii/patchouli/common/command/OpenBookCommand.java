@@ -4,13 +4,13 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.command.argument.IdentifierArgumentType;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.Book;
@@ -24,36 +24,36 @@ import java.util.List;
 import java.util.Map;
 
 public class OpenBookCommand {
-	private static final SuggestionProvider<ServerCommandSource> BOOK_ID_SUGGESTER =
+	private static final SuggestionProvider<CommandSourceStack> BOOK_ID_SUGGESTER =
 			(ctx, builder) -> {
-				List<Identifier> ids = new ArrayList<>();
-				for (Map.Entry<Identifier, Book> e : BookRegistry.INSTANCE.books.entrySet()) {
+				List<ResourceLocation> ids = new ArrayList<>();
+				for (Map.Entry<ResourceLocation, Book> e : BookRegistry.INSTANCE.books.entrySet()) {
 					if (!e.getValue().isExtension) {
 						ids.add(e.getKey());
 					}
 				}
-				return CommandSource.suggestIdentifiers(ids, builder);
+				return SharedSuggestionProvider.suggestResource(ids, builder);
 			};
 
-	public static void register(CommandDispatcher<ServerCommandSource> disp) {
-		disp.register(CommandManager.literal("open-patchouli-book")
-				.requires(cs -> cs.hasPermissionLevel(2))
-				.then(CommandManager.argument("targets", EntityArgumentType.players())
-						.then(CommandManager.argument("book", IdentifierArgumentType.identifier())
+	public static void register(CommandDispatcher<CommandSourceStack> disp) {
+		disp.register(Commands.literal("open-patchouli-book")
+				.requires(cs -> cs.hasPermission(2))
+				.then(Commands.argument("targets", EntityArgument.players())
+						.then(Commands.argument("book", ResourceLocationArgument.id())
 								.suggests(BOOK_ID_SUGGESTER)
-								.executes(ctx -> doIt(EntityArgumentType.getPlayers(ctx, "targets"),
-										IdentifierArgumentType.getIdentifier(ctx, "book"),
+								.executes(ctx -> doIt(EntityArgument.getPlayers(ctx, "targets"),
+										ResourceLocationArgument.getId(ctx, "book"),
 										null, 0))
-								.then(CommandManager.argument("entry", IdentifierArgumentType.identifier())
-										.then(CommandManager.argument("page", IntegerArgumentType.integer(0))
-												.executes(ctx -> doIt(EntityArgumentType.getPlayers(ctx, "targets"),
-														IdentifierArgumentType.getIdentifier(ctx, "book"),
-														IdentifierArgumentType.getIdentifier(ctx, "entry"),
+								.then(Commands.argument("entry", ResourceLocationArgument.id())
+										.then(Commands.argument("page", IntegerArgumentType.integer(0))
+												.executes(ctx -> doIt(EntityArgument.getPlayers(ctx, "targets"),
+														ResourceLocationArgument.getId(ctx, "book"),
+														ResourceLocationArgument.getId(ctx, "entry"),
 														IntegerArgumentType.getInteger(ctx, "page"))))))));
 	}
 
-	private static int doIt(Collection<ServerPlayerEntity> players, Identifier book, @Nullable Identifier entry, int page) {
-		for (var player : players) {
+	private static int doIt(Collection<ServerPlayer> players, ResourceLocation book, @Nullable ResourceLocation entry, int page) {
+		for (ServerPlayer player : players) {
 			if (entry != null) {
 				PatchouliAPI.get().openBookEntry(player, book, entry, page);
 			} else {

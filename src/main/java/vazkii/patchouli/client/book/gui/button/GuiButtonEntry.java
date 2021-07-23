@@ -1,21 +1,21 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.sound.SoundManager;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
-public class GuiButtonEntry extends ButtonWidget {
+public class GuiButtonEntry extends Button {
 
 	private static final int ANIM_TIME = 5;
 
@@ -23,14 +23,14 @@ public class GuiButtonEntry extends ButtonWidget {
 	private final BookEntry entry;
 	private float timeHovered;
 
-	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, ButtonWidget.PressAction onPress) {
+	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, Button.OnPress onPress) {
 		super(x, y, GuiBook.PAGE_WIDTH, 10, entry.getName(), onPress);
 		this.parent = parent;
 		this.entry = entry;
 	}
 
 	@Override
-	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (active) {
 			if (isHovered()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
@@ -43,7 +43,7 @@ public class GuiButtonEntry extends ButtonWidget {
 			boolean locked = entry.isLocked();
 
 			ms.scale(0.5F, 0.5F, 0.5F);
-			DrawableHelper.fill(ms, x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
+			GuiComponent.fill(ms, x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
 			RenderSystem.enableBlend();
 
 			if (locked) {
@@ -55,18 +55,18 @@ public class GuiButtonEntry extends ButtonWidget {
 
 			ms.scale(2F, 2F, 2F);
 
-			MutableText name;
+			MutableComponent name;
 			if (locked) {
-				name = new TranslatableText("patchouli.gui.lexicon.locked");
+				name = new TranslatableComponent("patchouli.gui.lexicon.locked");
 			} else {
 				name = entry.getName();
 				if (entry.isPriority()) {
-					name = name.formatted(Formatting.ITALIC);
+					name = name.withStyle(ChatFormatting.ITALIC);
 				}
 			}
 
-			name = name.fillStyle(entry.getBook().getFontStyle());
-			MinecraftClient.getInstance().textRenderer.draw(ms, name, x + 12, y, getColor());
+			name = name.withStyle(entry.getBook().getFontStyle());
+			Minecraft.getInstance().font.draw(ms, name, x + 12, y, getColor());
 
 			if (!entry.isLocked()) {
 				GuiBook.drawMarking(ms, parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());

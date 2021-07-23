@@ -1,14 +1,14 @@
 package vazkii.patchouli.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.LiteralText;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.BookContents;
@@ -17,12 +17,12 @@ import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 
-public class GuiButtonInventoryBook extends ButtonWidget {
+public class GuiButtonInventoryBook extends Button {
 
 	private Book book;
 
 	public GuiButtonInventoryBook(Book book, int x, int y) {
-		super(x, y, 20, 20, LiteralText.EMPTY, (b) -> {
+		super(x, y, 20, 20, TextComponent.EMPTY, (b) -> {
 			BookContents contents = book.getContents();
 			contents.openLexiconGui(contents.getCurrentGui(), false);
 		});
@@ -30,13 +30,13 @@ public class GuiButtonInventoryBook extends ButtonWidget {
 	}
 
 	@Override
-	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float pticks) {
-		MinecraftClient mc = MinecraftClient.getInstance();
-		RenderSystem.setShaderTexture(0, new Identifier(Patchouli.MOD_ID, "textures/gui/inventory_button.png"));
+	public void renderButton(PoseStack ms, int mouseX, int mouseY, float pticks) {
+		Minecraft mc = Minecraft.getInstance();
+		RenderSystem.setShaderTexture(0, new ResourceLocation(Patchouli.MOD_ID, "textures/gui/inventory_button.png"));
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
 		boolean hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
-		DrawableHelper.drawTexture(ms, x, y, (hovered ? 20 : 0), 0, width, height, 64, 64);
+		GuiComponent.blit(ms, x, y, (hovered ? 20 : 0), 0, width, height, 64, 64);
 
 		ItemStack stack = book.getBookItem();
 		RenderHelper.renderItemStackInGui(ms, stack, x + 2, y + 2);

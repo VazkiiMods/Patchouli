@@ -1,9 +1,13 @@
 package vazkii.patchouli.client.book.text;
 
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -18,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.*;
 
 public class BookTextParser {
-	public static final LiteralText EMPTY_STRING_COMPONENT = new LiteralText("");
+	public static final TextComponent EMPTY_STRING_COMPONENT = new TextComponent("");
 	// A command lookup takes the body of a command $(...) and the current span state.
 	// If it understands the command, it can modify the span state and return Optional.of(command replacement).
 	// Otherwise, it just returns Optional.empty().
@@ -73,19 +77,19 @@ public class BookTextParser {
 		}, "/t");
 		register(state -> state.gui.getMinecraft().player.getName().getString(), "playername"); // TODO 1.16: dropped format codes
 		register(state -> {
-			state.modifyStyle(s -> s.withFormatting(Formatting.OBFUSCATED));
+			state.modifyStyle(s -> s.applyFormat(ChatFormatting.OBFUSCATED));
 			return "";
 		}, "k", "obf");
 		register(state -> {
-			state.modifyStyle(s -> s.withFormatting(Formatting.BOLD));
+			state.modifyStyle(s -> s.applyFormat(ChatFormatting.BOLD));
 			return "";
 		}, "l", "bold");
 		register(state -> {
-			state.modifyStyle(s -> s.withFormatting(Formatting.STRIKETHROUGH));
+			state.modifyStyle(s -> s.applyFormat(ChatFormatting.STRIKETHROUGH));
 			return "";
 		}, "m", "strike");
 		register(state -> {
-			state.modifyStyle(s -> s.withFormatting(Formatting.ITALIC));
+			state.modifyStyle(s -> s.applyFormat(ChatFormatting.ITALIC));
 			return "";
 		}, "o", "italic", "italics");
 		register(state -> {
@@ -98,14 +102,14 @@ public class BookTextParser {
 		}, "nocolor");
 
 		register((parameter, state) -> {
-			KeyBinding result = getKeybindKey(state, parameter);
+			KeyMapping result = getKeybindKey(state, parameter);
 			if (result == null) {
-				state.tooltip = new TranslatableText("patchouli.gui.lexicon.keybind_missing", parameter);
+				state.tooltip = new TranslatableComponent("patchouli.gui.lexicon.keybind_missing", parameter);
 				return "N/A";
 			}
 
-			state.tooltip = new TranslatableText("patchouli.gui.lexicon.keybind", new TranslatableText(result.getTranslationKey()));
-			return result.getBoundKeyLocalizedText().getString();
+			state.tooltip = new TranslatableComponent("patchouli.gui.lexicon.keybind", new TranslatableComponent(result.getName()));
+			return result.getTranslatedKeyMessage().getString();
 		}, "k");
 		register((parameter, state) -> {
 			state.cluster = new LinkedList<>();
@@ -115,7 +119,7 @@ public class BookTextParser {
 
 			if (isExternal) {
 				String url = parameter;
-				state.tooltip = new TranslatableText("patchouli.gui.lexicon.external_link");
+				state.tooltip = new TranslatableComponent("patchouli.gui.lexicon.external_link");
 				state.isExternalLink = true;
 				state.onClick = () -> {
 					GuiBook.openWebLink(url);
@@ -129,11 +133,11 @@ public class BookTextParser {
 					parameter = parameter.substring(0, hash);
 				}
 
-				Identifier href = parameter.contains(":") ? new Identifier(parameter) : new Identifier(state.book.getModNamespace(), parameter);
+				ResourceLocation href = parameter.contains(":") ? new ResourceLocation(parameter) : new ResourceLocation(state.book.getModNamespace(), parameter);
 				BookEntry entry = state.book.getContents().entries.get(href);
 				if (entry != null) {
 					state.tooltip = entry.isLocked()
-							? new TranslatableText("patchouli.gui.lexicon.locked").formatted(Formatting.GRAY)
+							? new TranslatableComponent("patchouli.gui.lexicon.locked").withStyle(ChatFormatting.GRAY)
 							: entry.getName();
 					GuiBook gui = state.gui;
 					Book book = state.book;
@@ -154,13 +158,13 @@ public class BookTextParser {
 						return true;
 					};
 				} else {
-					state.tooltip = new LiteralText("BAD LINK: " + parameter);
+					state.tooltip = new TextComponent("BAD LINK: " + parameter);
 				}
 			}
 			return "";
 		}, "l");
 		register((parameter, state) -> {
-			state.tooltip = new LiteralText(parameter);
+			state.tooltip = new TextComponent(parameter);
 			state.cluster = new LinkedList<>();
 			return "";
 		}, "tooltip", "t");
@@ -168,12 +172,12 @@ public class BookTextParser {
 			state.pushStyle(Style.EMPTY.withColor(TextColor.fromRgb(state.book.linkColor)));
 			state.cluster = new LinkedList<>();
 			if (!parameter.startsWith("/")) {
-				state.tooltip = new LiteralText("INVALID COMMAND (must begin with /)");
+				state.tooltip = new TextComponent("INVALID COMMAND (must begin with /)");
 			} else {
-				state.tooltip = new LiteralText(parameter.length() < 20 ? parameter : parameter.substring(0, 20) + "...");
+				state.tooltip = new TextComponent(parameter.length() < 20 ? parameter : parameter.substring(0, 20) + "...");
 			}
 			state.onClick = () -> {
-				state.gui.getMinecraft().player.sendChatMessage(parameter);
+				state.gui.getMinecraft().player.chat(parameter);
 				return true;
 			};
 			return "";
@@ -203,7 +207,7 @@ public class BookTextParser {
 		this.baseStyle = baseStyle;
 	}
 
-	public List<Span> parse(Text text) {
+	public List<Span> parse(Component text) {
 		List<Span> spans = new ArrayList<>();
 		SpanState state = new SpanState(gui, book, baseStyle);
 		text.visitSelf((style, string) -> {
@@ -288,7 +292,7 @@ public class BookTextParser {
 		String result = optResult.orElse("$(" + cmd + ")");
 
 		if (state.endingExternal) {
-			result += Formatting.GRAY + "\u21AA";
+			result += ChatFormatting.GRAY + "\u21AA";
 		}
 
 		return result;
@@ -296,7 +300,7 @@ public class BookTextParser {
 
 	private static Optional<String> colorCodeProcessor(String functionName, SpanState state) {
 		if (functionName.length() == 1 && functionName.matches("^[0123456789abcdef]$")) {
-			state.modifyStyle(s -> s.withFormatting(Formatting.byCode(functionName.charAt(0))));
+			state.modifyStyle(s -> s.applyFormat(ChatFormatting.getByCode(functionName.charAt(0))));
 			return Optional.of("");
 		}
 		return Optional.empty();
@@ -329,7 +333,7 @@ public class BookTextParser {
 			state.lineBreaks = 1;
 			state.spacingLeft = pad;
 			state.spacingRight = state.spaceWidth;
-			return Optional.of(Formatting.BLACK.toString() + bullet);
+			return Optional.of(ChatFormatting.BLACK.toString() + bullet);
 		}
 		return Optional.empty();
 	}
@@ -350,12 +354,12 @@ public class BookTextParser {
 		return Optional.ofNullable(COMMANDS.get(functionName)).map(c -> c.process(state));
 	}
 
-	private static KeyBinding getKeybindKey(SpanState state, String keybind) {
+	private static KeyMapping getKeybindKey(SpanState state, String keybind) {
 		String alt = "key." + keybind;
 
-		KeyBinding[] keys = state.gui.getMinecraft().options.keysAll;
-		for (var k : keys) {
-			String name = k.getTranslationKey();
+		KeyMapping[] keys = state.gui.getMinecraft().options.keyMappings;
+		for (KeyMapping k : keys) {
+			String name = k.getName();
 			if (name.equals(keybind) || name.equals(alt)) {
 				return k;
 			}

@@ -1,9 +1,9 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -23,7 +23,7 @@ public class ComponentHeader extends TemplateComponent {
 	boolean centered = true;
 	float scale = 1F;
 
-	transient Text actualText;
+	transient Component actualText;
 	transient int color;
 
 	@Override
@@ -43,8 +43,8 @@ public class ComponentHeader extends TemplateComponent {
 	}
 
 	@Override
-	public void render(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
-		ms.push();
+	public void render(PoseStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
+		ms.pushPose();
 		ms.translate(x, y, 0);
 		ms.scale(scale, scale, scale);
 
@@ -53,13 +53,13 @@ public class ComponentHeader extends TemplateComponent {
 		} else {
 			page.fontRenderer.draw(ms, page.i18n(actualText.getString()), 0, 0, color);
 		}
-		ms.pop();
+		ms.popPose();
 	}
 
 	@Override
 	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
 		super.onVariablesAvailable(lookup);
-		actualText = lookup.apply(text).as(Text.class);
+		actualText = lookup.apply(text).as(Component.class);
 		colorStr = lookup.apply(colorStr);
 	}
 }

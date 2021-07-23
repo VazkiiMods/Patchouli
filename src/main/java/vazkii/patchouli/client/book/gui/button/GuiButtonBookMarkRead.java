@@ -1,9 +1,10 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import com.mojang.blaze3d.vertex.PoseStack;
+
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookCategory;
@@ -17,12 +18,12 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	private final Book book;
 
 	public GuiButtonBookMarkRead(GuiBook parent, int x, int y) {
-		super(parent, x, y, 308, 31, 11, 11, ButtonWidget::onPress, getTooltip(parent.book));
+		super(parent, x, y, 308, 31, 11, 11, Button::onPress, getTooltip(parent.book));
 		this.book = parent.book;
 	}
 
 	@Override
-	public void renderButton(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderButton(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int px = x + 1;
 		int py = (int) (y + 0.5);
 		GuiBook.drawFromTexture(ms, book, x, y, 285, 160, 13, 10);
@@ -31,7 +32,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 			GuiBook.drawFromTexture(ms, book, px, py, u + 11, v, width, height);
 			parent.setTooltip(getTooltip());
 		}
-		parent.getMinecraft().textRenderer.drawWithShadow(ms, "+", px - 0.5F, py - 0.2F, 0x00FF01);
+		parent.getMinecraft().font.drawShadow(ms, "+", px - 0.5F, py - 0.2F, 0x00FF01);
 	}
 
 	@Override
@@ -72,9 +73,9 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 		}
 	}
 
-	private static Text getTooltip(Book book) {
+	private static Component getTooltip(Book book) {
 		String text = isMainPage(book) ? "patchouli.gui.lexicon.button.mark_all_read" : "patchouli.gui.lexicon.button.mark_category_read";
-		return new TranslatableText(text);
+		return new TranslatableComponent(text);
 	}
 
 	private static boolean isMainPage(Book book) {
