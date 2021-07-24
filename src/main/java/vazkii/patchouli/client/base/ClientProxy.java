@@ -1,16 +1,16 @@
 package vazkii.patchouli.client.base;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
@@ -20,8 +20,7 @@ import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.common.network.NetworkHandler;
 
-public class ClientProxy implements ClientModInitializer {
-	@Override
+public class ClientProxy {
 	public void onInitializeClient() {
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
@@ -30,13 +29,14 @@ public class ClientProxy implements ClientModInitializer {
 		MultiblockVisualizationHandler.init();
 		NetworkHandler.registerMessages();
 
-		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, register) -> BookRegistry.INSTANCE.books.values().stream()
+		MinecraftForge.EVENT_BUS.addListener((ModelRegistryEvent e) -> {
+			BookRegistry.INSTANCE.books.values().stream()
 				.map(b -> new ModelResourceLocation(b.model, "inventory"))
-				.forEach(register));
+				.forEach(ModelLoader::addSpecialModel);
 
-		FabricModelPredicateProviderRegistry.register(PatchouliItems.book,
-				new ResourceLocation(Patchouli.MOD_ID, "completion"),
-				(stack, world, entity, seed) -> ItemModBook.getCompletion(stack));
+			ItemPropertyFunction prop = (stack, world, entity, seed) -> ItemModBook.getCompletion(stack);
+			ItemProperties.register(PatchouliItems.book, new ResourceLocation(Patchouli.MOD_ID, "completion"), prop);
+		});
 
 		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
 			private final ResourceLocation id = new ResourceLocation(Patchouli.MOD_ID, "resource_pack_books");

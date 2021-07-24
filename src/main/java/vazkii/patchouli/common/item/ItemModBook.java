@@ -1,7 +1,5 @@
 package vazkii.patchouli.common.item;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -22,6 +20,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.base.PatchouliSounds;
@@ -104,7 +104,6 @@ public class ItemModBook extends Item {
 		return ResourceLocation.tryParse(bookStr);
 	}
 
-	/* TODO fabric
 	@Override
 	public String getCreatorModId(ItemStack itemStack) {
 		Book book = getBook(itemStack);
@@ -114,7 +113,6 @@ public class ItemModBook extends Item {
 	
 		return super.getCreatorModId(itemStack);
 	}
-	*/
 
 	@Override
 	public Component getName(ItemStack stack) {
@@ -127,7 +125,7 @@ public class ItemModBook extends Item {
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(ItemStack stack, Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
 		super.appendHoverText(stack, worldIn, tooltip, flagIn);
 

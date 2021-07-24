@@ -4,8 +4,6 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -21,6 +19,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
@@ -63,8 +64,15 @@ public class BookRightClickHandler {
 	}
 
 	public static void init() {
-		HudRenderCallback.EVENT.register(BookRightClickHandler::onRenderHUD);
-		UseBlockCallback.EVENT.register(BookRightClickHandler::onRightClick);
+		MinecraftForge.EVENT_BUS.addListener((RenderGameOverlayEvent.Post evt) -> {
+			if (evt.getType() == RenderGameOverlayEvent.ElementType.ALL) {
+				onRenderHUD(evt.getMatrixStack(), evt.getPartialTicks());
+			}
+		});
+		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock evt)-> {
+			var result = onRightClick(evt.getPlayer(), evt.getWorld(), evt.getHand(), evt.getHitVec());
+			evt.setCancellationResult(result);
+		});
 	}
 
 	private static InteractionResult onRightClick(Player player, Level world, InteractionHand hand, BlockHitResult hit) {

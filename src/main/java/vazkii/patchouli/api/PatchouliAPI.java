@@ -2,8 +2,6 @@ package vazkii.patchouli.api;
 
 import com.google.common.base.Suppliers;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -14,6 +12,8 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 
 import vazkii.patchouli.api.stub.StubPatchouliAPI;
@@ -114,7 +114,7 @@ public class PatchouliAPI {
 		 * as the "res" resource location. The supplier should give an input stream that
 		 * reads a full json file, containing a template.
 		 */
-		@Environment(EnvType.CLIENT)
+		@OnlyIn(Dist.CLIENT)
 		void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider);
 
 		/**
@@ -124,7 +124,7 @@ public class PatchouliAPI {
 		 * with the current player's username). Commands that only modify style should return "".
 		 * This is thread safe.
 		 */
-		@Environment(EnvType.CLIENT)
+		@OnlyIn(Dist.CLIENT)
 		void registerCommand(String name, Function<IStyleStack, String> command);
 
 		/**
@@ -135,7 +135,7 @@ public class PatchouliAPI {
 		 * For example, $(k:use) is replaced by Right Button by default.
 		 * This is thread safe.
 		 */
-		@Environment(EnvType.CLIENT)
+		@OnlyIn(Dist.CLIENT)
 		void registerFunction(String name, BiFunction<String, IStyleStack, String> function);
 
 		// ================================================================================================

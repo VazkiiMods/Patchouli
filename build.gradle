@@ -1,20 +1,43 @@
-plugins {
-	id 'fabric-loom' version '0.8-SNAPSHOT'
-	id 'maven-publish'
-	id "com.diffplug.spotless" version "5.12.5"
+buildscript {
+    repositories {
+        maven {
+            name "Forge"
+            url "https://files.minecraftforge.net/maven"
+        }
+        maven {
+            name "Sponge"
+            url "https://repo.spongepowered.org/repository/maven-public/"
+            content { includeGroup "org.spongepowered" }
+        }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+'
+        // classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+    }
 }
 
+plugins {
+    id "com.diffplug.spotless" version "5.12.5"
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 apply plugin: 'pmd'
+// apply plugin: 'org.spongepowered.mixin'
+
+/*
+mixin {
+    add sourceSets.main, "patchouli.refmap.json"
+}
+*/
 
 ext.configFile = file('build.properties')
-ext.config = configFile.withReader {
-	def prop = new Properties()
-	prop.load(it)
-	return (new ConfigSlurper().parse(prop))
-}
+ext.config = parseConfig(configFile)
 
 def mc_version = '1.17.1'
-version = "${mc_version}-${config.build_number}-FABRIC"
+version = "${mc_version}-${config.build_number}"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
 }
@@ -22,52 +45,52 @@ if (System.getenv().RELEASE_MODE == null) {
 group = "vazkii.${config.mod_id}"
 archivesBaseName = "${config.mod_name}"
 
+java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+
 minecraft {
-}
+    mappings channel: 'official', version: mc_version
 
-spotless {
-	enforceCheck = false // workaround around jenkins having wrong line endings in some files
-	// we explicitly check in github actions builds
-	java {
-		indentWithTabs()
-		eclipse().configFile 'spotless/eclipseformat.xml'
-		removeUnusedImports()
-		importOrderFile 'spotless/eclipse.importorder'
-	}
-}
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            property 'fml.earlyprogresswindow', 'false'
 
-pmd {
-	toolVersion '6.35.0'
-	incrementalAnalysis.set(true)
-	ruleSets.clear()
-	ruleSetFiles = files("spotless/pmd-ruleset.xml")
-}
+            mods {
+                patchouli {
+                    source sourceSets.main
+                }
+            }
+        }
 
-task checkSyntax {
-	dependsOn spotlessJavaCheck, pmdMain
-}
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            property 'fml.earlyprogresswindow', 'false'
 
+            mods {
+                patchouli {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
 repositories {
-	maven {
-		name = "Modmuss"
-		url = "https://maven.modmuss50.me/"
-	}
+    maven {
+        name = "JEI"
+        url "https://dvs1.progwml6.com/files/maven/"
+    }
 }
 
 dependencies {
-	modImplementation "com.google.code.findbugs:jsr305:3.0.2"
-	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
-	include "me.zeroeightsix:fiber:0.23.0-2"
+    minecraft "net.minecraftforge:forge:${mc_version}-37.0.1"
+    annotationProcessor 'org.spongepowered:mixin:0.8.3:processor'
 
-	minecraft "com.mojang:minecraft:1.17.1"
-	mappings minecraft.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:0.11.3"
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.37.0+1.17"
-
-	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-	// You may need to force-disable transitiveness on them.
+    /*
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:7.6.0.58:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:7.6.0.58")
+    */
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.1'
@@ -78,82 +101,134 @@ test {
 }
 
 processResources {
-	inputs.property "version", project.version
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'META-INF/mods.toml'
 
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
+        // replace version and mcversion
+        expand 'version': project.version
+    }
+
+    // copy everything else, thats not the mods.toml
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'META-INF/mods.toml', '**/psd/**'
+    }
 }
 
 task incrementBuildNumber {
-	doFirst {
-		config.build_number = (config.build_number.toString().toInteger()) + 1
-		configFile.withWriter {
-			config.toProperties().store(it, "")
-		}
-	}
+    doFirst {
+        config.build_number = (config.build_number.toString().toInteger()) + 1
+        configFile.withWriter {
+            config.toProperties().store(it, "")
+        }
+    }
 }
 
-tasks.withType(JavaCompile).configureEach {
-	// ensure that the encoding is set to UTF-8, no matter what the system default is
-	// this fixes some edge cases with special characters not displaying correctly
-	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-	// If Javadoc is generated, this must be specified in that task too.
-	it.options.encoding = "UTF-8"
-
-	// Minecraft 1.17 (21w19a) upwards uses Java 16.
-	it.options.release = 16
+def parseConfig(File config) {
+    config.withReader {
+        def prop = new Properties()
+        prop.load(it)
+        return (new ConfigSlurper().parse(prop))
+    }
 }
 
-java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
+spotless {
+    enforceCheck = false // workaround around jenkins having wrong line endings in some files
+    // we explicitly check in github actions builds
+    java {
+        indentWithTabs()
+        eclipse().configFile 'spotless/eclipseformat.xml'
+        removeUnusedImports()
+        importOrderFile 'spotless/eclipse.importorder'
+    }
+}
+
+pmd {
+    toolVersion '6.35.0'
+    incrementalAnalysis.set(true)
+    ruleSets.clear()
+    ruleSetFiles = files("spotless/pmd-ruleset.xml")
+}
+
+task checkSyntax {
+    dependsOn spotlessJavaCheck, pmdMain
 }
 
 jar {
-	from "LICENSE"
+    manifest {
+        attributes([
+            "Specification-Title": "${config.mod_id}",
+            "Specification-Vendor": "vazkii",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": "${config.mod_id}",
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"vazkii",
+            "MixinConnector": "vazkii.patchouli.common.MixinConnector"
+        ])
+    }
 
-	exclude "**/*.bat"
-	exclude "**/*.psd"
-	exclude "**/*.exe"
-	exclude "**/unused"
-
-	// exclude test data
-	exclude "**/data/patchouli/patchouli_books/**"
-	exclude "**/data/patchouli/advancements/**"
+    exclude "**/*.bat"
+    exclude "**/*.psd"
+    exclude "**/*.exe"
+    exclude "**/unused"
+    
+    // exclude test data
+    exclude "**/data/patchouli/patchouli_books/**"
+    exclude "**/data/patchouli/advancements/**"
 	exclude "**/data/patchouli/recipes/**"
 }
 
-task apiJar(type: Jar, dependsOn: classes) {
-	from(sourceSets.main.output)
-	include 'vazkii/patchouli/api/**'
+jar.finalizedBy('reobfJar')
 
-	archiveClassifier = "api"
+task srcJar (type: Jar) {
+    from sourceSets.main.java
+    classifier = 'sources'
 }
 
-// configure the maven publication
+task apiJar(type: Jar) {
+    // Sources included because of MinecraftForge/ForgeGradle#369
+    from(sourceSets.main.allJava)
+    from(sourceSets.main.output)
+    include 'vazkii/patchouli/api/**'
+
+    classifier = 'api'
+}
+
+artifacts {
+    archives srcJar, apiJar
+}
+
 publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
-			artifact(apiJar) {
-				builtBy apiJar
-			}
-		}
-	}
+    tasks.publish.dependsOn build
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            from components.java
+            artifact srcJar
+            artifact apiJar
+            pom.withXml {
+                def node = asNode()
+                if(node.dependencies.size() > 0)
+                    node.remove(node.dependencies) // Remove deps, as they are all mappings-dependent and/or forge
+            }
+        }
+    }
 
-	// select the repositories you want to publish to
-	repositories {
-		maven {
-			url "file://" + System.getenv("local_maven")
-		}
-	}
+    repositories {
+        maven {
+            url "file://" + System.getenv("local_maven")
+        }
+    }
 }
+
+if (System.getProperty("idea.sync.active") == "true") {
+    afterEvaluate {
+        tasks.withType(JavaCompile).all {
+            it.options.annotationProcessorPath = files()
+        }
+    }
+}
+
+defaultTasks 'clean', 'build'

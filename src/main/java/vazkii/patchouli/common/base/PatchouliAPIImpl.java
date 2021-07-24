@@ -1,7 +1,5 @@
 package vazkii.patchouli.common.base;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -14,6 +12,8 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.io.IOUtils;
 
 import vazkii.patchouli.api.IMultiblock;
@@ -74,19 +74,19 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void openBookGUI(ResourceLocation book) {
 		ClientBookRegistry.INSTANCE.displayBookGui(book, null, 0);
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void openBookEntry(ResourceLocation book, ResourceLocation entry, int page) {
 		ClientBookRegistry.INSTANCE.displayBookGui(book, entry, page);
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public ResourceLocation getOpenBookGui() {
 		Screen gui = Minecraft.getInstance().screen;
 		if (gui instanceof GuiBook) {
@@ -106,13 +106,13 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void registerCommand(String name, Function<IStyleStack, String> command) {
 		BookTextParser.register(command::apply, name);
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void registerFunction(String name, BiFunction<String, IStyleStack, String> function) {
 		BookTextParser.register(function::apply, name);
 	}
@@ -152,13 +152,13 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public IMultiblock getCurrentMultiblock() {
 		return MultiblockVisualizationHandler.hasMultiblock ? MultiblockVisualizationHandler.getMultiblock() : null;
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void showMultiblock(@Nonnull IMultiblock multiblock, @Nonnull Component displayName, @Nonnull BlockPos center, @Nonnull Rotation rotation) {
 		MultiblockVisualizationHandler.setMultiblock(multiblock, displayName, null, false);
 		MultiblockVisualizationHandler.anchorTo(center, rotation);

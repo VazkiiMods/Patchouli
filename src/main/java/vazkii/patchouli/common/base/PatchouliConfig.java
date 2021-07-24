@@ -1,89 +1,70 @@
 package vazkii.patchouli.common.base;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import io.github.fablabsmc.fablabs.api.fiber.v1.exception.ValueDeserializationException;
-import io.github.fablabsmc.fablabs.api.fiber.v1.schema.type.derived.ConfigTypes;
-import io.github.fablabsmc.fablabs.api.fiber.v1.schema.type.derived.EnumConfigType;
-import io.github.fablabsmc.fablabs.api.fiber.v1.serialization.FiberSerialization;
-import io.github.fablabsmc.fablabs.api.fiber.v1.serialization.JanksonValueSerializer;
-import io.github.fablabsmc.fablabs.api.fiber.v1.tree.ConfigTree;
-import io.github.fablabsmc.fablabs.api.fiber.v1.tree.PropertyMirror;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.forgespi.language.IModInfo;
 
 public class PatchouliConfig {
-	public static PropertyMirror<Boolean> disableAdvancementLocking = PropertyMirror.create(ConfigTypes.BOOLEAN);
-	public static PropertyMirror<List<String>> noAdvancementBooks = PropertyMirror.create(ConfigTypes.makeList(ConfigTypes.STRING));
-	public static PropertyMirror<Boolean> testingMode = PropertyMirror.create(ConfigTypes.BOOLEAN);
-	public static PropertyMirror<String> inventoryButtonBook = PropertyMirror.create(ConfigTypes.STRING);
-	public static PropertyMirror<Boolean> useShiftForQuickLookup = PropertyMirror.create(ConfigTypes.BOOLEAN);
-	private static final EnumConfigType<TextOverflowMode> OVERFLOW_TYPE = ConfigTypes.makeEnum(TextOverflowMode.class);
-	public static PropertyMirror<TextOverflowMode> overflowMode = PropertyMirror.create(OVERFLOW_TYPE);
+	public static final ForgeConfigSpec.ConfigValue<Boolean> disableAdvancementLocking;
+	public static final ForgeConfigSpec.ConfigValue<List<String>> noAdvancementBooks;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> testingMode;
+	public static final ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
+	public static final ForgeConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
+	public static final ForgeConfigSpec.EnumValue<TextOverflowMode> overflowMode;
 
 	private static final Map<String, Boolean> CONFIG_FLAGS = new ConcurrentHashMap<>();
+	private static final ForgeConfigSpec SPEC;
+	static {
+		ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+		disableAdvancementLocking = builder
+			.comment("Set this to true to disable advancement locking for ALL books, making all entries visible at all times. Config Flag: advancements_disabled")
+			.define("disableAdvancementLocking", false);
 
-	private static final ConfigTree CONFIG = ConfigTree.builder()
-			.beginValue("disableAdvancementLocking", ConfigTypes.BOOLEAN, false)
-			.withComment("Set this to true to disable advancement locking for ALL books, making all entries visible at all times. Config Flag: advancements_disabled")
-			.finishValue(disableAdvancementLocking::mirror)
+		noAdvancementBooks = builder
+			.comment("Granular list of Book ID's to disable advancement locking for, e.g. [ \"botania:lexicon\" ]. Config Flags: advancements_disabled_<bookid>")
+			.define("noAdvancementBooks", Collections.emptyList());
 
-			.beginValue("noAdvancementBooks", ConfigTypes.makeList(ConfigTypes.STRING), Collections.emptyList())
-			.withComment("Granular list of Book ID's to disable advancement locking for, e.g. [ \"botania:lexicon\" ]. Config Flags: advancements_disabled_<bookid>")
-			.finishValue(noAdvancementBooks::mirror)
+		testingMode = builder
+			.comment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want. Config Flag: testing_mode")
+			.define("testingMode", false);
 
-			.beginValue("testingMode", ConfigTypes.BOOLEAN, false)
-			.withComment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want. Config Flag: testing_mode")
-			.finishValue(testingMode::mirror)
+		inventoryButtonBook = builder
+			.comment("Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.")
+			.define("inventoryButtonBook", "");
 
-			.beginValue("inventoryButtonBook", ConfigTypes.STRING, "")
-			.withComment("Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.")
-			.finishValue(inventoryButtonBook::mirror)
+		useShiftForQuickLookup = builder
+			.comment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
+			.define("useShiftForQuickLookup", false);
 
-			.beginValue("useShiftForQuickLookup", ConfigTypes.BOOLEAN, false)
-			.withComment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
-			.finishValue(useShiftForQuickLookup::mirror)
+		overflowMode = builder
+			.comment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit. Relogin after changing.")
+			.defineEnum("textOverflowMode", TextOverflowMode.OVERFLOW);
 
-			.beginValue("textOverflowMode", OVERFLOW_TYPE, TextOverflowMode.OVERFLOW)
-			.withComment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit. Relogin after changing.")
-			.finishValue(overflowMode::mirror)
-
-			.build();
-
-	private static void writeDefaultConfig(Path path, JanksonValueSerializer serializer) {
-		try (OutputStream s = new BufferedOutputStream(Files.newOutputStream(path, StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW))) {
-			FiberSerialization.serialize(CONFIG, s, serializer);
-		} catch (IOException ignored) {}
-
+		SPEC = builder.build();
 	}
 
 	public static void setup() {
-		JanksonValueSerializer serializer = new JanksonValueSerializer(false);
-		Path p = Paths.get("config", Patchouli.MOD_ID + ".json5");
-		writeDefaultConfig(p, serializer);
-
-		try (InputStream s = new BufferedInputStream(Files.newInputStream(p, StandardOpenOption.READ, StandardOpenOption.CREATE))) {
-			FiberSerialization.deserialize(CONFIG, s, serializer);
-		} catch (IOException | ValueDeserializationException e) {
-			Patchouli.LOGGER.error("Error loading config", e);
-		}
+		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SPEC);
 	}
 
 	public static void reloadBuiltinFlags() {
-		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
-		for (ModContainer info : mods) {
-			setFlag("mod:" + info.getMetadata().getId(), true);
+		List<IModInfo> mods = ModList.get().getMods();
+		for (IModInfo info : mods) {
+			setFlag("mod:" + info.getModId(), true);
 		}
 
 		setFlag("debug", Patchouli.debug);
 
-		setFlag("advancements_disabled", disableAdvancementLocking.getValue());
-		setFlag("testing_mode", testingMode.getValue());
-		for (String book : noAdvancementBooks.getValue()) {
+		setFlag("advancements_disabled", disableAdvancementLocking.get());
+		setFlag("testing_mode", testingMode.get());
+		for (String book : noAdvancementBooks.get()) {
 			setFlag("advancements_disabled_" + book, true);
 		}
 	}

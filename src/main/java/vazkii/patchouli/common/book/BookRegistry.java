@@ -3,12 +3,13 @@ package vazkii.patchouli.common.book;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.resources.ResourceLocation;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
+import net.minecraftforge.forgespi.language.IModInfo;
 import org.apache.commons.lang3.tuple.Pair;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -17,6 +18,8 @@ import vazkii.patchouli.common.base.PatchouliConfig;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -41,11 +44,11 @@ public class BookRegistry {
 	private BookRegistry() {}
 
 	public void init() {
-		Collection<ModContainer> mods = FabricLoader.getInstance().getAllMods();
-		Map<Pair<ModContainer, ResourceLocation>, String> foundBooks = new HashMap<>();
+		Collection<IModInfo> mods = ModList.get().getMods();
+		Map<Pair<IModInfo, ResourceLocation>, String> foundBooks = new HashMap<>();
 
 		mods.forEach(mod -> {
-			String id = mod.getMetadata().getId();
+			String id = mod.getModId();
 			findFiles(mod, String.format("data/%s/%s", id, BOOKS_LOCATION), Files::exists,
 					(path, file) -> {
 						if (Files.isRegularFile(file)
@@ -70,14 +73,16 @@ public class BookRegistry {
 		});
 
 		foundBooks.forEach((pair, file) -> {
-			ModContainer mod = pair.getLeft();
+			IModInfo mod = pair.getLeft();
 			ResourceLocation res = pair.getRight();
 
-			try (InputStream stream = Files.newInputStream(mod.getPath(file))) {
+			//noinspection OptionalGetWithoutIsPresent It will always be here.
+			Object modObject = ModList.get().getModObjectById(mod.getModId()).get();
+			try (InputStream stream = modObject.getClass().getResourceAsStream(file)) {
 				loadBook(mod, res, stream, false);
 			} catch (Exception e) {
 				Patchouli.LOGGER.error("Failed to load book {} defined by mod {}, skipping",
-						res, mod.getMetadata().getId(), e);
+						res, mod.getModId(), e);
 			}
 		});
 
@@ -108,7 +113,7 @@ public class BookRegistry {
 		}
 	}
 
-	public void loadBook(ModContainer mod, ResourceLocation res, InputStream stream,
+	public void loadBook(IModInfo mod, ResourceLocation res, InputStream stream,
 			boolean external) {
 		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		Book book = GSON.fromJson(reader, Book.class);
@@ -116,7 +121,7 @@ public class BookRegistry {
 		books.put(res, book);
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void reloadContents(boolean resourcePackBooksOnly) {
 		PatchouliConfig.reloadBuiltinFlags();
 		for (Book book : books.values()) {
@@ -135,19 +140,32 @@ public class BookRegistry {
 
 	// HELPER
 
-	public static void findFiles(ModContainer mod, String base, Predicate<Path> rootFilter,
+	public static void findFiles(IModInfo mod, String base, Predicate<Path> rootFilter,
 			BiFunction<Path, Path, Boolean> processor, boolean visitAllFiles) {
 		findFiles(mod, base, rootFilter, processor, visitAllFiles, Integer.MAX_VALUE);
 	}
 
-	public static void findFiles(ModContainer mod, String base, Predicate<Path> rootFilter,
+	public static void findFiles(IModInfo mod, String base, Predicate<Path> rootFilter,
 			BiFunction<Path, Path, Boolean> processor, boolean visitAllFiles, int maxDepth) {
-		if (mod.getMetadata().getId().equals("minecraft")) {
+		if (mod.getModId().equals("minecraft")) {
+			return;
+		}
+
+		Path source;
+		if (mod.getOwningFile() instanceof ModFileInfo info) {
+			source = info.getFile().getFilePath();
+		} else {
 			return;
 		}
 
 		try {
-			walk(mod.getRootPath().resolve(base), rootFilter, processor, visitAllFiles, maxDepth);
+			if (Files.isRegularFile(source)) {
+				try (FileSystem fs = FileSystems.newFileSystem(source)) {
+					walk(fs.getPath("/" + base), rootFilter, processor, visitAllFiles, maxDepth);
+				}
+			} else {
+				walk(source.resolve(base), rootFilter, processor, visitAllFiles, maxDepth);
+			}
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}

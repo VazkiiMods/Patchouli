@@ -3,7 +3,6 @@ package vazkii.patchouli.common.multiblock;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import net.fabricmc.fabric.impl.tag.extension.TagDelegate;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;

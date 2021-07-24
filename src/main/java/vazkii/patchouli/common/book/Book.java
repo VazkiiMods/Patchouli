@@ -2,9 +2,6 @@ package vazkii.patchouli.common.book;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -14,6 +11,9 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.forgespi.language.IModInfo;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.*;
 import vazkii.patchouli.common.base.Patchouli;
@@ -47,7 +47,7 @@ public class Book {
 
 	private transient boolean wasUpdated = false;
 
-	public transient ModContainer owner;
+	public transient IModInfo owner;
 	public transient ResourceLocation id;
 	private transient ItemStack bookItem;
 
@@ -116,7 +116,7 @@ public class Book {
 
 	public Map<String, String> macros = new HashMap<>();
 
-	public void build(ModContainer owner, ResourceLocation resource, boolean external) {
+	public void build(IModInfo owner, ResourceLocation resource, boolean external) {
 		this.owner = owner;
 		this.id = resource;
 		this.isExternal = external;
@@ -156,7 +156,7 @@ public class Book {
 		return bookItem;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void markUpdated() {
 		wasUpdated = true;
 	}
@@ -167,7 +167,7 @@ public class Book {
 		return updated;
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void reloadContents() {
 		if (!isExtension) {
 			BookContentsBuilder builder = new BookContentsBuilder();
@@ -196,10 +196,10 @@ public class Book {
 	}
 
 	public final boolean advancementsEnabled() {
-		return !PatchouliConfig.disableAdvancementLocking.getValue() && !PatchouliConfig.noAdvancementBooks.getValue().contains(id.toString());
+		return !PatchouliConfig.disableAdvancementLocking.get() && !PatchouliConfig.noAdvancementBooks.get().contains(id.toString());
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void reloadLocks(boolean suppressToasts) {
 		contents.entries.values().forEach(BookEntry::updateLockStatus);
 		contents.categories.values().forEach(c -> c.updateLockStatus(true));
@@ -211,10 +211,10 @@ public class Book {
 	}
 
 	public String getOwnerName() {
-		return owner.getMetadata().getName();
+		return owner.getDisplayName();
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public Style getFontStyle() {
 		if (useBlockyFont) {
 			return Style.EMPTY;
@@ -240,7 +240,7 @@ public class Book {
 		return new TranslatableComponent("patchouli.gui.lexicon.edition_str", editionStr);
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public BookIcon getIcon() {
 		if (indexIconRaw == null || indexIconRaw.isEmpty()) {
 			return new BookIcon(getBookItem());
@@ -253,7 +253,7 @@ public class Book {
 		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
 	}
 
-	@Environment(EnvType.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public BookContents getContents() {
 		if (isExtension) {
 			return extensionTarget.getContents();

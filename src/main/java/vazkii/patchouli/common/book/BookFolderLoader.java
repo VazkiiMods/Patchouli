@@ -1,10 +1,9 @@
 package vazkii.patchouli.common.book;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 
+import net.minecraftforge.fml.ModList;
 import vazkii.patchouli.common.base.Patchouli;
 
 import java.io.File;
@@ -28,7 +27,7 @@ public class BookFolderLoader {
 			setup();
 		}
 
-		ModContainer self = FabricLoader.getInstance().getModContainer(Patchouli.MOD_ID).get();
+		ModContainer self = ModList.get().(Patchouli.MOD_ID).get();
 		File[] subdirs = loadDir.listFiles(File::isDirectory);
 		if (subdirs == null) {
 			Patchouli.LOGGER.warn("Failed to list external books in {}, not loading external books",
