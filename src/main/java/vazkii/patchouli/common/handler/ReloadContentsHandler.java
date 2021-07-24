@@ -6,6 +6,8 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fmlserverevents.FMLServerStartedEvent;
 
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fmlserverevents.FMLServerStartedEvent;
 import vazkii.patchouli.common.network.message.MessageReloadBookContents;
 
 public class ReloadContentsHandler {

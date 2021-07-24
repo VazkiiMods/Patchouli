@@ -164,7 +164,7 @@ jar {
     exclude "**/*.psd"
     exclude "**/*.exe"
     exclude "**/unused"
-    
+
     // exclude test data
     exclude "**/data/patchouli/patchouli_books/**"
     exclude "**/data/patchouli/advancements/**"
