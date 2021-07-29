@@ -13,9 +13,6 @@ import com.mojang.math.Matrix4f;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -40,6 +37,10 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.base.ClientTicker;
@@ -208,9 +209,23 @@ public class MultiblockVisualizationHandler {
 	}
 
 	public static void init() {
-		UseBlockCallback.EVENT.register(MultiblockVisualizationHandler::onPlayerInteract);
-		ClientTickEvents.END_CLIENT_TICK.register(MultiblockVisualizationHandler::onClientTick);
-		HudRenderCallback.EVENT.register(MultiblockVisualizationHandler::onRenderHUD);
+		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
+			InteractionResult result = MultiblockVisualizationHandler.onPlayerInteract(e.getPlayer(), e.getWorld(), e.getHand(), e.getHitVec());
+			if (result.consumesAction()) {
+				e.setCanceled(true);
+				e.setCancellationResult(result);
+			}
+		});
+		MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent e) -> {
+			if (e.phase == TickEvent.Phase.END) {
+				MultiblockVisualizationHandler.onClientTick(Minecraft.getInstance());
+			}
+		});
+		MinecraftForge.EVENT_BUS.addListener((RenderGameOverlayEvent.Post e) -> {
+			if (e.getType() == RenderGameOverlayEvent.ElementType.ALL) {
+				MultiblockVisualizationHandler.onRenderHUD(e.getMatrixStack(), e.getPartialTicks());
+			}
+		});
 	}
 
 	public static void renderMultiblock(Level world, PoseStack ms) {

@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.base;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 
 /**
  * Counts ticks passed in-game, does <b>not</b> stop counting when paused.
@@ -27,11 +28,13 @@ public final class ClientTicker {
 	}
 
 	public static void init() {
-		ClientTickEvents.END_CLIENT_TICK.register(mc -> {
-			ticksInGame++;
-			partialTicks = 0;
+		MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent e) -> {
+			if (e.phase == TickEvent.Phase.END) {
+				ticksInGame++;
+				partialTicks = 0;
 
-			calcDelta();
+				calcDelta();
+			}
 		});
 	}
 

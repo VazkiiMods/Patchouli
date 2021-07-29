@@ -21,10 +21,11 @@ public class CommonProxy {
 		});
 		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
 			var result = LecternEventHandler.rightClick(e.getPlayer(), e.getWorld(), e.getHand(), e.getHitVec());
-			e.setCanceled(true);
-			e.setCancellationResult(result);
+			if (result.consumesAction()) {
+				e.setCanceled(true);
+				e.setCancellationResult(result);
+			}
 		});
-		UseBlockCallback.EVENT.register(LecternEventHandler::rightClick);
 
 		PatchouliSounds.preInit();
 		BookRegistry.INSTANCE.init();

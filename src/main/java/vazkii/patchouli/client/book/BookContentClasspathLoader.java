@@ -1,15 +1,15 @@
 package vazkii.patchouli.client.book;
 
-import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.resources.ResourceLocation;
 
+import net.minecraftforge.forgespi.language.IModInfo;
 import org.apache.commons.io.FilenameUtils;
-import org.jetbrains.annotations.Nullable;
 
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -38,8 +38,8 @@ public final class BookContentClasspathLoader implements BookContentLoader {
 
 	@Override
 	public void findFiles(Book book, String dir, List<ResourceLocation> list) {
-		ModContainer mod = book.owner;
-		String id = mod.getMetadata().getId();
+		IModInfo mod = book.owner;
+		String id = mod.getModId();
 		BookRegistry.findFiles(mod, String.format("data/%s/%s/%s/%s/%s", id, BookRegistry.BOOKS_LOCATION, book.id.getPath(), BookContentsBuilder.DEFAULT_LANG, dir), path -> true, pred(id, list), false);
 	}
 

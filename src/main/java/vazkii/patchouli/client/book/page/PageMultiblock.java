@@ -213,6 +213,7 @@ public class PageMultiblock extends PageWithText {
 				// Doesn't take pos anymore, maybe a problem?
 				te.setLevel(mc.level);
 
+				te.setBlockState();
 				// fake cached state in case the renderer checks it as we don't want to query the actual world
 				((AccessorBlockEntity) te).setBlockState(mb.getBlockState(pos));
 

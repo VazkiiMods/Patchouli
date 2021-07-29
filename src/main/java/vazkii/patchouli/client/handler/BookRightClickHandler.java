@@ -70,8 +70,7 @@ public class BookRightClickHandler {
 			}
 		});
 		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock evt)-> {
-			var result = onRightClick(evt.getPlayer(), evt.getWorld(), evt.getHand(), evt.getHitVec());
-			evt.setCancellationResult(result);
+			onRightClick(evt.getPlayer(), evt.getWorld(), evt.getHand(), evt.getHitVec());
 		});
 	}
 

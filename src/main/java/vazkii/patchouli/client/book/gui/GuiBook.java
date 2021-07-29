@@ -22,9 +22,10 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.glfw.GLFW;
 
-import vazkii.patchouli.api.BookDrawScreenCallback;
+import vazkii.patchouli.api.BookDrawScreenEvent;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
@@ -142,7 +143,7 @@ public abstract class GuiBook extends Screen {
 
 		super.render(ms, mouseX, mouseY, partialTicks);
 
-		BookDrawScreenCallback.EVENT.invoker().trigger(this.book.id, this, mouseX, mouseY, partialTicks, ms);
+		MinecraftForge.EVENT_BUS.post(new BookDrawScreenEvent(this.book.id, this, mouseX, mouseY, partialTicks, ms));
 
 		drawTooltip(ms, mouseX, mouseY);
 	}

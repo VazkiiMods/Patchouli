@@ -3,6 +3,7 @@ package vazkii.patchouli.common.book;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 
+import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
 import vazkii.patchouli.common.base.Patchouli;
 
@@ -27,7 +28,7 @@ public class BookFolderLoader {
 			setup();
 		}
 
-		ModContainer self = ModList.get().(Patchouli.MOD_ID).get();
+		ModContainer self = ModList.get().getModContainerById(Patchouli.MOD_ID).get();
 		File[] subdirs = loadDir.listFiles(File::isDirectory);
 		if (subdirs == null) {
 			Patchouli.LOGGER.warn("Failed to list external books in {}, not loading external books",
@@ -46,7 +47,7 @@ public class BookFolderLoader {
 
 			File bookJson = new File(dir, "book.json");
 			try (FileInputStream stream = new FileInputStream(bookJson)) {
-				BookRegistry.INSTANCE.loadBook(self, res, stream, true);
+				BookRegistry.INSTANCE.loadBook(self.getModInfo(), res, stream, true);
 			} catch (Exception e) {
 				Patchouli.LOGGER.error("Failed to load external book json from {}, skipping", bookJson, e);
 			}
