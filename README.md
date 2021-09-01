@@ -1,6 +1,10 @@
-# Website
+# Patchouli Website
 
 This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+
+### Style
+
+Please keep all lines within 90 columns.
 
 ### Installation
 
