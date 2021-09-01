@@ -1,7 +1,3 @@
----
-sidebar_position: 3
----
-
 # Category JSON Format
 
 This page details every key you can have in a Category json file.
@@ -14,11 +10,11 @@ The name of this category.
 
 * **description** (String, _mandatory_)
 
-The description for this category. This displays in the category's main page, and can be [formatted](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101).
+The description for this category. This displays in the category's main page, and can be [formatted](/docs/patchouli-basics/text-formatting).
 
 * **icon** (String, _mandatory_)
 
-The icon for this category. This can either be an [ItemStack String](https://github.com/Vazkii/Patchouli/wiki/ItemStack-String-Format), if you want an item to be the icon, or a resource location pointing to a square texture. If you want to use a resource location, make sure to end it with .png
+The icon for this category. This can either be an [ItemStack String](/docs/patchouli-advanced/itemstack-format), if you want an item to be the icon, or a resource location pointing to a square texture. If you want to use a resource location, make sure to end it with .png
 
 * **parent** (String)
 
@@ -26,7 +22,7 @@ The parent category to this one. If this is a sub-category, simply put the name 
 
 * **flag** (String)
 
-A config flag expression that determines whether this category should exist or not. See [Using Config Flags](https://github.com/Vazkii/Patchouli/wiki/Using-Config-Flags) for more info on config flags.
+A config flag expression that determines whether this category should exist or not. See [Using Config Flags](/docs/patchouli-basics/config-gating) for more info on config flags.
 
 * **sortnum** (integer)
 

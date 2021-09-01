@@ -8,7 +8,7 @@ Please check the [vanilla wiki](https://minecraft.fandom.com/wiki/Advancement/JS
 
 Below is a brief example:
 
-Replace `yourbooknamespace` with the namespace part of your book ID (see [Getting Started](https://github.com/Vazkii/Patchouli/wiki/Getting-Started)) for information about your book ID.
+Replace `yourbooknamespace` with the namespace part of your book ID (see [Getting Started](/docs/patchouli-basics/getting-started)) for information about your book ID.
 
 `/data/yourbooknamespace/advancements/grant_book_on_first_join.json`:
 ```json

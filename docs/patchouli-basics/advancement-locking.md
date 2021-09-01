@@ -7,19 +7,19 @@ Entries in your Patchouli books can be locked until certain Advancements are acc
 * Once your advancement is done, grab its ID (which would be in the namespace:path format). For the sake of demonstration, we'll pretend the ID is "mymod:myadv".
 
 * Open the .json file for the entry you want, and fill in the "advancement" field with the ID: `"advancement": "mymod:myadv"`. 
-    * See [Entry JSON Format](https://github.com/Vazkii/Patchouli/wiki/Entry-JSON-Format) for more info.
+    * See [Entry JSON Format](/docs/patchouli-basics/entry-json) for more info.
 
 * Open the book.json file for the book that contains the entry you just locked. 
     * If the the "advancement_namespaces" array isn't present yet, create it: `"advancement_namespaces": []`
     * Add the namespace to the "advancement_namespaces" array: `"advancement_namespaces": [ "mymod" ]`
     * Adding the namespace here tells patchouli that it needs to keep track of advancements in that namespace. You only have to do it once per namespace. If you have multiple books that use the namespace, only one needs it, but it's good practice to have it in all of them.
     * As of Patchouli 1.15.2-1.2-28, this is no longer necessary, and any advancement may be used to gate your content.
-    * See [Book JSON Format](https://github.com/Vazkii/Patchouli/wiki/Book-JSON-Format) for more info.
+    * See [Book JSON Format](/docs/patchouli-basics/book-json) for more info.
 
 * You may also lock individual pages behind advancements. This is allowed but not exactly encouraged, as it can be confusing to players if you aren't conveying the information properly.
     * To lock a page, simply fill the "advancement" field next to the page's "type" field, the same way you would for the entry itself.
     * Locked pages do not display any "locked" indicator, they are simply completely hidden.
-    * See [Default Page Types](https://github.com/Vazkii/Patchouli/wiki/Default-Page-Types) for more info.
+    * See [Default Page Types](/docs/patchouli-basics/page-types) for more info.
 
 * Some final pointers:
     * All advancement locks can be disabled by the player with the config.

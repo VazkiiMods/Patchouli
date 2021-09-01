@@ -55,7 +55,7 @@ See:
 
 ![](https://i.imgur.com/lsdDrrk.png)
 
-For more customization options, please read [Book JSON Format](https://github.com/Vazkii/Patchouli/wiki/Book-JSON-Format). (highly recommended!)
+For more customization options, please read [Book JSON Format](/docs/patchouli-basics/book-json). (highly recommended!)
 
 ### 4. Check ingame
 Load your game and check if your book is there. Unless you specified otherwise, it should be in the Miscellaneous creative tab, but you can also search for it. 
@@ -107,13 +107,13 @@ Save your files, then return ingame and open your book. Shift-click the pencil i
 
 You're done getting set up, now it's time to learn more about what you can do with Patchouli's book system. Check the following pages out:
 
-* [Locking Content with Advancements](https://github.com/Vazkii/Patchouli/wiki/Locking-Content-with-Advancements)
-* [Text Formatting 101](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101)
-* [Book JSON Format](https://github.com/Vazkii/Patchouli/wiki/Book-JSON-Format)
-* [Category JSON Format](https://github.com/Vazkii/Patchouli/wiki/Category-JSON-Format)
-* [Entry JSON Format](https://github.com/Vazkii/Patchouli/wiki/Entry-JSON-Format)
-    * [Default Page Types](https://github.com/Vazkii/Patchouli/wiki/Default-Page-Types)
-* [Using Templates](https://github.com/Vazkii/Patchouli/wiki/Using-Templates)
+* [Locking Content with Advancements](/docs/patchouli-basics/advancement-locking)
+* [Text Formatting 101](/docs/patchouli-basics/text-formatting)
+* [Book JSON Format](/docs/patchouli-basics/book-json)
+* [Category JSON Format](/docs/patchouli-basics/category-json)
+* [Entry JSON Format](/docs/patchouli-basics/entry-json)
+    * [Default Page Types](/docs/patchouli-basics/page-types)
+* [Using Templates](/docs/patchouli-basics/templates)
 
 ### 7. Use the Book Item
 
@@ -134,7 +134,7 @@ or just use `/ct hand`
 ### 8. Some Pointers
 
 * For modpack makers, if you want to use your own images, textures, sounds, or other assets, you'll need a tool to load them in, such as [Resource Loader](https://minecraft.curseforge.com/projects/resource-loader).
-* To grant your book to new players automatically, see [this page](./Giving-Books-to-New-Players)
+* To grant your book to new players automatically, see [this page](/docs/patchouli-basics/giving-new)
 * You need to reload the game to load new book.json files, but not the book contents.
 * Book contents are purely client sided, whereas book.json files are loaded by the server too.
 * You don't have to put your entries in folders corresponding to the categories they belong in, but it helps with organization!

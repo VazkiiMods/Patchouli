@@ -18,7 +18,7 @@ The category this entry belongs to. This must be set to one of your categories' 
 
 * **icon** (String, _mandatory_)
 
-The icon for this entry. This can either be an [ItemStack String](https://github.com/Vazkii/Patchouli/wiki/ItemStack-String-Format), if you want an item to be the icon, or a resource location pointing to a square texture. If you want to use a resource location, make sure to end it with .png
+The icon for this entry. This can either be an [ItemStack String](/docs/patchouli-advanced/itemstack-format), if you want an item to be the icon, or a resource location pointing to a square texture. If you want to use a resource location, make sure to end it with .png
 
 * **pages** (Object Array, _mandatory_)
 
@@ -38,15 +38,15 @@ The array of pages for this entry. In the following format:
 ]
 ```
 
-See [Default Page Types](https://github.com/Vazkii/Patchouli/wiki/Default-Page-Types) for the page types that Patchouli comes with and what data each one requires, or [Using Templates](https://github.com/Vazkii/Patchouli/wiki/Using-Templates) for instructions on how to create your own.
+See [Default Page Types](/docs/patchouli-basics/page-types) for the page types that Patchouli comes with and what data each one requires, or [Using Templates](/docs/patchouli-basics/templates) for instructions on how to create your own.
 
 * **advancement** (String)
 
-The name of the advancement you want this entry to be locked behind. See [Locking Content with Advancements](https://github.com/Vazkii/Patchouli/wiki/Locking-Content-with-Advancements) for more info on locking content.
+The name of the advancement you want this entry to be locked behind. See [Locking Content with Advancements](/docs/patchouli-basics/advancement-locking) for more info on locking content.
 
 * **flag** (String)
 
-A config flag expression that determines whether this entry should exist or not. See [Using Config Flags](https://github.com/Vazkii/Patchouli/wiki/Using-Config-Flags) for more info on config flags.
+A config flag expression that determines whether this entry should exist or not. See [Using Config Flags](/docs/patchouli-basics/config-gating) for more info on config flags.
 
 * **priority** (boolean)
 

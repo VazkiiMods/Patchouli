@@ -1,10 +1,10 @@
 # Default Page Types
 
-This page specifies the various page types provided by default in Patchouli. If you need other page types for whatever case, please see [Using Templates](https://github.com/Vazkii/Patchouli/wiki/Using-Templates) for information on creating your own.
+This page specifies the various page types provided by default in Patchouli. If you need other page types for whatever case, please see [Using Templates](/docs/patchouli-basics/templates) for information on creating your own.
 
-These pages should be used in Entries, in the "pages" array, via specifying which type you want by using "type" on each object. You can read more in [Entry JSON Format](https://github.com/Vazkii/Patchouli/wiki/Entry-JSON-Format).
+These pages should be used in Entries, in the "pages" array, via specifying which type you want by using "type" on each object. You can read more in [Entry JSON Format](/docs/patchouli-basics/entry-json).
 
-The following attributes are common to every page type:The ID of the entity you want to display. To display a chicken you'd use "minecraft:chicken". You can also add NBT data to the entity, in the same way you would in an [ItemStack String](https://github.com/Vazkii/Patchouli/wiki/ItemStack-String-Format)
+The following attributes are common to every page type:The ID of the entity you want to display. To display a chicken you'd use "minecraft:chicken". You can also add NBT data to the entity, in the same way you would in an [ItemStack String](/docs/patchouli-advanced/itemstack-format)
 
 * **type** (String, _mandatory_)
 
@@ -12,15 +12,15 @@ What type this page is. This isn't used by the page itself, but rather by the lo
 
 * **advancement** (String)
 
-A resource location to point at, to make a page appear when that advancement is completed. See [Locking Content with Advancements](https://github.com/Vazkii/Patchouli/wiki/Locking-Content-with-Advancements) for more info on locking content. Excluding this attribute or leaving it empty will leave the page unlocked from the start. Providing a nonexistent advancement will permanently lock this entry unless the advancement at the resource location starts existing.
+A resource location to point at, to make a page appear when that advancement is completed. See [Locking Content with Advancements](/docs/patchouli-basics/advancement-locking) for more info on locking content. Excluding this attribute or leaving it empty will leave the page unlocked from the start. Providing a nonexistent advancement will permanently lock this entry unless the advancement at the resource location starts existing.
 
 * **flag** (String)
 
-A config flag expression that determines whether this page should exist or not. See [Using Config Flags](https://github.com/Vazkii/Patchouli/wiki/Using-Config-Flags) for more info on config flags.
+A config flag expression that determines whether this page should exist or not. See [Using Config Flags](/docs/patchouli-basics/config-gating) for more info on config flags.
 
 * **anchor** (String)
 
-An anchor can be used elsewhere to refer to this specific page in an internal link. See [Text Formatting 101](Text-Formatting-101) for more details about internal links.
+An anchor can be used elsewhere to refer to this specific page in an internal link. See [Text Formatting 101](/docs/patchouli-basics/text-formatting) for more details about internal links.
 
 ## Example Usage
 
@@ -42,7 +42,7 @@ Page type: **"patchouli:text"**
 **Attributes**:
 * **text** (String, _mandatory_)
 
-The text to display on this page. This text can be [formatted](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101).
+The text to display on this page. This text can be [formatted](/docs/patchouli-basics/text-formatting).
 
 * **title** (String)
 
@@ -69,7 +69,7 @@ Defaults to false. Set to true if you want the image to be bordered, like in the
 
 * **text** (String)
 
-The text to display on this page, under the image. This text can be [formatted](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101).
+The text to display on this page, under the image. This text can be [formatted](/docs/patchouli-basics/text-formatting).
 
 ## Crafting Recipe Pages
 
@@ -91,7 +91,7 @@ The title of the page, to be displayed above both recipes. This is optional, but
 
 * **text** (String)
 
-The text to display on this page, under the recipes. This text can be [formatted](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101).
+The text to display on this page, under the recipes. This text can be [formatted](/docs/patchouli-basics/text-formatting).
 
 Note: the text will not display if there are two recipes with two different outputs, and "title" is not set. This is the case of the image displayed, in which both recipes have the output names displayed, and there's no space for text.
 
@@ -103,7 +103,7 @@ Page type: **"patchouli:smelting"**
 **Attibutes**:
 * **recipe** (String, _mandatory_)
 
-The first recipe you want to show. Given that furnace recipes are only named properly as of 1.13, instead of using a recipe ID, we use an [ItemStack String](https://github.com/Vazkii/Patchouli/wiki/ItemStack-String-Format) that corresponds to the item being smelted, so if you wanted to show the recipe for smelting sand to glass, you'd use "minecraft:sand" here.
+The first recipe you want to show. Given that furnace recipes are only named properly as of 1.13, instead of using a recipe ID, we use an [ItemStack String](/docs/patchouli-advanced/itemstack-format) that corresponds to the item being smelted, so if you wanted to show the recipe for smelting sand to glass, you'd use "minecraft:sand" here.
 
 * **recipe2** (String)
 
@@ -115,7 +115,7 @@ The title of the page, to be displayed above both recipes. This is optional, but
 
 * **text** (String)
 
-The text to display on this page, under the recipes. This text can be [formatted](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101).
+The text to display on this page, under the recipes. This text can be [formatted](/docs/patchouli-basics/text-formatting).
 
 ## Multiblock Pages
 
@@ -128,13 +128,13 @@ The name of the multiblock you're displaying. Shows as a header above the multib
 
 * **multiblock_id** (String)
 
-For modders only. The ID of the multiblock you want to display. See [API Usage](https://github.com/Vazkii/Patchouli/wiki/API-Usage) for how to create and register Multiblocks in code.
+For modders only. The ID of the multiblock you want to display. See [this page](/docs/patchouli-basics/multiblocks) for how to create and register Multiblocks in code.
 
 _Note: Either this or "multiblock" need to be set for this page type to work._
 
 * **multiblock** (Object)
 
-The multiblock object to display. See [Using Multiblocks](https://github.com/Vazkii/Patchouli/wiki/Using-Multiblocks) for how to create this object.
+The multiblock object to display. See [Using Multiblocks](/docs/patchouli-basics/multiblocks) for how to create this object.
 
 _Note: Either this or "multiblock_id" need to be set for this page type to work._
 
@@ -144,7 +144,7 @@ Defaults to true. Set this to false to disable the "Visualize" button.
 
 * **text** (String)
 
-The text to display on this page, under the multiblock. This text can be [formatted](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101).
+The text to display on this page, under the multiblock. This text can be [formatted](/docs/patchouli-basics/text-formatting).
 
 ## Entity Pages
 
@@ -154,7 +154,7 @@ Page type: **patchouli:entity**
 **Attibutes**:
 * **entity** (String, _mandatory_)
 
-The ID of the entity you want to display. To display a chicken you'd use "minecraft:chicken". You can also add NBT data to the entity, in the same way you would in an [ItemStack String](https://github.com/Vazkii/Patchouli/wiki/ItemStack-String-Format).
+The ID of the entity you want to display. To display a chicken you'd use "minecraft:chicken". You can also add NBT data to the entity, in the same way you would in an [ItemStack String](/docs/patchouli-advanced/itemstack-format).
 
 * **scale** (float)
 
@@ -178,7 +178,7 @@ The name to display on top of the frame. If this is empty or not defined, it'll 
 
 * **text** (String)
 
-The text to display on this page, under the entity. This text can be [formatted](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101).
+The text to display on this page, under the entity. This text can be [formatted](/docs/patchouli-basics/text-formatting).
 
 ## Spotlight Pages
 
@@ -188,7 +188,7 @@ Page type: **"patchouli:spotlight"**
 **Attibutes**:
 * **item** (String, _mandatory_)
 
-An [ItemStack String](https://github.com/Vazkii/Patchouli/wiki/ItemStack-String-Format) representing the item to be spotlighted.
+An [ItemStack String](/docs/patchouli-advanced/itemstack-format) representing the item to be spotlighted.
 
 * **title** (String)
 
@@ -200,7 +200,7 @@ Defaults to false. Set this to true to mark this spotlight page as the "recipe p
 
 * **text** (String)
 
-The text to display on this page, under the item. This text can be [formatted](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101).
+The text to display on this page, under the item. This text can be [formatted](/docs/patchouli-basics/text-formatting).
 
 ## Link Pages
 
@@ -234,7 +234,7 @@ The title of this page, to display above the links. If this is missing or empty,
 
 * **text** (String)
 
-The text to display on this page, under the links. This text can be [formatted](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101).
+The text to display on this page, under the links. This text can be [formatted](/docs/patchouli-basics/text-formatting).
 
 ## Quest Pages
 
@@ -246,7 +246,7 @@ Page type: **patchouli:quest**
 * Quest pages will make the entry they're in show up with a checkmark once the quest is completed. 
 * Entries that show up with a checkmark will show up at the end of the list to be out of the way. 
 * So it knows to mark it properly, **do not have multiple quest pages in a single entry**.
-* If you use a quest page, it's recommended you also use "[turnin](https://github.com/Vazkii/Patchouli/wiki/Entry-JSON-Format)" in the entry.
+* If you use a quest page, it's recommended you also use "[turnin](/docs/patchouli-basics/entry-json)" in the entry.
 
 **Attributes**:
 
@@ -260,7 +260,7 @@ The title of this page, to display above the links. If this is missing or empty,
 
 * **text** (String)
 
-The text to display on this page, under the links. This text can be [formatted](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101).
+The text to display on this page, under the links. This text can be [formatted](/docs/patchouli-basics/text-formatting).
 
 ## Empty Pages
 

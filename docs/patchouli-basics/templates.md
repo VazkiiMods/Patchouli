@@ -1,6 +1,6 @@
 # Templating
 
-Aside from the [Default Page Types](https://github.com/Vazkii/Patchouli/wiki/Default-Page-Types) shipped with Patchouli for you to use, you can also create your own! Creating new page types can be done through Patchouli's template system.
+Aside from the [Default Page Types](/docs/patchouli-basics/page-types) shipped with Patchouli for you to use, you can also create your own! Creating new page types can be done through Patchouli's template system.
 
 Templates are created and referenced in a similar manner to entries and categories, and as such, they go in /patchouli_books/YOURBOOK/en_us/templates/yourtemplate.json, and they can be sorted in sub-folders of /templates.
 
@@ -45,8 +45,8 @@ Let's start with a small tutorial on how to create a template.
    
 Some notes on variables:
  * You can have as many variables as you want, so you could have two text components in different positions with either the same "#text" value (if you want them to say the same thing), or for example, "#upper_text" and "#lower_text".
- * You can't use any variables such that their names are already common keys for pages. This means you can't use any of the names described in the first section of [Default Page Types](https://github.com/Vazkii/Patchouli/wiki/Default-Page-Types).
- * You can learn about more advanced variable usage such as inlining them in strings or deriving them in the [Template Variable Usage](https://github.com/Vazkii/Patchouli/wiki/Template-Variable-Usage) page.
+ * You can't use any variables such that their names are already common keys for pages. This means you can't use any of the names described in the first section of [Default Page Types](/docs/patchouli-basics/page-types).
+ * You can learn about more advanced variable usage such as inlining them in strings or deriving them in the [Template Variable Usage](/docs/patchouli-advanced/template-variable-usage) page.
 
 ## Template JSON Format
 
@@ -68,14 +68,14 @@ The array of components this template comes with. In the following format:
 ]
 ```
 
-See [Template Components](https://github.com/Vazkii/Patchouli/wiki/Template-Components) for the components that Patchouli comes with and what data each one requires.
+See [Template Components](/docs/patchouli-advanced/default-components) for the components that Patchouli comes with and what data each one requires.
 
 Note that the components are drawn in the order they appear here, so if you want one to overlap another, put them in the right order.
 
 * **include** (Object Array)
 
-A list of templates to include in this one. See [Template Nesting](https://github.com/Vazkii/Patchouli/wiki/Template-Nesting) for how to do this.
+A list of templates to include in this one. See [Template Nesting](/docs/patchouli-advanced/template-nesting) for how to do this.
 
 * **processor** (String)
 
-For modders only: A class name for the processor class that takes care of this template. A processor class can derive data from your code into variables defined in the template. See [Component Processors](https://github.com/Vazkii/Patchouli/wiki/Component-Processors) for how to use them.
+For modders only: A class name for the processor class that takes care of this template. A processor class can derive data from your code into variables defined in the template. See [Component Processors](/docs/patchouli-advanced/component-processors) for how to use them.

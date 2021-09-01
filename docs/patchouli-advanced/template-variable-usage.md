@@ -1,6 +1,6 @@
 # Template Variable Usage
 
-As explained in [Using Templates](https://github.com/Vazkii/Patchouli/wiki/Using-Templates), variables can be used to pass data in from the entry files into the template render.
+As explained in [Using Templates](/docs/patchouli-basics/templates), variables can be used to pass data in from the entry files into the template render.
 
 If you're not familiar with templates or using variables therein, please read the Using Templates page first, as thus page describes more complex use cases. Note that this page applies only to template design, and not in passing the variables in from the entry json.
 
@@ -26,7 +26,7 @@ The text block you would see displayed ingame would be _"String interpolation wi
 
 ## String Derivation
 
-Variables can have other data derived from them. For example, a variable you'd fill with an [ItemStack String](https://github.com/Vazkii/Patchouli/wiki/ItemStack-String-Format) can be derived to get the item's name.
+Variables can have other data derived from them. For example, a variable you'd fill with an [ItemStack String](/docs/patchouli-advanced/itemstack-format) can be derived to get the item's name.
 
 Deriving variables can be done by applying a function onto them. To do so, you append `->func` to the variable, replacing "func" with the function you want to apply. For example, should "item" be a variable with an ItemStack String, to get its item name, you'd use `#item->iname`.
 
@@ -48,4 +48,4 @@ Deriving variables can be done by applying a function onto them. To do so, you a
 
 * You can derive variables that are used inline, so `This recipe produces #item->iname#.` is valid.
 * You can derive multiple times, so `#item->iname->capital` is valid.
-* The functions that derive to "true" and "false" can be used with the "guard" attribute in [template components](https://github.com/Vazkii/Patchouli/wiki/Template-Components).
+* The functions that derive to "true" and "false" can be used with the "guard" attribute in [template components](/docs/patchouli-advanced/default-components).

@@ -1,6 +1,6 @@
 # Default Template Components
 
-This page specifies the various template components provided by Patchouli. These components should be used in Templates, in the "components" array, via specifying which type you want by using "type" on each object. You can read more in [Using Templates](https://github.com/Vazkii/Patchouli/wiki/Using-Templates).
+This page specifies the various template components provided by Patchouli. These components should be used in Templates, in the "components" array, via specifying which type you want by using "type" on each object. You can read more in [Using Templates](/docs/patchouli-basics/templates).
 
 The following attributes are common to every component type:
 
@@ -18,7 +18,7 @@ Defaults to 0. The vertical position of this component in the page.
 
 * **advancement** (String)
 
-A resource location to point at, to make a component appear when that advancement is completed. See [Locking Content with Advancements](https://github.com/Vazkii/Patchouli/wiki/Locking-Content-with-Advancements) for more info on locking content. Excluding this attribute or leaving it empty will make the component always display.
+A resource location to point at, to make a component appear when that advancement is completed. See [Locking Content with Advancements](/docs/patchouli-basics/advancement-locking) for more info on locking content. Excluding this attribute or leaving it empty will make the component always display.
 
 * **negate_advancement** (boolean)
 
@@ -26,15 +26,15 @@ Defaults to false. If set to true, the *advancement* field will be negated, maki
 
 * **guard** (String)
 
-A [Variable Function](https://github.com/Vazkii/Patchouli/wiki/Template-Variable-Usage#string-derivation) that determines whether the component should show. If this function resolves to "false" or an empty string, the component will not display.
+A [Variable Function](/docs/patchouli-advanced/template-variable-usage#string-derivation) that determines whether the component should show. If this function resolves to "false" or an empty string, the component will not display.
 
 * **flag** (String)
 
-A config flag expression that determines whether this component should show or not. See [Using Config Flags](https://github.com/Vazkii/Patchouli/wiki/Using-Config-Flags) for more info on config flags.
+A config flag expression that determines whether this component should show or not. See [Using Config Flags](/docs/patchouli-basics/config-gating) for more info on config flags.
 
 * **group** (String)
 
-Modders only: The group this element belongs to. Groups are only used to allow [Component Processors](https://github.com/Vazkii/Patchouli/wiki/Component-Processors) to hide individual components based on code-level conditions.
+Modders only: The group this element belongs to. Groups are only used to allow [Component Processors](/docs/patchouli-advanced/component-processors) to hide individual components based on code-level conditions.
 
 ## Example Usage
 
@@ -51,7 +51,7 @@ Here's an example of using a text component:
 
 ## Text Components
 Component type: **"patchouli:text"**  
-Draws a text block, which supports [formatting](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101).
+Draws a text block, which supports [formatting](/docs/patchouli-basics/text-formatting).
 
 **Attributes:**
 * **text** (String, _mandatory_)
@@ -78,7 +78,7 @@ Draws an item, which you can hover over to see its tooltip, or click to open the
 
 * **item** (String, _mandatory_)
 
-An [ItemStack String](https://github.com/Vazkii/Patchouli/wiki/ItemStack-String-Format) representing the item you want to show. Can be a variable.
+An [ItemStack String](/docs/patchouli-advanced/itemstack-format) representing the item you want to show. Can be a variable.
 
 Advanced usage of this value is possible. You may use `ore:ORENAME`, to display all items matching the ore dictionary key ORENAME, or you may display multiple stacks at once by separating them with commas (e.g. `minecraft:diamond,minecraft:emerald`). In both cases, they alternate with time.
  
@@ -160,7 +160,7 @@ Renders an entity which rotates around.
 
 * **entity** (String, _mandatory_)
 
-The ID of the entity you want to display. To display a chicken you'd use "minecraft:chicken". You can also add NBT data to the entity, in the same way you would in an [ItemStack String](https://github.com/Vazkii/Patchouli/wiki/ItemStack-String-Format). Can be a variable.
+The ID of the entity you want to display. To display a chicken you'd use "minecraft:chicken". You can also add NBT data to the entity, in the same way you would in an [ItemStack String](/docs/patchouli-advanced/itemstack-format). Can be a variable.
 
 * **render_size** (integer)
 

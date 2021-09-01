@@ -12,13 +12,13 @@ The name of the book that will be displayed in the book item and the GUI. For mo
 
 * **landing_text** (String, _mandatory_)  
 
-The text that will be displayed in the landing page of your book. This text can be [formatted](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101). For modders, this can be a localization key.
+The text that will be displayed in the landing page of your book. This text can be [formatted](/docs/patchouli-basics/text-formatting). For modders, this can be a localization key.
 
 * **advancement_namespaces** (String Array)
 
 **As of Patchouli 1.15.2-1.2-28 (backported to 1.12 Patchouli 1.0-21), this field is no longer necessary, and any advancement can be used to lock content.**
 
-The advancement namespaces this book uses for locking its entries. Any namespaces used need to be declared here so Patchouli knows to track them and listen for them to unlock stuff. As an example, if you use "yourmod:cooladvancement" in one of your entries, you need to have "yourmod" in this array. See [Locking Content with Advancements](https://github.com/Vazkii/Patchouli/wiki/Locking-Content-with-Advancements) for more information on advancement locking.
+The advancement namespaces this book uses for locking its entries. Any namespaces used need to be declared here so Patchouli knows to track them and listen for them to unlock stuff. As an example, if you use "yourmod:cooladvancement" in one of your entries, you need to have "yourmod" in this array. See [Locking Content with Advancements](docs/patchouli-basics/advancement-locking) for more information on advancement locking.
 
 Adding "minecraft" to this array isn't allowed to prevent a needlessly large amount of data from being sent around.
 
@@ -98,7 +98,7 @@ The sound effect played when flipping through pages in this book. This is a reso
 
 * **index_icon** (String)
 
-The icon to display for the Book Index. This can either be an [ItemStack String](https://github.com/Vazkii/Patchouli/wiki/ItemStack-String-Format), if you want an item to be the icon, or a resource location pointing to a square texture. If you want to use a resource location, make sure to end it with .png. This is optional, and if you don't include it, it'll default to the book's icon (which is the recommended value).
+The icon to display for the Book Index. This can either be an [ItemStack String](/docs/patchouli-advanced/itemstack-format), if you want an item to be the icon, or a resource location pointing to a square texture. If you want to use a resource location, make sure to end it with .png. This is optional, and if you don't include it, it'll default to the book's icon (which is the recommended value).
 
 * **show_progress** (boolean)
 
@@ -141,7 +141,7 @@ Defaults to false. Set this to true if you don't want Patchouli to make a book i
 
 * **custom_book_item** (String)
 
-Following from the previous key, if you do have a custom book, set it here. This is an [ItemStack String](https://github.com/Vazkii/Patchouli/wiki/ItemStack-String-Format).
+Following from the previous key, if you do have a custom book, set it here. This is an [ItemStack String](/docs/patchouli-advanced/itemstack-format).
 
 * **show_toasts** (boolean)
 
@@ -157,7 +157,7 @@ Default false. If set to true, attempts to look up category, entry, and page tit
 
 * **macros** (Object)
 
-Formatting macros this book should use. See [Text Formatting 101](https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101) for more info on how you can define these and what they do.
+Formatting macros this book should use. See [Text Formatting 101](/docs/patchouli-basics/text-formatting) for more info on how you can define these and what they do.
 
 * **pause_game** (boolean)
 
@@ -165,4 +165,4 @@ Default true. When set true, opening any GUI from this book will pause the game 
 
 ### Extension Keys
 
-There are some additional keys related to extending books in [Extending other Books](https://github.com/Vazkii/Patchouli/wiki/Extending-other-Books/).
+There are some additional keys related to extending books in [Extending other Books](/docs/patchouli-basics/extending).

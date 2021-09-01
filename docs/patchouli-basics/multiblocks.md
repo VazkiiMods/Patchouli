@@ -202,6 +202,6 @@ Let's add our pattern, mapping, and other values together, and we get:
 }
 ```
 
-Which, if we transplant onto a "multiblock" page (see [Default Page Types](https://github.com/Vazkii/Patchouli/wiki/Default-Page-Types#multiblock-pages)), and click Visualize, will show up just fine ingame!
+Which, if we transplant onto a "multiblock" page (see [Default Page Types](/docs/patchouli-basics/page-types#multiblock-pages)), and click Visualize, will show up just fine ingame!
 
 ![](https://i.imgur.com/1lfoaA1.png)

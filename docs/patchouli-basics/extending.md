@@ -1,6 +1,6 @@
 # Extending Other Books
 
-These are some additional keys you can have in your [book json file](https://github.com/Vazkii/Patchouli/wiki/Book-JSON-Format/) that are used for extending another book's content easily.
+These are some additional keys you can have in your [book json file](/docs/patchouli-basics/book-json) that are used for extending another book's content easily.
 
 * **extend** (String)
 
