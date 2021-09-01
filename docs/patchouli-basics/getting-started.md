@@ -4,7 +4,8 @@ sidebar_position: 1
 
 # Getting Started
 
-This entry serves as a quick guide of what to do to get started making your own Patchouli books, read on and follow carefully!
+This entry serves as a quick guide of what to do to get started making your own Patchouli
+books, read on and follow carefully!
 
 ## Prerequisites
 * Minecraft
@@ -12,16 +13,27 @@ This entry serves as a quick guide of what to do to get started making your own 
 * Working knowledge of the [JSON](https://en.wikipedia.org/wiki/JSON) data format.
 
 ### 0. Install Patchouli
-Pretty obvious. For modders, you can load it as a lib to your mod project or just drop it in your workspace's mods folder. The preferred way is to use maven, which you find the address for in the repo's readme.
-For non-modders, obtain the mod through the usual distribution channels.
+Pretty obvious. For modders, you can load it as a lib to your mod project or just drop it
+in your workspace's mods folder. The preferred way is to use maven, which you find the
+address for in the repo's readme.  For non-modders, obtain the mod through the usual
+distribution channels.
 
 ### 1. Locate your patchouli_books directory
-Your books and their contents will go in your patchouli_books directory, so you need to find it.
-* For modpack makers, it'll be in your instance folder (next to mods, config, etc). Note that you need to run the game with patchouli installed for it to show up (or just make it yourself).
-* For modders, it'll be /data/_YOURMODID_/patchouli_books, you'll have to make it yourself.
+Your books and their contents will go in your patchouli_books directory, so you need to
+find it.
+* For modpack makers, it'll be in your instance folder (next to mods, config, etc). Note
+  that you need to run the game with patchouli installed for it to show up (or just make
+  it yourself).
+* For modders, it'll be /data/_YOURMODID_/patchouli_books, you'll have to make it
+  yourself.
 
 ### 2. Create your folder structure
-Once you found patchouli_books, decide on a name for your book. Only lower case characters and underscores are allowed. This is the internal name for your book, and we encourage you to make it distinctive. For mods, you should name it after what the book is for (e.g. `lexicon` for Botania). For modpacks, name it something with your modpack's name, for example `crucial_2_guide_book`. After you have a name, create folders and files inside patchouli_books so that it looks like this:
+Once you found patchouli_books, decide on a name for your book. Only lower case characters
+and underscores are allowed. This is the internal name for your book, and we encourage you
+to make it distinctive. For mods, you should name it after what the book is for
+(e.g. `lexicon` for Botania). For modpacks, name it something with your modpack's name,
+for example `crucial_2_guide_book`. After you have a name, create folders and files inside
+patchouli_books so that it looks like this:
 
 * patchouli_books
     * `<the name you just chose>` (folder)
@@ -31,12 +43,20 @@ Once you found patchouli_books, decide on a name for your book. Only lower case 
             * categories (empty folder)
             * templates (empty folder)
 
-You may have as many books as you want, even within the same mod(pack).
-Each book has a [Namespaced ID](https://minecraft.fandom.com/wiki/Namespaced_ID). If the book is part of a mod, the namespace is that mod's mod ID. If the book is loaded from the extenral `patchouli_books` folder, the namespace is `patchouli`. The name part of the namespaced ID is the name you chose above.
+You may have as many books as you want, even within the same mod(pack).  Each book has a
+[Namespaced ID](https://minecraft.fandom.com/wiki/Namespaced_ID). If the book is part of a
+mod, the namespace is that mod's mod ID. If the book is loaded from the extenral
+`patchouli_books` folder, the namespace is `patchouli`. The name part of the namespaced ID
+is the name you chose above.
 
-Note that creating an "en_us" folder means you're creating the "English" version of your book. The contents you put in the "en_us" folder are always the "main" ones loaded, so even if your book isn't meant to be natively in english, you need to put your main stuff there.
+Note that creating an "en_us" folder means you're creating the "English" version of your
+book. The contents you put in the "en_us" folder are always the "main" ones loaded, so
+even if your book isn't meant to be natively in english, you need to put your main stuff
+there.
 
-Any translators may create folders with their languages and override any files they wish. They're automatically loaded if the game language is changed. For translators: Please don't include in your folder anything you aren't overriding.
+Any translators may create folders with their languages and override any files they
+wish. They're automatically loaded if the game language is changed. For translators:
+Please don't include in your folder anything you aren't overriding.
 
 ### 3. Populate book.json
 Open up your book.json using your favorite text editor, and fill it in as follows:
@@ -49,23 +69,31 @@ Open up your book.json using your favorite text editor, and fill it in as follow
 }
 ```
 
-where "BOOK NAME" is the name your book will be displayed as, and "LANDING TEXT" the text that will show up on the left page of your book ingame. The version field specifies which edition your book is. Whenever you update your book, you should also update the edition value. For modders, you can use localization keys in both name and landing_text.
+where "BOOK NAME" is the name your book will be displayed as, and "LANDING TEXT" the text
+that will show up on the left page of your book ingame. The version field specifies which
+edition your book is. Whenever you update your book, you should also update the edition
+value. For modders, you can use localization keys in both name and landing_text.
 
 See:  
 
 ![](https://i.imgur.com/lsdDrrk.png)
 
-For more customization options, please read [Book JSON Format](/docs/patchouli-basics/book-json). (highly recommended!)
+For more customization options, please read [Book JSON
+Format](/docs/patchouli-basics/book-json). (highly recommended!)
 
 ### 4. Check ingame
-Load your game and check if your book is there. Unless you specified otherwise, it should be in the Miscellaneous creative tab, but you can also search for it. 
+Load your game and check if your book is there. Unless you specified otherwise, it should
+be in the Miscellaneous creative tab, but you can also search for it.
 
-If you don't see it, check if patchouli is properly loaded and if there's any errors in your log. 
+If you don't see it, check if patchouli is properly loaded and if there's any errors in
+your log.
 
-Everything after this can be hot loaded without closing the game, so feel free to keep it open as you do further edits.
+Everything after this can be hot loaded without closing the game, so feel free to keep it
+open as you do further edits.
 
 ### 5. Add Stub Content
-Time to add some content to your book. Go to your book's folder and then en_us, and create folders and files so that it looks like this:
+Time to add some content to your book. Go to your book's folder and then en_us, and create
+folders and files so that it looks like this:
 
 * en_us
     * entries (folder)
@@ -101,11 +129,14 @@ Open test_entry.json and test_category.json and fill them in as follows:
 }
 ```
 
-Save your files, then return ingame and open your book. Shift-click the pencil in the bottom-left corner. When you do so, it will reload the book contents, and you should see the category and entry you just defined appear.
+Save your files, then return ingame and open your book. Shift-click the pencil in the
+bottom-left corner. When you do so, it will reload the book contents, and you should see
+the category and entry you just defined appear.
 
 ### 6. Learn More!
 
-You're done getting set up, now it's time to learn more about what you can do with Patchouli's book system. Check the following pages out:
+You're done getting set up, now it's time to learn more about what you can do with
+Patchouli's book system. Check the following pages out:
 
 * [Locking Content with Advancements](/docs/patchouli-basics/advancement-locking)
 * [Text Formatting 101](/docs/patchouli-basics/text-formatting)
@@ -117,7 +148,10 @@ You're done getting set up, now it's time to learn more about what you can do wi
 
 ### 7. Use the Book Item
 
-Here's a few examples of how to use your book's item. As a refresher, your book's *namespace* is your mod id, if you're a modder, and `patchouli`, if you're a pack maker. Then, if your folder is called "coolbook" then your *book ID* is `yourbooknamespace:coolbook`.
+Here's a few examples of how to use your book's item. As a refresher, your book's
+*namespace* is your mod id, if you're a modder, and `patchouli`, if you're a pack
+maker. Then, if your folder is called "coolbook" then your *book ID* is
+`yourbooknamespace:coolbook`.
 
 **CraftTweaker**:  
 `<patchouli:guide_book>.withTag({"patchouli:book": "YOURBOOKID"});`  
@@ -133,9 +167,15 @@ or just use `/ct hand`
 
 ### 8. Some Pointers
 
-* For modpack makers, if you want to use your own images, textures, sounds, or other assets, you'll need a tool to load them in, such as [Resource Loader](https://minecraft.curseforge.com/projects/resource-loader).
-* To grant your book to new players automatically, see [this page](/docs/patchouli-basics/giving-new)
+* For modpack makers, if you want to use your own images, textures, sounds, or other
+  assets, you'll need a tool to load them in, such as [Resource
+  Loader](https://minecraft.curseforge.com/projects/resource-loader).
+* To grant your book to new players automatically, see [this
+  page](/docs/patchouli-basics/giving-new)
 * You need to reload the game to load new book.json files, but not the book contents.
-* Book contents are purely client sided, whereas book.json files are loaded by the server too.
-* You don't have to put your entries in folders corresponding to the categories they belong in, but it helps with organization!
-* No dependencies are needed if you're a modder, not even any code. Patchouli automatically finds your files in your assets if you put them in the right place.
+* Book contents are purely client sided, whereas book.json files are loaded by the server
+  too.
+* You don't have to put your entries in folders corresponding to the categories they
+  belong in, but it helps with organization!
+* No dependencies are needed if you're a modder, not even any code. Patchouli
+  automatically finds your files in your assets if you put them in the right place.
