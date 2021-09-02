@@ -235,6 +235,7 @@ public class MultiblockVisualizationHandler {
 		double renderPosX = erd.camera.getPosition().x();
 		double renderPosY = erd.camera.getPosition().y();
 		double renderPosZ = erd.camera.getPosition().z();
+		ms.pushPose();
 		ms.translate(-renderPosX, -renderPosY, -renderPosZ);
 
 		if (buffers == null) {
@@ -279,6 +280,7 @@ public class MultiblockVisualizationHandler {
 		}
 
 		buffers.endBatch();
+		ms.popPose();
 
 		if (!isAnchored) {
 			blocks = blocksDone = 0;
