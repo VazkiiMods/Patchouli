@@ -68,7 +68,7 @@ module.exports = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/Vazkii/Patchouli',
+              href: 'https://github.com/VazkiiMods/Patchouli',
             },
           ],
         },
