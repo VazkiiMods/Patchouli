@@ -14,7 +14,7 @@ accomplished. This page will give you a quick primer on how to accomplish this.
 
 * Open the JSON file for the entry you want, and fill in the `"advancement"` field with
   the ID: `"advancement": "mymod:myadv"`. 
-    * See [Entry JSON Format](/docs/patchouli-basics/entry-json) for more info.
+    * See [Entry JSON Format](/docs/reference/entry-json) for more info.
 
 * You may also lock individual pages behind advancements. This is allowed but not exactly
   encouraged, as it can be confusing to players if you aren't conveying the information

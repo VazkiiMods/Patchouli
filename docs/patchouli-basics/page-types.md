@@ -6,7 +6,7 @@ Templates](/docs/patchouli-basics/templates) for information on creating your ow
 
 These pages should be used in Entries, in the "pages" array, via specifying which type you
 want by using "type" on each object. You can read more in [Entry JSON
-Format](/docs/patchouli-basics/entry-json).
+Format](/docs/reference/entry-json).
 
 The following attributes are common to every page type:
 
@@ -328,7 +328,7 @@ Page type: **patchouli:quest**
   the way.
 * So it knows to mark it properly, **do not have multiple quest pages in a single entry**.
 * If you use a quest page, it's recommended you also use
-  "[turnin](/docs/patchouli-basics/entry-json)" in the entry.
+  "[turnin](/docs/reference/entry-json)" in the entry.
 
 **Attributes**:
 

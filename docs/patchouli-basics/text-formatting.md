@@ -88,7 +88,7 @@ book they're defined for only. Macros defined by books override the default ones
 can rebind $(item) to some other color if you want to, for example.
 
 To create custom macros, simply add a "macros" key to your book.json (see [Book JSON
-Format](/docs/patchouli-basics/book-json) for more info), and fill it in as follows:
+Format](/docs/reference/book-json) for more info), and fill it in as follows:
 
 ```json
 "macros": {

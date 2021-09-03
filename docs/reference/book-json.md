@@ -1,7 +1,3 @@
----
-sidebar_position: 2
----
-
 # Book JSON Format
 
 This page details every key you can have in a book.json file.
@@ -67,7 +63,7 @@ registering any models you pass in to this, so you don't have to mess with any c
 them yourself.
 
 An [item predicate](https://minecraft.fandom.com/wiki/Model#Item_predicates)
-called `patchouli:completion` is provided for book models, hose its value is equal to
+called `patchouli:completion` is provided for book models, whose value is equal to
 the fraction of entries unlocked in the book, which allows book models to change their
 display as they're more completed.
 
@@ -205,5 +201,24 @@ singleplayer.
 
 ### Extension Keys
 
-There are some additional keys related to extending books in [Extending other
-Books](/docs/patchouli-basics/extending).
+* **extend** (String)
+
+Marks this book as an extension to the specified target book. Extension books do not create a
+book item and don't really "exist". All they serve to do is to add more content to another
+book that already exists. This is mainly here for addon mods that want to add stuff to the
+book they're extending.
+
+The value you put here is simply the ID of the book you want to extend. In the form of
+`modid:path`, where modid is the ID of the mod that owns the book, and path the folder
+where it is. For example, should you want to extend the book owned by "patchouli" that's
+in `/data/patchouli/patchouli_books/coolbook/book.json`, the value you'd put here would be
+`patchouli:coolbook`.
+
+If this value is set, every other value in the file is ignored. This book will
+inherit any entries, categories, templates, and macros from the original one, so feel free
+to use them at will.
+
+* **allow_extensions** (boolean)
+
+Defaults to true. Set it to false if you want to not play nice and lock your book from
+being extended by other books.

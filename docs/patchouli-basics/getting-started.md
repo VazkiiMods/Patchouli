@@ -7,11 +7,6 @@ sidebar_position: 1
 This entry serves as a quick guide of what to do to get started making your own Patchouli
 books, read on and follow carefully!
 
-## Prerequisites
-* Minecraft
-* Patchouli
-* Working knowledge of the [JSON](https://en.wikipedia.org/wiki/JSON) data format.
-
 ### 0. Install Patchouli
 Pretty obvious. For modders, you can load it as a lib to your mod project or just drop it
 in your workspace's mods folder. The preferred way is to use maven, which you find the
@@ -79,7 +74,7 @@ See:
 ![](https://i.imgur.com/lsdDrrk.png)
 
 For more customization options, please read [Book JSON
-Format](/docs/patchouli-basics/book-json). (highly recommended!)
+Format](/docs/reference/book-json). (highly recommended!)
 
 ### 4. Check ingame
 Load your game and check if your book is there. Unless you specified otherwise, it should
@@ -138,9 +133,9 @@ Patchouli's book system. Check the following pages out:
 
 * [Locking Content with Advancements](/docs/patchouli-basics/advancement-locking)
 * [Text Formatting 101](/docs/patchouli-basics/text-formatting)
-* [Book JSON Format](/docs/patchouli-basics/book-json)
-* [Category JSON Format](/docs/patchouli-basics/category-json)
-* [Entry JSON Format](/docs/patchouli-basics/entry-json)
+* [Book JSON Format](/docs/reference/book-json)
+* [Category JSON Format](/docs/reference/category-json)
+* [Entry JSON Format](/docs/reference/entry-json)
     * [Default Page Types](/docs/patchouli-basics/page-types)
 * [Using Templates](/docs/patchouli-basics/templates)
 
