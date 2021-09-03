@@ -4,32 +4,32 @@ import styles from './HomepageFeatures.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
+    title: 'Data Driven',
     Svg: require('../../static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+          Patchouli books integrate tightly with vanilla systems such as datapack recipes
+          and advancements.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Dependency-Free',
     Svg: require('../../static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+          Patchouli requires no other mods to be installed. Simply download Patchouli,
+          and start authoring content.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Tried and Trusted',
     Svg: require('../../static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+          Patchouli powers the documentation of critically acclaimed mods such
+          as <a href="https://botaniamod.net">Botania</a>.
       </>
     ),
   },
