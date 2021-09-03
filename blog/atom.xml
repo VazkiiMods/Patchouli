@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://vazkiimods.github.io/patchouli/blog</id>
+    <title>Patchouli Blog</title>
+    <updated>2021-08-31T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://vazkiimods.github.io/patchouli/blog"/>
+    <subtitle>Patchouli Blog</subtitle>
+    <icon>https://vazkiimods.github.io/patchouli/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[New Patchouli Docs]]></title>
+        <id>hello</id>
+        <link href="https://vazkiimods.github.io/patchouli/blog/hello"/>
+        <updated>2021-08-31T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Hi.]]></summary>
+        <author>
+            <name>williewillus</name>
+            <uri>https://vincent-lee.net/</uri>
+        </author>
+    </entry>
+</feed>
