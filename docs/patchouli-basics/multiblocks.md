@@ -1,10 +1,19 @@
 # Defining Multiblocks
 
-Patchouli comes with a system that allows you to define multiblocks and then visualize them in the world. These multiblocks can be either defined in code by modders (using the API), or defined in JSON inline with the entry data.
+Patchouli comes with a system that allows you to define multiblocks and then visualize
+them in the world. These multiblocks can be either defined in code by modders (using the
+API), or defined in JSON inline with the entry data.
 
-This page is written like a tutorial to get you to understand how multiblock objects work, as writing the object structure formally wouldn't properly convey how to construct it.
+This page is written like a tutorial to get you to understand how multiblock objects work,
+as writing the object structure formally wouldn't properly convey how to construct it.
 
-The page focuses on creating multiblocks using JSON, but the fundamentals also apply to doing so using code. Making multiblocks with code allows you to create state matchers using arbitrary predicates and using the multiblock for server-side validation and placement (if you make Patchouli a required dependency). You can look into the [Patchouli API](https://github.com/Vazkii/Patchouli/tree/master/src/main/java/vazkii/patchouli/api) for how to do this, or see an example of it being done [here](https://github.com/Vazkii/Patchouli/blob/master/src/main/java/vazkii/patchouli/common/multiblock/MultiblockRegistry.java).
+The page focuses on creating multiblocks using JSON, but the fundamentals also apply to
+doing so using code. Making multiblocks with code allows you to create state matchers
+using arbitrary predicates and using the multiblock for server-side validation and
+placement (if you make Patchouli a required dependency). You can look into the [Patchouli
+API](https://github.com/Vazkii/Patchouli/tree/master/src/main/java/vazkii/patchouli/api)
+for how to do this, or see an example of it being done
+[here](https://github.com/Vazkii/Patchouli/blob/master/src/main/java/vazkii/patchouli/common/multiblock/MultiblockRegistry.java).
 
 ## Multiblock Format
 
@@ -40,14 +49,19 @@ Once we know what types of blocks this structure uses, we assign a letter to eac
 * **R**: Red Terracotta
 * **W**: Any Wool
 
-Patchouli already provides built in characters for Air and (Any Block), which are respectively a space, and an underscore, so we don't have to account for those.
+Patchouli already provides built in characters for Air and (Any Block), which are
+respectively a space, and an underscore, so we don't have to account for those.
 
-Now, we need to convert these to data the game can understand. Patchouli uses the same vanilla logic to parse blockstate predicate as, for example, the `/execute if block ~ ~ ~ <PREDICATE>` command. This means you can use block ID's, tags, as well as specify blockstate properties you want to constraint. Therefore, we have:
+Now, we need to convert these to data the game can understand. Patchouli uses the same
+vanilla logic to parse blockstate predicate as, for example, the
+`/execute if block ~ ~ ~ <PREDICATE>`
+command. This means you can use block ID's, tags, as well as specify
+blockstate properties you want to constraint. Therefore, we have:
 
-* **G**: minecraft:gold_block
-* **B**: minecraft:note_block[note=4]
-* **R**: minecraft:red_terracotta
-* **W**: \#minecraft:wool
+* **G**: `minecraft:gold_block`
+* **B**: `minecraft:note_block[note=4]`
+* **R**: `minecraft:red_terracotta`
+* **W**: `#minecraft:wool`
 
 Looks good. Let's put these mappings into our json using a "mapping" block:
 ```json
@@ -62,9 +76,13 @@ Looks good. Let's put these mappings into our json using a "mapping" block:
 ```
 
 ### The Pattern
-Now that we told the multiblock what blocks to use, we need to tell it the shape. To do this, we go from the top to bottom, layer by layer, and translate each layer to a string array.
+Now that we told the multiblock what blocks to use, we need to tell it the shape. To do
+this, we go from the top to bottom, layer by layer, and translate each layer to a string
+array.
 
-Terse explanation of the format: the pattern attribute is an array of array of strings. It is indexed in the following order: y (top to bottom), x (west to east), then z (north to south).
+Terse explanation of the format: the pattern attribute is an array of array of strings. It
+is indexed in the following order: y (top to bottom), x (west to east), then z (north to
+south).
 
 Full explanation:
 Let's start with the first layer with the plus made of terracotta. It would look something like this:
@@ -78,10 +96,16 @@ Let's start with the first layer with the plus made of terracotta. It would look
 ]
 ```
 
-Recall that G is gold, R is red terracotta, and empty spaces are air. We can compress this a little so it doesn't look as bulky now:  
-```json [ " GRG ", "GGRGG", "RRRRR", "GGRGG", " GRG " ] ```
+Recall that G is gold, R is red terracotta, and empty spaces are air. We can compress this
+a little so it doesn't look as bulky now:
 
-It doesn't look as readable now that we aren't projecting it as a bird's eye view, but don't worry, it'll look good in a second. With that said, we put it into the "pattern" array, and follow through, adding in all the following layers:
+```json
+[ " GRG ", "GGRGG", "RRRRR", "GGRGG", " GRG " ]
+```
+
+It doesn't look as readable now that we aren't projecting it as a bird's eye view, but
+don't worry, it'll look good in a second. With that said, we put it into the "pattern"
+array, and follow through, adding in all the following layers:
 
 ```json
 "pattern": [

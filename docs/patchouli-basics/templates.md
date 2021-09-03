@@ -5,17 +5,17 @@ Patchouli for you to use, you can also create your own! Creating new page types 
 done through Patchouli's template system.
 
 Templates are created and referenced in a similar manner to entries and categories, and as
-such, they go in /patchouli_books/YOURBOOK/en_us/templates/yourtemplate.json, and they can
-be sorted in sub-folders of /templates.
+such, they go in `/patchouli_books/YOURBOOK/en_us/templates/yourtemplate.json`, and they can
+be sorted in sub-folders of `/templates/`.
 
 ## Your First Template
 
 Let's start with a small tutorial on how to create a template.
 
-* Go to /patchouli_books/YOURBOOK/en_us/templates, and create a "test_template.json" file,
+* Go to `/patchouli_books/YOURBOOK/en_us/templates`, create a file,
   and fill it as such:
 
-```json
+```json title="/patchouli_books/YOURBOOK/en_us/templates/test_template.json"
 {
 	"components": [
 		{
@@ -29,11 +29,7 @@ Let's start with a small tutorial on how to create a template.
 ```
 
 * Create a new entry for your book, and lay it out in any way you like. In one of the
-  pages, set the page type to be "test_template".
-    * Since there's no default page type with this name, the loader will look for any
-      templates your book has with this name.
-    * Naturally, this means you can't have templates named the same way as default page
-      types.
+  pages, set the page type to be `yourbooknamespace:test_template`.
 
 ```json
 {
@@ -43,7 +39,7 @@ Let's start with a small tutorial on how to create a template.
 
 * Try it out ingame. Your page should show the text you set it to. Feel free to change the
   text and the x and y positions.
-* Go back to your test_template.json file, and change the value of "text" to "#text". This
+* Go back to your `test_template.json` file, and change the value of `text` to `"#text"`. This
   is a _variable_, and we can set its value from the entry!
 * Go back to the entry that's using your template, and change the page to this:
 
@@ -54,14 +50,14 @@ Let's start with a small tutorial on how to create a template.
 }
 ```
 
-* Try the edited look ingame, and you'll see your template took the "text" value from your
-  page and put it where "#text" was. This is how you load in variable values onto your
+* Try the edited look ingame, and you'll see your template took the `"text"` value from your
+  page and put it where `"#text"` was. This is how you load in variable values onto your
   template.
    
 Some notes on variables:
  * You can have as many variables as you want, so you could have two text components in
-   different positions with either the same "#text" value (if you want them to say the
-   same thing), or for example, "#upper_text" and "#lower_text".
+   different positions with either the same `"#text"` value (if you want them to say the
+   same thing), or for example, `#upper_text` and `#lower_text`.
  * You can't use any variables such that their names are already common keys for
    pages. This means you can't use any of the names described in the first section of
    [Default Page Types](/docs/patchouli-basics/page-types).

@@ -8,16 +8,13 @@ These pages should be used in Entries, in the "pages" array, via specifying whic
 want by using "type" on each object. You can read more in [Entry JSON
 Format](/docs/patchouli-basics/entry-json).
 
-The following attributes are common to every page type:The ID of the entity you want to
-display. To display a chicken you'd use "minecraft:chicken". You can also add NBT data to
-the entity, in the same way you would in an [ItemStack
-String](/docs/patchouli-advanced/itemstack-format)
+The following attributes are common to every page type:
 
 * **type** (String, _mandatory_)
 
 What type this page is. This isn't used by the page itself, but rather by the loader to
 determine what page should be loaded. For example, if you want a text page, you set this
-to "patchouli:text". This should be fully-qualified in 1.17 and later and of the form
+to `patchouli:text`. This should be fully-qualified in 1.17 and later and of the form
 `domain:name`. For the built-in page types defined here, the domain is `patchouli`. In
 1.16 or earlier version, you should leave out everything up to and including the colon, so
 it would be `text`.
@@ -54,7 +51,8 @@ Here's an example of using a text page:
 ```  
 
 ## Text Pages
-![](https://i.imgur.com/cYGwnxb.png)  
+![](https://i.imgur.com/cYGwnxb.png)
+
 Page type: **"patchouli:text"**
 
 **Text pages should always be the first page in any entry**. If a text page is the first
@@ -73,7 +71,8 @@ An optional title to display at the top of the page. If you set this, the rest o
 will be shifted down a bit. You can't use "title" in the first page of an entry.
 
 ## Image Pages
-![](https://i.imgur.com/NnWb10b.png)  
+![](https://i.imgur.com/NnWb10b.png)
+
 Page type: **"patchouli:image"**
 
 **Attibutes**:
@@ -83,12 +82,12 @@ An array with images to display. Images should be in resource location format. F
 example, the value `botania:textures/gui/entries/banners.png` will point to
 `/assets/botania/textures/gui/entries/banners.png` in the resource pack. For modpack
 creators, this means that any images you want to use must be loaded with an external
-resource pack (or a mod such as Resource Loader or Open Loader). For best results, make
+resource pack (or a mod such as Open Loader). For best results, make
 your image file 256 by 256, but only place content in the upper left 200 by 200 area. This
 area is then rendered at a 0.5x scale compared to the rest of the book in pixel size.
 
 If there's more than one image in this array, arrow buttons are shown like in the picture,
-allowing the viewer to switch between images. If there's only one image, they're not.
+allowing the viewer to switch between images.
 
 * **title** (String)
 
@@ -107,7 +106,8 @@ The text to display on this page, under the image. This text can be
 
 ## Crafting Recipe Pages
 
-![](https://i.imgur.com/ySSi5zL.png)  
+![](https://i.imgur.com/ySSi5zL.png)
+
 Page type: **"patchouli:crafting"**
 
 **Attibutes**:
@@ -136,7 +136,8 @@ the output names displayed, and there's no space for text.
 
 ## Smelting Recipe Pages
 
-![](https://i.imgur.com/noBfGCc.png)  
+![](https://i.imgur.com/noBfGCc.png)
+
 Page type: **"patchouli:smelting"**
 
 **Attibutes**:
@@ -150,7 +151,7 @@ smelted, so if you wanted to show the recipe for smelting sand to glass, you'd u
 
 * **recipe2** (String)
 
-The second recipe you want to show. See "recipe" above for format. Displaying two recipes
+The second recipe you want to show. See `recipe` above for format. Displaying two recipes
 is optional.
 
 * **title** (String)
@@ -166,7 +167,8 @@ The text to display on this page, under the recipes. This text can be
 
 ## Multiblock Pages
 
-![](https://i.imgur.com/uTt7Zsc.png)  
+![](https://i.imgur.com/uTt7Zsc.png)
+
 Page type: **"patchouli:multiblock"**
 
 * **name** (String, _mandatory_)
@@ -200,14 +202,15 @@ The text to display on this page, under the multiblock. This text can be
 
 ## Entity Pages
 
-![](https://i.imgur.com/suEQTN4.png)  
+![](https://i.imgur.com/suEQTN4.png)
+
 Page type: **patchouli:entity**
 
 **Attibutes**:
 * **entity** (String, _mandatory_)
 
 The ID of the entity you want to display. To display a chicken you'd use
-"minecraft:chicken". You can also add NBT data to the entity, in the same way you would in
+`minecraft:chicken`. You can also add NBT data to the entity, in the same way you would in
 an [ItemStack String](/docs/patchouli-advanced/itemstack-format).
 
 * **scale** (float)
@@ -242,7 +245,8 @@ The text to display on this page, under the entity. This text can be
 
 ## Spotlight Pages
 
-![](https://i.imgur.com/W7ezngF.png)  
+![](https://i.imgur.com/W7ezngF.png)
+
 Page type: **"patchouli:spotlight"**
 
 **Attibutes**:
@@ -270,7 +274,8 @@ The text to display on this page, under the item. This text can be
 
 ## Link Pages
 
-![](https://i.imgur.com/AQST9Jf.png)  
+![](https://i.imgur.com/AQST9Jf.png)
+
 Page type: **patchouli:link**
 
 **Note:** Link pages are just specialized Text pages, which means they can work just like
@@ -289,7 +294,8 @@ The text to display on the link button.
 
 ## Relations Pages
 
-![](https://i.imgur.com/rBaxf4d.png)  
+![](https://i.imgur.com/rBaxf4d.png)
+
 Page type: **patchouli:relations**
 
 **Attributes**:
@@ -310,7 +316,8 @@ The text to display on this page, under the links. This text can be
 
 ## Quest Pages
 
-![](https://i.imgur.com/LRpRQdn.png)  
+![](https://i.imgur.com/LRpRQdn.png)
+
 Page type: **patchouli:quest**
 
 **Notes:**
@@ -343,7 +350,8 @@ The text to display on this page, under the links. This text can be
 
 ## Empty Pages
 
-![](https://i.imgur.com/9gv6Dje.png)  
+![](https://i.imgur.com/9gv6Dje.png)
+
 Page type: **patchouli:empty**
 
 **Attributes**:

@@ -39,7 +39,8 @@ main page). Read on for what you can use.
 * **$(/c)** - End Command, ends the current command but maintains formatting ($() also
   ends commands)
 
-**Using $(k:...)**:  
+**Using $(k:...)**:
+
 To find the name of a keybind, open your options.txt file in your instance folder (next to
 /mods, /config, etc) with a text editor, and browse the values that start with "key_",
 until you find one that looks like the one you want (these are internal names the mods

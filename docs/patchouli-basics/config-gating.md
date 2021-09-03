@@ -31,7 +31,7 @@ evaluate to false.
 
 ## Adding your own Flags
 
-This system is more in line for modders than mod pack makers, as it allows them to
+This system is intended for modders more so than mod pack makers, as it allows them to
 dynamically change the book based on their own config needs. This can be accomplished
 through hooks in the [Patchouli
 API](https://github.com/Vazkii/Patchouli/tree/master/src/main/java/vazkii/patchouli/api).

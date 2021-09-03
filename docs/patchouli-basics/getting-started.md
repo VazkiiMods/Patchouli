@@ -19,29 +19,29 @@ address for in the repo's readme.  For non-modders, obtain the mod through the u
 distribution channels.
 
 ### 1. Locate your patchouli_books directory
-Your books and their contents will go in your patchouli_books directory, so you need to
+Your books and their contents will go in your `patchouli_books` directory, so you need to
 find it.
 * For modpack makers, it'll be in your instance folder (next to mods, config, etc). Note
-  that you need to run the game with patchouli installed for it to show up (or just make
-  it yourself).
-* For modders, it'll be /data/_YOURMODID_/patchouli_books, you'll have to make it
+  that you need to run the game once with Patchouli installed for it to show up
+  (or just make it yourself).
+* For modders, it'll be `/data/_YOURMODID_/patchouli_books`, you'll have to make it
   yourself.
 
 ### 2. Create your folder structure
-Once you found patchouli_books, decide on a name for your book. Only lower case characters
+Once you find `patchouli_books`, decide on a name for your book. Only lower case characters
 and underscores are allowed. This is the internal name for your book, and we encourage you
 to make it distinctive. For mods, you should name it after what the book is for
 (e.g. `lexicon` for Botania). For modpacks, name it something with your modpack's name,
 for example `crucial_2_guide_book`. After you have a name, create folders and files inside
 patchouli_books so that it looks like this:
 
-* patchouli_books
+* `patchouli_books`
     * `<the name you just chose>` (folder)
-        * book.json (empty file)
-        * en_us (folder)
-            * entries (empty folder)
-            * categories (empty folder)
-            * templates (empty folder)
+        * `book.json` (empty file)
+        * `en_us` (folder)
+            * `entries` (empty folder)
+            * `categories` (empty folder)
+            * `templates` (empty folder)
 
 You may have as many books as you want, even within the same mod(pack).  Each book has a
 [Namespaced ID](https://minecraft.fandom.com/wiki/Namespaced_ID). If the book is part of a
@@ -49,8 +49,8 @@ mod, the namespace is that mod's mod ID. If the book is loaded from the extenral
 `patchouli_books` folder, the namespace is `patchouli`. The name part of the namespaced ID
 is the name you chose above.
 
-Note that creating an "en_us" folder means you're creating the "English" version of your
-book. The contents you put in the "en_us" folder are always the "main" ones loaded, so
+Note that creating an `en_us` folder means you're creating the "English" version of your
+book. The contents you put in the `en_us` folder are always the "main" ones loaded, so
 even if your book isn't meant to be natively in english, you need to put your main stuff
 there.
 
@@ -70,11 +70,11 @@ Open up your book.json using your favorite text editor, and fill it in as follow
 ```
 
 where "BOOK NAME" is the name your book will be displayed as, and "LANDING TEXT" the text
-that will show up on the left page of your book ingame. The version field specifies which
+that will show up on the left page of your book ingame. The `version` field specifies which
 edition your book is. Whenever you update your book, you should also update the edition
-value. For modders, you can use localization keys in both name and landing_text.
+value. For modders, you can use localization keys in both `name` and `landing_text`.
 
-See:  
+See:
 
 ![](https://i.imgur.com/lsdDrrk.png)
 
@@ -85,14 +85,14 @@ Format](/docs/patchouli-basics/book-json). (highly recommended!)
 Load your game and check if your book is there. Unless you specified otherwise, it should
 be in the Miscellaneous creative tab, but you can also search for it.
 
-If you don't see it, check if patchouli is properly loaded and if there's any errors in
+If you don't see it, check if Patchouli is properly loaded and if there's any errors in
 your log.
 
 Everything after this can be hot loaded without closing the game, so feel free to keep it
 open as you do further edits.
 
 ### 5. Add Stub Content
-Time to add some content to your book. Go to your book's folder and then en_us, and create
+Time to add some content to your book. Go to your book's folder and then `en_us`, and create
 folders and files so that it looks like this:
 
 * en_us
@@ -103,10 +103,9 @@ folders and files so that it looks like this:
         * test_category.json (empty file)
     * templates (empty folder)
 
-Open test_entry.json and test_category.json and fill them in as follows:
+Open `test_entry.json` and `test_category.json` and fill them in as follows:
 
-**test_entry.json**:
-```json
+```json title="test_entry.json"
 {
     "name": "Test Entry",
     "icon": "minecraft:writable_book",
@@ -120,8 +119,7 @@ Open test_entry.json and test_category.json and fill them in as follows:
 }
 ```
 
-**test_category.json**
-```json
+```json title="test_category".json
 {
 	"name": "Test Category",
 	"description": "This is a test category for testing!",

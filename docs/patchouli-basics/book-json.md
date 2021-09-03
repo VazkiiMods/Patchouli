@@ -6,74 +6,59 @@ sidebar_position: 2
 
 This page details every key you can have in a book.json file.
 
-* **name** (String, _mandatory_)   
+* **name** (String, _mandatory_)
 
 The name of the book that will be displayed in the book item and the GUI. For modders,
 this can be a localization key.
 
-* **landing_text** (String, _mandatory_)  
+* **landing_text** (String, _mandatory_)
 
 The text that will be displayed in the landing page of your book. This text can be
 [formatted](/docs/patchouli-basics/text-formatting). For modders, this can be a
 localization key.
 
-* **advancement_namespaces** (String Array)
-
-**As of Patchouli 1.15.2-1.2-28 (backported to 1.12 Patchouli 1.0-21), this field is no
-longer necessary, and any advancement can be used to lock content.**
-
-The advancement namespaces this book uses for locking its entries. Any namespaces used
-need to be declared here so Patchouli knows to track them and listen for them to unlock
-stuff. As an example, if you use "yourmod:cooladvancement" in one of your entries, you
-need to have "yourmod" in this array. See [Locking Content with
-Advancements](docs/patchouli-basics/advancement-locking) for more information on
-advancement locking.
-
-Adding "minecraft" to this array isn't allowed to prevent a needlessly large amount of
-data from being sent around.
-
-* **book_texture** (String)  
+* **book_texture** (String)
 
 The texture for the background of the book GUI. You can use any resource location for
 this, but it is *highly recommended* you use one of the built in ones so that if new
 elements get added, you have them right away. The ones that Patchouli comes with are the
 following:
 
-1. patchouli:textures/gui/book_blue.png
-2. patchouli:textures/gui/book_brown.png (default value)
-3. patchouli:textures/gui/book_cyan.png
-4. patchouli:textures/gui/book_gray.png
-5. patchouli:textures/gui/book_green.png
-6. patchouli:textures/gui/book_purple.png
-7. patchouli:textures/gui/book_red.png  
+1. `patchouli:textures/gui/book_blue.png`
+2. `patchouli:textures/gui/book_brown.png` (default value)
+3. `patchouli:textures/gui/book_cyan.png`
+4. `patchouli:textures/gui/book_gray.png`
+5. `patchouli:textures/gui/book_green.png`
+6. `patchouli:textures/gui/book_purple.png`
+7. `patchouli:textures/gui/book_red.png`
 
 In the advent you want to use a custom one, you can copy any of these and make any
 modifications you need.
 
-* **filler_texture** (String)  
+* **filler_texture** (String)
 
 The texture for the page filler (the cube thing that shows up on entries with an odd
 number of pages). Define if you want something else than the cube to fill your empty
 pages.
 
-* **crafting_texture** (String)  
+* **crafting_texture** (String)
 
 The texture for the crafting entry elements. Define if you want custom backdrops for
 these. Not really worth defining in most cases but if you want to be cool and stylish, you
 can.
 
-* **model** (String)  
+* **model** (String)
 
 The model for the book's item. This can be any standard item model you define. Patchouli
 provides a few you can use:
 
-1. patchouli:book_blue
-2. patchouli:book_brown (default value)
-3. patchouli:book_cyan
-4. patchouli:book_gray
-5. patchouli:book_green
-6. patchouli:book_purple
-7. patchouli:book_red
+1. `patchouli:book_blue`
+2. `patchouli:book_brown` (default value)
+3. `patchouli:book_cyan`
+4. `patchouli:book_gray`
+5. `patchouli:book_green`
+6. `patchouli:book_purple`
+7. `patchouli:book_red`
 
 FOR MODDERS: Do NOT use any of the above models. In the sake of books being
 distinguishable, having multiple mods using the same base textures is a bad idea, make
@@ -81,24 +66,25 @@ your own! They're provided for modpack makers. Patchouli automatically takes car
 registering any models you pass in to this, so you don't have to mess with any code for
 them yourself.
 
-A property called "_completion_" is provided for book models, where its value is equal to
+An [item predicate](https://minecraft.fandom.com/wiki/Model#Item_predicates)
+called `patchouli:completion` is provided for book models, hose its value is equal to
 the fraction of entries unlocked in the book, which allows book models to change their
 display as they're more completed.
 
-* **text_color** (String)  
+* **text_color** (String)
 
 The color of regular text, in hex ("RRGGBB", # not necessary). Defaults to "000000".
 
-* **header_color** (String)  
+* **header_color** (String)
 
 The color of header text, in hex ("RRGGBB", # not necessary). Defaults to "333333".
 
-* **nameplate_color** (String)  
+* **nameplate_color** (String)
 
 The color of the book nameplate in the landing page, in hex ("RRGGBB", # not
 necessary). Defaults to "FFDD00".
 
-* **link_color** (String)  
+* **link_color** (String)
 
 The color of link text, in hex ("RRGGBB", # not necessary). Defaults to "0000EE".
 
@@ -119,12 +105,12 @@ necessary). Defaults to "DDDDDD".
 * **open_sound** (String)
 
 The sound effect played when opening this book. This is a resource location pointing to
-the sound (which, for mooders, needs to be properly registered).
+the sound (which, for modders, needs to be properly registered).
 
 * **flip_sound** (String)
 
 The sound effect played when flipping through pages in this book. This is a resource
-location pointing to the sound (which, for mooders, needs to be properly registered).
+location pointing to the sound (which, for modders, needs to be properly registered).
 
 * **index_icon** (String)
 
@@ -171,8 +157,9 @@ it to any tab you wish. Here are the names for the vanilla tabs:
 8. combat
 9. brewing
 
-For modders, simply put in the same string you use when constructing your creative tab here, and the book will show up there.  
-On Fabric, the replace the `:` with a `.` in the identifier you used.
+For modders, simply put in the same string you use when constructing your creative tab here, and the book will show up there.
+On Fabric, use the name of the `Identifier` you registered your tab with, but with the `:`
+replaced with a `.`.
 
 * **advancements_tab** (String)
 
@@ -213,7 +200,7 @@ what they do.
 
 * **pause_game** (boolean)
 
-Default true. When set true, opening any GUI from this book will pause the game in
+Default false. When set to true, opening any GUI from this book will pause the game in
 singleplayer.
 
 ### Extension Keys

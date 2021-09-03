@@ -66,7 +66,8 @@ Here's an example of using a text component:
 ```
 
 ## Text Components
-Component type: **"patchouli:text"**  
+Component type: **"patchouli:text"**
+
 Draws a text block, which supports [formatting](/docs/patchouli-basics/text-formatting).
 
 **Attributes:**
@@ -91,7 +92,8 @@ else. If you set this to more than that, there will be space between the text li
 you set it to less, the lines will overlap and look bad.
 
 ## Item Components
-Component type: **"patchouli:item"**  
+Component type: **"patchouli:item"**
+
 Draws an item, which you can hover over to see its tooltip, or click to open the page that
 shows how to craft it, if there's one.
 
@@ -119,7 +121,8 @@ Defaults to false. Set this to true to mark any page this component is used in a
 the item, you can shift-click the item to be taken to the page that uses this component.
 
 ## Image Components
-Component type: **"patchouli:image"**  
+Component type: **"patchouli:image"**
+
 Draws an image, or part of it.
 
 **Attributes:**
@@ -142,13 +145,14 @@ top.
 
 * **u** (integer)
 
-How many pixels from the left of the image you want to start drawing the image. If you
-don't set this, it'll default to 0, and start drawing at the very left.
+How many pixels to shift rightwards before reading the image's pixel data. Default is 0,
+meaning to start at the very left of the image.
 
 * **v** (integer)
 
-How many pixels from the top of the image you want to start drawing the image. If you
-don't set this, it'll default to 0, and start drawing at the very top.
+
+How many pixels to shift downwards before reading the image's pixel data. Default is 0,
+meaning to start at the very top of the image.
 
 * **texture_width** (integer)
 
@@ -165,7 +169,8 @@ your image's height is different from 256, you need to set the value, or it'll l
 The scale at which you want to display this image. Defaults to 1.
 
 ## Header Components
-Component type: **"patchouli:header"**  
+Component type: **"patchouli:header"**
+
 Draws a text header, much like you'd see in the titles of categories and entries. Does not
 draw the separator line that appears below those.
 
@@ -193,7 +198,8 @@ The scale at which you want to display this headear. Defaults to 1.
   where headers are for the default pages.
 
 ## Entity Components
-Component type: **"patchouli:entity"**  
+Component type: **"patchouli:entity"**
+
 Renders an entity which rotates around.
 
 **Attributes:**
@@ -219,7 +225,8 @@ The rotation at which this entity should be rendered. This value is only used if
 is false. The default is -45.
 
 ## Separator Components
-Component type: **"patchouli:separator"**  
+Component type: **"patchouli:separator"**
+
 Draws a separator line using your book's texture.
 
 **Does not have any additional attributes.**
@@ -229,7 +236,8 @@ Draws a separator line using your book's texture.
   where separators are for the default pages.
 
 ## Frame Components
-Component type: **"patchouli:frame"**  
+Component type: **"patchouli:frame"**
+
 Draws a frame for a 200x200 image using your book's texture. This looks just like the
 frame on framed images in image pages.
 
@@ -241,7 +249,8 @@ frame on framed images in image pages.
   where frames are for the default pages.
 
 ## Tooltip Components
-Component type: **"patchouli:tooltip"**  
+Component type: **"patchouli:tooltip"**
+
 Makes the GUI render a tooltip when the cursor is over the section specified here.
 
 
@@ -262,7 +271,8 @@ The width of this tooltip area.
 The height of this tooltip area.
 
 ## Custom Components
-Component type: **"patchouli:custom"**  
+Component type: **"patchouli:custom"**
+
 Modders only: Does whatever you'd like! You can pass in an instance of an interface in the
 patchouli API for it to instantiate and pass stuff to.
 

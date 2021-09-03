@@ -2,9 +2,11 @@
 
 This page details every key you can have in a Category json file.
 
-While not described as a format key, the "category ID" of a category is the path necessary
-to get to it from /en_us/categories. So if your category is in
-"/en_us/categories/misc/cool_stuff.json", its ID would be "misc/cool_stuff".
+The "category ID" of a category is the path necessary
+to get to it from `/en_us/categories`. So if your category is in
+`/en_us/categories/misc/cool_stuff.json`, its ID would be `patchouli:misc/cool_stuff`.
+
+For modders, the domain used is the domain in which the book is defined.
 
 * **name** (String, _mandatory_)
 
@@ -20,7 +22,7 @@ The description for this category. This displays in the category's main page, an
 The icon for this category. This can either be an [ItemStack
 String](/docs/patchouli-advanced/itemstack-format), if you want an item to be the icon, or
 a resource location pointing to a square texture. If you want to use a resource location,
-make sure to end it with .png
+make sure to end it with `.png`.
 
 * **parent** (String)
 
@@ -44,5 +46,3 @@ make, you can set what order they display in.
 Defaults to false. Set this to true to make this category a secret category. Secret
 categories don't display a locked icon when locked, and instead will not display at all
 until unlocked.
-
-

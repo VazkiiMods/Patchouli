@@ -1,14 +1,12 @@
----
-sidebar_position: 4
----
-
 # Entry JSON Format
 
 This page details every key you can have in an Entry json file.
 
-While not described as a format key, the "entry ID" of an entry is the path necessary to
-get to it from /en_us/entries. So if your entry is in
-"/en_us/entries/misc/cool_stuff.json", its ID would be "misc/cool_stuff".
+The "entry ID" of an entry is the path necessary to
+get to it from `/en_us/entries`. So if your entry is in
+`/en_us/entries/misc/cool_stuff.json`, its ID would be `patchouli:misc/cool_stuff`.
+
+For modders, the domain used is the domain in which the book is defined.
 
 * **name** (String, _mandatory_)
 
@@ -84,7 +82,7 @@ The sorting number for this entry. Defaults to 0. Entries with the same sorting 
 sorted alphabetically, whereas entries with different sorting numbers are sorted from
 lowest to highest. Priority entries always show up first.
 
-It's recommended you do NOT use this, as breaking the alphabetical sorting order can make
+It's recommended you do *not* use this, as breaking the alphabetical sorting order can make
 things confusing, but it's left as an option.
 
 * **turnin** (String)
