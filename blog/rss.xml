@@ -2,14 +2,14 @@
 <rss version="2.0">
     <channel>
         <title>Patchouli Blog</title>
-        <link>https://vazkiimods.github.io/patchouli/blog</link>
+        <link>https://vazkiimods.github.io/Patchouli/blog</link>
         <description>Patchouli Blog</description>
         <lastBuildDate>Tue, 31 Aug 2021 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <item>
             <title><![CDATA[New Patchouli Docs]]></title>
-            <link>https://vazkiimods.github.io/patchouli/blog/hello</link>
+            <link>https://vazkiimods.github.io/Patchouli/blog/hello</link>
             <guid>hello</guid>
             <pubDate>Tue, 31 Aug 2021 00:00:00 GMT</pubDate>
             <description><![CDATA[Hi.]]></description>
