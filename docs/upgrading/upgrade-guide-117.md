@@ -41,6 +41,9 @@ been from 1.14-1.16.
 You opt in by specifying the above flag, and moving everything that isn't your book json
 from the `data` folder to `assets`.
 
+An example of this migration being done can be seen
+[here](https://github.com/VazkiiMods/Botania/commit/3f6266ce88231660da3ff305977edcb2e813e8d6?w=1).
+
 ### Convenience recipe type for books
 
 Crafting recipes for Patchouli books can now be provided using the `patchouli:book_recipe` and `patchouli:shapeless_book_recipe` recipe types as a convenience, and to avoid issues related to lack of default support on Fabric for NBT recipe output. These recipes use the syntax based on vanilla `minecraft:crafting_shaped` and `minecraft:crafting_shapeless` types, replacing the `output` object with a `book` string set to the ID of the book.
