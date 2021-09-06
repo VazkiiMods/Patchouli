@@ -61,13 +61,11 @@ public final class BookContentExternalLoader implements BookContentLoader {
 				stream = new FileInputStream(targetFile);
 				return stream;
 			} catch (IOException e) {
-				Patchouli.LOGGER.catching(e);
+				if (fallback != null) {
+					Patchouli.LOGGER.warn("Failed to load " + resloc + ". Switching to fallback.", e);
+					return loadJson(book, fallback, null);
+				}
 			}
-		}
-
-		if (fallback != null) {
-			Patchouli.LOGGER.warn("Failed to load " + resloc + ". Switching to fallback.");
-			return loadJson(book, fallback, null);
 		}
 
 		return null;
