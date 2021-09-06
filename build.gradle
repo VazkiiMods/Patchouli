@@ -22,9 +22,6 @@ if (System.getenv().RELEASE_MODE == null) {
 group = "vazkii.${config.mod_id}"
 archivesBaseName = "${config.mod_name}"
 
-minecraft {
-}
-
 spotless {
 	enforceCheck = false // workaround around jenkins having wrong line endings in some files
 	// we explicitly check in github actions builds
@@ -60,11 +57,11 @@ dependencies {
 	include "me.zeroeightsix:fiber:0.23.0-2"
 
 	minecraft "com.mojang:minecraft:1.17.1"
-	mappings minecraft.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:0.11.3"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:0.11.6"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.37.0+1.17"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.37.2+1.17"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
