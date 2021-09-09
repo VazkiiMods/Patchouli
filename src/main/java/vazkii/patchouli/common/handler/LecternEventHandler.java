@@ -12,9 +12,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
+
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -50,15 +49,15 @@ public class LecternEventHandler {
 		return InteractionResult.PASS;
 	}
 
-    public static void onRightClick(PlayerInteractEvent.RightClickBlock evt) {
+	public static void onRightClick(PlayerInteractEvent.RightClickBlock evt) {
 		InteractionResult result = LecternEventHandler.rightClick(evt.getPlayer(), evt.getWorld(), evt.getHand(), evt.getHitVec());
 		if (result.consumesAction()) {
 			evt.setCanceled(true);
 			evt.setCancellationResult(result);
 		}
-    }
+	}
 
-    private static void takeBook(Player player, LecternBlockEntity tileEntity) {
+	private static void takeBook(Player player, LecternBlockEntity tileEntity) {
 		ItemStack itemstack = tileEntity.getBook();
 		tileEntity.setBook(ItemStack.EMPTY);
 		LecternBlock.resetBookState(tileEntity.getLevel(), tileEntity.getBlockPos(), tileEntity.getBlockState(), false);

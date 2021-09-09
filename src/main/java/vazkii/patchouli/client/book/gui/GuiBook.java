@@ -38,7 +38,6 @@ import vazkii.patchouli.client.book.gui.button.GuiButtonBookMarkRead;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.mixin.client.AccessorScreen;
 
 import javax.annotation.Nullable;
 
