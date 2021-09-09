@@ -12,8 +12,7 @@
     "client.AccessorScreen",
     "client.MixinClientAdvancements",
     "client.MixinCrashReport",
-    "client.MixinInventoryScreen",
-    "client.MixinModelManager"
+    "client.MixinInventoryScreen"
   ],
   "injectors": {
     "defaultRequire": 1

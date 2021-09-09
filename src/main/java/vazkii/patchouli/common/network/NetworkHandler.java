@@ -10,17 +10,15 @@ import vazkii.patchouli.common.network.message.MessageReloadBookContents;
 
 public class NetworkHandler {
 	private static final String PROTOCOL_VERSION = "1";
-	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
-			.named(new ResourceLocation(Patchouli.MOD_ID, "main"))
-			.networkProtocolVersion(() -> PROTOCOL_VERSION)
-			.clientAcceptedVersions(PROTOCOL_VERSION::equals)
-			.serverAcceptedVersions(PROTOCOL_VERSION::equals)
-			.simpleChannel();
+	public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(Patchouli.MOD_ID, "main"), () -> PROTOCOL_VERSION, PROTOCOL_VERSION::equals, PROTOCOL_VERSION::equals);
+	private static int i = 0;
 
-	public static void registerMessages() {
-		int i = 0;
-		CHANNEL.registerMessage(i++, MessageOpenBookGui.class, MessageOpenBookGui::encode, MessageOpenBookGui::decode, MessageOpenBookGui::handle);
-		CHANNEL.registerMessage(i++, MessageReloadBookContents.class, MessageReloadBookContents::encode, MessageReloadBookContents::decode, MessageReloadBookContents::handle);
+	private static synchronized int nextId() {
+		return i++;
 	}
 
+	public static void registerMessages() {
+		CHANNEL.registerMessage(nextId(), MessageOpenBookGui.class, MessageOpenBookGui::encode, MessageOpenBookGui::decode, MessageOpenBookGui::handle);
+		CHANNEL.registerMessage(nextId(), MessageReloadBookContents.class, MessageReloadBookContents::encode, MessageReloadBookContents::decode, MessageReloadBookContents::handle);
+	}
 }

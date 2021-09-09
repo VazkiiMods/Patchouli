@@ -5,14 +5,13 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraftforge.common.ForgeTagHandler;
 
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.TriPredicate;
@@ -40,7 +39,7 @@ public class StringStateMatcher {
 		if (state != null) {
 			return new ExactMatcher(state, parser.getProperties());
 		} else {
-			Tag.Named<Block> tag = ForgeTagHandler.makeWrapperTag(Registry.BLOCK_REGISTRY.getRegistryName(), parser.getTag());
+			Tag.Named<Block> tag = BlockTags.createOptional(Objects.requireNonNull(parser.getTag()));
 			return new TagMatcher(tag, parser.getVagueProperties());
 		}
 	}

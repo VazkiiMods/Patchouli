@@ -12,6 +12,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -63,7 +64,7 @@ public abstract class BookRecipe<T extends CraftingRecipe> implements CraftingRe
 		public T fromJson(ResourceLocation id, JsonObject json) {
 			if (!json.has("result")) {
 				JsonObject object = new JsonObject();
-				object.addProperty("item", PatchouliItems.BOOK_ID.toString());
+				object.addProperty("item", PatchouliItems.BOOK.getId().toString());
 				json.add("result", object);
 			}
 			R recipe = getSerializer().fromJson(id, json);

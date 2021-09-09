@@ -11,8 +11,9 @@ import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
 import javax.annotation.Nullable;
-
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -49,18 +50,15 @@ public final class BookContentClasspathLoader implements BookContentLoader {
 		String path = "data/" + resloc.getNamespace() + "/" + resloc.getPath();
 		Patchouli.LOGGER.debug("Loading {}", path);
 
-		Object modObject = ModList.get().getModObjectById(book.owner.getModId()).get();
-		InputStream stream = modObject.getClass().getResourceAsStream(path);
-		if (stream != null) {
-			return stream;
+		try {
+			return Files.newInputStream(ModList.get().getModFileById(book.owner.getModId()).getFile().findResource(path));
+		} catch (IOException ex) {
+			if (fallback != null) {
+				Patchouli.LOGGER.warn("Failed to load {}. Switching to fallback.", resloc);
+				return loadJson(book, fallback, null);
+			}
 		}
-
-		if (fallback != null) {
-			Patchouli.LOGGER.debug("Failed to load {}. Switching to fallback.", resloc);
-			return loadJson(book, fallback, null);
-		} else {
-			Patchouli.LOGGER.warn("Failed to load {}.", resloc);
-			return null;
-		}
+		Patchouli.LOGGER.warn("Failed to load {}.", resloc);
+		return null;
 	}
 }

@@ -36,12 +36,12 @@ public abstract class MixinInventoryScreen extends EffectRenderingInventoryScree
 
 		Widget replaced = null;
 		Button replacement = null;
-		for (int i = 0; i < ((AccessorScreen) this).getRenderables().size(); i++) {
-			Widget button = ((AccessorScreen) this).getRenderables().get(i);
+		for (int i = 0; i < this.renderables.size(); i++) {
+			Widget button = this.renderables.get(i);
 			if (button instanceof ImageButton tex) {
 				replaced = button;
 				replacement = new GuiButtonInventoryBook(book, tex.x, tex.y - 1);
-				((AccessorScreen) this).getRenderables().set(i, replacement);
+				this.renderables.set(i, replacement);
 				break;
 			}
 		}

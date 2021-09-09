@@ -175,7 +175,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public void removeDrawablesIf(Predicate<Widget> pred) {
-		((AccessorScreen) (this)).getRenderables().removeIf(pred);
+		this.renderables.removeIf(pred);
 	}
 
 	public void removeDrawablesIn(Collection<?> coll) {
@@ -551,7 +551,7 @@ public abstract class GuiBook extends Screen {
 
 	public static void playBookFlipSound(Book book) {
 		if (ClientTicker.ticksInGame - lastSound > 6) {
-			SoundEvent sfx = PatchouliSounds.getSound(book.flipSound, PatchouliSounds.book_flip);
+			SoundEvent sfx = PatchouliSounds.getSound(book.flipSound, PatchouliSounds.BOOK_FLIP);
 			Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(sfx, (float) (0.7 + Math.random() * 0.3)));
 			lastSound = ClientTicker.ticksInGame;
 		}

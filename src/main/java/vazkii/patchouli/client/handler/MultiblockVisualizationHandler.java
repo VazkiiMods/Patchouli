@@ -37,6 +37,8 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -64,6 +66,7 @@ public class MultiblockVisualizationHandler {
 
 	public static boolean hasMultiblock;
 	public static Bookmark bookmark;
+	public static IIngameOverlay OVERLAY;
 
 	private static IMultiblock multiblock;
 	private static Component name;
@@ -179,19 +182,13 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static void onWorldRenderLast(PoseStack ms) {
-		if (hasMultiblock && multiblock != null) {
-			renderMultiblock(Minecraft.getInstance().level, ms);
-		}
-	}
-
 	public static void anchorTo(BlockPos target, Rotation rot) {
 		pos = target;
 		facingRotation = rot;
 		isAnchored = true;
 	}
 
-	private static InteractionResult onPlayerInteract(Player player, Level world, InteractionHand hand, BlockHitResult hit) {
+	static InteractionResult onPlayerInteract(Player player, Level world, InteractionHand hand, BlockHitResult hit) {
 		if (hasMultiblock && !isAnchored && player == Minecraft.getInstance().player) {
 			anchorTo(hit.getBlockPos(), getRotation(player));
 			return InteractionResult.SUCCESS;
@@ -213,23 +210,7 @@ public class MultiblockVisualizationHandler {
 	}
 
 	public static void init() {
-		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
-			InteractionResult result = MultiblockVisualizationHandler.onPlayerInteract(e.getPlayer(), e.getWorld(), e.getHand(), e.getHitVec());
-			if (result.consumesAction()) {
-				e.setCanceled(true);
-				e.setCancellationResult(result);
-			}
-		});
-		MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent e) -> {
-			if (e.phase == TickEvent.Phase.END) {
-				MultiblockVisualizationHandler.onClientTick(Minecraft.getInstance());
-			}
-		});
-		MinecraftForge.EVENT_BUS.addListener((RenderGameOverlayEvent.Post e) -> {
-			if (e.getType() == RenderGameOverlayEvent.ElementType.ALL) {
-				MultiblockVisualizationHandler.onRenderHUD(e.getMatrixStack(), e.getPartialTicks());
-			}
-		});
+		OVERLAY = OverlayRegistry.registerOverlayTop("Patchouli Multiblock Overlay", (gui, mStack, partialTicks, width, height) -> MultiblockVisualizationHandler.onRenderHUD(mStack, partialTicks));
 	}
 
 	public static void renderMultiblock(Level world, PoseStack ms) {
@@ -375,7 +356,7 @@ public class MultiblockVisualizationHandler {
 	}
 
 	private static MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
-		BufferBuilder fallback = ((AccessorMultiBufferSource) original).getFallbackBuffer();
+		BufferBuilder fallback = ((AccessorMultiBufferSource) original).getFallbackBuffer(); // TODO Accessos are broken
 		Map<RenderType, BufferBuilder> layerBuffers = ((AccessorMultiBufferSource) original).getFixedBuffers();
 		Map<RenderType, BufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
 		for (Map.Entry<RenderType, BufferBuilder> e : layerBuffers.entrySet()) {
@@ -422,5 +403,4 @@ public class MultiblockVisualizationHandler {
 			}
 		}
 	}
-
 }

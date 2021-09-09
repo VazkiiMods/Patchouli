@@ -20,6 +20,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 		this.recipeType = recipeType;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Nullable
 	private T getRecipe(ResourceLocation id) {
 		if (Minecraft.getInstance().level == null) {
