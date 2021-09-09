@@ -2,9 +2,9 @@ package vazkii.patchouli.common.book;
 
 import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
-
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModList;
+
 import vazkii.patchouli.common.base.Patchouli;
 
 import java.io.File;

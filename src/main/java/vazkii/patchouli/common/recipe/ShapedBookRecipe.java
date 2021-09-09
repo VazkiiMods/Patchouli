@@ -3,6 +3,7 @@ package vazkii.patchouli.common.recipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+
 import vazkii.patchouli.common.item.PatchouliItems;
 
 /**

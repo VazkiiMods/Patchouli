@@ -19,7 +19,9 @@ public class PatchouliSounds {
 	}
 
 	public static SoundEvent getSound(ResourceLocation key, Supplier<SoundEvent> fallback) {
-		if (!ForgeRegistries.SOUND_EVENTS.containsKey(key)) return fallback.get();
+		if (!ForgeRegistries.SOUND_EVENTS.containsKey(key)) {
+			return fallback.get();
+		}
 		return ForgeRegistries.SOUND_EVENTS.getValue(key);
 	}
 

@@ -21,8 +21,8 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
-
 import net.minecraftforge.common.MinecraftForge;
+
 import org.lwjgl.glfw.GLFW;
 
 import vazkii.patchouli.api.BookDrawScreenEvent;
@@ -37,7 +37,6 @@ import vazkii.patchouli.client.book.gui.button.GuiButtonBookMarkRead;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.mixin.client.AccessorScreen;
 
 import javax.annotation.Nullable;
 
