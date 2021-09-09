@@ -1,0 +1,25 @@
+modLoader = "javafml"
+loaderVersion = "[37,)"
+license = "CC BY-NC-SA 3.0"
+
+[[mods]]
+modId = "patchouli"
+version = "${version}"
+displayName = "Patchouli"
+logoFile = "icon.png"
+authors = "Vazkii, williewillus"
+description = "Patchouli: Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers"
+
+[[dependencies.patchouli]]
+modId = "forge"
+mandatory = true
+versionRange = "[37.0.47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.patchouli]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.17.1,1.18)"
+ordering = "NONE"
+side = "BOTH"

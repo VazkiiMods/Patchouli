@@ -1,10 +1,9 @@
 package vazkii.patchouli.client.book;
 
 import net.minecraft.resources.ResourceLocation;
-
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
 import org.apache.commons.io.FilenameUtils;
-
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -50,7 +49,7 @@ public final class BookContentClasspathLoader implements BookContentLoader {
 		Patchouli.LOGGER.debug("Loading {}", path);
 
 		try {
-			return Files.newInputStream(book.owner.getPath(path));
+			return Files.newInputStream(ModList.get().getModFileById(book.owner.getModId()).getFile().findResource(path));
 		} catch (IOException ex) {
 			if (fallback != null) {
 				Patchouli.LOGGER.warn("Failed to load " + resloc + ". Switching to fallback.");

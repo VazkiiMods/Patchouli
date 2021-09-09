@@ -52,7 +52,7 @@ public class BookTextRenderer {
 
 	private void build() {
 		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, baseStyle);
-		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width, PatchouliConfig.overflowMode.getValue());
+		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width, PatchouliConfig.overflowMode.get());
 		layouter.layout(Minecraft.getInstance().font, parser.parse(text));
 		scale = layouter.getScale();
 		words = layouter.getWords();

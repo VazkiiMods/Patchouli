@@ -3,6 +3,7 @@ package vazkii.patchouli.common.recipe;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import vazkii.patchouli.common.item.PatchouliItems;
 
 /**
  * Recipe type for shaped book recipes.
@@ -10,7 +11,6 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
  * "result" object is replaced by a "book" string for the book ID.
  */
 public class ShapedBookRecipe extends BookRecipe<ShapedRecipe> {
-	public static final RecipeSerializer<ShapedBookRecipe> SERIALIZER = new Serializer();
 
 	public ShapedBookRecipe(ShapedRecipe compose, ResourceLocation outputBook) {
 		super(compose, outputBook);
@@ -18,10 +18,10 @@ public class ShapedBookRecipe extends BookRecipe<ShapedRecipe> {
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
-		return SERIALIZER;
+		return PatchouliItems.SHAPED_BOOK_RECIPE.get();
 	}
 
-	private static class Serializer extends WrapperSerializer<ShapedRecipe, ShapedBookRecipe> {
+	public static class Serializer extends WrapperSerializer<ShapedRecipe, ShapedBookRecipe> {
 		@Override
 		protected RecipeSerializer<ShapedRecipe> getSerializer() {
 			return SHAPED_RECIPE;

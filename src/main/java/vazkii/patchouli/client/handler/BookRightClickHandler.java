@@ -20,6 +20,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.gui.IIngameOverlay;
+import net.minecraftforge.client.gui.OverlayRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import vazkii.patchouli.client.RenderHelper;
@@ -28,6 +30,24 @@ import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 public class BookRightClickHandler {
+
+	public static IIngameOverlay OVERLAY;
+
+	public static void onRightClick(Level world, Player player) {
+		ItemStack bookStack = player.getMainHandItem();
+
+		if (world.isClientSide && player.isShiftKeyDown()) {
+			Book book = ItemStackUtil.getBookFromStack(bookStack);
+
+			if (book != null) {
+				Pair<BookEntry, Integer> hover = BookRightClickHandler.getHoveredEntry(book);
+				if (hover != null) {
+					int page = hover.getSecond() * 2;
+					book.getContents().setTopEntry(hover.getFirst().getId(), page);
+				}
+			}
+		}
+	}
 
 	private static void onRenderHUD(PoseStack ms, float partialTicks) {
 		Minecraft mc = Minecraft.getInstance();
@@ -64,34 +84,10 @@ public class BookRightClickHandler {
 	}
 
 	public static void init() {
-		MinecraftForge.EVENT_BUS.addListener((RenderGameOverlayEvent.Post evt) -> {
-			if (evt.getType() == RenderGameOverlayEvent.ElementType.ALL) {
-				onRenderHUD(evt.getMatrixStack(), evt.getPartialTicks());
-			}
-		});
-		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock evt)-> {
-			onRightClick(evt.getPlayer(), evt.getWorld(), evt.getHand(), evt.getHitVec());
-		});
+		OVERLAY = OverlayRegistry.registerOverlayTop("Patchouli Book", (gui, mStack, partialTicks, width, height) -> onRenderHUD(mStack, partialTicks));
 	}
 
-	private static InteractionResult onRightClick(Player player, Level world, InteractionHand hand, BlockHitResult hit) {
-		ItemStack bookStack = player.getMainHandItem();
-
-		if (world.isClientSide && player.isShiftKeyDown()) {
-			Book book = ItemStackUtil.getBookFromStack(bookStack);
-
-			if (book != null) {
-				Pair<BookEntry, Integer> hover = getHoveredEntry(book);
-				if (hover != null) {
-					int page = hover.getSecond() * 2;
-					book.getContents().setTopEntry(hover.getFirst().getId(), page);
-				}
-			}
-		}
-		return InteractionResult.PASS;
-	}
-
-	private static Pair<BookEntry, Integer> getHoveredEntry(Book book) {
+	static Pair<BookEntry, Integer> getHoveredEntry(Book book) {
 		Minecraft mc = Minecraft.getInstance();
 		HitResult res = mc.hitResult;
 		if (res instanceof BlockHitResult) {
@@ -107,5 +103,4 @@ public class BookRightClickHandler {
 
 		return null;
 	}
-
 }

@@ -6,15 +6,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
-
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.base.Patchouli;
-import vazkii.patchouli.mixin.AccessorRecipeManager;
 
 import javax.annotation.Nullable;
-
-import java.util.Map;
 
 public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends PageDoubleRecipe<T> {
 	private final RecipeType<? extends T> recipeType;
@@ -23,11 +19,12 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 		this.recipeType = recipeType;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Nullable
 	private T getRecipe(ResourceLocation id) {
+		if (Minecraft.getInstance().level == null) return null;
 		RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-		Map<ResourceLocation, T> recipes = (Map<ResourceLocation, T>) ((AccessorRecipeManager) manager).patchouli_byType(recipeType);
-		return recipes.get(id);
+		return (T) manager.byKey(id).filter(recipe -> recipe.getType() == recipeType).orElse(null);
 	}
 
 	@Override

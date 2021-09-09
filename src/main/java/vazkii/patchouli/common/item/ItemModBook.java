@@ -68,7 +68,7 @@ public class ItemModBook extends Item {
 	}
 
 	public static ItemStack forBook(ResourceLocation book) {
-		ItemStack stack = new ItemStack(PatchouliItems.book);
+		ItemStack stack = new ItemStack(PatchouliItems.BOOK.get());
 
 		CompoundTag cmp = new CompoundTag();
 		cmp.putString(TAG_BOOK, book.toString());
@@ -160,7 +160,7 @@ public class ItemModBook extends Item {
 			PatchouliAPI.get().openBookGUI((ServerPlayer) playerIn, book.id);
 
 			// This plays the sound to others nearby, playing to the actual opening player handled from the packet
-			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open);
+			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.BOOK_OPEN);
 			playerIn.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
 		}
 

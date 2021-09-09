@@ -13,7 +13,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+'
-        // classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
 
@@ -25,13 +25,11 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'pmd'
-// apply plugin: 'org.spongepowered.mixin'
+apply plugin: 'org.spongepowered.mixin'
 
-/*
 mixin {
     add sourceSets.main, "patchouli.refmap.json"
 }
-*/
 
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
@@ -79,18 +77,24 @@ minecraft {
 repositories {
     maven {
         name = "JEI"
-        url "https://dvs1.progwml6.com/files/maven/"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        name = 'Sponge maven'
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
     }
 }
 
-dependencies {
-    minecraft "net.minecraftforge:forge:${mc_version}-37.0.1"
-    annotationProcessor 'org.spongepowered:mixin:0.8.3:processor'
+configurations {
+    implementation.extendsFrom(annotationProcessor)
+}
 
-    /*
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:7.6.0.58:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:7.6.0.58")
-    */
+dependencies {
+    minecraft "net.minecraftforge:forge:${mc_version}-37.0.50"
+    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:8.0.0.16:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:8.0.0.16")
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.1'
@@ -101,6 +105,7 @@ test {
 }
 
 processResources {
+    duplicatesStrategy DuplicatesStrategy.INCLUDE
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'META-INF/mods.toml'
