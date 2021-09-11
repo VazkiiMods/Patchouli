@@ -20,6 +20,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
@@ -39,7 +40,7 @@ public final class ItemStackUtil {
 
 	public static String serializeStack(ItemStack stack) {
 		StringBuilder builder = new StringBuilder();
-		builder.append(Registry.ITEM.getKey(stack.getItem()).toString());
+		builder.append(ForgeRegistries.ITEMS.getKey(stack.getItem()).toString());
 
 		int count = stack.getCount();
 		if (count > 1) {
@@ -79,7 +80,7 @@ public final class ItemStackUtil {
 		int countn = Integer.parseInt(count);
 		ResourceLocation key = new ResourceLocation(tokens[0], tokens[1]);
 		Optional<Item> maybeItem = Registry.ITEM.getOptional(key);
-		if (!maybeItem.isPresent()) {
+		if (maybeItem.isEmpty()) {
 			throw new RuntimeException("Unknown item ID: " + key);
 		}
 		Item item = maybeItem.get();
@@ -146,7 +147,7 @@ public final class ItemStackUtil {
 			return ItemModBook.getBook(stack);
 		}
 
-		Collection<Book> books = BookRegistry.INSTANCE.books.values();
+		Collection<Book> books = BookRegistry.INSTANCE.getBooks();
 		for (Book b : books) {
 			if (b.getBookItem().sameItemStackIgnoreDurability(stack)) {
 				return b;
@@ -156,15 +157,9 @@ public final class ItemStackUtil {
 		return null;
 	}
 
-	public static class StackWrapper {
+	public record StackWrapper(ItemStack stack) {
 
 		public static final StackWrapper EMPTY_WRAPPER = new StackWrapper(ItemStack.EMPTY);
-
-		public final ItemStack stack;
-
-		public StackWrapper(ItemStack stack) {
-			this.stack = stack;
-		}
 
 		@Override
 		public boolean equals(Object obj) {

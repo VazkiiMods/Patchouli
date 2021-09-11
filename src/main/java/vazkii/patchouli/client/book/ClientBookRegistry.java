@@ -1,22 +1,18 @@
 package vazkii.patchouli.client.book;
 
 import com.google.gson.*;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-
 import vazkii.patchouli.client.book.page.*;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliSounds;
-import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
 
 import javax.annotation.Nullable;
-
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,13 +54,14 @@ public class ClientBookRegistry {
 		pageTypes.put(new ResourceLocation(Patchouli.MOD_ID, "quest"), PageQuest.class);
 	}
 
-	public void reload(boolean resourcePackBooksOnly) {
-		currentLang = Minecraft.getInstance().getLanguageManager().getSelected().getCode();
-		BookRegistry.INSTANCE.reloadContents(resourcePackBooksOnly);
+	public void reload() {
+		var mc = Minecraft.getInstance();
+		currentLang = mc.getLanguageManager().getSelected().getCode();
+		BookRegistry.INSTANCE.reloadContents(mc.getResourceManager());
 	}
 
 	public void reloadLocks(boolean suppressToasts) {
-		BookRegistry.INSTANCE.books.values().forEach(b -> b.reloadLocks(suppressToasts));
+		BookRegistry.INSTANCE.getBooks().forEach(b -> b.reloadLocks(suppressToasts));
 	}
 
 	/**
@@ -75,22 +72,21 @@ public class ClientBookRegistry {
 		Minecraft mc = Minecraft.getInstance();
 		currentLang = mc.getLanguageManager().getSelected().getCode();
 
-		Book book = BookRegistry.INSTANCE.books.get(bookStr);
-
-		if (book != null && !book.isExtension) {
-			book.getContents().checkValidCurrentEntry();
+		BookRegistry.INSTANCE.getBook(bookStr).ifPresent(book -> {
+			var contents = book.getContents();
+			contents.checkValidCurrentEntry();
 
 			if (entryId != null) {
-				book.getContents().setTopEntry(entryId, page);
+				contents.setTopEntry(entryId, page);
 			}
 
-			book.getContents().openLexiconGui(book.getContents().getCurrentGui(), false);
+			contents.openLexiconGui(contents.getCurrentGui(), false);
 
 			if (mc.player != null) {
 				SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.BOOK_OPEN);
 				mc.player.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
 			}
-		}
+		});
 	}
 
 	public static class LexiconPageAdapter implements JsonDeserializer<BookPage> {

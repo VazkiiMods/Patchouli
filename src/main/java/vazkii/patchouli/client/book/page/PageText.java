@@ -1,10 +1,7 @@
 package vazkii.patchouli.client.book.page;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
-
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 
@@ -36,9 +33,6 @@ public class PageText extends PageWithText {
 			if (mc.options.advancedItemTooltips) {
 				ResourceLocation res = parent.getEntry().getId();
 				smolText = res.toString();
-			} else if (entry.isExtension()) {
-				String name = entry.getTrueProvider().getOwnerName();
-				smolText = I18n.get("patchouli.gui.lexicon.added_by", name);
 			}
 
 			if (!smolText.isEmpty()) {

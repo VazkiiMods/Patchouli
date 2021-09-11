@@ -39,15 +39,6 @@ public class ForgeEventHandler {
 	}
 
 	@SubscribeEvent
-	public static void onModelBake(ModelBakeEvent evt) {
-		ModelResourceLocation key = new ModelResourceLocation(PatchouliItems.BOOK.getId(), "inventory");
-		BakedModel oldModel = evt.getModelRegistry().get(key);
-		if (oldModel != null) {
-			evt.getModelRegistry().put(key, new BookModel(oldModel, evt.getModelLoader()));
-		}
-	}
-
-	@SubscribeEvent
 	public static void onWorldRenderLast(RenderWorldLastEvent evt) {
 		if (MultiblockVisualizationHandler.hasMultiblock && MultiblockVisualizationHandler.getMultiblock() != null) {
 			MultiblockVisualizationHandler.renderMultiblock(Minecraft.getInstance().level, evt.getMatrixStack());
@@ -67,16 +58,6 @@ public class ForgeEventHandler {
 			evt.setCanceled(true);
 			evt.setCancellationResult(result);
 		}
-	}
-
-	@SubscribeEvent
-	public static void onModelRegister(ModelRegistryEvent e) {
-		BookRegistry.INSTANCE.books.values().stream()
-				.map(b -> new ModelResourceLocation(b.model, "inventory"))
-				.forEach(ModelLoader::addSpecialModel);
-
-		ItemPropertyFunction prop = (stack, world, entity, seed) -> ItemModBook.getCompletion(stack);
-		ItemProperties.register(PatchouliItems.BOOK.get(), new ResourceLocation(Patchouli.MOD_ID, "completion"), prop);
 	}
 
 	@SubscribeEvent

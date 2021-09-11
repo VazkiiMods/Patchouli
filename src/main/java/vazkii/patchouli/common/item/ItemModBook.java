@@ -22,6 +22,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraftforge.fml.ModList;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.base.PatchouliSounds;
@@ -80,8 +81,8 @@ public class ItemModBook extends Item {
 	@Override
 	public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {
 		String tabName = tab.getRecipeFolderName();
-		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			if (!b.noBook && !b.isExtension && (tab == CreativeModeTab.TAB_SEARCH || b.creativeTab.equals(tabName))) {
+		BookRegistry.INSTANCE.getBooks().forEach(b -> {
+			if (!b.noBook && (tab == CreativeModeTab.TAB_SEARCH || b.creativeTab.equals(tabName))) {
 				items.add(forBook(b));
 			}
 		});
@@ -92,7 +93,7 @@ public class ItemModBook extends Item {
 		if (res == null) {
 			return null;
 		}
-		return BookRegistry.INSTANCE.books.get(res);
+		return BookRegistry.INSTANCE.getBook(res).orElse(null);
 	}
 
 	private static ResourceLocation getBookId(ItemStack stack) {
@@ -107,8 +108,8 @@ public class ItemModBook extends Item {
 	@Override
 	public String getCreatorModId(ItemStack itemStack) {
 		Book book = getBook(itemStack);
-		if (book != null) {
-			return book.owner.getModId();
+		if (book != null && ModList.get().isLoaded(book.id.getNamespace())) {
+			return book.id.getNamespace();
 		}
 
 		return super.getCreatorModId(itemStack);

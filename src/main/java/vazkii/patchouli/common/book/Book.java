@@ -1,29 +1,24 @@
 package vazkii.patchouli.common.book;
 
 import com.google.gson.annotations.SerializedName;
-
 import net.minecraft.Util;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.forgespi.language.IModInfo;
-
 import vazkii.patchouli.client.base.ClientAdvancements;
-import vazkii.patchouli.client.book.*;
+import vazkii.patchouli.client.book.BookContents;
+import vazkii.patchouli.client.book.BookContentsBuilder;
+import vazkii.patchouli.client.book.BookEntry;
+import vazkii.patchouli.client.book.BookIcon;
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class Book {
@@ -47,17 +42,10 @@ public class Book {
 
 	private transient boolean wasUpdated = false;
 
-	public transient IModInfo owner;
 	public transient ResourceLocation id;
 	private transient ItemStack bookItem;
 
 	public transient int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
-
-	public transient boolean isExtension = false;
-	public transient List<Book> extensions = new LinkedList<>();
-	public transient Book extensionTarget;
-
-	public transient boolean isExternal;
 
 	// JSON Loaded properties
 
@@ -104,38 +92,26 @@ public class Book {
 
 	@SerializedName("show_toasts") public boolean showToasts = true;
 
-	@SerializedName("extend") public ResourceLocation extend;
-
-	@SerializedName("allow_extensions") public boolean allowExtensions = true;
-
 	@SerializedName("pause_game") public boolean pauseGame = false;
-
-	@SerializedName("use_resource_pack") public boolean useResourcePack = false;
 
 	public boolean i18n = false;
 
 	public Map<String, String> macros = new HashMap<>();
 
-	public void build(IModInfo owner, ResourceLocation resource, boolean external) {
-		this.owner = owner;
+	public void build(ResourceLocation resource) {
 		this.id = resource;
-		this.isExternal = external;
 
-		isExtension = extend != null;
+		textColor = 0xFF000000 | Integer.parseInt(textColorRaw, 16);
+		headerColor = 0xFF000000 | Integer.parseInt(headerColorRaw, 16);
+		nameplateColor = 0xFF000000 | Integer.parseInt(nameplateColorRaw, 16);
+		linkColor = 0xFF000000 | Integer.parseInt(linkColorRaw, 16);
+		linkHoverColor = 0xFF000000 | Integer.parseInt(linkHoverColorRaw, 16);
+		progressBarColor = 0xFF000000 | Integer.parseInt(progressBarColorRaw, 16);
+		progressBarBackground = 0xFF000000 | Integer.parseInt(progressBarBackgroundRaw, 16);
 
-		if (!isExtension) {
-			textColor = 0xFF000000 | Integer.parseInt(textColorRaw, 16);
-			headerColor = 0xFF000000 | Integer.parseInt(headerColorRaw, 16);
-			nameplateColor = 0xFF000000 | Integer.parseInt(nameplateColorRaw, 16);
-			linkColor = 0xFF000000 | Integer.parseInt(linkColorRaw, 16);
-			linkHoverColor = 0xFF000000 | Integer.parseInt(linkHoverColorRaw, 16);
-			progressBarColor = 0xFF000000 | Integer.parseInt(progressBarColorRaw, 16);
-			progressBarBackground = 0xFF000000 | Integer.parseInt(progressBarBackgroundRaw, 16);
-
-			for (String m : DEFAULT_MACROS.keySet()) {
-				if (!macros.containsKey(m)) {
-					macros.put(m, DEFAULT_MACROS.get(m));
-				}
+		for (String m : DEFAULT_MACROS.keySet()) {
+			if (!macros.containsKey(m)) {
+				macros.put(m, DEFAULT_MACROS.get(m));
 			}
 		}
 	}
@@ -168,30 +144,14 @@ public class Book {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void reloadContents() {
-		if (!isExtension) {
-			BookContentsBuilder builder = new BookContentsBuilder();
-			try {
-				builder.loadFrom(this);
-			} catch (Exception e) {
-				Patchouli.LOGGER.error("Error loading book {}, using empty contents and ignoring extensions", id, e);
-				contents = BookContents.empty(this, e);
-			}
-
-			for (Book extension : extensions) {
-				try {
-					builder.loadFrom(extension);
-				} catch (Exception e) {
-					Patchouli.LOGGER.error("Error loading extending book {} with addon book {}, skipping", id, extension.id, e);
-				}
-			}
-
-			try {
-				contents = builder.build(this);
-			} catch (Exception e) {
-				Patchouli.LOGGER.error("Error compiling book {}, using empty contents", id, e);
-				contents = BookContents.empty(this, e);
-			}
+	public void reloadContents(ResourceManager resourceManager) {
+		BookContentsBuilder builder = new BookContentsBuilder();
+		try {
+			builder.loadFrom(this, resourceManager);
+			contents = builder.build(this);
+		} catch (Exception e) {
+			Patchouli.LOGGER.error("Error compiling book {}, using empty contents", id, e);
+			contents = BookContents.empty(this, e);
 		}
 	}
 
@@ -201,17 +161,15 @@ public class Book {
 
 	@OnlyIn(Dist.CLIENT)
 	public void reloadLocks(boolean suppressToasts) {
-		contents.entries.values().forEach(BookEntry::updateLockStatus);
-		contents.categories.values().forEach(c -> c.updateLockStatus(true));
+		if (contents != null) {
+			contents.entries.values().forEach(BookEntry::updateLockStatus);
+			contents.categories.values().forEach(c -> c.updateLockStatus(true));
+		}
 
 		boolean updated = popUpdated();
 		if (updated && !suppressToasts && advancementsEnabled() && showToasts) {
 			ClientAdvancements.sendBookToast(this);
 		}
-	}
-
-	public String getOwnerName() {
-		return owner.getDisplayName();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -255,10 +213,6 @@ public class Book {
 
 	@OnlyIn(Dist.CLIENT)
 	public BookContents getContents() {
-		if (isExtension) {
-			return extensionTarget.getContents();
-		} else {
-			return contents != null ? contents : BookContents.empty(this, null);
-		}
+		return contents != null ? contents : BookContents.empty(this, null);
 	}
 }

@@ -98,10 +98,8 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Nonnull
 	@Override
 	public Component getSubtitle(@Nonnull ResourceLocation bookId) {
-		Book book = BookRegistry.INSTANCE.books.get(bookId);
-		if (book == null) {
-			throw new IllegalArgumentException("Book not found: " + bookId);
-		}
+		Book book = BookRegistry.INSTANCE.getBook(bookId)
+				.orElseThrow(() -> new IllegalArgumentException("Book not found: " + bookId));
 		return book.getSubtitle();
 	}
 

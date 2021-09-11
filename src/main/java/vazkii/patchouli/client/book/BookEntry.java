@@ -30,23 +30,25 @@ import java.util.stream.Collectors;
 
 public class BookEntry extends AbstractReadStateHolder implements Comparable<BookEntry> {
 
-	private String name, category, flag;
+	@SerializedName("name") private String name;
+	@SerializedName("category") private String category;
+	@SerializedName("flag") private String flag;
 
 	@SerializedName("icon") private String iconRaw;
 
-	private boolean priority = false;
-	private boolean secret = false;
+	@SerializedName("priority") private boolean priority = false;
+	@SerializedName("secret") private boolean secret = false;
 	@SerializedName("read_by_default") private boolean readByDefault = false;
-	private BookPage[] pages;
-	private String advancement, turnin;
-	private int sortnum;
+	@SerializedName("pages") private BookPage[] pages;
+	@SerializedName("advancement") private String advancement;
+	@SerializedName("turnin") private String turnin;
+	@SerializedName("sortnum") private int sortnum;
 	@SerializedName("entry_color") private String entryColorRaw;
 
 	@SerializedName("extra_recipe_mappings") private Map<String, Integer> extraRecipeMappings;
 
 	private transient ResourceLocation id;
 	private transient Book book;
-	private transient Book trueProvider;
 	private transient BookCategory lcategory = null;
 	private transient BookIcon icon = null;
 	private final transient List<BookPage> realPages = new ArrayList<>();
@@ -98,9 +100,6 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 				lcategory = categories.apply(new ResourceLocation(category));
 			} else {
 				String hint = String.format("`%s:%s`", book.getModNamespace(), category);
-				if (isExtension() && !trueProvider.getModNamespace().equals(book.getModNamespace())) {
-					hint += String.format("or `%s:%s`", trueProvider.getModNamespace(), category);
-				}
 				throw new IllegalArgumentException("`category` must be fully qualified (domain:name). Hint: Try " + hint);
 			}
 		}
@@ -115,7 +114,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		locked = advancement != null && !advancement.isEmpty() && !ClientAdvancements.hasDone(advancement);
 
 		boolean dirty = false;
-		if (!locked && currLocked != locked) {
+		if (!locked && currLocked) {
 			dirty = true;
 			book.markUpdated();
 		}
@@ -162,7 +161,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		}
 
 		for (StackWrapper wrapper : relevantStacks) {
-			if (wrapper.stack.getHoverName().getString().toLowerCase().contains(query)) {
+			if (wrapper.stack().getHoverName().getString().toLowerCase().contains(query)) {
 				return true;
 			}
 		}
@@ -193,12 +192,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public void setBook(Book book) {
-		if (book.isExtension) {
-			this.book = book.extensionTarget;
-			trueProvider = book;
-		} else {
-			this.book = book;
-		}
+		this.book = book;
 	}
 
 	public void setId(ResourceLocation id) {
@@ -266,14 +260,6 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	 */
 	public final Book getBook() {
 		return book;
-	}
-
-	public Book getTrueProvider() {
-		return trueProvider;
-	}
-
-	public boolean isExtension() {
-		return getTrueProvider() != null && getTrueProvider() != getBook();
 	}
 
 	@Override

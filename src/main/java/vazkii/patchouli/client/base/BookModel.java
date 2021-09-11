@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -31,9 +32,9 @@ public class BookModel implements BakedModel {
 
 	public BookModel(BakedModel original, ModelBakery loader) {
 		this.original = original;
-		BlockModel missing = (BlockModel) loader.getModel(ModelBakery.MISSING_MODEL_LOCATION);
+		UnbakedModel missing = loader.getModel(ModelBakery.MISSING_MODEL_LOCATION);
 
-		this.itemHandler = new ItemOverrides(loader, missing, id -> missing, Collections.emptyList()) {
+		this.itemHandler = new ItemOverrides(loader, missing, id -> missing, loader.getSpriteMap()::getSprite, Collections.emptyList()) {
 			@Override
 			public BakedModel resolve(@Nonnull BakedModel original, @Nonnull ItemStack stack,
 					@Nullable ClientLevel world, @Nullable LivingEntity entity, int seed) {

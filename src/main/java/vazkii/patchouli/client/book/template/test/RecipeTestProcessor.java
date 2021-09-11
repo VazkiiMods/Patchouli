@@ -17,6 +17,9 @@ public class RecipeTestProcessor implements IComponentProcessor {
 
 	@Override
 	public void setup(IVariableProvider variables) {
+		if (Minecraft.getInstance().level == null) {
+			return;
+		}
 		// TODO probably add a recipe serializer?
 		String recipeId = variables.get("recipe").asString();
 		RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();

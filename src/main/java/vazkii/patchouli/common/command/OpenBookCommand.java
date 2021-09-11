@@ -3,7 +3,6 @@ package vazkii.patchouli.common.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -11,27 +10,17 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceLocationArgument;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
 import javax.annotation.Nullable;
-
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class OpenBookCommand {
 	private static final SuggestionProvider<CommandSourceStack> BOOK_ID_SUGGESTER =
 			(ctx, builder) -> {
-				List<ResourceLocation> ids = new ArrayList<>();
-				for (Map.Entry<ResourceLocation, Book> e : BookRegistry.INSTANCE.books.entrySet()) {
-					if (!e.getValue().isExtension) {
-						ids.add(e.getKey());
-					}
-				}
+				Set<ResourceLocation> ids = BookRegistry.INSTANCE.getBookIds();
 				return SharedSuggestionProvider.suggestResource(ids, builder);
 			};
 

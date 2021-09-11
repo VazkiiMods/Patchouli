@@ -31,7 +31,7 @@ public class ClientAdvancements {
 	*/
 	public static void onClientPacket() {
 		if (!gotFirstAdvPacket) {
-			ClientBookRegistry.INSTANCE.reload(false);
+			ClientBookRegistry.INSTANCE.reload();
 			gotFirstAdvPacket = true;
 		} else {
 			ClientBookRegistry.INSTANCE.reloadLocks(false);

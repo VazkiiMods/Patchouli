@@ -69,7 +69,7 @@ public abstract class BookRecipe<T extends CraftingRecipe> implements CraftingRe
 			R recipe = getSerializer().fromJson(id, json);
 
 			ResourceLocation outputBook = new ResourceLocation(GsonHelper.getAsString(json, "book"));
-			if (!BookRegistry.INSTANCE.books.containsKey(outputBook)) {
+			if (!BookRegistry.INSTANCE.isBookLoaded(outputBook)) {
 				Patchouli.LOGGER.warn("Book {} in recipe {} does not exist!", outputBook, id);
 			}
 

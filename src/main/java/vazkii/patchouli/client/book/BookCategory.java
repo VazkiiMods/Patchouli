@@ -1,31 +1,32 @@
 package vazkii.patchouli.client.book;
 
-import com.google.common.collect.Streams;
 import com.google.gson.annotations.SerializedName;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class BookCategory extends AbstractReadStateHolder implements Comparable<BookCategory> {
 
-	private String name, description, parent, flag;
+	@SerializedName("name") private String name;
+	@SerializedName("description") private String description;
+	@SerializedName("parent") private String parent;
+	@SerializedName("flag") private String flag;
 	@SerializedName("icon") private String iconRaw;
-	private int sortnum;
-	private boolean secret = false;
+	@SerializedName("sortnum") private int sortnum;
+	@SerializedName("secret") private boolean secret = false;
 
-	private transient Book book, trueProvider;
+	private transient Book book;
 	private transient BookCategory parentCategory;
-	private transient List<BookCategory> children = new ArrayList<>();
-	private transient List<BookEntry> entries = new ArrayList<>();
+	private final transient List<BookCategory> children = new ArrayList<>();
+	private final transient List<BookEntry> entries = new ArrayList<>();
 	private transient boolean locked;
 	private transient BookIcon icon = null;
 	private transient ResourceLocation id;
@@ -120,7 +121,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	}
 
 	@Override
-	public int compareTo(BookCategory o) {
+	public int compareTo(@Nonnull BookCategory o) {
 		if (book.advancementsEnabled() && o.locked != this.locked) {
 			return this.locked ? 1 : -1;
 		}
@@ -133,12 +134,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	}
 
 	public void setBook(Book book) {
-		if (book.isExtension) {
-			this.book = book.extensionTarget;
-			trueProvider = book;
-		} else {
-			this.book = book;
-		}
+		this.book = book;
 	}
 
 	public void build(ResourceLocation id, BookContentsBuilder builder) {
@@ -168,19 +164,11 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 		return book;
 	}
 
-	public Book getTrueProvider() {
-		return trueProvider;
-	}
-
-	public boolean isExtension() {
-		return getTrueProvider() != null && getTrueProvider() != getBook();
-	}
-
 	@Override
 	protected EntryDisplayState computeReadState() {
-		Stream entryStream = entries.stream().filter(e -> !e.isLocked()).map(BookEntry::getReadState);
-		Stream childrenStream = children.stream().map(BookCategory::getReadState);
-		return mostImportantState(Streams.concat(entryStream, childrenStream));
+		Stream<EntryDisplayState> entryStream = entries.stream().filter(e -> !e.isLocked()).map(BookEntry::getReadState);
+		Stream<EntryDisplayState> childrenStream = children.stream().map(BookCategory::getReadState);
+		return mostImportantState(Stream.concat(entryStream, childrenStream));
 	}
 
 	@Override
