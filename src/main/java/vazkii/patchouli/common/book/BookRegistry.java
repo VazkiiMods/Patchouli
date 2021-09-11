@@ -56,12 +56,12 @@ public class BookRegistry extends SimplePreparableReloadListener<Map<ResourceLoc
 	protected Map<ResourceLocation, ResourceLocation> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
 		loaded = false;
 		profiler.startTick();
-		Map<ResourceLocation, ResourceLocation> bookRls = resourceManager.listResources(BOOKS_LOCATION, s -> s.endsWith("book.json"))
+		Map<ResourceLocation, ResourceLocation> bookRls = resourceManager.listResources(BOOKS_LOCATION, s -> s.endsWith(".json"))
 				.stream()
 				.map(location -> {
 					String fileStr = location.getPath();
 					String relPath = fileStr.substring(fileStr.indexOf(BOOKS_LOCATION) + BOOKS_LOCATION.length() + 1);
-					String bookName = relPath.substring(0, relPath.indexOf("/"));
+					String bookName = relPath.substring(0, relPath.indexOf(".json"));
 					return Pair.of(new ResourceLocation(location.getNamespace(), bookName), location);
 				}).collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 		profiler.endTick();
