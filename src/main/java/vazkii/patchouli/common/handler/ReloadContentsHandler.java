@@ -3,9 +3,9 @@ package vazkii.patchouli.common.handler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fmlserverevents.FMLServerStartedEvent;
+
 import vazkii.patchouli.common.network.message.MessageReloadBookContents;
 
 public class ReloadContentsHandler {

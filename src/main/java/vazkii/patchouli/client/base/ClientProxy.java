@@ -5,12 +5,13 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
-
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
+
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
@@ -31,21 +32,15 @@ public class ClientProxy {
 
 		MinecraftForge.EVENT_BUS.addListener((ModelRegistryEvent e) -> {
 			BookRegistry.INSTANCE.books.values().stream()
-				.map(b -> new ModelResourceLocation(b.model, "inventory"))
-				.forEach(ModelLoader::addSpecialModel);
+					.map(b -> new ModelResourceLocation(b.model, "inventory"))
+					.forEach(ModelLoader::addSpecialModel);
 
 			ItemPropertyFunction prop = (stack, world, entity, seed) -> ItemModBook.getCompletion(stack);
 			ItemProperties.register(PatchouliItems.book, new ResourceLocation(Patchouli.MOD_ID, "completion"), prop);
 		});
 
-		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-			private final ResourceLocation id = new ResourceLocation(Patchouli.MOD_ID, "resource_pack_books");
-
-			@Override
-			public ResourceLocation getFabricId() {
-				return id;
-			}
-
+		var resourceManager = ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager());
+		resourceManager.registerReloadListener(new ResourceManagerReloadListener() {
 			@Override
 			public void onResourceManagerReload(ResourceManager manager) {
 				if (Minecraft.getInstance().level != null) {

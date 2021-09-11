@@ -18,10 +18,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
@@ -69,7 +69,7 @@ public class BookRightClickHandler {
 				onRenderHUD(evt.getMatrixStack(), evt.getPartialTicks());
 			}
 		});
-		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock evt)-> {
+		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock evt) -> {
 			onRightClick(evt.getPlayer(), evt.getWorld(), evt.getHand(), evt.getHitVec());
 		});
 	}

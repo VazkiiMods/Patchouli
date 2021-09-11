@@ -1,15 +1,15 @@
 package vazkii.patchouli.common.base;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.forgespi.language.IModInfo;
+
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PatchouliConfig {
 	public static final ForgeConfigSpec.ConfigValue<Boolean> disableAdvancementLocking;
@@ -24,28 +24,28 @@ public class PatchouliConfig {
 	static {
 		ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 		disableAdvancementLocking = builder
-			.comment("Set this to true to disable advancement locking for ALL books, making all entries visible at all times. Config Flag: advancements_disabled")
-			.define("disableAdvancementLocking", false);
+				.comment("Set this to true to disable advancement locking for ALL books, making all entries visible at all times. Config Flag: advancements_disabled")
+				.define("disableAdvancementLocking", false);
 
 		noAdvancementBooks = builder
-			.comment("Granular list of Book ID's to disable advancement locking for, e.g. [ \"botania:lexicon\" ]. Config Flags: advancements_disabled_<bookid>")
-			.define("noAdvancementBooks", Collections.emptyList());
+				.comment("Granular list of Book ID's to disable advancement locking for, e.g. [ \"botania:lexicon\" ]. Config Flags: advancements_disabled_<bookid>")
+				.define("noAdvancementBooks", Collections.emptyList());
 
 		testingMode = builder
-			.comment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want. Config Flag: testing_mode")
-			.define("testingMode", false);
+				.comment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want. Config Flag: testing_mode")
+				.define("testingMode", false);
 
 		inventoryButtonBook = builder
-			.comment("Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.")
-			.define("inventoryButtonBook", "");
+				.comment("Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.")
+				.define("inventoryButtonBook", "");
 
 		useShiftForQuickLookup = builder
-			.comment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
-			.define("useShiftForQuickLookup", false);
+				.comment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
+				.define("useShiftForQuickLookup", false);
 
 		overflowMode = builder
-			.comment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit. Relogin after changing.")
-			.defineEnum("textOverflowMode", TextOverflowMode.OVERFLOW);
+				.comment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit. Relogin after changing.")
+				.defineEnum("textOverflowMode", TextOverflowMode.OVERFLOW);
 
 		SPEC = builder.build();
 	}

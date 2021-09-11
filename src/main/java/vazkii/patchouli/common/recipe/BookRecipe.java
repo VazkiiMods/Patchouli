@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.base.Patchouli;
@@ -53,7 +54,7 @@ public abstract class BookRecipe<T extends CraftingRecipe> implements CraftingRe
 	@Override
 	public abstract RecipeSerializer<?> getSerializer();
 
-	protected abstract static class WrapperSerializer<R extends CraftingRecipe, T extends BookRecipe<R>> implements RecipeSerializer<T> {
+	protected abstract static class WrapperSerializer<R extends CraftingRecipe, T extends BookRecipe<R>> extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<T> {
 		protected abstract RecipeSerializer<R> getSerializer();
 
 		protected abstract T getRecipe(R recipe, ResourceLocation outputBook);

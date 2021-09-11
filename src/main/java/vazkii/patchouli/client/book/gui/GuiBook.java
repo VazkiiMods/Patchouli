@@ -21,8 +21,8 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
-
 import net.minecraftforge.common.MinecraftForge;
+
 import org.lwjgl.glfw.GLFW;
 
 import vazkii.patchouli.api.BookDrawScreenEvent;
