@@ -42,6 +42,20 @@ Please note that this mod uses official Mojang mappings (Mojmap). If you depend 
 or only consume Patchouli's API, there should be no licensing concerns, as the mod is remapped to Intermediary (or SRG, for Forge) on compile.
 
 There is a license concern, however, if you bundle Patchouli with your mod using Jar-in-Jar.
-Building a mod with mixin inserts a refmap, which contains raw Mojang mappings in a JSON file.
+Building a mod which uses Mixin inserts a refmap, which for Patchouli will contain raw Mojang mappings in a JSON file.
 If this presents a licensing problem to you, then do not bundle Patchouli and just depend on it externally.
 I recommend using normal dependencies either way, as Jar-in-Jar inflates your archive sizes to store a mod that will probably be in most modpacks anyways.
+
+## Making a Release
+1. Pull from remote, test all changes, and commit everything.
+2. `git tag -a release-<VERSION>`. All Patchouli versions *must* follow the version format `<MC-VER>-INT`, so it'll
+   probably look like `git tag -a release-1.17.1-55`. If the Fabric version, append `-FABRIC`, e.g.
+   `git tag -a release-1.17.1-55-FABRIC`. You can check which number is the next one by looking at
+   `build.properties`.
+3. In the Git editor that pops up, write the changelog. Finish the tag process (usually by saving and closing the
+   editor).
+4. Run `./gradlew incrementBuildNumber --no-daemon` to increment the build number of the next release. Commit this.
+5. Push: `git push origin master --tags`
+6. Go to [Jenkins](https://ci.blamejared.com/job/Patchouli/view/tags/) and wait for the tag you just pushed to be co
+   mpiled and built
+7. Download the JAR and submit it to CurseForge

@@ -8,7 +8,6 @@
     "AccessorSmithingRecipe"
   ],
   "client": [
-    "client.AccessorBlockEntity",
     "client.AccessorClientAdvancements",
     "client.AccessorMultiBufferSource",
     "client.AccessorScreen",
