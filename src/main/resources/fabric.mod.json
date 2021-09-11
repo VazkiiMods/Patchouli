@@ -22,7 +22,7 @@
       "vazkii.patchouli.common.base.Patchouli"
     ],
     "client": [
-      "vazkii.patchouli.client.base.ClientProxy"
+      "vazkii.patchouli.client.base.ClientInitializer"
     ]
   },
   "mixins": [
