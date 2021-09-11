@@ -2,36 +2,47 @@ package vazkii.patchouli.common.network.message;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.Patchouli;
+import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.network.NetworkHandler;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
-public class MessageReloadBookContents {
-
-	public static void sendToAll() {
-		//NetworkHandler.CHANNEL.send(PacketDistributor.ALL.noArg(), new MessageReloadBookContents());
-	}
+public record MessageReloadBookContents(Collection<Book> books) {
 
 	public void encode(FriendlyByteBuf buf) {
+		buf.writeInt(books.size());
+		books.forEach((book) -> {
+			buf.writeResourceLocation(book.getId());
+			buf.writeUtf(BookRegistry.GSON.toJson(book));
+		});
 	}
 
 	public static MessageReloadBookContents decode(FriendlyByteBuf buf) {
-		return new MessageReloadBookContents();
+		List<Book> books = new ArrayList<>();
+		for (int i = buf.readInt(); i > 0; i--) {
+			ResourceLocation id = buf.readResourceLocation();
+			Book book = BookRegistry.GSON.fromJson(buf.readUtf(), Book.class);
+			book.build(id);
+			books.add(book);
+		}
+		return new MessageReloadBookContents(books);
 	}
 
 	public void handle(Supplier<NetworkEvent.Context> ctx) {
-		ctx.get().enqueueWork(ClientBookRegistry.INSTANCE::reload);
-		ctx.get().setPacketHandled(true);
+		NetworkEvent.Context context = ctx.get();
+		context.enqueueWork(() -> {
+			BookRegistry.INSTANCE.sync(books);
+			ClientBookRegistry.INSTANCE.reload();
+			ClientBookRegistry.INSTANCE.refreshModels();
+			ClientBookRegistry.INSTANCE.reloadResources();
+		});
+		context.setPacketHandled(true);
 	}
 }

@@ -1,22 +1,16 @@
 package vazkii.patchouli.common.base;
 
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fmlserverevents.FMLServerStartedEvent;
-
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.command.OpenBookCommand;
 import vazkii.patchouli.common.handler.LecternEventHandler;
@@ -62,6 +56,6 @@ public class Patchouli {
 
 	private void onDatapackSync(OnDatapackSyncEvent evt) {
 		// Also reload contents when someone types /reload
-		MessageReloadBookContents.sendToAll();
+		NetworkHandler.CHANNEL.send(PacketDistributor.PLAYER.with(evt::getPlayer), new MessageReloadBookContents(BookRegistry.INSTANCE.getBooks()));
 	}
 }

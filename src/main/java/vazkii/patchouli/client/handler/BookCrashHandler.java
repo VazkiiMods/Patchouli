@@ -30,7 +30,7 @@ public class BookCrashHandler implements CrashReportDetail<String> {
 		Book book = gui.book;
 		StringBuilder builder = new StringBuilder(INDENT);
 
-		builder.append("Open book: ").append(book.id);
+		builder.append("Open book: ").append(book.getId());
 		if (gui instanceof GuiBookEntry) {
 			builder.append(INDENT).append("Current entry: ").append(((GuiBookEntry) gui).getEntry().getId());
 		} else if (gui instanceof GuiBookEntryList) {

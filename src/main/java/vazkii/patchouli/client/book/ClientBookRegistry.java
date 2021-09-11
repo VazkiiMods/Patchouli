@@ -1,21 +1,36 @@
 package vazkii.patchouli.client.book;
 
 import com.google.gson.*;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.repository.PackRepository;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.Unit;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.ModelLoader;
 import vazkii.patchouli.client.book.page.*;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.TemplateComponent;
 import vazkii.patchouli.common.base.Patchouli;
+import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.base.PatchouliSounds;
+import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 public class ClientBookRegistry {
 
@@ -28,6 +43,7 @@ public class ClientBookRegistry {
 	public String currentLang;
 
 	public static final ClientBookRegistry INSTANCE = new ClientBookRegistry();
+	private boolean loaded = false;
 
 	private ClientBookRegistry() {}
 
@@ -57,11 +73,30 @@ public class ClientBookRegistry {
 	public void reload() {
 		var mc = Minecraft.getInstance();
 		currentLang = mc.getLanguageManager().getSelected().getCode();
-		BookRegistry.INSTANCE.reloadContents(mc.getResourceManager());
+		reloadContents(mc.getResourceManager());
+	}
+
+	public void refreshModels() {
+		BookRegistry.INSTANCE.getBooks().stream()
+				.map(b -> new ModelResourceLocation(b.model, "inventory"))
+				.forEach(ModelLoader::addSpecialModel);
+	}
+
+	public void reloadResources() {
+		Minecraft.getInstance().reloadResourcePacks();
 	}
 
 	public void reloadLocks(boolean suppressToasts) {
 		BookRegistry.INSTANCE.getBooks().forEach(b -> b.reloadLocks(suppressToasts));
+	}
+
+	public void reloadContents(ResourceManager resourceManager) {
+		PatchouliConfig.reloadBuiltinFlags();
+		for (Book book : BookRegistry.INSTANCE.getBooks()) {
+			book.reloadContents(resourceManager);
+		}
+		ClientBookRegistry.INSTANCE.reloadLocks(false);
+		loaded = true;
 	}
 
 	/**

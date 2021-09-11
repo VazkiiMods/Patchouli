@@ -98,11 +98,11 @@ public class BookContentsBuilder {
 
 	private <T> void load(Book book, ResourceManager resourceManager, String dir, LoadFunc<T> loader, Map<ResourceLocation, T> builder) {
 		BookContentLoader contentLoader = BookContentResourceLoader.INSTANCE;
-		String prefix = String.format("%s/%s/%s/%s", BookRegistry.BOOKS_LOCATION, book.id.getPath(), BookContentsBuilder.DEFAULT_LANG, dir);
+		String prefix = String.format("%s/%s/%s/%s", BookRegistry.BOOKS_LOCATION, book.getId().getPath(), BookContentsBuilder.DEFAULT_LANG, dir);
 		resourceManager.listResources(prefix, p -> p.endsWith(".json"))
 				.stream()
 				.distinct()
-				.filter(file -> file.getNamespace().equals(book.id.getNamespace()))
+				.filter(file -> file.getNamespace().equals(book.getId().getNamespace()))
 				.forEach(file -> {
 					// caller expects list to contain logical id's, not file paths.
 					// we end up going from path -> id -> back to path, but it's okay as a transitional measure

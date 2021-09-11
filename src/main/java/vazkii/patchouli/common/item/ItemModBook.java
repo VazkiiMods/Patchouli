@@ -9,7 +9,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.*;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -65,7 +64,7 @@ public class ItemModBook extends Item {
 	}
 
 	public static ItemStack forBook(Book book) {
-		return forBook(book.id);
+		return forBook(book.getId());
 	}
 
 	public static ItemStack forBook(ResourceLocation book) {
@@ -108,8 +107,8 @@ public class ItemModBook extends Item {
 	@Override
 	public String getCreatorModId(ItemStack itemStack) {
 		Book book = getBook(itemStack);
-		if (book != null && ModList.get().isLoaded(book.id.getNamespace())) {
-			return book.id.getNamespace();
+		if (book != null && ModList.get().isLoaded(book.getId().getNamespace())) {
+			return book.getId().getNamespace();
 		}
 
 		return super.getCreatorModId(itemStack);
@@ -158,7 +157,7 @@ public class ItemModBook extends Item {
 		}
 
 		if (playerIn instanceof ServerPlayer) {
-			PatchouliAPI.get().openBookGUI((ServerPlayer) playerIn, book.id);
+			PatchouliAPI.get().openBookGUI((ServerPlayer) playerIn, book.getId());
 
 			// This plays the sound to others nearby, playing to the actual opening player handled from the packet
 			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.BOOK_OPEN);

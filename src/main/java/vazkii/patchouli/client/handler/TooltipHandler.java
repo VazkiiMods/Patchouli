@@ -101,7 +101,7 @@ public class TooltipHandler {
 					if (lexiconLookupTime >= time) {
 						mc.player.getInventory().selected = lexSlot;
 						int spread = lexiconEntry.getSecond();
-						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), spread * 2);
+						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().getId(), lexiconEntry.getFirst().getId(), spread * 2);
 					}
 				} else {
 					lexiconLookupTime = 0F;

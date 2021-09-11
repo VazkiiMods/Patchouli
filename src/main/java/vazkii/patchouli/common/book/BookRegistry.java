@@ -1,6 +1,5 @@
 package vazkii.patchouli.common.book;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -10,10 +9,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.core.config.AppenderControlArraySet;
-import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.Patchouli;
-import vazkii.patchouli.common.base.PatchouliConfig;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -25,35 +21,25 @@ public class BookRegistry extends SimplePreparableReloadListener<Map<ResourceLoc
 
 	public static final BookRegistry INSTANCE = new BookRegistry();
 	public static final String BOOKS_LOCATION = Patchouli.MOD_ID + "_books";
-
-	private final Map<ResourceLocation, Book> books = new HashMap<>();
 	public static final Gson GSON = new GsonBuilder()
 			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
 			.create();
 
+	private final Map<ResourceLocation, Book> books = new HashMap<>();
+
 	private boolean loaded = false;
-	private final List<Runnable> callbacks = new ArrayList<>();
 
 	private BookRegistry() {}
 
 	public Optional<Book> getBook(final ResourceLocation location) {
-		if (!isLoaded()) {
-			return Optional.empty();
-		}
 		return Optional.ofNullable(books.get(location));
 	}
 
 	public Collection<Book> getBooks() {
-		if (!isLoaded()) {
-			return ImmutableSet.of();
-		}
 		return Collections.unmodifiableCollection(books.values());
 	}
 
 	public Set<ResourceLocation> getBookIds() {
-		if (!isLoaded()) {
-			return ImmutableSet.of();
-		}
 		return Collections.unmodifiableSet(books.keySet());
 	}
 
@@ -61,9 +47,14 @@ public class BookRegistry extends SimplePreparableReloadListener<Map<ResourceLoc
 		return isLoaded() && books.containsKey(location);
 	}
 
+	public boolean isLoaded() {
+		return loaded;
+	}
+
 	@Nonnull
 	@Override
 	protected Map<ResourceLocation, ResourceLocation> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
+		loaded = false;
 		profiler.startTick();
 		Map<ResourceLocation, ResourceLocation> bookRls = resourceManager.listResources(BOOKS_LOCATION, s -> s.endsWith("book.json"))
 				.stream()
@@ -87,21 +78,7 @@ public class BookRegistry extends SimplePreparableReloadListener<Map<ResourceLoc
 						bookRl, bookRl.getNamespace(), e);
 			}
 		});
-		runCallbacks();
-	}
-
-	private void runCallbacks() {
-		for (Runnable callback : callbacks) {
-			try {
-					callback.run();
-			} catch (Exception e) {
-				Patchouli.LOGGER.error("Book reload callback errored!", e);
-			}
-		}
-	}
-
-	public void registerLoadedCallback(Runnable callback) {
-		callbacks.add(callback);
+		loaded = true;
 	}
 
 	public void loadBook(ResourceLocation res, InputStream stream) {
@@ -112,16 +89,8 @@ public class BookRegistry extends SimplePreparableReloadListener<Map<ResourceLoc
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void reloadContents(ResourceManager resourceManager) {
-		PatchouliConfig.reloadBuiltinFlags();
-		for (Book book : getBooks()) {
-			book.reloadContents(resourceManager);
-		}
-		ClientBookRegistry.INSTANCE.reloadLocks(false);
-		loaded = true;
-	}
-
-	public boolean isLoaded() {
-		return loaded;
+	public void sync(Collection<Book> books) {
+		this.books.clear();
+		books.forEach(book -> this.books.put(book.getId(), book));
 	}
 }

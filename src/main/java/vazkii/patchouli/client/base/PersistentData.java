@@ -39,7 +39,7 @@ public final class PersistentData {
 		Map<String, BookData> bookData = new HashMap<>();
 
 		public BookData getBookData(Book book) {
-			String res = book.id.toString();
+			String res = book.getId().toString();
 			if (!bookData.containsKey(res)) {
 				bookData.put(res, new BookData());
 			}

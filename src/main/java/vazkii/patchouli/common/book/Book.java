@@ -1,7 +1,10 @@
 package vazkii.patchouli.common.book;
 
 import com.google.gson.annotations.SerializedName;
+import com.mojang.serialization.*;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.Util;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -20,6 +23,7 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class Book {
 
@@ -42,7 +46,7 @@ public class Book {
 
 	private transient boolean wasUpdated = false;
 
-	public transient ResourceLocation id;
+	private transient ResourceLocation id;
 	private transient ItemStack bookItem;
 
 	public transient int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
@@ -117,7 +121,7 @@ public class Book {
 	}
 
 	public String getModNamespace() {
-		return id.getNamespace();
+		return getId().getNamespace();
 	}
 
 	public ItemStack getBookItem() {
@@ -150,13 +154,13 @@ public class Book {
 			builder.loadFrom(this, resourceManager);
 			contents = builder.build(this);
 		} catch (Exception e) {
-			Patchouli.LOGGER.error("Error compiling book {}, using empty contents", id, e);
+			Patchouli.LOGGER.error("Error compiling book {}, using empty contents", getId(), e);
 			contents = BookContents.empty(this, e);
 		}
 	}
 
 	public final boolean advancementsEnabled() {
-		return !PatchouliConfig.disableAdvancementLocking.get() && !PatchouliConfig.noAdvancementBooks.get().contains(id.toString());
+		return !PatchouliConfig.disableAdvancementLocking.get() && !PatchouliConfig.noAdvancementBooks.get().contains(getId().toString());
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -205,6 +209,10 @@ public class Book {
 		} else {
 			return BookIcon.from(indexIconRaw);
 		}
+	}
+
+	public ResourceLocation getId() {
+		return id;
 	}
 
 	private static String numberToOrdinal(int i) {

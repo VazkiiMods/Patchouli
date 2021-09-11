@@ -49,9 +49,7 @@ public final class ClientModEventHandler {
 
 	@SubscribeEvent
 	public static void onModelRegister(ModelRegistryEvent e) {
-		BookRegistry.INSTANCE.getBooks().stream()
-				.map(b -> new ModelResourceLocation(b.model, "inventory"))
-				.forEach(ModelLoader::addSpecialModel);
+		ClientBookRegistry.INSTANCE.refreshModels();
 
 		ItemPropertyFunction prop = (stack, world, entity, seed) -> ItemModBook.getCompletion(stack);
 		ItemProperties.register(PatchouliItems.BOOK.get(), new ResourceLocation(Patchouli.MOD_ID, "completion"), prop);
