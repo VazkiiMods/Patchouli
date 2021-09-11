@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "vazkii.patchouli.common.base.CommonProxy"
+      "vazkii.patchouli.common.base.Patchouli"
     ],
     "client": [
       "vazkii.patchouli.client.base.ClientProxy"

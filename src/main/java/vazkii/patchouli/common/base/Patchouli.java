@@ -1,11 +1,23 @@
 package vazkii.patchouli.common.base;
 
+import com.mojang.brigadier.CommandDispatcher;
+
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.commands.CommandSourceStack;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Patchouli {
+import vazkii.patchouli.common.book.BookRegistry;
+import vazkii.patchouli.common.command.OpenBookCommand;
+import vazkii.patchouli.common.handler.LecternEventHandler;
+import vazkii.patchouli.common.handler.ReloadContentsHandler;
+import vazkii.patchouli.common.item.PatchouliItems;
+
+public class Patchouli implements ModInitializer {
 
 	public static boolean debug = FabricLoader.getInstance().isDevelopmentEnvironment();
 
@@ -14,4 +26,21 @@ public class Patchouli {
 	public static final String PREFIX = MOD_ID + ":";
 
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+
+	@Override
+	public void onInitialize() {
+		PatchouliConfig.setup();
+		CommandRegistrationCallback.EVENT.register(this::registerCommands);
+		UseBlockCallback.EVENT.register(LecternEventHandler::rightClick);
+
+		PatchouliSounds.preInit();
+		BookRegistry.INSTANCE.init();
+
+		PatchouliItems.init();
+		ReloadContentsHandler.init();
+	}
+
+	private void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
+		OpenBookCommand.register(dispatcher);
+	}
 }
