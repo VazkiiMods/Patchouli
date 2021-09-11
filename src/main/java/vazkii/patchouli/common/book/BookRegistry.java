@@ -2,16 +2,20 @@ package vazkii.patchouli.common.book;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import org.apache.commons.lang3.tuple.Pair;
+
 import vazkii.patchouli.common.base.Patchouli;
 
 import javax.annotation.Nonnull;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -71,7 +75,7 @@ public class BookRegistry extends SimplePreparableReloadListener<Map<ResourceLoc
 	@Override
 	protected void apply(Map<ResourceLocation, ResourceLocation> books, @Nonnull ResourceManager resourceManager, @Nonnull ProfilerFiller profiler) {
 		books.forEach((bookRl, location) -> {
-			try(InputStream stream = resourceManager.getResource(location).getInputStream()) {
+			try (InputStream stream = resourceManager.getResource(location).getInputStream()) {
 				loadBook(bookRl, stream);
 			} catch (IOException e) {
 				Patchouli.LOGGER.error("Failed to load book {} defined by mod {}, skipping",

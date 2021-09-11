@@ -3,13 +3,10 @@ package vazkii.patchouli.common.network.message;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fmllegacy.network.NetworkEvent;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
-import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
-import vazkii.patchouli.common.network.NetworkHandler;
 
 import java.util.*;
 import java.util.function.Supplier;

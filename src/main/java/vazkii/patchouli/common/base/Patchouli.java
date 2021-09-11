@@ -9,8 +9,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.command.OpenBookCommand;
 import vazkii.patchouli.common.handler.LecternEventHandler;

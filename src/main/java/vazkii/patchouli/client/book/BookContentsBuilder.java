@@ -5,8 +5,8 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.resources.ResourceLocation;
-
 import net.minecraft.server.packs.resources.ResourceManager;
+
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;

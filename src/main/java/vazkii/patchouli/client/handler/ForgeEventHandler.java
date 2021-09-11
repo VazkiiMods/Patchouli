@@ -1,27 +1,16 @@
 package vazkii.patchouli.client.handler;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.renderer.item.ItemPropertyFunction;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import vazkii.patchouli.client.base.BookModel;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.ClientTicker;
-import vazkii.patchouli.common.base.Patchouli;
-import vazkii.patchouli.common.book.BookRegistry;
-import vazkii.patchouli.common.item.ItemModBook;
-import vazkii.patchouli.common.item.PatchouliItems;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class ForgeEventHandler {

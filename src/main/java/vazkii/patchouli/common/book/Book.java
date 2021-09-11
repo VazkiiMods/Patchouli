@@ -2,15 +2,15 @@ package vazkii.patchouli.common.book;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.serialization.*;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.Util;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -23,7 +23,6 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 public class Book {
 
