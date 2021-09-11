@@ -3,8 +3,8 @@ package vazkii.patchouli.client.book.template.test;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-
 import net.minecraftforge.registries.ForgeRegistries;
+
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;

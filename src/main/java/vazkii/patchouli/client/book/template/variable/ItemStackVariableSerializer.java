@@ -4,8 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.minecraft.world.item.ItemStack;
-
 import net.minecraftforge.registries.ForgeRegistries;
+
 import vazkii.patchouli.api.IVariableSerializer;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
