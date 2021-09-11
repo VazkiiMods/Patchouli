@@ -8,7 +8,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.TagParser;
@@ -19,6 +18,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -39,7 +39,7 @@ public final class ItemStackUtil {
 
 	public static String serializeStack(ItemStack stack) {
 		StringBuilder builder = new StringBuilder();
-		builder.append(Registry.ITEM.getKey(stack.getItem()).toString());
+		builder.append(ForgeRegistries.ITEMS.getKey(stack.getItem()).toString());
 
 		int count = stack.getCount();
 		if (count > 1) {
@@ -78,11 +78,10 @@ public final class ItemStackUtil {
 
 		int countn = Integer.parseInt(count);
 		ResourceLocation key = new ResourceLocation(tokens[0], tokens[1]);
-		Optional<Item> maybeItem = Registry.ITEM.getOptional(key);
-		if (!maybeItem.isPresent()) {
+		Item item = ForgeRegistries.ITEMS.getValue(key);
+		if (item == null) {
 			throw new RuntimeException("Unknown item ID: " + key);
 		}
-		Item item = maybeItem.get();
 		ItemStack stack = new ItemStack(item, countn);
 
 		if (!nbt.isEmpty()) {
@@ -225,8 +224,10 @@ public final class ItemStackUtil {
 		// Adapted from net.minecraftforge.common.crafting.CraftingHelper::getItemStack
 		String itemName = json.get("item").getAsString();
 
-		Item item = Registry.ITEM.getOptional(new ResourceLocation(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'")
-		);
+		Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName));
+		if (item == null) {
+			throw new IllegalArgumentException("Unknown item '" + itemName + "'");
+		}
 
 		ItemStack stack = new ItemStack(item, GsonHelper.getAsInt(json, "count", 1));
 
