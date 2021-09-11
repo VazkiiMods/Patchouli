@@ -1,12 +1,10 @@
 package vazkii.patchouli.common.item;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fmllegacy.RegistryObject;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.recipe.ShapedBookRecipe;
@@ -14,17 +12,23 @@ import vazkii.patchouli.common.recipe.ShapelessBookRecipe;
 
 public class PatchouliItems {
 
-	private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Patchouli.MOD_ID);
-	private static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, Patchouli.MOD_ID);
+	public static final ResourceLocation BOOK_ID = new ResourceLocation(Patchouli.MOD_ID, "guide_book");
+	public static Item BOOK;
 
-	public static final RegistryObject<ItemModBook> BOOK = ITEMS.register("guide_book", ItemModBook::new);
+	private static void registerItems(RegistryEvent.Register<Item> evt) {
+		BOOK = new ItemModBook();
+		evt.getRegistry().register(BOOK.setRegistryName(BOOK_ID));
+	}
 
-	public static final RegistryObject<ShapedBookRecipe.Serializer> SHAPED_BOOK_RECIPE = RECIPE_SERIALIZERS.register("shaped_book_recipe", ShapedBookRecipe.Serializer::new);
-	public static final RegistryObject<ShapelessBookRecipe.Serializer> SHAPELESS_BOOK_RECIPE = RECIPE_SERIALIZERS.register("shapeless_book_recipe", ShapelessBookRecipe.Serializer::new);
+	private static void registerRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> evt) {
+		evt.getRegistry().register(ShapedBookRecipe.SERIALIZER.setRegistryName(new ResourceLocation(Patchouli.MOD_ID, "shaped_book_recipe")));
+		evt.getRegistry().register(ShapelessBookRecipe.SERIALIZER.setRegistryName(new ResourceLocation(Patchouli.MOD_ID, "shapeless_book_recipe")));
+
+	}
 
 	public static void init() {
-		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-		ITEMS.register(bus);
-		RECIPE_SERIALIZERS.register(bus);
+		var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		modEventBus.addGenericListener(Item.class, PatchouliItems::registerItems);
+		modEventBus.addGenericListener(RecipeSerializer.class, PatchouliItems::registerRecipeSerializers);
 	}
 }

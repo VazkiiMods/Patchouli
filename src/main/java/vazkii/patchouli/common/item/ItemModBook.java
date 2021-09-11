@@ -9,7 +9,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.*;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -70,7 +69,7 @@ public class ItemModBook extends Item {
 	}
 
 	public static ItemStack forBook(ResourceLocation book) {
-		ItemStack stack = new ItemStack(PatchouliItems.BOOK.get());
+		ItemStack stack = new ItemStack(PatchouliItems.BOOK);
 
 		CompoundTag cmp = new CompoundTag();
 		cmp.putString(TAG_BOOK, book.toString());

@@ -35,6 +35,7 @@ public class Patchouli {
 		MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
 		MinecraftForge.EVENT_BUS.addListener(this::onDatapackSync);
 		MinecraftForge.EVENT_BUS.addListener(LecternEventHandler::onRightClick);
+		PatchouliSounds.init();
 		PatchouliItems.init();
 	}
 

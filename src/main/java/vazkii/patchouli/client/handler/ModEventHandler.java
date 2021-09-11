@@ -46,7 +46,7 @@ public class ModEventHandler {
 
 	@SubscribeEvent
 	public static void onModelBake(ModelBakeEvent evt) {
-		ModelResourceLocation key = new ModelResourceLocation(PatchouliItems.BOOK.getId(), "inventory");
+		ModelResourceLocation key = new ModelResourceLocation(PatchouliItems.BOOK_ID, "inventory");
 		BakedModel oldModel = evt.getModelRegistry().get(key);
 		if (oldModel != null) {
 			evt.getModelRegistry().put(key, new BookModel(oldModel, evt.getModelLoader()));
@@ -60,6 +60,6 @@ public class ModEventHandler {
 				.forEach(ModelLoader::addSpecialModel);
 
 		ItemPropertyFunction prop = (stack, world, entity, seed) -> ItemModBook.getCompletion(stack);
-		ItemProperties.register(PatchouliItems.BOOK.get(), new ResourceLocation(Patchouli.MOD_ID, "completion"), prop);
+		ItemProperties.register(PatchouliItems.BOOK, new ResourceLocation(Patchouli.MOD_ID, "completion"), prop);
 	}
 }

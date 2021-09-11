@@ -63,7 +63,7 @@ public abstract class BookRecipe<T extends CraftingRecipe> implements CraftingRe
 		public T fromJson(ResourceLocation id, JsonObject json) {
 			if (!json.has("result")) {
 				JsonObject object = new JsonObject();
-				object.addProperty("item", PatchouliItems.BOOK.getId().toString());
+				object.addProperty("item", PatchouliItems.BOOK_ID.toString());
 				json.add("result", object);
 			}
 			R recipe = getSerializer().fromJson(id, json);
