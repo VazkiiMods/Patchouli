@@ -112,6 +112,7 @@ public abstract class GuiBook extends Screen {
 		addBookmarkButtons();
 	}
 
+	@Override
 	public Minecraft getMinecraft() {
 		return minecraft;
 	}

@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "vazkii.patchouli.mixin",
-  "compatibilityLevel": "JAVA_8",
+  "compatibilityLevel": "JAVA_16",
   "mixins": [
     "AccessorRecipeManager",
     "AccessorSmithingRecipe"
@@ -13,12 +13,8 @@
     "client.AccessorScreen",
     "client.MixinClientAdvancements",
     "client.MixinCrashReport",
-    "client.MixinGameRenderer",
     "client.MixinInventoryScreen",
-    "client.MixinLevelRenderer",
-    "client.MixinMinecraft",
-    "client.MixinModelManager",
-    "client.MixinScreen"
+    "client.MixinModelManager"
   ],
   "injectors": {
     "defaultRequire": 1
