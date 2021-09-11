@@ -1,13 +1,15 @@
 package vazkii.patchouli.client.book.template.test;
 
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 
+import net.minecraftforge.registries.ForgeRegistries;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
+
+import java.util.Optional;
 
 public class EntityTestProcessor implements IComponentProcessor {
 
@@ -21,7 +23,7 @@ public class EntityTestProcessor implements IComponentProcessor {
 		}
 
 		ResourceLocation key = new ResourceLocation(entityType);
-		entityName = Registry.ENTITY_TYPE.getOptional(key)
+		entityName = Optional.ofNullable(ForgeRegistries.ENTITIES.getValue(key))
 				.map(EntityType::getDescription).map(Component::getString)
 				.orElse(null);
 	}
