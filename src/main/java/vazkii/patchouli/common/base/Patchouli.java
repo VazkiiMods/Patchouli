@@ -11,6 +11,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import vazkii.patchouli.client.base.ClientInitializer;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.command.OpenBookCommand;
 import vazkii.patchouli.common.handler.LecternEventHandler;
@@ -32,6 +33,7 @@ public class Patchouli {
 	public Patchouli() {
 		var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(this::onCommonSetup);
+		modEventBus.addListener(ClientInitializer::onInitializeClient);
 		MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
 		MinecraftForge.EVENT_BUS.addListener(this::onDatapackSync);
 		MinecraftForge.EVENT_BUS.addListener(LecternEventHandler::onRightClick);
