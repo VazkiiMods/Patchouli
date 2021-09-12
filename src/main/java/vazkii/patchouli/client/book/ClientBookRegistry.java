@@ -6,8 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-
 import net.minecraftforge.client.model.ModelLoader;
+
 import vazkii.patchouli.client.book.page.*;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.TemplateComponent;
