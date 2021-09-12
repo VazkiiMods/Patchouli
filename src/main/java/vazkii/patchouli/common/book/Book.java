@@ -14,9 +14,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.forgespi.language.IModInfo;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.forgespi.language.IModInfo;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.*;
 import vazkii.patchouli.common.base.Patchouli;
