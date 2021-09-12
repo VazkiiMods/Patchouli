@@ -1,9 +1,7 @@
 package vazkii.patchouli.client.base;
 
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
-import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 
 /**
  * Counts ticks passed in-game, does <b>not</b> stop counting when paused.
@@ -36,8 +34,8 @@ public final class ClientTicker {
 
 	private static void onRenderTick(TickEvent.RenderTickEvent evt) {
 		switch (evt.phase) {
-			case START -> renderTickStart(evt.renderTickTime);
-			case END -> renderTickEnd();
+		case START -> renderTickStart(evt.renderTickTime);
+		case END -> renderTickEnd();
 		}
 	}
 
