@@ -36,10 +36,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.client.gui.OverlayRegistry;
 
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -184,7 +184,7 @@ public class MultiblockVisualizationHandler {
 		isAnchored = true;
 	}
 
-	static InteractionResult onPlayerInteract(Player player, Level world, InteractionHand hand, BlockHitResult hit) {
+	private static InteractionResult onPlayerInteract(Player player, Level world, InteractionHand hand, BlockHitResult hit) {
 		if (hasMultiblock && !isAnchored && player == Minecraft.getInstance().player) {
 			anchorTo(hit.getBlockPos(), getRotation(player));
 			return InteractionResult.SUCCESS;
@@ -192,7 +192,17 @@ public class MultiblockVisualizationHandler {
 		return InteractionResult.PASS;
 	}
 
-	public static void onClientTick(Minecraft mc) {
+	public static void init() {
+		OVERLAY = OverlayRegistry.registerOverlayTop("Patchouli Multiblock Overlay", (gui, mStack, partialTicks, width, height) -> MultiblockVisualizationHandler.onRenderHUD(mStack, partialTicks));
+		MinecraftForge.EVENT_BUS.addListener(MultiblockVisualizationHandler::onWorldRenderLast);
+		MinecraftForge.EVENT_BUS.addListener(MultiblockVisualizationHandler::onBlockRightClicked);
+		MinecraftForge.EVENT_BUS.addListener(MultiblockVisualizationHandler::onClientTick);
+	}
+
+	private static void onClientTick(TickEvent.ClientTickEvent e) {
+		if (e.phase != TickEvent.Phase.END) {
+			return;
+		}
 		if (Minecraft.getInstance().level == null) {
 			hasMultiblock = false;
 		} else if (isAnchored && blocks == blocksDone && airFilled == 0) {
@@ -205,8 +215,18 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static void init() {
-		OVERLAY = OverlayRegistry.registerOverlayTop("Patchouli Multiblock Overlay", (gui, mStack, partialTicks, width, height) -> MultiblockVisualizationHandler.onRenderHUD(mStack, partialTicks));
+	private static void onWorldRenderLast(RenderWorldLastEvent evt) {
+		if (hasMultiblock && getMultiblock() != null) {
+			renderMultiblock(Minecraft.getInstance().level, evt.getMatrixStack());
+		}
+	}
+
+	private static void onBlockRightClicked(PlayerInteractEvent.RightClickBlock evt) {
+		InteractionResult result = onPlayerInteract(evt.getPlayer(), evt.getWorld(), evt.getHand(), evt.getHitVec());
+		if (result.consumesAction()) {
+			evt.setCanceled(true);
+			evt.setCancellationResult(result);
+		}
 	}
 
 	public static void renderMultiblock(Level world, PoseStack ms) {

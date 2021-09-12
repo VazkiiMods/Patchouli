@@ -17,6 +17,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
+import net.minecraftforge.client.event.RenderTooltipEvent;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 
 import vazkii.patchouli.client.RenderHelper;
@@ -31,10 +33,16 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 public class TooltipHandler {
 	private static float lexiconLookupTime = 0;
 
-	public static void onTooltip(PoseStack ms, ItemStack stack, int mouseX, int mouseY) {
+	public static void init() {
+		MinecraftForge.EVENT_BUS.addListener(TooltipHandler::onRenderTooltip);
+	}
+
+	private static void onRenderTooltip(RenderTooltipEvent.Pre evt) {
 		Minecraft mc = Minecraft.getInstance();
-		int tooltipX = mouseX;
-		int tooltipY = mouseY - 4;
+		PoseStack ms = evt.getMatrixStack();
+		ItemStack stack = evt.getStack();
+		int tooltipX = evt.getX();
+		int tooltipY = evt.getY() - 4;
 
 		if (mc.player != null && !(mc.screen instanceof GuiBook)) {
 			int lexSlot = -1;

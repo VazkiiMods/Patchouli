@@ -12,6 +12,8 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
 
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.minecraftforge.common.MinecraftForge;
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.book.Book;
@@ -55,7 +57,11 @@ public class ClientAdvancements {
 		return false;
 	}
 
-	public static void playerLogout() {
+	public static void init() {
+		MinecraftForge.EVENT_BUS.addListener(ClientAdvancements::onPlayerLogout);
+	}
+
+	private static void onPlayerLogout(ClientPlayerNetworkEvent.LoggedOutEvent evt) {
 		gotFirstAdvPacket = false;
 	}
 

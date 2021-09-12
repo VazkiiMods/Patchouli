@@ -11,12 +11,17 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import vazkii.patchouli.client.base.BookModel;
+import vazkii.patchouli.client.base.ClientAdvancements;
+import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.Patchouli;
@@ -32,8 +37,20 @@ public class ModEventHandler {
 		PersistentData.setup();
 		BookRightClickHandler.init();
 		MultiblockVisualizationHandler.init();
+		TooltipHandler.init();
+		ClientAdvancements.init();
+		ClientTicker.init();
 
-		((ReloadableResourceManager) Minecraft.getInstance().getResourceManager()).registerReloadListener((ResourceManagerReloadListener) (manager) -> {
+		var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		modEventBus.addListener(ModEventHandler::onRegisterClientReloadListener);
+		modEventBus.addListener(ModEventHandler::onModelBake);
+		modEventBus.addListener(ModEventHandler::onModelRegister);
+
+		ClientBookRegistry.INSTANCE.reload(false);
+	}
+
+	private static void onRegisterClientReloadListener(RegisterClientReloadListenersEvent evt) {
+		evt.registerReloadListener((ResourceManagerReloadListener) (manager) -> {
 			if (Minecraft.getInstance().level != null) {
 				Patchouli.LOGGER.info("Reloading resource pack-based books, world is nonnull");
 				ClientBookRegistry.INSTANCE.reload(true);
@@ -41,11 +58,9 @@ public class ModEventHandler {
 				Patchouli.LOGGER.info("Not reloading resource pack-based books as client world is missing");
 			}
 		});
-		ClientBookRegistry.INSTANCE.reload(false);
 	}
 
-	@SubscribeEvent
-	public static void onModelBake(ModelBakeEvent evt) {
+	private static void onModelBake(ModelBakeEvent evt) {
 		ModelResourceLocation key = new ModelResourceLocation(PatchouliItems.BOOK_ID, "inventory");
 		BakedModel oldModel = evt.getModelRegistry().get(key);
 		if (oldModel != null) {
@@ -53,8 +68,7 @@ public class ModEventHandler {
 		}
 	}
 
-	@SubscribeEvent
-	public static void onModelRegister(ModelRegistryEvent e) {
+	private static void onModelRegister(ModelRegistryEvent e) {
 		BookRegistry.INSTANCE.books.values().stream()
 				.map(b -> new ModelResourceLocation(b.model, "inventory"))
 				.forEach(ModelLoader::addSpecialModel);
