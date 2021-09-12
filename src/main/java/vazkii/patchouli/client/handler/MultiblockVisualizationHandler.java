@@ -37,8 +37,10 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.client.gui.IIngameOverlay;
 import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -94,90 +96,6 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static void onRenderHUD(PoseStack ms, float partialTicks) {
-		if (hasMultiblock) {
-			int waitTime = 40;
-			int fadeOutSpeed = 4;
-			int fullAnimTime = waitTime + 10;
-			float animTime = timeComplete + (timeComplete == 0 ? 0 : partialTicks);
-
-			if (animTime > fullAnimTime) {
-				hasMultiblock = false;
-				return;
-			}
-
-			ms.pushPose();
-			ms.translate(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed, 0);
-
-			Minecraft mc = Minecraft.getInstance();
-			int x = mc.getWindow().getGuiScaledWidth() / 2;
-			int y = 12;
-
-			mc.font.drawShadow(ms, name, x - mc.font.width(name) / 2, y, 0xFFFFFF);
-
-			int width = 180;
-			int height = 9;
-			int left = x - width / 2;
-			int top = y + 10;
-
-			if (timeComplete > 0) {
-				String s = I18n.get("patchouli.gui.lexicon.structure_complete");
-				ms.pushPose();
-				ms.translate(0, Math.min(height + 5, animTime), 0);
-				mc.font.drawShadow(ms, s, x - mc.font.width(s) / 2, top + height - 10, 0x00FF00);
-				ms.popPose();
-			}
-
-			GuiComponent.fill(ms, left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
-			drawGradientRect(ms, left, top, left + width, top + height, 0xFF666666, 0xFF555555);
-
-			float fract = (float) blocksDone / Math.max(1, blocks);
-			int progressWidth = (int) ((float) width * fract);
-			int color = Mth.hsvToRgb(fract / 3.0F, 1.0F, 1.0F) | 0xFF000000;
-			int color2 = new Color(color).darker().getRGB();
-			drawGradientRect(ms, left, top, left + progressWidth, top + height, color, color2);
-
-			if (!isAnchored) {
-				String s = I18n.get("patchouli.gui.lexicon.not_anchored");
-				mc.font.drawShadow(ms, s, x - mc.font.width(s) / 2, top + height + 8, 0xFFFFFF);
-			} else {
-				if (lookingState != null) {
-					// try-catch around here because the state isn't necessarily present in the world in this instance,
-					// which isn't really expected behavior for getPickBlock
-					try {
-						Block block = lookingState.getBlock();
-						ItemStack stack = block.getCloneItemStack(mc.level, lookingPos, lookingState);
-
-						if (!stack.isEmpty()) {
-							mc.font.drawShadow(ms, stack.getHoverName(), left + 20, top + height + 8, 0xFFFFFF);
-							RenderHelper.renderItemStackInGui(ms, stack, left, top + height + 2);
-						}
-					} catch (Exception ignored) {}
-				}
-
-				if (timeComplete == 0) {
-					color = 0xFFFFFF;
-					int posx = left + width;
-					int posy = top + height + 2;
-					int mult = 1;
-					String progress = blocksDone + "/" + blocks;
-
-					if (blocksDone == blocks && airFilled > 0) {
-						progress = I18n.get("patchouli.gui.lexicon.needs_air");
-						color = 0xDA4E3F;
-						mult *= 2;
-						posx -= width / 2;
-						posy += 2;
-					}
-
-					mc.font.drawShadow(ms, progress, posx - mc.font.width(progress) / mult, posy, color);
-				}
-			}
-
-			ms.popPose();
-		}
-	}
-
 	public static void anchorTo(BlockPos target, Rotation rot) {
 		pos = target;
 		facingRotation = rot;
@@ -185,7 +103,7 @@ public class MultiblockVisualizationHandler {
 	}
 
 	private static InteractionResult onPlayerInteract(Player player, Level world, InteractionHand hand, BlockHitResult hit) {
-		if (hasMultiblock && !isAnchored && player == Minecraft.getInstance().player) {
+		if (hasMultiblock && !isAnchored() && player == Minecraft.getInstance().player) {
 			anchorTo(hit.getBlockPos(), getRotation(player));
 			return InteractionResult.SUCCESS;
 		}
@@ -193,10 +111,95 @@ public class MultiblockVisualizationHandler {
 	}
 
 	public static void init() {
-		OVERLAY = OverlayRegistry.registerOverlayTop("Patchouli Multiblock Overlay", (gui, mStack, partialTicks, width, height) -> MultiblockVisualizationHandler.onRenderHUD(mStack, partialTicks));
+		OVERLAY = OverlayRegistry.registerOverlayTop("Patchouli Multiblock Overlay", MultiblockVisualizationHandler::renderHUD);
 		MinecraftForge.EVENT_BUS.addListener(MultiblockVisualizationHandler::onWorldRenderLast);
 		MinecraftForge.EVENT_BUS.addListener(MultiblockVisualizationHandler::onBlockRightClicked);
 		MinecraftForge.EVENT_BUS.addListener(MultiblockVisualizationHandler::onClientTick);
+	}
+
+	private static void renderHUD(ForgeIngameGui gui, PoseStack ms, float partialTicks, int screenWidth, int screenHeight) {
+		if (!hasMultiblock) {
+			return;
+		}
+		int waitTime = 40;
+		int fadeOutSpeed = 4;
+		int fullAnimTime = waitTime + 10;
+		float animTime = timeComplete + (timeComplete == 0 ? 0 : partialTicks);
+
+		if (animTime > fullAnimTime) {
+			hasMultiblock = false;
+			return;
+		}
+
+		ms.pushPose();
+		ms.translate(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed, 0);
+
+		Minecraft mc = Minecraft.getInstance();
+		int x = mc.getWindow().getGuiScaledWidth() / 2;
+		int y = 12;
+
+		mc.font.drawShadow(ms, name, x - mc.font.width(name) / 2f, y, 0xFFFFFF);
+
+		int width = 180;
+		int height = 9;
+		int left = x - width / 2;
+		int top = y + 10;
+
+		if (timeComplete > 0) {
+			String s = I18n.get("patchouli.gui.lexicon.structure_complete");
+			ms.pushPose();
+			ms.translate(0, Math.min(height + 5, animTime), 0);
+			mc.font.drawShadow(ms, s, x - mc.font.width(s) / 2f, top + height - 10, 0x00FF00);
+			ms.popPose();
+		}
+
+		GuiComponent.fill(ms, left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
+		drawGradientRect(ms, left, top, left + width, top + height, 0xFF666666, 0xFF555555);
+
+		float fract = (float) blocksDone / Math.max(1, blocks);
+		int progressWidth = (int) ((float) width * fract);
+		int color = Mth.hsvToRgb(fract / 3.0F, 1.0F, 1.0F) | 0xFF000000;
+		int color2 = new Color(color).darker().getRGB();
+		drawGradientRect(ms, left, top, left + progressWidth, top + height, color, color2);
+
+		if (!isAnchored()) {
+			String s = I18n.get("patchouli.gui.lexicon.not_anchored");
+			mc.font.drawShadow(ms, s, x - mc.font.width(s) / 2f, top + height + 8, 0xFFFFFF);
+		} else {
+			if (lookingState != null) {
+				// try-catch around here because the state isn't necessarily present in the world in this instance,
+				// which isn't really expected behavior for getPickBlock
+				try {
+					Block block = lookingState.getBlock();
+					ItemStack stack = block.getPickBlock(lookingState, mc.hitResult, mc.level, lookingPos, mc.player);
+
+					if (!stack.isEmpty()) {
+						mc.font.drawShadow(ms, stack.getHoverName(), left + 20, top + height + 8, 0xFFFFFF);
+						RenderHelper.renderItemStackInGui(ms, stack, left, top + height + 2);
+					}
+				} catch (Exception ignored) {}
+			}
+
+			if (timeComplete == 0) {
+				color = 0xFFFFFF;
+				int posx = left + width;
+				int posy = top + height + 2;
+				float mult = 1;
+				String progress = blocksDone + "/" + blocks;
+
+				if (blocksDone == blocks && airFilled > 0) {
+					progress = I18n.get("patchouli.gui.lexicon.needs_air");
+					color = 0xDA4E3F;
+					mult *= 2;
+					posx -= width / 2;
+					posy += 2;
+				}
+
+				mc.font.drawShadow(ms, progress, posx - mc.font.width(progress) / mult, posy, color);
+			}
+		}
+
+		ms.popPose();
 	}
 
 	private static void onClientTick(TickEvent.ClientTickEvent e) {
@@ -205,7 +208,7 @@ public class MultiblockVisualizationHandler {
 		}
 		if (Minecraft.getInstance().level == null) {
 			hasMultiblock = false;
-		} else if (isAnchored && blocks == blocksDone && airFilled == 0) {
+		} else if (isAnchored() && isDone()) {
 			timeComplete++;
 			if (timeComplete == 14) {
 				Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.EXPERIENCE_ORB_PICKUP, 1.0F));
@@ -231,7 +234,10 @@ public class MultiblockVisualizationHandler {
 
 	public static void renderMultiblock(Level world, PoseStack ms) {
 		Minecraft mc = Minecraft.getInstance();
-		if (!isAnchored) {
+		if (mc.player == null) {
+			return;
+		}
+		if (!isAnchored()) {
 			facingRotation = getRotation(mc.player);
 			if (mc.hitResult instanceof BlockHitResult) {
 				pos = ((BlockHitResult) mc.hitResult).getBlockPos();
@@ -259,8 +265,7 @@ public class MultiblockVisualizationHandler {
 		}
 
 		BlockPos checkPos = null;
-		if (mc.hitResult instanceof BlockHitResult) {
-			BlockHitResult blockRes = (BlockHitResult) mc.hitResult;
+		if (mc.hitResult instanceof BlockHitResult blockRes) {
 			checkPos = blockRes.getBlockPos().relative(blockRes.getDirection());
 		}
 
@@ -298,7 +303,7 @@ public class MultiblockVisualizationHandler {
 		buffers.endBatch();
 		ms.popPose();
 
-		if (!isAnchored) {
+		if (!isAnchored()) {
 			blocks = blocksDone = 0;
 		}
 	}
@@ -317,7 +322,7 @@ public class MultiblockVisualizationHandler {
 				state = Blocks.RED_CONCRETE.defaultBlockState();
 			}
 
-			Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, ms, buffers, 0xF000F0, OverlayTexture.NO_OVERLAY);
+			Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, ms, buffers, 0xF000F0, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
 
 			ms.popPose();
 		}
@@ -329,6 +334,10 @@ public class MultiblockVisualizationHandler {
 
 	public static boolean isAnchored() {
 		return isAnchored;
+	}
+
+	private static boolean isDone() {
+		return blocks == blocksDone && airFilled == 0;
 	}
 
 	public static Rotation getFacingRotation() {
@@ -372,7 +381,7 @@ public class MultiblockVisualizationHandler {
 	}
 
 	private static MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
-		BufferBuilder fallback = ((AccessorMultiBufferSource) original).getFallbackBuffer(); // TODO Accessos are broken
+		BufferBuilder fallback = ((AccessorMultiBufferSource) original).getFallbackBuffer();
 		Map<RenderType, BufferBuilder> layerBuffers = ((AccessorMultiBufferSource) original).getFixedBuffers();
 		Map<RenderType, BufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
 		for (Map.Entry<RenderType, BufferBuilder> e : layerBuffers.entrySet()) {
