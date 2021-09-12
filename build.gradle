@@ -68,6 +68,7 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
+            arg '--mixin.config=patchouli.mixins.json'
             property 'forge.logging.console.level', 'debug'
             property 'fml.earlyprogresswindow', 'false'
             property 'mixin.env.remapRefMap', 'true'
@@ -82,6 +83,7 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
+            arg '--mixin.config=patchouli.mixins.json'
             property 'forge.logging.console.level', 'debug'
             property 'fml.earlyprogresswindow', 'false'
             property 'mixin.env.remapRefMap', 'true'
@@ -107,8 +109,7 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${mc_version}-37.0.58"
-    implementation 'org.spongepowered:mixin:0.8.4'
+    minecraft "net.minecraftforge:forge:${mc_version}-37.0.59"
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}:8.0.0.16:api")
@@ -160,7 +161,7 @@ jar {
             "Implementation-Title": "${config.mod_id}",
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"vazkii",
-            "MixinConnector": "vazkii.patchouli.common.MixinConnector"
+            "MixinConfigs": "patchouli.mixins.json"
         ])
     }
 
