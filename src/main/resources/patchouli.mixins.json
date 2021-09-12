@@ -4,7 +4,6 @@
   "package": "vazkii.patchouli.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "AccessorRecipeManager",
     "AccessorSmithingRecipe"
   ],
   "client": [
