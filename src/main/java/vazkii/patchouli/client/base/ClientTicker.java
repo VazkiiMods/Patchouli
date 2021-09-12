@@ -34,7 +34,7 @@ public final class ClientTicker {
 		MinecraftForge.EVENT_BUS.addListener(ClientTicker::onRenderTick);
 	}
 
-	public static void onRenderTick(TickEvent.RenderTickEvent evt) {
+	private static void onRenderTick(TickEvent.RenderTickEvent evt) {
 		switch (evt.phase) {
 			case START -> renderTickStart(evt.renderTickTime);
 			case END -> renderTickEnd();
