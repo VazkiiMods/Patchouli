@@ -1,8 +1,10 @@
 package vazkii.patchouli.common.base;
 
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.OnDatapackSyncEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -34,6 +36,7 @@ public class Patchouli {
 		var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 		modEventBus.addListener(this::onCommonSetup);
 		modEventBus.addListener(ClientInitializer::onInitializeClient);
+		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientInitializer::preInitClient);
 		MinecraftForge.EVENT_BUS.addListener(this::onRegisterCommands);
 		MinecraftForge.EVENT_BUS.addListener(this::onDatapackSync);
 		MinecraftForge.EVENT_BUS.addListener(LecternEventHandler::onRightClick);

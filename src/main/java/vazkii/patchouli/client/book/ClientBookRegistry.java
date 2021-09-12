@@ -3,9 +3,11 @@ package vazkii.patchouli.client.book;
 import com.google.gson.*;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
+import net.minecraftforge.client.model.ModelLoader;
 import vazkii.patchouli.client.book.page.*;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.client.book.template.TemplateComponent;
@@ -61,6 +63,9 @@ public class ClientBookRegistry {
 	public void reload(boolean resourcePackBooksOnly) {
 		currentLang = Minecraft.getInstance().getLanguageManager().getSelected().getCode();
 		BookRegistry.INSTANCE.reloadContents(resourcePackBooksOnly);
+		BookRegistry.INSTANCE.books.values().stream()
+				.map(b -> new ModelResourceLocation(b.model, "inventory"))
+				.forEach(ModelLoader::addSpecialModel);
 	}
 
 	public void reloadLocks(boolean suppressToasts) {

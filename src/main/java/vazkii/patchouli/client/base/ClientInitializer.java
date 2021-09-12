@@ -2,7 +2,6 @@ package vazkii.patchouli.client.base;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.client.renderer.item.ItemPropertyFunction;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -10,7 +9,6 @@ import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -19,12 +17,19 @@ import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.handler.TooltipHandler;
 import vazkii.patchouli.common.base.Patchouli;
-import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 
 public class ClientInitializer {
+	public static void preInitClient() {
+		var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+		modEventBus.addListener(ClientInitializer::onRegisterClientReloadListener);
+		modEventBus.addListener(ClientInitializer::onModelBake);
+		modEventBus.addListener(ClientInitializer::onModelRegister);
+	}
+
 	public static void onInitializeClient(FMLClientSetupEvent evt) {
+		// TODO if something here is too late move it to preInitClient
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
 		BookRightClickHandler.init();
@@ -33,12 +38,7 @@ public class ClientInitializer {
 		ClientAdvancements.init();
 		ClientTicker.init();
 
-		var modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-		modEventBus.addListener(ClientInitializer::onRegisterClientReloadListener);
-		modEventBus.addListener(ClientInitializer::onModelBake);
-		modEventBus.addListener(ClientInitializer::onModelRegister);
-
-		evt.enqueueWork(() -> ClientBookRegistry.INSTANCE.reload(false));
+		ClientBookRegistry.INSTANCE.reload(false);
 	}
 
 	private static void onRegisterClientReloadListener(RegisterClientReloadListenersEvent evt) {
@@ -47,7 +47,7 @@ public class ClientInitializer {
 				Patchouli.LOGGER.info("Reloading resource pack-based books, world is nonnull");
 				ClientBookRegistry.INSTANCE.reload(true);
 			} else {
-				Patchouli.LOGGER.info("Not reloading resource pack-based books as client world is missing");
+				Patchouli.LOGGER.debug("Not reloading resource pack-based books as client world is missing");
 			}
 		});
 	}
@@ -61,11 +61,6 @@ public class ClientInitializer {
 	}
 
 	private static void onModelRegister(ModelRegistryEvent e) {
-		BookRegistry.INSTANCE.books.values().stream()
-				.map(b -> new ModelResourceLocation(b.model, "inventory"))
-				.forEach(ModelLoader::addSpecialModel);
-
-		ItemPropertyFunction prop = (stack, world, entity, seed) -> ItemModBook.getCompletion(stack);
-		ItemProperties.register(PatchouliItems.BOOK, new ResourceLocation(Patchouli.MOD_ID, "completion"), prop);
+		ItemProperties.register(PatchouliItems.BOOK, new ResourceLocation(Patchouli.MOD_ID, "completion"), (stack, world, entity, seed) -> ItemModBook.getCompletion(stack));
 	}
 }
