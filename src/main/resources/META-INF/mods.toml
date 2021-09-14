@@ -13,7 +13,7 @@ description = "Patchouli: Accessible, Data-Driven, Dependency-Free Documentation
 [[dependencies.patchouli]]
 modId = "forge"
 mandatory = true
-versionRange = "[37.0.47,)"
+versionRange = "[37.0.59,)"
 ordering = "NONE"
 side = "BOTH"
 
