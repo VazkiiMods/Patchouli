@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
 import net.minecraftforge.forgespi.language.IModInfo;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -76,8 +75,8 @@ public class BookRegistry {
 			IModInfo mod = pair.getLeft();
 			ResourceLocation res = pair.getRight();
 
-			var modObject = ModList.get().getModFileById(mod.getModId()).getFile().findResource(file);
-			try (InputStream stream = Files.newInputStream(modObject)) {
+			var path = ModList.get().getModFileById(mod.getModId()).getFile().findResource(file);
+			try (InputStream stream = Files.newInputStream(path)) {
 				loadBook(mod, res, stream, false);
 			} catch (Exception e) {
 				Patchouli.LOGGER.error("Failed to load book {} defined by mod {}, skipping",
@@ -112,8 +111,7 @@ public class BookRegistry {
 		}
 	}
 
-	public void loadBook(IModInfo mod, ResourceLocation res, InputStream stream,
-			boolean external) {
+	public void loadBook(IModInfo mod, ResourceLocation res, InputStream stream, boolean external) {
 		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		Book book = GSON.fromJson(reader, Book.class);
 		book.build(mod, res, external);
@@ -150,12 +148,7 @@ public class BookRegistry {
 			return;
 		}
 
-		Path source;
-		if (mod.getOwningFile() instanceof ModFileInfo info) {
-			source = info.getFile().getFilePath();
-		} else {
-			return;
-		}
+		Path source = mod.getOwningFile().getFile().getSecureJar().getRootPath();
 
 		try {
 			if (Files.isRegularFile(source)) {
