@@ -37,8 +37,8 @@ public final class SerializationUtil {
 			FileInputStream in = new FileInputStream(f);
 			return gson.fromJson(new InputStreamReader(in, StandardCharsets.UTF_8), clazz);
 		} catch (IOException e) {
-			Patchouli.LOGGER.error("Failed to load file", e);
-			return null;
+			Patchouli.LOGGER.error("Failed to load file, using default", e);
+			return baseCase.get();
 		}
 	}
 

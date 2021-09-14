@@ -16,7 +16,7 @@ public final class PersistentData {
 
 	private static File saveFile;
 
-	public static DataHolder data;
+	public static DataHolder data = new DataHolder();
 
 	public static void setup() {
 		saveFile = new File("patchouli_data.json");
