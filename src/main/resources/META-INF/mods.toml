@@ -6,7 +6,7 @@ license = "CC BY-NC-SA 3.0"
 modId = "patchouli"
 version = "${version}"
 displayName = "Patchouli"
-logoFile = "icon.png"
+logoFile = "logo.png"
 authors = "Vazkii, williewillus"
 description = "Patchouli: Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers"
 
