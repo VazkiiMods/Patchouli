@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 public class MessageReloadBookContents {
 	public static final ResourceLocation ID = new ResourceLocation(Patchouli.MOD_ID, "reload_books");
 
-	public static void sendToAll(MinecraftServer server) {
+	public static void sendToAll() {
 		NetworkHandler.CHANNEL.send(PacketDistributor.ALL.noArg(), new MessageReloadBookContents());
 	}
 

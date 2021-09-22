@@ -56,6 +56,11 @@ public class Patchouli {
 	}
 
 	private void onDatapackSync(OnDatapackSyncEvent evt) {
-		MessageReloadBookContents.send(evt.getPlayer());
+		var player = evt.getPlayer();
+		if (player != null) {
+			MessageReloadBookContents.send(player);
+		} else {
+			MessageReloadBookContents.sendToAll();
+		}
 	}
 }
