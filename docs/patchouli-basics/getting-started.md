@@ -122,6 +122,8 @@ Open `test_entry.json` and `test_category.json` and fill them in as follows:
 }
 ```
 
+You'll need to edit the "category" key in the test entry. If you are a modder, "yourbooknamespace:test_category" should be replaced with the namespace for your mod (with test_category tacked on, of course). If you're just making a modpack, it should be replaced with "patchouli:test_category"
+
 Save your files, then return ingame and open your book. Shift-click the pencil in the
 bottom-left corner. When you do so, it will reload the book contents, and you should see
 the category and entry you just defined appear.
