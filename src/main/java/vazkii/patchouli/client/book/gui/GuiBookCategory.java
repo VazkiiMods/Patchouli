@@ -67,7 +67,7 @@ public class GuiBookCategory extends GuiBookEntryList {
 
 			Button button = new GuiButtonCategory(this, x, y, ocategory, this::handleButtonCategory);
 			addRenderableWidget(button);
-			dependentButtons.add(button);
+			entryButtons.add(button);
 
 			i++;
 		}
