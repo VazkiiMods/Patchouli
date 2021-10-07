@@ -11,13 +11,13 @@
     "client.AccessorMultiBufferSource",
     "client.AccessorScreen",
     "client.MixinClientAdvancements",
-    "client.MixinCrashReport",
     "client.MixinGameRenderer",
     "client.MixinInventoryScreen",
     "client.MixinLevelRenderer",
     "client.MixinMinecraft",
     "client.MixinModelManager",
-    "client.MixinScreen"
+    "client.MixinScreen",
+    "client.MixinSystemReport"
   ],
   "injectors": {
     "defaultRequire": 1
