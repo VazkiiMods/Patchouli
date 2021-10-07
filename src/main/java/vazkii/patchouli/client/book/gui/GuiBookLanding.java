@@ -56,13 +56,6 @@ public class GuiBookLanding extends GuiBook {
 			addRenderableWidget(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y, this::handleButtonAdvancements));
 		}
 
-		// Config
-		//		if(!book.isExternal) {
-		//			IModGuiFactory guiFactory = FMLClientHandler.instance().getGuiFactoryFor(book.owner);
-		//			if(guiFactory != null && guiFactory.hasConfigGui())
-		//				addButton(new GuiButtonBookConfig(this, x + (pos++) * dist, y));
-		//		}
-
 		if (Minecraft.getInstance().player.isCreative()) {
 			addRenderableWidget(new GuiButtonBookEdit(this, x + (pos++) * dist, y, this::handleButtonEdit));
 		}
@@ -172,12 +165,6 @@ public class GuiBookLanding extends GuiBook {
 
 	public void handleButtonHistory(Button button) {
 		displayLexiconGui(new GuiBookHistory(book), true);
-	}
-
-	public void handleButtonConfig(Button button) {
-//		IModGuiFactory guiFactory = FMLClientHandler.instance().getGuiFactoryFor(book.owner);
-//		Screen configGui = guiFactory.createConfigGui(this);
-//		mc.displayGuiScreen(configGui);
 	}
 
 	public void handleButtonAdvancements(Button button) {

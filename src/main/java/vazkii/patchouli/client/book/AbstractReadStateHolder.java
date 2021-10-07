@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book;
 
+import java.util.Comparator;
 import java.util.stream.Stream;
 
 public abstract class AbstractReadStateHolder {
@@ -23,7 +24,8 @@ public abstract class AbstractReadStateHolder {
 	protected abstract EntryDisplayState computeReadState();
 
 	public static EntryDisplayState mostImportantState(Stream<EntryDisplayState> stream) {
-		return EntryDisplayState.fromOrdinal(stream.mapToInt(EntryDisplayState::ordinal).min().orElse(EntryDisplayState.DEFAULT_TYPE.ordinal()));
+		return stream.min(Comparator.comparingInt(EntryDisplayState::ordinal))
+				.orElse(EntryDisplayState.DEFAULT_TYPE);
 	}
 
 }

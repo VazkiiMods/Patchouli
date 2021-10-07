@@ -101,7 +101,7 @@ public class SpanState implements IStyleStack {
 	}
 
 	// Represents the styling applied to a single stack frame.
-	private class SpanPartialState {
+	private static class SpanPartialState {
 		// This is the current style of the frame.
 		private Style currentStyle;
 		// This is null iff this frame represents the base state (i.e. nothing to merge),

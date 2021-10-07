@@ -129,7 +129,7 @@ public abstract class GuiBook extends Screen {
 		ms.popPose();
 	}
 
-	private final void drawScreenAfterScale(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	private void drawScreenAfterScale(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		resetTooltip();
 		renderBackground(ms);
 

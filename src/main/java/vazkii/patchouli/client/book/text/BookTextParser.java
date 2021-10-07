@@ -115,7 +115,7 @@ public class BookTextParser {
 			state.cluster = new LinkedList<>();
 
 			state.pushStyle(Style.EMPTY.withColor(TextColor.fromRgb(state.book.linkColor)));
-			boolean isExternal = parameter.matches("^https?\\:.*");
+			boolean isExternal = parameter.matches("^https?:.*");
 
 			if (isExternal) {
 				String url = parameter;

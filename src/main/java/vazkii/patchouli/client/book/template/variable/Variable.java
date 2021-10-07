@@ -22,7 +22,7 @@ public class Variable implements IVariable {
 
 	@Override
 	public <T> T as(Class<T> clazz) {
-		IVariableSerializer<T> serializer = VariableHelper.instance().<T>serializerForClass(clazz);
+		IVariableSerializer<T> serializer = VariableHelper.instance().serializerForClass(clazz);
 
 		if (serializer == null) {
 			throw new IllegalArgumentException(String.format("Can't deserialize object of class %s from IVariable", clazz));

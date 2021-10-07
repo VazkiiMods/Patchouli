@@ -39,7 +39,7 @@ public final class ItemStackUtil {
 
 	public static String serializeStack(ItemStack stack) {
 		StringBuilder builder = new StringBuilder();
-		builder.append(Registry.ITEM.getKey(stack.getItem()).toString());
+		builder.append(Registry.ITEM.getKey(stack.getItem()));
 
 		int count = stack.getCount();
 		if (count > 1) {
@@ -79,7 +79,7 @@ public final class ItemStackUtil {
 		int countn = Integer.parseInt(count);
 		ResourceLocation key = new ResourceLocation(tokens[0], tokens[1]);
 		Optional<Item> maybeItem = Registry.ITEM.getOptional(key);
-		if (!maybeItem.isPresent()) {
+		if (maybeItem.isEmpty()) {
 			throw new RuntimeException("Unknown item ID: " + key);
 		}
 		Item item = maybeItem.get();
@@ -241,7 +241,7 @@ public final class ItemStackUtil {
 				}
 				stack.setTag(nbt);
 			} catch (CommandSyntaxException e) {
-				throw new IllegalArgumentException("Invalid NBT Entry: " + e.toString(), e);
+				throw new IllegalArgumentException("Invalid NBT Entry: " + e, e);
 			}
 		}
 

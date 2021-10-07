@@ -240,7 +240,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void renderItemStack(PoseStack ms, int x, int y, int mouseX, int mouseY, ItemStack stack) {
-		if (stack == null || stack.isEmpty()) {
+		if (stack.isEmpty()) {
 			return;
 		}
 

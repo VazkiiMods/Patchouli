@@ -3,7 +3,6 @@ package vazkii.patchouli.client.book;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +45,6 @@ public class BookIcon {
 	}
 
 	public void render(PoseStack ms, int x, int y) {
-		Minecraft mc = Minecraft.getInstance();
 		switch (type) {
 		case STACK:
 			RenderHelper.renderItemStackInGui(ms, stack, x, y);

@@ -112,11 +112,7 @@ public class PageEntity extends PageWithText {
 				float width = entity.getBbWidth();
 				float height = entity.getBbHeight();
 
-				float entitySize = width;
-				if (width < height) {
-					entitySize = height;
-				}
-				entitySize = Math.max(1F, entitySize);
+				float entitySize = Math.max(1F, Math.max(width, height));
 
 				renderScale = 100F / entitySize * 0.8F * scale;
 				offset = Math.max(height, entitySize) * 0.5F + extraOffset;

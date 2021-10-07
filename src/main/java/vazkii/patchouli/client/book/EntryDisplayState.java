@@ -7,7 +7,7 @@ public enum EntryDisplayState {
 	NEUTRAL(false, false, false, 0),
 	COMPLETED(true, false, false, 156);
 
-	private EntryDisplayState(boolean hasIcon, boolean showInInventory, boolean hasAnimation, int u) {
+	EntryDisplayState(boolean hasIcon, boolean showInInventory, boolean hasAnimation, int u) {
 		this.hasIcon = hasIcon;
 		this.showInInventory = showInInventory;
 		this.hasAnimation = hasAnimation;

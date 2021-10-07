@@ -166,7 +166,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	@Override
 	public void clearMultiblock() {
-		MultiblockVisualizationHandler.setMultiblock(null, (Component) null, null, false);
+		MultiblockVisualizationHandler.setMultiblock(null, null, null, false);
 	}
 
 	@Override
