@@ -1,7 +1,11 @@
 ## Fabric Information
 This is the Fabric port of Patchouli, it will receive support for the latest stable version of Minecraft available on Fabric.
 Snapshot releases may happen depending on my mood, but don't count on them.
+
+
 The Fabric branch is the most upstream development branch of Patchouli. Forge receives full support as well.
+
+
 However, pull requests should be made here against the Fabric branch and will be merged downstream to Forge by the maintainers (unless, of course, your changes are specifically relevant to only Forge)
 
 # Patchouli
