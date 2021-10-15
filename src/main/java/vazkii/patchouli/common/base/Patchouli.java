@@ -37,6 +37,8 @@ public class Patchouli {
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
 	public Patchouli() {
+		PatchouliSounds.init();
+		PatchouliItems.init();
 		FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLCommonSetupEvent e) -> this.onInitialize());
 		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener((FMLClientSetupEvent e) -> new ClientInitializer().onInitializeClient()));
 	}
@@ -54,10 +56,8 @@ public class Patchouli {
 			}
 		});
 
-		PatchouliSounds.preInit();
 		BookRegistry.INSTANCE.init();
 
-		PatchouliItems.init();
 		ReloadContentsHandler.init();
 	}
 

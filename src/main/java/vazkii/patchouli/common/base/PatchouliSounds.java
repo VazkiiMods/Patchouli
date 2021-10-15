@@ -3,22 +3,22 @@ package vazkii.patchouli.common.base;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class PatchouliSounds {
 
-	public static SoundEvent book_open;
-	public static SoundEvent book_flip;
+	public static final SoundEvent BOOK_OPEN = new SoundEvent(new ResourceLocation(Patchouli.MOD_ID, "book_open"));
+	public static final SoundEvent BOOK_FLIP = new SoundEvent(new ResourceLocation(Patchouli.MOD_ID, "book_flip"));
 
-	public static void preInit() {
-		book_open = register("book_open");
-		book_flip = register("book_flip");
+	public static void init() {
+		FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(SoundEvent.class, PatchouliSounds::registerSounds);
 	}
 
-	public static SoundEvent register(String name) {
-		ResourceLocation loc = new ResourceLocation(Patchouli.MOD_ID, name);
-		SoundEvent e = new SoundEvent(loc);
-		Registry.register(Registry.SOUND_EVENT, loc, e);
-		return e;
+	private static void registerSounds(RegistryEvent.Register<SoundEvent> evt) {
+		var r = evt.getRegistry();
+		r.register(BOOK_OPEN.setRegistryName(BOOK_OPEN.getLocation()));
+		r.register(BOOK_FLIP.setRegistryName(BOOK_FLIP.getLocation()));
 	}
 
 	public static SoundEvent getSound(ResourceLocation key, SoundEvent fallback) {

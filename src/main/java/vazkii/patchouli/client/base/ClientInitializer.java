@@ -41,7 +41,7 @@ public class ClientInitializer {
 					.forEach(ModelLoader::addSpecialModel);
 
 			ItemPropertyFunction prop = (stack, world, entity, seed) -> ItemModBook.getCompletion(stack);
-			ItemProperties.register(PatchouliItems.book, new ResourceLocation(Patchouli.MOD_ID, "completion"), prop);
+			ItemProperties.register(PatchouliItems.BOOK, new ResourceLocation(Patchouli.MOD_ID, "completion"), prop);
 		});
 
 		var resourceManager = ((ReloadableResourceManager) Minecraft.getInstance().getResourceManager());
