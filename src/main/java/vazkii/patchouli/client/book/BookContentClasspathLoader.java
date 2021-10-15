@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
 
 import org.apache.commons.io.FilenameUtils;
@@ -12,7 +11,9 @@ import vazkii.patchouli.common.book.BookRegistry;
 
 import javax.annotation.Nullable;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -49,18 +50,16 @@ public final class BookContentClasspathLoader implements BookContentLoader {
 		String path = "data/" + resloc.getNamespace() + "/" + resloc.getPath();
 		Patchouli.LOGGER.debug("Loading {}", path);
 
-		Object modObject = ModList.get().getModObjectById(book.owner.getModId()).get();
-		InputStream stream = modObject.getClass().getResourceAsStream(path);
-		if (stream != null) {
-			return stream;
-		}
-
-		if (fallback != null) {
-			Patchouli.LOGGER.debug("Failed to load {}. Switching to fallback.", resloc);
-			return loadJson(book, fallback, null);
-		} else {
-			Patchouli.LOGGER.warn("Failed to load {}.", resloc);
-			return null;
+		try {
+			return Files.newInputStream(book.owner.getOwningFile().getFile().findResource(path));
+		} catch (IOException ex) {
+			if (fallback != null) {
+				Patchouli.LOGGER.debug("Failed to load {}. Switching to fallback. ({})", resloc, ex.getMessage());
+				return loadJson(book, fallback, null);
+			} else {
+				Patchouli.LOGGER.warn("Failed to load {}.", resloc, ex);
+				return null;
+			}
 		}
 	}
 }

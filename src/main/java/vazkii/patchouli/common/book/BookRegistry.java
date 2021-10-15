@@ -76,9 +76,7 @@ public class BookRegistry {
 			IModInfo mod = pair.getLeft();
 			ResourceLocation res = pair.getRight();
 
-			//noinspection OptionalGetWithoutIsPresent It will always be here.
-			Object modObject = ModList.get().getModObjectById(mod.getModId()).get();
-			try (InputStream stream = modObject.getClass().getResourceAsStream(file)) {
+			try (InputStream stream = Files.newInputStream(mod.getOwningFile().getFile().findResource(file))) {
 				loadBook(mod, res, stream, false);
 			} catch (Exception e) {
 				Patchouli.LOGGER.error("Failed to load book {} defined by mod {}, skipping",
