@@ -40,7 +40,7 @@ public class StringStateMatcher {
 		if (state != null) {
 			return new ExactMatcher(state, parser.getProperties());
 		} else {
-			Tag.Named<Block> tag = ForgeTagHandler.makeWrapperTag(Registry.BLOCK_REGISTRY.getRegistryName(), parser.getTag());
+			Tag.Named<Block> tag = ForgeTagHandler.makeWrapperTag(Registry.BLOCK_REGISTRY.location(), parser.getTag());
 			return new TagMatcher(tag, parser.getVagueProperties());
 		}
 	}
