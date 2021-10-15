@@ -103,7 +103,7 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${mc_version}-37.0.58"
+    minecraft "net.minecraftforge:forge:${mc_version}-37.0.90"
     implementation 'org.spongepowered:mixin:0.8.4'
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 

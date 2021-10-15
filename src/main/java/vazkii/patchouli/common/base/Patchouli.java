@@ -1,6 +1,7 @@
 package vazkii.patchouli.common.base;
 
 import com.mojang.brigadier.CommandDispatcher;
+
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraftforge.api.distmarker.Dist;
@@ -8,6 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -23,6 +25,7 @@ import vazkii.patchouli.common.handler.LecternEventHandler;
 import vazkii.patchouli.common.handler.ReloadContentsHandler;
 import vazkii.patchouli.common.item.PatchouliItems;
 
+@Mod(Patchouli.MOD_ID)
 public class Patchouli {
 
 	public static final boolean debug = !FMLEnvironment.production;
@@ -39,7 +42,7 @@ public class Patchouli {
 	}
 
 	public void onInitialize() {
-        PatchouliConfig.setup();
+		PatchouliConfig.setup();
 		MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent e) -> {
 			registerCommands(e.getDispatcher(), e.getEnvironment() == Commands.CommandSelection.DEDICATED);
 		});
