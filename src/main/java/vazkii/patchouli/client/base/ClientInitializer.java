@@ -6,6 +6,8 @@ import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredica
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -19,6 +21,8 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.common.network.NetworkHandler;
+
+import java.util.Map;
 
 public class ClientInitializer implements ClientModInitializer {
 	@Override
@@ -56,5 +60,13 @@ public class ClientInitializer implements ClientModInitializer {
 				}
 			}
 		});
+	}
+
+	public static void replaceBookModel(ModelBakery loader, Map<ResourceLocation, BakedModel> bakedRegistry) {
+		ModelResourceLocation key = new ModelResourceLocation(PatchouliItems.BOOK_ID, "inventory");
+		BakedModel oldModel = bakedRegistry.get(key);
+		if (oldModel != null) {
+			bakedRegistry.put(key, new BookModel(oldModel, loader));
+		}
 	}
 }
