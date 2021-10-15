@@ -70,6 +70,9 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.console.level', 'debug'
             property 'fml.earlyprogresswindow', 'false'
+            arg '--mixin.config=patchouli.mixins.json'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
                 patchouli {
@@ -82,6 +85,9 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.console.level', 'debug'
             property 'fml.earlyprogresswindow', 'false'
+            arg '--mixin.config=patchouli.mixins.json'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
                 patchouli {
@@ -156,7 +162,7 @@ jar {
             "Implementation-Title": "${config.mod_id}",
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"vazkii",
-            "MixinConnector": "vazkii.patchouli.common.MixinConnector"
+            "MixinConfigs": "patchouli.mixins.json"
         ])
     }
 
