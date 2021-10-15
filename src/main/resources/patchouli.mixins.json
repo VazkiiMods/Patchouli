@@ -12,7 +12,6 @@
     "client.AccessorScreen",
     "client.MixinClientAdvancements",
     "client.MixinInventoryScreen",
-    "client.MixinModelManager",
     "client.MixinSystemReport"
   ],
   "injectors": {
