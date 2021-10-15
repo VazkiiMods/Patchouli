@@ -1,7 +1,6 @@
 package vazkii.patchouli.mixin.client;
 
 import net.minecraft.client.gui.components.Widget;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 
@@ -15,9 +14,6 @@ public interface AccessorScreen {
 
 	@Accessor("renderables")
 	List<Widget> getRenderables();
-
-	@Accessor("children")
-	List<GuiEventListener> getChildren();
 
 	@Accessor("narratables")
 	List<NarratableEntry> getNarratables();

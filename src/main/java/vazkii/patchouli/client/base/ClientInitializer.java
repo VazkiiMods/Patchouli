@@ -3,6 +3,8 @@ package vazkii.patchouli.client.base;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
@@ -25,6 +27,8 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.common.network.NetworkHandler;
+
+import java.util.Map;
 
 public class ClientInitializer {
 	public void onInitializeClient() {
@@ -76,5 +80,13 @@ public class ClientInitializer {
 		MinecraftForge.EVENT_BUS.addListener((RenderTooltipEvent.Pre e) -> {
 			TooltipHandler.onTooltip(e.getMatrixStack(), e.getStack(), e.getX(), e.getY());
 		});
+	}
+
+	public static void replaceBookModel(ModelBakery loader, Map<ResourceLocation, BakedModel> bakedRegistry) {
+		ModelResourceLocation key = new ModelResourceLocation(PatchouliItems.BOOK_ID, "inventory");
+		BakedModel oldModel = bakedRegistry.get(key);
+		if (oldModel != null) {
+			bakedRegistry.put(key, new BookModel(oldModel, loader));
+		}
 	}
 }
