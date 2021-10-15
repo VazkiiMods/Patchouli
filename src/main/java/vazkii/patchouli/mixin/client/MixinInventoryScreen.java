@@ -3,6 +3,7 @@ package vazkii.patchouli.mixin.client;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
@@ -19,6 +20,8 @@ import vazkii.patchouli.client.gui.GuiButtonInventoryBook;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
+
+import java.util.List;
 
 @Mixin(InventoryScreen.class)
 public abstract class MixinInventoryScreen extends EffectRenderingInventoryScreen<InventoryMenu> {
@@ -46,9 +49,9 @@ public abstract class MixinInventoryScreen extends EffectRenderingInventoryScree
 			}
 		}
 
-		int i = ((AccessorScreen) this).getChildren().indexOf(replaced);
+		int i = children().indexOf(replaced);
 		if (i >= 0) {
-			((AccessorScreen) this).getChildren().set(i, replacement);
+			((List<GuiEventListener>) children()).set(i, replacement);
 		}
 
 		i = ((AccessorScreen) this).getNarratables().indexOf(replaced);
