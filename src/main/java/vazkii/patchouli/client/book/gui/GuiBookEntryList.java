@@ -28,9 +28,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 
 	BookTextRenderer text;
 
-	List<Button> dependentButtons;
+	final List<Button> entryButtons = new ArrayList<>();
 	List<BookEntry> allEntries;
-	List<BookEntry> visibleEntries;
+	final List<BookEntry> visibleEntries = new ArrayList<>();
 
 	EditBox searchField;
 
@@ -44,7 +44,6 @@ public abstract class GuiBookEntryList extends GuiBook {
 
 		text = new BookTextRenderer(this, new TextComponent(getDescriptionText()), LEFT_PAGE_X, TOP_PADDING + 22);
 
-		visibleEntries = new ArrayList<>();
 		allEntries = new ArrayList<>(getEntries());
 		allEntries.removeIf(BookEntry::shouldHide);
 		if (shouldSortEntryList()) {
@@ -52,7 +51,6 @@ public abstract class GuiBookEntryList extends GuiBook {
 		}
 
 		this.searchField = createSearchBar();
-		dependentButtons = new ArrayList<>();
 		buildEntryButtons();
 	}
 
@@ -99,7 +97,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 			if (shouldDrawProgressBar()) {
 				drawProgressBar(ms, book, mouseX, mouseY, this::doesEntryCountForProgress);
 			}
-		} else if (spread % 2 == 1 && spread == maxSpreads - 1 && dependentButtons.size() <= ENTRIES_PER_PAGE) {
+		} else if (spread % 2 == 1 && spread == maxSpreads - 1 && entryButtons.size() <= ENTRIES_PER_PAGE) {
 			drawPageFiller(ms, book);
 		}
 
@@ -185,8 +183,8 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 
 	void buildEntryButtons() {
-		removeDrawablesIn(dependentButtons);
-		dependentButtons.clear();
+		removeDrawablesIn(entryButtons);
+		entryButtons.clear();
 		visibleEntries.clear();
 
 		String query = searchField.getValue().toLowerCase();
@@ -227,7 +225,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		for (int i = 0; i < count && (i + start) < visibleEntries.size(); i++) {
 			Button button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, visibleEntries.get(start + i), this::handleButtonEntry);
 			addRenderableWidget(button);
-			dependentButtons.add(button);
+			entryButtons.add(button);
 		}
 	}
 

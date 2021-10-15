@@ -26,7 +26,7 @@ import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.common.network.NetworkHandler;
 
-public class ClientProxy {
+public class ClientInitializer {
 	public void onInitializeClient() {
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();

@@ -44,7 +44,7 @@ public final class EntityUtil {
 
 		ResourceLocation key = new ResourceLocation(entityId);
 		Optional<EntityType<?>> maybeType = Registry.ENTITY_TYPE.getOptional(key);
-		if (!maybeType.isPresent()) {
+		if (maybeType.isEmpty()) {
 			throw new RuntimeException("Unknown entity id: " + entityId);
 		}
 		EntityType<?> type = maybeType.get();

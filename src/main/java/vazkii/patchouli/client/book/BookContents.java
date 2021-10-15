@@ -118,8 +118,7 @@ public class BookContents extends AbstractReadStateHolder {
 			int spread = page / 2;
 			currentGui = new GuiBookEntry(book, entry, spread);
 
-			if (prevGui instanceof GuiBookEntry) {
-				GuiBookEntry currEntry = (GuiBookEntry) prevGui;
+			if (prevGui instanceof GuiBookEntry currEntry) {
 				if (currEntry.getEntry() == entry && currEntry.getSpread() == spread) {
 					return;
 				}

@@ -121,7 +121,7 @@ public class PatchouliConfig {
 	public enum TextOverflowMode {
 		OVERFLOW,
 		TRUNCATE,
-		RESIZE;
+		RESIZE
 	}
 
 }

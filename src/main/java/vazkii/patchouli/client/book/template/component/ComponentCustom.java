@@ -25,10 +25,8 @@ public class ComponentCustom extends TemplateComponent {
 		super.onVariablesAvailable(lookup);
 		try {
 			Class<?> classObj = Class.forName(clazz);
-			if (classObj != null) {
-				callbacks = (ICustomComponent) SerializationUtil.RAW_GSON.fromJson(sourceObject, classObj);
-				callbacks.onVariablesAvailable(lookup);
-			}
+			callbacks = (ICustomComponent) SerializationUtil.RAW_GSON.fromJson(sourceObject, classObj);
+			callbacks.onVariablesAvailable(lookup);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to create custom component " + clazz, e);
 		}

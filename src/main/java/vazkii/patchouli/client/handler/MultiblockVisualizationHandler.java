@@ -110,7 +110,7 @@ public class MultiblockVisualizationHandler {
 			int x = mc.getWindow().getGuiScaledWidth() / 2;
 			int y = 12;
 
-			mc.font.drawShadow(ms, name, x - mc.font.width(name) / 2, y, 0xFFFFFF);
+			mc.font.drawShadow(ms, name, x - mc.font.width(name) / 2.0F, y, 0xFFFFFF);
 
 			int width = 180;
 			int height = 9;
@@ -121,7 +121,7 @@ public class MultiblockVisualizationHandler {
 				String s = I18n.get("patchouli.gui.lexicon.structure_complete");
 				ms.pushPose();
 				ms.translate(0, Math.min(height + 5, animTime), 0);
-				mc.font.drawShadow(ms, s, x - mc.font.width(s) / 2, top + height - 10, 0x00FF00);
+				mc.font.drawShadow(ms, s, x - mc.font.width(s) / 2.0F, top + height - 10, 0x00FF00);
 				ms.popPose();
 			}
 
@@ -136,7 +136,7 @@ public class MultiblockVisualizationHandler {
 
 			if (!isAnchored) {
 				String s = I18n.get("patchouli.gui.lexicon.not_anchored");
-				mc.font.drawShadow(ms, s, x - mc.font.width(s) / 2, top + height + 8, 0xFFFFFF);
+				mc.font.drawShadow(ms, s, x - mc.font.width(s) / 2.0F, top + height + 8, 0xFFFFFF);
 			} else {
 				if (lookingState != null) {
 					// try-catch around here because the state isn't necessarily present in the world in this instance,
@@ -156,7 +156,7 @@ public class MultiblockVisualizationHandler {
 					color = 0xFFFFFF;
 					int posx = left + width;
 					int posy = top + height + 2;
-					int mult = 1;
+					float mult = 1;
 					String progress = blocksDone + "/" + blocks;
 
 					if (blocksDone == blocks && airFilled > 0) {
@@ -258,8 +258,7 @@ public class MultiblockVisualizationHandler {
 		}
 
 		BlockPos checkPos = null;
-		if (mc.hitResult instanceof BlockHitResult) {
-			BlockHitResult blockRes = (BlockHitResult) mc.hitResult;
+		if (mc.hitResult instanceof BlockHitResult blockRes) {
 			checkPos = blockRes.getBlockPos().relative(blockRes.getDirection());
 		}
 

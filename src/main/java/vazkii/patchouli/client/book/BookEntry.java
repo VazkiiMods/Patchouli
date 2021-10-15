@@ -115,7 +115,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		locked = advancement != null && !advancement.isEmpty() && !ClientAdvancements.hasDone(advancement);
 
 		boolean dirty = false;
-		if (!locked && currLocked != locked) {
+		if (!locked && currLocked) {
 			dirty = true;
 			book.markUpdated();
 		}

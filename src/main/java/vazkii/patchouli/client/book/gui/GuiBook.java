@@ -131,7 +131,7 @@ public abstract class GuiBook extends Screen {
 		ms.popPose();
 	}
 
-	final void drawScreenAfterScale(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	private void drawScreenAfterScale(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		resetTooltip();
 		renderBackground(ms);
 
@@ -173,11 +173,13 @@ public abstract class GuiBook extends Screen {
 		}
 	}
 
-	public void removeDrawablesIf(Predicate<Widget> pred) {
+	public final void removeDrawablesIf(Predicate<Widget> pred) {
 		((AccessorScreen) (this)).getRenderables().removeIf(pred);
+		((AccessorScreen) (this)).getChildren().removeIf(listener -> listener instanceof Widget w && pred.test(w));
+		((AccessorScreen) (this)).getNarratables().removeIf(listener -> listener instanceof Widget w && pred.test(w));
 	}
 
-	public void removeDrawablesIn(Collection<?> coll) {
+	public final void removeDrawablesIn(Collection<?> coll) {
 		removeDrawablesIf(coll::contains);
 	}
 

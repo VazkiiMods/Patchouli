@@ -4,7 +4,6 @@
   "package": "vazkii.patchouli.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "AccessorRecipeManager",
     "AccessorSmithingRecipe"
   ],
   "client": [
@@ -12,9 +11,9 @@
     "client.AccessorMultiBufferSource",
     "client.AccessorScreen",
     "client.MixinClientAdvancements",
-    "client.MixinCrashReport",
     "client.MixinInventoryScreen",
-    "client.MixinModelManager"
+    "client.MixinModelManager",
+    "client.MixinSystemReport"
   ],
   "injectors": {
     "defaultRequire": 1

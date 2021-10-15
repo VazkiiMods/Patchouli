@@ -1,6 +1,5 @@
 package vazkii.patchouli.api;
 
-import com.google.common.collect.Streams;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -14,6 +13,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * A Patchouli derivation variable, represented internally as {@link JsonElement}.
@@ -32,7 +32,7 @@ public interface IVariable {
 
 	default <T> T as(Class<T> clazz, T def) {
 		return unwrap().isJsonNull() ? def : as(clazz);
-	};
+	}
 
 	/**
 	 * Take a look at the underlying {@link JsonElement} for this variable.
@@ -88,7 +88,8 @@ public interface IVariable {
 	 * Get this IVariable as a {@code Stream<IVariable>}, assuming it's backed by a JsonArray.
 	 */
 	default Stream<IVariable> asStream() {
-		return Streams.stream(unwrap().getAsJsonArray()).map(IVariable::wrap);
+		return StreamSupport.stream(unwrap().getAsJsonArray().spliterator(), false)
+				.map(IVariable::wrap);
 	}
 
 	/**
@@ -153,7 +154,7 @@ public interface IVariable {
 		return wrap(JsonNull.INSTANCE);
 	}
 
-	static class Serializer implements JsonDeserializer<IVariable> {
+	class Serializer implements JsonDeserializer<IVariable> {
 		@Override
 		public IVariable deserialize(JsonElement elem, Type t, JsonDeserializationContext c) {
 			return IVariable.wrap(elem);
