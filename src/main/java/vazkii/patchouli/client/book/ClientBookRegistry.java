@@ -87,7 +87,7 @@ public class ClientBookRegistry {
 			book.getContents().openLexiconGui(book.getContents().getCurrentGui(), false);
 
 			if (mc.player != null) {
-				SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.book_open);
+				SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.BOOK_OPEN);
 				mc.player.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
 			}
 		}

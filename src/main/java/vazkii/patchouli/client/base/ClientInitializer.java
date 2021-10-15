@@ -34,7 +34,7 @@ public class ClientInitializer implements ClientModInitializer {
 				.map(b -> new ModelResourceLocation(b.model, "inventory"))
 				.forEach(register));
 
-		FabricModelPredicateProviderRegistry.register(PatchouliItems.book,
+		FabricModelPredicateProviderRegistry.register(PatchouliItems.BOOK,
 				new ResourceLocation(Patchouli.MOD_ID, "completion"),
 				(stack, world, entity, seed) -> ItemModBook.getCompletion(stack));
 

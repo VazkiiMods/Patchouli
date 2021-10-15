@@ -11,12 +11,18 @@ import vazkii.patchouli.common.recipe.ShapelessBookRecipe;
 public class PatchouliItems {
 
 	public static final ResourceLocation BOOK_ID = new ResourceLocation(Patchouli.MOD_ID, "guide_book");
-	public static Item book;
+	public static final Item BOOK = new ItemModBook();
 
 	public static void init() {
-		book = new ItemModBook();
-		Registry.register(Registry.ITEM, BOOK_ID, book);
+		registerItem();
+		registerRecipeSerializers();
+	}
 
+	private static void registerItem() {
+		Registry.register(Registry.ITEM, BOOK_ID, BOOK);
+	}
+
+	private static void registerRecipeSerializers() {
 		Registry.register(Registry.RECIPE_SERIALIZER, new ResourceLocation(Patchouli.MOD_ID, "shaped_book_recipe"), ShapedBookRecipe.SERIALIZER);
 		Registry.register(Registry.RECIPE_SERIALIZER, new ResourceLocation(Patchouli.MOD_ID, "shapeless_book_recipe"), ShapelessBookRecipe.SERIALIZER);
 	}

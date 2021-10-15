@@ -27,16 +27,19 @@ public class Patchouli implements ModInitializer {
 
 	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
 
+	public Patchouli() {
+		PatchouliSounds.init();
+		PatchouliItems.init();
+	}
+
 	@Override
 	public void onInitialize() {
 		PatchouliConfig.setup();
 		CommandRegistrationCallback.EVENT.register(this::registerCommands);
 		UseBlockCallback.EVENT.register(LecternEventHandler::rightClick);
 
-		PatchouliSounds.preInit();
 		BookRegistry.INSTANCE.init();
 
-		PatchouliItems.init();
 		ReloadContentsHandler.init();
 	}
 

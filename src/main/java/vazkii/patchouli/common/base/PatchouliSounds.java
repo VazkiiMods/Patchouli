@@ -6,19 +6,16 @@ import net.minecraft.sounds.SoundEvent;
 
 public class PatchouliSounds {
 
-	public static SoundEvent book_open;
-	public static SoundEvent book_flip;
+	public static final SoundEvent BOOK_OPEN = new SoundEvent(new ResourceLocation(Patchouli.MOD_ID, "book_open"));
+	public static final SoundEvent BOOK_FLIP = new SoundEvent(new ResourceLocation(Patchouli.MOD_ID, "book_flip"));
 
-	public static void preInit() {
-		book_open = register("book_open");
-		book_flip = register("book_flip");
+	public static void init() {
+		registerSounds();
 	}
 
-	public static SoundEvent register(String name) {
-		ResourceLocation loc = new ResourceLocation(Patchouli.MOD_ID, name);
-		SoundEvent e = new SoundEvent(loc);
-		Registry.register(Registry.SOUND_EVENT, loc, e);
-		return e;
+	private static void registerSounds() {
+		Registry.register(Registry.SOUND_EVENT, BOOK_OPEN.getLocation(), BOOK_OPEN);
+		Registry.register(Registry.SOUND_EVENT, BOOK_FLIP.getLocation(), BOOK_FLIP);
 	}
 
 	public static SoundEvent getSound(ResourceLocation key, SoundEvent fallback) {
