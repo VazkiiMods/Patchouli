@@ -197,6 +197,10 @@ artifacts {
     archives srcJar, apiJar
 }
 
+tasks.withType(GenerateModuleMetadata) {
+    enabled = false
+}
+
 publishing {
     tasks.publish.dependsOn build
     publications {
