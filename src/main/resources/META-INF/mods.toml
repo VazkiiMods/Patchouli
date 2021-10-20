@@ -7,7 +7,7 @@ logoFile="logo.png"
 [[mods]]
 modId="patchouli"
 displayName="Patchouli"
-version="${jarVersion}"
+version="${file.jarVersion}"
 authors="Vazkii"
 description='''
 Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers
