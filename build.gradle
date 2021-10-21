@@ -157,7 +157,7 @@ jar {
             "Specification-Vendor": "vazkii",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": "${config.mod_id}",
-            "Implementation-Version": "${archiveVersion}",
+            "Implementation-Version": "${archiveVersion.get()}",
             "Implementation-Vendor" :"vazkii"
         ])
     }
