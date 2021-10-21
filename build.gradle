@@ -29,6 +29,8 @@ apply plugin: 'org.spongepowered.mixin'
 
 mixin {
     add sourceSets.main, "patchouli.refmap.json"
+    config 'patchouli.mixins.json'
+    dumpTargetOnFailure true
 }
 
 ext.configFile = file('build.properties')
@@ -70,9 +72,6 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.console.level', 'debug'
             property 'fml.earlyprogresswindow', 'false'
-            arg '--mixin.config=patchouli.mixins.json'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
                 patchouli {
@@ -85,9 +84,6 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.console.level', 'debug'
             property 'fml.earlyprogresswindow', 'false'
-            arg '--mixin.config=patchouli.mixins.json'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
                 patchouli {
@@ -110,8 +106,9 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-37.0.90"
-    implementation 'org.spongepowered:mixin:0.8.4'
-    annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    if (!Boolean.getBoolean('idea.sync.active')) {
+        annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
+    }
 
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}:8.0.0.16:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:8.0.0.16")
@@ -160,9 +157,8 @@ jar {
             "Specification-Vendor": "vazkii",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": "${config.mod_id}",
-            "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"vazkii",
-            "MixinConfigs": "patchouli.mixins.json"
+            "Implementation-Version": "${archiveVersion}",
+            "Implementation-Vendor" :"vazkii"
         ])
     }
 
@@ -181,7 +177,7 @@ jar.finalizedBy('reobfJar')
 
 task srcJar (type: Jar) {
     from sourceSets.main.java
-    classifier = 'sources'
+    archiveClassifier.set 'sources'
 }
 
 task apiJar(type: Jar) {
@@ -190,7 +186,7 @@ task apiJar(type: Jar) {
     from(sourceSets.main.output)
     include 'vazkii/patchouli/api/**'
 
-    classifier = 'api'
+    archiveClassifier.set 'api'
 }
 
 artifacts {
@@ -222,14 +218,6 @@ publishing {
     repositories {
         maven {
             url "file://" + System.getenv("local_maven")
-        }
-    }
-}
-
-if (System.getProperty("idea.sync.active") == "true") {
-    afterEvaluate {
-        tasks.withType(JavaCompile).all {
-            it.options.annotationProcessorPath = files()
         }
     }
 }
