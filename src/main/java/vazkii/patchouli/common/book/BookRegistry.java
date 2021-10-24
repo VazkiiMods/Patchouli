@@ -149,12 +149,7 @@ public class BookRegistry {
 			return;
 		}
 
-		Path source;
-		if (mod.getOwningFile() instanceof ModFileInfo info) {
-			source = info.getFile().getFilePath();
-		} else {
-			return;
-		}
+		Path source = mod.getOwningFile().getFile().getSecureJar().getRootPath();
 
 		try {
 			if (Files.isRegularFile(source)) {
