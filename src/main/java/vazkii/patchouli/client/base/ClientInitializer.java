@@ -20,7 +20,6 @@ import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
-import vazkii.patchouli.common.network.NetworkHandler;
 
 import java.util.Map;
 
@@ -32,7 +31,6 @@ public class ClientInitializer implements ClientModInitializer {
 		ClientTicker.init();
 		BookRightClickHandler.init();
 		MultiblockVisualizationHandler.init();
-		NetworkHandler.registerMessages();
 
 		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, register) -> BookRegistry.INSTANCE.books.values().stream()
 				.map(b -> new ModelResourceLocation(b.model, "inventory"))
