@@ -24,6 +24,7 @@ import vazkii.patchouli.common.command.OpenBookCommand;
 import vazkii.patchouli.common.handler.LecternEventHandler;
 import vazkii.patchouli.common.handler.ReloadContentsHandler;
 import vazkii.patchouli.common.item.PatchouliItems;
+import vazkii.patchouli.common.network.NetworkHandler;
 
 @Mod(Patchouli.MOD_ID)
 public class Patchouli {
@@ -55,6 +56,8 @@ public class Patchouli {
 				e.setCancellationResult(result);
 			}
 		});
+
+		NetworkHandler.registerMessages();
 
 		BookRegistry.INSTANCE.init();
 

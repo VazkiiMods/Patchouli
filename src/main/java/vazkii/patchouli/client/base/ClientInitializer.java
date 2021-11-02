@@ -30,7 +30,6 @@ import vazkii.patchouli.common.base.Patchouli;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
-import vazkii.patchouli.common.network.NetworkHandler;
 
 import java.util.Map;
 
@@ -73,7 +72,6 @@ public class ClientInitializer {
 		ClientTicker.init();
 		BookRightClickHandler.init();
 		MultiblockVisualizationHandler.init();
-		NetworkHandler.registerMessages();
 
 		MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent e) -> {
 			if (e.phase == TickEvent.Phase.START) {
