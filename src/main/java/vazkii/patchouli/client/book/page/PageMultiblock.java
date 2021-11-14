@@ -100,7 +100,7 @@ public class PageMultiblock extends PageWithText {
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		GuiBook.drawFromTexture(ms, book, x, y, 405, 149, 106, 106);
 
-		parent.drawCenteredStringNoShadow(ms, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		parent.drawCenteredStringNoShadow(ms, i18n(name), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 
 		if (multiblockObj != null) {
 			renderMultiblock(ms);
@@ -112,7 +112,7 @@ public class PageMultiblock extends PageWithText {
 	public void handleButtonVisualize(Button button) {
 		String entryKey = parent.getEntry().getId().toString();
 		Bookmark bookmark = new Bookmark(entryKey, pageNum / 2);
-		MultiblockVisualizationHandler.setMultiblock(multiblockObj, new TextComponent(name), bookmark, true);
+		MultiblockVisualizationHandler.setMultiblock(multiblockObj, i18nText(name), bookmark, true);
 		parent.addBookmarkButtons();
 
 		if (!PersistentData.data.clickedVisualize) {
