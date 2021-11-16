@@ -49,7 +49,7 @@ import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 import vazkii.patchouli.mixin.client.AccessorMultiBufferSource;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
