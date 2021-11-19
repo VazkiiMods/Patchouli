@@ -23,6 +23,9 @@
     ],
     "client": [
       "vazkii.patchouli.client.base.ClientInitializer"
+    ],
+    "fabric-gametest": [
+      "vazkii.patchouli.common.base.PatchouliSmokeTest"
     ]
   },
   "mixins": [

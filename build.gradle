@@ -51,6 +51,15 @@ repositories {
 	}
 }
 
+loom {
+	runs {
+		create("GameTest") {
+			server()
+			vmArg "-Dfabric-api.gametest=1"
+		}
+	}
+}
+
 dependencies {
 	modImplementation "com.google.code.findbugs:jsr305:3.0.2"
 	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
@@ -58,10 +67,10 @@ dependencies {
 
 	minecraft "com.mojang:minecraft:1.17.1"
 	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:0.11.6"
+	modImplementation "net.fabricmc:fabric-loader:0.12.5"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.37.2+1.17"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.42.1+1.17"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
