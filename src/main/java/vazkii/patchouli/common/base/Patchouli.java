@@ -16,7 +16,6 @@ import vazkii.patchouli.common.command.OpenBookCommand;
 import vazkii.patchouli.common.handler.LecternEventHandler;
 import vazkii.patchouli.common.handler.ReloadContentsHandler;
 import vazkii.patchouli.common.item.PatchouliItems;
-import vazkii.patchouli.common.network.NetworkHandler;
 
 public class Patchouli implements ModInitializer {
 
@@ -38,7 +37,6 @@ public class Patchouli implements ModInitializer {
 		PatchouliConfig.setup();
 		CommandRegistrationCallback.EVENT.register(this::registerCommands);
 		UseBlockCallback.EVENT.register(LecternEventHandler::rightClick);
-		NetworkHandler.registerMessages();
 
 		BookRegistry.INSTANCE.init();
 
