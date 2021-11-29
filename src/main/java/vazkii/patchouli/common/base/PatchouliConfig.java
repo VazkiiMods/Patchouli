@@ -48,8 +48,8 @@ public class PatchouliConfig {
 			.withComment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
 			.finishValue(useShiftForQuickLookup::mirror)
 
-			.beginValue("textOverflowMode", OVERFLOW_TYPE, TextOverflowMode.OVERFLOW)
-			.withComment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit. Relogin after changing.")
+			.beginValue("textOverflowMode", OVERFLOW_TYPE, TextOverflowMode.RESIZE)
+			.withComment("Set how to handle text overflow: OVERFLOW the text off the page, TRUNCATE overflowed text, or RESIZE everything to fit. Relogin after changing.")
 			.finishValue(overflowMode::mirror)
 
 			.build();
