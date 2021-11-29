@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.9-SNAPSHOT'
+	id 'fabric-loom' version '0.10-SNAPSHOT'
 	id 'maven-publish'
 	id "com.diffplug.spotless" version "5.12.5"
 }
@@ -13,7 +13,7 @@ ext.config = configFile.withReader {
 	return (new ConfigSlurper().parse(prop))
 }
 
-def mc_version = '1.17.1'
+def mc_version = '1.18'
 version = "${mc_version}-${config.build_number}-FABRIC"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
@@ -65,12 +65,12 @@ dependencies {
 	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
 	include "me.zeroeightsix:fiber:0.23.0-2"
 
-	minecraft "com.mojang:minecraft:1.17.1"
+	minecraft "com.mojang:minecraft:1.18-rc3"
 	mappings loom.officialMojangMappings()
 	modImplementation "net.fabricmc:fabric-loader:0.12.5"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.42.1+1.17"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.43.1+1.18"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
@@ -107,8 +107,8 @@ tasks.withType(JavaCompile).configureEach {
 	// If Javadoc is generated, this must be specified in that task too.
 	it.options.encoding = "UTF-8"
 
-	// Minecraft 1.17 (21w19a) upwards uses Java 16.
-	it.options.release = 16
+	// Minecraft 1.18 upwards uses Java 17.
+	it.options.release = 17
 }
 
 java {
