@@ -15,6 +15,7 @@ import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public record MessageOpenBookGui(ResourceLocation book, @Nullable ResourceLocation entry, int page) {
+
 	public static final ResourceLocation ID = new ResourceLocation(Patchouli.MOD_ID, "open_book");
 
 	public MessageOpenBookGui(ResourceLocation book, @Nullable ResourceLocation entry, int page) {
