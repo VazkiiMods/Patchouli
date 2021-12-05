@@ -42,8 +42,8 @@ public class ClientInitializer {
 	private static class ClownyModLoaderDesign {
 		@SubscribeEvent
 		public static void modelRegistry(ModelRegistryEvent e) {
-			BookRegistry.INSTANCE.books.values().stream()
-					.map(b -> new ModelResourceLocation(b.model, "inventory"))
+			BookRegistry.getBookModels()
+					.map(model -> new ModelResourceLocation(model, "inventory"))
 					.forEach(ModelLoader::addSpecialModel);
 
 			ItemPropertyFunction prop = (stack, world, entity, seed) -> ItemModBook.getCompletion(stack);

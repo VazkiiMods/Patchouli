@@ -1,0 +1,9 @@
+{
+  "name": "Model Test Book",
+  "landing_text": "Just a model test",
+  "model": "patchouli:test_book",
+  "version": "50",
+  "subtitle": "Comprehensive Test Book Subtitle",
+  "creative_tab": "tools",
+  "use_resource_pack": true
+}

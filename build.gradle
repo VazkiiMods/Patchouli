@@ -171,6 +171,7 @@ jar {
     exclude "**/data/patchouli/patchouli_books/**"
     exclude "**/data/patchouli/advancements/**"
 	exclude "**/data/patchouli/recipes/**"
+    exclude "**/assets/patchouli/models/item/test_book.json"
 }
 
 jar.finalizedBy('reobfJar')

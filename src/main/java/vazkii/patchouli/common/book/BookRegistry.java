@@ -25,8 +25,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class BookRegistry {
 
@@ -43,6 +47,7 @@ public class BookRegistry {
 	private BookRegistry() {}
 
 	public void init() {
+		LOCK.lock();
 		Collection<IModInfo> mods = ModList.get().getMods();
 		Map<Pair<IModInfo, ResourceLocation>, String> foundBooks = new HashMap<>();
 
@@ -108,6 +113,22 @@ public class BookRegistry {
 				book.extensionTarget.extensions.add(book);
 			}
 		}
+		initialized = true;
+		INIT_COMPLETE.signalAll();
+		LOCK.unlock();
+	}
+
+	private static final Lock LOCK = new ReentrantLock();
+	private static final Condition INIT_COMPLETE = LOCK.newCondition();
+	private boolean initialized = false;
+
+	public static Stream<ResourceLocation> getBookModels() {
+		LOCK.lock();
+		if (!INSTANCE.initialized) {
+			INIT_COMPLETE.awaitUninterruptibly();
+		}
+		LOCK.unlock();
+		return INSTANCE.books.values().stream().map(b -> b.model);
 	}
 
 	public void loadBook(IModInfo mod, ResourceLocation res, InputStream stream,
