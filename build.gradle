@@ -36,7 +36,7 @@ mixin {
 ext.configFile = file('build.properties')
 ext.config = parseConfig(configFile)
 
-def mc_version = '1.17.1'
+def mc_version = '1.18'
 version = "${mc_version}-${config.build_number}"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
@@ -45,7 +45,7 @@ if (System.getenv().RELEASE_MODE == null) {
 group = "vazkii.${config.mod_id}"
 archivesBaseName = "${config.mod_name}"
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 spotless {
 	enforceCheck = false // workaround around jenkins having wrong line endings in some files
 	// we explicitly check in github actions builds
@@ -105,13 +105,11 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${mc_version}-37.0.90"
-    if (!Boolean.getBoolean('idea.sync.active')) {
-        annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
-    }
+    minecraft "net.minecraftforge:forge:${mc_version}-38.0.14"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:8.0.0.16:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:8.0.0.16")
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:9.0.0.40:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:9.0.0.40")
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.1'

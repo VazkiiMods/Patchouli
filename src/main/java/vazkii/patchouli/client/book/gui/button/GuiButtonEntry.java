@@ -32,13 +32,13 @@ public class GuiButtonEntry extends Button {
 	@Override
 	public void renderButton(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (active) {
-			if (isHovered()) {
+			if (isHoveredOrFocused()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
 			} else {
 				timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
 			}
 
-			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHovered() ? partialTicks : -partialTicks)));
+			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHoveredOrFocused() ? partialTicks : -partialTicks)));
 			float widthFract = time / ANIM_TIME;
 			boolean locked = entry.isLocked();
 

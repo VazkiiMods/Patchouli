@@ -14,8 +14,8 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -45,7 +45,7 @@ public class ClientInitializer {
 			BookRegistry.getBookModels()
 					.stream()
 					.map(model -> new ModelResourceLocation(model, "inventory"))
-					.forEach(ModelLoader::addSpecialModel);
+					.forEach(ForgeModelBakery::addSpecialModel);
 
 			ItemPropertyFunction prop = (stack, world, entity, seed) -> ItemModBook.getCompletion(stack);
 			ItemProperties.register(PatchouliItems.BOOK, new ResourceLocation(Patchouli.MOD_ID, "completion"), prop);
@@ -53,15 +53,12 @@ public class ClientInitializer {
 
 		@SubscribeEvent
 		public static void registerReloadListeners(RegisterClientReloadListenersEvent e) {
-			e.registerReloadListener(new ResourceManagerReloadListener() {
-				@Override
-				public void onResourceManagerReload(ResourceManager manager) {
-					if (Minecraft.getInstance().level != null) {
-						Patchouli.LOGGER.info("Reloading resource pack-based books, world is nonnull");
-						ClientBookRegistry.INSTANCE.reload(true);
-					} else {
-						Patchouli.LOGGER.info("Not reloading resource pack-based books as client world is missing");
-					}
+			e.registerReloadListener((ResourceManagerReloadListener) manager -> {
+				if (Minecraft.getInstance().level != null) {
+					Patchouli.LOGGER.info("Reloading resource pack-based books, world is nonnull");
+					ClientBookRegistry.INSTANCE.reload(true);
+				} else {
+					Patchouli.LOGGER.info("Not reloading resource pack-based books as client world is missing");
 				}
 			});
 		}
@@ -82,8 +79,8 @@ public class ClientInitializer {
 			}
 		});
 
-		MinecraftForge.EVENT_BUS.addListener((RenderWorldLastEvent e) -> {
-			MultiblockVisualizationHandler.onWorldRenderLast(e.getMatrixStack());
+		MinecraftForge.EVENT_BUS.addListener((RenderLevelLastEvent e) -> {
+			MultiblockVisualizationHandler.onWorldRenderLast(e.getPoseStack());
 		});
 
 		MinecraftForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggedOutEvent e) -> {
@@ -91,7 +88,7 @@ public class ClientInitializer {
 		});
 
 		MinecraftForge.EVENT_BUS.addListener((RenderTooltipEvent.Pre e) -> {
-			TooltipHandler.onTooltip(e.getMatrixStack(), e.getStack(), e.getX(), e.getY());
+			TooltipHandler.onTooltip(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
 		});
 
 		FMLJavaModLoadingContext.get().getModEventBus().addListener((ModelBakeEvent e) -> {

@@ -42,13 +42,13 @@ public class GuiButtonCategory extends Button {
 	@Override
 	public void renderButton(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		if (active) {
-			if (isHovered()) {
+			if (isHoveredOrFocused()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
 			} else {
 				timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
 			}
 
-			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHovered() ? partialTicks : -partialTicks)));
+			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHoveredOrFocused() ? partialTicks : -partialTicks)));
 			float transparency = 0.5F - (time / ANIM_TIME) * 0.5F;
 			boolean locked = category != null && category.isLocked();
 
@@ -71,7 +71,7 @@ public class GuiButtonCategory extends Button {
 			}
 			ms.popPose();
 
-			if (isHovered()) {
+			if (isHoveredOrFocused()) {
 				parent.setTooltip(locked
 						? new TranslatableComponent("patchouli.gui.lexicon.locked").withStyle(ChatFormatting.GRAY)
 						: name);

@@ -3,8 +3,8 @@ package vazkii.patchouli.common.network.message;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.Patchouli;
@@ -14,12 +14,8 @@ import javax.annotation.Nullable;
 
 import java.util.function.Supplier;
 
-public class MessageOpenBookGui {
+public record MessageOpenBookGui(ResourceLocation book, @Nullable ResourceLocation entry, int page) {
 	public static final ResourceLocation ID = new ResourceLocation(Patchouli.MOD_ID, "open_book");
-
-	private final ResourceLocation book;
-	@Nullable private final ResourceLocation entry;
-	private final int page;
 
 	public MessageOpenBookGui(ResourceLocation book, @Nullable ResourceLocation entry, int page) {
 		this.book = book;
