@@ -24,7 +24,11 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
@@ -107,6 +111,38 @@ public class BookRegistry {
 
 				book.extensionTarget.extensions.add(book);
 			}
+		}
+		LOCK.lock();
+		initialized = true;
+		INIT_COMPLETE.signalAll();
+		LOCK.unlock();
+	}
+
+	/**
+	 * Why are these necessary?
+	 * BookRegistry.init is called from CommonSetupEvent. We need the models to be known in ModelRegistryEvent.
+	 * However, there is no defined ordering for those events. They all run concurrently during the initial resource
+	 * reload.
+	 * We need a way of waiting for the books to become known.
+	 * Another critical point to note is that loading runs on a fixed-size ForkJoinPool.
+	 * Blocking the thread can starve loading completely.
+	 * Fortunately, the implementation of Condition.await for ReentrantLock uses ForkJoinPool.managedBlock,
+	 * which is aware of potentially blocking operations and can resize the pool accordingly.
+	 * If parallel mod loading didn't exist we wouldn't need any of this, but here we are :))))
+	 */
+	private static final Lock LOCK = new ReentrantLock();
+	private static final Condition INIT_COMPLETE = LOCK.newCondition();
+	private boolean initialized = false;
+
+	public static List<ResourceLocation> getBookModels() {
+		LOCK.lock();
+		try {
+			while (!INSTANCE.initialized) {
+				INIT_COMPLETE.awaitUninterruptibly();
+			}
+			return INSTANCE.books.values().stream().map(b -> b.model).toList();
+		} finally {
+			LOCK.unlock();
 		}
 	}
 
