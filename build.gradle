@@ -83,6 +83,8 @@ test {
     useJUnitPlatform()
 }
 
+sourceSets.main.resources.srcDirs(sourceSets.test.resources.srcDirs) // include test books
+
 processResources {
 	inputs.property "version", project.version
 
