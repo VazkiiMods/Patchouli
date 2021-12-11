@@ -13,8 +13,10 @@ import vazkii.patchouli.common.network.NetworkHandler;
 
 import java.util.function.Supplier;
 
-public record MessageReloadBookContents() {
+public final class MessageReloadBookContents {
 	public static final ResourceLocation ID = new ResourceLocation(Patchouli.MOD_ID, "reload_books");
+
+	public MessageReloadBookContents() {}
 
 	public static void sendToAll(MinecraftServer server) {
 		NetworkHandler.CHANNEL.send(PacketDistributor.ALL.noArg(), new MessageReloadBookContents());

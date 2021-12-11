@@ -14,9 +14,12 @@ import javax.annotation.Nullable;
 
 import java.util.function.Supplier;
 
-public record MessageOpenBookGui(ResourceLocation book, @Nullable ResourceLocation entry, int page) {
+public final class MessageOpenBookGui {
 
 	public static final ResourceLocation ID = new ResourceLocation(Patchouli.MOD_ID, "open_book");
+	private final ResourceLocation book;
+	@Nullable private final ResourceLocation entry;
+	private final int page;
 
 	public MessageOpenBookGui(ResourceLocation book, @Nullable ResourceLocation entry, int page) {
 		this.book = book;
@@ -52,5 +55,4 @@ public record MessageOpenBookGui(ResourceLocation book, @Nullable ResourceLocati
 		ctx.get().enqueueWork(() -> ClientBookRegistry.INSTANCE.displayBookGui(book, entry, page));
 		ctx.get().setPacketHandled(true);
 	}
-
 }
