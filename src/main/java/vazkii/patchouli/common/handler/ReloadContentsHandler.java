@@ -4,7 +4,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fmlserverevents.FMLServerStartedEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 
 import vazkii.patchouli.common.network.message.MessageReloadBookContents;
 
@@ -13,7 +13,7 @@ public class ReloadContentsHandler {
 		MinecraftForge.EVENT_BUS.addListener(ReloadContentsHandler::serverStart);
 	}
 
-	private static void serverStart(FMLServerStartedEvent evt) {
+	private static void serverStart(ServerStartedEvent evt) {
 		MinecraftServer server = evt.getServer();
 		// Also reload contents when someone types /reload
 		ResourceManagerReloadListener listener = m -> MessageReloadBookContents.sendToAll(server);

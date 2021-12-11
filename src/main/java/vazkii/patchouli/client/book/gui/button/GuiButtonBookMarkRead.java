@@ -28,7 +28,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 		int py = (int) (y + 0.5);
 		GuiBook.drawFromTexture(ms, book, x, y, 285, 160, 13, 10);
 		GuiBook.drawFromTexture(ms, book, px, py, u, v, width, height);
-		if (isHovered()) {
+		if (isHoveredOrFocused()) {
 			GuiBook.drawFromTexture(ms, book, px, py, u + 11, v, width, height);
 			parent.setTooltip(getTooltip());
 		}
