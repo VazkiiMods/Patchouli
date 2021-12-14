@@ -34,7 +34,11 @@ mixin {
 }
 
 ext.configFile = file('build.properties')
-ext.config = parseConfig(configFile)
+ext.config = configFile.withReader {
+	def prop = new Properties()
+	prop.load(it)
+	return (new ConfigSlurper().parse(prop))
+}
 
 def mc_version = '1.18'
 version = "${mc_version}-${config.build_number}"
@@ -136,12 +140,15 @@ task incrementBuildNumber {
     }
 }
 
-def parseConfig(File config) {
-    config.withReader {
-        def prop = new Properties()
-        prop.load(it)
-        return (new ConfigSlurper().parse(prop))
-    }
+tasks.withType(JavaCompile).configureEach {
+	// ensure that the encoding is set to UTF-8, no matter what the system default is
+	// this fixes some edge cases with special characters not displaying correctly
+	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+	// If Javadoc is generated, this must be specified in that task too.
+	it.options.encoding = "UTF-8"
+
+	// Minecraft 1.18 upwards uses Java 17.
+	it.options.release = 17
 }
 
 task checkSyntax {

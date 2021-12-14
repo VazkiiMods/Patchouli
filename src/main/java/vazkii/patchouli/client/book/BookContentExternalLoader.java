@@ -52,23 +52,18 @@ public final class BookContentExternalLoader implements BookContentLoader {
 
 	@Override
 	public InputStream loadJson(Book book, ResourceLocation resloc, ResourceLocation fallback) {
-		String realPath = resloc.getPath().substring(BookFolderLoader.loadDir.getName().length());
-		File targetFile = new File(BookFolderLoader.loadDir, realPath);
-
-		if (targetFile.exists()) {
-			FileInputStream stream;
-			try {
-				stream = new FileInputStream(targetFile);
-				return stream;
-			} catch (IOException e) {
-				if (fallback != null) {
-					Patchouli.LOGGER.debug("Failed to load {}. Switching to fallback. ({})", resloc, e.getMessage());
-					return loadJson(book, fallback, null);
-				} else {
-					Patchouli.LOGGER.warn("Failed to load {}.", resloc, e);
-					return null;
-				}
+		try {
+			String path = resloc.getPath().substring(BookFolderLoader.loadDir.getName().length());
+			File targetFile = new File(BookFolderLoader.loadDir, path);
+			if (targetFile.exists()) {
+				return new FileInputStream(targetFile);
 			}
+			if (fallback != null) {
+				return loadJson(book, fallback, null);
+			}
+		} catch (IOException e) {
+			Patchouli.LOGGER.warn("Failed to load {}.", resloc, e);
+			return null;
 		}
 
 		return null;

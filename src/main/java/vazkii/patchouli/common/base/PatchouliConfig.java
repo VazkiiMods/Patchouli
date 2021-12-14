@@ -45,7 +45,7 @@ public class PatchouliConfig {
 
 		overflowMode = builder
 				.comment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit. Relogin after changing.")
-				.defineEnum("textOverflowMode", TextOverflowMode.OVERFLOW);
+				.defineEnum("textOverflowMode", TextOverflowMode.RESIZE);
 
 		SPEC = builder.build();
 	}

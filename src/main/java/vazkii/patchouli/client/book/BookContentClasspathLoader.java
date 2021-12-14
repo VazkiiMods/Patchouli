@@ -54,7 +54,6 @@ public final class BookContentClasspathLoader implements BookContentLoader {
 			return Files.newInputStream(book.owner.getOwningFile().getFile().findResource(path));
 		} catch (IOException ex) {
 			if (fallback != null) {
-				Patchouli.LOGGER.debug("Failed to load {}. Switching to fallback. ({})", resloc, ex.getMessage());
 				return loadJson(book, fallback, null);
 			} else {
 				Patchouli.LOGGER.warn("Failed to load {}.", resloc, ex);

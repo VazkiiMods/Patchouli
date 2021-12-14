@@ -10,10 +10,10 @@ import vazkii.patchouli.common.network.message.MessageReloadBookContents;
 
 public class ReloadContentsHandler {
 	public static void init() {
-		MinecraftForge.EVENT_BUS.addListener(ReloadContentsHandler::serverStart);
+		MinecraftForge.EVENT_BUS.addListener(ReloadContentsHandler::dataReloaded);
 	}
 
-	private static void serverStart(ServerStartedEvent evt) {
+	private static void dataReloaded(ServerStartedEvent evt) {
 		MinecraftServer server = evt.getServer();
 		// Also reload contents when someone types /reload
 		ResourceManagerReloadListener listener = m -> MessageReloadBookContents.sendToAll(server);
