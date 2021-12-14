@@ -13,7 +13,7 @@ ext.config = configFile.withReader {
 	return (new ConfigSlurper().parse(prop))
 }
 
-def mc_version = '1.18'
+def mc_version = '1.18.1'
 version = "${mc_version}-${config.build_number}-FABRIC"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
@@ -65,12 +65,12 @@ dependencies {
 	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
 	include "me.zeroeightsix:fiber:0.23.0-2"
 
-	minecraft "com.mojang:minecraft:1.18"
+	minecraft "com.mojang:minecraft:1.18.1"
 	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:0.12.5"
+	modImplementation "net.fabricmc:fabric-loader:0.12.11"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.43.1+1.18"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.44.0+1.18"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
