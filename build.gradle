@@ -40,7 +40,7 @@ ext.config = configFile.withReader {
 	return (new ConfigSlurper().parse(prop))
 }
 
-def mc_version = '1.18'
+def mc_version = '1.18.1'
 version = "${mc_version}-${config.build_number}"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
@@ -109,7 +109,7 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${mc_version}-38.0.14"
+    minecraft "net.minecraftforge:forge:${mc_version}-39.0.5"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     compileOnly fg.deobf("mezz.jei:jei-${mc_version}:9.0.0.40:api")
