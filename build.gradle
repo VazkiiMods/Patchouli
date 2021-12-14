@@ -112,8 +112,8 @@ dependencies {
     minecraft "net.minecraftforge:forge:${mc_version}-39.0.5"
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:9.0.0.40:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:9.0.0.40")
+    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:9.1.0.44:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:9.1.0.44")
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.1'
