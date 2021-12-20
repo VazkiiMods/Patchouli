@@ -201,8 +201,8 @@ public class Book {
 
 	@Environment(EnvType.CLIENT)
 	public void reloadLocks(boolean suppressToasts) {
-		contents.entries.values().forEach(BookEntry::updateLockStatus);
-		contents.categories.values().forEach(c -> c.updateLockStatus(true));
+		getContents().entries.values().forEach(BookEntry::updateLockStatus);
+		getContents().categories.values().forEach(c -> c.updateLockStatus(true));
 
 		boolean updated = popUpdated();
 		if (updated && !suppressToasts && advancementsEnabled() && showToasts) {
