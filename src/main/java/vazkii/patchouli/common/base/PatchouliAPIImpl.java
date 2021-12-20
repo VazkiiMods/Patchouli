@@ -74,13 +74,11 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
 	public void openBookGUI(ResourceLocation book) {
 		ClientBookRegistry.INSTANCE.displayBookGui(book, null, 0);
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
 	public void openBookEntry(ResourceLocation book, ResourceLocation entry, int page) {
 		ClientBookRegistry.INSTANCE.displayBookGui(book, entry, page);
 	}
@@ -106,13 +104,11 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
 	public void registerCommand(String name, Function<IStyleStack, String> command) {
 		BookTextParser.register(command::apply, name);
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
 	public void registerFunction(String name, BiFunction<String, IStyleStack, String> function) {
 		BookTextParser.register(function::apply, name);
 	}

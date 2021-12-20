@@ -3,8 +3,6 @@ package vazkii.patchouli.common.book;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.resources.ResourceLocation;
@@ -116,7 +114,9 @@ public class BookRegistry {
 		books.put(res, book);
 	}
 
-	@Environment(EnvType.CLIENT)
+	/**
+	 * Must only be called on client
+	 */
 	public void reloadContents(boolean resourcePackBooksOnly) {
 		PatchouliConfig.reloadBuiltinFlags();
 		for (Book book : books.values()) {

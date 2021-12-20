@@ -2,8 +2,6 @@ package vazkii.patchouli.common.book;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
@@ -156,7 +154,6 @@ public class Book {
 		return bookItem;
 	}
 
-	@Environment(EnvType.CLIENT)
 	public void markUpdated() {
 		wasUpdated = true;
 	}
@@ -167,7 +164,9 @@ public class Book {
 		return updated;
 	}
 
-	@Environment(EnvType.CLIENT)
+	/**
+	 * Must only be called on client
+	 */
 	public void reloadContents() {
 		if (!isExtension) {
 			BookContentsBuilder builder = new BookContentsBuilder();
@@ -199,7 +198,6 @@ public class Book {
 		return !PatchouliConfig.disableAdvancementLocking.getValue() && !PatchouliConfig.noAdvancementBooks.getValue().contains(id.toString());
 	}
 
-	@Environment(EnvType.CLIENT)
 	public void reloadLocks(boolean suppressToasts) {
 		getContents().entries.values().forEach(BookEntry::updateLockStatus);
 		getContents().categories.values().forEach(c -> c.updateLockStatus(true));
@@ -214,7 +212,6 @@ public class Book {
 		return owner.getMetadata().getName();
 	}
 
-	@Environment(EnvType.CLIENT)
 	public Style getFontStyle() {
 		if (useBlockyFont) {
 			return Style.EMPTY;
@@ -240,7 +237,6 @@ public class Book {
 		return new TranslatableComponent("patchouli.gui.lexicon.edition_str", editionStr);
 	}
 
-	@Environment(EnvType.CLIENT)
 	public BookIcon getIcon() {
 		if (indexIconRaw == null || indexIconRaw.isEmpty()) {
 			return new BookIcon(getBookItem());
@@ -253,7 +249,6 @@ public class Book {
 		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
 	}
 
-	@Environment(EnvType.CLIENT)
 	public BookContents getContents() {
 		if (isExtension) {
 			return extensionTarget.getContents();
