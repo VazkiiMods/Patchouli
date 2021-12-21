@@ -9,7 +9,7 @@ buildscript {
     }
 }
 /* TODO someone please fix this I hate gradle so much
-
+        I fixed it - Jared
 */
 
 subprojects {
@@ -34,12 +34,11 @@ subprojects {
         it.options.release = 17
     }
 
-    // TODO can this be moved out to the root project?
     pmd {
         toolVersion '6.35.0'
         incrementalAnalysis.set(true)
         ruleSets.clear()
-        ruleSetFiles = files("spotless/pmd-ruleset.xml")
+        ruleSetFiles = rootProject.files("spotless/pmd-ruleset.xml")
     }
 
     jar {
