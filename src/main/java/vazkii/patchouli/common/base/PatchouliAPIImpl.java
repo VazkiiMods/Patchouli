@@ -1,7 +1,9 @@
 package vazkii.patchouli.common.base;
 
+import com.google.common.base.Preconditions;
+
 import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
@@ -48,6 +50,13 @@ import java.util.function.Supplier;
 
 public class PatchouliAPIImpl implements IPatchouliAPI {
 
+	private static void assertPhysicalClient() {
+		Preconditions.checkState(
+				FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT,
+				"Not on the physical client"
+		);
+	}
+
 	@Override
 	public boolean isStub() {
 		return false;
@@ -75,17 +84,19 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	@Override
 	public void openBookGUI(ResourceLocation book) {
+		assertPhysicalClient();
 		ClientBookRegistry.INSTANCE.displayBookGui(book, null, 0);
 	}
 
 	@Override
 	public void openBookEntry(ResourceLocation book, ResourceLocation entry, int page) {
+		assertPhysicalClient();
 		ClientBookRegistry.INSTANCE.displayBookGui(book, entry, page);
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
 	public ResourceLocation getOpenBookGui() {
+		assertPhysicalClient();
 		Screen gui = Minecraft.getInstance().screen;
 		if (gui instanceof GuiBook) {
 			return ((GuiBook) gui).book.id;
@@ -105,11 +116,13 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	@Override
 	public void registerCommand(String name, Function<IStyleStack, String> command) {
+		assertPhysicalClient();
 		BookTextParser.register(command::apply, name);
 	}
 
 	@Override
 	public void registerFunction(String name, BiFunction<String, IStyleStack, String> function) {
+		assertPhysicalClient();
 		BookTextParser.register(function::apply, name);
 	}
 
@@ -120,6 +133,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	@Override
 	public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider) {
+		assertPhysicalClient();
 		InputStream testStream = streamProvider.get();
 		if (testStream == null) {
 			throw new NullPointerException("Stream provider can't return a null stream");
@@ -148,20 +162,21 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
 	public IMultiblock getCurrentMultiblock() {
+		assertPhysicalClient();
 		return MultiblockVisualizationHandler.hasMultiblock ? MultiblockVisualizationHandler.getMultiblock() : null;
 	}
 
 	@Override
-	@Environment(EnvType.CLIENT)
 	public void showMultiblock(@Nonnull IMultiblock multiblock, @Nonnull Component displayName, @Nonnull BlockPos center, @Nonnull Rotation rotation) {
+		assertPhysicalClient();
 		MultiblockVisualizationHandler.setMultiblock(multiblock, displayName, null, false);
 		MultiblockVisualizationHandler.anchorTo(center, rotation);
 	}
 
 	@Override
 	public void clearMultiblock() {
+		assertPhysicalClient();
 		MultiblockVisualizationHandler.setMultiblock(null, null, null, false);
 	}
 

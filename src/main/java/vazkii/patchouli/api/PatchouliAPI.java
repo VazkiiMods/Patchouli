@@ -74,12 +74,14 @@ public class PatchouliAPI {
 		boolean getConfigFlag(String flag);
 
 		/**
-		 * Opens the given book to the last page that was open, or the landing page otherwise.
+		 * Sends a network message to the given player
+		 * to open the given book to the last page that was open, or the landing page otherwise.
 		 */
 		void openBookGUI(ServerPlayer player, ResourceLocation book);
 
 		/**
-		 * Opens the book to the given entry
+		 * Sends a network message to the given player
+		 * to open the book to the given entry
 		 */
 		void openBookEntry(ServerPlayer player, ResourceLocation book, ResourceLocation entry, int page);
 
@@ -93,9 +95,15 @@ public class PatchouliAPI {
 		 */
 		void openBookEntry(ResourceLocation book, ResourceLocation entry, int page);
 
+		/**
+		 * Returns the book ID of the currently open book, if any. Only works clientside.
+		 */
+		@Nullable
 		ResourceLocation getOpenBookGui();
 
 		/**
+		 * Works on both sides.
+		 * 
 		 * @return                          The subtitle (edition string/what appears under the title in the landing
 		 *                                  page) of the book.
 		 * @throws IllegalArgumentException if the book id given cannot be found
@@ -103,7 +111,7 @@ public class PatchouliAPI {
 		Component getSubtitle(ResourceLocation bookId);
 
 		/**
-		 * Returns a book item with its NBT set to the book passed in.
+		 * Returns a book item with its NBT set to the book passed in. Works on both sides.
 		 */
 		ItemStack getBookStack(ResourceLocation book);
 
@@ -111,7 +119,7 @@ public class PatchouliAPI {
 		 * Register a template you made as a built in template to be used with all books
 		 * as the "res" resource location. The supplier should give an input stream that
 		 * reads a full json file, containing a template.
-		 * Only call on client.
+		 * Only works on client.
 		 */
 		void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider);
 
@@ -120,7 +128,7 @@ public class PatchouliAPI {
 		 * A command gets an IStyleStack if it wishes to modify it (for example, $(o) italicizes),
 		 * and returns the text that should replace the command (for example, $(playername) is replaced
 		 * with the current player's username). Commands that only modify style should return "".
-		 * This is thread safe. Only call clientside.
+		 * This is thread safe. Only works on client.
 		 */
 		void registerCommand(String name, Function<IStyleStack, String> command);
 
@@ -130,7 +138,7 @@ public class PatchouliAPI {
 		 * except it gets an additional argument (the text after the colon),
 		 * for things like conditional formatting or differing return values.
 		 * For example, $(k:use) is replaced by Right Button by default.
-		 * This is thread safe. Only call clientside.
+		 * This is thread safe. Only works on client.
 		 */
 		void registerFunction(String name, BiFunction<String, IStyleStack, String> function);
 
@@ -139,15 +147,16 @@ public class PatchouliAPI {
 		// ================================================================================================
 
 		/**
-		 * Gets a multiblock by its resource location, or null if none exists for it.
+		 * Gets a multiblock by its ID, or null if none exists for it.
 		 */
-		IMultiblock getMultiblock(ResourceLocation res);
+		@Nullable
+		IMultiblock getMultiblock(ResourceLocation id);
 
 		/**
 		 * Registers a multiblock given its resource location. This takes care of both registering it
 		 * and setting its resource location to the one passed.
 		 */
-		IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb);
+		IMultiblock registerMultiblock(ResourceLocation id, IMultiblock mb);
 
 		/**
 		 * @return The multiblock currently being visualized in-world or null if no multiblock is visualized. Only works
@@ -194,60 +203,60 @@ public class PatchouliAPI {
 		IMultiblock makeSparseMultiblock(Map<BlockPos, IStateMatcher> positions);
 
 		/**
-		 * Gets an IStateMatcher with the passed in BlockState for display and the passed in
+		 * Creates an IStateMatcher using the passed in BlockState for display and the passed in
 		 * predicate for validation.
 		 */
 		IStateMatcher predicateMatcher(BlockState display, Predicate<BlockState> predicate);
 
 		/**
-		 * Gets an IStateMatcher with the passed in Block's default state for display and the
+		 * Creates an IStateMatcher with the passed in Block's default state for display and the
 		 * passed in predicate for validation.
 		 */
 		IStateMatcher predicateMatcher(Block display, Predicate<BlockState> predicate);
 
 		/**
-		 * Gets an IStateMatcher with the passed in BlockState for display and validation,
+		 * Creates an IStateMatcher with the passed in BlockState for display and validation,
 		 * requiring that the state in world be exactly the same.
 		 */
 		IStateMatcher stateMatcher(BlockState state);
 
 		/**
-		 * Gets an IStateMatcher with the passed in BlockState for display and validation,
+		 * Creates an IStateMatcher with the passed in BlockState for display and validation,
 		 * requiring that only the specified properties are the same.
 		 */
 		IStateMatcher propertyMatcher(BlockState state, Property<?>... properties);
 
 		/**
-		 * Gets an IStateMatcher with the passed in Block's default state for display and
+		 * Creates an IStateMatcher with the passed in Block's default state for display and
 		 * validation, requiring that the state in world have only the same block.
 		 */
 		IStateMatcher looseBlockMatcher(Block block);
 
 		/**
-		 * Gets an IStateMatcher with the passed in Block's default state for display and
+		 * Creates an IStateMatcher with the passed in Block's default state for display and
 		 * validation, requiring that the state in world be exactly the same.
 		 */
 		IStateMatcher strictBlockMatcher(Block block);
 
 		/**
-		 * Gets an IStateMatcher that always validates to true, and shows the BlockState
+		 * Creates an IStateMatcher that always validates to true, and shows the BlockState
 		 * passed when displayed.
 		 */
 		IStateMatcher displayOnlyMatcher(BlockState state);
 
 		/**
-		 * Gets an IStateMatcher that always validates to true, and shows the passed in
+		 * Creates an IStateMatcher that always validates to true, and shows the passed in
 		 * Block's default state when displayed.
 		 */
 		IStateMatcher displayOnlyMatcher(Block block);
 
 		/**
-		 * Gets an IStateMatcher that accepts only air blocks.
+		 * Creates an IStateMatcher that accepts only air blocks.
 		 */
 		IStateMatcher airMatcher();
 
 		/**
-		 * Gets an IStateMatcher that accepts anything.
+		 * Creates an IStateMatcher that accepts anything.
 		 */
 		IStateMatcher anyMatcher();
 	}
