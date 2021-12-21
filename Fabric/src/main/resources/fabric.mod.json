@@ -29,6 +29,7 @@
     ]
   },
   "mixins": [
+    "patchouli.mixins.json",
     "patchouli_fabric.mixins.json"
   ],
 

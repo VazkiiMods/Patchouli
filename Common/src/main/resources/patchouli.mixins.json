@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "vazkii.patchouli.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "AccessorSmithingRecipe"
+  ],
+  "client": [
+    "client.AccessorClientAdvancements",
+    "client.AccessorMultiBufferSource",
+    "client.AccessorScreen",
+    "client.MixinClientAdvancements",
+    "client.MixinGameRenderer",
+    "client.MixinInventoryScreen",
+    "client.MixinLevelRenderer",
+    "client.MixinMinecraft",
+    "client.MixinScreen",
+    "client.MixinSystemReport"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "${refmap_target}refmap.json"
+}

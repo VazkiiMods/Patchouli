@@ -61,6 +61,10 @@ processResources {
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version
 	}
+
+    filesMatching("patchouli.fabric.mixins.json") {
+        expand "refmap_target": archivesBaseName + "-"
+    }
 }
 
 tasks.withType(JavaCompile) {
