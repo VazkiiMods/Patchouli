@@ -1,165 +1,48 @@
-plugins {
-	id 'fabric-loom' version '0.10-SNAPSHOT'
-	id 'maven-publish'
-	id "com.diffplug.spotless" version "5.12.5"
-}
+/* TODO someone please fix this I hate gradle so much
 
-apply plugin: 'pmd'
+*/
 
-ext.configFile = file('build.properties')
-ext.config = configFile.withReader {
-	def prop = new Properties()
-	prop.load(it)
-	return (new ConfigSlurper().parse(prop))
-}
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'pmd'
 
-def mc_version = '1.18.1'
-version = "${mc_version}-${config.build_number}-FABRIC"
-if (System.getenv().RELEASE_MODE == null) {
-    version += '-SNAPSHOT'
-}
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+    java.withSourcesJar()
+    java.withJavadocJar()
+    
+    repositories {
+        mavenCentral()
 
-group = "vazkii.${config.mod_id}"
-archivesBaseName = "${config.mod_name}"
+        maven {
+            name = 'Sponge / Mixin'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
+        }
+    }
 
-spotless {
-	enforceCheck = false // workaround around jenkins having wrong line endings in some files
-	// we explicitly check in github actions builds
-	java {
-		indentWithTabs()
-		eclipse().configFile 'spotless/eclipseformat.xml'
-		removeUnusedImports()
-		importOrderFile 'spotless/eclipse.importorder'
-	}
-}
+    tasks.withType(JavaCompile).configureEach {
+        it.options.encoding = 'UTF-8'
+        it.options.release = 17
+    }
 
-pmd {
-	toolVersion '6.35.0'
-	incrementalAnalysis.set(true)
-	ruleSets.clear()
-	ruleSetFiles = files("spotless/pmd-ruleset.xml")
-}
+    // TODO can this be moved out to the root project?
+    pmd {
+        toolVersion '6.35.0'
+        incrementalAnalysis.set(true)
+        ruleSets.clear()
+        ruleSetFiles = files("spotless/pmd-ruleset.xml")
+    }
 
-task checkSyntax {
-	dependsOn spotlessJavaCheck, pmdMain
-}
+    jar {
+        from "LICENSE"
 
-repositories {
-	maven {
-		name = "Modmuss"
-		url = "https://maven.modmuss50.me/"
-	}
-}
+        exclude "**/*.bat"
+        exclude "**/*.psd"
+        exclude "**/*.exe"
+        exclude "**/unused"
 
-loom {
-	runs {
-		create("GameTest") {
-			server()
-			vmArg "-Dfabric-api.gametest=1"
-		}
-	}
-}
-
-dependencies {
-	modImplementation "com.google.code.findbugs:jsr305:3.0.2"
-	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
-	include "me.zeroeightsix:fiber:0.23.0-2"
-
-	minecraft "com.mojang:minecraft:1.18.1"
-	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:0.12.11"
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.44.0+1.18"
-
-	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-	// You may need to force-disable transitiveness on them.
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.1'
-}
-
-test {
-    useJUnitPlatform()
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
-}
-
-task incrementBuildNumber {
-	doFirst {
-		config.build_number = (config.build_number.toString().toInteger()) + 1
-		configFile.withWriter {
-			config.toProperties().store(it, "")
-		}
-	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	// ensure that the encoding is set to UTF-8, no matter what the system default is
-	// this fixes some edge cases with special characters not displaying correctly
-	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-	// If Javadoc is generated, this must be specified in that task too.
-	it.options.encoding = "UTF-8"
-
-	// Minecraft 1.18 upwards uses Java 17.
-	it.options.release = 17
-}
-
-java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
-}
-
-jar {
-	from "LICENSE"
-
-	exclude "**/*.bat"
-	exclude "**/*.psd"
-	exclude "**/*.exe"
-	exclude "**/unused"
-
-	// exclude test data
-	exclude "**/data/patchouli/patchouli_books/**"
-	exclude "**/data/patchouli/advancements/**"
-	exclude "**/data/patchouli/recipes/**"
-}
-
-task apiJar(type: Jar, dependsOn: classes) {
-	from(sourceSets.main.output)
-	include 'vazkii/patchouli/api/**'
-
-	archiveClassifier = "api"
-}
-
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
-			artifact(apiJar) {
-				builtBy apiJar
-			}
-		}
-	}
-
-	// select the repositories you want to publish to
-	repositories {
-		maven {
-			url "file://" + System.getenv("local_maven")
-		}
-	}
+        // exclude test data
+        exclude "**/data/patchouli/patchouli_books/**"
+        exclude "**/data/patchouli/advancements/**"
+        exclude "**/data/patchouli/recipes/**"
+    }
 }

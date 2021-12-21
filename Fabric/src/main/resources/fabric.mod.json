@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "patchouli",
+  "version": "${version}",
+
+  "name": "Patchouli",
+  "description": "Patchouli: Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers",
+  "authors": [
+    "Vazkii",
+    "williewillus"
+  ],
+  "contact": {
+    "sources": "https://github.com/Vazkii/Patchouli"
+  },
+
+  "license": "CC BY-NC-SA 3.0",
+  "icon": "assets/patchouli/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "vazkii.patchouli.fabric.common.FabricModInitializer"
+    ],
+    "client": [
+      "vazkii.patchouli.fabric.client.FabricClientInitializer"
+    ],
+    "fabric-gametest": [
+      "vazkii.patchouli.fabric.common.PatchouliSmokeTest"
+    ]
+  },
+  "mixins": [
+    "patchouli_fabric.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.12",
+    "fabric": ">=0.44",
+    "minecraft": ">=1.18.1"
+  }
+}

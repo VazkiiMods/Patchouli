@@ -1,0 +1,102 @@
+plugins {
+	id 'fabric-loom' version '0.10-SNAPSHOT'
+	id 'maven-publish'
+	id "com.diffplug.spotless" version "5.12.5"
+}
+
+version = "${minecraft_version}-${build_number}-FABRIC"
+if (System.getenv().RELEASE_MODE == null) {
+    version += '-SNAPSHOT'
+}
+
+archivesBaseName = "${mod_name}"
+
+/* TODO apply to all subprojects. If I move it up to the superproject it breaks everything,
+   TODO if I duplicate to all subprojects it also breaks everything. I hate gradle.
+*/
+spotless {
+	enforceCheck = false // workaround around jenkins having wrong line endings in some files
+	// we explicitly check in github actions builds
+	java {
+		indentWithTabs()
+		eclipse().configFile 'spotless/eclipseformat.xml'
+		removeUnusedImports()
+		importOrderFile 'spotless/eclipse.importorder'
+	}
+}
+
+repositories {
+	maven {
+		name = "Modmuss"
+		url = "https://maven.modmuss50.me/"
+	}
+}
+
+loom {
+	runs {
+		create("GameTest") {
+			server()
+			vmArg "-Dfabric-api.gametest=1"
+		}
+	}
+}
+
+dependencies {
+    implementation project(":Common")
+	implementation "com.google.code.findbugs:jsr305:3.0.2"
+	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
+	include "me.zeroeightsix:fiber:0.23.0-2"
+
+	minecraft "com.mojang:minecraft:${minecraft_version}"
+	mappings loom.officialMojangMappings()
+	modImplementation "net.fabricmc:fabric-loader:0.12.11"
+
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.44.0+1.18"
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+}
+
+task apiJar(type: Jar, dependsOn: classes) {
+	from(sourceSets.main.output)
+	include 'vazkii/patchouli/api/**'
+
+	archiveClassifier = "api"
+}
+
+// configure the maven publication
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			// add all the jars that should be included when publishing to maven
+			artifact(remapJar) {
+				builtBy remapJar
+			}
+			artifact(sourcesJar) {
+				builtBy remapSourcesJar
+			}
+			artifact(apiJar) {
+				builtBy apiJar
+			}
+		}
+	}
+
+	// select the repositories you want to publish to
+	repositories {
+		maven {
+			url "file://" + System.getenv("local_maven")
+		}
+	}
+}
