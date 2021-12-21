@@ -12,7 +12,6 @@ import vazkii.patchouli.xplat.XplatModContainer;
 public class PatchouliConfig {
 	private static final Map<String, Boolean> CONFIG_FLAGS = new ConcurrentHashMap<>();
 
-	public static ConfigAccess ACCESS = null;
 	public record ConfigAccess(
 			Supplier<Boolean> disableAdvancementLocking,
 			Supplier<List<String>> noAdvancementBooks,
@@ -21,6 +20,18 @@ public class PatchouliConfig {
 			Supplier<Boolean> useShiftForQuickLookup,
 			Supplier<TextOverflowMode> overflowMode
 	) {}
+	private static ConfigAccess access = null;
+
+	public static ConfigAccess get() {
+		return access;
+	}
+
+	public static void set(ConfigAccess a) {
+		if (access != null) {
+			throw new IllegalStateException("ConfigAccess already set");
+		}
+		access = a;
+	}
 
 	public static void reloadBuiltinFlags() {
 		Collection<XplatModContainer> mods = XplatAbstractions.getInstance().getAllMods();
@@ -30,9 +41,9 @@ public class PatchouliConfig {
 
 		setFlag("debug", XplatAbstractions.getInstance().isDevEnvironment());
 
-		setFlag("advancements_disabled", ACCESS.disableAdvancementLocking().get());
-		setFlag("testing_mode", ACCESS.testingMode.get());
-		for (String book : ACCESS.noAdvancementBooks().get()) {
+		setFlag("advancements_disabled", get().disableAdvancementLocking().get());
+		setFlag("testing_mode", get().testingMode.get());
+		for (String book : get().noAdvancementBooks().get()) {
 			setFlag("advancements_disabled_" + book, true);
 		}
 	}

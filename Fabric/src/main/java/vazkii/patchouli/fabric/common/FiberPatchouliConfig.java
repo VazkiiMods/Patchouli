@@ -7,6 +7,7 @@ import io.github.fablabsmc.fablabs.api.fiber.v1.serialization.FiberSerialization
 import io.github.fablabsmc.fablabs.api.fiber.v1.serialization.JanksonValueSerializer;
 import io.github.fablabsmc.fablabs.api.fiber.v1.tree.ConfigTree;
 import io.github.fablabsmc.fablabs.api.fiber.v1.tree.PropertyMirror;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.base.PatchouliConfig;
 
@@ -66,6 +67,14 @@ public class FiberPatchouliConfig {
     }
 
     public static void setup() {
+        PatchouliConfig.set(new PatchouliConfig.ConfigAccess(
+                disableAdvancementLocking::getValue,
+                noAdvancementBooks::getValue,
+                testingMode::getValue,
+                () -> new ResourceLocation(inventoryButtonBook.getValue()),
+                useShiftForQuickLookup::getValue,
+                overflowMode::getValue
+        ));
         JanksonValueSerializer serializer = new JanksonValueSerializer(false);
         Path p = Paths.get("config", PatchouliAPI.MOD_ID + ".json5");
         writeDefaultConfig(p, serializer);

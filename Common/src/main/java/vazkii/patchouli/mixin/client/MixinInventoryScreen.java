@@ -7,7 +7,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 
@@ -31,7 +30,7 @@ public abstract class MixinInventoryScreen extends EffectRenderingInventoryScree
 
 	@Inject(at = @At("RETURN"), method = "init()V")
 	public void onGuiInitPost(CallbackInfo info) {
-		var bookID = PatchouliConfig.ACCESS.inventoryButtonBook().get();
+		var bookID = PatchouliConfig.get().inventoryButtonBook().get();
 		Book book = BookRegistry.INSTANCE.books.get(bookID);
 		if (book == null) {
 			return;

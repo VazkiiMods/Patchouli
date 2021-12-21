@@ -195,8 +195,8 @@ public class Book {
 	}
 
 	public final boolean advancementsEnabled() {
-		return !PatchouliConfig.ACCESS.disableAdvancementLocking().get()
-				&& !PatchouliConfig.ACCESS.noAdvancementBooks().get().contains(id.toString());
+		return !PatchouliConfig.get().disableAdvancementLocking().get()
+				&& !PatchouliConfig.get().noAdvancementBooks().get().contains(id.toString());
 	}
 
 	public void reloadLocks(boolean suppressToasts) {
