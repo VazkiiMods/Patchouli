@@ -9,12 +9,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
 
 import javax.annotation.Nullable;
+
 import java.io.InputStream;
 import java.util.Map;
 import java.util.function.BiFunction;

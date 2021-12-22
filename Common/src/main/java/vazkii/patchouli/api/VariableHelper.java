@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.google.gson.JsonElement;
 
 import javax.annotation.Nullable;
+
 import java.util.function.Supplier;
 
 /**

@@ -1,6 +1,7 @@
 package vazkii.patchouli.api;
 
 import com.mojang.datafixers.util.Pair;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
@@ -8,6 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 
 import javax.annotation.Nullable;
+
 import java.util.Collection;
 
 /**

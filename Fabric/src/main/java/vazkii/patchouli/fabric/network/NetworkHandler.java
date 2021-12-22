@@ -1,6 +1,7 @@
 package vazkii.patchouli.fabric.network;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+
 import vazkii.patchouli.fabric.network.message.MessageOpenBookGui;
 import vazkii.patchouli.fabric.network.message.MessageReloadBookContents;
 

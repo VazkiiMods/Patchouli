@@ -12,12 +12,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.xplat.XplatModContainer;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.*;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.util.ItemStackUtil;
+import vazkii.patchouli.xplat.XplatModContainer;
 
 import java.util.HashMap;
 import java.util.LinkedList;

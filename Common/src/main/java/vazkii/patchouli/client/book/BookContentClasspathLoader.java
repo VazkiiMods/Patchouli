@@ -6,9 +6,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.xplat.XplatModContainer;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
+import vazkii.patchouli.xplat.XplatModContainer;
 
 import java.io.IOException;
 import java.io.InputStream;

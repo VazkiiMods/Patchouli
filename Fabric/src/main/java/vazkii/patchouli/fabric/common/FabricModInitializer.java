@@ -1,11 +1,13 @@
 package vazkii.patchouli.fabric.common;
 
 import com.mojang.brigadier.CommandDispatcher;
+
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.commands.CommandSourceStack;
+
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.command.OpenBookCommand;

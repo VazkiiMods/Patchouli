@@ -1,6 +1,7 @@
 package vazkii.patchouli.api;
 
 import com.google.common.base.Suppliers;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -10,11 +11,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import vazkii.patchouli.api.stub.StubPatchouliAPI;
 
 import javax.annotation.Nullable;
+
 import java.io.InputStream;
 import java.util.Map;
 import java.util.function.BiFunction;

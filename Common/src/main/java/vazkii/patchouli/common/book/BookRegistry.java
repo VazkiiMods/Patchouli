@@ -8,10 +8,10 @@ import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.xplat.XplatAbstractions;
-import vazkii.patchouli.xplat.XplatModContainer;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.PatchouliConfig;
+import vazkii.patchouli.xplat.XplatAbstractions;
+import vazkii.patchouli.xplat.XplatModContainer;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -136,7 +136,7 @@ public class BookRegistry {
 	// HELPER
 
 	public static void findFiles(XplatModContainer mod, String base, Predicate<Path> rootFilter,
-								 BiFunction<Path, Path, Boolean> processor, boolean visitAllFiles) {
+			BiFunction<Path, Path, Boolean> processor, boolean visitAllFiles) {
 		findFiles(mod, base, rootFilter, processor, visitAllFiles, Integer.MAX_VALUE);
 	}
 

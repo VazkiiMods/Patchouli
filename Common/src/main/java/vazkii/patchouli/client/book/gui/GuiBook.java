@@ -24,7 +24,6 @@ import net.minecraft.world.item.ItemStack;
 
 import org.lwjgl.glfw.GLFW;
 
-import vazkii.patchouli.xplat.XplatAbstractions;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
@@ -37,6 +36,7 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.mixin.client.AccessorScreen;
+import vazkii.patchouli.xplat.XplatAbstractions;
 
 import javax.annotation.Nullable;
 

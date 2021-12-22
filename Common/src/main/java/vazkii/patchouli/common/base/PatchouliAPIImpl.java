@@ -20,7 +20,6 @@ import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
-import vazkii.patchouli.xplat.XplatAbstractions;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -34,6 +33,7 @@ import vazkii.patchouli.common.multiblock.DenseMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SparseMultiblock;
 import vazkii.patchouli.common.multiblock.StateMatcher;
+import vazkii.patchouli.xplat.XplatAbstractions;
 
 import javax.annotation.Nonnull;
 

@@ -1,13 +1,14 @@
 package vazkii.patchouli.common.base;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
-
 import net.minecraft.resources.ResourceLocation;
+
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.xplat.XplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
+
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 
 public class PatchouliConfig {
 	private static final Map<String, Boolean> CONFIG_FLAGS = new ConcurrentHashMap<>();
@@ -18,8 +19,9 @@ public class PatchouliConfig {
 			Supplier<Boolean> testingMode,
 			Supplier<ResourceLocation> inventoryButtonBook,
 			Supplier<Boolean> useShiftForQuickLookup,
-			Supplier<TextOverflowMode> overflowMode
-	) {}
+			Supplier<TextOverflowMode> overflowMode) {
+	}
+
 	private static ConfigAccess access = null;
 
 	public static ConfigAccess get() {
