@@ -47,9 +47,11 @@ processResources {
 		expand "version": project.version
 	}
 
-    filesMatching("patchouli.fabric.mixins.json") {
-        expand "refmap_target": archivesBaseName + "-"
-    }
+	// In Fabric, all refmaps are merged together and the refmap name is pre-set by Loom
+	// This ensures that the xplat mixins are also placed into the Loom refmap
+	filesMatching("patchouli_xplat.mixins.json") {
+		expand "refmap_target": archivesBaseName + "-"
+	}
 }
 
 tasks.withType(JavaCompile) {

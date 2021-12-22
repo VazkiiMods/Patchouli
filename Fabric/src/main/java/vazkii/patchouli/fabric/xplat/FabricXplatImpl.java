@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.level.block.Block;
 
-import org.jetbrains.annotations.Nullable;
 
 import vazkii.patchouli.api.BookContentsReloadCallback;
 import vazkii.patchouli.api.BookDrawScreenCallback;
@@ -21,6 +20,7 @@ import vazkii.patchouli.fabric.network.message.MessageReloadBookContents;
 import vazkii.patchouli.xplat.XplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

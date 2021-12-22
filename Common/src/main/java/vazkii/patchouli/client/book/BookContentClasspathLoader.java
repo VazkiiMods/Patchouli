@@ -3,13 +3,13 @@ package vazkii.patchouli.client.book;
 import net.minecraft.resources.ResourceLocation;
 
 import org.apache.commons.io.FilenameUtils;
-import org.jetbrains.annotations.Nullable;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.xplat.XplatModContainer;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
