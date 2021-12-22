@@ -11,11 +11,7 @@
     "client.AccessorMultiBufferSource",
     "client.AccessorScreen",
     "client.MixinClientAdvancements",
-    "client.MixinGameRenderer",
     "client.MixinInventoryScreen",
-    "client.MixinLevelRenderer",
-    "client.MixinMinecraft",
-    "client.MixinScreen",
     "client.MixinSystemReport"
   ],
   "injectors": {

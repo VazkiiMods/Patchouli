@@ -6,7 +6,11 @@
   "mixins": [
   ],
   "client": [
-    "client.MixinModelManager"
+    "client.MixinGameRenderer",
+    "client.MixinLevelRenderer",
+    "client.MixinMinecraft",
+    "client.MixinModelManager",
+    "client.MixinScreen"
   ],
   "injectors": {
     "defaultRequire": 1
