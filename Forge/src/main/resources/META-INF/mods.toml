@@ -1,0 +1,19 @@
+modLoader="javafml"
+license="CC BY-NC-SA 3.0"
+loaderVersion="[37,)"
+issueTrackerURL="https://github.com/Vazkii/Patchouli"
+logoFile="logo.png"
+
+[[mods]]
+modId="patchouli"
+displayName="Patchouli"
+version="${file.jarVersion}"
+authors="Vazkii"
+description='''
+Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers
+'''
+
+[[dependencies.patchouli]]
+modId="forge"
+mandatory=true
+versionRange="[37.0.0,)"

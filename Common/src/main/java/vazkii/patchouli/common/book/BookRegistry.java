@@ -104,6 +104,8 @@ public class BookRegistry {
 				book.extensionTarget.extensions.add(book);
 			}
 		}
+
+		XplatAbstractions.getInstance().signalBooksLoaded();
 	}
 
 	public void loadBook(XplatModContainer mod, ResourceLocation res, InputStream stream,

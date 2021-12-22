@@ -1,4 +1,4 @@
-package vazkii.patchouli.fabric.network.message;
+package vazkii.patchouli.fabric.network;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -16,11 +16,11 @@ import vazkii.patchouli.client.book.ClientBookRegistry;
 
 import io.netty.buffer.Unpooled;
 
-public class MessageReloadBookContents {
+public class FabricMessageReloadBookContents {
 	public static final ResourceLocation ID = new ResourceLocation(PatchouliAPI.MOD_ID, "reload_books");
 
 	public static void sendToAll(MinecraftServer server) {
-		PlayerLookup.all(server).forEach(MessageReloadBookContents::send);
+		PlayerLookup.all(server).forEach(FabricMessageReloadBookContents::send);
 	}
 
 	public static void send(ServerPlayer player) {

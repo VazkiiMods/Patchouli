@@ -10,6 +10,7 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.xplat.XplatModContainer;
 
 import javax.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;

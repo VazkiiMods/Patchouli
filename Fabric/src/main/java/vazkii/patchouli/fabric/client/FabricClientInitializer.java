@@ -3,6 +3,7 @@ package vazkii.patchouli.fabric.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
@@ -26,7 +27,8 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
-import vazkii.patchouli.fabric.network.NetworkHandler;
+import vazkii.patchouli.fabric.network.FabricMessageOpenBookGui;
+import vazkii.patchouli.fabric.network.FabricMessageReloadBookContents;
 
 import java.util.Map;
 
@@ -41,7 +43,8 @@ public class FabricClientInitializer implements ClientModInitializer {
 		UseBlockCallback.EVENT.register(MultiblockVisualizationHandler::onPlayerInteract);
 		ClientTickEvents.END_CLIENT_TICK.register(MultiblockVisualizationHandler::onClientTick);
 		HudRenderCallback.EVENT.register(MultiblockVisualizationHandler::onRenderHUD);
-		NetworkHandler.registerMessages();
+		ClientPlayNetworking.registerGlobalReceiver(FabricMessageOpenBookGui.ID, FabricMessageOpenBookGui::handle);
+		ClientPlayNetworking.registerGlobalReceiver(FabricMessageReloadBookContents.ID, FabricMessageReloadBookContents::handle);
 
 		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, register) -> BookRegistry.INSTANCE.books.values().stream()
 				.map(b -> new ModelResourceLocation(b.model, "inventory"))

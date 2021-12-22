@@ -12,15 +12,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.level.block.Block;
 
-
 import vazkii.patchouli.api.BookContentsReloadCallback;
 import vazkii.patchouli.api.BookDrawScreenCallback;
-import vazkii.patchouli.fabric.network.message.MessageOpenBookGui;
-import vazkii.patchouli.fabric.network.message.MessageReloadBookContents;
+import vazkii.patchouli.fabric.network.FabricMessageOpenBookGui;
+import vazkii.patchouli.fabric.network.FabricMessageReloadBookContents;
 import vazkii.patchouli.xplat.XplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
 
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,12 +38,12 @@ public class FabricXplatImpl implements XplatAbstractions.IXplatAbstractions {
 
 	@Override
 	public void sendReloadContentsMessage(MinecraftServer server) {
-		MessageReloadBookContents.sendToAll(server);
+		FabricMessageReloadBookContents.sendToAll(server);
 	}
 
 	@Override
 	public void sendOpenBookGui(ServerPlayer player, ResourceLocation book, @Nullable ResourceLocation entry, int page) {
-		MessageOpenBookGui.send(player, book, entry, page);
+		FabricMessageOpenBookGui.send(player, book, entry, page);
 	}
 
 	@Override

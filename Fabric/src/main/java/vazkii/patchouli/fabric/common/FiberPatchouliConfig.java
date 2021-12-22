@@ -1,7 +1,5 @@
 package vazkii.patchouli.fabric.common;
 
-import net.minecraft.resources.ResourceLocation;
-
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.base.PatchouliConfig;
 
@@ -73,7 +71,7 @@ public class FiberPatchouliConfig {
 				disableAdvancementLocking::getValue,
 				noAdvancementBooks::getValue,
 				testingMode::getValue,
-				() -> new ResourceLocation(inventoryButtonBook.getValue()),
+				inventoryButtonBook::getValue,
 				useShiftForQuickLookup::getValue,
 				overflowMode::getValue
 		));

@@ -1,7 +1,5 @@
 package vazkii.patchouli.common.base;
 
-import net.minecraft.resources.ResourceLocation;
-
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.xplat.XplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
@@ -17,7 +15,7 @@ public class PatchouliConfig {
 			Supplier<Boolean> disableAdvancementLocking,
 			Supplier<List<String>> noAdvancementBooks,
 			Supplier<Boolean> testingMode,
-			Supplier<ResourceLocation> inventoryButtonBook,
+			Supplier<String> inventoryButtonBook,
 			Supplier<Boolean> useShiftForQuickLookup,
 			Supplier<TextOverflowMode> overflowMode) {
 	}
@@ -44,7 +42,7 @@ public class PatchouliConfig {
 		setFlag("debug", XplatAbstractions.getInstance().isDevEnvironment());
 
 		setFlag("advancements_disabled", get().disableAdvancementLocking().get());
-		setFlag("testing_mode", get().testingMode.get());
+		setFlag("testing_mode", get().testingMode().get());
 		for (String book : get().noAdvancementBooks().get()) {
 			setFlag("advancements_disabled_" + book, true);
 		}

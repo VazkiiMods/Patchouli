@@ -34,6 +34,9 @@ public class XplatAbstractions {
 		// Misc
 		Tag.Named<Block> blockTag(ResourceLocation id);
 		boolean isPhysicalClient();
+
+		// Forge-specific
+		default void signalBooksLoaded() {}
 	}
 
 	private static IXplatAbstractions instance;

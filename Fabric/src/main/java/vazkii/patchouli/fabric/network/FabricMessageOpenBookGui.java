@@ -1,4 +1,4 @@
-package vazkii.patchouli.fabric.network.message;
+package vazkii.patchouli.fabric.network;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 
 import io.netty.buffer.Unpooled;
 
-public class MessageOpenBookGui {
+public class FabricMessageOpenBookGui {
 	public static final ResourceLocation ID = new ResourceLocation(PatchouliAPI.MOD_ID, "open_book");
 
 	public static void send(ServerPlayer player, ResourceLocation book, @Nullable ResourceLocation entry, int page) {

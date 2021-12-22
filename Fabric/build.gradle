@@ -1,14 +1,11 @@
 plugins {
 	id 'fabric-loom' version '0.10-SNAPSHOT'
-	id 'maven-publish'
 }
 
 version = "${minecraft_version}-${build_number}-FABRIC"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
 }
-
-archivesBaseName = "${mod_name}"
 
 repositories {
 	maven {
@@ -39,6 +36,10 @@ dependencies {
     implementation project(":Common")
 }
 
+tasks.withType(JavaCompile) {
+	source(project(":Common").sourceSets.main.allSource)
+}
+
 processResources {
     from project(":Common").sourceSets.main.resources
 	inputs.property "version", project.version
@@ -47,22 +48,11 @@ processResources {
 		expand "version": project.version
 	}
 
-	// In Fabric, all refmaps are merged together and the refmap name is pre-set by Loom
-	// This ensures that the xplat mixins are also placed into the Loom refmap
-	filesMatching("patchouli_xplat.mixins.json") {
+	filesMatching("*.mixins.json") {
+		// In Fabric, all refmaps are merged together and the refmap name is pre-set by Loom
+		// Make sure everyone uses that name
 		expand "refmap_target": archivesBaseName + "-"
 	}
-}
-
-tasks.withType(JavaCompile) {
-    source(project(":Common").sourceSets.main.allSource)
-}
-
-java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
 }
 
 task apiJar(type: Jar, dependsOn: classes) {
@@ -76,7 +66,9 @@ task apiJar(type: Jar, dependsOn: classes) {
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
+			groupId project.group
+			artifactId project.archivesBaseName
+			version project.version
 			artifact(remapJar) {
 				builtBy remapJar
 			}
@@ -88,8 +80,6 @@ publishing {
 			}
 		}
 	}
-
-	// select the repositories you want to publish to
 	repositories {
 		maven {
 			url "file://" + System.getenv("local_maven")
