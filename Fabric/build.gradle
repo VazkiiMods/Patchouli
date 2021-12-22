@@ -1,7 +1,6 @@
 plugins {
 	id 'fabric-loom' version '0.10-SNAPSHOT'
 	id 'maven-publish'
-	id "com.diffplug.spotless" version "5.12.5"
 }
 
 version = "${minecraft_version}-${build_number}-FABRIC"
@@ -10,20 +9,6 @@ if (System.getenv().RELEASE_MODE == null) {
 }
 
 archivesBaseName = "${mod_name}"
-
-/* TODO apply to all subprojects. If I move it up to the superproject it breaks everything,
-   TODO if I duplicate to all subprojects it also breaks everything. I hate gradle.
-*/
-spotless {
-	enforceCheck = false // workaround around jenkins having wrong line endings in some files
-	// we explicitly check in github actions builds
-	java {
-		indentWithTabs()
-		eclipse().configFile 'spotless/eclipseformat.xml'
-		removeUnusedImports()
-		importOrderFile 'spotless/eclipse.importorder'
-	}
-}
 
 repositories {
 	maven {
@@ -42,7 +27,6 @@ loom {
 }
 
 dependencies {
-    implementation project(":Common")
 	implementation "com.google.code.findbugs:jsr305:3.0.2"
 	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
 	include "me.zeroeightsix:fiber:0.23.0-2"
@@ -52,14 +36,24 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:0.12.11"
 
 	modImplementation "net.fabricmc.fabric-api:fabric-api:0.44.0+1.18"
+    implementation project(":Common")
 }
 
 processResources {
+    from project(":Common").sourceSets.main.resources
 	inputs.property "version", project.version
 
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version
 	}
+
+    filesMatching("patchouli.fabric.mixins.json") {
+        expand "refmap_target": archivesBaseName + "-"
+    }
+}
+
+tasks.withType(JavaCompile) {
+    source(project(":Common").sourceSets.main.allSource)
 }
 
 java {
