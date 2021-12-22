@@ -10,10 +10,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.Tag;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 
 import vazkii.patchouli.api.BookContentsReloadCallback;
 import vazkii.patchouli.api.BookDrawScreenCallback;
+import vazkii.patchouli.fabric.common.FabricRecipeSerializerWrapper;
 import vazkii.patchouli.fabric.network.FabricMessageOpenBookGui;
 import vazkii.patchouli.fabric.network.FabricMessageReloadBookContents;
 import vazkii.patchouli.xplat.XplatAbstractions;
@@ -24,6 +27,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiFunction;
 
 public class FabricXplatImpl implements XplatAbstractions.IXplatAbstractions {
 	@Override
@@ -73,5 +77,10 @@ public class FabricXplatImpl implements XplatAbstractions.IXplatAbstractions {
 	@Override
 	public boolean isPhysicalClient() {
 		return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+	}
+
+	@Override
+	public <T extends Recipe<?>, U extends T> RecipeSerializer<U> makeWrapperSerializer(RecipeSerializer<T> inner, BiFunction<T, ResourceLocation, U> converter) {
+		return new FabricRecipeSerializerWrapper<>(inner, converter);
 	}
 }

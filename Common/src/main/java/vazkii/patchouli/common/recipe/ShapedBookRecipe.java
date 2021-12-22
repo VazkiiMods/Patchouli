@@ -4,32 +4,23 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 
+import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.xplat.XplatAbstractions;
+
 /**
  * Recipe type for shaped book recipes.
  * The format is the same as vanilla shaped recipes, but the
  * "result" object is replaced by a "book" string for the book ID.
  */
-public class ShapedBookRecipe extends BookRecipe<ShapedRecipe> {
-	public static final RecipeSerializer<ShapedBookRecipe> SERIALIZER = new Serializer();
+public class ShapedBookRecipe extends ShapedRecipe {
+	public static final RecipeSerializer<ShapedBookRecipe> SERIALIZER = XplatAbstractions.getInstance().makeWrapperSerializer(RecipeSerializer.SHAPED_RECIPE, ShapedBookRecipe::new);
 
 	public ShapedBookRecipe(ShapedRecipe compose, ResourceLocation outputBook) {
-		super(compose, outputBook);
+		super(compose.getId(), compose.getGroup(), compose.getWidth(), compose.getHeight(), compose.getIngredients(), PatchouliAPI.get().getBookStack(outputBook));
 	}
 
 	@Override
 	public RecipeSerializer<?> getSerializer() {
 		return SERIALIZER;
-	}
-
-	private static class Serializer extends WrapperSerializer<ShapedRecipe, ShapedBookRecipe> {
-		@Override
-		protected RecipeSerializer<ShapedRecipe> getSerializer() {
-			return SHAPED_RECIPE;
-		}
-
-		@Override
-		protected ShapedBookRecipe getRecipe(ShapedRecipe recipe, ResourceLocation outputBook) {
-			return new ShapedBookRecipe(recipe, outputBook);
-		}
 	}
 }
