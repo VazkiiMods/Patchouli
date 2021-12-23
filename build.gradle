@@ -19,7 +19,6 @@ subprojects {
     apply plugin: 'maven-publish'
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
     java.withSourcesJar()
-    java.withJavadocJar()
     archivesBaseName = "${mod_name}"
 
     repositories {

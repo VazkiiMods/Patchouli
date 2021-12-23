@@ -55,12 +55,14 @@ processResources {
 	}
 }
 
+/*
 task apiJar(type: Jar, dependsOn: classes) {
 	from(sourceSets.main.output)
 	include 'vazkii/patchouli/api/**'
 
 	archiveClassifier = "api"
 }
+*/
 
 // configure the maven publication
 publishing {
@@ -75,9 +77,11 @@ publishing {
 			artifact(sourcesJar) {
 				builtBy remapSourcesJar
 			}
+                        /*
 			artifact(apiJar) {
 				builtBy apiJar
 			}
+                        */
 		}
 	}
 	repositories {
