@@ -16,8 +16,21 @@ repositories {
 
 loom {
 	runs {
-		create("GameTest") {
+		client {
+			client()
+			setConfigName("Fabric Client")
+			ideConfigGenerated(true)
+			runDir("run")
+		}
+		server {
 			server()
+			setConfigName("Fabric Server")
+			ideConfigGenerated(true)
+			runDir("run")
+		}
+		gameTest {
+			server()
+			ideConfigGenerated(true)
 			vmArg "-Dfabric-api.gametest=1"
 		}
 	}
