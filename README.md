@@ -1,13 +1,3 @@
-## Fabric Information
-This is the Fabric port of Patchouli, it will receive support for the latest stable version of Minecraft available on Fabric.
-Snapshot releases may happen depending on my mood, but don't count on them.
-
-
-The Fabric branch is the most upstream development branch of Patchouli. Forge receives full support as well.
-
-
-However, pull requests should be made here against the Fabric branch and will be merged downstream to Forge by the maintainers (unless, of course, your changes are specifically relevant to only Forge)
-
 # Patchouli
 Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers
 
@@ -37,31 +27,72 @@ dependencies {
     modImplementation "vazkii.patchouli:Patchouli:[VERSION]"
 }
 ```
+
+In Forge, use the following:
+```gradle
+repositories {
+    maven { url 'https://maven.blamejared.com' }
+}
+
+dependencies {
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:[VERSION]:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:[VERSION]")
+}
+```
+
 Note: Any code not located in the package `vazkii.patchouli.api` is strictly implementation detail, and you should not rely on it as it will change without warning.
 
 # License Information
 
-Patchouli's original code and assets are licensed under the CC-BY-NC-SA 3.0 Unported license.
-We recognize that this is not ideal, and are open to changing the licensing of the code in the future.
+Patchouli's original code and assets are licensed under the CC-BY-NC-SA 3.0 Unported
+license.  We recognize that this is not ideal, and are open to changing the licensing of
+the code in the future.
 
-Please note that this mod uses official Mojang mappings (Mojmap). If you depend on Patchouli as normal,
-or only consume Patchouli's API, there should be no licensing concerns, as the mod is remapped to Intermediary (or SRG, for Forge) on compile.
+Please note that this mod uses official Mojang mappings (Mojmap). If you depend on
+Patchouli as normal, or only consume Patchouli's API, there should be no licensing
+concerns, as the mod is remapped to Intermediary (or SRG, for Forge) on compile.
 
-There is a license concern, however, if you bundle Patchouli with your mod using Jar-in-Jar.
-Building a mod which uses Mixin inserts a refmap, which for Patchouli will contain raw Mojang mappings in a JSON file.
-If this presents a licensing problem to you, then do not bundle Patchouli and just depend on it externally.
-I recommend using normal dependencies either way, as Jar-in-Jar inflates your archive sizes to store a mod that will probably be in most modpacks anyways.
+There is a license concern, however, if you bundle Patchouli with your mod using
+Jar-in-Jar.  Building a mod which uses Mixin inserts a refmap, which for Patchouli will
+contain raw Mojang mappings in a JSON file.  If this presents a licensing problem to you,
+then do not bundle Patchouli and just depend on it externally.  I recommend using normal
+dependencies either way, as Jar-in-Jar inflates your archive sizes to store a mod that
+will probably be in most modpacks anyways.
 
-## Making a Release
+## Developer Info
+### Repository Layout
+From 1.18 onwards, Patchouli is developed with Fabric and Forge in the same branch of the
+same repository. This is a boon for productivity as most code can be shared without
+tedious merging of commits back and forth between branches. All code uses Mojang mappings
+(MojMap).
+
+This scheme is based on the [Multi-Loader
+Template](https://github.com/jaredlll08/MultiLoader-Template) created by @jaredlll08 and
+@Darkhax. Many thanks to them!
+
+How it works is we have three Gradle subprojects: `Common`, `Forge`, and `Fabric`.
+`Common` contains code that is loader-agnostic. In the IDE, we set up this subproject
+using Sponge's `VanillaGradle` plugin, which sets up a basic Mojmap-mapped game JAR to aid
+in auto-complete, etc. while coding.  However, this subproject is not actually compiled on
+its own.
+
+Instead, the loader-specific subprojects `Forge` and `Fabric` include the source of
+`Common` into their own sources when compiling. The loader-specific subprojects use the
+native loader's tools (ForgeGradle and Loom, respectively), so in nearly all respects this
+is the same as copying and pasting the `Common` code into the loader-specific subproject.
+
+If a loader needs to be temporarily disabled, simply comment it out in `settings.gradle`.
+
+### Making a Release
 1. Pull from remote, test all changes, and commit everything.
-2. `git tag -a release-<VERSION>`. All Patchouli versions *must* follow the version format `<MC-VER>-INT`, so it'll
-   probably look like `git tag -a release-1.17.1-55`. If the Fabric version, append `-FABRIC`, e.g.
-   `git tag -a release-1.17.1-55-FABRIC`. You can check which number is the next one by looking at
-   `build.properties`.
-3. In the Git editor that pops up, write the changelog. Finish the tag process (usually by saving and closing the
-   editor).
-4. Run `./gradlew incrementBuildNumber --no-daemon` to increment the build number of the next release. Commit this.
-5. Push: `git push origin master --tags`
-6. Go to [Jenkins](https://ci.blamejared.com/job/Patchouli/view/tags/) and wait for the tag you just pushed to be co
-   mpiled and built
-7. Download the JAR and submit it to CurseForge
+2. `git tag -a release-<VERSION>`. All Patchouli versions *must* follow the version format
+   `<MC-VER>-INT`, so it'll probably look like `git tag -a release-1.17.1-55`. You can
+   check which number is the next one by looking at `gradle.properties`.
+3. In the Git editor that pops up, write the changelog. Finish the tag process (usually by
+   saving and closing the editor).
+4. Increment the build number in `gradle.properties` of the next release. Commit this
+   separately.
+5. Push: `git push origin <branch> --tags`
+6. Go to [Jenkins](https://ci.blamejared.com/job/Patchouli/view/tags/) and wait for the
+   tag you just pushed to be co mpiled and built
+7. Download the Forge and Fabric JARs and submit them to CurseForge
