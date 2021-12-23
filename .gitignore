@@ -2,7 +2,8 @@ Thumbs.db
 .gradle
 build
 out
-.idea
+.idea/*
+!.idea/scopes
 
 ## ForgeGradle
 /run/*
