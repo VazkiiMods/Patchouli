@@ -100,10 +100,6 @@ processResources {
 
 jar.finalizedBy('reobfJar')
 
-tasks.withType(GenerateModuleMetadata) {
-    enabled = false
-}
-
 task apiJar(type: Jar, dependsOn: classes) {
     // Sources included because of MinecraftForge/ForgeGradle#369
     from(sourceSets.main.allJava)

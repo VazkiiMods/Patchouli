@@ -35,6 +35,10 @@ subprojects {
         it.options.release = 17
     }
 
+    tasks.withType(GenerateModuleMetadata).configureEach {
+        it.enabled = false
+    }
+
     pmd {
         toolVersion '6.35.0'
         incrementalAnalysis.set(true)

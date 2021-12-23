@@ -84,17 +84,7 @@ publishing {
 			groupId project.group
 			artifactId project.archivesBaseName
 			version project.version
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
-                        /*
-			artifact(apiJar) {
-				builtBy apiJar
-			}
-                        */
+			from components.java
 		}
 	}
 	repositories {
