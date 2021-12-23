@@ -28,6 +28,7 @@ import vazkii.patchouli.xplat.XplatAbstractions;
 public class ForgeModInitializer {
 	public ForgeModInitializer() {
 		XplatAbstractions.setInstance(new ForgeXplatImpl());
+		ForgePatchouliConfig.setup();
 	}
 
 	@SubscribeEvent
@@ -47,7 +48,6 @@ public class ForgeModInitializer {
 
 	@SubscribeEvent
 	public static void onInitialize(FMLCommonSetupEvent evt) {
-		ForgePatchouliConfig.setup();
 		MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent e) -> OpenBookCommand.register(e.getDispatcher()));
 		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
 			var result = LecternEventHandler.rightClick(e.getPlayer(), e.getWorld(), e.getHand(), e.getHitVec());
