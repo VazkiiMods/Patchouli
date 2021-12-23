@@ -1,7 +1,7 @@
 # Patchouli
 Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers
 
-For more information, see the [wiki](https://github.com/Vazkii/Patchouli/wiki).
+For more information, see the [docs](https://vazkiimods.github.io/Patchouli/docs/intro).
 
 ## What does the mod's name mean???1
 https://en.touhouwiki.net/wiki/Patchouli_Knowledge
@@ -23,7 +23,6 @@ repositories {
 }
 
 dependencies {
-    // 1.14+
     modImplementation "vazkii.patchouli:Patchouli:[VERSION]"
 }
 ```
@@ -94,5 +93,5 @@ If a loader needs to be temporarily disabled, simply comment it out in `settings
    separately.
 5. Push: `git push origin <branch> --tags`
 6. Go to [Jenkins](https://ci.blamejared.com/job/Patchouli/view/tags/) and wait for the
-   tag you just pushed to be co mpiled and built
+   tag you just pushed to be compiled and built
 7. Download the Forge and Fabric JARs and submit them to CurseForge
