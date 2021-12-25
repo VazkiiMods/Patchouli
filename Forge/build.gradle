@@ -45,7 +45,6 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             property 'fml.earlyprogresswindow', 'false'
             ideaModule "${rootProject.name}.${project.name}.main"
-            taskName 'Forge Client'
             args "-mixin.config=patchouli_xplat.mixins.json"
             mods {
                 patchouli {
@@ -60,7 +59,6 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             property 'fml.earlyprogresswindow', 'false'
             ideaModule "${rootProject.name}.${project.name}.main"
-            taskName 'Forge Server'
             args "-mixin.config=patchouli_xplat.mixins.json"
             mods {
                 patchouli {
