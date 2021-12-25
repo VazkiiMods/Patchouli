@@ -164,12 +164,20 @@ public class Book {
 		return updated;
 	}
 
+	/** Must only be called on client */
+	@Deprecated
+	public void reloadContents() {
+		reloadContents(false);
+	}
+
 	/**
 	 * Must only be called on client
+	 * 
+	 * @param singleBook Hint that the book was reloaded through the button on the main page
 	 */
-	public void reloadContents() {
+	public void reloadContents(boolean singleBook) {
 		if (!isExtension) {
-			BookContentsBuilder builder = new BookContentsBuilder();
+			BookContentsBuilder builder = new BookContentsBuilder(singleBook);
 			try {
 				builder.loadFrom(this);
 			} catch (Exception e) {

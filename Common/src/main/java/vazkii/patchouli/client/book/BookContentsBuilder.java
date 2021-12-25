@@ -32,13 +32,24 @@ public class BookContentsBuilder {
 	private final Map<ResourceLocation, Supplier<BookTemplate>> templates = new HashMap<>();
 	private final Map<ItemStackUtil.StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap<>();
 
+	private final boolean singleBookReload;
+
 	private interface LoadFunc<T> {
 		@Nullable
 		T load(Book book, BookContentLoader loader, ResourceLocation id, ResourceLocation file);
 	}
 
-	public BookContentsBuilder() {
+	/**
+	 * @param singleBookReload Signals that the book was reloaded through the ingame button
+	 *                         and should bypass the cached resource reload data.
+	 */
+	public BookContentsBuilder(boolean singleBookReload) {
+		this.singleBookReload = singleBookReload;
 		templates.putAll(BookContents.addonTemplates);
+	}
+
+	public BookContentsBuilder() {
+		this(false);
 	}
 
 	@Nullable
@@ -98,11 +109,7 @@ public class BookContentsBuilder {
 	}
 
 	private <T> void load(Book book, String thing, LoadFunc<T> loader, Map<ResourceLocation, T> builder) {
-		BookContentLoader contentLoader = book.isExternal
-				? BookContentExternalLoader.INSTANCE
-				: book.useResourcePack
-						? BookContentResourceLoader.INSTANCE
-				: BookContentClasspathLoader.INSTANCE;
+		BookContentLoader contentLoader = getContentLoader(book);
 		List<ResourceLocation> foundIds = new ArrayList<>();
 		contentLoader.findFiles(book, thing, foundIds);
 
@@ -114,6 +121,19 @@ public class BookContentsBuilder {
 				builder.put(id, value);
 			}
 		}
+	}
+
+	protected BookContentLoader getContentLoader(Book book) {
+		if (book.isExternal) {
+			return BookContentExternalLoader.INSTANCE;
+		}
+		if (book.useResourcePack) {
+			// A quick reload should not reuse stale data, it is initiated by the user anyways
+			return singleBookReload
+					? BookContentResourceDirectLoader.INSTANCE
+					: BookContentResourceListenerLoader.INSTANCE;
+		}
+		return BookContentClasspathLoader.INSTANCE;
 	}
 
 	@Nullable

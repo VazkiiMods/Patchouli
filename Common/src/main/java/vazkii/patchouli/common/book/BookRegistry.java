@@ -125,7 +125,7 @@ public class BookRegistry {
 			if (resourcePackBooksOnly && !book.useResourcePack) {
 				continue;
 			}
-			book.reloadContents();
+			book.reloadContents(false);
 		}
 		ClientBookRegistry.INSTANCE.reloadLocks(false);
 		loaded = true;

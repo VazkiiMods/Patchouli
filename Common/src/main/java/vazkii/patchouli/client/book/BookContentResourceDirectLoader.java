@@ -18,10 +18,10 @@ import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.List;
 
-public final class BookContentResourceLoader implements BookContentLoader {
-	public static final BookContentResourceLoader INSTANCE = new BookContentResourceLoader();
+public final class BookContentResourceDirectLoader implements BookContentLoader {
+	public static final BookContentResourceDirectLoader INSTANCE = new BookContentResourceDirectLoader();
 
-	private BookContentResourceLoader() {}
+	private BookContentResourceDirectLoader() {}
 
 	@Override
 	public void findFiles(Book book, String dir, List<ResourceLocation> list) {

@@ -28,6 +28,7 @@ import vazkii.patchouli.client.base.BookModel;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
+import vazkii.patchouli.client.book.BookContentResourceListenerLoader;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
@@ -91,6 +92,8 @@ public class ForgeClientInitializer {
 
 	@SubscribeEvent
 	public static void registerReloadListeners(RegisterClientReloadListenersEvent e) {
+		e.registerReloadListener(BookContentResourceListenerLoader.INSTANCE);
+
 		e.registerReloadListener((ResourceManagerReloadListener) manager -> {
 			if (Minecraft.getInstance().level != null) {
 				PatchouliAPI.LOGGER.info("Reloading resource pack-based books, world is nonnull");
