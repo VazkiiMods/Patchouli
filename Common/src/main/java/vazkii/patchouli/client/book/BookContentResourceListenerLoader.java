@@ -8,16 +8,12 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 
-import org.apache.commons.io.IOUtils;
-
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
 import javax.annotation.Nullable;
 
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +55,8 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 			data.computeIfAbsent(bookId, id -> new HashMap<>()).put(entry.getKey(), entry.getValue());
 		}
 
+		int count = data.values().stream().mapToInt(Map::size).sum();
+		PatchouliAPI.LOGGER.debug("{} preloaded {} jsons", getClass().getSimpleName(), count);
 		this.data = data;
 	}
 
@@ -86,7 +84,7 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 
 	@Nullable
 	@Override
-	public InputStream loadJson(Book book, ResourceLocation location, @Nullable ResourceLocation fallback) {
+	public JsonElement loadJson(Book book, ResourceLocation location, @Nullable ResourceLocation fallback) {
 		PatchouliAPI.LOGGER.trace("Loading {} with fallback {}", location, fallback);
 		var map = data.get(book.id);
 		if (map == null) {
@@ -99,9 +97,6 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 			path = fallback.getPath();
 			json = map.get(new ResourceLocation(fallback.getNamespace(), path.substring(0, path.length() - 5).split("/", 2)[1]));
 		}
-		if (json == null) {
-			return null;
-		}
-		return IOUtils.toInputStream(BookRegistry.GSON.toJson(json), StandardCharsets.UTF_8);
+		return json;
 	}
 }

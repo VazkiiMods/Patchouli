@@ -1,5 +1,7 @@
 package vazkii.patchouli.client.book;
 
+import com.google.gson.JsonElement;
+
 import net.minecraft.resources.ResourceLocation;
 
 import org.apache.commons.io.FilenameUtils;
@@ -11,7 +13,6 @@ import vazkii.patchouli.common.book.BookFolderLoader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -54,12 +55,12 @@ public final class BookContentExternalLoader implements BookContentLoader {
 	}
 
 	@Override
-	public InputStream loadJson(Book book, ResourceLocation resloc, ResourceLocation fallback) {
+	public JsonElement loadJson(Book book, ResourceLocation resloc, ResourceLocation fallback) {
 		try {
 			String path = resloc.getPath().substring(BookFolderLoader.loadDir.getName().length());
 			File targetFile = new File(BookFolderLoader.loadDir, path);
 			if (targetFile.exists()) {
-				return new FileInputStream(targetFile);
+				return BookContentLoader.streamToJson(new FileInputStream(targetFile));
 			}
 			if (fallback != null) {
 				return loadJson(book, fallback, null);

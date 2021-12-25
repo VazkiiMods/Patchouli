@@ -1,5 +1,7 @@
 package vazkii.patchouli.client.book;
 
+import com.google.gson.JsonElement;
+
 import net.minecraft.resources.ResourceLocation;
 
 import org.apache.commons.io.FilenameUtils;
@@ -12,7 +14,6 @@ import vazkii.patchouli.xplat.XplatModContainer;
 import javax.annotation.Nullable;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -50,12 +51,12 @@ public final class BookContentClasspathLoader implements BookContentLoader {
 
 	@Nullable
 	@Override
-	public InputStream loadJson(Book book, ResourceLocation resloc, @Nullable ResourceLocation fallback) {
+	public JsonElement loadJson(Book book, ResourceLocation resloc, @Nullable ResourceLocation fallback) {
 		String path = "data/" + resloc.getNamespace() + "/" + resloc.getPath();
 		PatchouliAPI.LOGGER.debug("Loading {}", path);
 
 		try {
-			return Files.newInputStream(book.owner.getPath(path));
+			return BookContentLoader.streamToJson(Files.newInputStream(book.owner.getPath(path)));
 		} catch (IOException ex) {
 			if (fallback != null) {
 				return loadJson(book, fallback, null);

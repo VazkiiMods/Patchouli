@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book;
 
 import com.google.common.base.Preconditions;
+import com.google.gson.JsonElement;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +14,6 @@ import vazkii.patchouli.common.book.BookRegistry;
 import javax.annotation.Nullable;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.List;
@@ -52,14 +52,14 @@ public final class BookContentResourceDirectLoader implements BookContentLoader 
 
 	@Nullable
 	@Override
-	public InputStream loadJson(Book book, ResourceLocation file, @Nullable ResourceLocation fallback) {
+	public JsonElement loadJson(Book book, ResourceLocation file, @Nullable ResourceLocation fallback) {
 		PatchouliAPI.LOGGER.debug("Loading {}", file);
 		ResourceManager manager = Minecraft.getInstance().getResourceManager();
 		try {
 			if (manager.hasResource(file)) {
-				return manager.getResource(file).getInputStream();
+				return BookContentLoader.streamToJson(manager.getResource(file).getInputStream());
 			} else if (fallback != null && manager.hasResource(fallback)) {
-				return manager.getResource(fallback).getInputStream();
+				return BookContentLoader.streamToJson(manager.getResource(fallback).getInputStream());
 			} else {
 				return null;
 			}
