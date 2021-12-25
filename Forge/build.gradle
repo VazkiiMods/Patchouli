@@ -95,8 +95,19 @@ processResources {
         expand "refmap_target": "patchouli."
     }
 }
-
-jar.finalizedBy('reobfJar')
+jar {
+    manifest {
+        attributes([
+                "Specification-Title": "${mod_name}",
+                "Specification-Vendor": "vazkii",
+                "Specification-Version": "1", // We are version 1 of ourselves
+                "Implementation-Title": "${mod_name}",
+                "Implementation-Version": "${archiveVersion.get()}",
+                "Implementation-Vendor" :"vazkii"
+        ])
+    }
+    finalizedBy 'reobfJar'
+}
 
 task apiJar(type: Jar, dependsOn: classes) {
     // Sources included because of MinecraftForge/ForgeGradle#369
