@@ -4,6 +4,7 @@ build
 out
 .idea/*
 !.idea/scopes
+Common/logs/
 
 ## ForgeGradle
 /run/*

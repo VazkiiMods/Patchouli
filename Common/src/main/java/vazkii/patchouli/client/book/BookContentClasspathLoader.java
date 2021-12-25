@@ -18,6 +18,10 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.BiFunction;
 
+/**
+ * BookContentLoader that loads from the classpath of the owning mod.
+ * This is the legacy behaviour of 1.16 and below.
+ */
 public final class BookContentClasspathLoader implements BookContentLoader {
 	public static final BookContentClasspathLoader INSTANCE = new BookContentClasspathLoader();
 

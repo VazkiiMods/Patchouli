@@ -18,6 +18,9 @@ import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * BookContentLoader that directly queries the Resource Pack system when queried
+ */
 public final class BookContentResourceDirectLoader implements BookContentLoader {
 	public static final BookContentResourceDirectLoader INSTANCE = new BookContentResourceDirectLoader();
 

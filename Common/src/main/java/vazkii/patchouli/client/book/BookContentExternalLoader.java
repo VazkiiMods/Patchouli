@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+/**
+ * BookContentLoader that loads from the .minecraft/patchouli_books folder
+ */
 public final class BookContentExternalLoader implements BookContentLoader {
 	public static final BookContentExternalLoader INSTANCE = new BookContentExternalLoader();
 

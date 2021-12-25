@@ -23,6 +23,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+/**
+ * BookContentLoader similar to {@link BookContentResourceDirectLoader}, but it
+ * pre-caches the JSONs at during resource load to avoid I/O during book reloads.
+ */
 public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadListener
 		implements BookContentLoader {
 	public static final BookContentResourceListenerLoader INSTANCE = new BookContentResourceListenerLoader();
