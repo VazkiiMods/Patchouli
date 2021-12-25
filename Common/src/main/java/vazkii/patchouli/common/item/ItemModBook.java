@@ -29,7 +29,7 @@ import java.util.List;
 
 public class ItemModBook extends Item {
 
-	private static final String TAG_BOOK = "patchouli:book";
+	public static final String TAG_BOOK = "patchouli:book";
 
 	public ItemModBook() {
 		super(new Item.Properties()
