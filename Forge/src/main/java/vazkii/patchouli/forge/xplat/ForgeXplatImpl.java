@@ -84,7 +84,9 @@ public class ForgeXplatImpl implements XplatAbstractions.IXplatAbstractions {
 
 	@Override
 	public void signalBooksLoaded() {
-		ForgeClientInitializer.signalBooksLoaded();
+		if (isPhysicalClient()) {
+			ForgeClientInitializer.signalBooksLoaded();
+		}
 	}
 
 	@Override
