@@ -10,7 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.base.PatchouliConfig;
-import vazkii.patchouli.xplat.XplatAbstractions;
+import vazkii.patchouli.xplat.IXplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
 
 import java.io.*;
@@ -39,7 +39,7 @@ public class BookRegistry {
 	private BookRegistry() {}
 
 	public void init() {
-		Collection<XplatModContainer> mods = XplatAbstractions.getInstance().getAllMods();
+		Collection<XplatModContainer> mods = IXplatAbstractions.INSTANCE.getAllMods();
 		Map<Pair<XplatModContainer, ResourceLocation>, String> foundBooks = new HashMap<>();
 
 		mods.forEach(mod -> {
@@ -105,7 +105,7 @@ public class BookRegistry {
 			}
 		}
 
-		XplatAbstractions.getInstance().signalBooksLoaded();
+		IXplatAbstractions.INSTANCE.signalBooksLoaded();
 	}
 
 	public void loadBook(XplatModContainer mod, ResourceLocation res, InputStream stream,

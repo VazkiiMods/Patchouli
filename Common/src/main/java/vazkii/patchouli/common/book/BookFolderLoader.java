@@ -4,7 +4,7 @@ import net.minecraft.ResourceLocationException;
 import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.xplat.XplatAbstractions;
+import vazkii.patchouli.xplat.IXplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
 
 import java.io.File;
@@ -28,7 +28,7 @@ public class BookFolderLoader {
 			setup();
 		}
 
-		XplatModContainer self = XplatAbstractions.getInstance().getModContainer(PatchouliAPI.MOD_ID);
+		XplatModContainer self = IXplatAbstractions.INSTANCE.getModContainer(PatchouliAPI.MOD_ID);
 		File[] subdirs = loadDir.listFiles(File::isDirectory);
 		if (subdirs == null) {
 			PatchouliAPI.LOGGER.warn("Failed to list external books in {}, not loading external books",

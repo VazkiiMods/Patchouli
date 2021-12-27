@@ -1,7 +1,7 @@
 package vazkii.patchouli.common.base;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.xplat.XplatAbstractions;
+import vazkii.patchouli.xplat.IXplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
 
 import java.util.*;
@@ -34,12 +34,12 @@ public class PatchouliConfig {
 	}
 
 	public static void reloadBuiltinFlags() {
-		Collection<XplatModContainer> mods = XplatAbstractions.getInstance().getAllMods();
+		Collection<XplatModContainer> mods = IXplatAbstractions.INSTANCE.getAllMods();
 		for (XplatModContainer info : mods) {
 			setFlag("mod:" + info.getId(), true);
 		}
 
-		setFlag("debug", XplatAbstractions.getInstance().isDevEnvironment());
+		setFlag("debug", IXplatAbstractions.INSTANCE.isDevEnvironment());
 
 		setFlag("advancements_disabled", get().disableAdvancementLocking().get());
 		setFlag("testing_mode", get().testingMode().get());

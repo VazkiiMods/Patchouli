@@ -24,7 +24,7 @@ import vazkii.patchouli.forge.client.ForgeClientInitializer;
 import vazkii.patchouli.forge.common.ForgeRecipeSerializerWrapper;
 import vazkii.patchouli.forge.network.ForgeMessageOpenBookGui;
 import vazkii.patchouli.forge.network.ForgeMessageReloadBookContents;
-import vazkii.patchouli.xplat.XplatAbstractions;
+import vazkii.patchouli.xplat.IXplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
 
-public class ForgeXplatImpl implements XplatAbstractions.IXplatAbstractions {
+public class ForgeXplatImpl implements IXplatAbstractions {
 	@Override
 	public void fireDrawBookScreen(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, PoseStack ms) {
 		MinecraftForge.EVENT_BUS.post(new BookDrawScreenEvent(book, gui, mouseX, mouseY, partialTicks, ms));

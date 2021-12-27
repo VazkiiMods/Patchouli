@@ -5,7 +5,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.xplat.XplatAbstractions;
+import vazkii.patchouli.xplat.IXplatAbstractions;
 
 /**
  * Recipe type for shapeless book recipes.
@@ -13,7 +13,7 @@ import vazkii.patchouli.xplat.XplatAbstractions;
  * "result" object is replaced by a "book" string for the book ID.
  */
 public class ShapelessBookRecipe extends ShapelessRecipe {
-	public static final RecipeSerializer<ShapelessBookRecipe> SERIALIZER = XplatAbstractions.getInstance().makeWrapperSerializer(RecipeSerializer.SHAPELESS_RECIPE, ShapelessBookRecipe::new);
+	public static final RecipeSerializer<ShapelessBookRecipe> SERIALIZER = IXplatAbstractions.INSTANCE.makeWrapperSerializer(RecipeSerializer.SHAPELESS_RECIPE, ShapelessBookRecipe::new);
 
 	public ShapelessBookRecipe(ShapelessRecipe compose, ResourceLocation outputBook) {
 		super(compose.getId(), compose.getGroup(), PatchouliAPI.get().getBookStack(outputBook), compose.getIngredients());

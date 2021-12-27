@@ -19,7 +19,7 @@ import vazkii.patchouli.api.BookDrawScreenCallback;
 import vazkii.patchouli.fabric.common.FabricRecipeSerializerWrapper;
 import vazkii.patchouli.fabric.network.FabricMessageOpenBookGui;
 import vazkii.patchouli.fabric.network.FabricMessageReloadBookContents;
-import vazkii.patchouli.xplat.XplatAbstractions;
+import vazkii.patchouli.xplat.IXplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
 
 import javax.annotation.Nullable;
@@ -29,7 +29,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.BiFunction;
 
-public class FabricXplatImpl implements XplatAbstractions.IXplatAbstractions {
+public class FabricXplatImpl implements IXplatAbstractions {
 	@Override
 	public void fireDrawBookScreen(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, PoseStack ms) {
 		BookDrawScreenCallback.EVENT.invoker().trigger(book, gui, mouseX, mouseY, partialTicks, ms);

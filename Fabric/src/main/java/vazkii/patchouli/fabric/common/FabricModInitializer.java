@@ -12,14 +12,8 @@ import vazkii.patchouli.common.command.OpenBookCommand;
 import vazkii.patchouli.common.handler.LecternEventHandler;
 import vazkii.patchouli.common.handler.ReloadContentsHandler;
 import vazkii.patchouli.common.item.PatchouliItems;
-import vazkii.patchouli.fabric.xplat.FabricXplatImpl;
-import vazkii.patchouli.xplat.XplatAbstractions;
 
 public class FabricModInitializer implements ModInitializer {
-	public FabricModInitializer() {
-		XplatAbstractions.setInstance(new FabricXplatImpl());
-	}
-
 	@Override
 	public void onInitialize() {
 		PatchouliSounds.submitRegistrations((id, e) -> Registry.register(Registry.SOUND_EVENT, id, e));

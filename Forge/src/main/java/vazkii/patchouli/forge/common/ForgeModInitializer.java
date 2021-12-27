@@ -20,14 +20,11 @@ import vazkii.patchouli.common.handler.LecternEventHandler;
 import vazkii.patchouli.common.handler.ReloadContentsHandler;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.forge.network.ForgeNetworkHandler;
-import vazkii.patchouli.forge.xplat.ForgeXplatImpl;
-import vazkii.patchouli.xplat.XplatAbstractions;
 
 @Mod.EventBusSubscriber(modid = PatchouliAPI.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 @Mod(PatchouliAPI.MOD_ID)
 public class ForgeModInitializer {
 	public ForgeModInitializer() {
-		XplatAbstractions.setInstance(new ForgeXplatImpl());
 		ForgePatchouliConfig.setup();
 	}
 

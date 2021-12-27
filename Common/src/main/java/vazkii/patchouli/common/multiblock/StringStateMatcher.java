@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.TriPredicate;
-import vazkii.patchouli.xplat.XplatAbstractions;
+import vazkii.patchouli.xplat.IXplatAbstractions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class StringStateMatcher {
 		if (state != null) {
 			return new ExactMatcher(state, parser.getProperties());
 		} else {
-			Tag.Named<Block> tag = XplatAbstractions.getInstance().blockTag(parser.getTag());
+			Tag.Named<Block> tag = IXplatAbstractions.INSTANCE.blockTag(parser.getTag());
 			return new TagMatcher(tag, parser.getVagueProperties());
 		}
 	}

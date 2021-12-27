@@ -33,7 +33,7 @@ import vazkii.patchouli.common.multiblock.DenseMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SparseMultiblock;
 import vazkii.patchouli.common.multiblock.StateMatcher;
-import vazkii.patchouli.xplat.XplatAbstractions;
+import vazkii.patchouli.xplat.IXplatAbstractions;
 
 import javax.annotation.Nonnull;
 
@@ -50,7 +50,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	private static void assertPhysicalClient() {
 		Preconditions.checkState(
-				XplatAbstractions.getInstance().isPhysicalClient(),
+				IXplatAbstractions.INSTANCE.isPhysicalClient(),
 				"Not on the physical client"
 		);
 	}
@@ -72,12 +72,12 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	@Override
 	public void openBookGUI(ServerPlayer player, ResourceLocation book) {
-		XplatAbstractions.getInstance().sendOpenBookGui(player, book, null, 0);
+		IXplatAbstractions.INSTANCE.sendOpenBookGui(player, book, null, 0);
 	}
 
 	@Override
 	public void openBookEntry(ServerPlayer player, ResourceLocation book, ResourceLocation entry, int page) {
-		XplatAbstractions.getInstance().sendOpenBookGui(player, book, entry, page);
+		IXplatAbstractions.INSTANCE.sendOpenBookGui(player, book, entry, page);
 	}
 
 	@Override

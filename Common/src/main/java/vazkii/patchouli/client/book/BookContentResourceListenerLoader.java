@@ -56,7 +56,7 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 		}
 
 		int count = data.values().stream().mapToInt(Map::size).sum();
-		PatchouliAPI.LOGGER.debug("{} preloaded {} jsons", getClass().getSimpleName(), count);
+		PatchouliAPI.LOGGER.info("{} preloaded {} jsons", getClass().getSimpleName(), count);
 		this.data = data;
 	}
 
@@ -79,7 +79,7 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 			}
 		}
 
-		PatchouliAPI.LOGGER.info("Files found in {}", stopwatch.stop());
+		PatchouliAPI.LOGGER.info("{}: Files found in {}", getClass().getSimpleName(), stopwatch.stop());
 	}
 
 	@Nullable

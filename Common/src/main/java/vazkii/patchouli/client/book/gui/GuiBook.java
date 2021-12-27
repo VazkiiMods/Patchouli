@@ -36,7 +36,7 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.mixin.client.AccessorScreen;
-import vazkii.patchouli.xplat.XplatAbstractions;
+import vazkii.patchouli.xplat.IXplatAbstractions;
 
 import javax.annotation.Nullable;
 
@@ -142,7 +142,7 @@ public abstract class GuiBook extends Screen {
 
 		super.render(ms, mouseX, mouseY, partialTicks);
 
-		XplatAbstractions.getInstance().fireDrawBookScreen(this.book.id, this, mouseX, mouseY, partialTicks, ms);
+		IXplatAbstractions.INSTANCE.fireDrawBookScreen(this.book.id, this, mouseX, mouseY, partialTicks, ms);
 
 		drawTooltip(ms, mouseX, mouseY);
 	}
