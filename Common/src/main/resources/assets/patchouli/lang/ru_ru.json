@@ -90,7 +90,7 @@
 	"patchouli.gui.lexicon.button.config": "Конфигурация",
 	"patchouli.gui.lexicon.button.visualize": "Визуализировать",
 	"patchouli.gui.lexicon.button.visualize.info": "(Повторное нажатие уберёт визуализацию)",
-	"patchouli.gui.lexicon.button.history": "История"
+	"patchouli.gui.lexicon.button.history": "История",
 	"patchouli.gui.lexicon.button.mark_all_read": "Отметить все как прочитанные",
 	"patchouli.gui.lexicon.button.mark_category_read": "Отметить эту категорию как прочитанную"
 }
