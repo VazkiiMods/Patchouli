@@ -41,6 +41,9 @@ dependencies {
 
 Note: Any code not located in the package `vazkii.patchouli.api` is strictly implementation detail, and you should not rely on it as it will change without warning.
 
+# Mixin Troubleshooting (Forge only)
+Patchouli uses Mixin to implement some of its features. On Forge, the game might crash when trying to launch in-dev, as ForgeGradle/MixinGradle do not yet properly support refmap remapping like Fabric does. This can be worked around by specifying the refmap remapping manually: add [these lines](https://github.com/SpongePowered/Mixin/issues/462#issuecomment-791370319) to your build.gradle and regenerate your run configurations in the IDE afterwards.
+
 # License Information
 
 Patchouli's original code and assets are licensed under the CC-BY-NC-SA 3.0 Unported
