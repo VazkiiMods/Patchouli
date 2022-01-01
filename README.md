@@ -42,7 +42,8 @@ dependencies {
 Note: Any code not located in the package `vazkii.patchouli.api` is strictly implementation detail, and you should not rely on it as it will change without warning.
 
 # Mixin Troubleshooting (Forge only)
-Patchouli uses Mixin to implement some of its features. On Forge, the game might crash when trying to launch in-dev, as ForgeGradle/MixinGradle do not yet properly support refmap remapping like Fabric does. This can be worked around by specifying the refmap remapping manually: add [these lines](https://github.com/SpongePowered/Mixin/issues/462#issuecomment-791370319) to your build.gradle and regenerate your run configurations in the IDE afterwards.
+Patchouli uses Mixin to implement some of its features. On Forge, the game might crash when trying to launch in-dev, as ForgeGradle does not remap the refmap by itself. This can be worked around by specifying the refmap remapping manually: add [these lines](https://github.com/SpongePowered/Mixin/issues/462#issuecomment-791370319) to your build.gradle and regenerate your run configurations in the IDE afterwards.
+MixinGradle applies this fix automatically - if you are using Mixin in your project you shouldn't have to change anything.
 
 # License Information
 
