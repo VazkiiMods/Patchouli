@@ -8,6 +8,7 @@
   ],
   "client": [
     "client.AccessorClientAdvancements",
+    "client.AccessorKeyMapping",
     "client.AccessorMultiBufferSource",
     "client.AccessorScreen",
     "client.MixinClientAdvancements",

@@ -8,6 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
@@ -21,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.api.BookContentsReloadEvent;
 import vazkii.patchouli.api.BookDrawScreenEvent;
 import vazkii.patchouli.forge.client.ForgeClientInitializer;
+import vazkii.patchouli.forge.client.jei.PatchouliJeiPlugin;
 import vazkii.patchouli.forge.common.ForgeRecipeSerializerWrapper;
 import vazkii.patchouli.forge.network.ForgeMessageOpenBookGui;
 import vazkii.patchouli.forge.network.ForgeMessageReloadBookContents;
@@ -87,6 +89,17 @@ public class ForgeXplatImpl implements IXplatAbstractions {
 		if (isPhysicalClient()) {
 			ForgeClientInitializer.signalBooksLoaded();
 		}
+	}
+
+	@Override
+	public boolean handleRecipeKeybind(int keyCode, int scanCode, @Nullable ItemStack stack) {
+		if (stack == null || stack.isEmpty()) {
+			return false;
+		}
+		if (ModList.get().isLoaded("jei")) {
+			return PatchouliJeiPlugin.handleRecipeKeybind(keyCode, scanCode, stack);
+		}
+		return false;
 	}
 
 	@Override

@@ -10,12 +10,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.Tag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 
 import vazkii.patchouli.api.BookContentsReloadCallback;
 import vazkii.patchouli.api.BookDrawScreenCallback;
+import vazkii.patchouli.fabric.client.rei.ReiCompat;
 import vazkii.patchouli.fabric.common.FabricRecipeSerializerWrapper;
 import vazkii.patchouli.fabric.network.FabricMessageOpenBookGui;
 import vazkii.patchouli.fabric.network.FabricMessageReloadBookContents;
@@ -77,6 +79,17 @@ public class FabricXplatImpl implements IXplatAbstractions {
 	@Override
 	public boolean isPhysicalClient() {
 		return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+	}
+
+	@Override
+	public boolean handleRecipeKeybind(int keyCode, int scanCode, @Nullable ItemStack stack) {
+		if (stack == null || stack.isEmpty()) {
+			return false;
+		}
+		if (FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) {
+			return ReiCompat.handleRecipeKeybind(keyCode, scanCode, stack);
+		}
+		return false;
 	}
 
 	@Override

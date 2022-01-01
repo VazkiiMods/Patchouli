@@ -325,9 +325,10 @@ public abstract class GuiBook extends Screen {
 		} else if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
 			back(true);
 			return true;
-		} else {
-			return super.keyPressed(keyCode, scanCode, modifiers);
+		} else if (IXplatAbstractions.INSTANCE.handleRecipeKeybind(keyCode, scanCode, tooltipStack)) {
+			return true;
 		}
+		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
 
 	@Override

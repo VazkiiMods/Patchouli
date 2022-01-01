@@ -1,3 +1,3 @@
 @javax.annotation.ParametersAreNonnullByDefault
-// @mcp.MethodsReturnNonnullByDefault
+@net.minecraft.MethodsReturnNonnullByDefault
 package vazkii.patchouli.api;
