@@ -1,5 +1,7 @@
 package vazkii.patchouli.fabric.common;
 
+import net.fabricmc.loader.api.FabricLoader;
+
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.base.PatchouliConfig;
 
@@ -76,7 +78,7 @@ public class FiberPatchouliConfig {
 				overflowMode::getValue
 		));
 		JanksonValueSerializer serializer = new JanksonValueSerializer(false);
-		Path p = Paths.get("config", PatchouliAPI.MOD_ID + ".json5");
+		Path p = FabricLoader.getInstance().getConfigDir().resolve(PatchouliAPI.MOD_ID + ".json5");
 		writeDefaultConfig(p, serializer);
 
 		try (InputStream s = new BufferedInputStream(Files.newInputStream(p, StandardOpenOption.READ, StandardOpenOption.CREATE))) {
