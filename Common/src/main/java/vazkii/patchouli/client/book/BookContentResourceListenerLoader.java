@@ -30,7 +30,7 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 			"(?<bookId>[a-z0-9_.-]+)" +
 					"/(?<lang>[a-z0-9_.-]+)" +
 					"/(?<folder>[a-z0-9_.-]+)" +
-					"/(?<entryId>[a-z0-9_.-/]+)");
+					"/(?<entryId>[a-z0-9/._-]+)");
 
 	// book id -> (entry id -> entry json)
 	private Map<ResourceLocation, Map<ResourceLocation, JsonElement>> data;
