@@ -43,14 +43,11 @@ public interface BookRecipeSerializer<T extends Recipe<?>, U extends T> extends 
 	@Nonnull
 	default U fromNetwork(@Nonnull ResourceLocation id, @Nonnull FriendlyByteBuf buf) {
 		T recipe = getCompose().fromNetwork(id, buf);
-		ResourceLocation outputBook = buf.readResourceLocation();
-
-		return getConverter().apply(recipe, outputBook);
+		return getConverter().apply(recipe, null);
 	}
 
 	@Override
 	default void toNetwork(@Nonnull FriendlyByteBuf buf, @Nonnull U recipe) {
 		getCompose().toNetwork(buf, recipe);
-		buf.writeResourceLocation(recipe.getId());
 	}
 }

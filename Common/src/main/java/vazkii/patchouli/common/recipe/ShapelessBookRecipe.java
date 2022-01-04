@@ -4,7 +4,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 
-import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.xplat.IXplatAbstractions;
 
 /**
@@ -16,7 +15,7 @@ public class ShapelessBookRecipe extends ShapelessRecipe {
 	public static final RecipeSerializer<ShapelessBookRecipe> SERIALIZER = IXplatAbstractions.INSTANCE.makeWrapperSerializer(RecipeSerializer.SHAPELESS_RECIPE, ShapelessBookRecipe::new);
 
 	public ShapelessBookRecipe(ShapelessRecipe compose, ResourceLocation outputBook) {
-		super(compose.getId(), compose.getGroup(), PatchouliAPI.get().getBookStack(outputBook), compose.getIngredients());
+		super(compose.getId(), compose.getGroup(), ShapedBookRecipe.getOutputBook(compose, outputBook), compose.getIngredients());
 	}
 
 	@Override
