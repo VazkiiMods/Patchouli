@@ -89,6 +89,10 @@ public class BookTextParser {
 			return "";
 		}, "m", "strike");
 		register(state -> {
+			state.modifyStyle(s -> s.applyFormat(ChatFormatting.UNDERLINE));
+			return "";
+		}, "n", "underline");
+		register(state -> {
 			state.modifyStyle(s -> s.applyFormat(ChatFormatting.ITALIC));
 			return "";
 		}, "o", "italic", "italics");
