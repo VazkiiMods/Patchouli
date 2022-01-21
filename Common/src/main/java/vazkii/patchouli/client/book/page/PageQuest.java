@@ -16,10 +16,11 @@ import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
+import vazkii.patchouli.client.book.page.abstr.CompletablePage;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.common.book.Book;
 
-public class PageQuest extends PageWithText {
+public class PageQuest extends PageWithText implements CompletablePage {
 
 	ResourceLocation trigger;
 	String title;
