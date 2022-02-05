@@ -11,55 +11,37 @@ import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
-public class BookIcon {
-	private static final BookIcon EMPTY = new BookIcon(ItemStack.EMPTY);
+public sealed interface BookIcon permits BookIcon.StackIcon,BookIcon.TextureIcon {
+	void render(PoseStack ms, int x, int y);
 
-	private final IconType type;
-	private final ItemStack stack;
-	private final ResourceLocation res;
+	record StackIcon(ItemStack stack) implements BookIcon {
+		@Override
+		public void render(PoseStack ms, int x, int y) {
+			RenderHelper.renderItemStackInGui(ms, stack(), x, y);
+		}
+	}
 
-	public static BookIcon from(String str) {
+	record TextureIcon(ResourceLocation texture) implements BookIcon {
+		@Override
+		public void render(PoseStack ms, int x, int y) {
+			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+			RenderSystem.setShaderTexture(0, texture());
+			GuiComponent.blit(ms, x, y, 0, 0, 16, 16, 16, 16);
+		}
+	}
+
+	static BookIcon from(String str) {
 		if (str.endsWith(".png")) {
-			return new BookIcon(new ResourceLocation(str));
+			return new TextureIcon(new ResourceLocation(str));
 		} else {
 			try {
 				ItemStack stack = ItemStackUtil.loadStackFromString(str);
-				return new BookIcon(stack);
+				return new StackIcon(stack);
 			} catch (Exception e) {
 				PatchouliAPI.LOGGER.warn("Invalid icon item stack: {}", e.getMessage());
-				return EMPTY;
+				return new StackIcon(ItemStack.EMPTY);
 			}
 		}
-	}
-
-	public BookIcon(ItemStack stack) {
-		type = IconType.STACK;
-		this.stack = stack;
-		res = null;
-	}
-
-	public BookIcon(ResourceLocation res) {
-		type = IconType.RESOURCE;
-		stack = null;
-		this.res = res;
-	}
-
-	public void render(PoseStack ms, int x, int y) {
-		switch (type) {
-		case STACK:
-			RenderHelper.renderItemStackInGui(ms, stack, x, y);
-			break;
-
-		case RESOURCE:
-			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-			RenderSystem.setShaderTexture(0, res);
-			GuiComponent.blit(ms, x, y, 0, 0, 16, 16, 16, 16);
-			break;
-		}
-	}
-
-	private enum IconType {
-		STACK, RESOURCE
 	}
 
 }

@@ -248,7 +248,7 @@ public class Book {
 
 	public BookIcon getIcon() {
 		if (indexIconRaw == null || indexIconRaw.isEmpty()) {
-			return new BookIcon(getBookItem());
+			return new BookIcon.StackIcon(getBookItem());
 		} else {
 			return BookIcon.from(indexIconRaw);
 		}
