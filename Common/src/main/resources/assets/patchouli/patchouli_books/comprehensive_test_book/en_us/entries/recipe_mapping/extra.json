@@ -1,7 +1,7 @@
 {
   "name": "Extra Recipe Mapping",
   "category": "patchouli:recipe_mapping",
-  "icon": "minecraft:tropical_fish",
+  "icon": "minecraft:stone",
   "pages": [
     {
       "type": "patchouli:text",

@@ -74,9 +74,7 @@ public class TooltipHandler {
 					float time = 20F;
 					float angles = lexiconLookupTime / time * 360F;
 
-					//RenderSystem.disableLighting();
 					RenderSystem.disableTexture();
-					//RenderSystem.shadeModel(GL11.GL_SMOOTH);
 					RenderSystem.enableBlend();
 					RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -96,7 +94,6 @@ public class TooltipHandler {
 
 					RenderSystem.disableBlend();
 					RenderSystem.enableTexture();
-					//RenderSystem.shadeModel(GL11.GL_FLAT);
 
 					if (lexiconLookupTime >= time) {
 						mc.player.getInventory().selected = lexSlot;
@@ -110,7 +107,6 @@ public class TooltipHandler {
 				mc.getItemRenderer().blitOffset = 300;
 				RenderHelper.renderItemStackInGui(ms, lexiconStack, x, tooltipY);
 				mc.getItemRenderer().blitOffset = 0;
-				//RenderSystem.disableLighting();
 
 				ms.pushPose();
 				ms.translate(0, 0, 500);

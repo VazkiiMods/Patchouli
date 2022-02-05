@@ -42,9 +42,12 @@ public class BookRightClickHandler {
 						int x = window.getGuiScaledWidth() / 2 + 3;
 						int y = window.getGuiScaledHeight() / 2 + 3;
 						entry.getIcon().render(ms, x, y);
+
+						ms.pushPose();
+						ms.translate(0, 0, 10);
 						ms.scale(0.5F, 0.5F, 1);
 						RenderHelper.renderItemStackInGui(ms, bookStack, (x + 8) * 2, (y + 8) * 2);
-						ms.scale(2F, 2F, 1F);
+						ms.popPose();
 
 						mc.font.draw(ms, entry.getName(), x + 18, y + 3, 0xFFFFFF);
 
