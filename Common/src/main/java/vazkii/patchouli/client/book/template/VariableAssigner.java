@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.template;
 
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -39,6 +40,7 @@ public class VariableAssigner {
 		FUNCTIONS.put("exists", VariableAssigner::exists);
 		FUNCTIONS.put("iexists", VariableAssigner::iexists);
 		FUNCTIONS.put("inv", VariableAssigner::inv);
+		FUNCTIONS.put("stacks", VariableAssigner::stacks);
 	}
 
 	public static void assignVariableHolders(IVariablesAvailableCallback object, IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
@@ -163,6 +165,10 @@ public class VariableAssigner {
 
 	private static IVariable inv(IVariable arg) {
 		return IVariable.wrap(!arg.unwrap().getAsBoolean());
+	}
+
+	private static IVariable stacks(IVariable arg) {
+		return IVariable.from(arg.as(Ingredient.class).getItems());
 	}
 
 	private static String ename(String arg) {
