@@ -114,7 +114,7 @@ Open `test_entry.json` and `test_category.json` and fill them in as follows:
 }
 ```
 
-```json title="test_category".json
+```json title="test_category.json"
 {
 	"name": "Test Category",
 	"description": "This is a test category for testing!",
