@@ -6,11 +6,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.block.Block;
 
 import vazkii.patchouli.api.PatchouliAPI;
 
@@ -39,7 +37,6 @@ public interface IXplatAbstractions {
 	boolean isDevEnvironment();
 
 	// Misc
-	Tag.Named<Block> blockTag(ResourceLocation id);
 	boolean isPhysicalClient();
 
 	// Needed because of Forge

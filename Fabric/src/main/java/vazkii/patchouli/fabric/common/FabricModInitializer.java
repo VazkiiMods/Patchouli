@@ -25,6 +25,10 @@ public class FabricModInitializer implements ModInitializer {
 
 		BookRegistry.INSTANCE.init();
 
-		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register(ReloadContentsHandler::dataReloaded);
+		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, _r, success) -> {
+			if (success) {
+				ReloadContentsHandler.dataReloaded(server);
+			}
+		});
 	}
 }

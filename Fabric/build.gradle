@@ -47,9 +47,9 @@ dependencies {
 
 	minecraft "com.mojang:minecraft:${minecraft_version}"
 	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:0.12.11"
+	modImplementation "net.fabricmc:fabric-loader:0.13.3"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.44.0+1.18"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.47.8+1.18.2"
     compileOnly project(":Common")
 
 	modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:7.0.343") { transitive = false }

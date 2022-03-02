@@ -4,14 +4,15 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
-import net.minecraft.data.worldgen.biome.Biomes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -164,7 +165,9 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockAndTintGet
 
 	@Override
 	public int getBlockTint(BlockPos pos, ColorResolver color) {
-		return color.getColor(Biomes.PLAINS, pos.getX(), pos.getZ());
+		var plains = world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY)
+				.getOrThrow(Biomes.PLAINS);
+		return color.getColor(plains, pos.getX(), pos.getZ());
 	}
 
 	@Override

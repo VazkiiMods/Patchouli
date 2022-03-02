@@ -13,8 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -123,12 +122,8 @@ public final class ItemStackUtil {
 		List<ItemStack> stacks = new ArrayList<>();
 		for (String s : stacksSerialized) {
 			if (s.startsWith("tag:")) {
-				Tag<Item> tag = ItemTags.getAllTags().getTag(new ResourceLocation(s.substring(4)));
-				if (tag != null) {
-					for (Item item : tag.getValues()) {
-						stacks.add(new ItemStack(item));
-					}
-				}
+				var key = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(s.substring(4)));
+				Registry.ITEM.getTag(key).ifPresent(tag -> tag.stream().forEach(item -> stacks.add(new ItemStack(item))));
 			} else {
 				stacks.add(loadStackFromString(s));
 			}

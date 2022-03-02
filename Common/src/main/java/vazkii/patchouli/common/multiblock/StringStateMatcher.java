@@ -1,11 +1,13 @@
 package vazkii.patchouli.common.multiblock;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
-import net.minecraft.tags.Tag;
+import net.minecraft.core.Registry;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -14,10 +16,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.TriPredicate;
-import vazkii.patchouli.xplat.IXplatAbstractions;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -39,8 +38,7 @@ public class StringStateMatcher {
 		if (state != null) {
 			return new ExactMatcher(state, parser.getProperties());
 		} else {
-			Tag.Named<Block> tag = IXplatAbstractions.INSTANCE.blockTag(parser.getTag());
-			return new TagMatcher(tag, parser.getVagueProperties());
+			return new TagMatcher(parser.getTag(), parser.getVagueProperties());
 		}
 	}
 
@@ -92,28 +90,28 @@ public class StringStateMatcher {
 	}
 
 	private static class TagMatcher implements IStateMatcher {
-		private final Tag.Named<Block> tag;
+		private final TagKey<Block> tag;
 		private final Map<String, String> props;
 
-		private TagMatcher(Tag.Named<Block> tag, Map<String, String> props) {
+		private TagMatcher(TagKey<Block> tag, Map<String, String> props) {
 			this.tag = tag;
 			this.props = props;
 		}
 
 		@Override
 		public BlockState getDisplayedState(int ticks) {
-			List<Block> all = new ArrayList<>(tag.getValues());
+			var all = ImmutableList.copyOf(Registry.BLOCK.getTagOrEmpty(this.tag));
 			if (all.isEmpty()) {
 				return Blocks.BEDROCK.defaultBlockState(); // show something impossible
 			} else {
 				int idx = (ticks / 20) % all.size();
-				return all.get(idx).defaultBlockState();
+				return all.get(idx).value().defaultBlockState();
 			}
 		}
 
 		@Override
 		public TriPredicate<BlockGetter, BlockPos, BlockState> getStatePredicate() {
-			return (w, p, s) -> tag.contains(s.getBlock()) && checkProps(s);
+			return (w, p, s) -> s.getBlock().builtInRegistryHolder().is(tag) && checkProps(s);
 		}
 
 		private boolean checkProps(BlockState state) {
@@ -144,13 +142,12 @@ public class StringStateMatcher {
 				return false;
 			}
 			TagMatcher that = (TagMatcher) o;
-			return Objects.equals(tag.getName(), that.tag.getName()) &&
-					Objects.equals(props, that.props);
+			return Objects.equals(tag, that.tag) && Objects.equals(props, that.props);
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(tag.getName(), props);
+			return Objects.hash(tag, props);
 		}
 	}
 }

@@ -3,17 +3,14 @@ package vazkii.patchouli.fabric.xplat;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.tag.TagFactory;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.block.Block;
 
 import vazkii.patchouli.api.BookContentsReloadCallback;
 import vazkii.patchouli.api.BookDrawScreenCallback;
@@ -69,11 +66,6 @@ public class FabricXplatImpl implements IXplatAbstractions {
 	@Override
 	public boolean isDevEnvironment() {
 		return FabricLoader.getInstance().isDevelopmentEnvironment();
-	}
-
-	@Override
-	public Tag.Named<Block> blockTag(ResourceLocation id) {
-		return TagFactory.BLOCK.create(id);
 	}
 
 	@Override

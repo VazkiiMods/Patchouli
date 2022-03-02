@@ -58,6 +58,6 @@ public class ForgeModInitializer {
 
 		BookRegistry.INSTANCE.init();
 
-		MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> ReloadContentsHandler.dataReloaded(e.getServer(), e.getServer().getServerResources(), true));
+		MinecraftForge.EVENT_BUS.addListener((ServerStartedEvent e) -> ReloadContentsHandler.dataReloaded(e.getServer()));
 	}
 }

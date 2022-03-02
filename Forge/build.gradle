@@ -71,12 +71,12 @@ minecraft {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-39.0.5"
+    minecraft "net.minecraftforge:forge:${minecraft_version}-40.0.1"
     implementation project(":Common")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:9.1.0.44:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:9.1.0.44")
+    compileOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.0.44:api") // TODO temporary hardcoding of mc version
+    // runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:9.1.0.44")
 }
 
 tasks.withType(JavaCompile) {

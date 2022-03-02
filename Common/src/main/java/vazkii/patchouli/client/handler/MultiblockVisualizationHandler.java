@@ -211,7 +211,7 @@ public class MultiblockVisualizationHandler {
 			if (mc.hitResult instanceof BlockHitResult) {
 				pos = ((BlockHitResult) mc.hitResult).getBlockPos();
 			}
-		} else if (pos.distSqr(mc.player.position(), false) > 64 * 64) {
+		} else if (pos.distToCenterSqr(mc.player.position()) > 64 * 64) {
 			return;
 		}
 
