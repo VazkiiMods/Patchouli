@@ -83,7 +83,7 @@ public class StateMatcher implements IStateMatcher {
 	}
 
 	@Override
-	public BlockState getDisplayedState(int ticks) {
+	public BlockState getDisplayedState(long ticks) {
 		return displayState;
 	}
 

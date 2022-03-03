@@ -46,7 +46,7 @@ public class SparseMultiblock extends AbstractMultiblock {
 
 	@Override
 	public BlockState getBlockState(BlockPos pos) {
-		int ticks = world != null ? (int) world.getDayTime() : 0;
+		long ticks = world != null ? world.getGameTime() : 0L;
 		return data.getOrDefault(pos, StateMatcher.AIR).getDisplayedState(ticks);
 	}
 

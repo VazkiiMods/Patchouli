@@ -176,7 +176,7 @@ public class DenseMultiblock extends AbstractMultiblock {
 		if (x < 0 || y < 0 || z < 0 || x >= size.getX() || y >= size.getY() || z >= size.getZ()) {
 			return Blocks.AIR.defaultBlockState();
 		}
-		int ticks = world != null ? (int) world.getDayTime() : 0;
+		long ticks = world != null ? world.getGameTime() : 0L;
 		return stateTargets[x][y][z].getDisplayedState(ticks);
 	}
 

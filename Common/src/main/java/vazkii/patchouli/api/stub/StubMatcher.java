@@ -17,7 +17,7 @@ public final class StubMatcher implements IStateMatcher {
 	private StubMatcher() {}
 
 	@Override
-	public BlockState getDisplayedState(int ticks) {
+	public BlockState getDisplayedState(long ticks) {
 		return state;
 	}
 

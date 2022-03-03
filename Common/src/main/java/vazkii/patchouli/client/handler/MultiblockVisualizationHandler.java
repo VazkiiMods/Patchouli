@@ -246,7 +246,7 @@ public class MultiblockVisualizationHandler {
 		for (IMultiblock.SimulateResult r : sim.getSecond()) {
 			float alpha = 0.3F;
 			if (r.getWorldPosition().equals(checkPos)) {
-				lookingState = r.getStateMatcher().getDisplayedState((int) ClientTicker.ticksInGame);
+				lookingState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame);
 				alpha = 0.6F + (float) (Math.sin(ClientTicker.total * 0.3F) + 1F) * 0.1F;
 			}
 
@@ -257,7 +257,7 @@ public class MultiblockVisualizationHandler {
 				}
 
 				if (!r.test(world, facingRotation)) {
-					BlockState renderState = r.getStateMatcher().getDisplayedState((int) ClientTicker.ticksInGame).rotate(facingRotation);
+					BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame).rotate(facingRotation);
 					renderBlock(world, renderState, r.getWorldPosition(), alpha, ms);
 
 					if (air) {

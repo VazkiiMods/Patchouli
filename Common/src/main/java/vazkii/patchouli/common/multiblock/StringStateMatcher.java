@@ -52,7 +52,7 @@ public class StringStateMatcher {
 		}
 
 		@Override
-		public BlockState getDisplayedState(int ticks) {
+		public BlockState getDisplayedState(long ticks) {
 			return state;
 		}
 
@@ -99,12 +99,12 @@ public class StringStateMatcher {
 		}
 
 		@Override
-		public BlockState getDisplayedState(int ticks) {
+		public BlockState getDisplayedState(long ticks) {
 			var all = ImmutableList.copyOf(Registry.BLOCK.getTagOrEmpty(this.tag));
 			if (all.isEmpty()) {
 				return Blocks.BEDROCK.defaultBlockState(); // show something impossible
 			} else {
-				int idx = (ticks / 20) % all.size();
+				int idx = (int) ((ticks / 20) % all.size());
 				return all.get(idx).value().defaultBlockState();
 			}
 		}
