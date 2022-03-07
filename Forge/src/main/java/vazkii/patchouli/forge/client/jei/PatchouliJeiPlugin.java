@@ -2,7 +2,8 @@ package vazkii.patchouli.forge.client.jei;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.recipe.IFocus;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 
@@ -59,11 +60,13 @@ public class PatchouliJeiPlugin implements IModPlugin {
 
 	public static boolean handleRecipeKeybind(int keyCode, int scanCode, ItemStack stack) {
 		if (showRecipe != null && showRecipe.matches(keyCode, scanCode)) {
-			jeiRuntime.getRecipesGui().show(jeiRuntime.getRecipeManager().createFocus(IFocus.Mode.OUTPUT, stack));
+			var focus = jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.OUTPUT, VanillaTypes.ITEM, stack);
+			jeiRuntime.getRecipesGui().show(focus);
 			return true;
 		}
 		if (showUses != null && showUses.matches(keyCode, scanCode)) {
-			jeiRuntime.getRecipesGui().show(jeiRuntime.getRecipeManager().createFocus(IFocus.Mode.INPUT, stack));
+			var focus = jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.INPUT, VanillaTypes.ITEM, stack);
+			jeiRuntime.getRecipesGui().show(focus);
 			return true;
 		}
 		return false;

@@ -75,8 +75,9 @@ dependencies {
     implementation project(":Common")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.0.44:api") // TODO temporary hardcoding of mc version
-    // runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:9.1.0.44")
+
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:9.4.3.122:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:9.4.3.122")
 }
 
 tasks.withType(JavaCompile) {
