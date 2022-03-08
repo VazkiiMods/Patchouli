@@ -10,12 +10,12 @@ to duplicate the values in json. Here's how to do it:
   to show a recipe with multiple inputs, you could change that to a single "recipe"
   variable and derive all the stack variables using it.
 * Create a class that implements
-  [IComponentProcessor](https://github.com/Vazkii/Patchouli/blob/master/src/main/java/vazkii/patchouli/api/IComponentProcessor.java),
+  [IComponentProcessor](https://github.com/Vazkii/Patchouli/blob/master/Common/src/main/java/vazkii/patchouli/api/IComponentProcessor.java),
   and fill in the class's methods according to the javadocs.
     * Here's [an
-      example](https://github.com/Vazkii/Patchouli/blob/master/src/main/java/vazkii/patchouli/client/book/template/test/RecipeTestProcessor.java)
+      example](https://github.com/Vazkii/Patchouli/blob/master/Common/src/main/java/vazkii/patchouli/client/book/template/test/RecipeTestProcessor.java)
       you can look into, as well as the [template
-      file](https://github.com/Vazkii/Patchouli/blob/master/src/main/resources/assets/patchouli/patchouli_books/testbook2/en_us/templates/include/recipetest.json)
+      file](https://github.com/Vazkii/Patchouli/blob/master/Common/src/main/resources/data/patchouli/patchouli_books/testbook2/en_us/templates/include/recipetest.json)
       that uses it.
 * Add `"processor": "package.name.ClassName"` to your template file, referencing the class
   you created.

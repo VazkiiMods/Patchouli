@@ -13,7 +13,7 @@ using arbitrary predicates and using the multiblock for server-side validation a
 placement (if you make Patchouli a required dependency). You can look into the [Patchouli
 API](https://github.com/Vazkii/Patchouli/tree/master/src/main/java/vazkii/patchouli/api)
 for how to do this, or see an example of it being done
-[here](https://github.com/Vazkii/Patchouli/blob/master/src/main/java/vazkii/patchouli/common/multiblock/MultiblockRegistry.java).
+[here](https://github.com/Vazkii/Patchouli/blob/master/Common/src/main/java/vazkii/patchouli/common/multiblock/MultiblockRegistry.java).
 
 ## Multiblock Format
 

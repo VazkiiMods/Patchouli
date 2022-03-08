@@ -277,7 +277,7 @@ Modders only: Does whatever you'd like! You can pass in an instance of an interf
 patchouli API for it to instantiate and pass stuff to.
 
 Here's a [test
-example](https://github.com/Vazkii/Patchouli/blob/master/src/main/java/vazkii/patchouli/client/book/template/test/ComponentCustomTest.java)
+example](https://github.com/Vazkii/Patchouli/blob/master/Common/src/main/java/vazkii/patchouli/client/book/template/test/ComponentCustomTest.java)
 you can refer to.
 
 **Attributes:**
@@ -285,7 +285,7 @@ you can refer to.
 * **class** (String, _mandatory_)
 
 A full class name (package.name.ClassName) pointing to a subtype of
-[ICustomComponent](https://github.com/Vazkii/Patchouli/blob/master/src/main/java/vazkii/patchouli/api/ICustomComponent.java). There's
+[ICustomComponent](https://github.com/Vazkii/Patchouli/blob/master/Common/src/main/java/vazkii/patchouli/api/ICustomComponent.java). There's
 no need to register this class anywhere in code, just create it and the loader will take
 care of finding and loading it.
 
