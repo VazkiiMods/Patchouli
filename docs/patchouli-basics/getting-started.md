@@ -10,7 +10,7 @@ books, read on and follow carefully!
 ### 0. Install Patchouli
 Pretty obvious. For modders, you can load it as a lib to your mod project or just drop it
 in your workspace's mods folder. The preferred way is to use maven, which you find the
-address for in the repo's readme.  For non-modders, obtain the mod through the usual
+address for in the repo's readme. For non-modders, obtain the mod through the usual
 distribution channels.
 
 ### 1. Locate your patchouli_books directory
@@ -38,9 +38,9 @@ patchouli_books so that it looks like this:
             * `categories` (empty folder)
             * `templates` (empty folder)
 
-You may have as many books as you want, even within the same mod(pack).  Each book has a
+You may have as many books as you want, even within the same mod(pack). Each book has a
 [Namespaced ID](https://minecraft.fandom.com/wiki/Namespaced_ID). If the book is part of a
-mod, the namespace is that mod's mod ID. If the book is loaded from the extenral
+mod, the namespace is that mod's mod ID. If the book is loaded from the external
 `patchouli_books` folder, the namespace is `patchouli`. The name part of the namespaced ID
 is the name you chose above.
 
