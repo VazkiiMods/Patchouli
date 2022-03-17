@@ -3,7 +3,6 @@ package vazkii.patchouli.client.book.page;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
@@ -11,7 +10,6 @@ import com.mojang.math.Vector4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -36,6 +34,7 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
+import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
 import javax.annotation.Nonnull;
 
@@ -192,11 +191,9 @@ public class PageMultiblock extends PageWithText {
 	private void doWorldRenderPass(PoseStack ms, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull MultiBufferSource.BufferSource buffers, Vector4f eye) {
 		for (BlockPos pos : blocks) {
 			BlockState bs = mb.getBlockState(pos);
-			VertexConsumer buffer = buffers.getBuffer(ItemBlockRenderTypes.getChunkRenderType(bs));
-
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
-			Minecraft.getInstance().getBlockRenderer().renderBatched(bs, pos, mb, ms, buffer, false, RAND);
+			IClientXplatAbstractions.INSTANCE.renderForMultiblock(bs, pos, mb, ms, buffers, RAND);
 			ms.popPose();
 		}
 	}
