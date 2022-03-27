@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.gui;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -23,9 +24,7 @@ import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nonnull;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -33,8 +32,6 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	final BookEntry entry;
 	BookPage leftPage, rightPage;
-
-	final Map<Button, Runnable> customButtons = new HashMap<>();
 
 	public GuiBookEntry(Book book, BookEntry entry) {
 		this(book, entry, 0);
@@ -131,8 +128,6 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	void setupPages() {
-		customButtons.clear();
-
 		if (leftPage != null) {
 			leftPage.onHidden(this);
 		}
@@ -279,11 +274,14 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void registerButton(Button button, int pageNum, Runnable onClick) {
-		button.x += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
-		button.y += bookTop;
+		addWidget(button, pageNum);
+	}
 
-		customButtons.put(button, onClick);
-		addRenderableWidget(button);
+	@Override
+	public void addWidget(AbstractWidget widget, int pageNum) {
+		widget.x += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
+		widget.y += bookTop;
+		addRenderableWidget(widget);
 	}
 
 	@Override

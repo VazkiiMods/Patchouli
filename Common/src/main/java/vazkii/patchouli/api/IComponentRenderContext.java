@@ -2,6 +2,7 @@ package vazkii.patchouli.api;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -32,7 +33,10 @@ public interface IComponentRenderContext {
 
 	void setHoverTooltipComponents(List<Component> tooltip);
 
+	@Deprecated(forRemoval = true) // use addWidget
 	void registerButton(Button button, int pageNum, Runnable onClick);
+
+	void addWidget(AbstractWidget button, int pageNum);
 
 	ResourceLocation getBookTexture();
 
