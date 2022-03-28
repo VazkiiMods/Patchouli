@@ -70,6 +70,10 @@ public abstract class BookPage {
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		return false;
 	}
+	
+	public boolean overwriteKeyPressed(int keyCode, int scanCode, int modifiers) {
+		return false;
+	}
 
 	public boolean canAdd(Book book) {
 		return flag == null || flag.isEmpty() || PatchouliConfig.getConfigFlag(flag);

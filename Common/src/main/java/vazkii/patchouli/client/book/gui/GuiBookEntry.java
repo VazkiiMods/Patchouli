@@ -5,6 +5,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -283,9 +286,20 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		widget.y += bookTop;
 		addRenderableWidget(widget);
 	}
+	
+	@Override
+	public void addAbstractWidget(AbstractWidget drawableElement, int pageNum) {
+		drawableElement.x += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
+		drawableElement.y += bookTop;
+		
+		addRenderableWidget(drawableElement);
+	}
 
 	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+		if ((leftPage != null && leftPage.overwriteKeyPressed(keyCode, scanCode, modifiers)) || (rightPage != null && rightPage.overwriteKeyPressed(keyCode, scanCode, modifiers))) {
+			return true;
+		}
 		if (Minecraft.getInstance().options.keyInventory.matches(keyCode, scanCode)) {
 			this.onClose();
 			return true;

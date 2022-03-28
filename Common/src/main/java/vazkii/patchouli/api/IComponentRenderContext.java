@@ -4,6 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -35,6 +38,8 @@ public interface IComponentRenderContext {
 
 	@Deprecated(forRemoval = true) // use addWidget
 	void registerButton(Button button, int pageNum, Runnable onClick);
+	
+	public void addAbstractWidget(AbstractWidget drawableElement, int pageNum);
 
 	void addWidget(AbstractWidget button, int pageNum);
 

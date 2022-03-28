@@ -51,5 +51,10 @@ public class ComponentCustom extends TemplateComponent {
 	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
 		return callbacks.mouseClicked(page.parent, mouseX, mouseY, mouseButton);
 	}
+	
+	@Override
+	public boolean overwriteKeyPressed(BookPage page, int keyCode, int scanCode, int modifiers) {
+		return callbacks.overwriteKeyPressed(page, keyCode, scanCode, modifiers);
+	}
 
 }

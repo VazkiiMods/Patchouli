@@ -2,6 +2,8 @@ package vazkii.patchouli.api;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import vazkii.patchouli.client.book.BookPage;
+
 /**
  * An interface for API level custom components for templates.
  * <br>
@@ -38,6 +40,14 @@ public interface ICustomComponent extends IVariablesAvailableCallback {
 	 * you need to validate the position.
 	 */
 	default boolean mouseClicked(IComponentRenderContext context, double mouseX, double mouseY, int mouseButton) {
+		return false;
+	}
+
+	/**
+	 * Called on key press. If it returns true, the normal key press logic will not be called. Note that the key 
+	 * press logic in this method is called even when the result is false.
+	 */
+	default boolean overwriteKeyPressed(BookPage page, int keyCode, int scanCode, int modifiers) {
 		return false;
 	}
 

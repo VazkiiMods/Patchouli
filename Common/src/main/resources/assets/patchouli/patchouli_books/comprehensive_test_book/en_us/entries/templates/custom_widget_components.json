@@ -1,0 +1,10 @@
+{
+  "name": "Custom Widget Components",
+  "category": "patchouli:templates",
+  "icon": "minecraft:written_book",
+  "pages": [
+    {
+      "type": "patchouli:custom_widget_component"
+    }
+  ]
+}

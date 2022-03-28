@@ -45,4 +45,9 @@ public class PageTemplate extends BookPage {
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		return template.mouseClicked(this, mouseX, mouseY, mouseButton);
 	}
+	
+	@Override
+	public boolean overwriteKeyPressed(int keyCode, int scanCode, int modifiers) {
+		return template.overwriteKeyPressed(this, keyCode, scanCode, modifiers);
+	}
 }

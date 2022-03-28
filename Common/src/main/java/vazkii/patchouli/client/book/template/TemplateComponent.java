@@ -86,6 +86,10 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
 		return false;
 	}
+	
+	public boolean overwriteKeyPressed(BookPage page, int keyCode, int scanCode, int modifiers) {
+		return false;
+	}
 
 	@Override
 	public void onVariablesAvailable(UnaryOperator<IVariable> lookup) {
