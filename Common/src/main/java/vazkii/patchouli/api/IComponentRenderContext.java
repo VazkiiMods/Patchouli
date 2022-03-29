@@ -38,8 +38,6 @@ public interface IComponentRenderContext {
 
 	@Deprecated(forRemoval = true) // use addWidget
 	void registerButton(Button button, int pageNum, Runnable onClick);
-	
-	public void addAbstractWidget(AbstractWidget drawableElement, int pageNum);
 
 	void addWidget(AbstractWidget button, int pageNum);
 

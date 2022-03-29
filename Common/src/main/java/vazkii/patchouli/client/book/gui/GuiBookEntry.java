@@ -288,14 +288,6 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 	
 	@Override
-	public void addAbstractWidget(AbstractWidget drawableElement, int pageNum) {
-		drawableElement.x += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
-		drawableElement.y += bookTop;
-		
-		addRenderableWidget(drawableElement);
-	}
-
-	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if ((leftPage != null && leftPage.overwriteKeyPressed(keyCode, scanCode, modifiers)) || (rightPage != null && rightPage.overwriteKeyPressed(keyCode, scanCode, modifiers))) {
 			return true;

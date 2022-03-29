@@ -40,7 +40,7 @@ public class EditBoxComponentTest implements ICustomComponent{
 	@Override
 	public void onDisplayed(IComponentRenderContext context) {
 		this.editbox = new EditBox(Minecraft.getInstance().font, x, y, 100, 20, new TextComponent(""));
-		context.addAbstractWidget((EditBox) editbox, page);
+		context.addWidget((EditBox) editbox, page);
 	}
 	
 	@Override
