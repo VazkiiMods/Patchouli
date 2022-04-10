@@ -1,5 +1,6 @@
 package vazkii.patchouli.forge.common;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public class ForgePatchouliConfig {
 	public static final ForgeConfigSpec.ConfigValue<Boolean> disableAdvancementLocking;
-	public static final ForgeConfigSpec.ConfigValue<List<String>> noAdvancementBooks;
+	public static final ForgeConfigSpec.ConfigValue<List<? extends String>> noAdvancementBooks;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> testingMode;
 	public static final ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
@@ -26,7 +27,8 @@ public class ForgePatchouliConfig {
 
 		noAdvancementBooks = builder
 				.comment("Granular list of Book ID's to disable advancement locking for, e.g. [ \"botania:lexicon\" ]. Config Flags: advancements_disabled_<bookid>")
-				.define("noAdvancementBooks", Collections.emptyList());
+				.defineListAllowEmpty(List.of("noAdvancementBooks"), Collections::emptyList,
+						o -> o instanceof String s && ResourceLocation.tryParse(s) != null);
 
 		testingMode = builder
 				.comment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want. Config Flag: testing_mode")
@@ -47,11 +49,19 @@ public class ForgePatchouliConfig {
 		SPEC = builder.build();
 	}
 
+	@SuppressWarnings("unchecked")
+	private static List<String> getNoAdvancementBooksHack() {
+		// cast from List<? extends String> to List<String>
+		// String is final so this is safe
+		// This is only needed because the Config API is stupid and forces a `? extends` type.
+		return (List<String>) noAdvancementBooks.get();
+	}
+
 	public static void setup() {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SPEC);
 		PatchouliConfig.set(new PatchouliConfig.ConfigAccess(
 				disableAdvancementLocking::get,
-				noAdvancementBooks::get,
+				ForgePatchouliConfig::getNoAdvancementBooksHack,
 				testingMode::get,
 				inventoryButtonBook::get,
 				useShiftForQuickLookup::get,
