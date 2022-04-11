@@ -1,5 +1,10 @@
 {
 	"item.patchouli.guide_book.name": "Guida",
+	"item.patchouli.guide_book.undefined": "Invalid book: no ID defined",
+	"item.patchouli.guide_book.invalid": "Invalid book: %s",
+	
+	"item.patchouli.comprehensive_test_book.name": "Libro di test Completo",
+	"item.patchouli.comprehensive_test_book.landing": "Quello che si spera diventi un libro di prova completo per tutta Patchouli, invece del miscuglio di codice che abbiamo in questo momento.",
 	
 	"item.patchouli:test_book_1.name": "Libro di test 1",
 	"item.patchouli:test_book_1.landing": "Non altrettanto divertente come introduzione, ma comunque presente.",
@@ -34,6 +39,7 @@
 	"patchouli.gui.lexicon.shapeless": "Senza forma",
 	"patchouli.gui.lexicon.no_results": "Nessun risultato",
 	"patchouli.gui.lexicon.sad": ":(",
+	"patchouli.gui.lexicon.no_entries": "Nessuna voce",
 	"patchouli.gui.lexicon.locked": "(Bloccato)",
 	"patchouli.gui.lexicon.reloaded": "Libri ricaricati. Ci sono voluti %d ms.",
 	"patchouli.gui.lexicon.add_bookmark": "Aggiungi segnalibro",
@@ -60,6 +66,11 @@
 	"patchouli.gui.lexicon.view": "Visualizza voce",
 	"patchouli.gui.lexicon.keybind": "Pulsante collegato: %s",
 	"patchouli.gui.lexicon.keybind_missing": "Nessun pulsante collegato: %s",
+	"patchouli.gui.lexicon.objective": "Obiettivo",
+	"patchouli.gui.lexicon.incomplete": "Incompleta",
+	"patchouli.gui.lexicon.complete": "Completata!",
+	"patchouli.gui.lexicon.mark_complete": "Segna completata",
+	"patchouli.gui.lexicon.mark_incomplete": "Segna da completare",
 	
 	"patchouli.gui.lexicon.button.prev_page": "Precedente",
 	"patchouli.gui.lexicon.button.next_page": "Prossima",
@@ -79,5 +90,7 @@
 	"patchouli.gui.lexicon.button.config": "Configurazione",
 	"patchouli.gui.lexicon.button.visualize": "Visualizza",
 	"patchouli.gui.lexicon.button.visualize.info": "(Clicca di nuovo per rimuovere)",
-	"patchouli.gui.lexicon.button.history": "Cronologia"
+	"patchouli.gui.lexicon.button.history": "Cronologia",
+	"patchouli.gui.lexicon.button.mark_all_read": "Segna tutto come letto",
+	"patchouli.gui.lexicon.button.mark_category_read": "Segna qusta categoria come letta"
 }
