@@ -1,6 +1,6 @@
 {
 	"item.patchouli.guide_book.name": "Guida",
-	"item.patchouli.guide_book.undefined": "Libro non valido: nessun ID definito",
+	"item.patchouli.guide_book.undefined": "Libro non valido: ID non definito",
 	"item.patchouli.guide_book.invalid": "Libro non valido: %s",
 	
 	"item.patchouli.comprehensive_test_book.name": "Libro di test Completo",
