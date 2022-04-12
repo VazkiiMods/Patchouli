@@ -1,7 +1,7 @@
 {
 	"item.patchouli.guide_book.name": "Guida",
-	"item.patchouli.guide_book.undefined": "Invalid book: no ID defined",
-	"item.patchouli.guide_book.invalid": "Invalid book: %s",
+	"item.patchouli.guide_book.undefined": "Libro non valido: nessun ID definito",
+	"item.patchouli.guide_book.invalid": "Libro non valido: %s",
 	
 	"item.patchouli.comprehensive_test_book.name": "Libro di test Completo",
 	"item.patchouli.comprehensive_test_book.landing": "Quello che si spera diventi un libro di prova completo per tutta Patchouli, invece del miscuglio di codice che abbiamo in questo momento.",
