@@ -84,6 +84,30 @@ tasks.withType(JavaCompile) {
     source(project(":Common").sourceSets.main.allSource)
 }
 
+sourcesJar {
+    from project(":Common").sourceSets.main.allJava
+}
+
+processResources {
+    from project(":Common").sourceSets.main.resources
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+
+    filesMatching("*.mixins.json") {
+        // In Fabric, all refmaps are merged together and the refmap name is pre-set by Loom
+        // Make sure everyone uses that name
+        expand "refmap_target": archivesBaseName + "-"
+    }
+}
+
+/*
+task apiJar(type: Jar, dependsOn: classes) {
+	from(sourceSets.main.output)
+	include 'vazkii/patchouli/api/**'
+
 processResources {
     from project(":Common").sourceSets.main.resources
     inputs.property "version", project.version
