@@ -18,11 +18,13 @@ main page). Read on for what you can use.
     * **$(#rgb)** is also allowed (e.g. $(#f00) also makes the text red)
 * **$(0-f)** - Color code (e.g. $(6) makes the text gold color)
 * **$(k/l/m/n/o)** - Formatting code (e.g. $(o) makes the text italic)
-* **$(l:entryid)** - Internal Link, replace entryid with the id of an entry in your book
-  and this will create a clickable link to it!
+* **$(l:ID)** - Internal Link. `ID` can be an entry ID or a category ID, renders
+  a clickable link opening the given entry or category. If both an entry or category
+  have the same ID, then the entry wins.
 * **$(l:entryid#anchorname)** - Internal Link, same as above, but refers to a specific
   page. The target page must have the "anchor" field set to the specified anchor name.
-* **$(l:http://...)** - External Link, similar to previous, but when clicked, opens the
+  Anchors cannot be used with category ID's.
+* **$(l:https://...)** - External Link, similar to previous, but when clicked, opens the
   website
 * **$(/l)** - End Link, ends the current link but maintains formatting ($() also ends
   links)
