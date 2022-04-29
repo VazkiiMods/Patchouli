@@ -3,7 +3,7 @@ package vazkii.patchouli.client.book;
 import com.google.common.collect.Streams;
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +32,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 	private transient boolean built;
 
-	public Component getName() {
+	public MutableComponent getName() {
 		return book.i18n ? new TranslatableComponent(name) : new TextComponent(name);
 	}
 

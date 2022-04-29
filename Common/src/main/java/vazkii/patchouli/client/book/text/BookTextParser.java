@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.gui.GuiBookCategory;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.book.Book;
 
@@ -138,13 +139,14 @@ public class BookTextParser {
 				}
 
 				ResourceLocation href = parameter.contains(":") ? new ResourceLocation(parameter) : new ResourceLocation(state.book.getModNamespace(), parameter);
-				BookEntry entry = state.book.getContents().entries.get(href);
+				GuiBook gui = state.gui;
+				Book book = state.book;
+				BookEntry entry = book.getContents().entries.get(href);
+				var category = book.getContents().categories.get(href);
 				if (entry != null) {
 					state.tooltip = entry.isLocked()
 							? new TranslatableComponent("patchouli.gui.lexicon.locked").withStyle(ChatFormatting.GRAY)
 							: entry.getName();
-					GuiBook gui = state.gui;
-					Book book = state.book;
 					int page = 0;
 					if (anchor != null) {
 						int anchorPage = entry.getPageFromAnchor(anchor);
@@ -161,6 +163,17 @@ public class BookTextParser {
 						GuiBook.playBookFlipSound(book);
 						return true;
 					};
+				} else if (category != null) {
+					if (anchor != null) {
+						state.tooltip = new TextComponent("BAD LINK: Cannot specify anchor when linking to a category");
+					} else {
+						state.tooltip = category.getName();
+						state.onClick = () -> {
+							gui.displayLexiconGui(new GuiBookCategory(book, category), true);
+							GuiBook.playBookFlipSound(book);
+							return true;
+						};
+					}
 				} else {
 					state.tooltip = new TextComponent("BAD LINK: " + parameter);
 				}

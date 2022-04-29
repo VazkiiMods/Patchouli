@@ -272,6 +272,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		return isMouseInRelativeRange(mouseX, mouseY, x, y, w, h);
 	}
 
+	@SuppressWarnings("removal")
 	@Override
 	public void registerButton(Button button, int pageNum, Runnable onClick) {
 		addWidget(button, pageNum);

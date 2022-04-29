@@ -20,6 +20,10 @@
           "Using the edition translation string with $(4)cool text that should propagate its formatting to the rest of the string!"
         ]
       }
+    },
+    {
+      "type": "patchouli:text",
+      "text": "This link should lead to the recipe_mapping category: $(l:patchouli:recipe_mapping)click me$(/l)"
     }
   ]
 }
