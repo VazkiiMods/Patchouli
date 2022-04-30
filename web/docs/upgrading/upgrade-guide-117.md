@@ -48,6 +48,8 @@ An example of this migration being done can be seen
 
 Crafting recipes for Patchouli books can now be provided using the `patchouli:book_recipe` and `patchouli:shapeless_book_recipe` recipe types as a convenience, and to avoid issues related to lack of default support on Fabric for NBT recipe output. These recipes use the syntax based on vanilla `minecraft:crafting_shaped` and `minecraft:crafting_shapeless` types, replacing the `output` object with a `book` string set to the ID of the book.
 
+See the [doc](/docs/patchouli-basics/recipe) for more info.
+
 For an example, see [the recipes for test books](https://github.com/VazkiiMods/Patchouli/tree/63983afeec89bb254c3b9c506ffbd4bd17808d3e/src/main/resources/data/patchouli/recipes).
 
 ## Projected Changes in 1.18
