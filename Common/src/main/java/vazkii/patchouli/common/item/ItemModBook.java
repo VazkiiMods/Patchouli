@@ -2,6 +2,7 @@ package vazkii.patchouli.common.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -25,6 +26,7 @@ import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemModBook extends Item {
@@ -82,6 +84,15 @@ public class ItemModBook extends Item {
 				items.add(forBook(b));
 			}
 		});
+	}
+
+	// SoftImplement IForgeItem
+	public String getCreatorModId(ItemStack stack) {
+		var book = getBook(stack);
+		if (book != null) {
+			return book.owner.getId();
+		}
+		return Registry.ITEM.getKey(this).getNamespace();
 	}
 
 	public static Book getBook(ItemStack stack) {
