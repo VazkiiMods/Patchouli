@@ -270,12 +270,4 @@ public class Book {
 			return contents != null ? contents : BookContents.empty(this, null);
 		}
 	}
-
-	public GuiBook getLandingPage() {
-		if (this.pamphletCategoryID == null) {
-			return new GuiBookLanding(this);
-		} else {
-			return new GuiBookPamphletLanding(this);
-		}
-	}
 }

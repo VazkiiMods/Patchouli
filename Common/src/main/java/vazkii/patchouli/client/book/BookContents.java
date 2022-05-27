@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
+import vazkii.patchouli.client.book.gui.GuiBookLanding;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -88,7 +89,7 @@ public class BookContents extends AbstractReadStateHolder {
 
 	public GuiBook getCurrentGui() {
 		if (currentGui == null) {
-			currentGui = this.book.getLandingPage();
+			currentGui = new GuiBookLanding(this.book);
 		}
 
 		return currentGui;
