@@ -1,0 +1,14 @@
+{
+    "name": "Entry 2",
+    "category": "patchouli:root",
+    "sortnum": 2,
+    "icon": "minecraft:diamond_pickaxe",
+    "pages": [
+        "Entry number two. (Right, also in this PR is a shortcut to make strings count as text pages).",
+        {
+            "type": "patchouli:crafting",
+            "recipe": "minecraft:diamond_pickaxe",
+            "text": "All the normal page types work still!"
+        }
+    ]
+}
