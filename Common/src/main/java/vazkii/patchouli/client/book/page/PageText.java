@@ -5,12 +5,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
 
+import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 
 public class PageText extends PageWithText {
 
 	String title;
+
+	public void setText(String text) {
+		this.text = IVariable.wrap(text);
+	}
 
 	@Override
 	public int getTextHeight() {

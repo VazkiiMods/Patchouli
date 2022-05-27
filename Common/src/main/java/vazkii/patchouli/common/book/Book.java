@@ -14,6 +14,9 @@ import net.minecraft.world.item.ItemStack;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.*;
+import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.gui.GuiBookLanding;
+import vazkii.patchouli.client.book.gui.GuiBookPamphletLanding;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -109,6 +112,8 @@ public class Book {
 	@SerializedName("pause_game") public boolean pauseGame = false;
 
 	@SerializedName("use_resource_pack") public boolean useResourcePack = false;
+
+	@SerializedName("pamphlet_category") public ResourceLocation pamphletCategoryID = null;
 
 	public boolean i18n = false;
 
@@ -263,6 +268,14 @@ public class Book {
 			return extensionTarget.getContents();
 		} else {
 			return contents != null ? contents : BookContents.empty(this, null);
+		}
+	}
+
+	public GuiBook getLandingPage() {
+		if (this.pamphletCategoryID == null) {
+			return new GuiBookLanding(this);
+		} else {
+			return new GuiBookPamphletLanding(this);
 		}
 	}
 }

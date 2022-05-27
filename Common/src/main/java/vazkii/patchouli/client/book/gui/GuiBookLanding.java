@@ -176,7 +176,7 @@ public class GuiBookLanding extends GuiBook {
 			long time = System.currentTimeMillis();
 			book.reloadContents(true);
 			book.reloadLocks(false);
-			displayLexiconGui(new GuiBookLanding(book), false);
+			displayLexiconGui(book.getLandingPage(), false);
 			minecraft.player.displayClientMessage(new TranslatableComponent("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)), false);
 		} else {
 			displayLexiconGui(new GuiBookWriter(book), true);

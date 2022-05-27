@@ -345,7 +345,7 @@ public abstract class GuiBook extends Screen {
 	void back(boolean sfx) {
 		if (!book.getContents().guiStack.isEmpty()) {
 			if (hasShiftDown()) {
-				displayLexiconGui(new GuiBookLanding(book), false);
+				displayLexiconGui(book.getLandingPage(), false);
 				book.getContents().guiStack.clear();
 			} else {
 				displayLexiconGui(book.getContents().guiStack.pop(), false);

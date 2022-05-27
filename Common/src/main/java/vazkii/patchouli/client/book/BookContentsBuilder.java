@@ -6,6 +6,7 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.resources.ResourceLocation;
 
+import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -99,11 +100,28 @@ public class BookContentsBuilder {
 			}
 		});
 
+		BookCategory pamphletCategory;
+		if (book.pamphletCategoryID == null) {
+			pamphletCategory = null;
+		} else {
+			var pc = categories.get(book.pamphletCategoryID);
+			if (pc == null) {
+				throw new RuntimeException("A pamphlet category was supplied but there is no category with the id " + book.pamphletCategoryID);
+			}
+
+			if (categories.size() != 1) {
+				PatchouliAPI.LOGGER.warn("A pamphlet category was supplied but there are {} categories, not just 1", categories.size());
+			}
+
+			pamphletCategory = pc;
+		}
+
 		return new BookContents(
 				book,
 				ImmutableMap.copyOf(categories),
 				ImmutableMap.copyOf(entries),
-				ImmutableMap.copyOf(recipeMappings)
+				ImmutableMap.copyOf(recipeMappings),
+				pamphletCategory
 		);
 	}
 
