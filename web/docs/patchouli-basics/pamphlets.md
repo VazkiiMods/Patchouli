@@ -15,4 +15,5 @@ only the one marked in the book.json will actually be displayed, so there's no
 reason to have more than one.)
 
 See:
-![https://imgur.com/a/WxdHNur]
+
+![](https://i.imgur.com/BoV7U6g.png)
