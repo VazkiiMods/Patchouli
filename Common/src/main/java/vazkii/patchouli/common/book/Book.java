@@ -14,9 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.*;
-import vazkii.patchouli.client.book.gui.GuiBook;
-import vazkii.patchouli.client.book.gui.GuiBookLanding;
-import vazkii.patchouli.client.book.gui.GuiBookPamphletLanding;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -113,7 +110,7 @@ public class Book {
 
 	@SerializedName("use_resource_pack") public boolean useResourcePack = false;
 
-	@SerializedName("pamphlet_category") public ResourceLocation pamphletCategoryID = null;
+	@SerializedName("pamphlet") public boolean isPamphlet = false;
 
 	public boolean i18n = false;
 

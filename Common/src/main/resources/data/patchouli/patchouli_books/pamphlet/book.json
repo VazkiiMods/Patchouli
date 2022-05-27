@@ -3,5 +3,5 @@
 	"landing_text": "item.patchouli:pamphlet.landing",
 	"creative_tab": "decorations",
 	"advancements_tab": "patchouli",
-	"pamphlet_category": "patchouli:root"
+	"pamphlet": true
 }

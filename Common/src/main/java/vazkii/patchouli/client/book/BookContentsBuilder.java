@@ -101,17 +101,11 @@ public class BookContentsBuilder {
 		});
 
 		BookCategory pamphletCategory = null;
-		if (book.pamphletCategoryID != null) {
-			var pc = categories.get(book.pamphletCategoryID);
-			if (pc == null) {
-				throw new RuntimeException("A pamphlet category was supplied but there is no category with the id " + book.pamphletCategoryID);
-			}
-
+		if (book.isPamphlet) {
 			if (categories.size() != 1) {
-				PatchouliAPI.LOGGER.warn("A pamphlet category was supplied but there are {} categories, not just 1", categories.size());
+				throw new RuntimeException("A pamphlet should have exactly one category but instead there were " + categories.size());
 			}
-
-			pamphletCategory = pc;
+			pamphletCategory = categories.values().iterator().next();
 		}
 
 		return new BookContents(

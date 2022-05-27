@@ -116,10 +116,9 @@ a resource location pointing to a square texture. If you want to use a resource 
 make sure to end it with .png. This is optional, and if you don't include it, it'll
 default to the book's icon (which is the recommended value).
 
-* **pamphlet_category** (String)
+* **pamphlet** (String)
 
-Defaults to null. If non-null, must be the resource location of one of the categories in the
-book. This marks this book as a [pamphlet](../patchouli-basics/pamphlets.md).
+Defaults to false. If true, marks this book as a [pamphlet](../patchouli-basics/pamphlets.md).
 
 * **show_progress** (boolean)
 
