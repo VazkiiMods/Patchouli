@@ -100,10 +100,8 @@ public class BookContentsBuilder {
 			}
 		});
 
-		BookCategory pamphletCategory;
-		if (book.pamphletCategoryID == null) {
-			pamphletCategory = null;
-		} else {
+		BookCategory pamphletCategory = null;
+		if (book.pamphletCategoryID != null) {
 			var pc = categories.get(book.pamphletCategoryID);
 			if (pc == null) {
 				throw new RuntimeException("A pamphlet category was supplied but there is no category with the id " + book.pamphletCategoryID);
