@@ -1,9 +1,6 @@
 name: Deploy docs
 
-on:
-  push:
-    paths:
-      - 'web/**'
+on: [push]
 
 jobs:
   deploy-docs:
@@ -15,10 +12,13 @@ jobs:
         with:
           node-version: 16.x
           cache: yarn
+          cache-dependency-path: 'web/yarn.lock'
       - name: Install dependencies
-        run: cd web && yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile
+        working-directory: ./web
       - name: Build website
-        run: cd web && yarn build
+        run: yarn build
+        working-directory: ./web
 
       # Popular action to deploy to GitHub Pages:
       # Docs: https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-docusaurus
