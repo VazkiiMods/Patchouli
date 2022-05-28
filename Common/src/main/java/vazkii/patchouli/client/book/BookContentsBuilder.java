@@ -99,11 +99,20 @@ public class BookContentsBuilder {
 			}
 		});
 
+		BookCategory pamphletCategory = null;
+		if (book.isPamphlet) {
+			if (categories.size() != 1) {
+				throw new RuntimeException("A pamphlet should have exactly one category but instead there were " + categories.size());
+			}
+			pamphletCategory = categories.values().iterator().next();
+		}
+
 		return new BookContents(
 				book,
 				ImmutableMap.copyOf(categories),
 				ImmutableMap.copyOf(entries),
-				ImmutableMap.copyOf(recipeMappings)
+				ImmutableMap.copyOf(recipeMappings),
+				pamphletCategory
 		);
 	}
 

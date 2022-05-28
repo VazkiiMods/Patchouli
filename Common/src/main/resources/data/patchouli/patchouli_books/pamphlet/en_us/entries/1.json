@@ -1,0 +1,12 @@
+{
+    "name": "Entry 1",
+    "category": "patchouli:root",
+    "sortnum": 1,
+    "icon": "minecraft:stick",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "Entry Number 1"
+        }
+    ]
+}

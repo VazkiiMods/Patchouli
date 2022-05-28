@@ -1,0 +1,16 @@
+{
+    "name": "What is a Pamphlet?",
+    "category": "patchouli:root",
+    "priority": true,
+    "icon": "minecraft:crafting_table",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "A pamphlet is a (generally small) book with only one category. It is intended for smaller mods or projects, where having multiple entries would be cluttered and having only one entry to click on on the landing page would be kitschy."
+        },
+        {
+            "type": "patchouli:text",
+            "text": "More pages ..."
+        }
+    ]
+}

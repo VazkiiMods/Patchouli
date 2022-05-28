@@ -13,6 +13,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookCategory;
+import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.*;
 import vazkii.patchouli.client.gui.GuiAdvancementsExt;
 import vazkii.patchouli.common.book.Book;
@@ -21,10 +22,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static vazkii.patchouli.client.book.gui.GuiBookEntryList.ENTRIES_IN_FIRST_PAGE;
+
 public class GuiBookLanding extends GuiBook {
 
 	BookTextRenderer text;
 	int loadedCategories = 0;
+
+	final List<Button> pamphletEntryButtons = new ArrayList<>();
+	List<BookEntry> entriesInPamphlet;
 
 	public GuiBookLanding(Book book) {
 		super(book, new TranslatableComponent(book.name));
@@ -60,20 +66,32 @@ public class GuiBookLanding extends GuiBook {
 			addRenderableWidget(new GuiButtonBookEdit(this, x + (pos++) * dist, y, this::handleButtonEdit));
 		}
 
-		int i = 0;
-		List<BookCategory> categories = new ArrayList<>(book.getContents().categories.values());
-		Collections.sort(categories);
+		if (this.book.getContents().pamphletCategory == null) {
+			int i = 0;
+			List<BookCategory> categories = new ArrayList<>(book.getContents().categories.values());
+			Collections.sort(categories);
 
-		for (BookCategory category : categories) {
-			if (category.getParentCategory() != null || category.shouldHide()) {
-				continue;
+			for (BookCategory category : categories) {
+				if (category.getParentCategory() != null || category.shouldHide()) {
+					continue;
+				}
+
+				addCategoryButton(i, category);
+				i++;
 			}
+			addCategoryButton(i, null);
+			loadedCategories = i + 1;
+		} else {
+			entriesInPamphlet = new ArrayList<>(book.getContents().entries.values());
+			entriesInPamphlet.removeIf(BookEntry::shouldHide);
+			Collections.sort(entriesInPamphlet);
+			buildEntryButtons();
 
-			addCategoryButton(i, category);
-			i++;
+			// yes, technically we loaded one category, but for display purposes
+			// it's more like we loaded zero.
+			loadedCategories = 0;
 		}
-		addCategoryButton(i, null);
-		loadedCategories = i + 1;
+
 	}
 
 	void addCategoryButton(int i, BookCategory category) {
@@ -91,16 +109,19 @@ public class GuiBookLanding extends GuiBook {
 	void drawForegroundElements(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		text.render(ms, mouseX, mouseY);
 
-		drawCenteredStringNoShadow(ms, I18n.get("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-
 		int topSeparator = TOP_PADDING + 12;
 		int bottomSeparator = topSeparator + 25 + 24 * ((loadedCategories - 1) / 4 + 1);
 
 		drawHeader(ms);
-		drawSeparator(ms, book, RIGHT_PAGE_X, topSeparator);
 
-		if (loadedCategories <= 16) {
-			drawSeparator(ms, book, RIGHT_PAGE_X, bottomSeparator);
+		if (book.getContents().pamphletCategory == null) {
+			drawCenteredStringNoShadow(ms, I18n.get("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+
+			drawSeparator(ms, book, RIGHT_PAGE_X, topSeparator);
+
+			if (loadedCategories <= 16) {
+				drawSeparator(ms, book, RIGHT_PAGE_X, bottomSeparator);
+			}
 		}
 
 		if (book.getContents().isErrored()) {
@@ -119,6 +140,31 @@ public class GuiBookLanding extends GuiBook {
 		}
 
 		drawProgressBar(ms, book, mouseX, mouseY, (e) -> true);
+	}
+
+	@Override
+	void onPageChanged() {
+		buildEntryButtons();
+	}
+
+	void buildEntryButtons() {
+		removeDrawablesIn(pamphletEntryButtons);
+		pamphletEntryButtons.clear();
+
+		maxSpreads = 1;
+
+		addEntryButtons(RIGHT_PAGE_X, TOP_PADDING, 0, ENTRIES_IN_FIRST_PAGE);
+	}
+
+	void addEntryButtons(int x, int y, int start, int count) {
+		if (!this.book.getContents().isErrored()) {
+			for (int i = 0; i < count && (i + start) < entriesInPamphlet.size(); i++) {
+				Button button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, entriesInPamphlet.get(start + i),
+						this::handleButtonPamphletEntry);
+				addRenderableWidget(button);
+				pamphletEntryButtons.add(button);
+			}
+		}
 	}
 
 	void drawHeader(PoseStack ms) {
@@ -194,4 +240,7 @@ public class GuiBookLanding extends GuiBook {
 		displayLexiconGui(this, false);
 	}
 
+	public void handleButtonPamphletEntry(Button button) {
+		GuiBookEntry.displayOrBookmark(this, ((GuiButtonEntry) button).getEntry());
+	}
 }

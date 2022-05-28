@@ -110,6 +110,8 @@ public class Book {
 
 	@SerializedName("use_resource_pack") public boolean useResourcePack = false;
 
+	@SerializedName("pamphlet") public boolean isPamphlet = false;
+
 	public boolean i18n = false;
 
 	public Map<String, String> macros = new HashMap<>();

@@ -30,6 +30,7 @@ public class BookContents extends AbstractReadStateHolder {
 
 	public final Map<ResourceLocation, BookCategory> categories;
 	public final Map<ResourceLocation, BookEntry> entries;
+	@Nullable public final BookCategory pamphletCategory;
 	private final Map<StackWrapper, Pair<BookEntry, Integer>> recipeMappings;
 	private final boolean errored;
 	@Nullable private final Exception exception;
@@ -44,6 +45,7 @@ public class BookContents extends AbstractReadStateHolder {
 		this.categories = Collections.emptyMap();
 		this.entries = Collections.emptyMap();
 		this.recipeMappings = Collections.emptyMap();
+		this.pamphletCategory = null;
 	}
 
 	public static BookContents empty(Book book, @Nullable Exception e) {
@@ -53,13 +55,23 @@ public class BookContents extends AbstractReadStateHolder {
 	public BookContents(Book book,
 			ImmutableMap<ResourceLocation, BookCategory> categories,
 			ImmutableMap<ResourceLocation, BookEntry> entries,
-			ImmutableMap<StackWrapper, Pair<BookEntry, Integer>> recipeMappings) {
+			ImmutableMap<StackWrapper, Pair<BookEntry, Integer>> recipeMappings,
+			@Nullable BookCategory pamphletCategory) {
 		this.book = book;
 		this.categories = categories;
 		this.entries = entries;
 		this.recipeMappings = recipeMappings;
 		this.errored = false;
 		this.exception = null;
+		this.pamphletCategory = pamphletCategory;
+	}
+
+	// For binary compatibility
+	public BookContents(Book book,
+			ImmutableMap<ResourceLocation, BookCategory> categories,
+			ImmutableMap<ResourceLocation, BookEntry> entries,
+			ImmutableMap<StackWrapper, Pair<BookEntry, Integer>> recipeMappings) {
+		this(book, categories, entries, recipeMappings, null);
 	}
 
 	public boolean isErrored() {
@@ -77,7 +89,7 @@ public class BookContents extends AbstractReadStateHolder {
 
 	public GuiBook getCurrentGui() {
 		if (currentGui == null) {
-			currentGui = new GuiBookLanding(book);
+			currentGui = new GuiBookLanding(this.book);
 		}
 
 		return currentGui;
@@ -86,8 +98,8 @@ public class BookContents extends AbstractReadStateHolder {
 	public void openLexiconGui(GuiBook gui, boolean push) {
 		if (gui.canBeOpened()) {
 			Minecraft mc = Minecraft.getInstance();
-			if (push && mc.screen instanceof GuiBook && gui != mc.screen) {
-				guiStack.push((GuiBook) mc.screen);
+			if (push && mc.screen instanceof GuiBook guiBook && gui != mc.screen) {
+				guiStack.push(guiBook);
 			}
 
 			mc.setScreen(gui);

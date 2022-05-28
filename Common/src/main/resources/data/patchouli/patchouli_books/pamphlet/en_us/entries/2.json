@@ -1,0 +1,17 @@
+{
+    "name": "Entry 2",
+    "category": "patchouli:root",
+    "sortnum": 2,
+    "icon": "minecraft:diamond_pickaxe",
+    "pages": [
+        {
+            "type": "patchouli:text",
+            "text": "Entry Number Two!"
+        },
+        {
+            "type": "patchouli:crafting",
+            "recipe": "minecraft:diamond_pickaxe",
+            "text": "All the normal page types work still!"
+        }
+    ]
+}
