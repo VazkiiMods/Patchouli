@@ -5,25 +5,10 @@
 	"priority": true,
 	"read_by_default": false,
 	"pages": [
-		{
-			"type": "patchouli:text",
-			"text": "$(bold)\"$()$(italic)Humankind cannot gain anything without first giving something in return. To obtain, something of equal value must be lost. That is alchemy's first law of Equivalent Exchange.$(bold)\"$()$(br)...is what many authors would begin their textbooks with.$(br2)Fortunately for you, I am not \"many authors\"."
-		},
-		{
-			"type": "patchouli:text",
-			"text": "You may have assembled this tome yourself. Maybe it arrived at your doorstep, or was a hand-me-down from a close relative. Perhaps you just happened to come across it in your travels.$(br2)Regardless of the means of acquisition, I welcome you, to the wonderful world of $(thing)Alchemical Artisanship$(). Not to be confused with $(thing)Alchemy$(), mind you. This is a different beast altogether, and deserves just as much respect."
-		},
-		{
-			"type": "patchouli:text",
-			"text": "Perhaps you may be questioning yourself: \"what differs $(thing)Alchemical Artisanship$() from $(thing)Alchemy$()?\". Perhaps you may have just taken me for a pedantic writer who pays undue attention to terminology.$(br2)Regardless, the difference is simple. $(thing)Alchemy$() is the art of transforming matter. $(thing)Alchemical Artisanship$(), however, is the art of harnessing matter's properties to fuel one's ingenuity and creative drive."
-		},
-		{
-			"type": "patchouli:text",
-			"text": "$(thing)Alchemical Artisanship$() is a subject with vast breadth for exploration. The four commonly accepted pillars of the art are as follows:$(li)Ritualism;$(li)Engineering;$(li)Artificing;$(li)Spell Writing;$(br2)The $(item)Lexica Alquimia$() will go through all of these in detail, after a few chapters of introductory information to initiate newcomers to the field."
-		},
-		{
-			"type": "patchouli:text",
-			"text": "This book is dedicated all the people around me who strive to have a positive impact on others' lives, especially $(bold)Knoll$(), $(bold)Rosalino$(), and $(bold)Kaizer$(). It's been a long journey, and you made me able to get through it.$(br2)Last but not least, you, the reader, player of mods. This book would not exist without your devotion, and you are to be thanked for that as well. I hope you enjoy it."
-		}
+		"$(bold)\"$()$(italic)Humankind cannot gain anything without first giving something in return. To obtain, something of equal value must be lost. That is alchemy's first law of Equivalent Exchange.$(bold)\"$()$(br)...is what many authors would begin their textbooks with.$(br2)Fortunately for you, I am not \"many authors\".",
+		"You may have assembled this tome yourself. Maybe it arrived at your doorstep, or was a hand-me-down from a close relative. Perhaps you just happened to come across it in your travels.$(br2)Regardless of the means of acquisition, I welcome you, to the wonderful world of $(thing)Alchemical Artisanship$(). Not to be confused with $(thing)Alchemy$(), mind you. This is a different beast altogether, and deserves just as much respect.",
+		"Perhaps you may be questioning yourself: \"what differs $(thing)Alchemical Artisanship$() from $(thing)Alchemy$()?\". Perhaps you may have just taken me for a pedantic writer who pays undue attention to terminology.$(br2)Regardless, the difference is simple. $(thing)Alchemy$() is the art of transforming matter. $(thing)Alchemical Artisanship$(), however, is the art of harnessing matter's properties to fuel one's ingenuity and creative drive.",
+		"$(thing)Alchemical Artisanship$() is a subject with vast breadth for exploration. The four commonly accepted pillars of the art are as follows:$(li)Ritualism;$(li)Engineering;$(li)Artificing;$(li)Spell Writing;$(br2)The $(item)Lexica Alquimia$() will go through all of these in detail, after a few chapters of introductory information to initiate newcomers to the field.",
+		"This book is dedicated all the people around me who strive to have a positive impact on others' lives, especially $(bold)Knoll$(), $(bold)Rosalino$(), and $(bold)Kaizer$(). It's been a long journey, and you made me able to get through it.$(br2)Last but not least, you, the reader, player of mods. This book would not exist without your devotion, and you are to be thanked for that as well. I hope you enjoy it."
 	]
 }

@@ -26,7 +26,6 @@ import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemModBook extends Item {

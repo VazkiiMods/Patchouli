@@ -97,6 +97,13 @@ public class ClientBookRegistry {
 
 		@Override
 		public BookPage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+			if (json instanceof JsonPrimitive prim && prim.isString()) {
+				// Shortcut: make strings instead of objects shortcut to text pages
+				var out = new PageText();
+				out.setText(prim.getAsString());
+				return out;
+			}
+
 			JsonObject obj = json.getAsJsonObject();
 			JsonPrimitive prim = (JsonPrimitive) obj.get("type");
 			String string = prim.getAsString();
