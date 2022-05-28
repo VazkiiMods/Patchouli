@@ -1,0 +1,10 @@
+image: debian/bullseye
+packages:
+  - openjdk-17-jdk-headless
+sources:
+  - https://git.sr.ht/~williewillus/patchouli
+tasks:
+  - build: |
+      cd patchouli && ./gradlew pmdMain spotlessJavaCheck build
+  - test: |
+      cd patchouli && ./gradlew :Fabric:runGameTest

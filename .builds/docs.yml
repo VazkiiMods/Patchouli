@@ -1,0 +1,14 @@
+image: debian/bullseye
+packages:
+  - npm
+sources:
+  - https://git.sr.ht/~williewillus/patchouli
+tasks:
+  # bullseye comes with old npm/node which doesn't have corepack yet
+  # install it, which will add a yarn executable into ~/node_modules/.bin/
+  - install_corepack: |
+      npm install corepack
+  - install_deps: |
+      cd patchouli/web && ~/node_modules/.bin/yarn install --frozen-lockfile
+  - build: |
+      cd patchouli/web && ~/node_modules/.bin/yarn build
