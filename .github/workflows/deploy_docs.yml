@@ -1,6 +1,9 @@
 name: Deploy docs
 
-on: [push]
+on:
+  push:
+    paths:
+      - 'web/**'
 
 jobs:
   deploy-docs:
