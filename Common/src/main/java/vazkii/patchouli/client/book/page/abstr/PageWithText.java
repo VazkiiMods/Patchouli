@@ -11,7 +11,7 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 
 public abstract class PageWithText extends BookPage {
 
-	protected IVariable text;
+	IVariable text;
 
 	transient BookTextRenderer textRender;
 

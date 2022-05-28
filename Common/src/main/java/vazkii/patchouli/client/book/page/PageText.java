@@ -13,10 +13,6 @@ public class PageText extends PageWithText {
 
 	String title;
 
-	public void setText(String text) {
-		this.text = IVariable.wrap(text);
-	}
-
 	@Override
 	public int getTextHeight() {
 		if (pageNum == 0) {
