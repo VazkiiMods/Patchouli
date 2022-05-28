@@ -87,13 +87,13 @@ module.exports = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://github.com/VazkiiMods/Patchouli/edit/documentation/',
+          editUrl: 'https://github.com/VazkiiMods/Patchouli/edit/1.18.x/web/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            'https://github.com/VazkiiMods/Patchouli/edit/documentation/blog/',
+            'https://github.com/VazkiiMods/Patchouli/edit/1.18.x/web/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
