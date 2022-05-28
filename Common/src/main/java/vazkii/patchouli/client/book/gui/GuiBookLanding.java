@@ -160,7 +160,7 @@ public class GuiBookLanding extends GuiBook {
 		if (!this.book.getContents().isErrored()) {
 			for (int i = 0; i < count && (i + start) < entriesInPamphlet.size(); i++) {
 				Button button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, entriesInPamphlet.get(start + i),
-					this::handleButtonPamphletEntry);
+						this::handleButtonPamphletEntry);
 				addRenderableWidget(button);
 				pamphletEntryButtons.add(button);
 			}

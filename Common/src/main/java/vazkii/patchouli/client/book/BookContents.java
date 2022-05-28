@@ -68,10 +68,10 @@ public class BookContents extends AbstractReadStateHolder {
 
 	// For binary compatibility
 	public BookContents(Book book,
-		ImmutableMap<ResourceLocation, BookCategory> categories,
-		ImmutableMap<ResourceLocation, BookEntry> entries,
-		ImmutableMap<StackWrapper, Pair<BookEntry, Integer>> recipeMappings) {
-			this(book, categories, entries, recipeMappings, null);
+			ImmutableMap<ResourceLocation, BookCategory> categories,
+			ImmutableMap<ResourceLocation, BookEntry> entries,
+			ImmutableMap<StackWrapper, Pair<BookEntry, Integer>> recipeMappings) {
+		this(book, categories, entries, recipeMappings, null);
 	}
 
 	public boolean isErrored() {

@@ -6,7 +6,6 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.resources.ResourceLocation;
 
-import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
