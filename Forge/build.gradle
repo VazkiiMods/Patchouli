@@ -102,3 +102,21 @@ processResources {
         expand "refmap_target": archivesBaseName + "-"
     }
 }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            artifact jar
+            artifact sourcesJar
+            artifact apiJar
+        }
+    }
+    repositories {
+        maven {
+            url "file://" + System.getenv("local_maven")
+        }
+    }
+}
