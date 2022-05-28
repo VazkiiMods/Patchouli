@@ -30,7 +30,9 @@ This command generates static content into the `build` directory and can be serv
 
 ### Deployment
 
-To deploy the website to GitHub pages, run the following:
+Automatic deployment is handled by a GitHub Action.
+
+If you need to do a manual deploy for whatever reason, do:
 
 ```
 $ GIT_USER=<Your GitHub username> USE_SSH=true yarn deploy
@@ -38,6 +40,3 @@ $ GIT_USER=<Your GitHub username> USE_SSH=true yarn deploy
 
 This will build the website then push it to the `gh-pages` branch of the repository. You
 must have push access to this repository to do this, of course.
-
-Automatic deploys are not configured currently. If you need a quick deploy for whatever
-reason, please poke a maintainer.
