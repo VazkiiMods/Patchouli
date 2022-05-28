@@ -111,7 +111,6 @@ publishing {
             version project.version
             artifact jar
             artifact sourcesJar
-            artifact apiJar
         }
     }
     repositories {
