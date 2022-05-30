@@ -19,6 +19,7 @@ repositories {
 }
 
 loom {
+	mixin.defaultRefmapName = "patchouli.refmap.json"
 	runs {
 		client {
 			client()
@@ -70,12 +71,6 @@ processResources {
 
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version
-	}
-
-	filesMatching("*.mixins.json") {
-		// In Fabric, all refmaps are merged together and the refmap name is pre-set by Loom
-		// Make sure everyone uses that name
-		expand "refmap_target": archivesBaseName + "-"
 	}
 }
 
