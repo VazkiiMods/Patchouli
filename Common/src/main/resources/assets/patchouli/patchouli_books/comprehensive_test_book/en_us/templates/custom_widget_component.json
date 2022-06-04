@@ -1,0 +1,10 @@
+{
+  "components": [
+    {
+      "type": "patchouli:custom",
+      "class": "vazkii.patchouli.client.book.template.test.EditBoxComponentTest",
+      "x": 10,
+      "y": 40
+    }
+  ]
+}

@@ -174,5 +174,16 @@ public class BookTemplate {
 			attemptedCreatingProcessor = true;
 		}
 	}
+	
+	public boolean overwriteKeyPressed(BookPage page, int keyCode, int scanCode, int modifiers) {
+		if (compiled) {
+			for (TemplateComponent c : components) {
+				if (c.isVisible && c.overwriteKeyPressed(page, keyCode, scanCode, modifiers)) {
+					return true;
+				}
+			}
+		}
 
+		return false;
+	}
 }
