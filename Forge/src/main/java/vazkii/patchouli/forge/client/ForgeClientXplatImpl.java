@@ -13,8 +13,8 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.client.ForgeHooksClient;
-
 import net.minecraftforge.client.model.data.EmptyModelData;
+
 import vazkii.patchouli.client.book.LiquidBlockVertexConsumer;
 import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
