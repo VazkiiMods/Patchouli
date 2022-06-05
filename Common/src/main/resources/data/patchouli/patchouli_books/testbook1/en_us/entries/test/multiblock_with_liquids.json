@@ -1,0 +1,38 @@
+{
+	"name": "Multiblock with Liquids",
+	"icon": "minecraft:textures/item/emerald.png",
+	"category": "patchouli:intro/butts",
+	"read_by_default": false,
+	"pages": [
+		{
+			"type": "patchouli:multiblock",
+			"multiblock_id": "",
+			"name": "Team Steve",
+			"text": "Testing a multiblock with liquids and also waterlogged blocks.",
+			"multiblock": {
+				"pattern": [
+					[
+						"GG   GG",
+						" LLLLLG",
+						"GGGGGGG",
+						" WW0WWG",
+						"GGGGGGG",
+						" SSSSSG",
+						"GG   GG"
+					]
+				],
+				"mapping": {
+					" ": "ANY",
+					"0": "minecraft:lapis_block",
+					"G": "minecraft:bricks",
+					"W": "minecraft:water",
+					"L": "minecraft:lava",
+					"S": "minecraft:brick_slab[type=bottom,waterlogged=true]"
+				},
+				"symmetrical": false,
+				"offset": [0, 0, 0],
+				"view_offset": [0, 0, 0]
+			}
+		}
+	]
+}
