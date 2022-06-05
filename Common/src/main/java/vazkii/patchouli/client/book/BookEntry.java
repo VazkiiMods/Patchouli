@@ -15,6 +15,7 @@ import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
 import vazkii.patchouli.client.book.page.PageEmpty;
 import vazkii.patchouli.client.book.page.PageQuest;
+import vazkii.patchouli.client.book.page.abstr.CompletablePage;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -288,7 +289,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		}
 
 		for (BookPage page : pages) {
-			if (page instanceof PageQuest && ((PageQuest) page).isCompleted(book)) {
+			if (page instanceof CompletablePage && ((CompletablePage) page).isCompleted(book)) {
 				return EntryDisplayState.COMPLETED;
 			}
 		}
