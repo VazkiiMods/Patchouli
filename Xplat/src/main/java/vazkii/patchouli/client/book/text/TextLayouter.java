@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.language.LanguageInfo;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.PatchouliConfig.TextOverflowMode;
@@ -157,7 +156,7 @@ public class TextLayouter {
 
 		char[] characters = last.span.text.toCharArray();
 		for (int i = last.start; i < characters.length; i++) {
-			Component tmp = new TextComponent(String.valueOf(characters[i])).setStyle(last.span.style);
+			Component tmp = Component.literal(String.valueOf(characters[i])).setStyle(last.span.style);
 			width += font.width(tmp);
 			if (last.span.bold) {
 				width++;

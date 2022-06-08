@@ -1,16 +1,14 @@
 package vazkii.patchouli.forge.common;
 
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.core.Registry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.RegisterEvent;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.base.PatchouliSounds;
@@ -29,18 +27,16 @@ public class ForgeModInitializer {
 	}
 
 	@SubscribeEvent
-	public static void registerSound(RegistryEvent.Register<SoundEvent> evt) {
-		PatchouliSounds.submitRegistrations((id, e) -> evt.getRegistry().register(e.setRegistryName(id)));
-	}
-
-	@SubscribeEvent
-	public static void registerItem(RegistryEvent.Register<Item> evt) {
-		PatchouliItems.submitItemRegistrations((id, e) -> evt.getRegistry().register(e.setRegistryName(id)));
-	}
-
-	@SubscribeEvent
-	public static void registerRecipeSerializer(RegistryEvent.Register<RecipeSerializer<?>> evt) {
-		PatchouliItems.submitRecipeSerializerRegistrations((id, e) -> evt.getRegistry().register(e.setRegistryName(id)));
+	public static void register(RegisterEvent evt) {
+		evt.register(Registry.SOUND_EVENT_REGISTRY, rh -> {
+			PatchouliSounds.submitRegistrations(rh::register);
+		});
+		evt.register(Registry.ITEM_REGISTRY, rh -> {
+			PatchouliItems.submitItemRegistrations(rh::register);
+		});
+		evt.register(Registry.RECIPE_SERIALIZER_REGISTRY, rh -> {
+			PatchouliItems.submitRecipeSerializerRegistrations(rh::register);
+		});
 	}
 
 	@SubscribeEvent

@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -39,12 +40,11 @@ import vazkii.patchouli.xplat.IClientXplatAbstractions;
 import javax.annotation.Nonnull;
 
 import java.util.Collections;
-import java.util.Random;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 public class PageMultiblock extends PageWithText {
-	private static final Random RAND = new Random();
+	private static final RandomSource RAND = RandomSource.createNewThreadLocalInstance();
 
 	String name = "";
 	@SerializedName("multiblock_id") ResourceLocation multiblockId;

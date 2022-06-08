@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -35,11 +34,11 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 
 		boolean customTitle = title != null && !title.isEmpty();
 		title1 = !customTitle ? getRecipeOutput(recipe1).getHoverName() : i18nText(title);
-		title2 = new TextComponent("-");
+		title2 = Component.literal("-");
 		if (recipe2 != null) {
-			title2 = !customTitle ? getRecipeOutput(recipe2).getHoverName() : TextComponent.EMPTY;
+			title2 = !customTitle ? getRecipeOutput(recipe2).getHoverName() : Component.empty();
 			if (title1.equals(title2)) {
-				title2 = TextComponent.EMPTY;
+				title2 = Component.empty();
 			}
 		}
 	}

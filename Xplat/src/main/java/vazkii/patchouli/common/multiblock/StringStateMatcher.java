@@ -1,13 +1,11 @@
 package vazkii.patchouli.common.multiblock;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -31,14 +29,15 @@ public class StringStateMatcher {
 			return StateMatcher.AIR;
 		}
 
-		// c.f. BlockPredicateArgumentType. Similar, but doesn't use vanilla's weird caching class.
-		BlockStateParser parser = new BlockStateParser(new StringReader(s), true).parse(false);
-		BlockState state = parser.getState();
+		// c.f. BlockPredicateArgument. Similar, but doesn't use vanilla's weird BlockInWorld caching class.
+		var result = BlockStateParser.parseForTesting(Registry.BLOCK, s, true);
 
-		if (state != null) {
-			return new ExactMatcher(state, parser.getProperties());
+		var blockResult = result.left();
+		var tagResult = result.right();
+		if (blockResult.isPresent()) {
+			return new ExactMatcher(blockResult.get().blockState(), blockResult.get().properties());
 		} else {
-			return new TagMatcher(parser.getTag(), parser.getVagueProperties());
+			return new TagMatcher(tagResult.get().tag(), tagResult.get().vagueProperties());
 		}
 	}
 
@@ -90,28 +89,27 @@ public class StringStateMatcher {
 	}
 
 	private static class TagMatcher implements IStateMatcher {
-		private final TagKey<Block> tag;
+		private final HolderSet<Block> tag;
 		private final Map<String, String> props;
 
-		private TagMatcher(TagKey<Block> tag, Map<String, String> props) {
+		private TagMatcher(HolderSet<Block> tag, Map<String, String> props) {
 			this.tag = tag;
 			this.props = props;
 		}
 
 		@Override
 		public BlockState getDisplayedState(long ticks) {
-			var all = ImmutableList.copyOf(Registry.BLOCK.getTagOrEmpty(this.tag));
-			if (all.isEmpty()) {
+			if (this.tag.size() == 0) {
 				return Blocks.BEDROCK.defaultBlockState(); // show something impossible
 			} else {
-				int idx = (int) ((ticks / 20) % all.size());
-				return all.get(idx).value().defaultBlockState();
+				int idx = (int) ((ticks / 20) % this.tag.size());
+				return this.tag.get(idx).value().defaultBlockState();
 			}
 		}
 
 		@Override
 		public TriPredicate<BlockGetter, BlockPos, BlockState> getStatePredicate() {
-			return (w, p, s) -> s.getBlock().builtInRegistryHolder().is(tag) && checkProps(s);
+			return (w, p, s) -> s.is(tag) && checkProps(s);
 		}
 
 		private boolean checkProps(BlockState state) {

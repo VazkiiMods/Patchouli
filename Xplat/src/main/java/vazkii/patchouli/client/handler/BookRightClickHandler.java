@@ -8,7 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -55,7 +54,7 @@ public class BookRightClickHandler {
 
 						ms.pushPose();
 						ms.scale(0.75F, 0.75F, 1F);
-						Component s = new TranslatableComponent("patchouli.gui.lexicon." + (player.isShiftKeyDown() ? "view" : "sneak"))
+						Component s = Component.translatable("patchouli.gui.lexicon." + (player.isShiftKeyDown() ? "view" : "sneak"))
 								.withStyle(ChatFormatting.ITALIC);
 						mc.font.draw(ms, s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
 						ms.popPose();

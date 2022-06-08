@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,7 +22,7 @@ public class GuiButtonInventoryBook extends Button {
 	private Book book;
 
 	public GuiButtonInventoryBook(Book book, int x, int y) {
-		super(x, y, 20, 20, TextComponent.EMPTY, (b) -> {
+		super(x, y, 20, 20, Component.empty(), (b) -> {
 			BookContents contents = book.getContents();
 			contents.openLexiconGui(contents.getCurrentGui(), false);
 		});

@@ -116,7 +116,7 @@ public class ForgeClientInitializer {
 		});
 		MinecraftForge.EVENT_BUS.addListener((RenderGameOverlayEvent.Post e) -> {
 			if (e.getType() == RenderGameOverlayEvent.ElementType.ALL) {
-				BookRightClickHandler.onRenderHUD(e.getMatrixStack(), e.getPartialTicks());
+				BookRightClickHandler.onRenderHUD(e.getPoseStack(), e.getPartialTick());
 			}
 		});
 		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> BookRightClickHandler.onRightClick(e.getPlayer(), e.getWorld(), e.getHand(), e.getHitVec()));
@@ -134,7 +134,7 @@ public class ForgeClientInitializer {
 		});
 		MinecraftForge.EVENT_BUS.addListener((RenderGameOverlayEvent.Post e) -> {
 			if (e.getType() == RenderGameOverlayEvent.ElementType.ALL) {
-				MultiblockVisualizationHandler.onRenderHUD(e.getMatrixStack(), e.getPartialTicks());
+				MultiblockVisualizationHandler.onRenderHUD(e.getPoseStack(), e.getPartialTick());
 			}
 		});
 

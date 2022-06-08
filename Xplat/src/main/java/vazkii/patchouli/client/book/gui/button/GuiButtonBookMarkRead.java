@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookCategory;
@@ -75,7 +74,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 
 	private static Component getTooltip(Book book) {
 		String text = isMainPage(book) ? "patchouli.gui.lexicon.button.mark_all_read" : "patchouli.gui.lexicon.button.mark_category_read";
-		return new TranslatableComponent(text);
+		return Component.translatable(text);
 	}
 
 	private static boolean isMainPage(Book book) {

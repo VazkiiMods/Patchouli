@@ -13,7 +13,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -114,7 +113,7 @@ public class TooltipHandler {
 
 				ms.scale(0.5F, 0.5F, 1F);
 				boolean mac = Minecraft.ON_OSX;
-				Component key = new TextComponent(PatchouliConfig.get().useShiftForQuickLookup().get() ? "Shift" : mac ? "Cmd" : "Ctrl")
+				Component key = Component.literal(PatchouliConfig.get().useShiftForQuickLookup().get() ? "Shift" : mac ? "Cmd" : "Ctrl")
 						.withStyle(ChatFormatting.BOLD);
 				mc.font.drawShadow(ms, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
 				ms.popPose();

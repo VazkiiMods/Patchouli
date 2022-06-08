@@ -71,13 +71,13 @@ minecraft {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-40.1.51"
+    minecraft "net.minecraftforge:forge:${minecraft_version}-41.0.1"
     implementation project(":Xplat")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
 
-    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:9.4.3.122:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:9.4.3.122")
+    //compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:9.4.3.122:api")
+    //runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:9.4.3.122")
 }
 
 compileJava {

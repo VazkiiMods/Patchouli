@@ -5,8 +5,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -127,7 +125,7 @@ public class ItemModBook extends Item {
 	public Component getName(ItemStack stack) {
 		Book book = getBook(stack);
 		if (book != null) {
-			return new TranslatableComponent(book.name);
+			return Component.translatable(book.name);
 		}
 
 		return super.getName(stack);
@@ -139,7 +137,7 @@ public class ItemModBook extends Item {
 
 		ResourceLocation rl = getBookId(stack);
 		if (flagIn.isAdvanced()) {
-			tooltip.add(new TextComponent("Book ID: " + rl).withStyle(ChatFormatting.GRAY));
+			tooltip.add(Component.literal("Book ID: " + rl).withStyle(ChatFormatting.GRAY));
 		}
 
 		Book book = getBook(stack);
@@ -147,10 +145,10 @@ public class ItemModBook extends Item {
 			tooltip.add(book.getSubtitle().withStyle(ChatFormatting.GRAY));
 		} else if (book == null) {
 			if (rl == null) {
-				tooltip.add(new TranslatableComponent("item.patchouli.guide_book.undefined")
+				tooltip.add(Component.translatable("item.patchouli.guide_book.undefined")
 						.withStyle(ChatFormatting.DARK_GRAY));
 			} else {
-				tooltip.add(new TranslatableComponent("item.patchouli.guide_book.invalid", rl)
+				tooltip.add(Component.translatable("item.patchouli.guide_book.invalid", rl)
 						.withStyle(ChatFormatting.DARK_GRAY));
 			}
 		}

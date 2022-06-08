@@ -9,13 +9,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import vazkii.patchouli.api.BookContentsReloadCallback;
 import vazkii.patchouli.api.BookDrawScreenCallback;
 import vazkii.patchouli.fabric.client.rei.ReiCompat;
-import vazkii.patchouli.fabric.common.FabricRecipeSerializerWrapper;
 import vazkii.patchouli.fabric.network.FabricMessageOpenBookGui;
 import vazkii.patchouli.fabric.network.FabricMessageReloadBookContents;
 import vazkii.patchouli.xplat.IXplatAbstractions;
@@ -26,7 +23,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.BiFunction;
 
 public class FabricXplatImpl implements IXplatAbstractions {
 	@Override
@@ -82,10 +78,5 @@ public class FabricXplatImpl implements IXplatAbstractions {
 			return ReiCompat.handleRecipeKeybind(keyCode, scanCode, stack);
 		}
 		return false;
-	}
-
-	@Override
-	public <T extends Recipe<?>, U extends T> RecipeSerializer<U> makeWrapperSerializer(RecipeSerializer<T> inner, BiFunction<T, ResourceLocation, U> converter) {
-		return new FabricRecipeSerializerWrapper<>(inner, converter);
 	}
 }

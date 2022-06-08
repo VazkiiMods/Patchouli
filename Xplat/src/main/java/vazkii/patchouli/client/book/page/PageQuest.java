@@ -5,8 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.client.base.ClientAdvancements;
@@ -49,7 +47,7 @@ public class PageQuest extends PageWithText {
 		super.onDisplayed(parent, left, top);
 
 		if (isManual) {
-			Button button = new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, TextComponent.EMPTY, this::questButtonClicked);
+			Button button = new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, Component.empty(), this::questButtonClicked);
 			addButton(button);
 			updateButtonText(button);
 		}
@@ -57,7 +55,7 @@ public class PageQuest extends PageWithText {
 
 	private void updateButtonText(Button button) {
 		boolean completed = isCompleted(parent.book);
-		Component s = new TranslatableComponent(completed ? "patchouli.gui.lexicon.mark_incomplete" : "patchouli.gui.lexicon.mark_complete");
+		Component s = Component.translatable(completed ? "patchouli.gui.lexicon.mark_incomplete" : "patchouli.gui.lexicon.mark_complete");
 		button.setMessage(s);
 	}
 

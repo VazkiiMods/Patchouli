@@ -4,9 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonObject;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -116,7 +115,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 	}
 
 	public MutableComponent getName() {
-		return book.i18n ? new TranslatableComponent(name) : new TextComponent(name);
+		return book.i18n ? Component.translatable(name) : Component.literal(name);
 	}
 
 	public List<BookPage> getPages() {

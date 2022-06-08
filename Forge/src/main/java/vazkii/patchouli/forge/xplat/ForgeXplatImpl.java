@@ -7,8 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
@@ -19,8 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.api.BookContentsReloadEvent;
 import vazkii.patchouli.api.BookDrawScreenEvent;
 import vazkii.patchouli.forge.client.ForgeClientInitializer;
-import vazkii.patchouli.forge.client.jei.PatchouliJeiPlugin;
-import vazkii.patchouli.forge.common.ForgeRecipeSerializerWrapper;
 import vazkii.patchouli.forge.network.ForgeMessageOpenBookGui;
 import vazkii.patchouli.forge.network.ForgeMessageReloadBookContents;
 import vazkii.patchouli.xplat.IXplatAbstractions;
@@ -29,7 +25,6 @@ import vazkii.patchouli.xplat.XplatModContainer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.BiFunction;
 
 public class ForgeXplatImpl implements IXplatAbstractions {
 	@Override
@@ -89,13 +84,8 @@ public class ForgeXplatImpl implements IXplatAbstractions {
 			return false;
 		}
 		if (ModList.get().isLoaded("jei")) {
-			return PatchouliJeiPlugin.handleRecipeKeybind(keyCode, scanCode, stack);
+			return false; //PatchouliJeiPlugin.handleRecipeKeybind(keyCode, scanCode, stack);
 		}
 		return false;
-	}
-
-	@Override
-	public <T extends Recipe<?>, U extends T> RecipeSerializer<U> makeWrapperSerializer(RecipeSerializer<T> inner, BiFunction<T, ResourceLocation, U> converter) {
-		return new ForgeRecipeSerializerWrapper<>(inner, converter);
 	}
 }

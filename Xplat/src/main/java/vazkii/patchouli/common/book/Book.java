@@ -3,11 +3,10 @@ package vazkii.patchouli.common.book;
 import com.google.gson.JsonObject;
 
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +35,6 @@ public class Book {
 	private static final ResourceLocation DEFAULT_BOOK_TEXTURE = new ResourceLocation(PatchouliAPI.MOD_ID, "textures/gui/book_brown.png");
 	private static final ResourceLocation DEFAULT_FILLER_TEXTURE = new ResourceLocation(PatchouliAPI.MOD_ID, "textures/gui/page_filler.png");
 	private static final ResourceLocation DEFAULT_CRAFTING_TEXTURE = new ResourceLocation(PatchouliAPI.MOD_ID, "textures/gui/crafting.png");
-	private static final ResourceLocation UNICODE_FONT_ID = new ResourceLocation(PatchouliAPI.MOD_ID, "unicode_font");
 
 	private static final Map<String, String> DEFAULT_MACROS = Util.make(() -> {
 		Map<String, String> ret = new HashMap<>();
@@ -248,7 +246,7 @@ public class Book {
 		if (useBlockyFont) {
 			return Style.EMPTY;
 		} else {
-			return Style.EMPTY.withFont(UNICODE_FONT_ID);
+			return Style.EMPTY.withFont(Minecraft.UNIFORM_FONT);
 		}
 	}
 
@@ -258,15 +256,15 @@ public class Book {
 		try {
 			int ver = Integer.parseInt(version);
 			if (ver == 0) {
-				return new TranslatableComponent(subtitle);
+				return Component.translatable(subtitle);
 			}
 
-			editionStr = new TextComponent(numberToOrdinal(ver));
+			editionStr = Component.literal(numberToOrdinal(ver));
 		} catch (NumberFormatException e) {
-			editionStr = new TranslatableComponent("patchouli.gui.lexicon.dev_edition");
+			editionStr = Component.translatable("patchouli.gui.lexicon.dev_edition");
 		}
 
-		return new TranslatableComponent("patchouli.gui.lexicon.edition_str", editionStr);
+		return Component.translatable("patchouli.gui.lexicon.edition_str", editionStr);
 	}
 
 	public BookIcon getIcon() {

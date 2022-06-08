@@ -7,7 +7,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookCategory;
@@ -75,7 +74,7 @@ public class GuiButtonCategory extends Button {
 
 			if (isHoveredOrFocused()) {
 				parent.setTooltip(locked
-						? new TranslatableComponent("patchouli.gui.lexicon.locked").withStyle(ChatFormatting.GRAY)
+						? Component.translatable("patchouli.gui.lexicon.locked").withStyle(ChatFormatting.GRAY)
 						: name);
 			}
 		}

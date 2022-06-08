@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,11 +19,9 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 import vazkii.patchouli.client.book.LiquidBlockVertexConsumer;
 import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
-import java.util.Random;
-
 public class ForgeClientXplatImpl implements IClientXplatAbstractions {
 	@Override
-	public void renderForMultiblock(BlockState state, BlockPos pos, BlockAndTintGetter multiblock, PoseStack ps, MultiBufferSource buffers, Random rand) {
+	public void renderForMultiblock(BlockState state, BlockPos pos, BlockAndTintGetter multiblock, PoseStack ps, MultiBufferSource buffers, RandomSource rand) {
 		final BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 		final FluidState fluidState = state.getFluidState();
 		for (RenderType layer : RenderType.chunkBufferLayers()) {

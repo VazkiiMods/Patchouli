@@ -1,24 +1,6 @@
+/*
 package vazkii.patchouli.forge.client.jei;
 
-import mezz.jei.api.IModPlugin;
-import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.registration.ISubtypeRegistration;
-import mezz.jei.api.runtime.IJeiRuntime;
-
-import net.minecraft.client.KeyMapping;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-
-import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.common.item.ItemModBook;
-import vazkii.patchouli.common.item.PatchouliItems;
-import vazkii.patchouli.mixin.client.AccessorKeyMapping;
-
-import javax.annotation.Nonnull;
-
-import java.util.Map;
 
 @JeiPlugin
 public class PatchouliJeiPlugin implements IModPlugin {
@@ -72,3 +54,4 @@ public class PatchouliJeiPlugin implements IModPlugin {
 		return false;
 	}
 }
+*/

@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.gui;
 
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.BookData;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class GuiBookHistory extends GuiBookEntryList {
 
 	public GuiBookHistory(Book book) {
-		super(book, new TranslatableComponent("patchouli.gui.lexicon.history"));
+		super(book, Component.translatable("patchouli.gui.lexicon.history"));
 	}
 
 	@Override

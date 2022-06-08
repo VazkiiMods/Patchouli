@@ -1,7 +1,7 @@
 package vazkii.patchouli.fabric.common;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.Registry;
@@ -20,7 +20,7 @@ public class FabricModInitializer implements ModInitializer {
 		PatchouliItems.submitItemRegistrations((id, e) -> Registry.register(Registry.ITEM, id, e));
 		PatchouliItems.submitRecipeSerializerRegistrations((id, e) -> Registry.register(Registry.RECIPE_SERIALIZER, id, e));
 		FiberPatchouliConfig.setup();
-		CommandRegistrationCallback.EVENT.register((disp, dedicated) -> OpenBookCommand.register(disp));
+		CommandRegistrationCallback.EVENT.register((disp, buildCtx, selection) -> OpenBookCommand.register(disp));
 		UseBlockCallback.EVENT.register(LecternEventHandler::rightClick);
 
 		BookRegistry.INSTANCE.init();

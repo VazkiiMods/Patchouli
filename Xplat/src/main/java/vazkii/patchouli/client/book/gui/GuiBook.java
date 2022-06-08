@@ -17,8 +17,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
@@ -80,7 +78,7 @@ public abstract class GuiBook extends Screen {
 	@Override
 	public void init() {
 		Window res = minecraft.getWindow();
-		double oldGuiScale = res.calculateScale(minecraft.options.guiScale, minecraft.isEnforceUnicode());
+		double oldGuiScale = res.calculateScale(minecraft.options.guiScale().get(), minecraft.isEnforceUnicode());
 
 		maxScale = getMaxAllowedScale();
 		int persistentScale = Math.min(PersistentData.data.bookGuiScale, maxScale);
@@ -103,8 +101,8 @@ public abstract class GuiBook extends Screen {
 		book.getContents().currentGui = this;
 
 		addRenderableWidget(new GuiButtonBook(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5, 308, 0, 18, 9, this::canSeeBackButton, this::handleButtonBack,
-				new TranslatableComponent("patchouli.gui.lexicon.button.back"),
-				new TranslatableComponent("patchouli.gui.lexicon.button.back.info").withStyle(ChatFormatting.GRAY)));
+				Component.translatable("patchouli.gui.lexicon.button.back"),
+				Component.translatable("patchouli.gui.lexicon.button.back.info").withStyle(ChatFormatting.GRAY)));
 		addRenderableWidget(new GuiButtonBookArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
 		addRenderableWidget(new GuiButtonBookArrow(this, bookLeft + FULL_WIDTH - 14, bookTop + FULL_HEIGHT - 6, false));
 
@@ -233,8 +231,8 @@ public abstract class GuiBook extends Screen {
 
 			Pair<BookEntry, Integer> provider = book.getContents().getEntryForStack(tooltipStack);
 			if (provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
-				Component t = new TextComponent("(")
-						.append(new TranslatableComponent("patchouli.gui.lexicon.shift_for_recipe"))
+				Component t = Component.literal("(")
+						.append(Component.translatable("patchouli.gui.lexicon.shift_for_recipe"))
 						.append(")")
 						.withStyle(ChatFormatting.GOLD);
 				tooltip.add(t);
@@ -464,23 +462,23 @@ public abstract class GuiBook extends Screen {
 		drawGradient(ms, barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, book.progressBarBackground);
 		drawGradient(ms, barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, book.progressBarColor);
 
-		font.draw(ms, new TranslatableComponent("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
+		font.draw(ms, Component.translatable("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
 
 		if (isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
 			List<Component> tooltip = new ArrayList<>();
-			Component progressStr = new TranslatableComponent("patchouli.gui.lexicon.progress_tooltip", unlockedEntries, totalEntries);
+			Component progressStr = Component.translatable("patchouli.gui.lexicon.progress_tooltip", unlockedEntries, totalEntries);
 			tooltip.add(progressStr);
 
 			if (unlockedSecretEntries > 0) {
 				if (unlockedSecretEntries == 1) {
-					tooltip.add(new TranslatableComponent("patchouli.gui.lexicon.progress_tooltip.secret1").withStyle(ChatFormatting.GRAY));
+					tooltip.add(Component.translatable("patchouli.gui.lexicon.progress_tooltip.secret1").withStyle(ChatFormatting.GRAY));
 				} else {
-					tooltip.add(new TranslatableComponent("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries).withStyle(ChatFormatting.GRAY));
+					tooltip.add(Component.translatable("patchouli.gui.lexicon.progress_tooltip.secret", unlockedSecretEntries).withStyle(ChatFormatting.GRAY));
 				}
 			}
 
 			if (unlockedEntries != totalEntries) {
-				tooltip.add(new TranslatableComponent("patchouli.gui.lexicon.progress_tooltip.info").withStyle(ChatFormatting.GRAY));
+				tooltip.add(Component.translatable("patchouli.gui.lexicon.progress_tooltip.info").withStyle(ChatFormatting.GRAY));
 			}
 
 			setTooltip(tooltip);

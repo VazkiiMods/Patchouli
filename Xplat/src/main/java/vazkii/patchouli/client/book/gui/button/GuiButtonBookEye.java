@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
@@ -14,8 +14,8 @@ public class GuiButtonBookEye extends GuiButtonBook {
 
 	public GuiButtonBookEye(GuiBook parent, int x, int y, Button.OnPress onPress) {
 		super(parent, x, y, 308, 31, 11, 11, onPress,
-				new TranslatableComponent("patchouli.gui.lexicon.button.visualize"),
-				new TranslatableComponent("patchouli.gui.lexicon.button.visualize.info").withStyle(ChatFormatting.GRAY));
+				Component.translatable("patchouli.gui.lexicon.button.visualize"),
+				Component.translatable("patchouli.gui.lexicon.button.visualize.info").withStyle(ChatFormatting.GRAY));
 	}
 
 	@Override

@@ -8,8 +8,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -80,6 +78,6 @@ public abstract class BookPage {
 	}
 
 	public Component i18nText(String text) {
-		return book.i18n ? new TranslatableComponent(text) : new TextComponent(text);
+		return book.i18n ? Component.translatable(text) : Component.literal(text);
 	}
 }

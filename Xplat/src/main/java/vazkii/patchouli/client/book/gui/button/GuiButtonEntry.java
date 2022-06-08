@@ -8,8 +8,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
@@ -57,7 +57,7 @@ public class GuiButtonEntry extends Button {
 
 			MutableComponent name;
 			if (locked) {
-				name = new TranslatableComponent("patchouli.gui.lexicon.locked");
+				name = Component.translatable("patchouli.gui.lexicon.locked");
 			} else {
 				name = entry.getName();
 				if (entry.isPriority()) {

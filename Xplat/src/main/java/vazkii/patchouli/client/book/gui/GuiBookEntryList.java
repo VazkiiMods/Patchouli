@@ -7,7 +7,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -42,7 +41,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	public void init() {
 		super.init();
 
-		text = new BookTextRenderer(this, new TextComponent(getDescriptionText()), LEFT_PAGE_X, TOP_PADDING + 22);
+		text = new BookTextRenderer(this, Component.literal(getDescriptionText()), LEFT_PAGE_X, TOP_PADDING + 22);
 
 		allEntries = new ArrayList<>(getEntries());
 		allEntries.removeIf(BookEntry::shouldHide);
@@ -55,7 +54,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 
 	protected EditBox createSearchBar() {
-		EditBox field = new EditBox(font, 160, 170, 90, 12, TextComponent.EMPTY);
+		EditBox field = new EditBox(font, 160, 170, 90, 12, Component.empty());
 		field.setMaxLength(32);
 		//field.setHasBorder(false);
 		field.setCanLoseFocus(false);
@@ -104,7 +103,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		if (!searchField.getValue().isEmpty()) {
 			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 			drawFromTexture(ms, book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
-			Component toDraw = new TextComponent(searchField.getValue()).setStyle(book.getFontStyle());
+			Component toDraw = Component.literal(searchField.getValue()).setStyle(book.getFontStyle());
 			font.draw(ms, toDraw, searchField.x + 7, searchField.y + 1, 0);
 		}
 

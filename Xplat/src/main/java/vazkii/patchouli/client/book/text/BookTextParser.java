@@ -3,10 +3,9 @@ package vazkii.patchouli.client.book.text;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.api.PatchouliAPI;
@@ -23,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.*;
 
 public class BookTextParser {
-	public static final TextComponent EMPTY_STRING_COMPONENT = new TextComponent("");
+	public static final MutableComponent EMPTY_STRING_COMPONENT = Component.literal("");
 	// A command lookup takes the body of a command $(...) and the current span state.
 	// If it understands the command, it can modify the span state and return Optional.of(command replacement).
 	// Otherwise, it just returns Optional.empty().
@@ -109,11 +108,11 @@ public class BookTextParser {
 		register((parameter, state) -> {
 			KeyMapping result = getKeybindKey(state, parameter);
 			if (result == null) {
-				state.tooltip = new TranslatableComponent("patchouli.gui.lexicon.keybind_missing", parameter);
+				state.tooltip = Component.translatable("patchouli.gui.lexicon.keybind_missing", parameter);
 				return "N/A";
 			}
 
-			state.tooltip = new TranslatableComponent("patchouli.gui.lexicon.keybind", new TranslatableComponent(result.getName()));
+			state.tooltip = Component.translatable("patchouli.gui.lexicon.keybind", Component.translatable(result.getName()));
 			return result.getTranslatedKeyMessage().getString();
 		}, "k");
 		register((parameter, state) -> {
@@ -124,7 +123,7 @@ public class BookTextParser {
 
 			if (isExternal) {
 				String url = parameter;
-				state.tooltip = new TranslatableComponent("patchouli.gui.lexicon.external_link");
+				state.tooltip = Component.translatable("patchouli.gui.lexicon.external_link");
 				state.isExternalLink = true;
 				state.onClick = () -> {
 					GuiBook.openWebLink(state.gui, url);
@@ -145,7 +144,7 @@ public class BookTextParser {
 				var category = book.getContents().categories.get(href);
 				if (entry != null) {
 					state.tooltip = entry.isLocked()
-							? new TranslatableComponent("patchouli.gui.lexicon.locked").withStyle(ChatFormatting.GRAY)
+							? Component.translatable("patchouli.gui.lexicon.locked").withStyle(ChatFormatting.GRAY)
 							: entry.getName();
 					int page = 0;
 					if (anchor != null) {
@@ -165,7 +164,7 @@ public class BookTextParser {
 					};
 				} else if (category != null) {
 					if (anchor != null) {
-						state.tooltip = new TextComponent("BAD LINK: Cannot specify anchor when linking to a category");
+						state.tooltip = Component.literal("BAD LINK: Cannot specify anchor when linking to a category");
 					} else {
 						state.tooltip = category.getName();
 						state.onClick = () -> {
@@ -175,13 +174,13 @@ public class BookTextParser {
 						};
 					}
 				} else {
-					state.tooltip = new TextComponent("BAD LINK: " + parameter);
+					state.tooltip = Component.literal("BAD LINK: " + parameter);
 				}
 			}
 			return "";
 		}, "l");
 		register((parameter, state) -> {
-			state.tooltip = new TextComponent(parameter);
+			state.tooltip = Component.literal(parameter);
 			state.cluster = new LinkedList<>();
 			return "";
 		}, "tooltip", "t");
@@ -189,12 +188,12 @@ public class BookTextParser {
 			state.pushStyle(Style.EMPTY.withColor(TextColor.fromRgb(state.book.linkColor)));
 			state.cluster = new LinkedList<>();
 			if (!parameter.startsWith("/")) {
-				state.tooltip = new TextComponent("INVALID COMMAND (must begin with /)");
+				state.tooltip = Component.literal("INVALID COMMAND (must begin with /)");
 			} else {
-				state.tooltip = new TextComponent(parameter.length() < 20 ? parameter : parameter.substring(0, 20) + "...");
+				state.tooltip = Component.literal(parameter.length() < 20 ? parameter : parameter.substring(0, 20) + "...");
 			}
 			state.onClick = () -> {
-				state.gui.getMinecraft().player.chat(parameter);
+				state.gui.getMinecraft().player.command(parameter);
 				return true;
 			};
 			return "";
@@ -227,7 +226,7 @@ public class BookTextParser {
 	public List<Span> parse(Component text) {
 		List<Span> spans = new ArrayList<>();
 		SpanState state = new SpanState(gui, book, baseStyle);
-		text.visitSelf((style, string) -> {
+		text.visit((style, string) -> {
 			spans.addAll(processCommands(expandMacros(string), state, style));
 			return Optional.empty();
 		}, baseStyle);

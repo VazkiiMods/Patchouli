@@ -29,7 +29,7 @@ public final class BookContentResourceDirectLoader implements BookContentLoader 
 	@Override
 	public void findFiles(Book book, String dir, List<ResourceLocation> list) {
 		String prefix = String.format("%s/%s/%s/%s", BookRegistry.BOOKS_LOCATION, book.id.getPath(), BookContentsBuilder.DEFAULT_LANG, dir);
-		Collection<ResourceLocation> files = Minecraft.getInstance().getResourceManager().listResources(prefix, p -> p.endsWith(".json"));
+		Collection<ResourceLocation> files = Minecraft.getInstance().getResourceManager().listResources(prefix, p -> p.getPath().endsWith(".json")).keySet();
 
 		files.stream()
 				.distinct()
@@ -56,10 +56,11 @@ public final class BookContentResourceDirectLoader implements BookContentLoader 
 		PatchouliAPI.LOGGER.debug("Loading {}", file);
 		ResourceManager manager = Minecraft.getInstance().getResourceManager();
 		try {
-			if (manager.hasResource(file)) {
-				return BookContentLoader.streamToJson(manager.getResource(file).getInputStream());
-			} else if (fallback != null && manager.hasResource(fallback)) {
-				return BookContentLoader.streamToJson(manager.getResource(fallback).getInputStream());
+			var resource = manager.getResource(file);
+			if (resource.isPresent()) {
+				return BookContentLoader.streamToJson(resource.get().open());
+			} else if (fallback != null && (resource = manager.getResource(fallback)).isPresent()) {
+				return BookContentLoader.streamToJson(resource.get().open());
 			} else {
 				return null;
 			}

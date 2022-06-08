@@ -5,8 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBook;
@@ -21,20 +20,20 @@ public class GuiBookWriter extends GuiBook {
 	private static boolean drawHeader;
 
 	public GuiBookWriter(Book book) {
-		super(book, TextComponent.EMPTY);
+		super(book, Component.empty());
 	}
 
 	@Override
 	public void init() {
 		super.init();
 
-		text = new BookTextRenderer(this, new TranslatableComponent("patchouli.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
-		textfield = new EditBox(font, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20, TextComponent.EMPTY);
+		text = new BookTextRenderer(this, Component.translatable("patchouli.gui.lexicon.editor.info"), LEFT_PAGE_X, TOP_PADDING + 20);
+		textfield = new EditBox(font, 10, FULL_HEIGHT - 40, PAGE_WIDTH, 20, Component.empty());
 		textfield.setMaxLength(Integer.MAX_VALUE);
 		textfield.setValue(savedText);
 
 		var button = new GuiButtonBook(this, bookLeft + 115, bookTop + PAGE_HEIGHT - 36, 330, 9, 11, 11, this::handleToggleHeaderButton,
-				new TranslatableComponent("patchouli.gui.lexicon.button.toggle_mock_header"));
+				Component.translatable("patchouli.gui.lexicon.button.toggle_mock_header"));
 		addRenderableWidget(button);
 		refreshText();
 	}
@@ -94,9 +93,9 @@ public class GuiBookWriter extends GuiBook {
 
 		savedText = textfield.getValue();
 		try {
-			editableText = new BookTextRenderer(this, new TextComponent(savedText), RIGHT_PAGE_X, yPos);
+			editableText = new BookTextRenderer(this, Component.literal(savedText), RIGHT_PAGE_X, yPos);
 		} catch (Throwable e) {
-			editableText = new BookTextRenderer(this, new TextComponent("[ERROR]"), RIGHT_PAGE_X, yPos);
+			editableText = new BookTextRenderer(this, Component.literal("[ERROR]"), RIGHT_PAGE_X, yPos);
 			PatchouliAPI.LOGGER.catching(e);
 		}
 	}

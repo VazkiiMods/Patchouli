@@ -1,10 +1,10 @@
 package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.TextComponent;
 
 import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -43,7 +43,7 @@ public class SpanState implements IStyleStack {
 		this.book = book;
 		this.baseStyle = baseStyle;
 		this.stateStack.push(new SpanPartialState(baseStyle, null));
-		this.spaceWidth = Minecraft.getInstance().font.width(new TextComponent(" ").setStyle(baseStyle));
+		this.spaceWidth = Minecraft.getInstance().font.width(Component.literal(" ").setStyle(baseStyle));
 	}
 
 	public Style getBase() {

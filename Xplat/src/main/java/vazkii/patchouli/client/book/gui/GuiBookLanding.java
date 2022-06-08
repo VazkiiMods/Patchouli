@@ -8,8 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookCategory;
@@ -33,14 +31,14 @@ public class GuiBookLanding extends GuiBook {
 	List<BookEntry> entriesInPamphlet;
 
 	public GuiBookLanding(Book book) {
-		super(book, new TranslatableComponent(book.name));
+		super(book, Component.translatable(book.name));
 	}
 
 	@Override
 	public void init() {
 		super.init();
 
-		text = new BookTextRenderer(this, new TranslatableComponent(book.landingText), LEFT_PAGE_X, TOP_PADDING + 25);
+		text = new BookTextRenderer(this, Component.translatable(book.landingText), LEFT_PAGE_X, TOP_PADDING + 25);
 
 		boolean disableBar = !book.showProgress || !book.advancementsEnabled();
 
@@ -56,18 +54,18 @@ public class GuiBookLanding extends GuiBook {
 
 		// History
 		addRenderableWidget(new GuiButtonBook(this, x + (pos++) * dist, y, 330, 31, 11, 11, this::handleButtonHistory,
-				new TranslatableComponent("patchouli.gui.lexicon.button.history")));
+				Component.translatable("patchouli.gui.lexicon.button.history")));
 
 		// Advancements
 		if (book.advancementsTab != null) {
 			addRenderableWidget(new GuiButtonBook(this, x + (pos++) * dist, y, 330, 20, 11, 11, this::handleButtonAdvancements,
-					new TranslatableComponent("patchouli.gui.lexicon.button.advancements")));
+					Component.translatable("patchouli.gui.lexicon.button.advancements")));
 		}
 
 		if (Minecraft.getInstance().player.isCreative()) {
 			addRenderableWidget(new GuiButtonBook(this, x + (pos++) * dist, y, 308, 9, 11, 11, this::handleButtonEdit,
-					new TranslatableComponent("patchouli.gui.lexicon.button.editor"),
-					new TranslatableComponent("patchouli.gui.lexicon.button.editor.info").withStyle(ChatFormatting.GRAY)));
+					Component.translatable("patchouli.gui.lexicon.button.editor"),
+					Component.translatable("patchouli.gui.lexicon.button.editor.info").withStyle(ChatFormatting.GRAY)));
 		}
 
 		if (this.book.getContents().pamphletCategory == null) {
@@ -103,7 +101,7 @@ public class GuiBookLanding extends GuiBook {
 		int y = TOP_PADDING + 25 + (i / 4) * 24;
 
 		if (category == null) {
-			addRenderableWidget(new GuiButtonCategory(this, x, y, book.getIcon(), new TranslatableComponent("patchouli.gui.lexicon.index"), this::handleButtonIndex));
+			addRenderableWidget(new GuiButtonCategory(this, x, y, book.getIcon(), Component.translatable("patchouli.gui.lexicon.index"), this::handleButtonIndex));
 		} else {
 			addRenderableWidget(new GuiButtonCategory(this, x, y, category, this::handleButtonCategory));
 		}
@@ -188,13 +186,13 @@ public class GuiBookLanding extends GuiBook {
 		while (e != null) {
 			String msg = e.getMessage();
 			if (msg != null && !msg.isEmpty()) {
-				lines.add(new TextComponent(e.getMessage()));
+				lines.add(Component.literal(e.getMessage()));
 			}
 			e = e.getCause();
 		}
 
 		if (!lines.isEmpty()) {
-			lines.add(new TranslatableComponent("patchouli.gui.lexicon.loading_error_log").withStyle(ChatFormatting.GREEN));
+			lines.add(Component.translatable("patchouli.gui.lexicon.loading_error_log").withStyle(ChatFormatting.GREEN));
 			setTooltip(lines);
 		}
 	}
@@ -227,7 +225,7 @@ public class GuiBookLanding extends GuiBook {
 			book.reloadContents(true);
 			book.reloadLocks(false);
 			displayLexiconGui(new GuiBookLanding(book), false);
-			minecraft.player.displayClientMessage(new TranslatableComponent("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)), false);
+			minecraft.player.displayClientMessage(Component.translatable("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)), false);
 		} else {
 			displayLexiconGui(new GuiBookWriter(book), true);
 		}

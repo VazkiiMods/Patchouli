@@ -4,7 +4,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -50,7 +49,7 @@ public class Span {
 		this.style = style;
 		this.onClick = null;
 		this.linkCluster = null;
-		this.tooltip = new TextComponent("");
+		this.tooltip = Component.literal("");
 		this.lineBreaks = state.lineBreaks;
 		this.spacingLeft = state.spacingLeft;
 		this.spacingRight = state.spacingRight;
@@ -62,10 +61,10 @@ public class Span {
 	}
 
 	public MutableComponent styledSubstring(int start) {
-		return new TextComponent(text.substring(start)).setStyle(style);
+		return Component.literal(text.substring(start)).setStyle(style);
 	}
 
 	public MutableComponent styledSubstring(int start, int end) {
-		return new TextComponent(text.substring(start, end)).setStyle(style);
+		return Component.literal(text.substring(start, end)).setStyle(style);
 	}
 }

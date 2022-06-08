@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
@@ -58,12 +57,12 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 
 		if (bookmark == null || entry == null) {
-			return new Component[] { new TranslatableComponent("patchouli.gui.lexicon.add_bookmark") };
+			return new Component[] { Component.translatable("patchouli.gui.lexicon.add_bookmark") };
 		}
 
 		return new Component[] {
 				entry.getName(),
-				new TranslatableComponent(multiblock
+				Component.translatable(multiblock
 						? "patchouli.gui.lexicon.multiblock_bookmark"
 						: "patchouli.gui.lexicon.remove_bookmark").withStyle(ChatFormatting.GRAY)
 		};
