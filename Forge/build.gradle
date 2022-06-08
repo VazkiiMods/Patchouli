@@ -49,7 +49,7 @@ minecraft {
             mods {
                 patchouli {
                     source sourceSets.main
-                    source project(":Common").sourceSets.main
+                    source project(":Xplat").sourceSets.main
                 }
             }
         }
@@ -63,7 +63,7 @@ minecraft {
             mods {
                 patchouli {
                     source sourceSets.main
-                    source project(":Common").sourceSets.main
+                    source project(":Xplat").sourceSets.main
                 }
             }
         }
@@ -72,7 +72,7 @@ minecraft {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-40.0.1"
-    implementation project(":Common")
+    implementation project(":Xplat")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
 
@@ -81,15 +81,15 @@ dependencies {
 }
 
 tasks.withType(JavaCompile) {
-    source(project(":Common").sourceSets.main.allSource)
+    source(project(":Xplat").sourceSets.main.allSource)
 }
 
 sourcesJar {
-    from project(":Common").sourceSets.main.allJava
+    from project(":Xplat").sourceSets.main.allJava
 }
 
 processResources {
-    from project(":Common").sourceSets.main.resources
+    from project(":Xplat").sourceSets.main.resources
 }
 
 publishing {

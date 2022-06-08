@@ -73,16 +73,16 @@ This scheme is based on the [Multi-Loader
 Template](https://github.com/jaredlll08/MultiLoader-Template) created by @jaredlll08 and
 @Darkhax. Many thanks to them!
 
-How it works is we have three Gradle subprojects: `Common`, `Forge`, and `Fabric`.
-`Common` contains code that is loader-agnostic. In the IDE, we set up this subproject
+How it works is we have three Gradle subprojects: `Xplat`, `Forge`, and `Fabric`.
+`Xplat` contains code that is loader-agnostic. In the IDE, we set up this subproject
 using Sponge's `VanillaGradle` plugin, which sets up a basic Mojmap-mapped game JAR to aid
 in auto-complete, etc. while coding.  However, this subproject is not actually compiled on
 its own.
 
 Instead, the loader-specific subprojects `Forge` and `Fabric` include the source of
-`Common` into their own sources when compiling. The loader-specific subprojects use the
+`Xplat` into their own sources when compiling. The loader-specific subprojects use the
 native loader's tools (ForgeGradle and Loom, respectively), so in nearly all respects this
-is the same as copying and pasting the `Common` code into the loader-specific subproject.
+is the same as copying and pasting the `Xplat` code into the loader-specific subproject.
 
 If a loader needs to be temporarily disabled, simply comment it out in `settings.gradle`.
 
