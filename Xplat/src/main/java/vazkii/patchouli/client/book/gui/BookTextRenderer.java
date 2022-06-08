@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.contents.LiteralContents;
 
+import net.minecraft.network.chat.contents.LiteralContents;
 import vazkii.patchouli.client.book.text.BookTextParser;
 import vazkii.patchouli.client.book.text.TextLayouter;
 import vazkii.patchouli.client.book.text.Word;
