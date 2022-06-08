@@ -2,7 +2,6 @@ package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.network.chat.Component;
 
-import net.minecraft.network.chat.Component;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 import java.util.function.Supplier;
