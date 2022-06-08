@@ -29,16 +29,11 @@ public class StringStateMatcher {
 			return StateMatcher.AIR;
 		}
 
-		// c.f. BlockPredicateArgument. Similar, but doesn't use vanilla's weird BlockInWorld caching class.
-		var result = BlockStateParser.parseForTesting(Registry.BLOCK, s, true);
-
-		var blockResult = result.left();
-		var tagResult = result.right();
-		if (blockResult.isPresent()) {
-			return new ExactMatcher(blockResult.get().blockState(), blockResult.get().properties());
-		} else {
-			return new TagMatcher(tagResult.get().tag(), tagResult.get().vagueProperties());
-		}
+		// c.f. BlockPredicateArgument. Similar, but doesn't use vanilla's weird caching class.
+		return BlockStateParser.parseForTesting(Registry.BLOCK, s, true).map(
+				blockResult -> new ExactMatcher(blockResult.blockState(), blockResult.properties()),
+				tagResult -> new TagMatcher(tagResult.tag(), tagResult.vagueProperties())
+		);
 	}
 
 	private static class ExactMatcher implements IStateMatcher {
