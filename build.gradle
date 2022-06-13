@@ -55,6 +55,7 @@ subprojects {
         exclude "**/unused"
 
         // exclude test data
+        exclude "**/assets/patchouli/patchouli_books/**"
         exclude "**/data/patchouli/patchouli_books/**"
         exclude "**/data/patchouli/advancements/**"
         exclude "**/data/patchouli/recipes/**"
