@@ -83,6 +83,7 @@ public class BookContents extends AbstractReadStateHolder {
 		return exception;
 	}
 
+	@Nullable
 	public Pair<BookEntry, Integer> getEntryForStack(ItemStack stack) {
 		return recipeMappings.get(ItemStackUtil.wrapStack(stack));
 	}

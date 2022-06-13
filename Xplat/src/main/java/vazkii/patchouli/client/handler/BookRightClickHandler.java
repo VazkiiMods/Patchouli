@@ -24,6 +24,8 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
+import javax.annotation.Nullable;
+
 public class BookRightClickHandler {
 
 	public static void onRenderHUD(PoseStack ms, float partialTicks) {
@@ -80,11 +82,12 @@ public class BookRightClickHandler {
 		return InteractionResult.PASS;
 	}
 
+	@Nullable
 	private static Pair<BookEntry, Integer> getHoveredEntry(Book book) {
 		Minecraft mc = Minecraft.getInstance();
 		HitResult res = mc.hitResult;
-		if (res instanceof BlockHitResult) {
-			BlockPos pos = ((BlockHitResult) res).getBlockPos();
+		if (mc.level != null && res instanceof BlockHitResult hit) {
+			BlockPos pos = hit.getBlockPos();
 			BlockState state = mc.level.getBlockState(pos);
 			Block block = state.getBlock();
 			ItemStack picked = block.getCloneItemStack(mc.level, pos, state);
