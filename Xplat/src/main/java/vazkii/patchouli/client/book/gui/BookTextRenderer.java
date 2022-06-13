@@ -20,14 +20,9 @@ import java.util.List;
 
 public class BookTextRenderer {
 	private final Book book;
-	private final GuiBook gui;
-	private final Component text;
-	private final int x, y, width;
-	private final int lineHeight;
-	private final Style baseStyle;
 
-	private List<Word> words;
-	private float scale;
+	private final List<Word> words;
+	private final float scale;
 
 	public BookTextRenderer(GuiBook gui, Component text, int x, int y) {
 		this(gui, text, x, y, GuiBook.PAGE_WIDTH, GuiBook.TEXT_LINE_HEIGHT, gui.book.textColor);
@@ -35,27 +30,19 @@ public class BookTextRenderer {
 
 	public BookTextRenderer(GuiBook gui, Component text, int x, int y, int width, int lineHeight, int baseColor) {
 		this.book = gui.book;
-		this.gui = gui;
+		Component text1;
 		if (book.i18n && text instanceof TextComponent) {
-			this.text = new TextComponent(I18n.get(((TextComponent) text).getText()));
+			text1 = new TextComponent(I18n.get(((TextComponent) text).getText()));
 		} else {
-			this.text = text;
+			text1 = text;
 		}
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.lineHeight = lineHeight;
-		this.baseStyle = book.getFontStyle().withColor(TextColor.fromRgb(baseColor));
+		Style baseStyle = book.getFontStyle().withColor(TextColor.fromRgb(baseColor));
 
-		build();
-	}
-
-	private void build() {
-		BookTextParser parser = new BookTextParser(gui, book, x, y, width, lineHeight, baseStyle);
-		TextLayouter layouter = new TextLayouter(gui, x, y, lineHeight, width, PatchouliConfig.get().overflowMode().get());
-		layouter.layout(Minecraft.getInstance().font, parser.parse(text));
-		scale = layouter.getScale();
-		words = layouter.getWords();
+		var parser = new BookTextParser(gui, this.book, x, y, width, lineHeight, baseStyle);
+		var layouter = new TextLayouter(gui, x, y, lineHeight, width, PatchouliConfig.get().overflowMode().get());
+		layouter.layout(Minecraft.getInstance().font, parser.parse(text1));
+		this.scale = layouter.getScale();
+		this.words = layouter.getWords();
 	}
 
 	private double rescale(double in, double origin) {
