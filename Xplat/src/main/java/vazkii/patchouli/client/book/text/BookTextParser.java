@@ -127,7 +127,7 @@ public class BookTextParser {
 				state.tooltip = new TranslatableComponent("patchouli.gui.lexicon.external_link");
 				state.isExternalLink = true;
 				state.onClick = () -> {
-					GuiBook.openWebLink(url);
+					GuiBook.openWebLink(state.gui, url);
 					return true;
 				};
 			} else {

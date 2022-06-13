@@ -12,6 +12,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
@@ -557,8 +558,15 @@ public abstract class GuiBook extends Screen {
 		}
 	}
 
-	public static void openWebLink(String address) {
-		Util.getPlatform().openUri(address);
+	public static void openWebLink(Screen prevScreen, String address) {
+		var mc = Minecraft.getInstance();
+		mc.setScreen(new ConfirmLinkScreen(yes -> {
+			if (yes) {
+				Util.getPlatform().openUri(address);
+			}
+
+			mc.setScreen(prevScreen);
+		}, address, false));
 	}
 
 	public void displayLexiconGui(GuiBook gui, boolean push) {
