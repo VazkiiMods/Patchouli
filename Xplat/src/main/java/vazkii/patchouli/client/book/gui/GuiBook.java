@@ -158,7 +158,6 @@ public abstract class GuiBook extends Screen {
 			y += 12;
 		}
 
-		y += (y == 0 ? 0 : 2);
 		if (shouldAddAddBookmarkButton() && bookmarks.size() <= MAX_BOOKMARKS) {
 			addRenderableWidget(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
 		}
