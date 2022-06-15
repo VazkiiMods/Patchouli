@@ -162,13 +162,15 @@ public class BookRegistry {
 		}
 
 		if (processor != null) {
-			Iterator<Path> itr = Files.walk(root, maxDepth).iterator();
+			try (var stream = Files.walk(root, maxDepth)) {
+				Iterator<Path> itr = stream.iterator();
 
-			while (itr.hasNext()) {
-				boolean cont = processor.apply(root, itr.next());
+				while (itr.hasNext()) {
+					boolean keepGoing = processor.apply(root, itr.next());
 
-				if (!visitAllFiles && !cont) {
-					return;
+					if (!visitAllFiles && !keepGoing) {
+						return;
+					}
 				}
 			}
 		}
