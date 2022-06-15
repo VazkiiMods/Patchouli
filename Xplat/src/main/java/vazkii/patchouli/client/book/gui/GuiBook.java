@@ -29,10 +29,7 @@ import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
 import vazkii.patchouli.client.book.*;
-import vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow;
-import vazkii.patchouli.client.book.gui.button.GuiButtonBookBack;
-import vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark;
-import vazkii.patchouli.client.book.gui.button.GuiButtonBookMarkRead;
+import vazkii.patchouli.client.book.gui.button.*;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
@@ -105,7 +102,9 @@ public abstract class GuiBook extends Screen {
 
 		book.getContents().currentGui = this;
 
-		addRenderableWidget(new GuiButtonBookBack(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5));
+		addRenderableWidget(new GuiButtonBook(this, width / 2 - 9, bookTop + FULL_HEIGHT - 5, 308, 0, 18, 9, this::canSeeBackButton, this::handleButtonBack,
+				new TranslatableComponent("patchouli.gui.lexicon.button.back"),
+				new TranslatableComponent("patchouli.gui.lexicon.button.back.info").withStyle(ChatFormatting.GRAY)));
 		addRenderableWidget(new GuiButtonBookArrow(this, bookLeft - 4, bookTop + FULL_HEIGHT - 6, true));
 		addRenderableWidget(new GuiButtonBookArrow(this, bookLeft + FULL_WIDTH - 14, bookTop + FULL_HEIGHT - 6, false));
 
@@ -264,7 +263,7 @@ public abstract class GuiBook extends Screen {
 		return book.pauseGame;
 	}
 
-	public void handleButtonBack(Button button) {
+	private void handleButtonBack(Button button) {
 		back(false);
 	}
 

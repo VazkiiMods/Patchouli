@@ -55,15 +55,19 @@ public class GuiBookLanding extends GuiBook {
 		}
 
 		// History
-		addRenderableWidget(new GuiButtonBookHistory(this, x + (pos++) * dist, y, this::handleButtonHistory));
+		addRenderableWidget(new GuiButtonBook(this, x + (pos++) * dist, y, 330, 31, 11, 11, this::handleButtonHistory,
+				new TranslatableComponent("patchouli.gui.lexicon.button.history")));
 
 		// Advancements
 		if (book.advancementsTab != null) {
-			addRenderableWidget(new GuiButtonBookAdvancements(this, x + (pos++) * dist, y, this::handleButtonAdvancements));
+			addRenderableWidget(new GuiButtonBook(this, x + (pos++) * dist, y, 330, 20, 11, 11, this::handleButtonAdvancements,
+					new TranslatableComponent("patchouli.gui.lexicon.button.advancements")));
 		}
 
 		if (Minecraft.getInstance().player.isCreative()) {
-			addRenderableWidget(new GuiButtonBookEdit(this, x + (pos++) * dist, y, this::handleButtonEdit));
+			addRenderableWidget(new GuiButtonBook(this, x + (pos++) * dist, y, 308, 9, 11, 11, this::handleButtonEdit,
+					new TranslatableComponent("patchouli.gui.lexicon.button.editor"),
+					new TranslatableComponent("patchouli.gui.lexicon.button.editor.info").withStyle(ChatFormatting.GRAY)));
 		}
 
 		if (this.book.getContents().pamphletCategory == null) {
@@ -99,7 +103,7 @@ public class GuiBookLanding extends GuiBook {
 		int y = TOP_PADDING + 25 + (i / 4) * 24;
 
 		if (category == null) {
-			addRenderableWidget(new GuiButtonIndex(this, x, y, this::handleButtonIndex));
+			addRenderableWidget(new GuiButtonCategory(this, x, y, book.getIcon(), new TranslatableComponent("patchouli.gui.lexicon.index"), this::handleButtonIndex));
 		} else {
 			addRenderableWidget(new GuiButtonCategory(this, x, y, category, this::handleButtonCategory));
 		}
@@ -209,15 +213,15 @@ public class GuiBookLanding extends GuiBook {
 		displayLexiconGui(new GuiBookCategory(book, ((GuiButtonCategory) button).getCategory()), true);
 	}
 
-	public void handleButtonHistory(Button button) {
+	private void handleButtonHistory(Button button) {
 		displayLexiconGui(new GuiBookHistory(book), true);
 	}
 
-	public void handleButtonAdvancements(Button button) {
+	private void handleButtonAdvancements(Button button) {
 		minecraft.setScreen(new GuiAdvancementsExt(minecraft.player.connection.getAdvancements(), this, book.advancementsTab));
 	}
 
-	public void handleButtonEdit(Button button) {
+	private void handleButtonEdit(Button button) {
 		if (hasShiftDown()) {
 			long time = System.currentTimeMillis();
 			book.reloadContents(true);
