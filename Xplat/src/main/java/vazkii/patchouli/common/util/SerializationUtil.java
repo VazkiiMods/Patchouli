@@ -2,11 +2,15 @@ package vazkii.patchouli.common.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.PatchouliAPI;
+
+import javax.annotation.Nullable;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -56,6 +60,14 @@ public final class SerializationUtil {
 			}
 		} catch (IOException e) {
 			PatchouliAPI.LOGGER.error("Failed to save file", e);
+		}
+	}
+
+	public static ResourceLocation getAsResourceLocation(JsonObject object, String key, @Nullable ResourceLocation fallback) {
+		if (object.has(key)) {
+			return new ResourceLocation(GsonHelper.convertToString(object.get(key), key));
+		} else {
+			return fallback;
 		}
 	}
 }

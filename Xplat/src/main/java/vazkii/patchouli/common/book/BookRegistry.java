@@ -2,6 +2,7 @@ package vazkii.patchouli.common.book;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import net.minecraft.resources.ResourceLocation;
 
@@ -89,7 +90,7 @@ public class BookRegistry {
 				);
 			}
 			if (book.isExtension) {
-				book.extensionTarget = books.get(book.extend);
+				book.extensionTarget = books.get(book.extensionTargetID);
 
 				if (book.extensionTarget == null) {
 					throw new IllegalArgumentException("Extension Book " + book.id + " has no valid target");
@@ -111,9 +112,8 @@ public class BookRegistry {
 	public void loadBook(XplatModContainer mod, ResourceLocation res, InputStream stream,
 			boolean external) {
 		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-		Book book = GSON.fromJson(reader, Book.class);
-		book.build(mod, res, external);
-		books.put(res, book);
+		var tree = GSON.fromJson(reader, JsonObject.class);
+		books.put(res, new Book(tree, mod, res, external));
 	}
 
 	/**
