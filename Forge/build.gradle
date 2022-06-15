@@ -71,7 +71,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-40.0.1"
+    minecraft "net.minecraftforge:forge:${minecraft_version}-40.1.51"
     implementation project(":Xplat")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
