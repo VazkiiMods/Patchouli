@@ -14,8 +14,8 @@ import vazkii.patchouli.common.book.Book;
 
 public class GuiBookWriter extends GuiBook {
 
-	BookTextRenderer text, editableText;
-	EditBox textfield;
+	private BookTextRenderer text, editableText;
+	private EditBox textfield;
 
 	private static String savedText = "";
 	private static boolean drawHeader;
@@ -89,7 +89,7 @@ public class GuiBookWriter extends GuiBook {
 		refreshText();
 	}
 
-	public void refreshText() {
+	private void refreshText() {
 		int yPos = TOP_PADDING + (drawHeader ? 22 : -4);
 
 		savedText = textfield.getValue();

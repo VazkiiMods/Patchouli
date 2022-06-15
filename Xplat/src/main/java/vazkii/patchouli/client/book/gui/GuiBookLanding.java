@@ -98,7 +98,7 @@ public class GuiBookLanding extends GuiBook {
 
 	}
 
-	void addCategoryButton(int i, BookCategory category) {
+	private void addCategoryButton(int i, BookCategory category) {
 		int x = RIGHT_PAGE_X + 10 + (i % 4) * 24;
 		int y = TOP_PADDING + 25 + (i / 4) * 24;
 
@@ -151,7 +151,7 @@ public class GuiBookLanding extends GuiBook {
 		buildEntryButtons();
 	}
 
-	void buildEntryButtons() {
+	private void buildEntryButtons() {
 		removeDrawablesIn(pamphletEntryButtons);
 		pamphletEntryButtons.clear();
 
@@ -160,7 +160,7 @@ public class GuiBookLanding extends GuiBook {
 		addEntryButtons(RIGHT_PAGE_X, TOP_PADDING, 0, ENTRIES_IN_FIRST_PAGE);
 	}
 
-	void addEntryButtons(int x, int y, int start, int count) {
+	private void addEntryButtons(int x, int y, int start, int count) {
 		if (!this.book.getContents().isErrored()) {
 			for (int i = 0; i < count && (i + start) < entriesInPamphlet.size(); i++) {
 				Button button = new GuiButtonEntry(this, bookLeft + x, bookTop + y + i * 11, entriesInPamphlet.get(start + i),
@@ -171,7 +171,7 @@ public class GuiBookLanding extends GuiBook {
 		}
 	}
 
-	void drawHeader(PoseStack ms) {
+	private void drawHeader(PoseStack ms) {
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		drawFromTexture(ms, book, -8, 12, 0, 180, 140, 31);
 
@@ -181,7 +181,7 @@ public class GuiBookLanding extends GuiBook {
 		font.draw(ms, toDraw, 24, 24, color);
 	}
 
-	void makeErrorTooltip() {
+	private void makeErrorTooltip() {
 		Throwable e = book.getContents().getException();
 
 		List<Component> lines = new ArrayList<>();

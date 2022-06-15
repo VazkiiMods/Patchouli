@@ -14,16 +14,18 @@ import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookIcon;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
+import javax.annotation.Nullable;
+
 public class GuiButtonCategory extends Button {
 
 	private static final int ANIM_TIME = 5;
 
-	final GuiBook parent;
-	BookCategory category;
-	final BookIcon icon;
-	final Component name;
-	final int u, v;
-	float timeHovered;
+	private final GuiBook parent;
+	@Nullable private BookCategory category;
+	private final BookIcon icon;
+	private final Component name;
+	private final int u, v;
+	private float timeHovered;
 
 	public GuiButtonCategory(GuiBook parent, int x, int y, BookCategory category, Button.OnPress onPress) {
 		this(parent, x, y, category.getIcon(), category.getName(), onPress);

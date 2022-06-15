@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 
 public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
-	final BookEntry entry;
-	BookPage leftPage, rightPage;
+	protected final BookEntry entry;
+	private BookPage leftPage, rightPage;
 
 	public GuiBookEntry(Book book, BookEntry entry) {
 		this(book, entry, 0);
@@ -113,7 +113,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		ms.popPose();
 	}
 
-	boolean clickPage(BookPage page, double mouseX, double mouseY, int mouseButton) {
+	private boolean clickPage(BookPage page, double mouseX, double mouseY, int mouseButton) {
 		if (page != null) {
 			return page.mouseClicked(mouseX - page.left, mouseY - page.top, mouseButton);
 		}
@@ -127,7 +127,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		needsBookmarkUpdate = true;
 	}
 
-	void setupPages() {
+	private void setupPages() {
 		if (leftPage != null) {
 			leftPage.onHidden(this);
 		}

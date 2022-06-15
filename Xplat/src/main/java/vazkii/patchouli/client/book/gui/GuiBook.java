@@ -61,15 +61,15 @@ public abstract class GuiBook extends Screen {
 	public int bookLeft, bookTop;
 	private float scaleFactor;
 
-	private List<Component> tooltip;
-	private ItemStack tooltipStack;
-	private Pair<BookEntry, Integer> targetPage;
+	@Nullable private List<Component> tooltip;
+	@Nullable private ItemStack tooltipStack;
+	@Nullable private Pair<BookEntry, Integer> targetPage;
 	protected int spread = 0, maxSpreads = 0;
 
 	public int ticksInBook;
 	public int maxScale;
 
-	boolean needsBookmarkUpdate = false;
+	protected boolean needsBookmarkUpdate = false;
 
 	public GuiBook(Book book, Component title) {
 		super(title);

@@ -15,10 +15,10 @@ import java.util.function.Supplier;
 
 public class GuiButtonBook extends Button {
 
-	final GuiBook parent;
-	final int u, v;
-	final Supplier<Boolean> displayCondition;
-	final List<Component> tooltip;
+	protected final GuiBook parent;
+	protected final int u, v;
+	private final Supplier<Boolean> displayCondition;
+	protected final List<Component> tooltip;
 
 	public GuiButtonBook(GuiBook parent, int x, int y, int u, int v, int w, int h, OnPress onPress, Component... tooltip) {
 		this(parent, x, y, u, v, w, h, () -> true, onPress, tooltip);

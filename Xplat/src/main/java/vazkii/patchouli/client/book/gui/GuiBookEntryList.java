@@ -26,13 +26,13 @@ public abstract class GuiBookEntryList extends GuiBook {
 	public static final int ENTRIES_PER_PAGE = 13;
 	public static final int ENTRIES_IN_FIRST_PAGE = 11;
 
-	BookTextRenderer text;
+	private BookTextRenderer text;
 
-	final List<Button> entryButtons = new ArrayList<>();
-	List<BookEntry> allEntries;
-	final List<BookEntry> visibleEntries = new ArrayList<>();
+	protected final List<Button> entryButtons = new ArrayList<>();
+	private List<BookEntry> allEntries;
+	private final List<BookEntry> visibleEntries = new ArrayList<>();
 
-	EditBox searchField;
+	private EditBox searchField;
 
 	public GuiBookEntryList(Book book, Component title) {
 		super(book, title);
