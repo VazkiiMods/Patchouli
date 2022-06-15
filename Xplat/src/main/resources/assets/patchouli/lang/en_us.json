@@ -80,6 +80,7 @@
 	"patchouli.gui.lexicon.button.back": "Back",
 	"patchouli.gui.lexicon.button.back.info": "Shift-Click to return to Home",
 	"patchouli.gui.lexicon.button.resize": "Resize UI",
+	"patchouli.gui.lexicon.button.toggle_mock_header": "Toggle Mock Header",
 	"patchouli.gui.lexicon.button.resize.size0": "Default",
 	"patchouli.gui.lexicon.button.resize.size1": "Small",
 	"patchouli.gui.lexicon.button.resize.size2": "Medium",

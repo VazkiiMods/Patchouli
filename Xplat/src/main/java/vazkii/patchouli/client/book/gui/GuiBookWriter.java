@@ -9,7 +9,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBook;
 import vazkii.patchouli.common.book.Book;
 
 public class GuiBookWriter extends GuiBook {
@@ -33,7 +33,9 @@ public class GuiBookWriter extends GuiBook {
 		textfield.setMaxLength(Integer.MAX_VALUE);
 		textfield.setValue(savedText);
 
-		addRenderableWidget(new GuiButtonBookResize(this, bookLeft + 115, bookTop + PAGE_HEIGHT - 36, false, this::handleButtonResize));
+		var button = new GuiButtonBook(this, bookLeft + 115, bookTop + PAGE_HEIGHT - 36, 330, 9, 11, 11, this::handleToggleHeaderButton,
+				new TranslatableComponent("patchouli.gui.lexicon.button.toggle_mock_header"));
+		addRenderableWidget(button);
 		refreshText();
 	}
 
@@ -82,7 +84,7 @@ public class GuiBookWriter extends GuiBook {
 		return super.charTyped(c, i);
 	}
 
-	public void handleButtonResize(Button button) {
+	private void handleToggleHeaderButton(Button button) {
 		drawHeader = !drawHeader;
 		refreshText();
 	}

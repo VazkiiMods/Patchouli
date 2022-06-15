@@ -51,7 +51,7 @@ public class GuiBookLanding extends GuiBook {
 
 		// Resize
 		if (maxScale > 2) {
-			addRenderableWidget(new GuiButtonBookResize(this, x + (pos++) * dist, y, true, this::handleButtonResize));
+			addRenderableWidget(new GuiButtonBookResize(this, x + (pos++) * dist, y, this::handleButtonResize));
 		}
 
 		// History
