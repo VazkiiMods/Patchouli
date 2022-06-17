@@ -203,6 +203,17 @@ what they do.
 Default false. When set to true, opening any GUI from this book will pause the game in
 singleplayer.
 
+* **text_overflow_mode** (`overflow`, `resize`, `truncate`)
+
+Added in Patchouli 1.18.2-71
+
+Allows the `textOverflow` config option to be customized per-book, controlling how text
+pages that have overflowing contents are handled:
+
+`overflow` lets the text run off the page, `truncate` discards all overflowed text, and `resize`
+attempts to shrink the text to fit in the page.
+
+
 ### Extension Keys
 
 * **extend** (String)
@@ -226,13 +237,3 @@ to use them at will.
 
 Defaults to true. Set it to false if you want to not play nice and lock your book from
 being extended by other books.
-
-* **text_overflow_mode** (`overflow`, `resize`, `truncate`)
-
-Added in Patchouli 1.18.2-71
-
-Allows the `textOverflow` config option to be customized per-book, controlling how text
-pages that have overflowing contents are handled:
-
-`overflow` lets the text run off the page, `truncate` discards all overflowed text, and `resize`
-attempts to shrink the text to fit in the page.
