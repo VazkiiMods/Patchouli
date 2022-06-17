@@ -85,7 +85,7 @@ public class BookContentsBuilder {
 	public BookContents build(Book book) {
 		categories.forEach((id, category) -> {
 			try {
-				category.build(id, this);
+				category.build(this);
 			} catch (Exception e) {
 				throw new RuntimeException("Error while building category " + id, e);
 			}
@@ -147,12 +147,7 @@ public class BookContentsBuilder {
 	@Nullable
 	private static BookCategory loadCategory(Book book, BookContentLoader loader, ResourceLocation id, ResourceLocation file) {
 		JsonElement json = loadLocalizedJson(book, loader, file);
-		BookCategory category = ClientBookRegistry.INSTANCE.gson.fromJson(json, BookCategory.class);
-		if (category == null) {
-			throw new IllegalArgumentException(file + " does not exist.");
-		}
-
-		category.setBook(book);
+		var category = new BookCategory(json.getAsJsonObject(), id, book);
 		if (category.canAdd()) {
 			return category;
 		}

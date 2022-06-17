@@ -1,36 +1,61 @@
 package vazkii.patchouli.client.book;
 
 import com.google.common.collect.Streams;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.JsonObject;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
+
+import javax.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class BookCategory extends AbstractReadStateHolder implements Comparable<BookCategory> {
+public final class BookCategory extends AbstractReadStateHolder implements Comparable<BookCategory> {
 
-	private String name, description, parent, flag;
-	@SerializedName("icon") private String iconRaw;
-	private int sortnum;
-	private boolean secret = false;
+	private final ResourceLocation id;
+	private final String name;
+	private final String description;
+	private final BookIcon icon;
+	@Nullable private final String parent;
+	private final String flag;
+	private final int sortnum;
+	private final boolean secret;
 
-	private transient Book book, trueProvider;
-	private transient BookCategory parentCategory;
-	private transient List<BookCategory> children = new ArrayList<>();
-	private transient List<BookEntry> entries = new ArrayList<>();
-	private transient boolean locked;
-	private transient BookIcon icon = null;
-	private transient ResourceLocation id;
+	// Logical book we belong to
+	private final Book book;
 
-	private transient boolean built;
+	// Mutable state
+	@Nullable private BookCategory parentCategory;
+	private final List<BookCategory> children = new ArrayList<>();
+	private final List<BookEntry> entries = new ArrayList<>();
+	private boolean locked;
+	private boolean built;
+	// End mutable state
+
+	public BookCategory(JsonObject root, ResourceLocation id, Book book) {
+		if (book.isExtension) {
+			this.book = book.extensionTarget;
+		} else {
+			this.book = book;
+		}
+
+		this.id = id;
+		this.name = GsonHelper.getAsString(root, "name");
+		this.description = GsonHelper.getAsString(root, "description");
+		this.icon = BookIcon.from(GsonHelper.getAsString(root, "icon"));
+		this.parent = GsonHelper.getAsString(root, "parent", null);
+		this.flag = GsonHelper.getAsString(root, "flag", "");
+		this.sortnum = GsonHelper.getAsInt(root, "sortnum", 0);
+		this.secret = GsonHelper.getAsBoolean(root, "secret", false);
+	}
 
 	public MutableComponent getName() {
 		return book.i18n ? new TranslatableComponent(name) : new TextComponent(name);
@@ -41,10 +66,6 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	}
 
 	public BookIcon getIcon() {
-		if (icon == null) {
-			icon = BookIcon.from(iconRaw);
-		}
-
 		return icon;
 	}
 
@@ -60,6 +81,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 		return entries;
 	}
 
+	@Nullable
 	public BookCategory getParentCategory() {
 		return parentCategory;
 	}
@@ -116,7 +138,7 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 	}
 
 	public boolean canAdd() {
-		return flag == null || flag.isEmpty() || PatchouliConfig.getConfigFlag(flag);
+		return flag.isEmpty() || PatchouliConfig.getConfigFlag(flag);
 	}
 
 	@Override
@@ -132,33 +154,25 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 		return this.getName().getString().compareTo(o.getName().getString());
 	}
 
-	public void setBook(Book book) {
-		if (book.isExtension) {
-			this.book = book.extensionTarget;
-			trueProvider = book;
-		} else {
-			this.book = book;
-		}
-	}
-
-	public void build(ResourceLocation id, BookContentsBuilder builder) {
+	public void build(BookContentsBuilder builder) {
 		if (built) {
 			return;
 		}
 
-		this.id = id;
-
 		if (!isRootCategory()) {
 			if (parent.contains(":")) {
-				parentCategory = builder.getCategory(new ResourceLocation(parent));
+				var parentCat = builder.getCategory(new ResourceLocation(parent));
+				if (parentCat == null) {
+					var msg = String.format("Category %s specifies parent %s, but it could not be found", id, parent);
+					throw new RuntimeException(msg);
+				} else {
+					parentCat.addChildCategory(this);
+					this.parentCategory = parentCat;
+				}
 			} else {
 				String hint = String.format("`%s:%s`", book.getModNamespace(), parent);
 				throw new IllegalArgumentException("`parent` must be fully qualified (domain:name). Hint: Try " + hint);
 			}
-		}
-
-		if (parentCategory != null) {
-			parentCategory.addChildCategory(this);
 		}
 
 		built = true;
@@ -166,14 +180,6 @@ public class BookCategory extends AbstractReadStateHolder implements Comparable<
 
 	public Book getBook() {
 		return book;
-	}
-
-	public Book getTrueProvider() {
-		return trueProvider;
-	}
-
-	public boolean isExtension() {
-		return getTrueProvider() != null && getTrueProvider() != getBook();
 	}
 
 	@Override

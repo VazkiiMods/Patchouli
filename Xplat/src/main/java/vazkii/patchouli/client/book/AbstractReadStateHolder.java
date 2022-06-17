@@ -5,8 +5,8 @@ import java.util.stream.Stream;
 
 public abstract class AbstractReadStateHolder {
 
-	transient EntryDisplayState readState;
-	transient boolean readStateDirty = true;
+	EntryDisplayState readState;
+	boolean readStateDirty = true;
 
 	public EntryDisplayState getReadState() {
 		if (readStateDirty) {
