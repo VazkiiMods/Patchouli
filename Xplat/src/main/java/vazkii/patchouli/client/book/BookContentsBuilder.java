@@ -163,24 +163,10 @@ public class BookContentsBuilder {
 	private static BookEntry loadEntry(Book book, BookContentLoader loader, ResourceLocation id,
 			ResourceLocation file, Function<ResourceLocation, BookCategory> categories) {
 		JsonElement json = loadLocalizedJson(book, loader, file);
-		BookEntry entry = ClientBookRegistry.INSTANCE.gson.fromJson(json, BookEntry.class);
-		if (entry == null) {
-			throw new IllegalArgumentException(file + " does not exist.");
-		}
+		var entry = new BookEntry(json.getAsJsonObject(), id, file, book, categories);
 
-		entry.setBook(book);
 		if (entry.canAdd()) {
-			entry.initCategory(categories);
-
-			BookCategory category = entry.getCategory();
-			if (category != null) {
-				category.addEntry(entry);
-			} else {
-				String msg = String.format("Entry in file %s does not have a valid category.", file);
-				throw new RuntimeException(msg);
-			}
-
-			entry.setId(id);
+			entry.getCategory().addEntry(entry);
 			return entry;
 		}
 		return null;

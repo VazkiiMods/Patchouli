@@ -1,12 +1,14 @@
 package vazkii.patchouli.client.book;
 
 import com.google.common.collect.ImmutableList;
-import com.google.gson.annotations.SerializedName;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.JsonObject;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.api.PatchouliAPI;
@@ -19,42 +21,99 @@ import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
+import vazkii.patchouli.common.util.SerializationUtil;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import javax.annotation.Nullable;
+
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class BookEntry extends AbstractReadStateHolder implements Comparable<BookEntry> {
+public final class BookEntry extends AbstractReadStateHolder implements Comparable<BookEntry> {
+	private final String name;
+	private final String flag;
 
-	private String name, category, flag;
+	private final boolean priority;
+	private final boolean secret;
+	private final boolean readByDefault;
+	private final BookPage[] pages;
+	@Nullable private final ResourceLocation advancement;
+	@Nullable private final ResourceLocation turnin;
+	private final int sortnum;
+	private final int entryColor;
 
-	@SerializedName("icon") private String iconRaw;
+	private final Map<String, Integer> extraRecipeMappings;
 
-	private boolean priority = false;
-	private boolean secret = false;
-	@SerializedName("read_by_default") private boolean readByDefault = false;
-	private BookPage[] pages;
-	private String advancement, turnin;
-	private int sortnum;
-	@SerializedName("entry_color") private String entryColorRaw;
+	private final ResourceLocation id;
+	// Logical book we belong to
+	private final Book book;
+	// If we are part of an extension, the Book representing our real parent
+	@Nullable private final Book trueProvider;
+	private final BookCategory category;
+	private final BookIcon icon;
 
-	@SerializedName("extra_recipe_mappings") private Map<String, Integer> extraRecipeMappings;
+	// Mutable state
+	private final List<BookPage> realPages = new ArrayList<>();
+	private final List<StackWrapper> relevantStacks = new LinkedList<>();
+	private boolean locked;
+	private boolean built;
+	// End mutable state
 
-	private transient ResourceLocation id;
-	private transient Book book;
-	private transient Book trueProvider;
-	private transient BookCategory lcategory = null;
-	private transient BookIcon icon = null;
-	private final transient List<BookPage> realPages = new ArrayList<>();
-	private final transient List<StackWrapper> relevantStacks = new LinkedList<>();
-	private transient boolean locked;
-	private transient int entryColor;
+	public BookEntry(JsonObject root, ResourceLocation id,
+			ResourceLocation file,
+			Book book, Function<ResourceLocation, BookCategory> categories) {
+		this.id = id;
+		if (book.isExtension) {
+			this.book = book.extensionTarget;
+			this.trueProvider = book;
+		} else {
+			this.book = book;
+			this.trueProvider = null;
+		}
 
-	private transient boolean built;
+		var categoryId = GsonHelper.getAsString(root, "category");
+		if (categoryId.contains(":")) { // full category ID
+			var category = categories.apply(new ResourceLocation(categoryId));
+			if (category == null) {
+				String msg = String.format("Entry in file %s does not have a valid category.", file);
+				throw new RuntimeException(msg);
+			} else {
+				this.category = category;
+			}
+		} else {
+			String hint = String.format("`%s:%s`", book.getModNamespace(), categoryId);
+			if (isExtension() && !trueProvider.getModNamespace().equals(book.getModNamespace())) {
+				hint += String.format("or `%s:%s`", trueProvider.getModNamespace(), categoryId);
+			}
+			throw new IllegalArgumentException("`category` must be fully qualified (domain:name). Hint: Try " + hint);
+		}
+
+		this.name = GsonHelper.getAsString(root, "name");
+		this.flag = GsonHelper.getAsString(root, "flag", "");
+		this.icon = BookIcon.from(GsonHelper.getAsString(root, "icon"));
+		this.priority = GsonHelper.getAsBoolean(root, "priority", false);
+		this.secret = GsonHelper.getAsBoolean(root, "secret", false);
+		this.readByDefault = GsonHelper.getAsBoolean(root, "read_by_default", false);
+		this.advancement = SerializationUtil.getAsResourceLocation(root, "advancement", null);
+		this.turnin = SerializationUtil.getAsResourceLocation(root, "turnin", null);
+		this.sortnum = GsonHelper.getAsInt(root, "sortnum", 0);
+		var entryColor = GsonHelper.getAsString(root, "entry_color", null);
+		if (entryColor != null) {
+			this.entryColor = Integer.parseInt(entryColor, 16);
+		} else {
+			this.entryColor = book.textColor;
+		}
+		this.pages = ClientBookRegistry.INSTANCE.gson.fromJson(GsonHelper.getAsJsonArray(root, "pages"), BookPage[].class);
+
+		var extraRecipeMap = GsonHelper.getAsJsonObject(root, "extra_recipe_mappings", null);
+		if (extraRecipeMap == null) {
+			extraRecipeMappings = Collections.emptyMap();
+		} else {
+			extraRecipeMappings = ClientBookRegistry.INSTANCE.gson.fromJson(extraRecipeMap, new TypeToken<Map<String, Integer>>() {}.getType());
+		}
+
+	}
 
 	public MutableComponent getName() {
 		return book.i18n ? new TranslatableComponent(name) : new TextComponent(name);
@@ -85,34 +144,16 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public BookIcon getIcon() {
-		if (icon == null) {
-			icon = BookIcon.from(iconRaw);
-		}
-
 		return icon;
 	}
 
-	public void initCategory(Function<ResourceLocation, BookCategory> categories) {
-		if (lcategory == null) {
-			if (category.contains(":")) { // full category ID
-				lcategory = categories.apply(new ResourceLocation(category));
-			} else {
-				String hint = String.format("`%s:%s`", book.getModNamespace(), category);
-				if (isExtension() && !trueProvider.getModNamespace().equals(book.getModNamespace())) {
-					hint += String.format("or `%s:%s`", trueProvider.getModNamespace(), category);
-				}
-				throw new IllegalArgumentException("`category` must be fully qualified (domain:name). Hint: Try " + hint);
-			}
-		}
-	}
-
 	public BookCategory getCategory() {
-		return lcategory;
+		return category;
 	}
 
 	public void updateLockStatus() {
 		boolean currLocked = locked;
-		locked = advancement != null && !advancement.isEmpty() && !ClientAdvancements.hasDone(advancement);
+		locked = advancement != null && !ClientAdvancements.hasDone(advancement.toString());
 
 		boolean dirty = false;
 		if (!locked && currLocked) {
@@ -120,7 +161,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 			book.markUpdated();
 		}
 
-		if (!dirty && !readStateDirty && getReadState() == EntryDisplayState.PENDING && ClientAdvancements.hasDone(turnin)) {
+		if (!dirty && !readStateDirty && getReadState() == EntryDisplayState.PENDING && ClientAdvancements.hasDone(turnin.toString())) {
 			dirty = true;
 		}
 
@@ -153,7 +194,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	}
 
 	public boolean canAdd() {
-		return (flag == null || flag.isEmpty() || PatchouliConfig.getConfigFlag(flag));
+		return (flag.isEmpty() || PatchouliConfig.getConfigFlag(flag));
 	}
 
 	public boolean isFoundByQuery(String query) {
@@ -192,29 +233,11 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 		return sort == 0 ? this.getName().getString().compareTo(o.getName().getString()) : sort;
 	}
 
-	public void setBook(Book book) {
-		if (book.isExtension) {
-			this.book = book.extensionTarget;
-			trueProvider = book;
-		} else {
-			this.book = book;
-		}
-	}
-
-	public void setId(ResourceLocation id) {
-		this.id = id;
-	}
-
 	public void build(BookContentsBuilder builder) {
 		if (built) {
 			return;
 		}
 
-		if (entryColorRaw != null) {
-			this.entryColor = Integer.parseInt(entryColorRaw, 16);
-		} else {
-			this.entryColor = book.textColor;
-		}
 		for (int i = 0; i < pages.length; i++) {
 			if (pages[i].canAdd(book)) {
 				try {
@@ -264,10 +287,11 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 	 * @return The logical book this entry belongs to.
 	 *         For entries added by extension books, this is the book being extended.
 	 */
-	public final Book getBook() {
+	public Book getBook() {
 		return book;
 	}
 
+	@Nullable
 	public Book getTrueProvider() {
 		return trueProvider;
 	}
@@ -283,7 +307,7 @@ public class BookEntry extends AbstractReadStateHolder implements Comparable<Boo
 			return EntryDisplayState.UNREAD;
 		}
 
-		if (turnin != null && !turnin.isEmpty() && !ClientAdvancements.hasDone(turnin)) {
+		if (turnin != null && !ClientAdvancements.hasDone(turnin.toString())) {
 			return EntryDisplayState.PENDING;
 		}
 
