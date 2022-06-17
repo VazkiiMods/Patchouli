@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.function.Supplier;
 
 public final class SerializationUtil {
@@ -66,6 +67,16 @@ public final class SerializationUtil {
 	public static ResourceLocation getAsResourceLocation(JsonObject object, String key, @Nullable ResourceLocation fallback) {
 		if (object.has(key)) {
 			return new ResourceLocation(GsonHelper.convertToString(object.get(key), key));
+		} else {
+			return fallback;
+		}
+	}
+
+	@Nullable
+	public static <T extends Enum<T>> T getAsEnum(JsonObject object, String key, Class<T> clz, @Nullable T fallback) {
+		if (object.has(key)) {
+			var str = GsonHelper.convertToString(object.get(key), key).toUpperCase(Locale.ROOT);
+			return Enum.valueOf(clz, str);
 		} else {
 			return fallback;
 		}

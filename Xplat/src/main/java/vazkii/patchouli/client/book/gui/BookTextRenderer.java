@@ -39,7 +39,11 @@ public class BookTextRenderer {
 		Style baseStyle = book.getFontStyle().withColor(TextColor.fromRgb(baseColor));
 
 		var parser = new BookTextParser(gui, this.book, x, y, width, lineHeight, baseStyle);
-		var layouter = new TextLayouter(gui, x, y, lineHeight, width, PatchouliConfig.get().overflowMode().get());
+		var overflowMode = this.book.overflowMode;
+		if (overflowMode == null) {
+			overflowMode = PatchouliConfig.get().overflowMode().get();
+		}
+		var layouter = new TextLayouter(gui, x, y, lineHeight, width, overflowMode);
 		layouter.layout(Minecraft.getInstance().font, parser.parse(text1));
 		this.scale = layouter.getScale();
 		this.words = layouter.getWords();

@@ -104,6 +104,7 @@ public class Book {
 	public final boolean isPamphlet;
 
 	public final boolean i18n;
+	@Nullable public final PatchouliConfig.TextOverflowMode overflowMode;
 
 	public final Map<String, String> macros = new HashMap<>();
 
@@ -151,6 +152,7 @@ public class Book {
 		this.useResourcePack = GsonHelper.getAsBoolean(root, "use_resource_pack", false);
 		this.isPamphlet = GsonHelper.getAsBoolean(root, "pamphlet", false);
 		this.i18n = GsonHelper.getAsBoolean(root, "i18n", false);
+		this.overflowMode = SerializationUtil.getAsEnum(root, "text_overflow_mode", PatchouliConfig.TextOverflowMode.class, null);
 
 		var customBookItem = GsonHelper.getAsString(root, "custom_book_item", "");
 		if (noBook) {
