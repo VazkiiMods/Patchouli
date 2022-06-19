@@ -183,7 +183,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		BookData data = PersistentData.data.getBookData(book);
 
 		for (Bookmark bookmark : data.bookmarks) {
-			if (bookmark.entry.equals(entryKey) && bookmark.page == spread) {
+			if (bookmark.entry.equals(entryKey) && bookmark.spread == spread) {
 				return true;
 			}
 		}
@@ -209,7 +209,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 			if (gui.isBookmarkedAlready()) {
 				String key = entry.getId().toString();
-				data.bookmarks.removeIf((bm) -> bm.entry.equals(key) && bm.page == 0);
+				data.bookmarks.removeIf((bm) -> bm.entry.equals(key) && bm.spread == 0);
 				PersistentData.save();
 				currGui.needsBookmarkUpdate = true;
 				return;

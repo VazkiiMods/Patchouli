@@ -86,6 +86,8 @@ public class PatchouliAPI {
 		/**
 		 * Sends a network message to the given player
 		 * to open the book to the given entry
+		 * 
+		 * @param page Zero-indexed page number
 		 */
 		void openBookEntry(ServerPlayer player, ResourceLocation book, ResourceLocation entry, int page);
 

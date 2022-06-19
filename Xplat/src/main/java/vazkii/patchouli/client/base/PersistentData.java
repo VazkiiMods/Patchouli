@@ -1,5 +1,7 @@
 package vazkii.patchouli.client.base;
 
+import com.google.gson.annotations.SerializedName;
+
 import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.client.book.BookEntry;
@@ -57,11 +59,12 @@ public final class PersistentData {
 			public static final class Bookmark {
 
 				public String entry;
-				public int page;
+				// Serialized as page for legacy reasons
+				@SerializedName("page") public int spread;
 
-				public Bookmark(String entry, int page) {
+				public Bookmark(String entry, int spread) {
 					this.entry = entry;
-					this.page = page;
+					this.spread = spread;
 				}
 
 				public BookEntry getEntry(Book book) {

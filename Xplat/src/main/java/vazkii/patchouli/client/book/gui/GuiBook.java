@@ -283,7 +283,7 @@ public abstract class GuiBook extends Screen {
 				PersistentData.save();
 				needsBookmarkUpdate = true;
 			} else {
-				displayLexiconGui(new GuiBookEntry(book, bookmark.getEntry(book), bookmark.page), true);
+				displayLexiconGui(new GuiBookEntry(book, bookmark.getEntry(book), bookmark.spread), true);
 			}
 		}
 	}

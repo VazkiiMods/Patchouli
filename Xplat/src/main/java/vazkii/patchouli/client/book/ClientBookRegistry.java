@@ -69,7 +69,7 @@ public class ClientBookRegistry {
 
 	/**
 	 * @param entryId Entry to force to the top of the stack
-	 * @param page    Page in the entry to force. Ignored if {@code entryId} is null.
+	 * @param page    Zero-indexed page in the entry to force. Ignored if {@code entryId} is null.
 	 */
 	public void displayBookGui(ResourceLocation bookStr, @Nullable ResourceLocation entryId, int page) {
 		Minecraft mc = Minecraft.getInstance();

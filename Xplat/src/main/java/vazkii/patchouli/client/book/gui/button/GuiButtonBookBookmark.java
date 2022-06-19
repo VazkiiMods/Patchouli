@@ -44,7 +44,7 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 			entry.getIcon().render(ms, px, py);
 
 			RenderSystem.disableDepthTest();
-			String s = Integer.toString(bookmark.page + 1);
+			String s = Integer.toString(bookmark.spread + 1);
 			if (multiblock) {
 				s = I18n.get("patchouli.gui.lexicon.visualize_letter");
 			}
