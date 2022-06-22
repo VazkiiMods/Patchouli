@@ -40,7 +40,7 @@ public class PageQuest extends PageWithText {
 
 	public boolean isCompleted(Book book) {
 		return isManual
-				? PersistentData.data.getBookData(book).completedManualQuests.contains(entry.getId().toString())
+				? PersistentData.data.getBookData(book).completedManualQuests.contains(entry.getId())
 				: trigger != null && ClientAdvancements.hasDone(trigger.toString());
 	}
 
@@ -62,7 +62,7 @@ public class PageQuest extends PageWithText {
 	}
 
 	protected void questButtonClicked(Button button) {
-		String res = entry.getId().toString();
+		var res = entry.getId();
 		BookData data = PersistentData.data.getBookData(parent.book);
 
 		if (data.completedManualQuests.contains(res)) {

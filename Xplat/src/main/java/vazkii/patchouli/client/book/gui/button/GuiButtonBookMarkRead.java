@@ -56,7 +56,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 
 	private void markEntry(BookEntry entry) {
 		boolean dirty = false;
-		String key = entry.getId().toString();
+		var key = entry.getId();
 
 		if (!entry.isLocked() && entry.getReadState().equals(EntryDisplayState.UNREAD)) {
 			PersistentData.BookData data = PersistentData.data.getBookData(book);

@@ -56,7 +56,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		super.onFirstOpened();
 
 		boolean dirty = false;
-		String key = entry.getId().toString();
+		var key = entry.getId();
 
 		BookData data = PersistentData.data.getBookData(book);
 
@@ -193,7 +193,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void bookmarkThis() {
-		String entryKey = entry.getId().toString();
+		var entryKey = entry.getId();
 		BookData data = PersistentData.data.getBookData(book);
 		data.bookmarks.add(new Bookmark(entryKey, spread));
 		PersistentData.save();

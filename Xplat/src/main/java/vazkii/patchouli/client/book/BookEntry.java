@@ -303,7 +303,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 	@Override
 	protected EntryDisplayState computeReadState() {
 		BookData data = PersistentData.data.getBookData(book);
-		if (data != null && getId() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getId().toString())) {
+		if (data != null && getId() != null && !readByDefault && !isLocked() && !data.viewedEntries.contains(getId())) {
 			return EntryDisplayState.UNREAD;
 		}
 

@@ -108,7 +108,7 @@ public class PageMultiblock extends PageWithText {
 	}
 
 	public void handleButtonVisualize(Button button) {
-		String entryKey = parent.getEntry().getId().toString();
+		var entryKey = parent.getEntry().getId();
 		Bookmark bookmark = new Bookmark(entryKey, pageNum / 2);
 		MultiblockVisualizationHandler.setMultiblock(multiblockObj, i18nText(name), bookmark, true);
 		parent.addBookmarkButtons();
