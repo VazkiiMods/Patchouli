@@ -75,9 +75,7 @@ dependencies {
     implementation project(":Xplat")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-
-    //compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:9.4.3.122:api")
-    //runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:9.4.3.122")
+    compileOnly fg.deobf("mezz.jei:jei-1.19-common-api:11.0.0.206")
 }
 
 compileJava {

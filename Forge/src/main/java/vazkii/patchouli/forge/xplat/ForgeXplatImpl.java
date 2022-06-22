@@ -62,6 +62,11 @@ public class ForgeXplatImpl implements IXplatAbstractions {
 	}
 
 	@Override
+	public boolean isModLoaded(String modId) {
+		return ModList.get().isLoaded(modId);
+	}
+
+	@Override
 	public boolean isDevEnvironment() {
 		return !FMLEnvironment.production;
 	}

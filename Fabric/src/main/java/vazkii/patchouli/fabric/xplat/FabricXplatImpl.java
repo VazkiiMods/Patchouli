@@ -60,6 +60,11 @@ public class FabricXplatImpl implements IXplatAbstractions {
 	}
 
 	@Override
+	public boolean isModLoaded(String modId) {
+		return FabricLoader.getInstance().isModLoaded(modId);
+	}
+
+	@Override
 	public boolean isDevEnvironment() {
 		return FabricLoader.getInstance().isDevelopmentEnvironment();
 	}

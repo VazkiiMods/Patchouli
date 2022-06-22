@@ -31,6 +31,7 @@ public interface IXplatAbstractions {
 	// FML/FabricLoader-related
 	Collection<XplatModContainer> getAllMods();
 	XplatModContainer getModContainer(String modId);
+	boolean isModLoaded(String modId);
 	boolean isDevEnvironment();
 
 	// Misc

@@ -29,6 +29,7 @@ import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.client.book.*;
 import vazkii.patchouli.client.book.gui.button.*;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
+import vazkii.patchouli.client.jei.PatchouliJeiPlugin;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.mixin.client.AccessorScreen;
@@ -324,6 +325,8 @@ public abstract class GuiBook extends Screen {
 			return true;
 		} else if (IXplatAbstractions.INSTANCE.handleRecipeKeybind(keyCode, scanCode, tooltipStack)) {
 			return true;
+		} else if (IXplatAbstractions.INSTANCE.isModLoaded("jei")) {
+			return PatchouliJeiPlugin.handleRecipeKeybind(keyCode, scanCode, tooltipStack);
 		}
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
