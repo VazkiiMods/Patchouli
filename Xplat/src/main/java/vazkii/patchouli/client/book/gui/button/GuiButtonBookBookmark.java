@@ -8,7 +8,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 
-import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
+import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;

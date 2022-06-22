@@ -41,7 +41,7 @@ import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.base.ClientTicker;
-import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
+import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 import vazkii.patchouli.mixin.client.AccessorMultiBufferSource;

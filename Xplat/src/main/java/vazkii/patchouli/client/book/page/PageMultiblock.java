@@ -23,7 +23,7 @@ import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
-import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
+import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;

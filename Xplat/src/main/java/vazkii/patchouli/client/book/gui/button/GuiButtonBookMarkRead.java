@@ -59,7 +59,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 		String key = entry.getId().toString();
 
 		if (!entry.isLocked() && entry.getReadState().equals(EntryDisplayState.UNREAD)) {
-			PersistentData.DataHolder.BookData data = PersistentData.data.getBookData(book);
+			PersistentData.BookData data = PersistentData.data.getBookData(book);
 
 			if (!data.viewedEntries.contains(key)) {
 				data.viewedEntries.add(key);

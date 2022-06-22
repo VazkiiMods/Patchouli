@@ -5,7 +5,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.client.base.PersistentData;
-import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
+import vazkii.patchouli.client.base.PersistentData.BookData;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
 

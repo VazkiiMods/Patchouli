@@ -34,48 +34,41 @@ public final class PersistentData {
 	}
 
 	public static final class DataHolder {
-
 		public int bookGuiScale = 0;
 		public boolean clickedVisualize = false;
 
-		Map<String, BookData> bookData = new HashMap<>();
+		Map<String, PersistentData.BookData> bookData = new HashMap<>();
 
-		public BookData getBookData(Book book) {
+		public PersistentData.BookData getBookData(Book book) {
 			String res = book.id.toString();
 			if (!bookData.containsKey(res)) {
-				bookData.put(res, new BookData());
+				bookData.put(res, new PersistentData.BookData());
 			}
 
 			return bookData.get(res);
 		}
-
-		public static final class BookData {
-
-			public List<String> viewedEntries = new ArrayList<>();
-			public List<Bookmark> bookmarks = new ArrayList<>();
-			public List<String> history = new ArrayList<>();
-			public List<String> completedManualQuests = new ArrayList<>();
-
-			public static final class Bookmark {
-
-				public String entry;
-				// Serialized as page for legacy reasons
-				@SerializedName("page") public int spread;
-
-				public Bookmark(String entry, int spread) {
-					this.entry = entry;
-					this.spread = spread;
-				}
-
-				public BookEntry getEntry(Book book) {
-					ResourceLocation res = new ResourceLocation(entry);
-					return book.getContents().entries.get(res);
-				}
-
-			}
-
-		}
-
 	}
 
+	public static final class Bookmark {
+		public String entry;
+		// Serialized as page for legacy reasons
+		@SerializedName("page") public int spread;
+
+		public Bookmark(String entry, int spread) {
+			this.entry = entry;
+			this.spread = spread;
+		}
+
+		public BookEntry getEntry(Book book) {
+			ResourceLocation res = new ResourceLocation(entry);
+			return book.getContents().entries.get(res);
+		}
+	}
+
+	public static final class BookData {
+		public List<String> viewedEntries = new ArrayList<>();
+		public List<Bookmark> bookmarks = new ArrayList<>();
+		public List<String> history = new ArrayList<>();
+		public List<String> completedManualQuests = new ArrayList<>();
+	}
 }

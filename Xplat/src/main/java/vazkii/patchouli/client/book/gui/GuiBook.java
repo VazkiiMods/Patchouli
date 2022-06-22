@@ -27,7 +27,7 @@ import org.lwjgl.glfw.GLFW;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
-import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData.Bookmark;
+import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.client.book.*;
 import vazkii.patchouli.client.book.gui.button.*;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;

@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
-import vazkii.patchouli.client.base.PersistentData.DataHolder.BookData;
+import vazkii.patchouli.client.base.PersistentData.BookData;
 import vazkii.patchouli.client.book.page.PageEmpty;
 import vazkii.patchouli.client.book.page.PageQuest;
 import vazkii.patchouli.common.base.PatchouliConfig;
