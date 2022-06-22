@@ -85,12 +85,6 @@ public class ForgeXplatImpl implements IXplatAbstractions {
 
 	@Override
 	public boolean handleRecipeKeybind(int keyCode, int scanCode, @Nullable ItemStack stack) {
-		if (stack == null || stack.isEmpty()) {
-			return false;
-		}
-		if (ModList.get().isLoaded("jei")) {
-			return false; //PatchouliJeiPlugin.handleRecipeKeybind(keyCode, scanCode, stack);
-		}
 		return false;
 	}
 }
