@@ -19,6 +19,7 @@ Note that `-SNAPSHOT` versions can be broken from time to time, and you are stro
 In Fabric, add the following to your `build.gradle`
 ```gradle
 repositories {
+    maven { url 'https://dvs1.progwml6.com/files/maven/' }
     maven { url 'https://maven.blamejared.com' }
 }
 
@@ -30,6 +31,7 @@ dependencies {
 In Forge, use the following:
 ```gradle
 repositories {
+    maven { url 'https://dvs1.progwml6.com/files/maven/' }
     maven { url 'https://maven.blamejared.com' }
 }
 
