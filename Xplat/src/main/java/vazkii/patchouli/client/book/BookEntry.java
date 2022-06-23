@@ -49,7 +49,8 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 	private final Book book;
 	// If we are part of an extension, the Book representing our real parent
 	@Nullable private final Book trueProvider;
-	private final BookCategory category;
+	private final ResourceLocation categoryId;
+	private BookCategory category;
 	private final BookIcon icon;
 
 	// Mutable state
@@ -59,9 +60,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 	private boolean built;
 	// End mutable state
 
-	public BookEntry(JsonObject root, ResourceLocation id,
-			ResourceLocation file,
-			Book book, Function<ResourceLocation, BookCategory> categories) {
+	public BookEntry(JsonObject root, ResourceLocation id, Book book) {
 		this.id = id;
 		if (book.isExtension) {
 			this.book = book.extensionTarget;
@@ -73,13 +72,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 
 		var categoryId = GsonHelper.getAsString(root, "category");
 		if (categoryId.contains(":")) { // full category ID
-			var category = categories.apply(new ResourceLocation(categoryId));
-			if (category == null) {
-				String msg = String.format("Entry in file %s does not have a valid category.", file);
-				throw new RuntimeException(msg);
-			} else {
-				this.category = category;
-			}
+			this.categoryId = new ResourceLocation(categoryId);
 		} else {
 			String hint = String.format("`%s:%s`", book.getModNamespace(), categoryId);
 			if (isExtension() && !trueProvider.getModNamespace().equals(book.getModNamespace())) {
@@ -144,6 +137,16 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 
 	public BookIcon getIcon() {
 		return icon;
+	}
+
+	public void initCategory(ResourceLocation file, Function<ResourceLocation, BookCategory> categories) {
+		this.category = categories.apply(this.categoryId);
+		if (this.category == null) {
+			String msg = String.format("Entry in file %s does not have a valid category.", file);
+			throw new RuntimeException(msg);
+		} else {
+			this.category.addEntry(this);
+		}
 	}
 
 	public BookCategory getCategory() {
