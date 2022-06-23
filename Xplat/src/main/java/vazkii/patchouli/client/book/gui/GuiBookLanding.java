@@ -18,6 +18,7 @@ import vazkii.patchouli.client.book.gui.button.*;
 import vazkii.patchouli.client.gui.GuiAdvancementsExt;
 import vazkii.patchouli.common.book.Book;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +27,7 @@ import static vazkii.patchouli.client.book.gui.GuiBookEntryList.ENTRIES_IN_FIRST
 
 public class GuiBookLanding extends GuiBook {
 
-	BookTextRenderer text;
+	@Nullable BookTextRenderer text;
 	int loadedCategories = 0;
 
 	final List<Button> pamphletEntryButtons = new ArrayList<>();
@@ -111,7 +112,9 @@ public class GuiBookLanding extends GuiBook {
 
 	@Override
 	void drawForegroundElements(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		text.render(ms, mouseX, mouseY);
+		if (text != null) {
+			text.render(ms, mouseX, mouseY);
+		}
 
 		int topSeparator = TOP_PADDING + 12;
 		int bottomSeparator = topSeparator + 25 + 24 * ((loadedCategories - 1) / 4 + 1);
@@ -201,7 +204,7 @@ public class GuiBookLanding extends GuiBook {
 
 	@Override
 	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-		return text.click(mouseX, mouseY, mouseButton)
+		return text != null && text.click(mouseX, mouseY, mouseButton)
 				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 
