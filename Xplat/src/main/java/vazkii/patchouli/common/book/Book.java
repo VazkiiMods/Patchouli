@@ -1,5 +1,6 @@
 package vazkii.patchouli.common.book;
 
+import com.google.common.base.Suppliers;
 import com.google.gson.JsonObject;
 
 import net.minecraft.Util;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class Book {
 
@@ -53,7 +55,7 @@ public class Book {
 
 	public final XplatModContainer owner;
 	public final ResourceLocation id;
-	private final ItemStack bookItem;
+	private Supplier<ItemStack> bookItem;
 
 	public final int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
 
@@ -154,9 +156,12 @@ public class Book {
 
 		var customBookItem = GsonHelper.getAsString(root, "custom_book_item", "");
 		if (noBook) {
-			bookItem = ItemStackUtil.loadStackFromString(customBookItem);
+			// Parse on load to catch errors, but need lazy loading for mods
+			// that load after Patchouli
+			var parsed = ItemStackUtil.parseItemStackString(customBookItem);
+			bookItem = Suppliers.memoize(() -> ItemStackUtil.loadFromParsed(parsed));
 		} else {
-			bookItem = ItemModBook.forBook(this.id);
+			bookItem = Suppliers.memoize(() -> ItemModBook.forBook(id));
 		}
 
 		if (!isExtension) {
@@ -172,7 +177,7 @@ public class Book {
 	}
 
 	public ItemStack getBookItem() {
-		return bookItem;
+		return this.bookItem.get();
 	}
 
 	public void markUpdated() {

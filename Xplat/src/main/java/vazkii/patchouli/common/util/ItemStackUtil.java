@@ -19,6 +19,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
+
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
@@ -55,7 +58,7 @@ public final class ItemStackUtil {
 		return builder.toString();
 	}
 
-	public static ItemStack loadStackFromString(String res) {
+	public static Triple<ResourceLocation, Integer, CompoundTag> parseItemStackString(String res) {
 		String nbt = "";
 		int nbtStart = res.indexOf("{");
 		if (nbtStart > 0) {
@@ -72,27 +75,43 @@ public final class ItemStackUtil {
 
 		String[] tokens = res.split(":");
 		if (tokens.length < 2) {
-			return ItemStack.EMPTY;
+			throw new RuntimeException("Malformed item ID " + res);
 		}
 
-		int countn = Integer.parseInt(count);
 		ResourceLocation key = new ResourceLocation(tokens[0], tokens[1]);
-		Optional<Item> maybeItem = Registry.ITEM.getOptional(key);
-		if (maybeItem.isEmpty()) {
-			throw new RuntimeException("Unknown item ID: " + key);
-		}
-		Item item = maybeItem.get();
-		ItemStack stack = new ItemStack(item, countn);
+		int countn = Integer.parseInt(count);
+		CompoundTag tag = null;
 
 		if (!nbt.isEmpty()) {
 			try {
-				stack.setTag(TagParser.parseTag(nbt));
+				tag = TagParser.parseTag(nbt);
 			} catch (CommandSyntaxException e) {
 				throw new RuntimeException("Failed to parse ItemStack JSON", e);
 			}
 		}
 
+		return ImmutableTriple.of(key, countn, tag);
+	}
+
+	public static ItemStack loadFromParsed(Triple<ResourceLocation, Integer, CompoundTag> parsed) {
+		var key = parsed.getLeft();
+		var count = parsed.getMiddle();
+		var nbt = parsed.getRight();
+		Optional<Item> maybeItem = Registry.ITEM.getOptional(key);
+		if (maybeItem.isEmpty()) {
+			throw new RuntimeException("Unknown item ID: " + key);
+		}
+		Item item = maybeItem.get();
+		ItemStack stack = new ItemStack(item, count);
+
+		if (nbt != null) {
+			stack.setTag(nbt);
+		}
 		return stack;
+	}
+
+	public static ItemStack loadStackFromString(String res) {
+		return loadFromParsed(parseItemStackString(res));
 	}
 
 	public static String serializeIngredient(Ingredient ingredient) {
