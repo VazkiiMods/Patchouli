@@ -23,6 +23,7 @@ import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,7 +32,8 @@ import java.util.stream.Collectors;
 public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	protected final BookEntry entry;
-	private BookPage leftPage, rightPage;
+	@Nullable private BookPage leftPage;
+	@Nullable private BookPage rightPage;
 
 	public GuiBookEntry(Book book, BookEntry entry) {
 		this(book, entry, 0);
@@ -91,7 +93,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		drawPage(ms, rightPage, mouseX, mouseY, partialTicks);
 
 		if (rightPage == null) {
-			drawPageFiller(ms, leftPage.book);
+			drawPageFiller(ms, entry.getBook());
 		}
 	}
 
@@ -102,7 +104,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 
-	void drawPage(PoseStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
+	void drawPage(PoseStack ms, @Nullable BookPage page, int mouseX, int mouseY, float pticks) {
 		if (page == null) {
 			return;
 		}
@@ -113,7 +115,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		ms.popPose();
 	}
 
-	private boolean clickPage(BookPage page, double mouseX, double mouseY, int mouseButton) {
+	private boolean clickPage(@Nullable BookPage page, double mouseX, double mouseY, int mouseButton) {
 		if (page != null) {
 			return page.mouseClicked(mouseX - page.left, mouseY - page.top, mouseButton);
 		}
