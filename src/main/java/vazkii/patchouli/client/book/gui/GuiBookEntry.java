@@ -22,6 +22,7 @@ import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +33,8 @@ import java.util.stream.Collectors;
 public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	final BookEntry entry;
-	BookPage leftPage, rightPage;
+	@Nullable private BookPage leftPage;
+	@Nullable private BookPage rightPage;
 
 	final Map<Button, Runnable> customButtons = new HashMap<>();
 
@@ -94,7 +96,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		drawPage(ms, rightPage, mouseX, mouseY, partialTicks);
 
 		if (rightPage == null) {
-			drawPageFiller(ms, leftPage.book);
+			drawPageFiller(ms, entry.getBook());
 		}
 	}
 
@@ -105,7 +107,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 
-	void drawPage(MatrixStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
+	void drawPage(MatrixStack ms, @Nullable BookPage page, int mouseX, int mouseY, float pticks) {
 		if (page == null) {
 			return;
 		}
@@ -116,7 +118,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		ms.pop();
 	}
 
-	boolean clickPage(BookPage page, double mouseX, double mouseY, int mouseButton) {
+	boolean clickPage(@Nullable BookPage page, double mouseX, double mouseY, int mouseButton) {
 		if (page != null) {
 			return page.func_231043_a_(mouseX - page.left, mouseY - page.top, mouseButton);
 		}
