@@ -18,13 +18,15 @@ import vazkii.patchouli.client.book.gui.button.*;
 import vazkii.patchouli.client.gui.GuiAdvancementsExt;
 import vazkii.patchouli.common.book.Book;
 
+import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class GuiBookLanding extends GuiBook {
 
-	BookTextRenderer text;
+	@Nullable BookTextRenderer text;
 	int loadedCategories = 0;
 
 	public GuiBookLanding(Book book) {
@@ -97,7 +99,9 @@ public class GuiBookLanding extends GuiBook {
 
 	@Override
 	void drawForegroundElements(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
-		text.render(ms, mouseX, mouseY);
+		if (text != null) {
+			text.render(ms, mouseX, mouseY);
+		}
 
 		drawCenteredStringNoShadow(ms, I18n.format("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
@@ -159,7 +163,7 @@ public class GuiBookLanding extends GuiBook {
 
 	@Override
 	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-		return text.click(mouseX, mouseY, mouseButton)
+		return text != null && text.click(mouseX, mouseY, mouseButton)
 				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 
