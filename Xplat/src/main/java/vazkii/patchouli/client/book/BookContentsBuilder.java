@@ -158,10 +158,10 @@ public class BookContentsBuilder {
 	private static BookEntry loadEntry(Book book, BookContentLoader loader, ResourceLocation id,
 			ResourceLocation file, Function<ResourceLocation, BookCategory> categories) {
 		JsonElement json = loadLocalizedJson(book, loader, file);
-		var entry = new BookEntry(json.getAsJsonObject(), id, file, book, categories);
+		var entry = new BookEntry(json.getAsJsonObject(), id, book);
 
 		if (entry.canAdd()) {
-			entry.getCategory().addEntry(entry);
+			entry.initCategory(file, categories);
 			return entry;
 		}
 		return null;
