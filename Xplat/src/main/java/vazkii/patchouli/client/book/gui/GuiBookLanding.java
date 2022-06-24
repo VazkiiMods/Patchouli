@@ -19,6 +19,7 @@ import vazkii.patchouli.client.gui.GuiAdvancementsExt;
 import vazkii.patchouli.common.book.Book;
 
 import javax.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
