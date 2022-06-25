@@ -1,5 +1,7 @@
 # Pamphlets
 
+Available in Patchouli 1.18.2-68 or above.
+
 Sometimes, an entire book with multiple categories is too bloated for a 
 small mod or project. For this use-case, Patchouli offers *pamphlets*,
 which are a special type of book with only one category.

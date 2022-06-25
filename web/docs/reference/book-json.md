@@ -118,6 +118,8 @@ default to the book's icon (which is the recommended value).
 
 * **pamphlet** (String)
 
+Available in Patchouli 1.18.2-68 or above.
+
 Defaults to false. If true, marks this book as a [pamphlet](../patchouli-basics/pamphlets.md).
 
 * **show_progress** (boolean)
