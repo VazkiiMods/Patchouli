@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.api.PatchouliAPI;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.ServiceLoader;

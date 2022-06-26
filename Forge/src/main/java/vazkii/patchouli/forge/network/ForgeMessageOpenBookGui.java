@@ -8,7 +8,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 

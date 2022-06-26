@@ -12,8 +12,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
-import org.jetbrains.annotations.Nullable;
-
 import vazkii.patchouli.api.BookContentsReloadEvent;
 import vazkii.patchouli.api.BookDrawScreenEvent;
 import vazkii.patchouli.forge.client.ForgeClientInitializer;
@@ -21,6 +19,8 @@ import vazkii.patchouli.forge.network.ForgeMessageOpenBookGui;
 import vazkii.patchouli.forge.network.ForgeMessageReloadBookContents;
 import vazkii.patchouli.xplat.IXplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;

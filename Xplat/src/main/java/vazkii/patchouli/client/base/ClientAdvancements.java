@@ -17,7 +17,7 @@ import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.mixin.client.AccessorClientAdvancements;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -73,13 +73,13 @@ public class ClientAdvancements {
 			this.book = book;
 		}
 
-		@Nonnull
+		@NotNull
 		@Override
 		public Book getToken() {
 			return book;
 		}
 
-		@Nonnull
+		@NotNull
 		@Override
 		public Visibility render(PoseStack ms, ToastComponent toastGui, long delta) {
 			RenderSystem.setShaderTexture(0, TEXTURE);

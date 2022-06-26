@@ -12,14 +12,14 @@ import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.PatchouliItems;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
 
 public record BookRecipeSerializer<T extends Recipe<?>, U extends T> (RecipeSerializer<T> compose, BiFunction<T, ResourceLocation, U> converter) implements RecipeSerializer<U> {
 	@Override
-	@Nonnull
-	public U fromJson(@Nonnull ResourceLocation id, @Nonnull JsonObject json) {
+	@NotNull
+	public U fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
 		if (!json.has("result")) {
 			JsonObject object = new JsonObject();
 			object.addProperty("item", PatchouliItems.BOOK_ID.toString());
@@ -36,14 +36,14 @@ public record BookRecipeSerializer<T extends Recipe<?>, U extends T> (RecipeSeri
 	}
 
 	@Override
-	@Nonnull
-	public U fromNetwork(@Nonnull ResourceLocation id, @Nonnull FriendlyByteBuf buf) {
+	@NotNull
+	public U fromNetwork(@NotNull ResourceLocation id, @NotNull FriendlyByteBuf buf) {
 		T recipe = compose().fromNetwork(id, buf);
 		return converter().apply(recipe, null);
 	}
 
 	@Override
-	public void toNetwork(@Nonnull FriendlyByteBuf buf, @Nonnull U recipe) {
+	public void toNetwork(@NotNull FriendlyByteBuf buf, @NotNull U recipe) {
 		compose().toNetwork(buf, recipe);
 	}
 }

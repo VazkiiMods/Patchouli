@@ -16,7 +16,7 @@ import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.mixin.client.AccessorKeyMapping;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -37,14 +37,14 @@ public class PatchouliJeiPlugin implements IModPlugin {
 		}
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public ResourceLocation getPluginUid() {
 		return UID;
 	}
 
 	@Override
-	public void registerItemSubtypes(@Nonnull ISubtypeRegistration registration) {
+	public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
 		registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, PatchouliItems.BOOK, (stack, context) -> {
 			if (!stack.hasTag() || !stack.getTag().contains(ItemModBook.TAG_BOOK)) {
 				return "";
@@ -54,7 +54,7 @@ public class PatchouliJeiPlugin implements IModPlugin {
 	}
 
 	@Override
-	public void onRuntimeAvailable(@Nonnull IJeiRuntime jeiRuntime) {
+	public void onRuntimeAvailable(@NotNull IJeiRuntime jeiRuntime) {
 		PatchouliJeiPlugin.jeiRuntime = jeiRuntime;
 	}
 

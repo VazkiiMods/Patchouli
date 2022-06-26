@@ -25,7 +25,7 @@ import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.TriPredicate;
 import vazkii.patchouli.common.util.RotationUtil;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;

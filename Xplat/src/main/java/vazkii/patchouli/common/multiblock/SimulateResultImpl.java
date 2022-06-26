@@ -9,7 +9,7 @@ import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class SimulateResultImpl implements IMultiblock.SimulateResult {
 	private final BlockPos worldPosition;

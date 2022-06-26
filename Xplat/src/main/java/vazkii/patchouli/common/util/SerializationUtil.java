@@ -9,7 +9,7 @@ import net.minecraft.util.GsonHelper;
 
 import vazkii.patchouli.api.IVariable;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.Locale;

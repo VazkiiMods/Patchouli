@@ -13,7 +13,7 @@ import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookIcon;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class GuiButtonCategory extends Button {
 

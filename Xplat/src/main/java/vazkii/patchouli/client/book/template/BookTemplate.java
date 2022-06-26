@@ -15,7 +15,7 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.template.component.*;
 import vazkii.patchouli.common.book.Book;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;

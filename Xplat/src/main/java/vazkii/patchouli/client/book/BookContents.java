@@ -15,7 +15,7 @@ import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.ItemStackUtil.StackWrapper;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

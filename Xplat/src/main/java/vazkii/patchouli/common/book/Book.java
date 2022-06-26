@@ -22,7 +22,7 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.SerializationUtil;
 import vazkii.patchouli.xplat.XplatModContainer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.LinkedList;

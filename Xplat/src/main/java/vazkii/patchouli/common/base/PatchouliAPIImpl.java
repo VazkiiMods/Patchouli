@@ -40,7 +40,7 @@ import vazkii.patchouli.common.multiblock.SparseMultiblock;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.xplat.IXplatAbstractions;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -107,9 +107,9 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 		return null;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	public Component getSubtitle(@Nonnull ResourceLocation bookId) {
+	public Component getSubtitle(@NotNull ResourceLocation bookId) {
 		Book book = BookRegistry.INSTANCE.books.get(bookId);
 		if (book == null) {
 			throw new IllegalArgumentException("Book not found: " + bookId);
@@ -171,7 +171,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	public void showMultiblock(@Nonnull IMultiblock multiblock, @Nonnull Component displayName, @Nonnull BlockPos center, @Nonnull Rotation rotation) {
+	public void showMultiblock(@NotNull IMultiblock multiblock, @NotNull Component displayName, @NotNull BlockPos center, @NotNull Rotation rotation) {
 		assertPhysicalClient();
 		MultiblockVisualizationHandler.setMultiblock(multiblock, displayName, null, false);
 		MultiblockVisualizationHandler.anchorTo(center, rotation);
@@ -233,14 +233,14 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 		return StateMatcher.displayOnly(block);
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	public IStateMatcher tagMatcher(@Nonnull TagKey<Block> tag) {
+	public IStateMatcher tagMatcher(@NotNull TagKey<Block> tag) {
 		/* TODO deduplicate with StringStateMatcher's version. This one is okay with
 		* tags that don't exist but that one validates that the tag exists.
 		*/
 		return new IStateMatcher() {
-			@Nonnull
+			@NotNull
 			@Override
 			public BlockState getDisplayedState(long ticks) {
 				return Registry.BLOCK.getTag(tag).map(n -> {
@@ -249,7 +249,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 				}).orElse(Blocks.BEDROCK.defaultBlockState());
 			}
 
-			@Nonnull
+			@NotNull
 			@Override
 			public TriPredicate<BlockGetter, BlockPos, BlockState> getStatePredicate() {
 				return (w, p, s) -> s.is(tag);

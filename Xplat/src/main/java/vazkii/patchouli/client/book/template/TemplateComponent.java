@@ -15,7 +15,7 @@ import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.UnaryOperator;
 

@@ -12,7 +12,7 @@ import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.IVariablesAvailableCallback;
 import vazkii.patchouli.common.util.EntityUtil;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;

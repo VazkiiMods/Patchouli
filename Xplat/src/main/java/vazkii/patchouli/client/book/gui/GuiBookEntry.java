@@ -21,8 +21,8 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -264,7 +264,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public void setHoverTooltipComponents(@Nonnull List<Component> tooltip) {
+	public void setHoverTooltipComponents(@NotNull List<Component> tooltip) {
 		setTooltip(tooltip);
 	}
 

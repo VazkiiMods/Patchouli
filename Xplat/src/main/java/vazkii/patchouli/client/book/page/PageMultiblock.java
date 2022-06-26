@@ -37,7 +37,7 @@ import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
 import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Set;
@@ -188,7 +188,7 @@ public class PageMultiblock extends PageWithText {
 		ms.popPose();
 	}
 
-	private void doWorldRenderPass(PoseStack ms, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final @Nonnull MultiBufferSource.BufferSource buffers, Vector4f eye) {
+	private void doWorldRenderPass(PoseStack ms, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final @NotNull MultiBufferSource.BufferSource buffers, Vector4f eye) {
 		for (BlockPos pos : blocks) {
 			BlockState bs = mb.getBlockState(pos);
 			ms.pushPose();

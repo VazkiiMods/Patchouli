@@ -1,7 +1,7 @@
 #Organize Import Order
 11=\#
 10=java
-9=javax
+9=org.jetbrains.annotations
 8=vazkii
 7=top
 6=org

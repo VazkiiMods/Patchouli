@@ -11,7 +11,7 @@ import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends PageDoubleRecipe<T> {
 	private final RecipeType<? extends T> recipeType;

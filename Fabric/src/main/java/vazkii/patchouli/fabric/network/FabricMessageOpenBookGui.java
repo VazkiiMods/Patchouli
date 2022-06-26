@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 import io.netty.buffer.Unpooled;

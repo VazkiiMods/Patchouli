@@ -10,7 +10,7 @@ import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

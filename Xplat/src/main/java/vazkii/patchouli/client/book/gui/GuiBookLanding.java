@@ -16,7 +16,7 @@ import vazkii.patchouli.client.book.gui.button.*;
 import vazkii.patchouli.client.gui.GuiAdvancementsExt;
 import vazkii.patchouli.common.book.Book;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -18,7 +18,7 @@ import vazkii.patchouli.fabric.network.FabricMessageReloadBookContents;
 import vazkii.patchouli.xplat.IXplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;

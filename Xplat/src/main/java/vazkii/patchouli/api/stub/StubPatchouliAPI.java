@@ -16,7 +16,7 @@ import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -180,7 +180,8 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 		return StubMatcher.INSTANCE;
 	}
 
-	@Override public IStateMatcher tagMatcher(TagKey<Block> block) {
+	@Override
+	public IStateMatcher tagMatcher(TagKey<Block> block) {
 		return StubMatcher.INSTANCE;
 	}
 }

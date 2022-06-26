@@ -35,7 +35,7 @@ import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.mixin.client.AccessorScreen;
 import vazkii.patchouli.xplat.IXplatAbstractions;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 import java.util.*;

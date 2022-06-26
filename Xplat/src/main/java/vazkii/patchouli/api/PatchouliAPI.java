@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 
 import vazkii.patchouli.api.stub.StubPatchouliAPI;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.util.Map;

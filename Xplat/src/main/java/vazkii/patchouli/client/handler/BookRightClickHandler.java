@@ -23,7 +23,7 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class BookRightClickHandler {
 

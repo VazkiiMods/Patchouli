@@ -46,7 +46,6 @@ loom {
 }
 
 dependencies {
-	implementation "com.google.code.findbugs:jsr305:3.0.2"
 	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
 	include "me.zeroeightsix:fiber:0.23.0-2"
 

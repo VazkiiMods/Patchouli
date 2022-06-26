@@ -19,8 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +35,7 @@ public class BookModel implements BakedModel {
 
 		this.itemHandler = new ItemOverrides(loader, missing, id -> missing, Collections.emptyList()) {
 			@Override
-			public BakedModel resolve(@Nonnull BakedModel original, @Nonnull ItemStack stack,
+			public BakedModel resolve(@NotNull BakedModel original, @NotNull ItemStack stack,
 					@Nullable ClientLevel world, @Nullable LivingEntity entity, int seed) {
 				Book book = ItemModBook.getBook(stack);
 				if (book != null) {
@@ -47,15 +47,15 @@ public class BookModel implements BakedModel {
 		};
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public ItemOverrides getOverrides() {
 		return itemHandler;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull RandomSource rand) {
+	public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand) {
 		return original.getQuads(state, side, rand);
 	}
 
@@ -79,7 +79,7 @@ public class BookModel implements BakedModel {
 		return original.isCustomRenderer();
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public TextureAtlasSprite getParticleIcon() {
 		return original.getParticleIcon();

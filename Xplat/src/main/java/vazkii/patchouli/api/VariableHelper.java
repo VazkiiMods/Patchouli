@@ -3,7 +3,7 @@ package vazkii.patchouli.api;
 import com.google.common.base.Suppliers;
 import com.google.gson.JsonElement;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
