@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
@@ -255,6 +256,11 @@ public class PatchouliAPI {
 		 * Block's default state when displayed.
 		 */
 		IStateMatcher displayOnlyMatcher(Block block);
+
+		/**
+		 * @return A state matcher that accepts any block in the given tag
+		 */
+		IStateMatcher tagMatcher(TagKey<Block> block);
 
 		/**
 		 * Creates an IStateMatcher that accepts only air blocks.

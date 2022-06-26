@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
@@ -179,4 +180,7 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 		return StubMatcher.INSTANCE;
 	}
 
+	@Override public IStateMatcher tagMatcher(TagKey<Block> block) {
+		return StubMatcher.INSTANCE;
+	}
 }

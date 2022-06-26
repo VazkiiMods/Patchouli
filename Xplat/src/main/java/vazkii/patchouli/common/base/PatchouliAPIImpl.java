@@ -5,11 +5,15 @@ import com.google.common.base.Preconditions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -20,6 +24,7 @@ import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
+import vazkii.patchouli.api.TriPredicate;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -226,6 +231,30 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	public IStateMatcher displayOnlyMatcher(Block block) {
 		return StateMatcher.displayOnly(block);
+	}
+
+	@Nonnull
+	@Override
+	public IStateMatcher tagMatcher(@Nonnull TagKey<Block> tag) {
+		/* TODO deduplicate with StringStateMatcher's version. This one is okay with
+		* tags that don't exist but that one validates that the tag exists.
+		*/
+		return new IStateMatcher() {
+			@Nonnull
+			@Override
+			public BlockState getDisplayedState(long ticks) {
+				return Registry.BLOCK.getTag(tag).map(n -> {
+					int idx = (int) ((ticks / 20) % n.size());
+					return n.get(idx).value().defaultBlockState();
+				}).orElse(Blocks.BEDROCK.defaultBlockState());
+			}
+
+			@Nonnull
+			@Override
+			public TriPredicate<BlockGetter, BlockPos, BlockState> getStatePredicate() {
+				return (w, p, s) -> s.is(tag);
+			}
+		};
 	}
 
 	@Override
