@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.page;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
@@ -10,7 +11,10 @@ import com.mojang.math.Vector4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
@@ -19,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.PatchouliAPI;
@@ -27,6 +32,7 @@ import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
+import vazkii.patchouli.client.book.LiquidBlockVertexConsumer;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookEye;
@@ -193,6 +199,14 @@ public class PageMultiblock extends PageWithText {
 			BlockState bs = mb.getBlockState(pos);
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
+
+			final FluidState fluidState = bs.getFluidState();
+			final BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
+			if (!fluidState.isEmpty()) {
+				final RenderType layer = ItemBlockRenderTypes.getRenderLayer(fluidState);
+				final VertexConsumer buffer = buffers.getBuffer(layer);
+				blockRenderer.renderLiquid(pos, mb, new LiquidBlockVertexConsumer(buffer, ms, pos), bs, fluidState);
+			}
 			IClientXplatAbstractions.INSTANCE.renderForMultiblock(bs, pos, mb, ms, buffers, RAND);
 			ms.popPose();
 		}

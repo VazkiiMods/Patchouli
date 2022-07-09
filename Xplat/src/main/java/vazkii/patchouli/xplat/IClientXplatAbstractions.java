@@ -14,6 +14,7 @@ import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 public interface IClientXplatAbstractions {
+	// NB: Fluids handled at callsite in platform-independent manner
 	void renderForMultiblock(BlockState state, BlockPos pos, BlockAndTintGetter multiblock, PoseStack ps, MultiBufferSource buffers, RandomSource rand);
 
 	IClientXplatAbstractions INSTANCE = find();

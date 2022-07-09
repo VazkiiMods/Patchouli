@@ -7,7 +7,6 @@
   ],
   "client": [
     "client.MixinGameRenderer",
-    "client.MixinLevelRenderer",
     "client.MixinMinecraft",
     "client.MixinModelManager",
     "client.MixinScreen"

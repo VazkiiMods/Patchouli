@@ -9,14 +9,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
-import net.minecraftforge.client.event.RenderTooltipEvent;
-import net.minecraftforge.client.model.ForgeModelBakery;
+import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -81,11 +75,11 @@ public class ForgeClientInitializer {
 	}
 
 	@SubscribeEvent
-	public static void modelRegistry(ModelRegistryEvent e) {
+	public static void modelRegistry(ModelEvent.RegisterAdditional e) {
 		getBookModels()
 				.stream()
 				.map(model -> new ModelResourceLocation(model, "inventory"))
-				.forEach(ForgeModelBakery::addSpecialModel);
+				.forEach(e::register);
 
 		ItemPropertyFunction prop = (stack, world, entity, seed) -> ItemModBook.getCompletion(stack);
 		ItemProperties.register(PatchouliItems.BOOK, new ResourceLocation(PatchouliAPI.MOD_ID, "completion"), prop);
@@ -106,17 +100,22 @@ public class ForgeClientInitializer {
 	}
 
 	@SubscribeEvent
+	public static void registerOverlays(RegisterGuiOverlaysEvent evt) {
+		evt.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "book_right_click",
+				(gui, poseStack, partialTick, width, height) -> BookRightClickHandler.onRenderHUD(poseStack, partialTick)
+		);
+		evt.registerBelow(VanillaGuiOverlay.BOSS_EVENT_PROGRESS.id(), "multiblock_progress",
+				(gui, poseStack, partialTick, width, height) -> MultiblockVisualizationHandler.onRenderHUD(poseStack, partialTick)
+		);
+	}
+
+	@SubscribeEvent
 	public static void onInitializeClient(FMLClientSetupEvent evt) {
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
 		MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent e) -> {
 			if (e.phase == TickEvent.Phase.END) {
 				ClientTicker.endClientTick(Minecraft.getInstance());
-			}
-		});
-		MinecraftForge.EVENT_BUS.addListener((RenderGameOverlayEvent.Post e) -> {
-			if (e.getType() == RenderGameOverlayEvent.ElementType.ALL) {
-				BookRightClickHandler.onRenderHUD(e.getPoseStack(), e.getPartialTick());
 			}
 		});
 		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> BookRightClickHandler.onRightClick(e.getPlayer(), e.getWorld(), e.getHand(), e.getHitVec()));
@@ -132,11 +131,6 @@ public class ForgeClientInitializer {
 				MultiblockVisualizationHandler.onClientTick(Minecraft.getInstance());
 			}
 		});
-		MinecraftForge.EVENT_BUS.addListener((RenderGameOverlayEvent.Post e) -> {
-			if (e.getType() == RenderGameOverlayEvent.ElementType.ALL) {
-				MultiblockVisualizationHandler.onRenderHUD(e.getPoseStack(), e.getPartialTick());
-			}
-		});
 
 		MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent e) -> {
 			if (e.phase == TickEvent.Phase.START) {
@@ -146,11 +140,7 @@ public class ForgeClientInitializer {
 			}
 		});
 
-		MinecraftForge.EVENT_BUS.addListener((RenderLevelLastEvent e) -> {
-			MultiblockVisualizationHandler.onWorldRenderLast(e.getPoseStack());
-		});
-
-		MinecraftForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggedOutEvent e) -> {
+		MinecraftForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut e) -> {
 			ClientAdvancements.playerLogout();
 		});
 
@@ -160,11 +150,11 @@ public class ForgeClientInitializer {
 	}
 
 	@SubscribeEvent
-	public static void replaceBookModel(ModelBakeEvent evt) {
+	public static void replaceBookModel(ModelEvent.BakingCompleted evt) {
 		ModelResourceLocation key = new ModelResourceLocation(PatchouliItems.BOOK_ID, "inventory");
-		BakedModel oldModel = evt.getModelRegistry().get(key);
+		BakedModel oldModel = evt.getModels().get(key);
 		if (oldModel != null) {
-			evt.getModelRegistry().put(key, new BookModel(oldModel, evt.getModelLoader()));
+			evt.getModels().put(key, new BookModel(oldModel, evt.getModelBakery()));
 		}
 	}
 }
