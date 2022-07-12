@@ -118,9 +118,9 @@ public class ForgeClientInitializer {
 				ClientTicker.endClientTick(Minecraft.getInstance());
 			}
 		});
-		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> BookRightClickHandler.onRightClick(e.getPlayer(), e.getWorld(), e.getHand(), e.getHitVec()));
+		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> BookRightClickHandler.onRightClick(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec()));
 		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
-			InteractionResult result = MultiblockVisualizationHandler.onPlayerInteract(e.getPlayer(), e.getWorld(), e.getHand(), e.getHitVec());
+			InteractionResult result = MultiblockVisualizationHandler.onPlayerInteract(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec());
 			if (result.consumesAction()) {
 				e.setCanceled(true);
 				e.setCancellationResult(result);

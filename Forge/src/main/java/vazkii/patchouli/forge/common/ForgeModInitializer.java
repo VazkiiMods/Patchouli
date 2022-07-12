@@ -43,7 +43,7 @@ public class ForgeModInitializer {
 	public static void onInitialize(FMLCommonSetupEvent evt) {
 		MinecraftForge.EVENT_BUS.addListener((RegisterCommandsEvent e) -> OpenBookCommand.register(e.getDispatcher()));
 		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
-			var result = LecternEventHandler.rightClick(e.getPlayer(), e.getWorld(), e.getHand(), e.getHitVec());
+			var result = LecternEventHandler.rightClick(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec());
 			if (result.consumesAction()) {
 				e.setCanceled(true);
 				e.setCancellationResult(result);
