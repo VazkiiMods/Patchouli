@@ -5,6 +5,8 @@ import net.minecraftforge.fml.ModContainer;
 import vazkii.patchouli.xplat.XplatModContainer;
 
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 
 public class ForgeXplatModContainer implements XplatModContainer {
 	private final ModContainer container;
@@ -29,7 +31,7 @@ public class ForgeXplatModContainer implements XplatModContainer {
 	}
 
 	@Override
-	public Path getRootPath() {
-		return container.getModInfo().getOwningFile().getFile().getSecureJar().getRootPath();
+	public List<Path> getRootPaths() {
+		return Collections.singletonList(container.getModInfo().getOwningFile().getFile().getSecureJar().getRootPath());
 	}
 }

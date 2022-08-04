@@ -149,7 +149,9 @@ public class BookRegistry {
 		}
 
 		try {
-			walk(mod.getRootPath().resolve(base), rootFilter, processor, visitAllFiles, maxDepth);
+			for (var root : mod.getRootPaths()) {
+				walk(root.resolve(base), rootFilter, processor, visitAllFiles, maxDepth);
+			}
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}

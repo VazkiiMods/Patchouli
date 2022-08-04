@@ -5,6 +5,7 @@ import net.fabricmc.loader.api.ModContainer;
 import vazkii.patchouli.xplat.XplatModContainer;
 
 import java.nio.file.Path;
+import java.util.List;
 
 public class FabricXplatModContainer implements XplatModContainer {
 	private final ModContainer container;
@@ -29,7 +30,7 @@ public class FabricXplatModContainer implements XplatModContainer {
 	}
 
 	@Override
-	public Path getRootPath() {
-		return container.getRootPath();
+	public List<Path> getRootPaths() {
+		return container.getRootPaths();
 	}
 }
