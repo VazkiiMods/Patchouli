@@ -16,7 +16,7 @@ to get to it from <code>/en_us/categories</code>. So if your category is in
 <code>/en_us/categories/misc/cool_stuff.json</code>, its ID would be <code>patchouli:misc/cool_stuff</code>.</p><p>For modders, the domain used is the domain in which the book is defined.</p><ul><li><strong>name</strong> (String, <em>mandatory</em>)</li></ul><p>The name of this category.</p><ul><li><strong>description</strong> (String, <em>mandatory</em>)</li></ul><p>The description for this category. This displays in the category&#x27;s main page, and can be
 <a href="/Patchouli/docs/patchouli-basics/text-formatting">formatted</a>.</p><ul><li><strong>icon</strong> (String, <em>mandatory</em>)</li></ul><p>The icon for this category. This can either be an <a href="/Patchouli/docs/patchouli-advanced/itemstack-format">ItemStack
 String</a>, if you want an item to be the icon, or
-a resource location pointing to a square texture. If you want to use a resource location,
+a <a href="/Patchouli/docs/patchouli-basics/prerequisites/#pack-layout">resource location</a> pointing to a square texture. If you want to use a <a href="/Patchouli/docs/patchouli-basics/prerequisites/#pack-layout">resource location</a>,
 make sure to end it with <code>.png</code>.</p><ul><li><strong>parent</strong> (String)</li></ul><p>The parent category to this one. If this is a sub-category, simply put the name of the
 category this is a child to here. If not, don&#x27;t define it. This should be fully-qualified
 and of the form <code>domain:name</code> where <code>domain</code> is the same as the domain of your Book ID.</p><ul><li><strong>flag</strong> (String)</li></ul><p>A config flag expression that determines whether this category should exist or not. See
