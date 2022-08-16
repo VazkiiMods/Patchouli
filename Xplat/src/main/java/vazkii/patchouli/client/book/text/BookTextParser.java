@@ -193,7 +193,7 @@ public class BookTextParser {
 				state.tooltip = Component.literal(parameter.length() < 20 ? parameter : parameter.substring(0, 20) + "...");
 			}
 			state.onClick = () -> {
-				state.gui.getMinecraft().player.command(parameter);
+				state.gui.getMinecraft().player.commandSigned(parameter.substring(1), null);
 				return true;
 			};
 			return "";
