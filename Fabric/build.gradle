@@ -58,8 +58,8 @@ dependencies {
 
 	modCompileOnly "mezz.jei:jei-1.19.2-common-api:11.2.0.247"
 
-	modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:7.0.343") { transitive = false }
-	modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:6.0.43") { transitive = false }
+	modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:9.1.528") { transitive = false }
+	modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:7.0.73") { transitive = false }
 }
 
 compileJava {
