@@ -33,6 +33,9 @@ repositories {
     maven {
         name = "JEI"
         url "https://dvs1.progwml6.com/files/maven/"
+        content {
+            includeGroup "mezz.jei"
+        }
     }
 }
 

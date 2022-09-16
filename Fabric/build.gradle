@@ -11,14 +11,24 @@ repositories {
 	maven {
 		name = "JEI"
 		url "https://dvs1.progwml6.com/files/maven/"
+		content {
+			includeGroup "mezz.jei"
+		}
 	}
 	maven {
 		name = "Modmuss"
 		url = "https://maven.modmuss50.me/"
+		content {
+			includeGroup "me.zeroeightsix"
+		}
 	}
 	maven {
 		name = "Shedaniel"
-		url = "https://maven.shedaniel.me/" // for REI
+		url = "https://maven.shedaniel.me/"
+		content {
+			includeGroup "me.shedaniel"
+			includeGroup "me.shedaniel.cloth"
+		}
 	}
 }
 
