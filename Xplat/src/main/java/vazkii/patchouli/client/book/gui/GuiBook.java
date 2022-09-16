@@ -323,9 +323,9 @@ public abstract class GuiBook extends Screen {
 		} else if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
 			back(true);
 			return true;
-		} else if (IXplatAbstractions.INSTANCE.handleRecipeKeybind(keyCode, scanCode, tooltipStack)) {
+		} else if (tooltipStack != null && IXplatAbstractions.INSTANCE.handleRecipeKeybind(keyCode, scanCode, tooltipStack)) {
 			return true;
-		} else if (IXplatAbstractions.INSTANCE.isModLoaded("jei")
+		} else if (tooltipStack != null && IXplatAbstractions.INSTANCE.isModLoaded("jei")
 				&& PatchouliJeiPlugin.handleRecipeKeybind(keyCode, scanCode, tooltipStack)) {
 			return true;
 		}

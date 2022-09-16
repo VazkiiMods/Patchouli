@@ -76,6 +76,7 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     compileOnly fg.deobf("mezz.jei:jei-1.19.2-common-api:11.2.0.247")
+    runtimeOnly(fg.deobf("mezz.jei:jei-1.19.2-forge:11.2.0.247"))
 }
 
 compileJava {
