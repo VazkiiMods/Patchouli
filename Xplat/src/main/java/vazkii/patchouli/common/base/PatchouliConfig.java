@@ -6,18 +6,17 @@ import vazkii.patchouli.xplat.XplatModContainer;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Supplier;
 
 public class PatchouliConfig {
 	private static final Map<String, Boolean> CONFIG_FLAGS = new ConcurrentHashMap<>();
 
-	public record ConfigAccess(
-			Supplier<Boolean> disableAdvancementLocking,
-			Supplier<List<String>> noAdvancementBooks,
-			Supplier<Boolean> testingMode,
-			Supplier<String> inventoryButtonBook,
-			Supplier<Boolean> useShiftForQuickLookup,
-			Supplier<TextOverflowMode> overflowMode) {
+	public interface ConfigAccess {
+		boolean disableAdvancementLocking();
+		List<String> noAdvancementBooks();
+		boolean testingMode();
+		String inventoryButtonBook();
+		boolean useShiftForQuickLookup();
+		TextOverflowMode overflowMode();
 	}
 
 	private static ConfigAccess access = null;
@@ -41,9 +40,9 @@ public class PatchouliConfig {
 
 		setFlag("debug", IXplatAbstractions.INSTANCE.isDevEnvironment());
 
-		setFlag("advancements_disabled", get().disableAdvancementLocking().get());
-		setFlag("testing_mode", get().testingMode().get());
-		for (String book : get().noAdvancementBooks().get()) {
+		setFlag("advancements_disabled", get().disableAdvancementLocking());
+		setFlag("testing_mode", get().testingMode());
+		for (String book : get().noAdvancementBooks()) {
 			setFlag("advancements_disabled_" + book, true);
 		}
 	}

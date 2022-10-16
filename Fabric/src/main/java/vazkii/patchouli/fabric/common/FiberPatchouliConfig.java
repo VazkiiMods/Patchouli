@@ -68,14 +68,37 @@ public class FiberPatchouliConfig {
 	}
 
 	public static void setup() {
-		PatchouliConfig.set(new PatchouliConfig.ConfigAccess(
-				disableAdvancementLocking::getValue,
-				noAdvancementBooks::getValue,
-				testingMode::getValue,
-				inventoryButtonBook::getValue,
-				useShiftForQuickLookup::getValue,
-				overflowMode::getValue
-		));
+		PatchouliConfig.set(new PatchouliConfig.ConfigAccess() {
+			@Override
+			public boolean disableAdvancementLocking() {
+				return disableAdvancementLocking.getValue();
+			}
+
+			@Override
+			public List<String> noAdvancementBooks() {
+				return noAdvancementBooks.getValue();
+			}
+
+			@Override
+			public boolean testingMode() {
+				return testingMode.getValue();
+			}
+
+			@Override
+			public String inventoryButtonBook() {
+				return inventoryButtonBook.getValue();
+			}
+
+			@Override
+			public boolean useShiftForQuickLookup() {
+				return useShiftForQuickLookup.getValue();
+			}
+
+			@Override
+			public PatchouliConfig.TextOverflowMode overflowMode() {
+				return overflowMode.getValue();
+			}
+		});
 		JanksonValueSerializer serializer = new JanksonValueSerializer(false);
 		Path p = FabricLoader.getInstance().getConfigDir().resolve(PatchouliAPI.MOD_ID + ".json5");
 		writeDefaultConfig(p, serializer);

@@ -31,7 +31,7 @@ public abstract class MixinInventoryScreen extends EffectRenderingInventoryScree
 
 	@Inject(at = @At("RETURN"), method = "init()V")
 	public void onGuiInitPost(CallbackInfo info) {
-		var bookID = new ResourceLocation(PatchouliConfig.get().inventoryButtonBook().get());
+		var bookID = new ResourceLocation(PatchouliConfig.get().inventoryButtonBook());
 		Book book = BookRegistry.INSTANCE.books.get(bookID);
 		if (book == null) {
 			return;

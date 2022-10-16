@@ -49,23 +49,41 @@ public class ForgePatchouliConfig {
 		SPEC = builder.build();
 	}
 
-	@SuppressWarnings("unchecked")
-	private static List<String> getNoAdvancementBooksHack() {
-		// cast from List<? extends String> to List<String>
-		// String is final so this is safe
-		// This is only needed because the Config API is stupid and forces a `? extends` type.
-		return (List<String>) noAdvancementBooks.get();
-	}
-
 	public static void setup() {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SPEC);
-		PatchouliConfig.set(new PatchouliConfig.ConfigAccess(
-				disableAdvancementLocking::get,
-				ForgePatchouliConfig::getNoAdvancementBooksHack,
-				testingMode::get,
-				inventoryButtonBook::get,
-				useShiftForQuickLookup::get,
-				overflowMode::get
-		));
+		PatchouliConfig.set(new PatchouliConfig.ConfigAccess() {
+			@Override
+			public boolean disableAdvancementLocking() {
+				return disableAdvancementLocking.get();
+			}
+
+			@Override
+			public List<String> noAdvancementBooks() {
+				// cast from List<? extends String> to List<String>
+				// String is final so this is safe
+				// This is only needed because the Config API is stupid and forces a `? extends` type.
+				return (List<String>) noAdvancementBooks.get();
+			}
+
+			@Override
+			public boolean testingMode() {
+				return testingMode.get();
+			}
+
+			@Override
+			public String inventoryButtonBook() {
+				return inventoryButtonBook.get();
+			}
+
+			@Override
+			public boolean useShiftForQuickLookup() {
+				return useShiftForQuickLookup.get();
+			}
+
+			@Override
+			public PatchouliConfig.TextOverflowMode overflowMode() {
+				return overflowMode.get();
+			}
+		});
 	}
 }
