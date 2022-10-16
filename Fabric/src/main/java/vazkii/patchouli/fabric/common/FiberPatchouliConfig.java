@@ -32,6 +32,7 @@ public class FiberPatchouliConfig {
 	public static PropertyMirror<Boolean> useShiftForQuickLookup = PropertyMirror.create(ConfigTypes.BOOLEAN);
 	private static final EnumConfigType<PatchouliConfig.TextOverflowMode> OVERFLOW_TYPE = ConfigTypes.makeEnum(PatchouliConfig.TextOverflowMode.class);
 	public static PropertyMirror<PatchouliConfig.TextOverflowMode> overflowMode = PropertyMirror.create(OVERFLOW_TYPE);
+	public static PropertyMirror<Integer> quickLookupTime = PropertyMirror.create(ConfigTypes.INTEGER);
 
 	private static final ConfigTree CONFIG = ConfigTree.builder()
 			.beginValue("disableAdvancementLocking", ConfigTypes.BOOLEAN, false)
@@ -57,6 +58,10 @@ public class FiberPatchouliConfig {
 			.beginValue("textOverflowMode", OVERFLOW_TYPE, PatchouliConfig.TextOverflowMode.RESIZE)
 			.withComment("Set how to handle text overflow: OVERFLOW the text off the page, TRUNCATE overflowed text, or RESIZE everything to fit. Relogin after changing.")
 			.finishValue(overflowMode::mirror)
+
+			.beginValue("quickLookupTime", ConfigTypes.INTEGER, 10)
+			.withComment("How long in ticks the quick lookup key needs to be pressed before the book opens")
+			.finishValue(quickLookupTime::mirror)
 
 			.build();
 
@@ -97,6 +102,11 @@ public class FiberPatchouliConfig {
 			@Override
 			public PatchouliConfig.TextOverflowMode overflowMode() {
 				return overflowMode.getValue();
+			}
+
+			@Override
+			public int quickLookupTime() {
+				return quickLookupTime.getValue();
 			}
 		});
 		JanksonValueSerializer serializer = new JanksonValueSerializer(false);

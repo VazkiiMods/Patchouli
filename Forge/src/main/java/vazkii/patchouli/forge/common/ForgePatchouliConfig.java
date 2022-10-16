@@ -17,6 +17,7 @@ public class ForgePatchouliConfig {
 	public static final ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
 	public static final ForgeConfigSpec.EnumValue<PatchouliConfig.TextOverflowMode> overflowMode;
+	public static final ForgeConfigSpec.ConfigValue<Integer> quickLookupTime;
 
 	private static final ForgeConfigSpec SPEC;
 	static {
@@ -45,6 +46,10 @@ public class ForgePatchouliConfig {
 		overflowMode = builder
 				.comment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit. Relogin after changing.")
 				.defineEnum("textOverflowMode", PatchouliConfig.TextOverflowMode.RESIZE);
+
+		quickLookupTime = builder
+				.comment("How long in ticks the quick lookup key needs to be pressed before the book opens")
+				.define("quickLookupTime", 10);
 
 		SPEC = builder.build();
 	}
@@ -83,6 +88,11 @@ public class ForgePatchouliConfig {
 			@Override
 			public PatchouliConfig.TextOverflowMode overflowMode() {
 				return overflowMode.get();
+			}
+
+			@Override
+			public int quickLookupTime() {
+				return quickLookupTime.get();
 			}
 		});
 	}

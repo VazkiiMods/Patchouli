@@ -70,8 +70,8 @@ public class TooltipHandler {
 					int cx = x + 8;
 					int cy = tooltipY + 8;
 					float r = 12;
-					float time = 20F;
-					float angles = lexiconLookupTime / time * 360F;
+					float requiredTime = PatchouliConfig.get().quickLookupTime();
+					float angles = lexiconLookupTime / requiredTime * 360F;
 
 					RenderSystem.disableTexture();
 					RenderSystem.enableBlend();
@@ -94,7 +94,7 @@ public class TooltipHandler {
 					RenderSystem.disableBlend();
 					RenderSystem.enableTexture();
 
-					if (lexiconLookupTime >= time) {
+					if (lexiconLookupTime >= requiredTime) {
 						mc.player.getInventory().selected = lexSlot;
 						int spread = lexiconEntry.getSecond();
 						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), spread * 2);

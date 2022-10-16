@@ -17,6 +17,7 @@ public class PatchouliConfig {
 		String inventoryButtonBook();
 		boolean useShiftForQuickLookup();
 		TextOverflowMode overflowMode();
+		int quickLookupTime();
 	}
 
 	private static ConfigAccess access = null;
