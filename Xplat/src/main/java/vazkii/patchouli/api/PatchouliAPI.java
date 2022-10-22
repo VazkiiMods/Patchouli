@@ -61,6 +61,11 @@ public class PatchouliAPI {
 		 */
 		boolean isStub();
 
+		/**
+		 * @return A read-only view of Patchouli's config options
+		 */
+		PatchouliConfigAccess getConfig();
+
 		// ================================================================================================
 		// Book and Templates
 		// ================================================================================================

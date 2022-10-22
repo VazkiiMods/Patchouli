@@ -20,11 +20,8 @@ import net.minecraft.world.level.block.state.properties.Property;
 
 import org.apache.commons.io.IOUtils;
 
-import vazkii.patchouli.api.IMultiblock;
-import vazkii.patchouli.api.IStateMatcher;
-import vazkii.patchouli.api.IStyleStack;
+import vazkii.patchouli.api.*;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
-import vazkii.patchouli.api.TriPredicate;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -63,6 +60,12 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	public boolean isStub() {
 		return false;
+	}
+
+	@NotNull
+	@Override
+	public PatchouliConfigAccess getConfig() {
+		return PatchouliConfig.get();
 	}
 
 	@Override

@@ -15,10 +15,14 @@ import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.IStyleStack;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
+import vazkii.patchouli.api.PatchouliConfigAccess;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -34,6 +38,50 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	@Override
 	public boolean isStub() {
 		return true;
+	}
+
+	@NotNull
+	@Override
+	public PatchouliConfigAccess getConfig() {
+		return new PatchouliConfigAccess() {
+			@Override
+			public boolean disableAdvancementLocking() {
+				return false;
+			}
+
+			@NotNull
+			@Override
+			public List<String> noAdvancementBooks() {
+				return Collections.emptyList();
+			}
+
+			@Override
+			public boolean testingMode() {
+				return false;
+			}
+
+			@NotNull
+			@Override
+			public String inventoryButtonBook() {
+				return "";
+			}
+
+			@Override
+			public boolean useShiftForQuickLookup() {
+				return false;
+			}
+
+			@NotNull
+			@Override
+			public TextOverflowMode overflowMode() {
+				return TextOverflowMode.OVERFLOW;
+			}
+
+			@Override
+			public int quickLookupTime() {
+				return Integer.MAX_VALUE;
+			}
+		};
 	}
 
 	@Override

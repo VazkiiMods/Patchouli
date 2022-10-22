@@ -13,6 +13,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.api.PatchouliConfigAccess;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.*;
 import vazkii.patchouli.common.base.PatchouliConfig;
@@ -104,7 +105,7 @@ public class Book {
 	public final boolean isPamphlet;
 
 	public final boolean i18n;
-	@Nullable public final PatchouliConfig.TextOverflowMode overflowMode;
+	@Nullable public final PatchouliConfigAccess.TextOverflowMode overflowMode;
 
 	public final Map<String, String> macros = new HashMap<>();
 
@@ -152,7 +153,7 @@ public class Book {
 		this.useResourcePack = GsonHelper.getAsBoolean(root, "use_resource_pack", false);
 		this.isPamphlet = GsonHelper.getAsBoolean(root, "pamphlet", false);
 		this.i18n = GsonHelper.getAsBoolean(root, "i18n", false);
-		this.overflowMode = SerializationUtil.getAsEnum(root, "text_overflow_mode", PatchouliConfig.TextOverflowMode.class, null);
+		this.overflowMode = SerializationUtil.getAsEnum(root, "text_overflow_mode", PatchouliConfigAccess.TextOverflowMode.class, null);
 
 		var customBookItem = GsonHelper.getAsString(root, "custom_book_item", "");
 		if (noBook) {

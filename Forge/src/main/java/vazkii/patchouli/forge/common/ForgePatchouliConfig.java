@@ -5,6 +5,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 
+import vazkii.patchouli.api.PatchouliConfigAccess;
 import vazkii.patchouli.common.base.PatchouliConfig;
 
 import java.util.Collections;
@@ -16,7 +17,7 @@ public class ForgePatchouliConfig {
 	public static final ForgeConfigSpec.ConfigValue<Boolean> testingMode;
 	public static final ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
-	public static final ForgeConfigSpec.EnumValue<PatchouliConfig.TextOverflowMode> overflowMode;
+	public static final ForgeConfigSpec.EnumValue<PatchouliConfigAccess.TextOverflowMode> overflowMode;
 	public static final ForgeConfigSpec.ConfigValue<Integer> quickLookupTime;
 
 	private static final ForgeConfigSpec SPEC;
@@ -45,7 +46,7 @@ public class ForgePatchouliConfig {
 
 		overflowMode = builder
 				.comment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit. Relogin after changing.")
-				.defineEnum("textOverflowMode", PatchouliConfig.TextOverflowMode.RESIZE);
+				.defineEnum("textOverflowMode", PatchouliConfigAccess.TextOverflowMode.RESIZE);
 
 		quickLookupTime = builder
 				.comment("How long in ticks the quick lookup key needs to be pressed before the book opens")
@@ -56,7 +57,7 @@ public class ForgePatchouliConfig {
 
 	public static void setup() {
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SPEC);
-		PatchouliConfig.set(new PatchouliConfig.ConfigAccess() {
+		PatchouliConfig.set(new PatchouliConfigAccess() {
 			@Override
 			public boolean disableAdvancementLocking() {
 				return disableAdvancementLocking.get();
@@ -86,7 +87,7 @@ public class ForgePatchouliConfig {
 			}
 
 			@Override
-			public PatchouliConfig.TextOverflowMode overflowMode() {
+			public TextOverflowMode overflowMode() {
 				return overflowMode.get();
 			}
 

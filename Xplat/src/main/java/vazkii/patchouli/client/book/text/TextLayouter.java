@@ -5,8 +5,9 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.language.LanguageInfo;
 import net.minecraft.network.chat.Component;
 
+import vazkii.patchouli.api.PatchouliConfigAccess;
+import vazkii.patchouli.api.PatchouliConfigAccess.TextOverflowMode;
 import vazkii.patchouli.client.book.gui.GuiBook;
-import vazkii.patchouli.common.base.PatchouliConfig.TextOverflowMode;
 
 import java.text.BreakIterator;
 import java.util.ArrayList;
@@ -72,9 +73,9 @@ public class TextLayouter {
 				layoutParagraph(paragraph);
 			}
 			// Only downscale if TextOverflowMode is RESIZE
-		} while (mode == TextOverflowMode.RESIZE && getOverflow() * getScale() > 1 && adjustScale());
+		} while (mode == PatchouliConfigAccess.TextOverflowMode.RESIZE && getOverflow() * getScale() > 1 && adjustScale());
 		// if TextOverflowMode is TRUNCATE, yeet everything below baseline
-		if (mode == TextOverflowMode.TRUNCATE) {
+		if (mode == PatchouliConfigAccess.TextOverflowMode.TRUNCATE) {
 			words.removeIf(word -> word.y + lineHeight > GuiBook.PAGE_HEIGHT);
 		}
 	}

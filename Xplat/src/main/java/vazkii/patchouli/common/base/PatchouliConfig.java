@@ -1,6 +1,7 @@
 package vazkii.patchouli.common.base;
 
 import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.api.PatchouliConfigAccess;
 import vazkii.patchouli.xplat.IXplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
 
@@ -10,23 +11,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PatchouliConfig {
 	private static final Map<String, Boolean> CONFIG_FLAGS = new ConcurrentHashMap<>();
 
-	public interface ConfigAccess {
-		boolean disableAdvancementLocking();
-		List<String> noAdvancementBooks();
-		boolean testingMode();
-		String inventoryButtonBook();
-		boolean useShiftForQuickLookup();
-		TextOverflowMode overflowMode();
-		int quickLookupTime();
-	}
+	private static PatchouliConfigAccess access = null;
 
-	private static ConfigAccess access = null;
-
-	public static ConfigAccess get() {
+	public static PatchouliConfigAccess get() {
 		return access;
 	}
 
-	public static void set(ConfigAccess a) {
+	public static void set(PatchouliConfigAccess a) {
 		if (access != null) {
 			throw new IllegalStateException("ConfigAccess already set");
 		}
@@ -95,12 +86,6 @@ public class PatchouliConfig {
 
 	public static void setFlag(String flag, boolean value) {
 		CONFIG_FLAGS.put(flag.trim().toLowerCase(Locale.ROOT), value);
-	}
-
-	public enum TextOverflowMode {
-		OVERFLOW,
-		TRUNCATE,
-		RESIZE
 	}
 
 }

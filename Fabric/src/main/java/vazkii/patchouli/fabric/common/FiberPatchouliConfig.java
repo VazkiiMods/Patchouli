@@ -3,6 +3,7 @@ package vazkii.patchouli.fabric.common;
 import net.fabricmc.loader.api.FabricLoader;
 
 import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.api.PatchouliConfigAccess;
 import vazkii.patchouli.common.base.PatchouliConfig;
 
 import java.io.BufferedInputStream;
@@ -30,8 +31,8 @@ public class FiberPatchouliConfig {
 	public static PropertyMirror<Boolean> testingMode = PropertyMirror.create(ConfigTypes.BOOLEAN);
 	public static PropertyMirror<String> inventoryButtonBook = PropertyMirror.create(ConfigTypes.STRING);
 	public static PropertyMirror<Boolean> useShiftForQuickLookup = PropertyMirror.create(ConfigTypes.BOOLEAN);
-	private static final EnumConfigType<PatchouliConfig.TextOverflowMode> OVERFLOW_TYPE = ConfigTypes.makeEnum(PatchouliConfig.TextOverflowMode.class);
-	public static PropertyMirror<PatchouliConfig.TextOverflowMode> overflowMode = PropertyMirror.create(OVERFLOW_TYPE);
+	private static final EnumConfigType<PatchouliConfigAccess.TextOverflowMode> OVERFLOW_TYPE = ConfigTypes.makeEnum(PatchouliConfigAccess.TextOverflowMode.class);
+	public static PropertyMirror<PatchouliConfigAccess.TextOverflowMode> overflowMode = PropertyMirror.create(OVERFLOW_TYPE);
 	public static PropertyMirror<Integer> quickLookupTime = PropertyMirror.create(ConfigTypes.INTEGER);
 
 	private static final ConfigTree CONFIG = ConfigTree.builder()
@@ -55,7 +56,7 @@ public class FiberPatchouliConfig {
 			.withComment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
 			.finishValue(useShiftForQuickLookup::mirror)
 
-			.beginValue("textOverflowMode", OVERFLOW_TYPE, PatchouliConfig.TextOverflowMode.RESIZE)
+			.beginValue("textOverflowMode", OVERFLOW_TYPE, PatchouliConfigAccess.TextOverflowMode.RESIZE)
 			.withComment("Set how to handle text overflow: OVERFLOW the text off the page, TRUNCATE overflowed text, or RESIZE everything to fit. Relogin after changing.")
 			.finishValue(overflowMode::mirror)
 
@@ -73,7 +74,7 @@ public class FiberPatchouliConfig {
 	}
 
 	public static void setup() {
-		PatchouliConfig.set(new PatchouliConfig.ConfigAccess() {
+		PatchouliConfig.set(new PatchouliConfigAccess() {
 			@Override
 			public boolean disableAdvancementLocking() {
 				return disableAdvancementLocking.getValue();
@@ -100,7 +101,7 @@ public class FiberPatchouliConfig {
 			}
 
 			@Override
-			public PatchouliConfig.TextOverflowMode overflowMode() {
+			public TextOverflowMode overflowMode() {
 				return overflowMode.getValue();
 			}
 
