@@ -16,6 +16,6 @@ Xplat/logs/
 .LSOverride
 
 # Java
-*.class
+Fabric/bin/
 Xplat/bin/
 Forge/bin/
