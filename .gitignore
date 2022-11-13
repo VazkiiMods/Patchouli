@@ -14,3 +14,8 @@ Xplat/logs/
 .DS_Store
 .AppleDouble
 .LSOverride
+
+# Java
+*.class
+Xplat/bin/
+Forge/bin/
