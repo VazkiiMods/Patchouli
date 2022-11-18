@@ -31,6 +31,7 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
+import vazkii.patchouli.common.item.PatchouliBookItem;
 import vazkii.patchouli.common.multiblock.DenseMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SparseMultiblock;
@@ -134,7 +135,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	@Override
 	public ItemStack getBookStack(ResourceLocation book) {
-		return ItemModBook.forBook(book);
+		return PatchouliBookItem.getItemStack(book);
 	}
 
 	@Override

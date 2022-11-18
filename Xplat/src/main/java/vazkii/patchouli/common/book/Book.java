@@ -19,6 +19,7 @@ import vazkii.patchouli.client.book.*;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.item.ItemModBook;
+import vazkii.patchouli.common.item.PatchouliBookItem;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.SerializationUtil;
 import vazkii.patchouli.xplat.XplatModContainer;
@@ -162,7 +163,7 @@ public class Book {
 			var parsed = ItemStackUtil.parseItemStackString(customBookItem);
 			bookItem = Suppliers.memoize(() -> ItemStackUtil.loadFromParsed(parsed));
 		} else {
-			bookItem = Suppliers.memoize(() -> ItemModBook.forBook(id));
+			bookItem = Suppliers.memoize(() -> PatchouliBookItem.getItemStack(id));
 		}
 
 		if (!isExtension) {
