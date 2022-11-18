@@ -142,6 +142,6 @@ public class PatchouliBookItem extends Item {
     private static ResourceLocation getBookResourceLocation(ItemStack itemStack) {
         var tag = itemStack.getOrCreateTag();
 
-        return tag.contains(BOOK_TAG) ? null : ResourceLocation.tryParse(tag.getString(BOOK_TAG));
+        return tag.contains(BOOK_TAG) ? ResourceLocation.tryParse(tag.getString(BOOK_TAG)) : null;
     }
 }
