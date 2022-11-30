@@ -28,6 +28,8 @@ public interface IComponentRenderContext {
 
 	boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h);
 
+	boolean navigateToEntry(ResourceLocation entry, int page, boolean push);
+
 	@Deprecated // use setHoverTooltipComponents
 	void setHoverTooltip(List<String> tooltip);
 

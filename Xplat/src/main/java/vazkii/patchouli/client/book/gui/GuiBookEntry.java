@@ -273,6 +273,16 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		return isMouseInRelativeRange(mouseX, mouseY, x, y, w, h);
 	}
 
+	@Override
+	public boolean navigateToEntry(ResourceLocation entry, int page, boolean push) {
+		BookEntry bookEntry = book.getContents().entries.get(entry);
+		if (bookEntry != null && !bookEntry.isLocked()) {
+			displayLexiconGui(new GuiBookEntry(book, bookEntry, page), push);
+			return true;
+		}
+		return false;
+	}
+
 	@SuppressWarnings("removal")
 	@Override
 	public void registerButton(Button button, int pageNum, Runnable onClick) {
