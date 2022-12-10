@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.item.ItemModBook;
+import vazkii.patchouli.common.item.PatchouliBookItem;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.mixin.client.AccessorKeyMapping;
 
@@ -46,10 +47,10 @@ public class PatchouliJeiPlugin implements IModPlugin {
 	@Override
 	public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
 		registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, PatchouliItems.BOOK, (stack, context) -> {
-			if (!stack.hasTag() || !stack.getTag().contains(ItemModBook.TAG_BOOK)) {
+			if (!stack.hasTag() || !stack.getTag().contains(PatchouliBookItem.BOOK_TAG)) {
 				return "";
 			}
-			return stack.getTag().getString(ItemModBook.TAG_BOOK);
+			return stack.getTag().getString(PatchouliBookItem.BOOK_TAG);
 		});
 	}
 
