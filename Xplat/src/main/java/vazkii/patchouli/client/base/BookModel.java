@@ -7,23 +7,21 @@ import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 public class BookModel implements BakedModel {
 	private final BakedModel original;
@@ -33,7 +31,28 @@ public class BookModel implements BakedModel {
 		this.original = original;
 		BlockModel missing = (BlockModel) loader.getModel(ModelBakery.MISSING_MODEL_LOCATION);
 
-		this.itemHandler = new ItemOverrides(loader, missing, id -> missing, Collections.emptyList()) {
+		this.itemHandler = new ItemOverrides(new ModelBaker() {
+			// soft implement IForgeModelBaker
+			public Function<Material, TextureAtlasSprite> getModelTextureGetter() {
+				return null;
+			}
+
+			// soft implement IForgeModelBaker
+			public BakedModel bake(ResourceLocation location, ModelState state, Function<Material, TextureAtlasSprite> sprites) {
+				return null;
+			}
+
+			@Override
+			public UnbakedModel getModel(ResourceLocation resourceLocation) {
+				return null;
+			}
+
+			@Nullable
+			@Override
+			public BakedModel bake(ResourceLocation resourceLocation, ModelState modelState) {
+				return null;
+			}
+		}, missing, Collections.emptyList()) {
 			@Override
 			public BakedModel resolve(@NotNull BakedModel original, @NotNull ItemStack stack,
 					@Nullable ClientLevel world, @Nullable LivingEntity entity, int seed) {

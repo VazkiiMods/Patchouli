@@ -1,7 +1,7 @@
 {
 	"name": "item.patchouli:pamphlet.name",
 	"landing_text": "item.patchouli:pamphlet.landing",
-	"creative_tab": "decorations",
+	"creative_tab": "natural_blocks",
 	"advancements_tab": "patchouli",
 	"pamphlet": true
 }

@@ -1,10 +1,8 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
-
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookEntry;
@@ -23,9 +21,9 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 
 	@Override
 	public void renderButton(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		int px = x + 1;
-		int py = (int) (y + 0.5);
-		GuiBook.drawFromTexture(ms, book, x, y, 285, 160, 13, 10);
+		int px = getX() + 1;
+		int py = (int) (getY() + 0.5);
+		GuiBook.drawFromTexture(ms, book, getX(), getY(), 285, 160, 13, 10);
 		GuiBook.drawFromTexture(ms, book, px, py, u, v, width, height);
 		if (isHoveredOrFocused()) {
 			GuiBook.drawFromTexture(ms, book, px, py, u + 11, v, width, height);

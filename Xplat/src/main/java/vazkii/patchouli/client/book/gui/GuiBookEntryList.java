@@ -2,14 +2,11 @@ package vazkii.patchouli.client.book.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-
 import org.lwjgl.glfw.GLFW;
-
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonEntry;
@@ -102,9 +99,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 
 		if (!searchField.getValue().isEmpty()) {
 			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-			drawFromTexture(ms, book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
+			drawFromTexture(ms, book, searchField.getX() - 8, searchField.getY(), 140, 183, 99, 14);
 			Component toDraw = Component.literal(searchField.getValue()).setStyle(book.getFontStyle());
-			font.draw(ms, toDraw, searchField.x + 7, searchField.y + 1, book.textColor);
+			font.draw(ms, toDraw, searchField.getX() + 7, searchField.getY() + 1, book.textColor);
 		}
 
 		if (visibleEntries.isEmpty()) {

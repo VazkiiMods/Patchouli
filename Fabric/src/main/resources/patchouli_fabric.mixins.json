@@ -8,7 +8,7 @@
   "client": [
     "client.MixinGameRenderer",
     "client.MixinMinecraft",
-    "client.MixinModelManager",
+    "client.MixinModelBakery",
     "client.MixinScreen"
   ],
   "injectors": {

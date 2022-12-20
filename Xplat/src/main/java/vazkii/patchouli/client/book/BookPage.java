@@ -2,13 +2,11 @@ package vazkii.patchouli.client.book;
 
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.base.PatchouliConfig;
@@ -57,8 +55,8 @@ public abstract class BookPage {
 	}
 
 	protected void addButton(Button button) {
-		button.x += (parent.bookLeft + left);
-		button.y += (parent.bookTop + top);
+		button.setX(button.getX() + (parent.bookLeft + left));
+		button.setY(button.getY() + (parent.bookTop + top));
 		buttons.add(button);
 		parent.addRenderableWidget(button);
 	}

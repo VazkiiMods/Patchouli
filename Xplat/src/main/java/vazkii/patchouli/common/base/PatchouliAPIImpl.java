@@ -1,11 +1,10 @@
 package vazkii.patchouli.common.base;
 
 import com.google.common.base.Preconditions;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,9 +16,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
-
 import org.apache.commons.io.IOUtils;
-
+import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.api.*;
 import vazkii.patchouli.api.PatchouliAPI.IPatchouliAPI;
 import vazkii.patchouli.client.book.BookContents;
@@ -36,8 +34,6 @@ import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SparseMultiblock;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.xplat.IXplatAbstractions;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -246,7 +242,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 			@NotNull
 			@Override
 			public BlockState getDisplayedState(long ticks) {
-				return Registry.BLOCK.getTag(tag).map(n -> {
+				return BuiltInRegistries.BLOCK.getTag(tag).map(n -> {
 					int idx = (int) ((ticks / 20) % n.size());
 					return n.get(idx).value().defaultBlockState();
 				}).orElse(Blocks.BEDROCK.defaultBlockState());

@@ -2,11 +2,9 @@ package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -38,8 +36,8 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 		if (bookmark != null && entry != null) {
 			ms.pushPose();
 			ms.scale(0.5F, 0.5F, 0.5F);
-			int px = x * 2 + (isHoveredOrFocused() ? 6 : 2);
-			int py = y * 2 + 2;
+			int px = getX() * 2 + (isHoveredOrFocused() ? 6 : 2);
+			int py = getY() * 2 + 2;
 			entry.getIcon().render(ms, px, py);
 
 			RenderSystem.disableDepthTest();

@@ -7,8 +7,8 @@ import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
-
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.TagParser;
@@ -18,21 +18,14 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
-
+import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.StringJoiner;
+import java.util.*;
 
 public final class ItemStackUtil {
 	private static final Gson GSON = new GsonBuilder().create();
@@ -41,7 +34,7 @@ public final class ItemStackUtil {
 
 	public static String serializeStack(ItemStack stack) {
 		StringBuilder builder = new StringBuilder();
-		builder.append(Registry.ITEM.getKey(stack.getItem()));
+		builder.append(BuiltInRegistries.ITEM.getKey(stack.getItem()));
 
 		int count = stack.getCount();
 		if (count > 1) {
@@ -97,7 +90,7 @@ public final class ItemStackUtil {
 		var key = parsed.getLeft();
 		var count = parsed.getMiddle();
 		var nbt = parsed.getRight();
-		Optional<Item> maybeItem = Registry.ITEM.getOptional(key);
+		Optional<Item> maybeItem = BuiltInRegistries.ITEM.getOptional(key);
 		if (maybeItem.isEmpty()) {
 			throw new RuntimeException("Unknown item ID: " + key);
 		}
@@ -141,8 +134,8 @@ public final class ItemStackUtil {
 		List<ItemStack> stacks = new ArrayList<>();
 		for (String s : stacksSerialized) {
 			if (s.startsWith("tag:")) {
-				var key = TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(s.substring(4)));
-				Registry.ITEM.getTag(key).ifPresent(tag -> tag.stream().forEach(item -> stacks.add(new ItemStack(item))));
+				var key = TagKey.create(Registries.ITEM, new ResourceLocation(s.substring(4)));
+				BuiltInRegistries.ITEM.getTag(key).ifPresent(tag -> tag.stream().forEach(item -> stacks.add(new ItemStack(item))));
 			} else {
 				stacks.add(loadStackFromString(s));
 			}
@@ -162,7 +155,7 @@ public final class ItemStackUtil {
 
 		Collection<Book> books = BookRegistry.INSTANCE.books.values();
 		for (Book b : books) {
-			if (b.getBookItem().sameItemStackIgnoreDurability(stack)) {
+			if (b.getBookItem().sameItem(stack)) {
 				return b;
 			}
 		}
@@ -182,7 +175,7 @@ public final class ItemStackUtil {
 
 		@Override
 		public boolean equals(Object obj) {
-			return obj == this || (obj instanceof StackWrapper && ItemStack.isSameIgnoreDurability(stack, ((StackWrapper) obj).stack));
+			return obj == this || (obj instanceof StackWrapper && ItemStack.isSame(stack, ((StackWrapper) obj).stack));
 		}
 
 		@Override
@@ -239,7 +232,7 @@ public final class ItemStackUtil {
 		// Adapted from net.minecraftforge.common.crafting.CraftingHelper::getItemStack
 		String itemName = json.get("item").getAsString();
 
-		Item item = Registry.ITEM.getOptional(new ResourceLocation(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'")
+		Item item = BuiltInRegistries.ITEM.getOptional(new ResourceLocation(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'")
 		);
 
 		ItemStack stack = new ItemStack(item, GsonHelper.getAsInt(json, "count", 1));

@@ -1,17 +1,12 @@
 package vazkii.patchouli.common.multiblock;
 
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ColorResolver;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Rotation;
@@ -20,12 +15,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-
+import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.TriPredicate;
 import vazkii.patchouli.common.util.RotationUtil;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -165,7 +158,7 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockAndTintGet
 
 	@Override
 	public int getBlockTint(BlockPos pos, ColorResolver color) {
-		var plains = world.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY)
+		var plains = world.registryAccess().registryOrThrow(Registries.BIOME)
 				.getOrThrow(Biomes.PLAINS);
 		return color.getColor(plains, pos.getX(), pos.getZ());
 	}

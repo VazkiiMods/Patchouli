@@ -4,12 +4,11 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
@@ -20,14 +19,18 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
-
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
-
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
-import vazkii.patchouli.client.book.*;
-import vazkii.patchouli.client.book.gui.button.*;
+import vazkii.patchouli.client.book.BookCategory;
+import vazkii.patchouli.client.book.BookEntry;
+import vazkii.patchouli.client.book.EntryDisplayState;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBook;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookArrow;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookBookmark;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookMarkRead;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.jei.PatchouliJeiPlugin;
 import vazkii.patchouli.common.base.PatchouliSounds;
@@ -35,11 +38,9 @@ import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.mixin.client.AccessorScreen;
 import vazkii.patchouli.xplat.IXplatAbstractions;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class GuiBook extends Screen {
@@ -169,10 +170,10 @@ public abstract class GuiBook extends Screen {
 		}
 	}
 
-	public final void removeDrawablesIf(Predicate<Widget> pred) {
+	public final void removeDrawablesIf(Predicate<Renderable> pred) {
 		((AccessorScreen) (this)).getRenderables().removeIf(pred);
-		children().removeIf(listener -> listener instanceof Widget w && pred.test(w));
-		((AccessorScreen) (this)).getNarratables().removeIf(listener -> listener instanceof Widget w && pred.test(w));
+		children().removeIf(listener -> listener instanceof Renderable w && pred.test(w));
+		((AccessorScreen) (this)).getNarratables().removeIf(listener -> listener instanceof Renderable w && pred.test(w));
 	}
 
 	public final void removeDrawablesIn(Collection<?> coll) {
@@ -180,7 +181,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	@Override // make public
-	public <T extends GuiEventListener & Widget & NarratableEntry> T addRenderableWidget(T drawableElement) {
+	public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T drawableElement) {
 		return super.addRenderableWidget(drawableElement);
 	}
 

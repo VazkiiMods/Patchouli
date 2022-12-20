@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
-	"textures": { 
-		"layer0": "patchouli:items/book_red"
+	"textures": {
+		"layer0": "patchouli:item/book_red"
 	}
 }

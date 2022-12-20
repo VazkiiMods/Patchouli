@@ -2,7 +2,6 @@ package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
@@ -10,7 +9,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -24,7 +22,7 @@ public class GuiButtonEntry extends Button {
 	private float timeHovered;
 
 	public GuiButtonEntry(GuiBook parent, int x, int y, BookEntry entry, Button.OnPress onPress) {
-		super(x, y, GuiBook.PAGE_WIDTH, 10, entry.getName(), onPress);
+		super(x, y, GuiBook.PAGE_WIDTH, 10, entry.getName(), onPress, DEFAULT_NARRATION);
 		this.parent = parent;
 		this.entry = entry;
 	}
@@ -43,14 +41,14 @@ public class GuiButtonEntry extends Button {
 			boolean locked = entry.isLocked();
 
 			ms.scale(0.5F, 0.5F, 0.5F);
-			GuiComponent.fill(ms, x * 2, y * 2, (x + (int) ((float) width * widthFract)) * 2, (y + height) * 2, 0x22000000);
+			GuiComponent.fill(ms, getX() * 2, getY() * 2, (getX() + (int) ((float) width * widthFract)) * 2, (getY() + height) * 2, 0x22000000);
 			RenderSystem.enableBlend();
 
 			if (locked) {
 				RenderSystem.setShaderColor(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(ms, parent.book, x * 2 + 2, y * 2 + 2);
+				GuiBook.drawLock(ms, parent.book, getX() * 2 + 2, getY() * 2 + 2);
 			} else {
-				entry.getIcon().render(ms, x * 2 + 2, y * 2 + 2);
+				entry.getIcon().render(ms, getX() * 2 + 2, getY() * 2 + 2);
 			}
 
 			ms.scale(2F, 2F, 2F);
@@ -66,10 +64,10 @@ public class GuiButtonEntry extends Button {
 			}
 
 			name = name.withStyle(entry.getBook().getFontStyle());
-			Minecraft.getInstance().font.draw(ms, name, x + 12, y, getColor());
+			Minecraft.getInstance().font.draw(ms, name, getX() + 12, getY(), getColor());
 
 			if (!entry.isLocked()) {
-				GuiBook.drawMarking(ms, parent.book, x + width - 5, y + 1, entry.hashCode(), entry.getReadState());
+				GuiBook.drawMarking(ms, parent.book, getX() + width - 5, getY() + 1, entry.hashCode(), entry.getReadState());
 			}
 		}
 	}

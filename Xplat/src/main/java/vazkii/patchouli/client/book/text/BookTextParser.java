@@ -7,7 +7,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
-
+import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -15,11 +15,10 @@ import vazkii.patchouli.client.book.gui.GuiBookCategory;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.common.book.Book;
 
-import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BookTextParser {
 	public static final MutableComponent EMPTY_STRING_COMPONENT = Component.literal("");
@@ -193,7 +192,7 @@ public class BookTextParser {
 				state.tooltip = Component.literal(parameter.length() < 20 ? parameter : parameter.substring(0, 20) + "...");
 			}
 			state.onClick = () -> {
-				state.gui.getMinecraft().player.commandSigned(parameter.substring(1), null);
+				state.gui.getMinecraft().player.connection.sendCommand(parameter.substring(1));
 				return true;
 			};
 			return "";

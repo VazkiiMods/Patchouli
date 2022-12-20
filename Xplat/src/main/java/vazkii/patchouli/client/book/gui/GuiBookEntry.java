@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -11,7 +10,8 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.base.PersistentData;
@@ -20,9 +20,6 @@ import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Objects;
@@ -291,8 +288,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void addWidget(AbstractWidget widget, int pageNum) {
-		widget.x += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
-		widget.y += bookTop;
+		widget.setX(widget.getX() + (bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X)));
+		widget.setY(widget.getY() + bookTop);
 		addRenderableWidget(widget);
 	}
 

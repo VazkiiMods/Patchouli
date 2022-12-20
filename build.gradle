@@ -8,9 +8,6 @@ buildscript {
         classpath "com.diffplug.spotless:spotless-plugin-gradle:5.12.5"
     }
 }
-/* TODO someone please fix this I hate gradle so much
-        I fixed it - Jared
-*/
 
 subprojects {
     apply plugin: 'java'

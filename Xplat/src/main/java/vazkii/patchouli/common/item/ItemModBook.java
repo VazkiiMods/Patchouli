@@ -1,8 +1,7 @@
 package vazkii.patchouli.common.item;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -12,12 +11,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.base.PatchouliSounds;
@@ -31,9 +28,7 @@ public class ItemModBook extends Item {
 	public static final String TAG_BOOK = "patchouli:book";
 
 	public ItemModBook() {
-		super(new Item.Properties()
-				.stacksTo(1)
-				.tab(CreativeModeTab.TAB_MISC));
+		super(new Item.Properties().stacksTo(1));
 	}
 
 	public static float getCompletion(ItemStack stack) {
@@ -73,23 +68,13 @@ public class ItemModBook extends Item {
 		return stack;
 	}
 
-	@Override
-	public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {
-		String tabName = tab.getRecipeFolderName();
-		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			if (!b.noBook && !b.isExtension && (tab == CreativeModeTab.TAB_SEARCH || b.creativeTab.equals(tabName))) {
-				items.add(forBook(b));
-			}
-		});
-	}
-
 	// SoftImplement IForgeItem
 	public String getCreatorModId(ItemStack stack) {
 		var book = getBook(stack);
 		if (book != null) {
 			return book.owner.getId();
 		}
-		return Registry.ITEM.getKey(this).getNamespace();
+		return BuiltInRegistries.ITEM.getKey(this).getNamespace();
 	}
 
 	public static Book getBook(ItemStack stack) {
@@ -116,7 +101,7 @@ public class ItemModBook extends Item {
 		if (book != null) {
 			return book.owner.getModId();
 		}
-	
+
 		return super.getCreatorModId(itemStack);
 	}
 	*/
