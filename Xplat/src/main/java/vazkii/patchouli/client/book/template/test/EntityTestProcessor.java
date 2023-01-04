@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.template.test;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -21,7 +21,7 @@ public class EntityTestProcessor implements IComponentProcessor {
 		}
 
 		ResourceLocation key = new ResourceLocation(entityType);
-		entityName = Registry.ENTITY_TYPE.getOptional(key)
+		entityName = BuiltInRegistries.ENTITY_TYPE.getOptional(key)
 				.map(EntityType::getDescription).map(Component::getString)
 				.orElse(null);
 	}

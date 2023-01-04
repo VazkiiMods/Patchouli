@@ -28,8 +28,7 @@ public class PageLink extends PageText {
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 
-		addButton(new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, i18nText(realText.getString()),
-				(b) -> GuiBook.openWebLink(parent, url)));
+		addButton(Button.builder(i18nText(realText.getString()), (b) -> GuiBook.openWebLink(parent, url)).pos(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35).size(100, 20).build());
 	}
 
 }

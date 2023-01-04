@@ -1,6 +1,6 @@
 package vazkii.patchouli.common.base;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
@@ -10,8 +10,8 @@ import java.util.function.BiConsumer;
 
 public class PatchouliSounds {
 
-	public static final SoundEvent BOOK_OPEN = new SoundEvent(new ResourceLocation(PatchouliAPI.MOD_ID, "book_open"));
-	public static final SoundEvent BOOK_FLIP = new SoundEvent(new ResourceLocation(PatchouliAPI.MOD_ID, "book_flip"));
+	public static final SoundEvent BOOK_OPEN = SoundEvent.createVariableRangeEvent(new ResourceLocation(PatchouliAPI.MOD_ID, "book_open"));
+	public static final SoundEvent BOOK_FLIP = SoundEvent.createVariableRangeEvent(new ResourceLocation(PatchouliAPI.MOD_ID, "book_flip"));
 
 	public static void submitRegistrations(BiConsumer<ResourceLocation, SoundEvent> e) {
 		e.accept(BOOK_OPEN.getLocation(), BOOK_OPEN);
@@ -19,7 +19,7 @@ public class PatchouliSounds {
 	}
 
 	public static SoundEvent getSound(ResourceLocation key, SoundEvent fallback) {
-		return Registry.SOUND_EVENT.getOptional(key).orElse(fallback);
+		return BuiltInRegistries.SOUND_EVENT.getOptional(key).orElse(fallback);
 	}
 
 }

@@ -38,8 +38,8 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 		if (bookmark != null && entry != null) {
 			ms.pushPose();
 			ms.scale(0.5F, 0.5F, 0.5F);
-			int px = x * 2 + (isHoveredOrFocused() ? 6 : 2);
-			int py = y * 2 + 2;
+			int px = getX() * 2 + (isHoveredOrFocused() ? 6 : 2);
+			int py = getY() * 2 + 2;
 			entry.getIcon().render(ms, px, py);
 
 			RenderSystem.disableDepthTest();

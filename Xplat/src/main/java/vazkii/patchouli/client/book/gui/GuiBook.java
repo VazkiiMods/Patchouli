@@ -9,7 +9,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
@@ -169,10 +169,10 @@ public abstract class GuiBook extends Screen {
 		}
 	}
 
-	public final void removeDrawablesIf(Predicate<Widget> pred) {
+	public final void removeDrawablesIf(Predicate<Renderable> pred) {
 		((AccessorScreen) (this)).getRenderables().removeIf(pred);
-		children().removeIf(listener -> listener instanceof Widget w && pred.test(w));
-		((AccessorScreen) (this)).getNarratables().removeIf(listener -> listener instanceof Widget w && pred.test(w));
+		children().removeIf(listener -> listener instanceof Renderable w && pred.test(w));
+		((AccessorScreen) (this)).getNarratables().removeIf(listener -> listener instanceof Renderable w && pred.test(w));
 	}
 
 	public final void removeDrawablesIn(Collection<?> coll) {
@@ -180,7 +180,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	@Override // make public
-	public <T extends GuiEventListener & Widget & NarratableEntry> T addRenderableWidget(T drawableElement) {
+	public <T extends GuiEventListener & Renderable & NarratableEntry> T addRenderableWidget(T drawableElement) {
 		return super.addRenderableWidget(drawableElement);
 	}
 

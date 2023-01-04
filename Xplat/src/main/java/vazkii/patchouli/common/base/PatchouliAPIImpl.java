@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -246,7 +246,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 			@NotNull
 			@Override
 			public BlockState getDisplayedState(long ticks) {
-				return Registry.BLOCK.getTag(tag).map(n -> {
+				return BuiltInRegistries.BLOCK.getTag(tag).map(n -> {
 					int idx = (int) ((ticks / 20) % n.size());
 					return n.get(idx).value().defaultBlockState();
 				}).orElse(Blocks.BEDROCK.defaultBlockState());

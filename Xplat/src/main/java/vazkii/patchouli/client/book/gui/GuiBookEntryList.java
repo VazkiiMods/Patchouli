@@ -102,9 +102,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 
 		if (!searchField.getValue().isEmpty()) {
 			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-			drawFromTexture(ms, book, searchField.x - 8, searchField.y, 140, 183, 99, 14);
+			drawFromTexture(ms, book, searchField.getX() - 8, searchField.getY(), 140, 183, 99, 14);
 			Component toDraw = Component.literal(searchField.getValue()).setStyle(book.getFontStyle());
-			font.draw(ms, toDraw, searchField.x + 7, searchField.y + 1, book.textColor);
+			font.draw(ms, toDraw, searchField.getX() + 7, searchField.getY() + 1, book.textColor);
 		}
 
 		if (visibleEntries.isEmpty()) {

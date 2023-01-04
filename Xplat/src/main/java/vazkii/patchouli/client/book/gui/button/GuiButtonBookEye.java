@@ -23,7 +23,7 @@ public class GuiButtonBookEye extends GuiButtonBook {
 		super.renderButton(ms, mouseX, mouseY, partialTicks);
 
 		if (!PersistentData.data.clickedVisualize && (ClientTicker.ticksInGame) % 20 < 10) {
-			parent.getMinecraft().font.drawShadow(ms, "!", x, y, 0xFF3333);
+			parent.getMinecraft().font.drawShadow(ms, "!", getX(), getY(), 0xFF3333);
 		}
 	}
 

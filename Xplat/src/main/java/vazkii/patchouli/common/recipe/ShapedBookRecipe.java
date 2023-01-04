@@ -17,7 +17,7 @@ public class ShapedBookRecipe extends ShapedRecipe {
 	public static final RecipeSerializer<ShapedBookRecipe> SERIALIZER = new BookRecipeSerializer<>(RecipeSerializer.SHAPED_RECIPE, ShapedBookRecipe::new);
 
 	public ShapedBookRecipe(ShapedRecipe compose, ResourceLocation outputBook) {
-		super(compose.getId(), compose.getGroup(), compose.getWidth(), compose.getHeight(), compose.getIngredients(), getOutputBook(compose, outputBook));
+		super(compose.getId(), compose.getGroup(), compose.category(), compose.getWidth(), compose.getHeight(), compose.getIngredients(), getOutputBook(compose, outputBook));
 	}
 
 	static ItemStack getOutputBook(Recipe<?> compose, ResourceLocation outputBook) {

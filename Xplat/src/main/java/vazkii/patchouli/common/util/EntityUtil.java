@@ -3,6 +3,7 @@ package vazkii.patchouli.common.util;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +24,7 @@ public final class EntityUtil {
 
 	public static String getEntityName(String entityId) {
 		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
-		EntityType<?> type = Registry.ENTITY_TYPE.get(new ResourceLocation(nameAndNbt.getLeft()));
+		EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(nameAndNbt.getLeft()));
 
 		return type.getDescriptionId();
 	}
@@ -43,7 +44,7 @@ public final class EntityUtil {
 		}
 
 		ResourceLocation key = new ResourceLocation(entityId);
-		Optional<EntityType<?>> maybeType = Registry.ENTITY_TYPE.getOptional(key);
+		Optional<EntityType<?>> maybeType = BuiltInRegistries.ENTITY_TYPE.getOptional(key);
 		if (maybeType.isEmpty()) {
 			throw new RuntimeException("Unknown entity id: " + entityId);
 		}

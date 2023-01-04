@@ -5,7 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -30,7 +30,7 @@ public class StringStateMatcher {
 		}
 
 		// c.f. BlockPredicateArgument. Similar, but doesn't use vanilla's weird caching class.
-		return BlockStateParser.parseForTesting(Registry.BLOCK, s, true).map(
+		return BlockStateParser.parseForTesting(BuiltInRegistries.BLOCK.asLookup(), s, true).map(
 				blockResult -> new ExactMatcher(blockResult.blockState(), blockResult.properties()),
 				tagResult -> new TagMatcher(tagResult.tag(), tagResult.vagueProperties())
 		);

@@ -291,8 +291,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void addWidget(AbstractWidget widget, int pageNum) {
-		widget.x += bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X);
-		widget.y += bookTop;
+		widget.setX(widget.getX() + bookLeft + ((pageNum % 2) == 0 ? LEFT_PAGE_X : RIGHT_PAGE_X));
+		widget.setY(widget.getY() + bookTop);
 		addRenderableWidget(widget);
 	}
 

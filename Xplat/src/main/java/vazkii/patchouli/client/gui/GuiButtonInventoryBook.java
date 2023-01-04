@@ -25,7 +25,7 @@ public class GuiButtonInventoryBook extends Button {
 		super(x, y, 20, 20, Component.empty(), (b) -> {
 			BookContents contents = book.getContents();
 			contents.openLexiconGui(contents.getCurrentGui(), false);
-		});
+		}, DEFAULT_NARRATION);
 		this.book = book;
 	}
 
@@ -35,15 +35,15 @@ public class GuiButtonInventoryBook extends Button {
 		RenderSystem.setShaderTexture(0, new ResourceLocation(PatchouliAPI.MOD_ID, "textures/gui/inventory_button.png"));
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
-		boolean hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
-		GuiComponent.blit(ms, x, y, (hovered ? 20 : 0), 0, width, height, 64, 64);
+		boolean hovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
+		GuiComponent.blit(ms, getX(), getY(), (hovered ? 20 : 0), 0, width, height, 64, 64);
 
 		ItemStack stack = book.getBookItem();
-		RenderHelper.renderItemStackInGui(ms, stack, x + 2, y + 2);
+		RenderHelper.renderItemStackInGui(ms, stack, getX() + 2, getY() + 2);
 
 		EntryDisplayState readState = book.getContents().getReadState();
 		if (readState.hasIcon && readState.showInInventory) {
-			GuiBook.drawMarking(ms, book, x, y, 0, readState);
+			GuiBook.drawMarking(ms, book, getX(), getY(), 0, readState);
 		}
 	}
 

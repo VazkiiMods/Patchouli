@@ -2,7 +2,7 @@ package vazkii.patchouli.mixin.client;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -37,13 +37,13 @@ public abstract class MixinInventoryScreen extends EffectRenderingInventoryScree
 			return;
 		}
 
-		Widget replaced = null;
+		Renderable replaced = null;
 		Button replacement = null;
 		for (int i = 0; i < ((AccessorScreen) this).getRenderables().size(); i++) {
-			Widget button = ((AccessorScreen) this).getRenderables().get(i);
+			Renderable button = ((AccessorScreen) this).getRenderables().get(i);
 			if (button instanceof ImageButton tex) {
 				replaced = button;
-				replacement = new GuiButtonInventoryBook(book, tex.x, tex.y - 1);
+				replacement = new GuiButtonInventoryBook(book, tex.getX(), tex.getY() - 1);
 				((AccessorScreen) this).getRenderables().set(i, replacement);
 				break;
 			}

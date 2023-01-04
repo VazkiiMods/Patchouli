@@ -2,7 +2,7 @@ package vazkii.patchouli.common.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -32,8 +32,8 @@ public class ItemModBook extends Item {
 
 	public ItemModBook() {
 		super(new Item.Properties()
-				.stacksTo(1)
-				.tab(CreativeModeTab.TAB_MISC));
+				.stacksTo(1));
+		/*.tab(CreativeModeTab.TAB_MISC)*/
 	}
 
 	public static float getCompletion(ItemStack stack) {
@@ -72,7 +72,7 @@ public class ItemModBook extends Item {
 
 		return stack;
 	}
-
+/*
 	@Override
 	public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {
 		String tabName = tab.getRecipeFolderName();
@@ -82,14 +82,14 @@ public class ItemModBook extends Item {
 			}
 		});
 	}
-
+*/
 	// SoftImplement IForgeItem
 	public String getCreatorModId(ItemStack stack) {
 		var book = getBook(stack);
 		if (book != null) {
 			return book.owner.getId();
 		}
-		return Registry.ITEM.getKey(this).getNamespace();
+		return BuiltInRegistries.ITEM.getKey(this).getNamespace();
 	}
 
 	public static Book getBook(ItemStack stack) {

@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -31,9 +32,13 @@ public class BookModel implements BakedModel {
 
 	public BookModel(BakedModel original, ModelBakery loader) {
 		this.original = original;
+
 		BlockModel missing = (BlockModel) loader.getModel(ModelBakery.MISSING_MODEL_LOCATION);
 
-		this.itemHandler = new ItemOverrides(loader, missing, id -> missing, Collections.emptyList()) {
+		this.itemHandler = ItemOverrides.EMPTY;
+
+		/*
+			new ItemOverrides(fakeBaker, missing, Collections.emptyList()) {
 			@Override
 			public BakedModel resolve(@NotNull BakedModel original, @NotNull ItemStack stack,
 					@Nullable ClientLevel world, @Nullable LivingEntity entity, int seed) {
@@ -44,7 +49,7 @@ public class BookModel implements BakedModel {
 				}
 				return original;
 			}
-		};
+		};*/
 	}
 
 	@NotNull

@@ -4,9 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
-import com.mojang.math.Vector4f;
+import com.mojang.math.Axis;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -44,6 +42,9 @@ import vazkii.patchouli.common.multiblock.SerializedMultiblock;
 import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
+import org.joml.Quaternionfc;
 
 import java.util.Collections;
 import java.util.Set;
@@ -148,11 +149,11 @@ public class PageMultiblock extends PageWithText {
 		// Initial eye pos somewhere off in the distance in the -Z direction
 		Vector4f eye = new Vector4f(0, 0, -100, 1);
 		Matrix4f rotMat = new Matrix4f();
-		rotMat.setIdentity();
+		rotMat.identity();
 
 		// For each GL rotation done, track the opposite to keep the eye pos accurate
-		ms.mulPose(Vector3f.XP.rotationDegrees(-30F));
-		rotMat.multiply(Vector3f.XP.rotationDegrees(30));
+		ms.mulPose(Axis.XP.rotationDegrees(-30F));
+		rotMat.rotate(Axis.XP.rotationDegrees(30));
 
 		float offX = (float) -sizeX / 2;
 		float offZ = (float) -sizeZ / 2 + 1;
@@ -162,15 +163,15 @@ public class PageMultiblock extends PageWithText {
 			time += ClientTicker.partialTicks;
 		}
 		ms.translate(-offX, 0, -offZ);
-		ms.mulPose(Vector3f.YP.rotationDegrees(time));
-		rotMat.multiply(Vector3f.YP.rotationDegrees(-time));
-		ms.mulPose(Vector3f.YP.rotationDegrees(45));
-		rotMat.multiply(Vector3f.YP.rotationDegrees(-45));
+		ms.mulPose(Axis.YP.rotationDegrees(time));
+		rotMat.rotate(Axis.YP.rotationDegrees(-time));
+		ms.mulPose(Axis.YP.rotationDegrees(45));
+		rotMat.rotate(Axis.YP.rotationDegrees(-45));
 		ms.translate(offX, 0, offZ);
 
 		// Finally apply the rotations
-		eye.transform(rotMat);
-		eye.perspectiveDivide();
+		rotMat.transform(eye);
+		eye.div(eye.w());
 		/* TODO XXX This does not handle visualization of sparse multiblocks correctly.
 			Dense multiblocks store everything in positive X/Z, so this works, but sparse multiblocks store everything from the JSON as-is.
 			Potential solution: Rotate around the offset vars of the multiblock, and add AABB method for extent of the multiblock

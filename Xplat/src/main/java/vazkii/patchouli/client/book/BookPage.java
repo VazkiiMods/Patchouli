@@ -57,8 +57,8 @@ public abstract class BookPage {
 	}
 
 	protected void addButton(Button button) {
-		button.x += (parent.bookLeft + left);
-		button.y += (parent.bookTop + top);
+		button.setX(button.getX() + (parent.bookLeft + left));
+		button.setY(button.getY() + (parent.bookTop + top));
 		buttons.add(button);
 		parent.addRenderableWidget(button);
 	}

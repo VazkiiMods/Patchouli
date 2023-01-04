@@ -47,7 +47,7 @@ public class PageQuest extends PageWithText {
 		super.onDisplayed(parent, left, top);
 
 		if (isManual) {
-			Button button = new Button(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35, 100, 20, Component.empty(), this::questButtonClicked);
+			Button button = Button.builder(Component.empty(), this::questButtonClicked).pos(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35).size(100, 20).build();
 			addButton(button);
 			updateButtonText(button);
 		}

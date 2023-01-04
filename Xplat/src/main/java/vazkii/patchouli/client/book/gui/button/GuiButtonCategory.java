@@ -32,7 +32,7 @@ public class GuiButtonCategory extends Button {
 	}
 
 	public GuiButtonCategory(GuiBook parent, int x, int y, BookIcon icon, Component name, Button.OnPress onPress) {
-		super(parent.bookLeft + x, parent.bookTop + y, 20, 20, name, onPress);
+		super(parent.bookLeft + x, parent.bookTop + y, 20, 20, name, onPress, DEFAULT_NARRATION);
 		this.parent = parent;
 		this.u = x;
 		this.v = y;
@@ -55,20 +55,20 @@ public class GuiButtonCategory extends Button {
 
 			if (locked) {
 				RenderSystem.setShaderColor(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(ms, parent.book, x + 2, y + 2);
+				GuiBook.drawLock(ms, parent.book, getX() + 2, getY() + 2);
 			} else {
-				icon.render(ms, x + 2, y + 2);
+				icon.render(ms, getX() + 2, getY() + 2);
 			}
 
 			ms.pushPose();
 			RenderSystem.enableBlend();
 			RenderSystem.setShaderColor(1F, 1F, 1F, transparency);
 			ms.translate(0, 0, 200);
-			GuiBook.drawFromTexture(ms, parent.book, x, y, u, v, width, height);
+			GuiBook.drawFromTexture(ms, parent.book, getX(), getY(), u, v, width, height);
 			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
 			if (category != null && !category.isLocked()) {
-				GuiBook.drawMarking(ms, parent.book, x, y, 0, category.getReadState());
+				GuiBook.drawMarking(ms, parent.book, getX(), getY(), 0, category.getReadState());
 			}
 			ms.popPose();
 

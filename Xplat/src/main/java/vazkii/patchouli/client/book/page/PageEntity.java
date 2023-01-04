@@ -3,7 +3,7 @@ package vazkii.patchouli.client.book.page;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -93,8 +93,8 @@ public class PageEntity extends PageWithText {
 		ms.translate(x, y, 50);
 		ms.scale(renderScale, renderScale, renderScale);
 		ms.translate(0, offset, 0);
-		ms.mulPose(Vector3f.ZP.rotationDegrees(180));
-		ms.mulPose(Vector3f.YP.rotationDegrees(rotation));
+		ms.mulPose(Axis.ZP.rotationDegrees(180));
+		ms.mulPose(Axis.YP.rotationDegrees(rotation));
 		EntityRenderDispatcher erd = Minecraft.getInstance().getEntityRenderDispatcher();
 		MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();
 		erd.setRenderShadow(false);

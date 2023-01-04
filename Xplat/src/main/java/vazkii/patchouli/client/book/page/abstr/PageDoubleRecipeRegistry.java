@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.page.abstr;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -45,7 +45,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 			return tempRecipe;
 		}
 
-		PatchouliAPI.LOGGER.warn("Recipe {} (of type {}) not found", res, Registry.RECIPE_TYPE.getKey(recipeType));
+		PatchouliAPI.LOGGER.warn("Recipe {} (of type {}) not found", res, BuiltInRegistries.RECIPE_TYPE.getKey(recipeType));
 		return null;
 	}
 

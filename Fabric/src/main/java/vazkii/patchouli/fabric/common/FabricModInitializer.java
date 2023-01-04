@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -16,9 +17,9 @@ import vazkii.patchouli.common.item.PatchouliItems;
 public class FabricModInitializer implements ModInitializer {
 	@Override
 	public void onInitialize() {
-		PatchouliSounds.submitRegistrations((id, e) -> Registry.register(Registry.SOUND_EVENT, id, e));
-		PatchouliItems.submitItemRegistrations((id, e) -> Registry.register(Registry.ITEM, id, e));
-		PatchouliItems.submitRecipeSerializerRegistrations((id, e) -> Registry.register(Registry.RECIPE_SERIALIZER, id, e));
+		PatchouliSounds.submitRegistrations((id, e) -> Registry.register(BuiltInRegistries.SOUND_EVENT, id, e));
+		PatchouliItems.submitItemRegistrations((id, e) -> Registry.register(BuiltInRegistries.ITEM, id, e));
+		PatchouliItems.submitRecipeSerializerRegistrations((id, e) -> Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, e));
 		FiberPatchouliConfig.setup();
 		CommandRegistrationCallback.EVENT.register((disp, buildCtx, selection) -> OpenBookCommand.register(disp));
 		UseBlockCallback.EVENT.register(LecternEventHandler::rightClick);
