@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 
@@ -13,6 +14,7 @@ import vazkii.patchouli.common.command.OpenBookCommand;
 import vazkii.patchouli.common.handler.LecternEventHandler;
 import vazkii.patchouli.common.handler.ReloadContentsHandler;
 import vazkii.patchouli.common.item.PatchouliItems;
+import vazkii.patchouli.common.item.ItemModBook;
 
 public class FabricModInitializer implements ModInitializer {
 	@Override
@@ -31,5 +33,11 @@ public class FabricModInitializer implements ModInitializer {
 				ReloadContentsHandler.dataReloaded(server);
 			}
 		});
+
+		ItemGroupEvents.MODIFY_ENTRIES_ALL.register((tab, entries) -> {
+			ItemModBook.fillItemCategory(tab, entries.getDisplayStacks());
+			ItemModBook.fillItemCategory(tab, entries.getSearchTabStacks());
+		});
+
 	}
 }

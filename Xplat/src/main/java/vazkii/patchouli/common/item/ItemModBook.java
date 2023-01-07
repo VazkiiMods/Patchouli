@@ -1,7 +1,6 @@
 package vazkii.patchouli.common.item;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -17,6 +16,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.chat.ComponentContents;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
@@ -72,17 +73,24 @@ public class ItemModBook extends Item {
 
 		return stack;
 	}
-/*
-	@Override
-	public void fillItemCategory(CreativeModeTab tab, NonNullList<ItemStack> items) {
-		String tabName = tab.getRecipeFolderName();
+
+	public static void fillItemCategory(CreativeModeTab tab, List<ItemStack> items) {
+		ComponentContents contents = tab.getDisplayName().getContents();
+		if (!(contents instanceof TranslatableContents)) {
+			return;
+		}
+
+		String tabName = ((TranslatableContents) contents).getKey();
+
+		PatchouliAPI.LOGGER.info("Registering items for tab " + tabName);
+
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			if (!b.noBook && !b.isExtension && (tab == CreativeModeTab.TAB_SEARCH || b.creativeTab.equals(tabName))) {
+			if (!b.noBook && !b.isExtension && b.creativeTab.equals(tabName)) {
 				items.add(forBook(b));
 			}
 		});
 	}
-*/
+
 	// SoftImplement IForgeItem
 	public String getCreatorModId(ItemStack stack) {
 		var book = getBook(stack);
