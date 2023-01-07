@@ -35,10 +35,7 @@ public class BookModel implements BakedModel {
 
 		BlockModel missing = (BlockModel) loader.getModel(ModelBakery.MISSING_MODEL_LOCATION);
 
-		this.itemHandler = ItemOverrides.EMPTY;
-
-		/*
-			new ItemOverrides(fakeBaker, missing, Collections.emptyList()) {
+		this.itemHandler = new ItemOverrides(null, missing, Collections.emptyList()) {
 			@Override
 			public BakedModel resolve(@NotNull BakedModel original, @NotNull ItemStack stack,
 					@Nullable ClientLevel world, @Nullable LivingEntity entity, int seed) {
@@ -49,7 +46,7 @@ public class BookModel implements BakedModel {
 				}
 				return original;
 			}
-		};*/
+		};
 	}
 
 	@NotNull

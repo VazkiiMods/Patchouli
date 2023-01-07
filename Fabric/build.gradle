@@ -53,6 +53,7 @@ loom {
 			vmArg "-Dfabric-api.gametest=1"
 		}
 	}
+	accessWidenerPath = file("src/main/resources/patchouli.accesswidener")
 }
 
 dependencies {

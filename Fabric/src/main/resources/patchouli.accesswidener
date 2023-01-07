@@ -1,0 +1,3 @@
+accessWidener	v1	named
+accessible	class	net/minecraft/client/resources/model/ModelManager$ReloadState
+accessible	field	net/minecraft/client/resources/model/ModelManager$ReloadState	modelBakery	Lnet/minecraft/client/resources/model/ModelBakery;

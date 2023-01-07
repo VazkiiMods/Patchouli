@@ -33,6 +33,7 @@
     "patchouli_xplat.mixins.json",
     "patchouli_fabric.mixins.json"
   ],
+  "accessWidener": "patchouli.accesswidener",
 
   "depends": {
     "fabricloader": ">=0.14.9",
