@@ -18,6 +18,9 @@
 	"item.patchouli:intro_book.name": "Patchouli",
 	"item.patchouli:intro_book.subtitle": "Documentazione per tutti",
 	"item.patchouli:intro_book.landing": "Con $(item)Patchouli$(), puoi realizzare $(thing)libri$() facili da leggere e sbloccabili con avanzamenti per le mod e i modpack!",
+
+	"item.patchouli:pamphlet.name": "Opuscolo di test",
+	"item.patchouli:pamphlet.landing": "Un opuscolo di prova, un libro ma con una sola categoria.",
 	
 	"patchouli.subtitle.book_open": "Libro che si apre",
 	"patchouli.subtitle.book_flip": "Pagina che gira",
@@ -77,6 +80,7 @@
 	"patchouli.gui.lexicon.button.back": "Indietro",
 	"patchouli.gui.lexicon.button.back.info": "Shift-Click per tornare alla home",
 	"patchouli.gui.lexicon.button.resize": "Ridimensiona grafica",
+	"patchouli.gui.lexicon.button.toggle_mock_header": "Attiva/disattiva intestazione fittizia",
 	"patchouli.gui.lexicon.button.resize.size0": "Predefinita",
 	"patchouli.gui.lexicon.button.resize.size1": "Piccola",
 	"patchouli.gui.lexicon.button.resize.size2": "Media",
