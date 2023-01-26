@@ -1,10 +1,12 @@
 package vazkii.patchouli.client.book.page;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.BookData;
@@ -45,7 +47,7 @@ public class PageQuest extends PageWithText {
 		super.onDisplayed(parent, left, top);
 
 		if (isManual) {
-			Button button = Button.builder(Component.empty(), this::questButtonClicked).size(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35).pos(100, 20).build();
+			Button button = Button.builder(Component.empty(), this::questButtonClicked).pos(GuiBook.PAGE_WIDTH / 2 - 50, GuiBook.PAGE_HEIGHT - 35).size(100, 20).build();
 			addButton(button);
 			updateButtonText(button);
 		}

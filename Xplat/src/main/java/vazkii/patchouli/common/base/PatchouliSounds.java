@@ -3,6 +3,7 @@ package vazkii.patchouli.common.base;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.function.BiConsumer;

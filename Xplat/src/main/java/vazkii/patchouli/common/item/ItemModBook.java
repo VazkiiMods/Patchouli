@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.base.PatchouliSounds;
@@ -101,7 +102,7 @@ public class ItemModBook extends Item {
 		if (book != null) {
 			return book.owner.getModId();
 		}
-
+	
 		return super.getCreatorModId(itemStack);
 	}
 	*/

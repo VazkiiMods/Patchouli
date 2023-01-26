@@ -2,9 +2,11 @@ package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
+
 import vazkii.patchouli.client.book.gui.GuiBook;
 
 import java.util.Arrays;

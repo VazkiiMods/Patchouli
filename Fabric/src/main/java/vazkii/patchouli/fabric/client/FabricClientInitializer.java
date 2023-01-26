@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
+
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.BookModel;
 import vazkii.patchouli.client.base.ClientTicker;

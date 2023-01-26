@@ -2,8 +2,10 @@ package vazkii.patchouli.client.book.template.variable;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
+
 import vazkii.patchouli.api.IVariableSerializer;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
