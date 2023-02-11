@@ -11,8 +11,6 @@ import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -20,7 +18,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.client.base.BookModel;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookContentResourceListenerLoader;
@@ -89,13 +86,5 @@ public class FabricClientInitializer implements ClientModInitializer {
 				}
 			}
 		});
-	}
-
-	public static BakedModel replaceBookModel(BakedModel oldModel, ModelBakery bakery, ResourceLocation key) {
-		ModelResourceLocation location = new ModelResourceLocation(PatchouliItems.BOOK_ID, "inventory");
-		if (oldModel != null && location.equals(key)) {
-			return new BookModel(oldModel, bakery);
-		}
-		return oldModel;
 	}
 }

@@ -17,19 +17,26 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.item.ItemModBook;
+import vazkii.patchouli.common.item.PatchouliItems;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class BookModel implements BakedModel {
 	private final BakedModel original;
 	private final ItemOverrides itemHandler;
 
-	public BookModel(BakedModel original, ModelBakery loader) {
+	public static void replace(Map<ResourceLocation, BakedModel> models, ModelBakery bakery) {
+		ModelResourceLocation key = new ModelResourceLocation(PatchouliItems.BOOK_ID, "inventory");
+		models.computeIfPresent(key, (k, oldModel) -> new BookModel(oldModel, bakery));
+	}
+
+	private BookModel(BakedModel original, ModelBakery loader) {
 		this.original = original;
 		BlockModel missing = (BlockModel) loader.getModel(ModelBakery.MISSING_MODEL_LOCATION);
 

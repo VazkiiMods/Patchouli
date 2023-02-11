@@ -2,7 +2,7 @@
   "__info": "This demonstrates how to create a book that changes appearance based on completion rate unlocking entries",
   "parent": "item/generated",
   "textures": {
-    "layer0": "patchouli:items/book_gray"
+    "layer0": "patchouli:item/book_gray"
   },
   "overrides": [
     {
