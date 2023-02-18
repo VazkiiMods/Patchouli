@@ -1,23 +1,23 @@
 {
 	"item.patchouli.guide_book": "指南手冊",
-	"item.patchouli.guide_book.undefined": "無效的手冊：沒有定義的 ID",
+	"item.patchouli.guide_book.undefined": "無效的手冊：沒有已定義的 ID",
 	"item.patchouli.guide_book.invalid": "無效的手冊：%s",
 
-	"item.patchouli.comprehensive_test_book.name": "綜合測試書",
-	"item.patchouli.comprehensive_test_book.landing": "希望能成為綜合測試 Patchouli 的測試書，而不是現在這樣一盤散沙。",
+	"item.patchouli.comprehensive_test_book.name": "全方位測試書",
+	"item.patchouli.comprehensive_test_book.landing": "希望能成為全方位測試 Patchouli 的測試書，而不是現在這樣一團亂。",
 
 	"item.patchouli:test_book_1.name": "測試書 1",
-	"item.patchouli:test_book_1.landing": "這裡的文本可能該更有趣一點。管他呢。",
+	"item.patchouli:test_book_1.landing": "沒那麼有趣的登陸文字，但仍然出現在這裡。",
 	
 	"item.patchouli:test_book_2.name": "測試書 2",
-	"item.patchouli:test_book_2.landing": "現在支持$(2)顏色$()和$(4)$(bold)粗體$()了！這就有趣多了。",
+	"item.patchouli:test_book_2.landing": "登陸文字！它甚至支援$(2)顏色$()和$(4)$(bold)粗體$()！",
 	
 	"item.patchouli:test_completion.name": "進度測試書",
-	"item.patchouli:test_completion.landing": "隨著你解鎖條目，書的顏色會跟著變！",
+	"item.patchouli:test_completion.landing": "隨著你解鎖項目，書的顏色會隨著改變！",
 	
 	"item.patchouli:intro_book.name": "Patchouli",
 	"item.patchouli:intro_book.subtitle": "給所有人的文件",
-	"item.patchouli:intro_book.landing": "使用 $(item)Patchouli$() ，你可以為模組和整合包製作易於閱讀、可解鎖進度的$(thing)書$()！",
+	"item.patchouli:intro_book.landing": "使用 $(item)Patchouli$()，你可以為模組和整合包製作易於閱讀、可解鎖進度的$(thing)書$()！",
 
 	"item.patchouli:pamphlet.name": "測試小冊",
 	"item.patchouli:pamphlet.landing": "一個測試小冊，這是一本只有一個類別的書。",
@@ -35,14 +35,14 @@
 	"patchouli.gui.lexicon.chapters": "章節",
 	"patchouli.gui.lexicon.editor": "書本編輯器",
 	"patchouli.gui.lexicon.editor.mock_header": "測試頁首",
-	"patchouli.gui.lexicon.editor.info": "這個編輯器是給 Patchouli 的書頁準備的，主要面向開發或翻譯時的測試。對普通玩家來說沒有用途。$(br2)參閱 $(l:https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101)Patchouli Wiki$() 了解更多關於控制字符的內容。",
+	"patchouli.gui.lexicon.editor.info": "這是 Patchouli 書本項目的編輯器。它用於開發或翻譯。如果你是玩家，則它對你沒有用。$(br2)請參考 $(l:https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101)Patchouli wiki$() 以獲得可用的控制代碼。",
 	"patchouli.gui.lexicon.shift_for_recipe": "Shift 點擊以顯示合成",
 	"patchouli.gui.lexicon.index": "總目錄",
 	"patchouli.gui.lexicon.index.info": "本書所有章節的索引。$(br2)你可以通過簡單地輸入你的查詢以搜索索引或任何其他類別。然後會出現一個搜索欄來幫助你。",
 	"patchouli.gui.lexicon.shapeless": "無序合成",
 	"patchouli.gui.lexicon.no_results": "沒有結果",
 	"patchouli.gui.lexicon.sad": ":(",
-	"patchouli.gui.lexicon.no_entries": "無條目",
+	"patchouli.gui.lexicon.no_entries": "無項目",
 	"patchouli.gui.lexicon.locked": "（已鎖定）",
 	"patchouli.gui.lexicon.reloaded": "本書已重新載入，耗時 %d ms。",
 	"patchouli.gui.lexicon.add_bookmark": "新增書簽",
