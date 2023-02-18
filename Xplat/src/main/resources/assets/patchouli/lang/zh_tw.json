@@ -35,7 +35,7 @@
 	"patchouli.gui.lexicon.chapters": "章節",
 	"patchouli.gui.lexicon.editor": "書本編輯器",
 	"patchouli.gui.lexicon.editor.mock_header": "測試頁首",
-	"patchouli.gui.lexicon.editor.info": "這是 Patchouli 書本項目的編輯器。它用於開發或翻譯。如果你是玩家，則它對你沒有用。$(br2)請參考 $(l:https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101)Patchouli wiki$() 以獲得可用的控制代碼。",
+	"patchouli.gui.lexicon.editor.info": "這是 Patchouli 書本項目的編輯器。它用於開發或翻譯。如果你是玩家，則它對你沒有用。$(br2)請參考 $(l:https://github.com/Vazkii/Patchouli/wiki/Text-Formatting-101)Patchouli wiki$() 以取得可用的控制代碼。",
 	"patchouli.gui.lexicon.shift_for_recipe": "Shift 點擊以顯示合成",
 	"patchouli.gui.lexicon.index": "總目錄",
 	"patchouli.gui.lexicon.index.info": "本書所有章節的索引。$(br2)你可以通過簡單地輸入你的查詢以搜索索引或任何其他類別。然後會出現一個搜索欄來幫助你。",
