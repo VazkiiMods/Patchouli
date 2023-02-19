@@ -25,7 +25,7 @@
 	"patchouli.subtitle.book_open": "翻開",
 	"patchouli.subtitle.book_flip": "翻頁",
 	
-	"patchouli.gui.lexicon.landing_info": "（預留位置登陸文字，請在你的 book.json 檔案中中自行定義！）",
+	"patchouli.gui.lexicon.landing_info": "（預留登陸文字，請在你的 book.json 檔案中中自行定義！）",
 	"patchouli.gui.lexicon.progress_meter": "解鎖進度：",
 	"patchouli.gui.lexicon.progress_tooltip": "%d/%d 已解鎖",
 	"patchouli.gui.lexicon.progress_tooltip.secret1": "包含 1 個隱藏頁",
