@@ -63,7 +63,7 @@
 	"patchouli.gui.lexicon.loading_error_hover": "(Hover for info)",
 	"patchouli.gui.lexicon.loading_error_log": "Check your log for more",
 	"patchouli.gui.lexicon.dev_edition": "Writer's",
-	"patchouli.gui.lexicon.edition_str": "%s Edition",
+	"patchouli.gui.lexicon.edition_str": "Edition #%s",
 	"patchouli.gui.lexicon.added_by": "Added by %s",
 	"patchouli.gui.lexicon.sneak": "Sneak to view",
 	"patchouli.gui.lexicon.view": "View entry",
