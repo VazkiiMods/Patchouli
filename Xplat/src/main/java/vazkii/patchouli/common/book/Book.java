@@ -288,7 +288,7 @@ public class Book {
 		if (i%1000 >= 100 && tens == 0) {tens = 100;}
 		i = Integer.toString(i);
 		units = Integer.toString(units);
-		tens = Integer.toString(tens);
+		tens = tens == 0 ? "00" : Integer.toString(tens);
 		return Component.translatable(String.join(".", base, tens), i
 					      Component.translatable(String.join(".", base, units), i),
 					      Component.translatable(String.join(".", base, tens, units), i, 
