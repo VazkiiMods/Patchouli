@@ -285,15 +285,27 @@ public class Book {
 		int units = i % 10;
 		int tens = i % 100 - units;
 		String base = "patchouli.gui.lexicon.edition_str.ord";
-		if (i%1000 >= 100 && tens == 0) {tens = 100;}
+		if (i % 1000 >= 100 && tens == 0) {tens = 100;}
 		i = Integer.toString(i);
 		units = Integer.toString(units);
 		tens = tens == 0 ? "00" : Integer.toString(tens);
+		/*
+		The translation key is first picked based on the number's tens.
+			- If the translation is "%1$s<suffix>", then that suffix will be used for all numbers with those tens.
+			- If the translation is "%2$s", then for all the numbers with those tens 
+			  it will pick a suffix based on the units alone (the translation of <base>.<units>).
+			- If the translation is "%3$s", then for all the numbers with those tens
+			  it will pick a translation based on both units AND tens. This translation can be:
+				- "%1$s" (default tens suffix)
+				- "%2$s" (default units suffix)
+				- "%3$s<suffix>" (a special suffix)
+		*/
 		return Component.translatable(String.join(".", base, tens), i
 					      Component.translatable(String.join(".", base, units), i),
-					      Component.translatable(String.join(".", base, tens, units), i, 
-								     Component.translatable(String.join(".", base, units), i)
-								    )
+					      Component.translatable(String.join(".", base, tens, units),
+								     Component.translatable(String.join(".", base, tens), i),
+								     Component.translatable(String.join(".", base, units), i),
+								     i)
 					     );
 		
 	}
