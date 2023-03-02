@@ -294,7 +294,7 @@ public class Book {
 					      Component.translatable(String.join(".", base, tens, units), i, 
 								     Component.translatable(String.join(".", base, units), i)
 								    )
-					     )
+					     );
 		
 	}
 
