@@ -257,7 +257,7 @@ public class Book {
 	}
 
 	public MutableComponent getSubtitle() {
-		Component editionStr;
+		Component edition;
 
 		try {
 			int ver = Integer.parseInt(version);
@@ -265,12 +265,12 @@ public class Book {
 				return Component.translatable(subtitle);
 			}
 
-			editionStr = Component.literal(numberToOrdinal(ver));
+			editionStr = numberToOrdinal(ver);
 		} catch (NumberFormatException e) {
-			editionStr = Component.translatable("patchouli.gui.lexicon.dev_edition");
+			return Component.translatable("patchouli.gui.lexicon.dev_edition");
 		}
 
-		return Component.translatable("patchouli.gui.lexicon.edition_str", editionStr);
+		return Component.translatable("patchouli.gui.lexicon.edition_str", edition);
 	}
 
 	public BookIcon getIcon() {
@@ -281,8 +281,21 @@ public class Book {
 		}
 	}
 
-	private static String numberToOrdinal(int i) {
-		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
+	private static Component numberToOrdinal(int i) {
+		int units = i % 10;
+		int tens = i % 100 - units;
+		String base = "patchouli.gui.lexicon.edition_str.ord";
+		if (i%1000 >= 100 && tens == 0) {tens = 100;}
+		i = Integer.toString(i);
+		units = Integer.toString(units);
+		tens = Integer.toString(tens);
+		return Component.translatable(String.join(".", base, tens), i
+					      Component.translatable(String.join(".", base, units), i),
+					      Component.translatable(String.join(".", base, tens, units), i, 
+								     Component.translatable(String.join(".", base, units), i)
+								    )
+					     )
+		
 	}
 
 	public BookContents getContents() {
