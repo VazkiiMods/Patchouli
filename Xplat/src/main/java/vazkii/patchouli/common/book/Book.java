@@ -257,7 +257,7 @@ public class Book {
 	}
 
 	public MutableComponent getSubtitle() {
-		Component edition;
+		Component editionStr;
 
 		try {
 			int ver = Integer.parseInt(version);
@@ -272,7 +272,7 @@ public class Book {
 			return Component.translatable("patchouli.gui.lexicon.dev_edition");
 		}
 
-		return Component.translatable("patchouli.gui.lexicon.edition_str", edition);
+		return Component.translatable("patchouli.gui.lexicon.edition_str", editionStr);
 	}
 
 	public BookIcon getIcon() {
