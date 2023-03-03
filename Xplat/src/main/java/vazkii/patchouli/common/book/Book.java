@@ -298,9 +298,8 @@ public class Book {
 			  it will pick a suffix based on the units alone (the translation of <base>.<units>).
 			- If the translation is "%3$s", then for all the numbers with those tens
 			  it will pick a translation based on both units AND tens. This translation can be:
-				- "%1$s" (default tens suffix)
+				- "%1$s<suffix>" (a special suffix)
 				- "%2$s" (default units suffix)
-				- "%3$s<suffix>" (a special suffix)
 		If the tens of a number are equal to 0, 'tens' can have three possible values:
 			- "uu" if the number is less than 10 (1, 2, 3, ...)
 			- "00" if the number is greater than 10 and number's hundreds are equal to 0 (1001, 2002, 3003, ...)
@@ -308,10 +307,9 @@ public class Book {
 		*/
 		return Component.translatable(String.join(".", base, tens_str), i_str
 					      Component.translatable(String.join(".", base, units_str), i_str),
-					      Component.translatable(String.join(".", base, tens_str, units_str),
-								     Component.translatable(String.join(".", base, tens_str), i_str),
-								     Component.translatable(String.join(".", base, units_str), i_str),
-								     i_str)
+					      Component.translatable(String.join(".", base, tens_str, units_str), i_str,
+								     Component.translatable(String.join(".", base, units_str), i_str)
+								     )
 					     );
 	}
 
