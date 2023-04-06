@@ -305,7 +305,7 @@ public class Book {
 			- "00" if the number is greater than 10 and number's hundreds are equal to 0 (1001, 2002, 3003, ...)
 			- "100" if the number's hundreds are not equal to 0 (101, 202, 3303, ...)
 		*/
-		return Component.translatable(String.join(".", base, tens_str), i_str
+		return Component.translatable(String.join(".", base, tens_str), i_str,
 					      Component.translatable(String.join(".", base, units_str), i_str),
 					      Component.translatable(String.join(".", base, tens_str, units_str), i_str,
 								     Component.translatable(String.join(".", base, units_str), i_str)
