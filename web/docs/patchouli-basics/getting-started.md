@@ -78,7 +78,7 @@ Format](/docs/reference/book-json). (highly recommended!)
 
 ### 4. Check ingame
 Load your game and check if your book is there. Unless you specified otherwise, it should
-be in the Miscellaneous creative tab, but you can also search for it.
+be in the Tools & Utilities creative tab, but you can also search for it.
 
 If you don't see it, check if Patchouli is properly loaded and if there's any errors in
 your log.

@@ -146,7 +146,7 @@ landing page if "version" is set to "0" or not set.
 
 * **creative_tab** (String)
 
-The creative tab to display your book in. This defaults to Miscellaneous, but you can move
+The creative tab to display your book in. This defaults to Tools & Utilities, but you can move
 it to any tab you wish. Here are the names for the vanilla tabs:
 
 1. buildingBlocks
