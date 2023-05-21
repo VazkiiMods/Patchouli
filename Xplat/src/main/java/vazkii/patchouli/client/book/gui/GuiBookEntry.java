@@ -13,7 +13,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import vazkii.patchouli.api.IComponentRenderContext;
-import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.BookData;
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
@@ -240,10 +239,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 			return;
 		}
 
-		RenderHelper.transferMsToGl(ms, () -> {
-			Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, x, y);
-			minecraft.getItemRenderer().renderGuiItemDecorations(font, stack, x, y);
-		});
+		Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(ms, stack, x, y);
+		minecraft.getItemRenderer().renderGuiItemDecorations(ms, font, stack, x, y);
 
 		if (isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
 			setTooltipStack(stack);

@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.page;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -11,6 +12,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
@@ -23,6 +25,10 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 
 	@Override
 	protected void drawRecipe(PoseStack ms, Recipe<?> recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
+		Level level = Minecraft.getInstance().level;
+		if (level == null)
+			return;
+
 		RenderSystem.setShaderTexture(0, book.craftingTexture);
 		RenderSystem.enableBlend();
 		GuiComponent.blit(ms, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 256);
@@ -39,7 +45,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 
 		parent.drawCenteredStringNoShadow(ms, getTitle(second).getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-		parent.renderItemStack(ms, recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getResultItem());
+		parent.renderItemStack(ms, recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getResultItem(level.registryAccess()));
 
 		NonNullList<Ingredient> ingredients = recipe.getIngredients();
 		int wrap = 3;
@@ -61,11 +67,12 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 
 	@Override
 	protected ItemStack getRecipeOutput(Recipe<?> recipe) {
-		if (recipe == null) {
+		Level level = Minecraft.getInstance().level;
+		if (recipe == null || level == null) {
 			return ItemStack.EMPTY;
 		}
 
-		return recipe.getResultItem();
+		return recipe.getResultItem(level.registryAccess());
 	}
 
 }

@@ -11,7 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.BookContents;
 import vazkii.patchouli.client.book.EntryDisplayState;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -30,7 +29,7 @@ public class GuiButtonInventoryBook extends Button {
 	}
 
 	@Override
-	public void renderButton(PoseStack ms, int mouseX, int mouseY, float pticks) {
+	public void renderWidget(PoseStack ms, int mouseX, int mouseY, float pticks) {
 		Minecraft mc = Minecraft.getInstance();
 		RenderSystem.setShaderTexture(0, new ResourceLocation(PatchouliAPI.MOD_ID, "textures/gui/inventory_button.png"));
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
@@ -39,7 +38,7 @@ public class GuiButtonInventoryBook extends Button {
 		GuiComponent.blit(ms, getX(), getY(), (hovered ? 20 : 0), 0, width, height, 64, 64);
 
 		ItemStack stack = book.getBookItem();
-		RenderHelper.renderItemStackInGui(ms, stack, getX() + 2, getY() + 2);
+		Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(ms, stack, getX() + 2, getY() + 2);
 
 		EntryDisplayState readState = book.getContents().getReadState();
 		if (readState.hasIcon && readState.showInInventory) {

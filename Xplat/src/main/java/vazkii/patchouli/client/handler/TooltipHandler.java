@@ -18,7 +18,6 @@ import net.minecraft.world.item.ItemStack;
 
 import org.lwjgl.opengl.GL11;
 
-import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -73,7 +72,6 @@ public class TooltipHandler {
 					float requiredTime = PatchouliConfig.get().quickLookupTime();
 					float angles = lexiconLookupTime / requiredTime * 360F;
 
-					RenderSystem.disableTexture();
 					RenderSystem.enableBlend();
 					RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -92,7 +90,6 @@ public class TooltipHandler {
 					Tesselator.getInstance().end();
 
 					RenderSystem.disableBlend();
-					RenderSystem.enableTexture();
 
 					if (lexiconLookupTime >= requiredTime) {
 						mc.player.getInventory().selected = lexSlot;
@@ -103,9 +100,10 @@ public class TooltipHandler {
 					lexiconLookupTime = 0F;
 				}
 
-				mc.getItemRenderer().blitOffset = 300;
-				RenderHelper.renderItemStackInGui(ms, lexiconStack, x, tooltipY);
-				mc.getItemRenderer().blitOffset = 0;
+				ms.pushPose();
+				ms.translate(0, 0, 300);
+				Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(ms, lexiconStack, x, tooltipY);
+				ms.popPose();
 
 				ms.pushPose();
 				ms.translate(0, 0, 500);

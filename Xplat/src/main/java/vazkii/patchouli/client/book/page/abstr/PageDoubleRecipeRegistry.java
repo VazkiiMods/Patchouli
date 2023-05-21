@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -31,7 +32,8 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 
 	@Override
 	protected T loadRecipe(BookContentsBuilder builder, BookEntry entry, ResourceLocation res) {
-		if (res == null) {
+		Level level = Minecraft.getInstance().level;
+		if (res == null || level == null) {
 			return null;
 		}
 
@@ -41,7 +43,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 		}
 
 		if (tempRecipe != null) {
-			entry.addRelevantStack(builder, tempRecipe.getResultItem(), pageNum);
+			entry.addRelevantStack(builder, tempRecipe.getResultItem(level.registryAccess()), pageNum);
 			return tempRecipe;
 		}
 

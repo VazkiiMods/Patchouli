@@ -12,7 +12,6 @@ import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
 
-import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.mixin.client.AccessorClientAdvancements;
@@ -90,7 +89,7 @@ public class ClientAdvancements {
 			toastGui.getMinecraft().font.draw(ms, I18n.get(book.name), 30, 7, -11534256);
 			toastGui.getMinecraft().font.draw(ms, I18n.get("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
 
-			RenderHelper.renderItemStackInGui(ms, book.getBookItem(), 8, 8);
+			Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(ms, book.getBookItem(), 8, 8);
 
 			return delta >= 5000L ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
 		}

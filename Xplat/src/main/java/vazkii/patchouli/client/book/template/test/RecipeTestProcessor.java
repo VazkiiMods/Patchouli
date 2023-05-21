@@ -6,6 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
@@ -25,6 +26,9 @@ public class RecipeTestProcessor implements IComponentProcessor {
 
 	@Override
 	public IVariable process(String key) {
+		Level level = Minecraft.getInstance().level;
+		if (level == null)
+			return null;
 		if (key.startsWith("item")) {
 			int index = Integer.parseInt(key.substring(4)) - 1;
 			Ingredient ingredient = recipe.getIngredients().get(index);
@@ -33,12 +37,12 @@ public class RecipeTestProcessor implements IComponentProcessor {
 
 			return IVariable.from(stack);
 		} else if (key.equals("text")) {
-			ItemStack out = recipe.getResultItem();
+			ItemStack out = recipe.getResultItem(level.registryAccess());
 			return IVariable.wrap(out.getCount() + "x$(br)" + out.getHoverName());
 		} else if (key.equals("icount")) {
-			return IVariable.wrap(recipe.getResultItem().getCount());
+			return IVariable.wrap(recipe.getResultItem(level.registryAccess()).getCount());
 		} else if (key.equals("iname")) {
-			return IVariable.wrap(recipe.getResultItem().getHoverName().getString());
+			return IVariable.wrap(recipe.getResultItem(level.registryAccess()).getHoverName().getString());
 		}
 
 		return null;

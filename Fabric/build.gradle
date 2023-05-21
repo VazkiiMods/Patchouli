@@ -61,9 +61,9 @@ dependencies {
 
 	minecraft "com.mojang:minecraft:${minecraft_version}"
 	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:0.14.11"
+	modImplementation "net.fabricmc:fabric-loader:0.14.19"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.68.1+1.19.3"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.81.1+1.19.4"
     compileOnly project(":Xplat")
 
 	modCompileOnly "mezz.jei:jei-1.19.2-common-api:11.2.0.247"
