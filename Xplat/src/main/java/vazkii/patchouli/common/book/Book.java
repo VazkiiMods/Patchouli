@@ -86,7 +86,7 @@ public class Book {
 	public final String version;
 	public final String subtitle;
 
-	public final String creativeTab;
+	@Nullable public final ResourceLocation creativeTab;
 
 	@Nullable public final ResourceLocation advancementsTab;
 
@@ -144,7 +144,7 @@ public class Book {
 		this.indexIconRaw = GsonHelper.getAsString(root, "index_icon", "");
 		this.version = GsonHelper.getAsString(root, "version", "0");
 		this.subtitle = GsonHelper.getAsString(root, "subtitle", "");
-		this.creativeTab = GsonHelper.getAsString(root, "creative_tab", "misc");
+		this.creativeTab = SerializationUtil.getAsResourceLocation(root, "creative_tab", null);
 		this.advancementsTab = SerializationUtil.getAsResourceLocation(root, "advancements_tab", null);
 		this.noBook = GsonHelper.getAsBoolean(root, "dont_generate_book", false);
 		this.showToasts = GsonHelper.getAsBoolean(root, "show_toasts", true);
