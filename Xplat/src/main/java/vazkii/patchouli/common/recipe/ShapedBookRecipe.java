@@ -25,8 +25,9 @@ public class ShapedBookRecipe extends ShapedRecipe {
 
 	static ItemStack getOutputBook(Recipe<?> compose, ResourceLocation outputBook) {
 		Level level = Minecraft.getInstance().level;
-		if (level == null)
+		if (level == null) {
 			return null;
+		}
 		if (outputBook != null) {
 			return PatchouliAPI.get().getBookStack(outputBook);
 		}

@@ -27,8 +27,9 @@ public class RecipeTestProcessor implements IComponentProcessor {
 	@Override
 	public IVariable process(String key) {
 		Level level = Minecraft.getInstance().level;
-		if (level == null)
+		if (level == null) {
 			return null;
+		}
 		if (key.startsWith("item")) {
 			int index = Integer.parseInt(key.substring(4)) - 1;
 			Ingredient ingredient = recipe.getIngredients().get(index);

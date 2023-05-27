@@ -26,8 +26,9 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 	@Override
 	protected void drawRecipe(PoseStack ms, Recipe<?> recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		Level level = Minecraft.getInstance().level;
-		if (level == null)
+		if (level == null) {
 			return;
+		}
 
 		RenderSystem.setShaderTexture(0, book.craftingTexture);
 		RenderSystem.enableBlend();
