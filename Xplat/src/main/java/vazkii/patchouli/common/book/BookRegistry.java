@@ -35,8 +35,6 @@ public class BookRegistry {
 			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
 			.create();
 
-	private boolean loaded = false;
-
 	private BookRegistry() {}
 
 	public void init() {
@@ -128,11 +126,6 @@ public class BookRegistry {
 			book.reloadContents(false);
 		}
 		ClientBookRegistry.INSTANCE.reloadLocks(false);
-		loaded = true;
-	}
-
-	public boolean isLoaded() {
-		return loaded;
 	}
 
 	// HELPER
