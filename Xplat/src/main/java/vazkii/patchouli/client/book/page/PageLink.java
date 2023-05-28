@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -19,8 +20,8 @@ public class PageLink extends PageText {
 	transient Component realText;
 
 	@Override
-	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
-		super.build(entry, builder, pageNum);
+	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(level, entry, builder, pageNum);
 		realText = linkText.as(Component.class);
 	}
 

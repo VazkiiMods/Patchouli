@@ -67,8 +67,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 	}
 
 	@Override
-	protected ItemStack getRecipeOutput(Recipe<?> recipe) {
-		Level level = Minecraft.getInstance().level;
+	protected ItemStack getRecipeOutput(Level level, Recipe<?> recipe) {
 		if (recipe == null || level == null) {
 			return ItemStack.EMPTY;
 		}

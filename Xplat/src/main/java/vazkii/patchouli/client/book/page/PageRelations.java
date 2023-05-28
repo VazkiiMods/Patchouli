@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
@@ -27,8 +28,8 @@ public class PageRelations extends PageWithText {
 	transient List<BookEntry> entryObjs;
 
 	@Override
-	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
-		super.build(entry, builder, pageNum);
+	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(level, entry, builder, pageNum);
 
 		entryObjs = entries.stream()
 				.map(ResourceLocation::new)

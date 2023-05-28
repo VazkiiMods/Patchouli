@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.api.PatchouliConfigAccess;
@@ -200,18 +201,12 @@ public class Book {
 		return updated;
 	}
 
-	/** Must only be called on client */
-	@Deprecated
-	public void reloadContents() {
-		reloadContents(false);
-	}
-
 	/**
 	 * Must only be called on client
 	 * 
 	 * @param singleBook Hint that the book was reloaded through the button on the main page
 	 */
-	public void reloadContents(boolean singleBook) {
+	public void reloadContents(Level level, boolean singleBook) {
 		if (!isExtension) {
 			BookContentsBuilder builder = new BookContentsBuilder(singleBook);
 			try {
@@ -230,7 +225,7 @@ public class Book {
 			}
 
 			try {
-				contents = builder.build(this);
+				contents = builder.build(level, this);
 			} catch (Exception e) {
 				PatchouliAPI.LOGGER.error("Error compiling book {}, using empty contents", id, e);
 				contents = BookContents.empty(this, e);

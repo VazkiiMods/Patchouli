@@ -36,8 +36,7 @@ public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends Pa
 	}
 
 	@Override
-	protected ItemStack getRecipeOutput(T recipe) {
-		Level level = Minecraft.getInstance().level;
+	protected ItemStack getRecipeOutput(Level level, T recipe) {
 		if (recipe == null || level == null) {
 			return ItemStack.EMPTY;
 		}

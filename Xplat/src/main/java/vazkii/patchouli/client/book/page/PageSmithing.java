@@ -39,8 +39,7 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 	}
 
 	@Override
-	protected ItemStack getRecipeOutput(SmithingRecipe recipe) {
-		Level level = Minecraft.getInstance().level;
+	protected ItemStack getRecipeOutput(Level level, SmithingRecipe recipe) {
 		if (recipe == null || level == null) {
 			return ItemStack.EMPTY;
 		}

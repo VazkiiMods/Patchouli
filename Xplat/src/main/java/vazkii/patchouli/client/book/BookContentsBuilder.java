@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.client.book.template.BookTemplate;
 import vazkii.patchouli.common.book.Book;
@@ -82,7 +83,7 @@ public class BookContentsBuilder {
 		load(book, "templates", BookContentsBuilder::loadTemplate, templates);
 	}
 
-	public BookContents build(Book book) {
+	public BookContents build(Level level, Book book) {
 		categories.forEach((id, category) -> {
 			try {
 				category.build(this);
@@ -93,7 +94,7 @@ public class BookContentsBuilder {
 
 		entries.values().forEach(entry -> {
 			try {
-				entry.build(this);
+				entry.build(level, this);
 			} catch (Exception e) {
 				throw new RuntimeException("Error building entry " + entry.getId(), e);
 			}

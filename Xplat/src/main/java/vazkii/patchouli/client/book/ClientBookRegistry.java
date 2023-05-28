@@ -60,7 +60,7 @@ public class ClientBookRegistry {
 
 	public void reload(boolean resourcePackBooksOnly) {
 		currentLang = Minecraft.getInstance().getLanguageManager().getSelected();
-		BookRegistry.INSTANCE.reloadContents(resourcePackBooksOnly);
+		BookRegistry.INSTANCE.reloadContents(Minecraft.getInstance().level, resourcePackBooksOnly);
 	}
 
 	public void reloadLocks(boolean suppressToasts) {
