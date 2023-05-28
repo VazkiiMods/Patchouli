@@ -36,25 +36,6 @@ public final class ItemStackUtil {
 
 	private ItemStackUtil() {}
 
-	public static String serializeStack(ItemStack stack) {
-		StringBuilder builder = new StringBuilder();
-		builder.append(BuiltInRegistries.ITEM.getKey(stack.getItem()));
-
-		int count = stack.getCount();
-		if (count > 1) {
-			builder.append("#");
-			builder.append(count);
-		}
-
-		if (stack.hasTag()) {
-			Dynamic<?> dyn = new Dynamic<>(NbtOps.INSTANCE, stack.getTag());
-			JsonElement j = dyn.convert(JsonOps.INSTANCE).getValue();
-			builder.append(GSON.toJson(j));
-		}
-
-		return builder.toString();
-	}
-
 	public static Triple<ResourceLocation, Integer, CompoundTag> parseItemStackString(String res) {
 		String nbt = "";
 		int nbtStart = res.indexOf("{");
@@ -111,26 +92,8 @@ public final class ItemStackUtil {
 		return loadFromParsed(parseItemStackString(res));
 	}
 
-	public static String serializeIngredient(Ingredient ingredient) {
-		ItemStack[] stacks = ingredient.getItems();
-		String[] stacksSerialized = new String[stacks.length];
-		for (int i = 0; i < stacks.length; i++) {
-			stacksSerialized[i] = serializeStack(stacks[i]);
-		}
-
-		return String.join(",", stacksSerialized);
-	}
-
 	public static Ingredient loadIngredientFromString(String ingredientString) {
 		return Ingredient.of(loadStackListFromString(ingredientString).toArray(new ItemStack[0]));
-	}
-
-	public static String serializeStackList(List<ItemStack> stacks) {
-		StringJoiner joiner = new StringJoiner(",");
-		for (ItemStack stack : stacks) {
-			joiner.add(serializeStack(stack));
-		}
-		return joiner.toString();
 	}
 
 	public static List<ItemStack> loadStackListFromString(String ingredientString) {
