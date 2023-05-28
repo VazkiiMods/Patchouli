@@ -1,13 +1,12 @@
 package vazkii.patchouli.common.recipe;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.PatchouliAPI;
 
@@ -24,14 +23,10 @@ public class ShapedBookRecipe extends ShapedRecipe {
 	}
 
 	static ItemStack getOutputBook(Recipe<?> compose, ResourceLocation outputBook) {
-		Level level = Minecraft.getInstance().level;
-		if (level == null) {
-			return null;
-		}
 		if (outputBook != null) {
 			return PatchouliAPI.get().getBookStack(outputBook);
 		}
-		return compose.getResultItem(level.registryAccess());
+		return compose.getResultItem(RegistryAccess.EMPTY);
 	}
 
 	@Override
