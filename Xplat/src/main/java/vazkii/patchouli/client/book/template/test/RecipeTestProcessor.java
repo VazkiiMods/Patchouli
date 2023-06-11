@@ -17,19 +17,15 @@ public class RecipeTestProcessor implements IComponentProcessor {
 	private Recipe<?> recipe;
 
 	@Override
-	public void setup(IVariableProvider variables) {
+	public void setup(Level level, IVariableProvider variables) {
 		// TODO probably add a recipe serializer?
 		String recipeId = variables.get("recipe").asString();
-		RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
+		RecipeManager manager = level.getRecipeManager();
 		recipe = manager.byKey(new ResourceLocation(recipeId)).orElseThrow(IllegalArgumentException::new);
 	}
 
 	@Override
-	public IVariable process(String key) {
-		Level level = Minecraft.getInstance().level;
-		if (level == null) {
-			return null;
-		}
+	public IVariable process(Level level, String key) {
 		if (key.startsWith("item")) {
 			int index = Integer.parseInt(key.substring(4)) - 1;
 			Ingredient ingredient = recipe.getIngredients().get(index);

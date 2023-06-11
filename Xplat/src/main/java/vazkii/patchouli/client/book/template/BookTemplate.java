@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.resources.ResourceLocation;
 
+import net.minecraft.world.level.Level;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.PatchouliAPI;
@@ -76,7 +77,7 @@ public class BookTemplate {
 		return template;
 	}
 
-	public void compile(BookContentsBuilder builder, IVariableProvider variables) {
+	public void compile(Level level, BookContentsBuilder builder, IVariableProvider variables) {
 		if (compiled) {
 			return;
 		}
@@ -91,7 +92,7 @@ public class BookTemplate {
 			}
 
 			try {
-				processor.setup(processorVars);
+				processor.setup(level, processorVars);
 			} catch (Exception e) {
 				throw new RuntimeException("Error setting up template processor", e);
 			}
@@ -103,15 +104,15 @@ public class BookTemplate {
 			}
 
 			include.upperMerge(encapsulation);
-			include.process(processor);
+			include.process(level, processor);
 
 			BookTemplate template = createTemplate(book, builder, include.template, include);
-			template.compile(builder, variables);
+			template.compile(level, builder, variables);
 			components.addAll(template.components);
 		}
 
 		for (TemplateComponent c : components) {
-			c.compile(variables, processor, encapsulation);
+			c.compile(level, variables, processor, encapsulation);
 		}
 
 		compiled = true;

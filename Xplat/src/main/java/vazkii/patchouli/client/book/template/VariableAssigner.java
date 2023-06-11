@@ -4,6 +4,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.text.WordUtils;
 
 import vazkii.patchouli.api.IComponentProcessor;
@@ -43,14 +44,14 @@ public class VariableAssigner {
 		FUNCTIONS.put("stacks", VariableAssigner::stacks);
 	}
 
-	public static void assignVariableHolders(IVariablesAvailableCallback object, IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
+	public static void assignVariableHolders(Level level, IVariablesAvailableCallback object, IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
 		Context c = new Context(variables, processor, encapsulation);
 		object.onVariablesAvailable(input -> {
 			if (input == null) {
 				return IVariable.empty();
 			}
 			if (input.unwrap().isJsonPrimitive() && input.unwrap().getAsJsonPrimitive().isString()) {
-				IVariable resolved = resolveString(input.asString(), c);
+				IVariable resolved = resolveString(level, input.asString(), c);
 				if (resolved != null) {
 					return resolved;
 				}
@@ -59,7 +60,7 @@ public class VariableAssigner {
 		});
 	}
 
-	private static IVariable resolveString(@Nullable String curr, Context c) {
+	private static IVariable resolveString(Level level, @Nullable String curr, Context c) {
 		if (curr == null || curr.isEmpty()) {
 			return null;
 		}
@@ -71,16 +72,16 @@ public class VariableAssigner {
 			String var = m.group(2);
 			String after = m.group(3);
 
-			String resolved = resolveStringFunctions(var, c).asString();
+			String resolved = resolveStringFunctions(level, var, c).asString();
 
 			s = String.format("%s%s%s", before, resolved, after);
 			m = INLINE_VAR_PATTERN.matcher(s);
 		}
 
-		return resolveStringFunctions(s, c);
+		return resolveStringFunctions(level, s, c);
 	}
 
-	private static IVariable resolveStringFunctions(String curr, Context c) {
+	private static IVariable resolveStringFunctions(Level level, String curr, Context c) {
 		IVariable cached = c.getCached(curr);
 		if (cached != null) {
 			return cached;
@@ -94,19 +95,19 @@ public class VariableAssigner {
 
 			if (FUNCTIONS.containsKey(funcStr)) {
 				UnaryOperator<IVariable> func = FUNCTIONS.get(funcStr);
-				IVariable parsedArg = resolveStringFunctions(arg, c);
+				IVariable parsedArg = resolveStringFunctions(level, arg, c);
 				return c.cache(curr, func.apply(parsedArg));
 			} else {
 				throw new IllegalArgumentException("Invalid Function " + funcStr);
 			}
 		}
 
-		IVariable ret = resolveStringVar(curr, c);
+		IVariable ret = resolveStringVar(level, curr, c);
 
 		return c.cache(curr, ret);
 	}
 
-	private static IVariable resolveStringVar(String original, Context c) {
+	private static IVariable resolveStringVar(Level level, String original, Context c) {
 		String curr = original;
 		IVariable val = null;
 
@@ -128,7 +129,7 @@ public class VariableAssigner {
 			String originalKey = original.substring(1);
 
 			if (c.processor != null) {
-				val = c.processor.process(originalKey);
+				val = c.processor.process(level, originalKey);
 			}
 
 			if (val == null && c.variables.has(key)) {

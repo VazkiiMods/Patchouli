@@ -27,7 +27,7 @@ public class PageTemplate extends BookPage {
 
 		JsonVariableWrapper wrapper = new JsonVariableWrapper(sourceObject);
 
-		template.compile(builder, wrapper);
+		template.compile(level, builder, wrapper);
 		template.build(builder, this, entry, pageNum);
 	}
 

@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.world.level.Level;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
@@ -37,7 +38,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 
 	public transient JsonObject sourceObject;
 
-	public final void compile(IVariableProvider variables, IComponentProcessor processor, @Nullable TemplateInclusion encapsulation) {
+	public final void compile(Level level, IVariableProvider variables, IComponentProcessor processor, @Nullable TemplateInclusion encapsulation) {
 		if (compiled) {
 			return;
 		}
@@ -47,7 +48,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 			y += encapsulation.y;
 		}
 
-		VariableAssigner.assignVariableHolders(this, variables, processor, encapsulation);
+		VariableAssigner.assignVariableHolders(level, this, variables, processor, encapsulation);
 		compiled = true;
 	}
 
