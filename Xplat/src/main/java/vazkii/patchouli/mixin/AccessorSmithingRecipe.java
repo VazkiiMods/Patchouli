@@ -6,7 +6,7 @@ import net.minecraft.world.item.crafting.LegacyUpgradeRecipe;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@SuppressWarnings("deprecated")
+@SuppressWarnings("removal")
 @Mixin(LegacyUpgradeRecipe.class)
 public interface AccessorSmithingRecipe {
 	@Accessor("base")
