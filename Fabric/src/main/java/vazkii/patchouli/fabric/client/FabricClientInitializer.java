@@ -6,11 +6,11 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -51,7 +51,7 @@ public class FabricClientInitializer implements ClientModInitializer {
 				.map(b -> new ModelResourceLocation(b.model, "inventory"))
 				.forEach(register));
 
-		FabricModelPredicateProviderRegistry.register(PatchouliItems.BOOK,
+		ItemProperties.register(PatchouliItems.BOOK,
 				new ResourceLocation(PatchouliAPI.MOD_ID, "completion"),
 				(stack, world, entity, seed) -> ItemModBook.getCompletion(stack));
 
