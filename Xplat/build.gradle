@@ -4,13 +4,13 @@ plugins {
 }
 
 archivesBaseName = "${mod_name}-xplat"
-version = "${minecraft_version}-${build_number}"
+version = "${mc_version}-${build_number}"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
 }
 
 minecraft {
-    version(minecraft_version)
+    version(mc_version)
 }
 
 repositories {

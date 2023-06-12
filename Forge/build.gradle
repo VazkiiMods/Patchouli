@@ -17,7 +17,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "${minecraft_version}-${build_number}"
+version = "${mc_version}-${build_number}-FORGE"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
 }
@@ -40,7 +40,7 @@ repositories {
 }
 
 minecraft {
-    mappings channel: 'official', version: minecraft_version
+    mappings channel: 'official', version: mc_version
 
     runs {
         client {
@@ -74,7 +74,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-45.0.64"
+    minecraft "net.minecraftforge:forge:${mc_version}-45.0.64"
     implementation project(":Xplat")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
