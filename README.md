@@ -41,11 +41,11 @@ dependencies {
 
 Note: Any code not located in the package `vazkii.patchouli.api` is strictly implementation detail, and you should not rely on it as it will change without warning.
 
-# Mixin Troubleshooting (Forge only)
+## Mixin Troubleshooting (Forge only)
 Patchouli uses Mixin to implement some of its features. On Forge, the game might crash when trying to launch in-dev, as ForgeGradle does not remap the refmap by itself. This can be worked around by specifying the refmap remapping manually: add [these lines](https://github.com/SpongePowered/Mixin/issues/462#issuecomment-791370319) to your build.gradle and regenerate your run configurations in the IDE afterwards.
 MixinGradle applies this fix automatically - if you are using Mixin in your project you shouldn't have to change anything.
 
-# License Information
+## License Information
 
 Patchouli's original code and assets are licensed under the CC-BY-NC-SA 3.0 Unported
 license.  We recognize that this is not ideal, and are open to changing the licensing of
@@ -95,7 +95,10 @@ If a loader needs to be temporarily disabled, simply comment it out in `settings
    saving and closing the editor).
 4. Increment the build number in `gradle.properties` of the next release. Commit this
    separately.
-5. Push: `git push origin <branch> --tags`
-6. Go to [Jenkins](https://ci.blamejared.com/job/Patchouli/view/tags/) and wait for the
-   tag you just pushed to be compiled and built
-7. Download the Forge and Fabric JARs and submit them to CurseForge
+5. Push the branch and tag: `git push origin <branch> <tag>`
+6. Wait a bit and the binaries should magically be published to GitHub, CurseForge, and Modrinth for you
+
+## Signing
+Releases starting from 1.19.4-79 are signed with the Violet Moon signing key, see [this
+page](https://github.com/VazkiiMods/.github/blob/main/security/README.md) for information
+about how to verify the artifacts.
