@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.world.level.Level;
+
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;

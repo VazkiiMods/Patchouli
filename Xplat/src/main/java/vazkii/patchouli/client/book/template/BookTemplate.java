@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.resources.ResourceLocation;
-
 import net.minecraft.world.level.Level;
+
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.PatchouliAPI;

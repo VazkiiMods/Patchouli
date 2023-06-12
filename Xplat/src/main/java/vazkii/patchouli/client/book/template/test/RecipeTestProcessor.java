@@ -1,6 +1,5 @@
 package vazkii.patchouli.client.book.template.test;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
