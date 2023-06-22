@@ -13,5 +13,9 @@ In 1.20, this system is now required. All `book.json`s must specify `use_resourc
 true`, and the book contents must be located under
 `/assets/<namespace>/patchouli_books/{categories, entries, ...}`.
 
+As a result, "extension books" are now obsolete. Any books that wish to extend another
+book can simply add content via the resource pack system into the original book's
+paths. Book JSONs that specify the old `extend` property will throw an exception.
+
 In the future, we may explore options that also move the `book.json` out of `/data/` and
 into `/assets/`.
