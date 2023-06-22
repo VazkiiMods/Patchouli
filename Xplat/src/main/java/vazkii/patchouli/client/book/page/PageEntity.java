@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.resources.language.I18n;
@@ -59,36 +60,37 @@ public class PageEntity extends PageWithText {
 	}
 
 	@Override
-	public void render(PoseStack ms, int mouseX, int mouseY, float pticks) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
 		RenderSystem.enableBlend();
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-		GuiBook.drawFromTexture(ms, book, x, y, 405, 149, 106, 106);
+		GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
 
 		if (name == null || name.isEmpty()) {
 			if (entity != null) {
-				parent.drawCenteredStringNoShadow(ms, entity.getName().getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+				parent.drawCenteredStringNoShadow(graphics, entity.getName().getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 			}
 		} else {
-			parent.drawCenteredStringNoShadow(ms, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+			parent.drawCenteredStringNoShadow(graphics, name, GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		}
 
 		if (errored) {
-			fontRenderer.drawShadow(ms, I18n.get("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000);
+			graphics.drawString(fontRenderer, I18n.get("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000, true);
 		}
 
 		if (entity != null) {
 			float rotation = rotate ? ClientTicker.total : defaultRotation;
-			renderEntity(ms, entity, parent.getMinecraft().level, 58, 60, rotation, renderScale, offset);
+			renderEntity(graphics, entity, parent.getMinecraft().level, 58, 60, rotation, renderScale, offset);
 		}
 
-		super.render(ms, mouseX, mouseY, pticks);
+		super.render(graphics, mouseX, mouseY, pticks);
 	}
 
-	public static void renderEntity(PoseStack ms, Entity entity, Level world, float x, float y, float rotation, float renderScale, float offset) {
-		entity.level = world;
+	public static void renderEntity(GuiGraphics graphics, Entity entity, Level world, float x, float y, float rotation, float renderScale, float offset) {
+		//entity.level = world; // TODO fix this
 
+		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(x, y, 50);
 		ms.scale(renderScale, renderScale, renderScale);

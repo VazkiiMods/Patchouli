@@ -3,14 +3,13 @@ package vazkii.patchouli.client.handler;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,7 +28,7 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 public class TooltipHandler {
 	private static float lexiconLookupTime = 0;
 
-	public static void onTooltip(PoseStack ms, ItemStack stack, int mouseX, int mouseY) {
+	public static void onTooltip(GuiGraphics graphics, ItemStack stack, int mouseX, int mouseY) {
 		Minecraft mc = Minecraft.getInstance();
 		int tooltipX = mouseX;
 		int tooltipY = mouseY - 4;
@@ -60,8 +59,8 @@ public class TooltipHandler {
 				int x = tooltipX - 34;
 				RenderSystem.disableDepthTest();
 
-				GuiComponent.fill(ms, x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
-				GuiComponent.fill(ms, x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
+				graphics.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
+				graphics.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
 
 				if (PatchouliConfig.get().useShiftForQuickLookup() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
 					lexiconLookupTime += ClientTicker.delta;
@@ -100,21 +99,22 @@ public class TooltipHandler {
 					lexiconLookupTime = 0F;
 				}
 
-				ms.pushPose();
-				ms.translate(0, 0, 300);
-				Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(ms, lexiconStack, x, tooltipY);
-				ms.popPose();
+				graphics.pose().pushPose();
+				graphics.pose().translate(0, 0, 300);
+				graphics.renderItem(lexiconStack, x, tooltipY);
+				graphics.renderItemDecorations(mc.font, lexiconStack, x, tooltipY);
+				graphics.pose().popPose();
 
-				ms.pushPose();
-				ms.translate(0, 0, 500);
-				mc.font.drawShadow(ms, "?", x + 10, tooltipY + 8, 0xFFFFFFFF);
+				graphics.pose().pushPose();
+				graphics.pose().translate(0, 0, 500);
+				graphics.drawString(mc.font, "?", x + 10, tooltipY + 8, 0xFFFFFFFF, true);
 
-				ms.scale(0.5F, 0.5F, 1F);
+				graphics.pose().scale(0.5F, 0.5F, 1F);
 				boolean mac = Minecraft.ON_OSX;
 				Component key = Component.literal(PatchouliConfig.get().useShiftForQuickLookup() ? "Shift" : mac ? "Cmd" : "Ctrl")
 						.withStyle(ChatFormatting.BOLD);
-				mc.font.drawShadow(ms, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF);
-				ms.popPose();
+				graphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF, true);
+				graphics.pose().popPose();
 
 				RenderSystem.enableDepthTest();
 			} else {

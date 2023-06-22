@@ -9,7 +9,7 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
@@ -83,7 +83,7 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static void onRenderHUD(PoseStack ms, float partialTicks) {
+	public static void onRenderHUD(GuiGraphics graphics, float partialTicks) {
 		if (hasMultiblock) {
 			int waitTime = 40;
 			int fadeOutSpeed = 4;
@@ -95,14 +95,14 @@ public class MultiblockVisualizationHandler {
 				return;
 			}
 
-			ms.pushPose();
-			ms.translate(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed, 0);
+			graphics.pose().pushPose();
+			graphics.pose().translate(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed, 0);
 
 			Minecraft mc = Minecraft.getInstance();
 			int x = mc.getWindow().getGuiScaledWidth() / 2;
 			int y = 12;
 
-			mc.font.drawShadow(ms, name, x - mc.font.width(name) / 2.0F, y, 0xFFFFFF);
+			graphics.drawCenteredString(mc.font, name, x, y, 0xFFFFFF);
 
 			int width = 180;
 			int height = 9;
@@ -110,25 +110,23 @@ public class MultiblockVisualizationHandler {
 			int top = y + 10;
 
 			if (timeComplete > 0) {
-				String s = I18n.get("patchouli.gui.lexicon.structure_complete");
-				ms.pushPose();
-				ms.translate(0, Math.min(height + 5, animTime), 0);
-				mc.font.drawShadow(ms, s, x - mc.font.width(s) / 2.0F, top + height - 10, 0x00FF00);
-				ms.popPose();
+				graphics.pose().pushPose();
+				graphics.pose().translate(0, Math.min(height + 5, animTime), 0);
+				graphics.drawCenteredString(mc.font, Component.translatable("patchouli.gui.lexicon.structure_complete"), x, top + height - 10, 0x00FF00);
+				graphics.pose().popPose();
 			}
 
-			GuiComponent.fill(ms, left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
-			drawGradientRect(ms, left, top, left + width, top + height, 0xFF666666, 0xFF555555);
+			graphics.fill(left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
+			drawGradientRect(graphics, left, top, left + width, top + height, 0xFF666666, 0xFF555555);
 
 			float fract = (float) blocksDone / Math.max(1, blocks);
 			int progressWidth = (int) ((float) width * fract);
 			int color = Mth.hsvToRgb(fract / 3.0F, 1.0F, 1.0F) | 0xFF000000;
 			int color2 = new Color(color).darker().getRGB();
-			drawGradientRect(ms, left, top, left + progressWidth, top + height, color, color2);
+			drawGradientRect(graphics, left, top, left + progressWidth, top + height, color, color2);
 
 			if (!isAnchored) {
-				String s = I18n.get("patchouli.gui.lexicon.not_anchored");
-				mc.font.drawShadow(ms, s, x - mc.font.width(s) / 2.0F, top + height + 8, 0xFFFFFF);
+				graphics.drawCenteredString(mc.font, Component.translatable("patchouli.gui.lexicon.not_anchored"), x, top + height + 8, 0xFFFFFF);
 			} else {
 				if (lookingState != null) {
 					// try-catch around here because the state isn't necessarily present in the world in this instance,
@@ -138,8 +136,8 @@ public class MultiblockVisualizationHandler {
 						ItemStack stack = block.getCloneItemStack(mc.level, lookingPos, lookingState);
 
 						if (!stack.isEmpty()) {
-							mc.font.drawShadow(ms, stack.getHoverName(), left + 20, top + height + 8, 0xFFFFFF);
-							Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(ms, stack, left, top + height + 2);
+							graphics.drawString(mc.font, stack.getHoverName(), left + 20, top + height + 8, 0xFFFFFF, true);
+							graphics.renderItem(stack, left, top + height + 2);
 						}
 					} catch (Exception ignored) {}
 				}
@@ -148,7 +146,7 @@ public class MultiblockVisualizationHandler {
 					color = 0xFFFFFF;
 					int posx = left + width;
 					int posy = top + height + 2;
-					float mult = 1;
+					int mult = 1;
 					String progress = blocksDone + "/" + blocks;
 
 					if (blocksDone == blocks && airFilled > 0) {
@@ -159,11 +157,11 @@ public class MultiblockVisualizationHandler {
 						posy += 2;
 					}
 
-					mc.font.drawShadow(ms, progress, posx - mc.font.width(progress) / mult, posy, color);
+					graphics.drawString(mc.font, progress, posx - mc.font.width(progress) / mult, posy, color, false);
 				}
 			}
 
-			ms.popPose();
+			graphics.pose().popPose();
 		}
 	}
 
@@ -309,7 +307,7 @@ public class MultiblockVisualizationHandler {
 		return offsetApplier.apply(pos);
 	}
 
-	private static void drawGradientRect(PoseStack ms, int left, int top, int right, int bottom, int startColor, int endColor) {
+	private static void drawGradientRect(GuiGraphics graphics, int left, int top, int right, int bottom, int startColor, int endColor) {
 		float f = (float) (startColor >> 24 & 255) / 255.0F;
 		float f1 = (float) (startColor >> 16 & 255) / 255.0F;
 		float f2 = (float) (startColor >> 8 & 255) / 255.0F;
@@ -323,7 +321,7 @@ public class MultiblockVisualizationHandler {
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-		Matrix4f mat = ms.last().pose();
+		Matrix4f mat = graphics.pose().last().pose();
 		bufferbuilder.vertex(mat, right, top, 0).color(f1, f2, f3, f).endVertex();
 		bufferbuilder.vertex(mat, left, top, 0).color(f1, f2, f3, f).endVertex();
 		bufferbuilder.vertex(mat, left, bottom, 0).color(f5, f6, f7, f4).endVertex();

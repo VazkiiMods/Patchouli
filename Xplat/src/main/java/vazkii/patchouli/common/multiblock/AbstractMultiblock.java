@@ -88,7 +88,7 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockAndTintGet
 			BlockPos placePos = r.getWorldPosition();
 			BlockState targetState = r.getStateMatcher().getDisplayedState(world.getGameTime()).rotate(rotation);
 
-			if (!targetState.isAir() && targetState.canSurvive(world, placePos) && world.getBlockState(placePos).getMaterial().isReplaceable()) {
+			if (!targetState.isAir() && targetState.canSurvive(world, placePos) && world.getBlockState(placePos).canBeReplaced()) {
 				world.setBlockAndUpdate(placePos, targetState);
 			}
 		});

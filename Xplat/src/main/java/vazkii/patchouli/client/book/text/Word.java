@@ -1,13 +1,8 @@
 package vazkii.patchouli.client.book.text;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.*;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
@@ -42,17 +37,17 @@ public class Word {
 		this.text = text;
 	}
 
-	public void render(PoseStack ms, Font font, Style styleOverride, int mouseX, int mouseY) {
+	public void render(GuiGraphics graphics, Font font, Style styleOverride, int mouseX, int mouseY) {
 		MutableComponent toRender = text.copy().withStyle(styleOverride);
 		if (isClusterHovered(mouseX, mouseY)) {
 			if (onClick != null) {
 				toRender.withStyle(s -> s.withColor(TextColor.fromRgb(book.linkHoverColor)));
 			}
 
-			gui.renderComponentHoverEffect(ms, text.getStyle(), (int) gui.getRelativeX(mouseX), (int) gui.getRelativeY(mouseY));
+			graphics.renderComponentHoverEffect(font, text.getStyle(), (int) gui.getRelativeX(mouseX), (int) gui.getRelativeY(mouseY));
 		}
 
-		font.draw(ms, toRender, x, y, -1);
+		graphics.drawString(font, toRender, x, y, -1, false);
 	}
 
 	public boolean click(double mouseX, double mouseY, int mouseButton) {

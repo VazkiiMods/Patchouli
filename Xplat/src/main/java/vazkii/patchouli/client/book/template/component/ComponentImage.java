@@ -2,9 +2,8 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.api.IVariable;
@@ -40,19 +39,18 @@ public class ComponentImage extends TemplateComponent {
 	}
 
 	@Override
-	public void render(PoseStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (scale == 0F) {
 			return;
 		}
 
-		RenderSystem.setShaderTexture(0, resource);
-		ms.pushPose();
-		ms.translate(x, y, 0);
-		ms.scale(scale, scale, scale);
-		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+		graphics.pose().pushPose();
+		graphics.pose().translate(x, y, 0);
+		graphics.pose().scale(scale, scale, scale);
+		graphics.setColor(1F, 1F, 1F, 1F);
 		RenderSystem.enableBlend();
-		GuiComponent.blit(ms, 0, 0, u, v, width, height, textureWidth, textureHeight);
-		ms.popPose();
+		graphics.blit(resource, 0, 0, u, v, width, height, textureWidth, textureHeight);
+		graphics.pose().popPose();
 	}
 
 }

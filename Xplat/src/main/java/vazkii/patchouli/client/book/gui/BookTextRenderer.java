@@ -1,9 +1,8 @@
 package vazkii.patchouli.client.book.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -53,19 +52,19 @@ public class BookTextRenderer {
 		return origin + (in - origin) / scale;
 	}
 
-	public void render(PoseStack ms, int mouseX, int mouseY) {
+	public void render(GuiGraphics graphics, int mouseX, int mouseY) {
 		if (!words.isEmpty()) {
 			Font font = Minecraft.getInstance().font;
 			Style style = book.getFontStyle();
 			Word first = words.get(0);
-			ms.pushPose();
-			ms.translate(first.x, first.y, 0);
-			ms.scale(scale, scale, 1.0f);
-			ms.translate(-first.x, -first.y, 0);
+			graphics.pose().pushPose();
+			graphics.pose().translate(first.x, first.y, 0);
+			graphics.pose().scale(scale, scale, 1.0f);
+			graphics.pose().translate(-first.x, -first.y, 0);
 			int scaledX = (int) rescale(mouseX, first.x);
 			int scaledY = (int) rescale(mouseY, first.y);
-			words.forEach(word -> word.render(ms, font, style, scaledX, scaledY));
-			ms.popPose();
+			words.forEach(word -> word.render(graphics, font, style, scaledX, scaledY));
+			graphics.pose().popPose();
 		}
 	}
 

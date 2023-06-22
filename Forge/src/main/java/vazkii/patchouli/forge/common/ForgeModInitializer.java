@@ -1,13 +1,14 @@
 package vazkii.patchouli.forge.common;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.CreativeModeTabRegistry;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -49,15 +50,15 @@ public class ForgeModInitializer {
 	}
 
 	@SubscribeEvent
-	public static void processCreativeTabs(CreativeModeTabEvent.BuildContents evt) {
+	public static void processCreativeTabs(BuildCreativeModeTabContentsEvent evt) {
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
 			if (!b.noBook && !b.isExtension) {
 				ItemStack book = ItemModBook.forBook(b);
 				if (evt.getTab() == CreativeModeTabs.searchTab()) {
 					evt.accept(book);
 				} else if (b.creativeTab != null) {
-					CreativeModeTab remappedVanillaTab = mapVanillaCreativeTabFabricIdToForge(b.creativeTab);
-					if (evt.getTab() == remappedVanillaTab
+					ResourceKey<CreativeModeTab> remappedVanillaTab = mapVanillaCreativeTabFabricIdToForge(b.creativeTab);
+					if (evt.getTabKey() == remappedVanillaTab
 							|| evt.getTab() == CreativeModeTabRegistry.getTab(b.creativeTab)) {
 						evt.accept(book);
 					}
@@ -70,7 +71,7 @@ public class ForgeModInitializer {
 	// We want to transparently handle both, so map the ones that differ here.
 	// See FabricModInitializer for this method's dual.
 	@Nullable
-	private static CreativeModeTab mapVanillaCreativeTabFabricIdToForge(ResourceLocation oldId) {
+	private static ResourceKey<CreativeModeTab> mapVanillaCreativeTabFabricIdToForge(ResourceLocation oldId) {
 		if (!oldId.getNamespace().equals("minecraft")) {
 			return null;
 		}

@@ -1,6 +1,6 @@
 package vazkii.patchouli.api;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 
 /**
  * An interface for API level custom components for templates.
@@ -23,7 +23,7 @@ public interface ICustomComponent extends IVariablesAvailableCallback {
 	 * Called every render tick. No special transformations are applied, so you're responsible
 	 * for putting everything in the right place.
 	 */
-	void render(PoseStack ms, IComponentRenderContext context, float pticks, int mouseX, int mouseY);
+	void render(GuiGraphics graphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY);
 
 	/**
 	 * Called when this component first enters the screen. Good time to refresh anything that

@@ -1,10 +1,10 @@
 package vazkii.patchouli.client.book.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -12,7 +12,10 @@ import net.minecraft.network.chat.Component;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.gui.button.*;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBook;
+import vazkii.patchouli.client.book.gui.button.GuiButtonBookResize;
+import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
+import vazkii.patchouli.client.book.gui.button.GuiButtonEntry;
 import vazkii.patchouli.client.gui.GuiAdvancementsExt;
 import vazkii.patchouli.common.book.Book;
 
@@ -110,23 +113,23 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	@Override
-	void drawForegroundElements(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (text != null) {
-			text.render(ms, mouseX, mouseY);
+			text.render(graphics, mouseX, mouseY);
 		}
 
 		int topSeparator = TOP_PADDING + 12;
 		int bottomSeparator = topSeparator + 25 + 24 * ((loadedCategories - 1) / 4 + 1);
 
-		drawHeader(ms);
+		drawHeader(graphics);
 
 		if (book.getContents().pamphletCategory == null) {
-			drawCenteredStringNoShadow(ms, I18n.get("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawCenteredStringNoShadow(graphics, I18n.get("patchouli.gui.lexicon.categories"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
 
-			drawSeparator(ms, book, RIGHT_PAGE_X, topSeparator);
+			drawSeparator(graphics, book, RIGHT_PAGE_X, topSeparator);
 
 			if (loadedCategories <= 16) {
-				drawSeparator(ms, book, RIGHT_PAGE_X, bottomSeparator);
+				drawSeparator(graphics, book, RIGHT_PAGE_X, bottomSeparator);
 			}
 		}
 
@@ -134,8 +137,8 @@ public class GuiBookLanding extends GuiBook {
 			int x = RIGHT_PAGE_X + PAGE_WIDTH / 2;
 			int y = bottomSeparator + 12;
 
-			drawCenteredStringNoShadow(ms, I18n.get("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
-			drawCenteredStringNoShadow(ms, I18n.get("patchouli.gui.lexicon.loading_error_hover"), x, y + 10, 0x777777);
+			drawCenteredStringNoShadow(graphics, I18n.get("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
+			drawCenteredStringNoShadow(graphics, I18n.get("patchouli.gui.lexicon.loading_error_hover"), x, y + 10, 0x777777);
 
 			x -= PAGE_WIDTH / 2;
 			y -= 4;
@@ -145,7 +148,7 @@ public class GuiBookLanding extends GuiBook {
 			}
 		}
 
-		drawProgressBar(ms, book, mouseX, mouseY, (e) -> true);
+		drawProgressBar(graphics, book, mouseX, mouseY, (e) -> true);
 	}
 
 	@Override
@@ -173,14 +176,14 @@ public class GuiBookLanding extends GuiBook {
 		}
 	}
 
-	private void drawHeader(PoseStack ms) {
+	private void drawHeader(GuiGraphics graphics) {
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-		drawFromTexture(ms, book, -8, 12, 0, 180, 140, 31);
+		drawFromTexture(graphics, book, -8, 12, 0, 180, 140, 31);
 
 		int color = book.nameplateColor;
-		font.draw(ms, book.getBookItem().getHoverName(), 13, 16, color);
+		graphics.drawString(font, book.getBookItem().getHoverName(), 13, 16, color, false);
 		Component toDraw = book.getSubtitle().withStyle(book.getFontStyle());
-		font.draw(ms, toDraw, 24, 24, color);
+		graphics.drawString(font, toDraw, 24, 24, color, false);
 	}
 
 	private void makeErrorTooltip() {

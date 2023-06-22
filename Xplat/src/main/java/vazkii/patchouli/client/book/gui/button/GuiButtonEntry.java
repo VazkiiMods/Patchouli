@@ -1,11 +1,10 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -30,47 +29,48 @@ public class GuiButtonEntry extends Button {
 	}
 
 	@Override
-	public void renderWidget(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		if (active) {
-			if (isHoveredOrFocused()) {
-				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
-			} else {
-				timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
+	protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		if (!active) {
+			return;
+		}
+		if (isHoveredOrFocused()) {
+			timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
+		} else {
+			timeHovered = Math.max(0, timeHovered - ClientTicker.delta);
+		}
+
+		float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHoveredOrFocused() ? partialTicks : -partialTicks)));
+		float widthFract = time / ANIM_TIME;
+		boolean locked = entry.isLocked();
+
+		graphics.pose().scale(0.5F, 0.5F, 0.5F);
+		graphics.fill(getX() * 2, getY() * 2, (getX() + (int) ((float) width * widthFract)) * 2, (getY() + height) * 2, 0x22000000);
+		RenderSystem.enableBlend();
+
+		if (locked) {
+			graphics.setColor(1F, 1F, 1F, 0.7F);
+			GuiBook.drawLock(graphics, parent.book, getX() * 2 + 2, getY() * 2 + 2);
+		} else {
+			entry.getIcon().render(graphics, getX() * 2 + 2, getY() * 2 + 2);
+		}
+
+		graphics.pose().scale(2F, 2F, 2F);
+
+		MutableComponent name;
+		if (locked) {
+			name = Component.translatable("patchouli.gui.lexicon.locked");
+		} else {
+			name = entry.getName();
+			if (entry.isPriority()) {
+				name = name.withStyle(ChatFormatting.ITALIC);
 			}
+		}
 
-			float time = Math.max(0, Math.min(ANIM_TIME, timeHovered + (isHoveredOrFocused() ? partialTicks : -partialTicks)));
-			float widthFract = time / ANIM_TIME;
-			boolean locked = entry.isLocked();
+		name = name.withStyle(entry.getBook().getFontStyle());
+		graphics.drawString(Minecraft.getInstance().font, name, getX() + 12, getY(), getColor(), false);
 
-			ms.scale(0.5F, 0.5F, 0.5F);
-			GuiComponent.fill(ms, getX() * 2, getY() * 2, (getX() + (int) ((float) width * widthFract)) * 2, (getY() + height) * 2, 0x22000000);
-			RenderSystem.enableBlend();
-
-			if (locked) {
-				RenderSystem.setShaderColor(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(ms, parent.book, getX() * 2 + 2, getY() * 2 + 2);
-			} else {
-				entry.getIcon().render(ms, getX() * 2 + 2, getY() * 2 + 2);
-			}
-
-			ms.scale(2F, 2F, 2F);
-
-			MutableComponent name;
-			if (locked) {
-				name = Component.translatable("patchouli.gui.lexicon.locked");
-			} else {
-				name = entry.getName();
-				if (entry.isPriority()) {
-					name = name.withStyle(ChatFormatting.ITALIC);
-				}
-			}
-
-			name = name.withStyle(entry.getBook().getFontStyle());
-			Minecraft.getInstance().font.draw(ms, name, getX() + 12, getY(), getColor());
-
-			if (!entry.isLocked()) {
-				GuiBook.drawMarking(ms, parent.book, getX() + width - 5, getY() + 1, entry.hashCode(), entry.getReadState());
-			}
+		if (!entry.isLocked()) {
+			GuiBook.drawMarking(graphics, parent.book, getX() + width - 5, getY() + 1, entry.hashCode(), entry.getReadState());
 		}
 	}
 

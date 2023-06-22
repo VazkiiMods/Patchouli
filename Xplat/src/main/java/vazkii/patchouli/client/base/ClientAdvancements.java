@@ -1,15 +1,16 @@
 package vazkii.patchouli.client.base;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -80,16 +81,18 @@ public class ClientAdvancements {
 
 		@NotNull
 		@Override
-		public Visibility render(PoseStack ms, ToastComponent toastGui, long delta) {
+		public Visibility render(GuiGraphics graphics, ToastComponent toastGui, long delta) {
 			RenderSystem.setShaderTexture(0, TEXTURE);
 
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			toastGui.blit(ms, 0, 0, 0, 32, 160, 32);
+			graphics.blit(TEXTURE, 0, 0, 0, 32, 160, 32);
 
-			toastGui.getMinecraft().font.draw(ms, I18n.get(book.name), 30, 7, -11534256);
-			toastGui.getMinecraft().font.draw(ms, I18n.get("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216);
+			Font font = toastGui.getMinecraft().font;
+			graphics.drawString(font, Component.translatable(book.name), 30, 7, -11534256, false);
+			graphics.drawString(font, Component.translatable("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216, false);
 
-			Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(ms, book.getBookItem(), 8, 8);
+			graphics.renderItem(book.getBookItem(), 8, 8);
+			graphics.renderItemDecorations(font, book.getBookItem(), 8, 8);
 
 			return delta >= 5000L ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
 		}

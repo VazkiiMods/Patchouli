@@ -2,12 +2,12 @@ package vazkii.patchouli.client.book.gui;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -16,7 +16,6 @@ import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
@@ -120,35 +119,35 @@ public abstract class GuiBook extends Screen {
 	}
 
 	@Override
-	public final void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		ms.pushPose();
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		graphics.pose().pushPose();
 		if (scaleFactor != 1) {
-			ms.scale(scaleFactor, scaleFactor, scaleFactor);
+			graphics.pose().scale(scaleFactor, scaleFactor, scaleFactor);
 
 			mouseX /= scaleFactor;
 			mouseY /= scaleFactor;
 		}
 
-		drawScreenAfterScale(ms, mouseX, mouseY, partialTicks);
-		ms.popPose();
+		drawScreenAfterScale(graphics, mouseX, mouseY, partialTicks);
+		graphics.pose().popPose();
 	}
 
-	private void drawScreenAfterScale(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	private void drawScreenAfterScale(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		resetTooltip();
-		renderBackground(ms);
+		renderBackground(graphics);
 
-		ms.pushPose();
-		ms.translate(bookLeft, bookTop, 0);
-		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-		drawBackgroundElements(ms, mouseX, mouseY, partialTicks);
-		drawForegroundElements(ms, mouseX, mouseY, partialTicks);
-		ms.popPose();
+		graphics.pose().pushPose();
+		graphics.pose().translate(bookLeft, bookTop, 0);
+		graphics.setColor(1F, 1F, 1F, 1F);
+		drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
+		drawForegroundElements(graphics, mouseX, mouseY, partialTicks);
+		graphics.pose().popPose();
 
-		super.render(ms, mouseX, mouseY, partialTicks);
+		super.render(graphics, mouseX, mouseY, partialTicks);
 
-		IXplatAbstractions.INSTANCE.fireDrawBookScreen(this.book.id, this, mouseX, mouseY, partialTicks, ms);
+		IXplatAbstractions.INSTANCE.fireDrawBookScreen(this.book.id, this, mouseX, mouseY, partialTicks, graphics);
 
-		drawTooltip(ms, mouseX, mouseY);
+		drawTooltip(graphics, mouseX, mouseY);
 	}
 
 	public void addBookmarkButtons() {
@@ -189,11 +188,6 @@ public abstract class GuiBook extends Screen {
 		return super.addRenderableWidget(drawableElement);
 	}
 
-	@Override // make public
-	public void renderComponentHoverEffect(PoseStack matrices, @Nullable Style style, int mouseX, int mouseY) {
-		super.renderComponentHoverEffect(matrices, style, mouseX, mouseY);
-	}
-
 	protected boolean shouldAddAddBookmarkButton() {
 		return false;
 	}
@@ -225,15 +219,15 @@ public abstract class GuiBook extends Screen {
 		}
 	}
 
-	final void drawBackgroundElements(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		drawFromTexture(ms, book, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT);
+	final void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		drawFromTexture(graphics, book, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT);
 	}
 
-	void drawForegroundElements(PoseStack ms, int mouseX, int mouseY, float partialTicks) {}
+	void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {}
 
-	final void drawTooltip(PoseStack ms, int mouseX, int mouseY) {
+	final void drawTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
 		if (tooltipStack != null) {
-			List<Component> tooltip = this.getTooltipFromItem(tooltipStack);
+			List<Component> tooltip = Screen.getTooltipFromItem(this.minecraft, tooltipStack);
 
 			Pair<BookEntry, Integer> provider = book.getContents().getEntryForStack(tooltipStack);
 			if (provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getFirst())) {
@@ -244,10 +238,9 @@ public abstract class GuiBook extends Screen {
 				tooltip.add(t);
 				targetPage = provider;
 			}
-
-			this.renderComponentTooltip(ms, tooltip, mouseX, mouseY);
+			graphics.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
 		} else if (tooltip != null && !tooltip.isEmpty()) {
-			this.renderComponentTooltip(ms, tooltip, mouseX, mouseY);
+			graphics.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
 		}
 	}
 
@@ -257,9 +250,8 @@ public abstract class GuiBook extends Screen {
 		targetPage = null;
 	}
 
-	public static void drawFromTexture(PoseStack ms, Book book, int x, int y, int u, int v, int w, int h) {
-		RenderSystem.setShaderTexture(0, book.bookTexture);
-		blit(ms, x, y, u, v, w, h, 512, 256);
+	public static void drawFromTexture(GuiGraphics graphics, Book book, int x, int y, int u, int v, int w, int h) {
+		graphics.blit(book.bookTexture, x, y, u, v, w, h, 512, 256);
 	}
 
 	@Override
@@ -299,22 +291,25 @@ public abstract class GuiBook extends Screen {
 
 	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
 		switch (mouseButton) {
-		case GLFW.GLFW_MOUSE_BUTTON_LEFT:
+		case GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
 			if (targetPage != null && hasShiftDown()) {
 				displayLexiconGui(new GuiBookEntry(book, targetPage.getFirst(), targetPage.getSecond()), true);
 				playBookFlipSound(book);
 				return true;
 			}
-			break;
-		case GLFW.GLFW_MOUSE_BUTTON_RIGHT:
+		}
+		case GLFW.GLFW_MOUSE_BUTTON_RIGHT -> {
 			back(true);
 			return true;
-		case GLFW.GLFW_MOUSE_BUTTON_4:
+		}
+		case GLFW.GLFW_MOUSE_BUTTON_4 -> {
 			changePage(true, true);
 			return true;
-		case GLFW.GLFW_MOUSE_BUTTON_5:
+		}
+		case GLFW.GLFW_MOUSE_BUTTON_5 -> {
 			changePage(false, true);
 			return true;
+		}
 		}
 
 		return super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -428,7 +423,7 @@ public abstract class GuiBook extends Screen {
 		return absY - bookTop;
 	}
 
-	public void drawProgressBar(PoseStack ms, Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
+	public void drawProgressBar(GuiGraphics graphics, Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
 		if (!book.showProgress || !book.advancementsEnabled()) {
 			return;
 		}
@@ -466,12 +461,12 @@ public abstract class GuiBook extends Screen {
 		float unlockFract = (float) unlockedEntries / Math.max(1, (float) totalEntries);
 		int progressWidth = (int) (((float) barWidth - 1) * unlockFract);
 
-		fill(ms, barLeft, barTop, barLeft + barWidth, barTop + barHeight, book.headerColor);
+		graphics.fill(barLeft, barTop, barLeft + barWidth, barTop + barHeight, book.headerColor);
 
-		drawGradient(ms, barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, book.progressBarBackground);
-		drawGradient(ms, barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, book.progressBarColor);
+		drawGradient(graphics, barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, book.progressBarBackground);
+		drawGradient(graphics, barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, book.progressBarColor);
 
-		font.draw(ms, Component.translatable("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor);
+		graphics.drawString(this.font, Component.translatable("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor, false);
 
 		if (isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
 			List<Component> tooltip = new ArrayList<>();
@@ -494,17 +489,17 @@ public abstract class GuiBook extends Screen {
 		}
 	}
 
-	private void drawGradient(PoseStack ms, int x, int y, int w, int h, int color) {
+	private void drawGradient(GuiGraphics graphics, int x, int y, int w, int h, int color) {
 		int darkerColor = new Color(color).darker().getRGB();
-		fillGradient(ms, x, y, w, h, color, darkerColor);
+		graphics.fillGradient(x, y, w, h, color, darkerColor);
 	}
 
-	public void drawCenteredStringNoShadow(PoseStack ms, FormattedCharSequence s, int x, int y, int color) {
-		font.draw(ms, s, x - font.width(s) / 2.0F, y, color);
+	public void drawCenteredStringNoShadow(GuiGraphics graphics, FormattedCharSequence s, int x, int y, int color) {
+		graphics.drawString(font, s, x - font.width(s) / 2, y, color, false);
 	}
 
-	public void drawCenteredStringNoShadow(PoseStack ms, String s, int x, int y, int color) {
-		font.draw(ms, s, x - font.width(s) / 2.0F, y, color);
+	public void drawCenteredStringNoShadow(GuiGraphics graphics, String s, int x, int y, int color) {
+		graphics.drawString(font, s, x - font.width(s) / 2, y, color, false);
 	}
 
 	private int getMaxAllowedScale() {
@@ -515,22 +510,22 @@ public abstract class GuiBook extends Screen {
 		return spread;
 	}
 
-	public static void drawSeparator(PoseStack ms, Book book, int x, int y) {
+	public static void drawSeparator(GuiGraphics graphics, Book book, int x, int y) {
 		int w = 110;
 		int h = 3;
 		int rx = x + PAGE_WIDTH / 2 - w / 2;
 
 		RenderSystem.enableBlend();
-		RenderSystem.setShaderColor(1F, 1F, 1F, 0.8F);
-		drawFromTexture(ms, book, rx, y, 140, 180, w, h);
-		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+		graphics.setColor(1F, 1F, 1F, 0.8F);
+		drawFromTexture(graphics, book, rx, y, 140, 180, w, h);
+		graphics.setColor(1F, 1F, 1F, 1F);
 	}
 
-	public static void drawLock(PoseStack ms, Book book, int x, int y) {
-		drawFromTexture(ms, book, x, y, 250, 180, 16, 16);
+	public static void drawLock(GuiGraphics graphics, Book book, int x, int y) {
+		drawFromTexture(graphics, book, x, y, 250, 180, 16, 16);
 	}
 
-	public static void drawMarking(PoseStack ms, Book book, int x, int y, int rand, EntryDisplayState state) {
+	public static void drawMarking(GuiGraphics graphics, Book book, int x, int y, int rand, EntryDisplayState state) {
 		if (!state.hasIcon) {
 			return;
 		}
@@ -539,20 +534,19 @@ public abstract class GuiBook extends Screen {
 		//RenderSystem.disableAlphaTest();
 		float alpha = state.hasAnimation ? ((float) Math.sin(ClientTicker.total * 0.2F) * 0.3F + 0.7F) : 1F;
 		RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
-		drawFromTexture(ms, book, x, y, state.u, 197, 8, 8);
+		drawFromTexture(graphics, book, x, y, state.u, 197, 8, 8);
 		//RenderSystem.enableAlphaTest();
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 	}
 
-	public static void drawPageFiller(PoseStack ms, Book book) {
-		drawPageFiller(ms, book, RIGHT_PAGE_X, TOP_PADDING);
+	public static void drawPageFiller(GuiGraphics graphics, Book book) {
+		drawPageFiller(graphics, book, RIGHT_PAGE_X, TOP_PADDING);
 	}
 
-	public static void drawPageFiller(PoseStack ms, Book book, int x, int y) {
+	public static void drawPageFiller(GuiGraphics graphics, Book book, int x, int y) {
 		RenderSystem.enableBlend();
-		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-		RenderSystem.setShaderTexture(0, book.fillerTexture);
-		blit(ms, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
+		graphics.setColor(1F, 1F, 1F, 1F);
+		graphics.blit(book.fillerTexture, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 
 	public static void playBookFlipSound(Book book) {

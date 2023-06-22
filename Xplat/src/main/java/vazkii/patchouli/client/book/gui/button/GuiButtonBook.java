@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -34,17 +34,17 @@ public class GuiButtonBook extends Button {
 	}
 
 	@Override
-	public final void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	public final void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		active = visible = displayCondition.get();
-		super.render(ms, mouseX, mouseY, partialTicks);
+		super.render(graphics, mouseX, mouseY, partialTicks);
 	}
 
 	@Override
-	public void renderWidget(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-		GuiBook.drawFromTexture(ms, parent.book, getX(), getY(), u + (isHoveredOrFocused() ? width : 0), v, width, height);
+		GuiBook.drawFromTexture(graphics, parent.book, getX(), getY(), u + (isHoveredOrFocused() ? width : 0), v, width, height);
 		if (isHoveredOrFocused()) {
-			parent.setTooltip(getTooltip());
+			parent.setTooltip(getTooltipLines());
 		}
 	}
 
@@ -53,7 +53,7 @@ public class GuiButtonBook extends Button {
 		GuiBook.playBookFlipSound(parent.book);
 	}
 
-	public List<Component> getTooltip() {
+	public List<Component> getTooltipLines() {
 		return tooltip;
 	}
 

@@ -1,9 +1,9 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -41,7 +41,7 @@ public class GuiButtonCategory extends Button {
 	}
 
 	@Override
-	public void renderWidget(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (active) {
 			if (isHoveredOrFocused()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
@@ -55,22 +55,22 @@ public class GuiButtonCategory extends Button {
 
 			if (locked) {
 				RenderSystem.setShaderColor(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(ms, parent.book, getX() + 2, getY() + 2);
+				GuiBook.drawLock(graphics, parent.book, getX() + 2, getY() + 2);
 			} else {
-				icon.render(ms, getX() + 2, getY() + 2);
+				icon.render(graphics, getX() + 2, getY() + 2);
 			}
 
-			ms.pushPose();
+			graphics.pose().pushPose();
 			RenderSystem.enableBlend();
 			RenderSystem.setShaderColor(1F, 1F, 1F, transparency);
-			ms.translate(0, 0, 200);
-			GuiBook.drawFromTexture(ms, parent.book, getX(), getY(), u, v, width, height);
+			graphics.pose().translate(0, 0, 200);
+			GuiBook.drawFromTexture(graphics, parent.book, getX(), getY(), u, v, width, height);
 			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
 			if (category != null && !category.isLocked()) {
-				GuiBook.drawMarking(ms, parent.book, getX(), getY(), 0, category.getReadState());
+				GuiBook.drawMarking(graphics, parent.book, getX(), getY(), 0, category.getReadState());
 			}
-			ms.popPose();
+			graphics.pose().popPose();
 
 			if (isHoveredOrFocused()) {
 				parent.setTooltip(locked

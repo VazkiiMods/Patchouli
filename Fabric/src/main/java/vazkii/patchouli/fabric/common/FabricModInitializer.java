@@ -7,6 +7,8 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -20,6 +22,8 @@ import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public class FabricModInitializer implements ModInitializer {
 	@Override
@@ -44,14 +48,10 @@ public class FabricModInitializer implements ModInitializer {
 				if (b.creativeTab != null) {
 					ItemGroupEvents.ModifyEntries listener = entries -> entries.accept(ItemModBook.forBook(b));
 
-					CreativeModeTab remappedVanillaTab = mapVanillaCreativeTabForgeIdToFabric(b.creativeTab);
-					if (remappedVanillaTab != null) {
-						ItemGroupEvents.modifyEntriesEvent(remappedVanillaTab).register(listener);
-					} else {
-						ItemGroupEvents.modifyEntriesEvent(b.creativeTab).register(listener);
-					}
+					ResourceKey<CreativeModeTab> remappedVanillaTab = mapVanillaCreativeTabForgeIdToFabric(b.creativeTab);
+					ItemGroupEvents.modifyEntriesEvent(Objects.requireNonNullElseGet(remappedVanillaTab, () -> ResourceKey.create(Registries.CREATIVE_MODE_TAB, b.creativeTab))).register(listener);
 				}
-				ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.searchTab()).register(entries -> {
+				ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SEARCH).register(entries -> {
 					entries.accept(ItemModBook.forBook(b));
 				});
 			}
@@ -62,7 +62,7 @@ public class FabricModInitializer implements ModInitializer {
 	// We want to transparently handle both, so map the ones that differ here.
 	// See ForgeModInitializer for this method's dual.
 	@Nullable
-	private static CreativeModeTab mapVanillaCreativeTabForgeIdToFabric(ResourceLocation oldId) {
+	private static ResourceKey<CreativeModeTab> mapVanillaCreativeTabForgeIdToFabric(ResourceLocation oldId) {
 		if (!oldId.getNamespace().equals("minecraft")) {
 			return null;
 		}

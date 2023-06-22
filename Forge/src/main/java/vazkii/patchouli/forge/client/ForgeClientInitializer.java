@@ -144,7 +144,7 @@ public class ForgeClientInitializer {
 		});
 
 		MinecraftForge.EVENT_BUS.addListener((RenderTooltipEvent.Pre e) -> {
-			TooltipHandler.onTooltip(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+			TooltipHandler.onTooltip(e.getGraphics(), e.getItemStack(), e.getX(), e.getY());
 		});
 	}
 

@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import vazkii.patchouli.api.IVariable;
@@ -51,8 +51,8 @@ public class ComponentText extends TemplateComponent {
 	}
 
 	@Override
-	public void render(PoseStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
-		textRenderer.render(ms, mouseX, mouseY);
+	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+		textRenderer.render(graphics, mouseX, mouseY);
 	}
 
 	@Override

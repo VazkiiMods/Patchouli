@@ -1,8 +1,7 @@
 package vazkii.patchouli.client.book.template.test;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import vazkii.patchouli.api.IComponentRenderContext;
@@ -24,9 +23,9 @@ public class ComponentCustomTest implements ICustomComponent {
 	}
 
 	@Override
-	public void render(PoseStack ms, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
+	public void render(GuiGraphics graphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
 		Component toRender = Component.literal(text).setStyle(context.getFont());
-		Minecraft.getInstance().font.drawShadow(ms, toRender, x, y, -1);
+		graphics.drawString(Minecraft.getInstance().font, toRender, x, y, -1, true);
 	}
 
 	@Override
