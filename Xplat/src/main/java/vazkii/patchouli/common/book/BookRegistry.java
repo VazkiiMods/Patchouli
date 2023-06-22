@@ -118,12 +118,9 @@ public class BookRegistry {
 	/**
 	 * Must only be called on client
 	 */
-	public void reloadContents(Level level, boolean resourcePackBooksOnly) {
+	public void reloadContents(Level level) {
 		PatchouliConfig.reloadBuiltinFlags();
 		for (Book book : books.values()) {
-			if (resourcePackBooksOnly && !book.useResourcePack) {
-				continue;
-			}
 			book.reloadContents(level, false);
 		}
 		ClientBookRegistry.INSTANCE.reloadLocks(false);

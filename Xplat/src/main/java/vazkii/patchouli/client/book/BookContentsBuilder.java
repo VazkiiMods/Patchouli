@@ -136,13 +136,10 @@ public class BookContentsBuilder {
 		if (book.isExternal) {
 			return BookContentExternalLoader.INSTANCE;
 		}
-		if (book.useResourcePack) {
-			// A quick reload should not reuse stale data, it is initiated by the user anyways
-			return singleBookReload
-					? BookContentResourceDirectLoader.INSTANCE
-					: BookContentResourceListenerLoader.INSTANCE;
-		}
-		return BookContentClasspathLoader.INSTANCE;
+		// A quick reload should not reuse stale data, it is initiated by the user anyways
+		return singleBookReload
+				? BookContentResourceDirectLoader.INSTANCE
+				: BookContentResourceListenerLoader.INSTANCE;
 	}
 
 	@Nullable

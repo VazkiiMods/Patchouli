@@ -101,6 +101,8 @@ public class Book {
 
 	public final boolean pauseGame;
 
+	// This is no longer checked anywhere except the constructor, but should be kept so that
+	// people upgrading from <1.20 know that migration work needs to happen.
 	public final boolean useResourcePack;
 
 	public final boolean isPamphlet;
@@ -157,12 +159,11 @@ public class Book {
 		this.overflowMode = SerializationUtil.getAsEnum(root, "text_overflow_mode", PatchouliConfigAccess.TextOverflowMode.class, null);
 
 		if (!this.useResourcePack) {
-			// TODO 1.20: Really, get rid of non resource-pack books. Don't release without addressing this.
-			PatchouliAPI.LOGGER.warn("Book {} has use_resource_pack set to false. "
-					+ "This behaviour is deprecated and will be removed in 1.20. "
-					+ "Please enable this flag and move all your book contents clientside to /assets/, "
-					+ "leaving the book.json in /data/. See https://vazkiimods.github.io/Patchouli/docs/upgrading/upgrade-guide-117#resource-pack-based-books for details.",
-					this.id);
+			String message = "Book %s has use_resource_pack set to false. ".formatted(this.id)
+					+ "This behaviour was removed in 1.20. "
+					+ "The book author should enable this flag and move all book contents clientside to /assets/, "
+					+ "leaving the book.json in /data/. See https://vazkiimods.github.io/Patchouli/docs/upgrading/upgrade-guide-117#resource-pack-based-books for details.";
+			throw new IllegalArgumentException(message);
 		}
 
 		var customBookItem = GsonHelper.getAsString(root, "custom_book_item", "");

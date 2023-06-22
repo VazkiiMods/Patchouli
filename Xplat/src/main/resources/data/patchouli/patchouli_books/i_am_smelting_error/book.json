@@ -3,5 +3,6 @@
   "landing_text": "DO NOT OPEN",
   "subtitle": "DO NOT OPEN",
   "model": "minecraft:barrier",
-  "version": "GRADLE:VERSION"
+  "version": "GRADLE:VERSION",
+  "use_resource_pack": true
 }

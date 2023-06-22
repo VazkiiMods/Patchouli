@@ -3,5 +3,6 @@
 	"landing_text": "item.patchouli:intro_book.landing",
 	"subtitle": "item.patchouli:intro_book.subtitle",
 	"creative_tab": "minecraft:natural_blocks",
-	"advancements_tab": "patchouli"
+	"advancements_tab": "patchouli",
+	"use_resource_pack": true
 }

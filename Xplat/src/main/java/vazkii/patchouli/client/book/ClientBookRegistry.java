@@ -58,9 +58,9 @@ public class ClientBookRegistry {
 		pageTypes.put(new ResourceLocation(PatchouliAPI.MOD_ID, "quest"), PageQuest.class);
 	}
 
-	public void reload(boolean resourcePackBooksOnly) {
+	public void reload() {
 		currentLang = Minecraft.getInstance().getLanguageManager().getSelected();
-		BookRegistry.INSTANCE.reloadContents(Minecraft.getInstance().level, resourcePackBooksOnly);
+		BookRegistry.INSTANCE.reloadContents(Minecraft.getInstance().level);
 	}
 
 	public void reloadLocks(boolean suppressToasts) {

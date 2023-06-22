@@ -29,6 +29,6 @@ public class FabricMessageReloadBookContents {
 	}
 
 	public static void handle(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender responseSender) {
-		client.submit(() -> ClientBookRegistry.INSTANCE.reload(false));
+		client.submit(() -> ClientBookRegistry.INSTANCE.reload());
 	}
 }
