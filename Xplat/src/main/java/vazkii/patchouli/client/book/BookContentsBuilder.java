@@ -31,6 +31,10 @@ public class BookContentsBuilder {
 	private final Map<ResourceLocation, Supplier<BookTemplate>> templates = new HashMap<>();
 	private final Map<ItemStackUtil.StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap<>();
 
+	private final Book book;
+	/**
+	 * Signals that the book was reloaded through the ingame button and should bypass the cached resource reload data.
+	 */
 	private final boolean singleBookReload;
 
 	private interface LoadFunc<T> {
@@ -38,17 +42,10 @@ public class BookContentsBuilder {
 		T load(Book book, BookContentLoader loader, ResourceLocation id, ResourceLocation file);
 	}
 
-	/**
-	 * @param singleBookReload Signals that the book was reloaded through the ingame button
-	 *                         and should bypass the cached resource reload data.
-	 */
-	public BookContentsBuilder(boolean singleBookReload) {
+	private BookContentsBuilder(Book book, boolean singleBookReload) {
+		this.book = book;
 		this.singleBookReload = singleBookReload;
 		templates.putAll(BookContents.addonTemplates);
-	}
-
-	public BookContentsBuilder() {
-		this(false);
 	}
 
 	@Nullable
@@ -70,15 +67,21 @@ public class BookContentsBuilder {
 		recipeMappings.put(stack, Pair.of(entry, spread));
 	}
 
-	public void loadFor(Book book) {
-		load(book, "categories", BookContentsBuilder::loadCategory, categories);
-		load(book, "entries",
-				(b, l, id, file) -> BookContentsBuilder.loadEntry(b, l, id, file, categories::get),
-				entries);
-		load(book, "templates", BookContentsBuilder::loadTemplate, templates);
+	public static BookContents loadAndBuildFor(Level level, Book book, boolean singleBookReload) {
+		BookContentsBuilder builder = new BookContentsBuilder(book, singleBookReload);
+		builder.loadFiles();
+		return builder.build(level);
 	}
 
-	public BookContents build(Level level, Book book) {
+	private void loadFiles() {
+		load("categories", BookContentsBuilder::loadCategory, categories);
+		load("entries",
+				(b, l, id, file) -> BookContentsBuilder.loadEntry(b, l, id, file, categories::get),
+				entries);
+		load("templates", BookContentsBuilder::loadTemplate, templates);
+	}
+
+	private BookContents build(Level level) {
 		categories.forEach((id, category) -> {
 			try {
 				category.build(this);
@@ -112,8 +115,8 @@ public class BookContentsBuilder {
 		);
 	}
 
-	private <T> void load(Book book, String thing, LoadFunc<T> loader, Map<ResourceLocation, T> builder) {
-		BookContentLoader contentLoader = getContentLoader(book);
+	private <T> void load(String thing, LoadFunc<T> loader, Map<ResourceLocation, T> builder) {
+		BookContentLoader contentLoader = getContentLoader();
 		List<ResourceLocation> foundIds = new ArrayList<>();
 		contentLoader.findFiles(book, thing, foundIds);
 
@@ -127,7 +130,7 @@ public class BookContentsBuilder {
 		}
 	}
 
-	protected BookContentLoader getContentLoader(Book book) {
+	protected BookContentLoader getContentLoader() {
 		if (book.isExternal) {
 			return BookContentExternalLoader.INSTANCE;
 		}

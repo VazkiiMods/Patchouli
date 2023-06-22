@@ -141,7 +141,7 @@ public class Book {
 			String message = "Book %s has use_resource_pack set to false. ".formatted(this.id)
 					+ "This behaviour was removed in 1.20. "
 					+ "The book author should enable this flag and move all book contents clientside to /assets/, "
-					+ "leaving the book.json in /data/. See https://vazkiimods.github.io/Patchouli/docs/upgrading/upgrade-guide-117#resource-pack-based-books for details.";
+					+ "leaving the book.json in /data/. See https://vazkiimods.github.io/Patchouli/docs/upgrading/upgrade-guide-120 for details.";
 			throw new IllegalArgumentException(message);
 		}
 
@@ -194,18 +194,10 @@ public class Book {
 	 * @param singleBook Hint that the book was reloaded through the button on the main page
 	 */
 	public void reloadContents(Level level, boolean singleBook) {
-		BookContentsBuilder builder = new BookContentsBuilder(singleBook);
 		try {
-			builder.loadFor(this);
+			contents = BookContentsBuilder.loadAndBuildFor(level, this, singleBook);
 		} catch (Exception e) {
-			PatchouliAPI.LOGGER.error("Error loading book {}, using empty contents", id, e);
-			contents = BookContents.empty(this, e);
-		}
-
-		try {
-			contents = builder.build(level, this);
-		} catch (Exception e) {
-			PatchouliAPI.LOGGER.error("Error compiling book {}, using empty contents", id, e);
+			PatchouliAPI.LOGGER.error("Error loading and compiling book {}, using empty contents", id, e);
 			contents = BookContents.empty(this, e);
 		}
 	}
