@@ -47,7 +47,7 @@ public class ForgeModInitializer {
 	@SubscribeEvent
 	public static void processCreativeTabs(BuildCreativeModeTabContentsEvent evt) {
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			if (!b.noBook && !b.isExtension) {
+			if (!b.noBook) {
 				ItemStack book = ItemModBook.forBook(b);
 				if (evt.getTab() == CreativeModeTabs.searchTab()) {
 					evt.accept(book);
