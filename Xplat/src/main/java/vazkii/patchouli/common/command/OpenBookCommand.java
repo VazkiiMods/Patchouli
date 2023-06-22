@@ -13,27 +13,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 public class OpenBookCommand {
 	private static final SuggestionProvider<CommandSourceStack> BOOK_ID_SUGGESTER =
-			(ctx, builder) -> {
-				List<ResourceLocation> ids = new ArrayList<>();
-				for (Map.Entry<ResourceLocation, Book> e : BookRegistry.INSTANCE.books.entrySet()) {
-					if (!e.getValue().isExtension) {
-						ids.add(e.getKey());
-					}
-				}
-				return SharedSuggestionProvider.suggestResource(ids, builder);
-			};
+			(ctx, builder) -> SharedSuggestionProvider.suggestResource(
+					BookRegistry.INSTANCE.books.keySet(), builder);
 
 	public static void register(CommandDispatcher<CommandSourceStack> disp) {
 		disp.register(Commands.literal("open-patchouli-book")

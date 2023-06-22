@@ -77,7 +77,7 @@ public class ClientBookRegistry {
 
 		Book book = BookRegistry.INSTANCE.books.get(bookStr);
 
-		if (book != null && !book.isExtension) {
+		if (book != null) {
 			book.getContents().checkValidCurrentEntry();
 
 			if (entryId != null) {

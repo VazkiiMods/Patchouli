@@ -44,7 +44,7 @@ public class FabricModInitializer implements ModInitializer {
 		});
 
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			if (!b.noBook && !b.isExtension) {
+			if (!b.noBook) {
 				if (b.creativeTab != null) {
 					ItemGroupEvents.ModifyEntries listener = entries -> entries.accept(ItemModBook.forBook(b));
 

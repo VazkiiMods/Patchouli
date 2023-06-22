@@ -80,31 +80,6 @@ public class BookRegistry {
 		});
 
 		BookFolderLoader.findBooks();
-
-		for (Book book : books.values()) {
-			if (book.useResourcePack && !book.allowExtensions) {
-				throw new IllegalArgumentException(
-						String.format("Book %s uses resource pack loading but doesn't allow extensions. "
-								+ "All resource pack books allow extensions by definition.", book.id)
-				);
-			}
-			if (book.isExtension) {
-				book.extensionTarget = books.get(book.extensionTargetID);
-
-				if (book.extensionTarget == null) {
-					throw new IllegalArgumentException("Extension Book " + book.id + " has no valid target");
-				} else if (!book.extensionTarget.allowExtensions) {
-					throw new IllegalArgumentException("Book " + book.extensionTarget.id + " doesn't allow extensions, so " + book.id + " can't modify it");
-				} else if (book.useResourcePack) {
-					PatchouliAPI.LOGGER.warn("Book {} is a resource-pack-based book. Extension books are unnecessary for resource-pack-based books. "
-							+ "You should simply create a resource pack with the extra content you want to add or override.",
-							book.extensionTarget.id);
-				}
-
-				book.extensionTarget.extensions.add(book);
-			}
-		}
-
 		IXplatAbstractions.INSTANCE.signalBooksLoaded();
 	}
 

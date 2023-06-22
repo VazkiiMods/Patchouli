@@ -14,7 +14,6 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Holds book content state while it is being assembled from JSON data and extension data.
+ * Holds book content state while it is being assembled from JSON data
  */
 public class BookContentsBuilder {
 	public static final String DEFAULT_LANG = "en_us";
@@ -71,11 +70,7 @@ public class BookContentsBuilder {
 		recipeMappings.put(stack, Pair.of(entry, spread));
 	}
 
-	/**
-	 * Contribute the on-disk contents of the given book to this builder.
-	 * Should first be called with the "real" book, then by all extensions
-	 */
-	public void loadFrom(Book book) {
+	public void loadFor(Book book) {
 		load(book, "categories", BookContentsBuilder::loadCategory, categories);
 		load(book, "entries",
 				(b, l, id, file) -> BookContentsBuilder.loadEntry(b, l, id, file, categories::get),

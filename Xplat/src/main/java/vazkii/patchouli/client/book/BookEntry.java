@@ -63,13 +63,8 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 
 	public BookEntry(JsonObject root, ResourceLocation id, Book book) {
 		this.id = id;
-		if (book.isExtension) {
-			this.book = book.extensionTarget;
-			this.trueProvider = book;
-		} else {
-			this.book = book;
-			this.trueProvider = null;
-		}
+		this.book = book;
+		this.trueProvider = null;
 
 		var categoryId = GsonHelper.getAsString(root, "category");
 		if (categoryId.contains(":")) { // full category ID

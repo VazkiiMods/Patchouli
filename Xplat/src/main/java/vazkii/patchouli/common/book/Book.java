@@ -27,8 +27,6 @@ import vazkii.patchouli.xplat.XplatModContainer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -61,10 +59,6 @@ public class Book {
 
 	public final int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
 
-	public final boolean isExtension;
-	public final List<Book> extensions = new LinkedList<>();
-	@Nullable public Book extensionTarget;
-
 	public final boolean isExternal;
 
 	// JSON Loaded properties
@@ -95,15 +89,7 @@ public class Book {
 
 	public final boolean showToasts;
 
-	@Nullable public final ResourceLocation extensionTargetID;
-
-	public final boolean allowExtensions;
-
 	public final boolean pauseGame;
-
-	// This is no longer checked anywhere except the constructor, but should be kept so that
-	// people upgrading from <1.20 know that migration work needs to happen.
-	public final boolean useResourcePack;
 
 	public final boolean isPamphlet;
 
@@ -112,11 +98,7 @@ public class Book {
 
 	public final Map<String, String> macros = new HashMap<>();
 
-	private static int parseColor(JsonObject root, String key, String defaultColor, boolean isExtension) {
-		if (isExtension) {
-			return 0;
-		}
-
+	private static int parseColor(JsonObject root, String key, String defaultColor) {
 		return 0xFF000000 | Integer.parseInt(GsonHelper.getAsString(root, key, defaultColor), 16);
 	}
 
@@ -132,15 +114,13 @@ public class Book {
 		this.owner = owner;
 		this.id = id;
 		this.isExternal = external;
-		this.extensionTargetID = SerializationUtil.getAsResourceLocation(root, "extend", null);
-		this.isExtension = extensionTargetID != null;
-		this.textColor = parseColor(root, "text_color", "000000", isExtension);
-		this.headerColor = parseColor(root, "header_color", "333333", isExtension);
-		this.nameplateColor = parseColor(root, "nameplate_color", "FFDD00", isExtension);
-		this.linkColor = parseColor(root, "link_color", "0000EE", isExtension);
-		this.linkHoverColor = parseColor(root, "link_hover_color", "8800EE", isExtension);
-		this.progressBarColor = parseColor(root, "progress_bar_color", "FFFF55", isExtension);
-		this.progressBarBackground = parseColor(root, "progress_bar_background", "DDDDDD", isExtension);
+		this.textColor = parseColor(root, "text_color", "000000");
+		this.headerColor = parseColor(root, "header_color", "333333");
+		this.nameplateColor = parseColor(root, "nameplate_color", "FFDD00");
+		this.linkColor = parseColor(root, "link_color", "0000EE");
+		this.linkHoverColor = parseColor(root, "link_hover_color", "8800EE");
+		this.progressBarColor = parseColor(root, "progress_bar_color", "FFFF55");
+		this.progressBarBackground = parseColor(root, "progress_bar_background", "DDDDDD");
 		this.openSound = SerializationUtil.getAsResourceLocation(root, "open_sound", PatchouliSounds.BOOK_OPEN.getLocation());
 		this.flipSound = SerializationUtil.getAsResourceLocation(root, "flip_sound", PatchouliSounds.BOOK_FLIP.getLocation());
 		this.showProgress = GsonHelper.getAsBoolean(root, "show_progress", true);
@@ -151,18 +131,26 @@ public class Book {
 		this.advancementsTab = SerializationUtil.getAsResourceLocation(root, "advancements_tab", null);
 		this.noBook = GsonHelper.getAsBoolean(root, "dont_generate_book", false);
 		this.showToasts = GsonHelper.getAsBoolean(root, "show_toasts", true);
-		this.allowExtensions = GsonHelper.getAsBoolean(root, "allow_extensions", true);
 		this.pauseGame = GsonHelper.getAsBoolean(root, "pause_game", false);
-		this.useResourcePack = GsonHelper.getAsBoolean(root, "use_resource_pack", false);
 		this.isPamphlet = GsonHelper.getAsBoolean(root, "pamphlet", false);
 		this.i18n = GsonHelper.getAsBoolean(root, "i18n", false);
 		this.overflowMode = SerializationUtil.getAsEnum(root, "text_overflow_mode", PatchouliConfigAccess.TextOverflowMode.class, null);
 
-		if (!this.useResourcePack) {
+		boolean useResourcePack = GsonHelper.getAsBoolean(root, "use_resource_pack", false);
+		if (!useResourcePack) {
 			String message = "Book %s has use_resource_pack set to false. ".formatted(this.id)
 					+ "This behaviour was removed in 1.20. "
 					+ "The book author should enable this flag and move all book contents clientside to /assets/, "
 					+ "leaving the book.json in /data/. See https://vazkiimods.github.io/Patchouli/docs/upgrading/upgrade-guide-117#resource-pack-based-books for details.";
+			throw new IllegalArgumentException(message);
+		}
+
+		// Check legacy extensions flag
+		ResourceLocation extensionTargetID = SerializationUtil.getAsResourceLocation(root, "extend", null);
+		if (extensionTargetID != null) {
+			String message = "Book %s is declared to extend %s. ".formatted(this.id, extensionTargetID)
+					+ "This behaviour was removed in 1.20. "
+					+ "The book author should simply create a resource pack with the extra content they want to add or override.";
 			throw new IllegalArgumentException(message);
 		}
 
@@ -176,11 +164,9 @@ public class Book {
 			bookItem = Suppliers.memoize(() -> ItemModBook.forBook(id));
 		}
 
-		if (!isExtension) {
-			macros.putAll(DEFAULT_MACROS);
-			for (var e : GsonHelper.getAsJsonObject(root, "macros", new JsonObject()).entrySet()) {
-				macros.put(e.getKey(), GsonHelper.convertToString(e.getValue(), "macro value"));
-			}
+		macros.putAll(DEFAULT_MACROS);
+		for (var e : GsonHelper.getAsJsonObject(root, "macros", new JsonObject()).entrySet()) {
+			macros.put(e.getKey(), GsonHelper.convertToString(e.getValue(), "macro value"));
 		}
 	}
 
@@ -208,29 +194,19 @@ public class Book {
 	 * @param singleBook Hint that the book was reloaded through the button on the main page
 	 */
 	public void reloadContents(Level level, boolean singleBook) {
-		if (!isExtension) {
-			BookContentsBuilder builder = new BookContentsBuilder(singleBook);
-			try {
-				builder.loadFrom(this);
-			} catch (Exception e) {
-				PatchouliAPI.LOGGER.error("Error loading book {}, using empty contents and ignoring extensions", id, e);
-				contents = BookContents.empty(this, e);
-			}
+		BookContentsBuilder builder = new BookContentsBuilder(singleBook);
+		try {
+			builder.loadFor(this);
+		} catch (Exception e) {
+			PatchouliAPI.LOGGER.error("Error loading book {}, using empty contents", id, e);
+			contents = BookContents.empty(this, e);
+		}
 
-			for (Book extension : extensions) {
-				try {
-					builder.loadFrom(extension);
-				} catch (Exception e) {
-					PatchouliAPI.LOGGER.error("Error loading extending book {} with addon book {}, skipping", id, extension.id, e);
-				}
-			}
-
-			try {
-				contents = builder.build(level, this);
-			} catch (Exception e) {
-				PatchouliAPI.LOGGER.error("Error compiling book {}, using empty contents", id, e);
-				contents = BookContents.empty(this, e);
-			}
+		try {
+			contents = builder.build(level, this);
+		} catch (Exception e) {
+			PatchouliAPI.LOGGER.error("Error compiling book {}, using empty contents", id, e);
+			contents = BookContents.empty(this, e);
 		}
 	}
 
@@ -291,10 +267,6 @@ public class Book {
 	}
 
 	public BookContents getContents() {
-		if (isExtension) {
-			return extensionTarget.getContents();
-		} else {
-			return contents != null ? contents : BookContents.empty(this, null);
-		}
+		return contents != null ? contents : BookContents.empty(this, null);
 	}
 }
