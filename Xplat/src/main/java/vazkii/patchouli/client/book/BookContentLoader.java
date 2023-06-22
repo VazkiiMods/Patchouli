@@ -22,7 +22,7 @@ public interface BookContentLoader {
 	void findFiles(Book book, String dir, List<ResourceLocation> list);
 
 	@Nullable
-	JsonElement loadJson(Book book, ResourceLocation resloc, @Nullable ResourceLocation fallback);
+	JsonElement loadJson(Book book, ResourceLocation file);
 
 	static JsonElement streamToJson(InputStream stream) throws IOException {
 		try (Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {

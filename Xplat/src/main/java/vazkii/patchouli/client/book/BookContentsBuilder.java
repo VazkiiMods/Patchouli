@@ -177,13 +177,16 @@ public class BookContentsBuilder {
 		return supplier;
 	}
 
-	private static JsonElement loadLocalizedJson(Book book, BookContentLoader loader, ResourceLocation res) {
-		ResourceLocation localized = new ResourceLocation(res.getNamespace(),
-				res.getPath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
+	private static JsonElement loadLocalizedJson(Book book, BookContentLoader loader, ResourceLocation file) {
+		ResourceLocation localizedFile = new ResourceLocation(file.getNamespace(),
+				file.getPath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
 
-		JsonElement input = loader.loadJson(book, localized, res);
+		JsonElement input = loader.loadJson(book, localizedFile);
 		if (input == null) {
-			throw new IllegalArgumentException(res + " does not exist.");
+			input = loader.loadJson(book, file);
+			if (input == null) {
+				throw new IllegalArgumentException(file + " does not exist.");
+			}
 		}
 
 		return input;

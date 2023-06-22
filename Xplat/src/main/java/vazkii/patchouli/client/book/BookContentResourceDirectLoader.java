@@ -52,14 +52,12 @@ public final class BookContentResourceDirectLoader implements BookContentLoader 
 
 	@Nullable
 	@Override
-	public JsonElement loadJson(Book book, ResourceLocation file, @Nullable ResourceLocation fallback) {
+	public JsonElement loadJson(Book book, ResourceLocation file) {
 		PatchouliAPI.LOGGER.debug("Loading {}", file);
 		ResourceManager manager = Minecraft.getInstance().getResourceManager();
 		try {
 			var resource = manager.getResource(file);
 			if (resource.isPresent()) {
-				return BookContentLoader.streamToJson(resource.get().open());
-			} else if (fallback != null && (resource = manager.getResource(fallback)).isPresent()) {
 				return BookContentLoader.streamToJson(resource.get().open());
 			} else {
 				return null;
