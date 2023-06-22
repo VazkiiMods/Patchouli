@@ -1,0 +1,11 @@
+{
+  "name": "Language Test",
+  "category": "patchouli:language",
+  "icon": "minecraft:globe_banner_pattern",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "此生无悔入东方，来世愿生幻想乡"
+    }
+  ]
+}
