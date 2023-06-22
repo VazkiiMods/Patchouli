@@ -95,18 +95,6 @@ public class ItemModBook extends Item {
 		return ResourceLocation.tryParse(bookStr);
 	}
 
-	/* TODO fabric
-	@Override
-	public String getCreatorModId(ItemStack itemStack) {
-		Book book = getBook(itemStack);
-		if (book != null) {
-			return book.owner.getModId();
-		}
-	
-		return super.getCreatorModId(itemStack);
-	}
-	*/
-
 	@Override
 	public Component getName(ItemStack stack) {
 		Book book = getBook(stack);
