@@ -142,8 +142,9 @@ public class BookContentsBuilder {
 
 	@Nullable
 	private static BookCategory loadCategory(Book book, BookContentLoader loader, ResourceLocation id, ResourceLocation file) {
-		JsonElement json = loadLocalizedJson(book, loader, file);
-		var category = new BookCategory(json.getAsJsonObject(), id, book);
+		BookContentLoader.LoadResult result = loadLocalizedJson(book, loader, file);
+		// TODO: Render the "added by" text in the category UI somewhere
+		var category = new BookCategory(result.json().getAsJsonObject(), id, book);
 		if (category.canAdd()) {
 			return category;
 		}
@@ -153,8 +154,8 @@ public class BookContentsBuilder {
 	@Nullable
 	private static BookEntry loadEntry(Book book, BookContentLoader loader, ResourceLocation id,
 			ResourceLocation file, Function<ResourceLocation, BookCategory> categories) {
-		JsonElement json = loadLocalizedJson(book, loader, file);
-		var entry = new BookEntry(json.getAsJsonObject(), id, book);
+		BookContentLoader.LoadResult result = loadLocalizedJson(book, loader, file);
+		var entry = new BookEntry(result.json().getAsJsonObject(), id, book, result.addedBy());
 
 		if (entry.canAdd()) {
 			entry.initCategory(file, categories);
@@ -164,7 +165,7 @@ public class BookContentsBuilder {
 	}
 
 	private static Supplier<BookTemplate> loadTemplate(Book book, BookContentLoader loader, ResourceLocation key, ResourceLocation res) {
-		JsonElement json = loadLocalizedJson(book, loader, res);
+		JsonElement json = loadLocalizedJson(book, loader, res).json();
 
 		Supplier<BookTemplate> supplier = () -> ClientBookRegistry.INSTANCE.gson.fromJson(json, BookTemplate.class);
 
@@ -177,11 +178,11 @@ public class BookContentsBuilder {
 		return supplier;
 	}
 
-	private static JsonElement loadLocalizedJson(Book book, BookContentLoader loader, ResourceLocation file) {
+	private static BookContentLoader.LoadResult loadLocalizedJson(Book book, BookContentLoader loader, ResourceLocation file) {
 		ResourceLocation localizedFile = new ResourceLocation(file.getNamespace(),
 				file.getPath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
 
-		JsonElement input = loader.loadJson(book, localizedFile);
+		BookContentLoader.LoadResult input = loader.loadJson(book, localizedFile);
 		if (input == null) {
 			input = loader.loadJson(book, file);
 			if (input == null) {

@@ -84,7 +84,7 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 
 	@Nullable
 	@Override
-	public JsonElement loadJson(Book book, ResourceLocation file) {
+	public LoadResult loadJson(Book book, ResourceLocation file) {
 		PatchouliAPI.LOGGER.trace("Loading {}", file);
 		var map = data.get(book.id);
 		if (map == null) {
@@ -92,6 +92,10 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 		}
 		String path = file.getPath();
 
-		return map.get(new ResourceLocation(file.getNamespace(), path.substring(0, path.length() - 5).split("/", 2)[1]));
+		return new LoadResult(
+				map.get(new ResourceLocation(file.getNamespace(), path.substring(0, path.length() - 5).split("/", 2)[1])),
+				// todo implement this
+				null
+		);
 	}
 }

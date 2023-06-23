@@ -22,7 +22,15 @@ public interface BookContentLoader {
 	void findFiles(Book book, String dir, List<ResourceLocation> list);
 
 	@Nullable
-	JsonElement loadJson(Book book, ResourceLocation file);
+	LoadResult loadJson(Book book, ResourceLocation file);
+
+	/**
+	 * @param addedBy Opaque string to be shown to user in the book,
+	 *                indicates that the thing in question was added by a "foreign" entity such
+	 *                as a resource pack addon. Null if no message should be shown.
+	 */
+	record LoadResult(JsonElement json, @Nullable String addedBy) {
+	}
 
 	static JsonElement streamToJson(InputStream stream) throws IOException {
 		try (Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {

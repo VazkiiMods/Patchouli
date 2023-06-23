@@ -40,10 +40,8 @@ public class PageText extends PageWithText {
 			if (mc.options.advancedItemTooltips) {
 				ResourceLocation res = parent.getEntry().getId();
 				smolText = res.toString();
-			} else if (entry.isExtension()) {
-				// TODO 1.20 this needs to be reimplemented
-				String name = entry.getTrueProvider().getOwnerName();
-				smolText = I18n.get("patchouli.gui.lexicon.added_by", name);
+			} else if (entry.getAddedBy() != null) {
+				smolText = I18n.get("patchouli.gui.lexicon.added_by", entry.getAddedBy());
 			}
 
 			if (!smolText.isEmpty()) {

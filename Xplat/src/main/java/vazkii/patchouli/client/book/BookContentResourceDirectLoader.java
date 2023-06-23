@@ -1,10 +1,10 @@
 package vazkii.patchouli.client.book;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonElement;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import vazkii.patchouli.api.PatchouliAPI;
@@ -52,18 +52,40 @@ public final class BookContentResourceDirectLoader implements BookContentLoader 
 
 	@Nullable
 	@Override
-	public JsonElement loadJson(Book book, ResourceLocation file) {
+	public LoadResult loadJson(Book book, ResourceLocation file) {
 		PatchouliAPI.LOGGER.debug("Loading {}", file);
 		ResourceManager manager = Minecraft.getInstance().getResourceManager();
 		try {
-			var resource = manager.getResource(file);
-			if (resource.isPresent()) {
-				return BookContentLoader.streamToJson(resource.get().open());
+			var resourceOpt = manager.getResource(file);
+			if (resourceOpt.isPresent()) {
+				Resource resource = resourceOpt.get();
+				return new LoadResult(
+						BookContentLoader.streamToJson(resource.open()),
+						computeAddedByText(resource.sourcePackId(), book)
+				);
 			} else {
 				return null;
 			}
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}
+	}
+
+	@Nullable
+	private static String computeAddedByText(String sourcePackId, Book book) {
+		// Resource packs are named by "file/<packname>"
+		if (sourcePackId.startsWith("file/")) {
+			sourcePackId = sourcePackId.substring(5);
+		}
+
+		// Forge and Fabric lump all mod resources into one dummy pack.
+		// Unsure how to handle them for now. TODO: Fix this
+		// We'd like to show only those packs that are not in the one that originally
+		// declared the book.
+		if (sourcePackId.equals("mod_resources") || sourcePackId.equals("fabric")) {
+			return null;
+		}
+
+		return sourcePackId;
 	}
 }
