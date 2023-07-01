@@ -164,7 +164,7 @@ public final class BookCategory extends AbstractReadStateHolder implements Compa
 					this.parentCategory = parentCat;
 				}
 			} else {
-				String hint = String.format("`%s:%s`", book.getModNamespace(), parent);
+				String hint = String.format("`%s:%s`", book.id.getNamespace(), parent);
 				throw new IllegalArgumentException("`parent` must be fully qualified (domain:name). Hint: Try " + hint);
 			}
 		}

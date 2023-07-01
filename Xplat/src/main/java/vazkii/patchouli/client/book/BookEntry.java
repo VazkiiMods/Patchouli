@@ -69,7 +69,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 		if (categoryId.contains(":")) { // full category ID
 			this.categoryId = new ResourceLocation(categoryId);
 		} else {
-			String hint = String.format("`%s:%s`", book.getModNamespace(), categoryId);
+			String hint = String.format("`%s:%s`", book.id.getNamespace(), categoryId);
 			throw new IllegalArgumentException("`category` must be fully qualified (domain:name). Hint: Try " + hint);
 		}
 

@@ -170,10 +170,6 @@ public class Book {
 		}
 	}
 
-	public String getModNamespace() {
-		return id.getNamespace();
-	}
-
 	public ItemStack getBookItem() {
 		return this.bookItem.get();
 	}

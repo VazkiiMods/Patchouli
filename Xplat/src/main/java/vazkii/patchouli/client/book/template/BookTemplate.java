@@ -62,7 +62,7 @@ public class BookTemplate {
 		if (type.contains(":")) {
 			key = new ResourceLocation(type);
 		} else {
-			key = new ResourceLocation(book.getModNamespace(), type);
+			key = new ResourceLocation(book.id.getNamespace(), type);
 		}
 
 		Supplier<BookTemplate> supplier = builder.getTemplate(key);
