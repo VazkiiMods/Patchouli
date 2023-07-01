@@ -41,7 +41,7 @@ An anchor can be used elsewhere to refer to this specific page in an internal li
 internal links.
 
 ## Text Pages (`patchouli:text`)
-![](https://i.imgur.com/cYGwnxb.png)
+![Screenshot of text page](/img/pageText.png)
 
 
 **Text pages should always be the first page in any entry**. If a text page is the first
@@ -74,7 +74,7 @@ normal) will implicitly become a text page, with the text set to the content of 
 ```
 
 ## Image Pages (`patchouli:image`)
-![](https://i.imgur.com/NnWb10b.png)
+![Screenshot of image page](/img/pageImage.png)
 
 
 ### **images** (String Array, _mandatory_)
@@ -107,7 +107,7 @@ The text to display on this page, under the image. This text can be
 
 ## Crafting Recipe Pages (`patchouli:crafting`)
 
-![](https://i.imgur.com/ySSi5zL.png)
+![Screenshot of Crafting page](/img/pageCrafting.png)
 
 ### **recipe** (String, _mandatory_)
 
@@ -134,7 +134,7 @@ the output names displayed, and there's no space for text.
 
 ## Smelting Recipe Pages (`patchouli:smelting`)
 
-![](https://i.imgur.com/noBfGCc.png)
+![Screenshot of smelting page](/img/pageSmelting.png)
 
 ### **recipe** (String, _mandatory_)
 
@@ -157,7 +157,7 @@ The text to display on this page, under the recipes. This text can be
 
 ## Multiblock Pages (`patchouli:multiblock`)
 
-![](https://i.imgur.com/uTt7Zsc.png)
+![Screenshot of multiblock page](/img/pageMultiblock.png)
 
 ### **name** (String, _mandatory_)
 
@@ -190,7 +190,7 @@ The text to display on this page, under the multiblock. This text can be
 
 ## Entity Pages (`patchouli:entity`)
 
-![](https://i.imgur.com/suEQTN4.png)
+![Screenshot of entity page](/img/pageEntity.png)
 
 ### **entity** (String, _mandatory_)
 
@@ -230,7 +230,7 @@ The text to display on this page, under the entity. This text can be
 
 ## Spotlight Pages (`patchouli:spotlight`)
 
-![](https://i.imgur.com/W7ezngF.png)
+![Screenshot of spotlight page](/img/pageSpotlight.png)
 
 ### **item** (String, _mandatory_)
 
@@ -256,7 +256,7 @@ The text to display on this page, under the item. This text can be
 
 ## Link Pages (`patchouli:link`)
 
-![](https://i.imgur.com/AQST9Jf.png)
+![Screenshot of link page](/img/pageLink.png)
 
 **Note:** Link pages are just specialized Text pages, which means they can work just like
 text pages, with the additional link button on the bottom. They also have all the
@@ -273,7 +273,7 @@ The text to display on the link button.
 
 ## Relations Pages (`patchouli:relations`)
 
-![](https://i.imgur.com/rBaxf4d.png)
+![Screenshot of relations page](/img/pageRelations.png)
 
 ### **entries** (String Array)
 
@@ -292,7 +292,7 @@ The text to display on this page, under the links. This text can be
 
 ## Quest Pages (`patchouli:quest`)
 
-![](https://i.imgur.com/LRpRQdn.png)
+![Screenshot of quest page](/img/pageQuest.png)
 
 **Notes:**
 
@@ -321,7 +321,7 @@ The text to display on this page, under the links. This text can be
 [formatted](/docs/patchouli-basics/text-formatting).
 
 ## Empty Pages (`patchouli:empty`)
-![](https://i.imgur.com/9gv6Dje.png)
+![Screenshot of empty page](/img/pageEmpty.png)
 
 ### **draw_filler** (boolean)
 

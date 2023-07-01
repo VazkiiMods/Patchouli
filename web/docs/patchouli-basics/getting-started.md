@@ -91,7 +91,7 @@ Load your game and check if your book is there. Unless you specified otherwise, 
 be in the Tools and Utilities creative tab, but you can also search for it. Opening the
 book should yield a blank landing page.
 
-![](https://i.imgur.com/lsdDrrk.png)
+![Screenshot of blank Patchouli book on landing page](/img/gettingStarted.png)
 
 If you don't see it, check if Patchouli is properly loaded and if there's any errors in
 your log.

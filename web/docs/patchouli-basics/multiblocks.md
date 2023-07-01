@@ -21,7 +21,7 @@ A Multiblock is composed of a 2 dimensional String Array (the pattern), and a ma
 
 As a demonstration of how to create a multiblock, we'll be using the following... thing as a demonstration:
 
-![](https://i.imgur.com/M6Fw6nP.png)
+![picture of sample gazebo multiblock](/img/multiblock.png)
 
 A multiblock can be defined using a JSON object. Let's begin with an empty one and add in as we go.
 
@@ -228,4 +228,4 @@ Let's add our pattern, mapping, and other values together, and we get:
 
 Which, if we transplant onto a "multiblock" page (see [Default Page Types](/docs/patchouli-basics/page-types#multiblock-pages)), and click Visualize, will show up just fine ingame!
 
-![](https://i.imgur.com/1lfoaA1.png)
+![Screenshot showing multiblock visualization](/img/multiblockVis.png)
