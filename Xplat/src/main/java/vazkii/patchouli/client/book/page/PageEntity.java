@@ -81,15 +81,13 @@ public class PageEntity extends PageWithText {
 
 		if (entity != null) {
 			float rotation = rotate ? ClientTicker.total : defaultRotation;
-			renderEntity(graphics, entity, parent.getMinecraft().level, 58, 60, rotation, renderScale, offset);
+			renderEntity(graphics, entity, 58, 60, rotation, renderScale, offset);
 		}
 
 		super.render(graphics, mouseX, mouseY, pticks);
 	}
 
-	public static void renderEntity(GuiGraphics graphics, Entity entity, Level world, float x, float y, float rotation, float renderScale, float offset) {
-		//entity.level = world; // TODO fix this
-
+	public static void renderEntity(GuiGraphics graphics, Entity entity, float x, float y, float rotation, float renderScale, float offset) {
 		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(x, y, 50);
@@ -107,7 +105,7 @@ public class PageEntity extends PageWithText {
 	}
 
 	private void loadEntity(Level world) {
-		if (!errored && (entity == null || !entity.isAlive())) {
+		if (!errored && (entity == null || !entity.isAlive() || entity.level() != world)) {
 			try {
 				entity = creator.apply(world);
 

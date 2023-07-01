@@ -53,7 +53,7 @@ public class ComponentEntity extends TemplateComponent {
 
 		if (entity != null) {
 			float rotation = rotate ? ClientTicker.total : defaultRotation;
-			PageEntity.renderEntity(graphics, entity, page.mc.level, x, y, rotation, renderScale, offset);
+			PageEntity.renderEntity(graphics, entity, x, y, rotation, renderScale, offset);
 		}
 	}
 
@@ -64,7 +64,7 @@ public class ComponentEntity extends TemplateComponent {
 	}
 
 	private void loadEntity(Level world) {
-		if (!errored && (entity == null || !entity.isAlive())) {
+		if (!errored && (entity == null || !entity.isAlive() || entity.level() != world)) {
 			try {
 				entity = creator.apply(world);
 				float width = entity.getBbWidth();
