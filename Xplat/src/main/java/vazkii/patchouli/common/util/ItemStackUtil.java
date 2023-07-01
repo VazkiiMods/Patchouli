@@ -139,7 +139,7 @@ public final class ItemStackUtil {
 
 		@Override
 		public boolean equals(Object obj) {
-			return obj == this || (obj instanceof StackWrapper && ItemStack.matches(stack, ((StackWrapper) obj).stack)); // TODO check if this is correct
+			return obj == this || (obj instanceof StackWrapper && ItemStack.isSameItemSameTags(stack, ((StackWrapper) obj).stack));
 		}
 
 		@Override
