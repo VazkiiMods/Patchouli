@@ -150,7 +150,7 @@ public class Book {
 		if (extensionTargetID != null) {
 			String message = "Book %s is declared to extend %s. ".formatted(this.id, extensionTargetID)
 					+ "This behaviour was removed in 1.20. "
-					+ "The book author should simply create a resource pack with the extra content they want to add or override.";
+					+ "The author should simply ship the extra content they want to add or override in a resource pack.";
 			throw new IllegalArgumentException(message);
 		}
 
