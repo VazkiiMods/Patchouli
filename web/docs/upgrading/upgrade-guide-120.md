@@ -27,15 +27,14 @@ Forge and Fabric.
 In the future, we may explore options that also move the `book.json` out of `/data/` and
 into `/assets/`.
 
-To recap, this is what your resources folder should look like going forward, for modders
-and those using resource packs:
+To recap, this is what your resources folder should look like going forward, for modders:
 
 ```
 .
 ├── assets
-│   └── patchouli
+│   └── your_namespace
 │       └── patchouli_books
-│           └── comprehensive_test_book
+│           └── your_book_name
 │               ├── en_us
 │               │   ├── categories
 │               │   ├── entries
@@ -43,31 +42,34 @@ and those using resource packs:
 │               └── zh_cn
 │                   └── entries
 └── data
-    └── patchouli
+    └── your_namespace
         └── patchouli_books
-            └── comprehensive_test_book
+            └── your_book_name
                 └── book.json
 ```
+
+Addon modders and modpackers modifying an existing book will only need the `/assets/` part
+above, and should ship it in mod resources or a resource pack, respectively.
 
 For those using the external folder, your structure will remain as follows:
 
 ```
 .minecraft
 └── patchouli_books
-    └── external_book
+    └── your_book_name
         ├── book.json
         └── en_us
             ├── categories
-            │   └── testcat.json
             └── entries
-                └── testcat
-                    └── testentry.json
 ```
 
 If it sounds confusing, sorry, that's because it is. Patchouli's history of loading stuff
-is complicated due to several past mistakes that stuck with us.
+is complicated due to several past mistakes that stuck with us. These changes already
+drastically simplify the internals of how extensions and overriding work, so we appreciate
+your patience.
 
 In the future, we may investigate two further simplifications:
 
-1. Somehow making books completely clientsided, so that nothing is needed in `/data/`
-2. Removing the external folder and requiring resource pack usage for everything.
+1. Somehow making books completely clientsided, so that nothing needs to be put in `/data/`
+2. Removing the external folder and requiring resource pack usage for everything. This
+   requires the previous point to be done first.
