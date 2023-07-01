@@ -137,7 +137,7 @@ public class Book {
 		this.overflowMode = SerializationUtil.getAsEnum(root, "text_overflow_mode", PatchouliConfigAccess.TextOverflowMode.class, null);
 
 		boolean useResourcePack = GsonHelper.getAsBoolean(root, "use_resource_pack", false);
-		if (!useResourcePack) {
+		if (!this.isExternal && !useResourcePack) {
 			String message = "Book %s has use_resource_pack set to false. ".formatted(this.id)
 					+ "This behaviour was removed in 1.20. "
 					+ "The book author should enable this flag and move all book contents clientside to /assets/, "

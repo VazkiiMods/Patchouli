@@ -13,9 +13,12 @@ in your workspace's mods folder. The preferred way is to use maven, which you fi
 address for in the repo's readme. For non-modders, obtain the mod through the usual
 distribution channels.
 
-### 1. Locate your patchouli_books directory
+### 1. Locate the patchouli_books directories
 Your books and their contents will go in your `patchouli_books` directory, so you need to
 find it.
+
+
+* Modpack authors can use the external folder
 * For modpack makers, it'll be in your instance folder (next to mods, config, etc). Note
   that you need to run the game once with Patchouli installed for it to show up
   (or just make it yourself).
