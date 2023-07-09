@@ -91,11 +91,18 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 			return null;
 		}
 		String path = file.getPath();
+		// Drop patchouli_books/ and json suffix
+		String relativizedPath = path.substring(0, path.length() - 5).split("/", 2)[1];
 
-		return new LoadResult(
-				map.get(new ResourceLocation(file.getNamespace(), path.substring(0, path.length() - 5).split("/", 2)[1])),
-				// todo implement this
-				null
-		);
+		JsonElement json = map.get(new ResourceLocation(file.getNamespace(), relativizedPath));
+		if (json != null) {
+			return new LoadResult(
+					json,
+					// todo implement this
+					null
+			);
+		}
+
+		return null;
 	}
 }
