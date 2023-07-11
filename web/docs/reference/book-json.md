@@ -161,6 +161,7 @@ landing page if "version" is set to "0" or not set.
 The creative tab to display your book in. Defaults to null (no tab).
 
 ### 1.20
+Here are the vanilla tabs:
 
 * `building_blocks`
 * `colored_blocks`
@@ -172,6 +173,8 @@ The creative tab to display your book in. Defaults to null (no tab).
 * `food_and_drinks`
 * `ingredients`
 * `spawn_eggs`
+
+For modders, put the full namespaced ID of the tab that you used when registering it.
 
 ### 1.19.3-1.19.4
 The names of the vanilla tabs for 1.19.3 and 1.19.4 depend on your target platform, see
