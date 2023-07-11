@@ -13,10 +13,11 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.PatchouliItems;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
-public record BookRecipeSerializer<T extends Recipe<?>, U extends T> (RecipeSerializer<T> compose, BiFunction<T, ResourceLocation, U> converter) implements RecipeSerializer<U> {
+public record BookRecipeSerializer<T extends Recipe<?>, U extends T> (RecipeSerializer<T> compose, BiFunction<T, @Nullable ResourceLocation, U> converter) implements RecipeSerializer<U> {
 	@Override
 	@NotNull
 	public U fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
