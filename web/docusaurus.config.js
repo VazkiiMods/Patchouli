@@ -50,6 +50,10 @@ module.exports = {
           title: 'Community',
           items: [
             {
+              label: 'Forums',
+              href: 'https://forum.violetmoon.org/t/patchouli',
+            },
+            {
               label: 'Discord',
               href: 'https://discord.com/invite/vazkii',
             },
