@@ -16,8 +16,6 @@ import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class PageRelations extends PageWithText {
 
@@ -30,11 +28,15 @@ public class PageRelations extends PageWithText {
 	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
 		super.build(level, entry, builder, pageNum);
 
-		entryObjs = entries.stream()
-				.map(ResourceLocation::new)
-				.map(builder::getEntry)
-				.filter(Objects::nonNull)
-				.collect(Collectors.toList());
+		this.entryObjs = new ArrayList<>();
+		for (String s : this.entries) {
+			ResourceLocation targetId = new ResourceLocation(s);
+			BookEntry targetEntry = builder.getEntry(targetId);
+			if (targetEntry == null) {
+				throw new IllegalArgumentException("Could not find entry " + targetId);
+			}
+			this.entryObjs.add(targetEntry);
+		}
 	}
 
 	@Override
