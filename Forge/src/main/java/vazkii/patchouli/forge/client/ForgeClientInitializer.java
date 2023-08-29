@@ -150,6 +150,7 @@ public class ForgeClientInitializer {
 
 	@SubscribeEvent
 	public static void replaceBookModel(ModelEvent.ModifyBakingResult evt) {
-		BookModel.replace(evt.getModels(), evt.getModelBakery());
+		ModelResourceLocation key = new ModelResourceLocation(PatchouliItems.BOOK_ID, "inventory");
+		evt.getModels().computeIfPresent(key, (k, oldModel) -> new BookModel(oldModel, evt.getModelBakery()));
 	}
 }
