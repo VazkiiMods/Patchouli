@@ -94,14 +94,15 @@ public class BookContentsBuilder {
 			try {
 				entry.build(level, this);
 			} catch (Exception e) {
-				throw new RuntimeException("Error building entry " + entry.getId(), e);
+				throw new RuntimeException("Error building entry %s of book %s".formatted(entry.getId(), book.id), e);
 			}
 		});
 
 		BookCategory pamphletCategory = null;
 		if (book.isPamphlet) {
 			if (categories.size() != 1) {
-				throw new RuntimeException("A pamphlet should have exactly one category but instead there were " + categories.size());
+				throw new RuntimeException("Pamphlet %s should have exactly one category but instead there were %d"
+						.formatted(book.id, categories.size()));
 			}
 			pamphletCategory = categories.values().iterator().next();
 		}

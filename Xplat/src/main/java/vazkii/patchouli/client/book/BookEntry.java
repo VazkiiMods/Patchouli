@@ -238,7 +238,8 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 					pages[i].build(level, this, builder, i);
 					realPages.add(pages[i]);
 				} catch (Exception e) {
-					throw new RuntimeException("Error while loading entry " + id + " page " + i, e);
+					throw new RuntimeException("Error while building entry %s page %d of book %s"
+							.formatted(id, i, book.id), e);
 				}
 			}
 		}
