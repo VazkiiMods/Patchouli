@@ -90,10 +90,10 @@ public class ForgeClientInitializer {
 
 		e.registerReloadListener((ResourceManagerReloadListener) manager -> {
 			if (Minecraft.getInstance().level != null) {
-				PatchouliAPI.LOGGER.info("Reloading resource pack-based books, world is nonnull");
+				PatchouliAPI.LOGGER.info("Reloading resource pack-based books");
 				ClientBookRegistry.INSTANCE.reload();
 			} else {
-				PatchouliAPI.LOGGER.info("Not reloading resource pack-based books as client world is missing");
+				PatchouliAPI.LOGGER.debug("Not reloading resource pack-based books as client world is missing");
 			}
 		});
 	}
