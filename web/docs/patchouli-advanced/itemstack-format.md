@@ -17,3 +17,20 @@ Any of the following are allowed:
 To represent NBT tags with text inside, you can either replace all double quotes (`"`)
 with single quotes (`'`), or escape them (`\"`). If you want to write a single quote,
 you'll have to double-escape it (`\\'`).
+
+## Multiple Items
+In contexts where multiple items are allowed, you can write multiple items out, separated
+by commas.
+
+For example:
+
+```
+"minecraft:sword,minecraft:stone#64"
+```
+
+Item tags may also be specified by prepending the marker `tag:` then writing the tag
+ID. This can be interspersed with ordinary items:
+
+```
+"minecraft:sword,tag:minecraft:axes,minecraft:stone#64"
+```

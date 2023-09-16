@@ -232,10 +232,44 @@ The text to display on this page, under the entity. This text can be
 
 ![Screenshot of spotlight page](/img/pageSpotlight.png)
 
-### **item** (String, _mandatory_)
+### **item** (Object or String, _mandatory_)
 
-An [ItemStack String](/docs/patchouli-advanced/itemstack-format) representing the item to
-be spotlighted.
+The item or items to be spotlit. Can be a JSON object or String.
+
+If a JSON object, follows the [vanilla format for recipe ingredients](https://minecraft.fandom.com/wiki/Recipe#crafting_shaped).
+
+That is, either a JSON object with the key `item` or the key `tag`. If you have any mods
+that extend the Ingredient format with additional functionality (e.g. NBT support), it
+will be supported here as well.
+
+If a JSON string, follows the Patchouli-specific [ItemStack String
+format](/docs/patchouli-advanced/itemstack-format).
+
+Examples:
+
+```json
+// vanilla format, single item
+{
+  "type": "patchouli:spotlight",
+  "item": {
+    "item": "minecraft:diamond_sword"
+  }
+}
+
+// vanilla format, tag
+{
+  "type": "patchouli:spotlight",
+  "item": {
+    "tag": "minecraft:axes"
+  }
+}
+
+// patchouli string format, allowing interspersed items and tags
+{
+  "type": "patchouli:spotlight",
+  "item": "minecraft:diamond_sword,tag:minecraft:axes,minecraft:diamond_shovel"
+}
+```
 
 ### **title** (String)
 
