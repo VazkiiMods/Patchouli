@@ -9,10 +9,15 @@
     <icon>https://vazkiimods.github.io/Patchouli/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[New Patchouli Docs]]></title>
-        <id>hello</id>
+        <id>https://vazkiimods.github.io/Patchouli/blog/hello</id>
         <link href="https://vazkiimods.github.io/Patchouli/blog/hello"/>
         <updated>2021-08-31T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[Hi there. This is a new website we're building out for Patchouli documentation. The old]]></summary>
+        <content type="html"><![CDATA[<p>Hi there. This is a new website we're building out for Patchouli documentation. The old
+GitHub wiki was workable, but it was hard to edit locally and the organization was quite
+poor.</p><p>Currently, we've imported all the documentation verbatim from GitHub, but over the next
+few weeks we'll be cleaning things up and properly separating the "guides" from the
+"reference material".</p><p>Enjoy!</p>]]></content>
         <author>
             <name>williewillus</name>
             <uri>https://vincent-lee.net/</uri>
