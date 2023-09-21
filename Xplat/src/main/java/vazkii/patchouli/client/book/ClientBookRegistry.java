@@ -5,6 +5,7 @@ import com.google.gson.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.GsonHelper;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.page.*;
@@ -105,8 +106,7 @@ public class ClientBookRegistry {
 			}
 
 			JsonObject obj = json.getAsJsonObject();
-			JsonPrimitive prim = (JsonPrimitive) obj.get("type");
-			String string = prim.getAsString();
+			String string = GsonHelper.getAsString(obj, "type");
 			if (string.indexOf(':') < 0) {
 				string = PatchouliAPI.MOD_ID + ":" + string;
 			}
