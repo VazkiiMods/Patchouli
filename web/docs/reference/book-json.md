@@ -74,7 +74,7 @@ your own! They're provided for modpack makers. Patchouli automatically takes car
 registering any models you pass in to this, so you don't have to mess with any code for
 them yourself.
 
-An [item predicate](https://minecraft.fandom.com/wiki/Tutorials/Models#Item_predicates)
+An [item predicate](https://minecraft.wiki/w/Tutorials/Models#Item_predicates)
 called `patchouli:completion` is provided for book models, whose value is equal to the
 fraction of entries unlocked in the book, which allows book models to change their display
 as they're more completed.

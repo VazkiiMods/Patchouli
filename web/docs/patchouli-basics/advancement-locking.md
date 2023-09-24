@@ -4,7 +4,7 @@ Entries in your Patchouli books can be locked until certain Advancements are
 accomplished. This page will give you a quick primer on how to accomplish this.
 
 * First things first, create your advancement. If you're a modder, make it as you usually
-  would ([Minecraft Wiki reference](https://minecraft.gamepedia.com/Advancements)), and
+  would ([Minecraft Wiki reference](https://minecraft.wiki/w/Advancement/JSON_format)), and
   place it in `/data/MODID/advancements`. If you're a modpack maker, you'll need to load
   your advancements using another mod, such as
   [OpenLoader](https://www.curseforge.com/minecraft/mc-mods/open-loader).

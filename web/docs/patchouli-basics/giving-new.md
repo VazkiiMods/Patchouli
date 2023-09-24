@@ -8,7 +8,7 @@ whose reward is the book. Advancement rewards are one-time-only, so unless the a
 is revoked from the player, this should happen once, immediately when the player joins the
 world for the first time.
 
-Please check the [vanilla wiki](https://minecraft.fandom.com/wiki/Advancement/JSON_format)
+Please check the [vanilla wiki](https://minecraft.wiki/w/Advancement/JSON_format)
 for details.
 
 Below is a brief example:

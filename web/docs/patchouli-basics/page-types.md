@@ -236,7 +236,7 @@ The text to display on this page, under the entity. This text can be
 
 The item or items to be spotlit. Can be a JSON object or String.
 
-If a JSON object, follows the [vanilla format for recipe ingredients](https://minecraft.fandom.com/wiki/Recipe#crafting_shaped).
+If a JSON object, follows the [vanilla format for recipe ingredients](https://minecraft.wiki/w/Recipe#crafting_shaped).
 
 That is, either a JSON object with the key `item` or the key `tag`. If you have any mods
 that extend the Ingredient format with additional functionality (e.g. NBT support), it

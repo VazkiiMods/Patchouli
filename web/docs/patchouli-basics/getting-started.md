@@ -40,7 +40,7 @@ patchouli_books so that it looks like this:
             * `templates` (empty folder)
 
 You may have as many books as you want, even within the same mod(pack). Each book has a
-[Namespaced ID](https://minecraft.fandom.com/wiki/Namespaced_ID). If the book is part of a
+[resource location](https://minecraft.wiki/w/Resource_location). If the book is part of a
 mod, the namespace is that mod's ID. If the book is loaded from the
 `.minecraft/patchouli_books` folder, the namespace is `patchouli`. The second part of the
 namespaced ID is the name you chose above. So for Botania, the full book ID is
