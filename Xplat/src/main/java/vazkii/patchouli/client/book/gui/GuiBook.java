@@ -312,7 +312,7 @@ public abstract class GuiBook extends Screen {
 		}
 		}
 
-		for(GuiEventListener listener : children()) {
+		for (GuiEventListener listener : children()) {
 			if (listener.mouseClicked(mouseX, mouseY, mouseButton)) {
 				if (mouseButton == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
 					setDragging(true);
