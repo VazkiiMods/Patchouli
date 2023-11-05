@@ -87,7 +87,7 @@
 	"patchouli.gui.lexicon.button.resize.size3": "Středně velká",
 	"patchouli.gui.lexicon.button.resize.size4": "Velká",
 	"patchouli.gui.lexicon.button.resize.size5": "Obrovská",
-	"patchouli.gui.lexicon.button.resize.verybig.message": "Jak velký je váš monitor",
+	"patchouli.gui.lexicon.button.resize.verybig.message": "Jak velký je váš monitor?",
 	"patchouli.gui.lexicon.button.resize.verybig.container": "%s?",
 	"patchouli.gui.lexicon.button.editor": "Editor",
 	"patchouli.gui.lexicon.button.editor.info": "(Shift-Click pro znovunačtení)",
