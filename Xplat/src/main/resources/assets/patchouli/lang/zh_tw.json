@@ -96,6 +96,6 @@
 	"patchouli.gui.lexicon.button.visualize": "可視化",
 	"patchouli.gui.lexicon.button.visualize.info": "（再次點擊以清除）",
 	"patchouli.gui.lexicon.button.history": "瀏覽歷史"
-	"patchouli.gui.lexicon.button.mark_all_read": "全部標示為已讀",
-	"patchouli.gui.lexicon.button.mark_category_read": "標示這個類別為已讀"
+	"patchouli.gui.lexicon.button.mark_all_read": "全部標記為已讀",
+	"patchouli.gui.lexicon.button.mark_category_read": "標記這個類別為已讀"
 }
