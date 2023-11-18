@@ -2,7 +2,6 @@ package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.resources.language.LanguageInfo;
 import net.minecraft.network.chat.Component;
 
 import vazkii.patchouli.api.PatchouliConfigAccess;
@@ -103,15 +102,7 @@ public class TextLayouter {
 	// a paragraph is a series of spans without explicit line break
 	private void layoutParagraph(List<Span> paragraph) {
 		String text = toString(paragraph);
-		// todo fabric is there a helper to do this?
-		LanguageInfo language = Minecraft.getInstance().getLanguageManager().getSelected();
-		Locale locale;
-		String[] splitLangCode = language.getName().split("_", 2);
-		if (splitLangCode.length == 1) {
-			locale = new Locale(language.getCode());
-		} else {
-			locale = new Locale(splitLangCode[0], splitLangCode[1]);
-		}
+		Locale locale = new Locale(Minecraft.getInstance().getLanguageManager().getSelected());
 		BreakIterator iterator = BreakIterator.getLineInstance(locale);
 		iterator.setText(text);
 		lineStart = 0;

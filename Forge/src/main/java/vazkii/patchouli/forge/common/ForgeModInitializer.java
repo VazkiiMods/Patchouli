@@ -2,7 +2,9 @@ package vazkii.patchouli.forge.common;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.CreativeModeTabRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CreativeModeTabEvent;
@@ -24,7 +26,7 @@ import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.forge.network.ForgeNetworkHandler;
 
-import java.util.Objects;
+import org.jetbrains.annotations.Nullable;
 
 @Mod.EventBusSubscriber(modid = PatchouliAPI.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 @Mod(PatchouliAPI.MOD_ID)
@@ -48,12 +50,41 @@ public class ForgeModInitializer {
 
 	@SubscribeEvent
 	public static void processCreativeTabs(CreativeModeTabEvent.BuildContents evt) {
-		ResourceLocation name = CreativeModeTabRegistry.getName(evt.getTab());
 		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			if (!b.noBook && !b.isExtension && (evt.getTab() == CreativeModeTabs.searchTab() || Objects.equals(ResourceLocation.tryParse(b.creativeTab), name))) {
-				evt.accept(ItemModBook.forBook(b));
+			if (!b.noBook && !b.isExtension) {
+				ItemStack book = ItemModBook.forBook(b);
+				if (evt.getTab() == CreativeModeTabs.searchTab()) {
+					evt.accept(book);
+				} else if (b.creativeTab != null) {
+					CreativeModeTab remappedVanillaTab = mapVanillaCreativeTabFabricIdToForge(b.creativeTab);
+					if (evt.getTab() == remappedVanillaTab
+							|| evt.getTab() == CreativeModeTabRegistry.getTab(b.creativeTab)) {
+						evt.accept(book);
+					}
+				}
 			}
 		});
+	}
+
+	// Forge and Fabric assign different ID's to the vanilla creative tabs.
+	// We want to transparently handle both, so map the ones that differ here.
+	// See FabricModInitializer for this method's dual.
+	@Nullable
+	private static CreativeModeTab mapVanillaCreativeTabFabricIdToForge(ResourceLocation oldId) {
+		if (!oldId.getNamespace().equals("minecraft")) {
+			return null;
+		}
+
+		return switch (oldId.getPath()) {
+		// From MinecraftItemGroups in Fabric API impl
+		case "natural" -> CreativeModeTabs.NATURAL_BLOCKS;
+		case "functional" -> CreativeModeTabs.FUNCTIONAL_BLOCKS;
+		case "redstone" -> CreativeModeTabs.REDSTONE_BLOCKS;
+		case "tools" -> CreativeModeTabs.TOOLS_AND_UTILITIES;
+		case "food_and_drink" -> CreativeModeTabs.FOOD_AND_DRINKS;
+		case "op" -> CreativeModeTabs.OP_BLOCKS;
+		default -> null;
+		};
 	}
 
 	@SubscribeEvent

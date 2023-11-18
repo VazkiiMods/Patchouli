@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.world.level.Level;
+
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
@@ -62,7 +64,7 @@ public class TemplateInclusion {
 		}
 	}
 
-	public void process(IComponentProcessor processor) {
+	public void process(Level level, IComponentProcessor processor) {
 		if (processor == null) {
 			return;
 		}
@@ -72,7 +74,7 @@ public class TemplateInclusion {
 			JsonElement val = entry.getValue();
 			if (val.isJsonPrimitive() && val.getAsString().startsWith("#")) {
 				String realVal = val.getAsString().substring(1);
-				IVariable res = processor.process(realVal);
+				IVariable res = processor.process(level, realVal);
 				if (res != null) {
 					entry.setValue(res.unwrap());
 				}

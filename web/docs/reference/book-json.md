@@ -146,8 +146,22 @@ landing page if "version" is set to "0" or not set.
 
 * **creative_tab** (String)
 
-The creative tab to display your book in. This defaults to Miscellaneous, but you can move
-it to any tab you wish. Here are the names for the vanilla tabs:
+The creative tab to display your book in.
+
+On 1.19.3 and above, defaults to null and your book will not show up in any tabs by
+default. The names of the vanilla tabs for 1.19.3 and 1.19.4 depend on your target
+platform, see
+[this](https://github.com/MinecraftForge/MinecraftForge/blob/1.19.x/src/main/java/net/minecraftforge/common/CreativeModeTabRegistry.java#L124)
+for Forge and
+[this](https://github.com/FabricMC/fabric/blob/1.19.4/fabric-item-group-api-v1/src/main/java/net/fabricmc/fabric/impl/itemgroup/MinecraftItemGroups.java#L28)
+for Fabric.
+
+On 1.20 and above, the names of the vanilla tabs are unified again and are as follows:
+
+TODO 1.20 fill this in
+
+On versions 1.19.2 and below, this defaults to Miscellaneous, but you can move it to any
+tab you wish. Here are the names for the vanilla tabs on 1.19.2 and below:
 
 1. buildingBlocks
 2. decorations

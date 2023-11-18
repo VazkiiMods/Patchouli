@@ -2,6 +2,6 @@
 	"name": "item.patchouli:intro_book.name",
 	"landing_text": "item.patchouli:intro_book.landing",
 	"subtitle": "item.patchouli:intro_book.subtitle",
-	"creative_tab": "natural_blocks",
+	"creative_tab": "minecraft:natural_blocks",
 	"advancements_tab": "patchouli"
 }

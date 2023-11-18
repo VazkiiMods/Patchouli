@@ -36,7 +36,6 @@ import org.joml.Matrix4f;
 
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.common.multiblock.StateMatcher;
@@ -140,7 +139,7 @@ public class MultiblockVisualizationHandler {
 
 						if (!stack.isEmpty()) {
 							mc.font.drawShadow(ms, stack.getHoverName(), left + 20, top + height + 8, 0xFFFFFF);
-							RenderHelper.renderItemStackInGui(ms, stack, left, top + height + 2);
+							Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(ms, stack, left, top + height + 2);
 						}
 					} catch (Exception ignored) {}
 				}
@@ -319,7 +318,6 @@ public class MultiblockVisualizationHandler {
 		float f5 = (float) (endColor >> 16 & 255) / 255.0F;
 		float f6 = (float) (endColor >> 8 & 255) / 255.0F;
 		float f7 = (float) (endColor & 255) / 255.0F;
-		RenderSystem.disableTexture();
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		Tesselator tessellator = Tesselator.getInstance();
@@ -332,7 +330,6 @@ public class MultiblockVisualizationHandler {
 		bufferbuilder.vertex(mat, right, bottom, 0).color(f5, f6, f7, f4).endVertex();
 		tessellator.end();
 		RenderSystem.disableBlend();
-		RenderSystem.enableTexture();
 	}
 
 	/**

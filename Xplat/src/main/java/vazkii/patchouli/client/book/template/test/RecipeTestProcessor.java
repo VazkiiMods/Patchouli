@@ -1,11 +1,11 @@
 package vazkii.patchouli.client.book.template.test;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
@@ -16,15 +16,15 @@ public class RecipeTestProcessor implements IComponentProcessor {
 	private Recipe<?> recipe;
 
 	@Override
-	public void setup(IVariableProvider variables) {
+	public void setup(Level level, IVariableProvider variables) {
 		// TODO probably add a recipe serializer?
 		String recipeId = variables.get("recipe").asString();
-		RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
+		RecipeManager manager = level.getRecipeManager();
 		recipe = manager.byKey(new ResourceLocation(recipeId)).orElseThrow(IllegalArgumentException::new);
 	}
 
 	@Override
-	public IVariable process(String key) {
+	public IVariable process(Level level, String key) {
 		if (key.startsWith("item")) {
 			int index = Integer.parseInt(key.substring(4)) - 1;
 			Ingredient ingredient = recipe.getIngredients().get(index);
@@ -33,12 +33,12 @@ public class RecipeTestProcessor implements IComponentProcessor {
 
 			return IVariable.from(stack);
 		} else if (key.equals("text")) {
-			ItemStack out = recipe.getResultItem();
+			ItemStack out = recipe.getResultItem(level.registryAccess());
 			return IVariable.wrap(out.getCount() + "x$(br)" + out.getHoverName());
 		} else if (key.equals("icount")) {
-			return IVariable.wrap(recipe.getResultItem().getCount());
+			return IVariable.wrap(recipe.getResultItem(level.registryAccess()).getCount());
 		} else if (key.equals("iname")) {
-			return IVariable.wrap(recipe.getResultItem().getHoverName().getString());
+			return IVariable.wrap(recipe.getResultItem(level.registryAccess()).getHoverName().getString());
 		}
 
 		return null;

@@ -18,7 +18,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 
-import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
@@ -47,7 +46,7 @@ public class BookRightClickHandler {
 						ms.pushPose();
 						ms.translate(0, 0, 10);
 						ms.scale(0.5F, 0.5F, 1);
-						RenderHelper.renderItemStackInGui(ms, bookStack, (x + 8) * 2, (y + 8) * 2);
+						Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(ms, bookStack, (x + 8) * 2, (y + 8) * 2);
 						ms.popPose();
 
 						mc.font.draw(ms, entry.getName(), x + 18, y + 3, 0xFFFFFF);

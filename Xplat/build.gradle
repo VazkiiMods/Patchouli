@@ -4,19 +4,19 @@ plugins {
 }
 
 archivesBaseName = "${mod_name}-xplat"
-version = "${minecraft_version}-${build_number}"
+version = "${mc_version}-${build_number}"
 if (System.getenv().RELEASE_MODE == null) {
     version += '-SNAPSHOT'
 }
 
 minecraft {
-    version(minecraft_version)
+    version(mc_version)
 }
 
 repositories {
     maven {
         name = "JEI"
-        url "https://dvs1.progwml6.com/files/maven/"
+        url "https://maven.blamejared.com/"
         content {
             includeGroup "mezz.jei"
         }

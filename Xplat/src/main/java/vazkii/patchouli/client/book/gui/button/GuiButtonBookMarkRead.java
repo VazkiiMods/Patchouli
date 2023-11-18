@@ -22,7 +22,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	}
 
 	@Override
-	public void renderButton(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		int px = getX() + 1;
 		int py = (int) (getY() + 0.5);
 		GuiBook.drawFromTexture(ms, book, getX(), getY(), 285, 160, 13, 10);

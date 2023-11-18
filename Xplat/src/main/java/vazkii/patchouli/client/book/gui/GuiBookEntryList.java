@@ -56,9 +56,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 	protected EditBox createSearchBar() {
 		EditBox field = new EditBox(font, 160, 170, 90, 12, Component.empty());
 		field.setMaxLength(32);
-		//field.setHasBorder(false);
+		field.setBordered(false);
 		field.setCanLoseFocus(false);
-		field.changeFocus(true);
+		field.setFocused(true);
 		return field;
 	}
 

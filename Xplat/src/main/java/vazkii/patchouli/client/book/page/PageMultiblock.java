@@ -19,6 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
@@ -64,8 +65,8 @@ public class PageMultiblock extends PageWithText {
 	private transient Button visualizeButton;
 
 	@Override
-	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
-		super.build(entry, builder, pageNum);
+	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(level, entry, builder, pageNum);
 		if (multiblockId != null) {
 			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(multiblockId);
 

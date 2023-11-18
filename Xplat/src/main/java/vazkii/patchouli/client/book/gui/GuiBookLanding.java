@@ -226,7 +226,7 @@ public class GuiBookLanding extends GuiBook {
 	private void handleButtonEdit(Button button) {
 		if (hasShiftDown()) {
 			long time = System.currentTimeMillis();
-			book.reloadContents(true);
+			book.reloadContents(minecraft.level, true);
 			book.reloadLocks(false);
 			displayLexiconGui(new GuiBookLanding(book), false);
 			minecraft.player.displayClientMessage(Component.translatable("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)), false);

@@ -40,7 +40,7 @@ public class GuiButtonBook extends Button {
 	}
 
 	@Override
-	public void renderButton(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		GuiBook.drawFromTexture(ms, parent.book, getX(), getY(), u + (isHoveredOrFocused() ? width : 0), v, width, height);
 		if (isHoveredOrFocused()) {

@@ -3,12 +3,12 @@ package vazkii.patchouli.client.book;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.client.RenderHelper;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 public sealed interface BookIcon permits BookIcon.StackIcon,BookIcon.TextureIcon {
@@ -17,7 +17,7 @@ public sealed interface BookIcon permits BookIcon.StackIcon,BookIcon.TextureIcon
 	record StackIcon(ItemStack stack) implements BookIcon {
 		@Override
 		public void render(PoseStack ms, int x, int y) {
-			RenderHelper.renderItemStackInGui(ms, stack(), x, y);
+			Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(ms, stack(), x, y);
 		}
 	}
 

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -34,8 +35,6 @@ public class BookRegistry {
 	public static final Gson GSON = new GsonBuilder()
 			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
 			.create();
-
-	private boolean loaded = false;
 
 	private BookRegistry() {}
 
@@ -119,20 +118,15 @@ public class BookRegistry {
 	/**
 	 * Must only be called on client
 	 */
-	public void reloadContents(boolean resourcePackBooksOnly) {
+	public void reloadContents(Level level, boolean resourcePackBooksOnly) {
 		PatchouliConfig.reloadBuiltinFlags();
 		for (Book book : books.values()) {
 			if (resourcePackBooksOnly && !book.useResourcePack) {
 				continue;
 			}
-			book.reloadContents(false);
+			book.reloadContents(level, false);
 		}
 		ClientBookRegistry.INSTANCE.reloadLocks(false);
-		loaded = true;
-	}
-
-	public boolean isLoaded() {
-		return loaded;
 	}
 
 	// HELPER

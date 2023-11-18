@@ -9,6 +9,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.ClientAdvancements;
@@ -235,7 +236,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 		return sort == 0 ? this.getName().getString().compareTo(o.getName().getString()) : sort;
 	}
 
-	public void build(BookContentsBuilder builder) {
+	public void build(Level level, BookContentsBuilder builder) {
 		if (built) {
 			return;
 		}
@@ -243,7 +244,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 		for (int i = 0; i < pages.length; i++) {
 			if (pages[i].canAdd(book)) {
 				try {
-					pages[i].build(this, builder, i);
+					pages[i].build(level, this, builder, i);
 					realPages.add(pages[i]);
 				} catch (Exception e) {
 					throw new RuntimeException("Error while loading entry " + id + " page " + i, e);

@@ -2,6 +2,8 @@ package vazkii.patchouli.client.book.page;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.world.level.Level;
+
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
@@ -15,8 +17,8 @@ public class PageTemplate extends BookPage {
 	private transient boolean resolved = false;
 
 	@Override
-	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
-		super.build(entry, builder, pageNum);
+	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(level, entry, builder, pageNum);
 
 		if (!resolved) {
 			template = BookTemplate.createTemplate(book, builder, type, null);
@@ -25,7 +27,7 @@ public class PageTemplate extends BookPage {
 
 		JsonVariableWrapper wrapper = new JsonVariableWrapper(sourceObject);
 
-		template.compile(builder, wrapper);
+		template.compile(level, builder, wrapper);
 		template.build(builder, this, entry, pageNum);
 	}
 

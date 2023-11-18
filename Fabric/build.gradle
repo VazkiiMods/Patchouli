@@ -2,15 +2,15 @@ plugins {
 	id 'fabric-loom' version '0.12-SNAPSHOT'
 }
 
-version = "${minecraft_version}-${build_number}-FABRIC"
-if (System.getenv().RELEASE_MODE == null) {
+version = "${mc_version}-${build_number}-FABRIC"
+if (System.getenv().RELEASE_MODE != "1") {
     version += '-SNAPSHOT'
 }
 
 repositories {
 	maven {
 		name = "JEI"
-		url "https://dvs1.progwml6.com/files/maven/"
+		url "https://maven.blamejared.com/"
 		content {
 			includeGroup "mezz.jei"
 		}
@@ -59,11 +59,11 @@ dependencies {
 	modImplementation "me.zeroeightsix:fiber:0.23.0-2"
 	include "me.zeroeightsix:fiber:0.23.0-2"
 
-	minecraft "com.mojang:minecraft:${minecraft_version}"
+	minecraft "com.mojang:minecraft:${mc_version}"
 	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:0.14.11"
+	modImplementation "net.fabricmc:fabric-loader:0.14.19"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.68.1+1.19.3"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.81.1+1.19.4"
     compileOnly project(":Xplat")
 
 	modCompileOnly "mezz.jei:jei-1.19.2-common-api:11.2.0.247"

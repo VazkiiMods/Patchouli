@@ -17,8 +17,8 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'org.spongepowered.mixin'
 
-version = "${minecraft_version}-${build_number}"
-if (System.getenv().RELEASE_MODE == null) {
+version = "${mc_version}-${build_number}-FORGE"
+if (System.getenv().RELEASE_MODE != "1") {
     version += '-SNAPSHOT'
 }
 
@@ -32,7 +32,7 @@ mixin {
 repositories {
     maven {
         name = "JEI"
-        url "https://dvs1.progwml6.com/files/maven/"
+        url "https://maven.blamejared.com/"
         content {
             includeGroup "mezz.jei"
         }
@@ -40,7 +40,7 @@ repositories {
 }
 
 minecraft {
-    mappings channel: 'official', version: minecraft_version
+    mappings channel: 'official', version: mc_version
 
     runs {
         client {
@@ -74,7 +74,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-44.1.8"
+    minecraft "net.minecraftforge:forge:${mc_version}-45.0.64"
     implementation project(":Xplat")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 

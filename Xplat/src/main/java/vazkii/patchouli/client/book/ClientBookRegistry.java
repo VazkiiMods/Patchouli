@@ -59,8 +59,8 @@ public class ClientBookRegistry {
 	}
 
 	public void reload(boolean resourcePackBooksOnly) {
-		currentLang = Minecraft.getInstance().getLanguageManager().getSelected().getCode();
-		BookRegistry.INSTANCE.reloadContents(resourcePackBooksOnly);
+		currentLang = Minecraft.getInstance().getLanguageManager().getSelected();
+		BookRegistry.INSTANCE.reloadContents(Minecraft.getInstance().level, resourcePackBooksOnly);
 	}
 
 	public void reloadLocks(boolean suppressToasts) {
@@ -73,7 +73,7 @@ public class ClientBookRegistry {
 	 */
 	public void displayBookGui(ResourceLocation bookStr, @Nullable ResourceLocation entryId, int page) {
 		Minecraft mc = Minecraft.getInstance();
-		currentLang = mc.getLanguageManager().getSelected().getCode();
+		currentLang = mc.getLanguageManager().getSelected();
 
 		Book book = BookRegistry.INSTANCE.books.get(bookStr);
 

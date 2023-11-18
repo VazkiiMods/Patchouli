@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
@@ -21,11 +22,11 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	protected transient Component title1, title2;
 
 	@Override
-	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
-		super.build(entry, builder, pageNum);
+	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(level, entry, builder, pageNum);
 
-		recipe1 = loadRecipe(builder, entry, recipeId);
-		recipe2 = loadRecipe(builder, entry, recipe2Id);
+		recipe1 = loadRecipe(level, builder, entry, recipeId);
+		recipe2 = loadRecipe(level, builder, entry, recipe2Id);
 
 		if (recipe1 == null && recipe2 != null) {
 			recipe1 = recipe2;
@@ -33,10 +34,10 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 		}
 
 		boolean customTitle = title != null && !title.isEmpty();
-		title1 = !customTitle ? getRecipeOutput(recipe1).getHoverName() : i18nText(title);
+		title1 = !customTitle ? getRecipeOutput(level, recipe1).getHoverName() : i18nText(title);
 		title2 = Component.literal("-");
 		if (recipe2 != null) {
-			title2 = !customTitle ? getRecipeOutput(recipe2).getHoverName() : Component.empty();
+			title2 = !customTitle ? getRecipeOutput(level, recipe2).getHoverName() : Component.empty();
 			if (title1.equals(title2)) {
 				title2 = Component.empty();
 			}
@@ -69,8 +70,8 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	}
 
 	protected abstract void drawRecipe(PoseStack ms, T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
-	protected abstract T loadRecipe(BookContentsBuilder builder, BookEntry entry, ResourceLocation loc);
-	protected abstract ItemStack getRecipeOutput(T recipe);
+	protected abstract T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, ResourceLocation loc);
+	protected abstract ItemStack getRecipeOutput(Level level, T recipe);
 	protected abstract int getRecipeHeight();
 
 	protected int getX() {
