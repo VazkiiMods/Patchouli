@@ -16,7 +16,7 @@ Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and
 [[dependencies.patchouli]]
 modId="forge"
 mandatory=true
-versionRange="[47.2.0,)"
+versionRange="[47.1.47,)"
 
 [[dependencies.patchouli]]
 modId="minecraft"
