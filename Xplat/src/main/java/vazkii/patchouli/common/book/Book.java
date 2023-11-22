@@ -267,11 +267,13 @@ public class Book {
 			int ver = Integer.parseInt(version);
 			if (ver == 0) {
 				return Component.translatable(subtitle);
+			} else if (ver < 0) {
+				return Component.translatable("patchouli.gui.lexicon.dev_edition");
 			}
 
-			editionStr = Component.literal(numberToOrdinal(ver));
+			editionStr = numberToOrdinal(ver);
 		} catch (NumberFormatException e) {
-			editionStr = Component.translatable("patchouli.gui.lexicon.dev_edition");
+			return Component.translatable("patchouli.gui.lexicon.dev_edition");
 		}
 
 		return Component.translatable("patchouli.gui.lexicon.edition_str", editionStr);
@@ -285,8 +287,34 @@ public class Book {
 		}
 	}
 
-	private static String numberToOrdinal(int i) {
-		return i % 100 == 11 || i % 100 == 12 || i % 100 == 13 ? i + "th" : i + ORDINAL_SUFFIXES[i % 10];
+	private static Component numberToOrdinal(int i) {
+		int units = i % 10;
+		int tens = i % 100 - units;
+		String base = "patchouli.gui.lexicon.edition_str.ord";
+		if (i % 1000 >= 100 && tens == 0) {tens = 100;}
+		String i_str = Integer.toString(i);
+		String units_str = Integer.toString(units);
+		String tens_str = tens == 0 ? (i < 10 ? "uu" : "00") : Integer.toString(tens);
+		/*
+		The translation key is first picked based on the number's tens.
+			- If the translation is "%1$s<suffix>", then that suffix will be used for all numbers with those tens.
+			- If the translation is "%2$s", then for all the numbers with those tens 
+			  it will pick a suffix based on the units alone (the translation of <base>.<units>).
+			- If the translation is "%3$s", then for all the numbers with those tens
+			  it will pick a translation based on both units AND tens. This translation can be:
+				- "%1$s<suffix>" (a special suffix)
+				- "%2$s" (default units suffix)
+		If the tens of a number are equal to 0, 'tens' can have three possible values:
+			- "uu" if the number is less than 10 (1, 2, 3, ...)
+			- "00" if the number is greater than 10 and number's hundreds are equal to 0 (1001, 2002, 3003, ...)
+			- "100" if the number's hundreds are not equal to 0 (101, 202, 3303, ...)
+		*/
+		return Component.translatable(String.join(".", base, tens_str), i_str,
+					      Component.translatable(String.join(".", base, units_str), i_str),
+					      Component.translatable(String.join(".", base, tens_str, units_str), i_str,
+								     Component.translatable(String.join(".", base, units_str), i_str)
+								     )
+					     );
 	}
 
 	public BookContents getContents() {
