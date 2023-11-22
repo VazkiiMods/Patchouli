@@ -61,12 +61,11 @@ minecraft {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${mc_version}-47.1.1"
+    minecraft "net.minecraftforge:forge:${mc_version}-47.2.0"
     implementation project(":Xplat")
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    compileOnly fg.deobf("mezz.jei:jei-1.20.1-common-api:15.0.0.12")
-    //runtimeOnly(fg.deobf("mezz.jei:jei-1.19.2-forge:11.2.0.247"))
+    compileOnly fg.deobf("mezz.jei:jei-1.20.1-common-api:15.2.0.27")
 }
 
 compileJava {
