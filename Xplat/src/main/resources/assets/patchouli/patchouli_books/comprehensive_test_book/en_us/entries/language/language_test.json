@@ -1,0 +1,11 @@
+{
+  "name": "Language Test",
+  "category": "patchouli:language",
+  "icon": "minecraft:globe_banner_pattern",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "This page should be replaced with something else when you switch to zh_cn"
+    }
+  ]
+}

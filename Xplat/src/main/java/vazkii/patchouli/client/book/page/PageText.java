@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
 
@@ -31,8 +30,8 @@ public class PageText extends PageWithText {
 	}
 
 	@Override
-	public void render(PoseStack ms, int mouseX, int mouseY, float pticks) {
-		super.render(ms, mouseX, mouseY, pticks);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+		super.render(graphics, mouseX, mouseY, pticks);
 
 		if (pageNum == 0) {
 			boolean renderedSmol = false;
@@ -41,22 +40,21 @@ public class PageText extends PageWithText {
 			if (mc.options.advancedItemTooltips) {
 				ResourceLocation res = parent.getEntry().getId();
 				smolText = res.toString();
-			} else if (entry.isExtension()) {
-				String name = entry.getTrueProvider().getOwnerName();
-				smolText = I18n.get("patchouli.gui.lexicon.added_by", name);
+			} else if (entry.getAddedBy() != null) {
+				smolText = I18n.get("patchouli.gui.lexicon.added_by", entry.getAddedBy());
 			}
 
 			if (!smolText.isEmpty()) {
-				ms.scale(0.5F, 0.5F, 1F);
-				parent.drawCenteredStringNoShadow(ms, smolText, GuiBook.PAGE_WIDTH, 12, book.headerColor);
-				ms.scale(2F, 2F, 1F);
+				graphics.pose().scale(0.5F, 0.5F, 1F);
+				parent.drawCenteredStringNoShadow(graphics, smolText, GuiBook.PAGE_WIDTH, 12, book.headerColor);
+				graphics.pose().scale(2F, 2F, 1F);
 				renderedSmol = true;
 			}
 
-			parent.drawCenteredStringNoShadow(ms, parent.getEntry().getName().getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, renderedSmol ? -3 : 0, book.headerColor);
-			GuiBook.drawSeparator(ms, book, 0, 12);
+			parent.drawCenteredStringNoShadow(graphics, parent.getEntry().getName().getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, renderedSmol ? -3 : 0, book.headerColor);
+			GuiBook.drawSeparator(graphics, book, 0, 12);
 		} else if (title != null && !title.isEmpty()) {
-			parent.drawCenteredStringNoShadow(ms, i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+			parent.drawCenteredStringNoShadow(graphics, i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		}
 	}
 

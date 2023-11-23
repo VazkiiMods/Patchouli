@@ -14,7 +14,6 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Holds book content state while it is being assembled from JSON data and extension data.
+ * Holds book content state while it is being assembled from JSON data
  */
 public class BookContentsBuilder {
 	public static final String DEFAULT_LANG = "en_us";
@@ -32,6 +31,10 @@ public class BookContentsBuilder {
 	private final Map<ResourceLocation, Supplier<BookTemplate>> templates = new HashMap<>();
 	private final Map<ItemStackUtil.StackWrapper, Pair<BookEntry, Integer>> recipeMappings = new HashMap<>();
 
+	private final Book book;
+	/**
+	 * Signals that the book was reloaded through the ingame button and should bypass the cached resource reload data.
+	 */
 	private final boolean singleBookReload;
 
 	private interface LoadFunc<T> {
@@ -39,17 +42,10 @@ public class BookContentsBuilder {
 		T load(Book book, BookContentLoader loader, ResourceLocation id, ResourceLocation file);
 	}
 
-	/**
-	 * @param singleBookReload Signals that the book was reloaded through the ingame button
-	 *                         and should bypass the cached resource reload data.
-	 */
-	public BookContentsBuilder(boolean singleBookReload) {
+	private BookContentsBuilder(Book book, boolean singleBookReload) {
+		this.book = book;
 		this.singleBookReload = singleBookReload;
 		templates.putAll(BookContents.addonTemplates);
-	}
-
-	public BookContentsBuilder() {
-		this(false);
 	}
 
 	@Nullable
@@ -71,19 +67,21 @@ public class BookContentsBuilder {
 		recipeMappings.put(stack, Pair.of(entry, spread));
 	}
 
-	/**
-	 * Contribute the on-disk contents of the given book to this builder.
-	 * Should first be called with the "real" book, then by all extensions
-	 */
-	public void loadFrom(Book book) {
-		load(book, "categories", BookContentsBuilder::loadCategory, categories);
-		load(book, "entries",
-				(b, l, id, file) -> BookContentsBuilder.loadEntry(b, l, id, file, categories::get),
-				entries);
-		load(book, "templates", BookContentsBuilder::loadTemplate, templates);
+	public static BookContents loadAndBuildFor(Level level, Book book, boolean singleBookReload) {
+		BookContentsBuilder builder = new BookContentsBuilder(book, singleBookReload);
+		builder.loadFiles();
+		return builder.build(level);
 	}
 
-	public BookContents build(Level level, Book book) {
+	private void loadFiles() {
+		load("categories", BookContentsBuilder::loadCategory, categories);
+		load("entries",
+				(b, l, id, file) -> BookContentsBuilder.loadEntry(b, l, id, file, categories::get),
+				entries);
+		load("templates", BookContentsBuilder::loadTemplate, templates);
+	}
+
+	private BookContents build(Level level) {
 		categories.forEach((id, category) -> {
 			try {
 				category.build(this);
@@ -96,14 +94,15 @@ public class BookContentsBuilder {
 			try {
 				entry.build(level, this);
 			} catch (Exception e) {
-				throw new RuntimeException("Error building entry " + entry.getId(), e);
+				throw new RuntimeException("Error building entry %s of book %s".formatted(entry.getId(), book.id), e);
 			}
 		});
 
 		BookCategory pamphletCategory = null;
 		if (book.isPamphlet) {
 			if (categories.size() != 1) {
-				throw new RuntimeException("A pamphlet should have exactly one category but instead there were " + categories.size());
+				throw new RuntimeException("Pamphlet %s should have exactly one category but instead there were %d"
+						.formatted(book.id, categories.size()));
 			}
 			pamphletCategory = categories.values().iterator().next();
 		}
@@ -117,8 +116,8 @@ public class BookContentsBuilder {
 		);
 	}
 
-	private <T> void load(Book book, String thing, LoadFunc<T> loader, Map<ResourceLocation, T> builder) {
-		BookContentLoader contentLoader = getContentLoader(book);
+	private <T> void load(String thing, LoadFunc<T> loader, Map<ResourceLocation, T> builder) {
+		BookContentLoader contentLoader = getContentLoader();
 		List<ResourceLocation> foundIds = new ArrayList<>();
 		contentLoader.findFiles(book, thing, foundIds);
 
@@ -132,23 +131,21 @@ public class BookContentsBuilder {
 		}
 	}
 
-	protected BookContentLoader getContentLoader(Book book) {
+	protected BookContentLoader getContentLoader() {
 		if (book.isExternal) {
 			return BookContentExternalLoader.INSTANCE;
 		}
-		if (book.useResourcePack) {
-			// A quick reload should not reuse stale data, it is initiated by the user anyways
-			return singleBookReload
-					? BookContentResourceDirectLoader.INSTANCE
-					: BookContentResourceListenerLoader.INSTANCE;
-		}
-		return BookContentClasspathLoader.INSTANCE;
+		// A quick reload should not reuse stale data, it is initiated by the user anyways
+		return singleBookReload
+				? BookContentResourceDirectLoader.INSTANCE
+				: BookContentResourceListenerLoader.INSTANCE;
 	}
 
 	@Nullable
 	private static BookCategory loadCategory(Book book, BookContentLoader loader, ResourceLocation id, ResourceLocation file) {
-		JsonElement json = loadLocalizedJson(book, loader, file);
-		var category = new BookCategory(json.getAsJsonObject(), id, book);
+		BookContentLoader.LoadResult result = loadLocalizedJson(book, loader, file);
+		// TODO: Render the "added by" text in the category UI somewhere
+		var category = new BookCategory(result.json().getAsJsonObject(), id, book);
 		if (category.canAdd()) {
 			return category;
 		}
@@ -158,8 +155,8 @@ public class BookContentsBuilder {
 	@Nullable
 	private static BookEntry loadEntry(Book book, BookContentLoader loader, ResourceLocation id,
 			ResourceLocation file, Function<ResourceLocation, BookCategory> categories) {
-		JsonElement json = loadLocalizedJson(book, loader, file);
-		var entry = new BookEntry(json.getAsJsonObject(), id, book);
+		BookContentLoader.LoadResult result = loadLocalizedJson(book, loader, file);
+		var entry = new BookEntry(result.json().getAsJsonObject(), id, book, result.addedBy());
 
 		if (entry.canAdd()) {
 			entry.initCategory(file, categories);
@@ -169,7 +166,7 @@ public class BookContentsBuilder {
 	}
 
 	private static Supplier<BookTemplate> loadTemplate(Book book, BookContentLoader loader, ResourceLocation key, ResourceLocation res) {
-		JsonElement json = loadLocalizedJson(book, loader, res);
+		JsonElement json = loadLocalizedJson(book, loader, res).json();
 
 		Supplier<BookTemplate> supplier = () -> ClientBookRegistry.INSTANCE.gson.fromJson(json, BookTemplate.class);
 
@@ -182,13 +179,16 @@ public class BookContentsBuilder {
 		return supplier;
 	}
 
-	private static JsonElement loadLocalizedJson(Book book, BookContentLoader loader, ResourceLocation res) {
-		ResourceLocation localized = new ResourceLocation(res.getNamespace(),
-				res.getPath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
+	private static BookContentLoader.LoadResult loadLocalizedJson(Book book, BookContentLoader loader, ResourceLocation file) {
+		ResourceLocation localizedFile = new ResourceLocation(file.getNamespace(),
+				file.getPath().replaceAll(DEFAULT_LANG, ClientBookRegistry.INSTANCE.currentLang));
 
-		JsonElement input = loader.loadJson(book, localized, res);
+		BookContentLoader.LoadResult input = loader.loadJson(book, localizedFile);
 		if (input == null) {
-			throw new IllegalArgumentException(res + " does not exist.");
+			input = loader.loadJson(book, file);
+			if (input == null) {
+				throw new IllegalArgumentException(file + " does not exist.");
+			}
 		}
 
 		return input;

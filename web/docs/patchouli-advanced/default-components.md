@@ -103,11 +103,6 @@ shows how to craft it, if there's one.
 
 An [ItemStack String](/docs/patchouli-advanced/itemstack-format) representing the item you
 want to show. Can be a variable.
-
-Advanced usage of this value is possible. You may use `ore:ORENAME`, to display all items
-matching the ore dictionary key ORENAME, or you may display multiple stacks at once by
-separating them with commas (e.g. `minecraft:diamond,minecraft:emerald`). In both cases,
-they alternate with time.
  
 * **framed** (boolean)
 

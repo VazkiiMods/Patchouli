@@ -1,7 +1,6 @@
 package vazkii.patchouli.api;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -22,9 +21,9 @@ public interface IComponentRenderContext {
 
 	Style getFont();
 
-	void renderItemStack(PoseStack ms, int x, int y, int mouseX, int mouseY, ItemStack stack);
+	void renderItemStack(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, ItemStack stack);
 
-	void renderIngredient(PoseStack ms, int x, int y, int mouseX, int mouseY, Ingredient ingredient);
+	void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Ingredient ingredient);
 
 	boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h);
 

@@ -13,5 +13,6 @@
 	"model": "patchouli:book_green",
 	"creative_tab": "minecraft:natural_blocks",
 	"advancements_tab": "patchouli",
-	"i18n": true
+	"i18n": true,
+	"use_resource_pack": true
 }

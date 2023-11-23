@@ -2,7 +2,8 @@ package vazkii.patchouli.fabric.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelModifier;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -11,6 +12,7 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -18,17 +20,21 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 
 import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.client.base.BookModel;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookContentResourceListenerLoader;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
+import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.fabric.network.FabricMessageOpenBookGui;
 import vazkii.patchouli.fabric.network.FabricMessageReloadBookContents;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -47,9 +53,23 @@ public class FabricClientInitializer implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(FabricMessageOpenBookGui.ID, FabricMessageOpenBookGui::handle);
 		ClientPlayNetworking.registerGlobalReceiver(FabricMessageReloadBookContents.ID, FabricMessageReloadBookContents::handle);
 
-		ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, register) -> BookRegistry.INSTANCE.books.values().stream()
-				.map(b -> new ModelResourceLocation(b.model, "inventory"))
-				.forEach(register));
+		ModelLoadingPlugin.register(pluginContext -> {
+			for (Book book : BookRegistry.INSTANCE.books.values()) {
+				pluginContext.addModels(new ModelResourceLocation(book.model, "inventory"));
+			}
+
+			pluginContext.modifyModelAfterBake().register(
+					(@Nullable BakedModel oldModel, ModelModifier.AfterBake.Context ctx) -> {
+						if (ctx.id() instanceof ModelResourceLocation key
+								&& PatchouliItems.BOOK_ID.equals(key) // checks namespace and path
+								&& key.getVariant().equals("inventory")
+								&& oldModel != null) {
+							return new BookModel(oldModel, ctx.loader());
+						}
+						return oldModel;
+					}
+			);
+		});
 
 		ItemProperties.register(PatchouliItems.BOOK,
 				new ResourceLocation(PatchouliAPI.MOD_ID, "completion"),
@@ -79,10 +99,10 @@ public class FabricClientInitializer implements ClientModInitializer {
 			@Override
 			public void onResourceManagerReload(ResourceManager manager) {
 				if (Minecraft.getInstance().level != null) {
-					PatchouliAPI.LOGGER.info("Reloading resource pack-based books, world is nonnull");
-					ClientBookRegistry.INSTANCE.reload(true);
+					PatchouliAPI.LOGGER.info("Reloading resource pack-based books");
+					ClientBookRegistry.INSTANCE.reload();
 				} else {
-					PatchouliAPI.LOGGER.info("Not reloading resource pack-based books as client world is missing");
+					PatchouliAPI.LOGGER.debug("Not reloading resource pack-based books as client world is missing");
 				}
 			}
 		});

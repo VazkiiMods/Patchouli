@@ -1,7 +1,6 @@
 package vazkii.patchouli.xplat;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
  */
 public interface IXplatAbstractions {
 	// Events
-	void fireDrawBookScreen(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, PoseStack ms);
+	void fireDrawBookScreen(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics);
 	void fireBookReload(ResourceLocation book);
 
 	// Networking

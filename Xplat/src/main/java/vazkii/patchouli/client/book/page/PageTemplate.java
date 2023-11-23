@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -39,8 +38,8 @@ public class PageTemplate extends BookPage {
 	}
 
 	@Override
-	public void render(PoseStack ms, int mouseX, int mouseY, float pticks) {
-		template.render(ms, this, mouseX, mouseY, pticks);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+		template.render(graphics, this, mouseX, mouseY, pticks);
 	}
 
 	@Override

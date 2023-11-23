@@ -1,9 +1,8 @@
 package vazkii.patchouli.api;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 
@@ -16,11 +15,11 @@ import net.minecraft.resources.ResourceLocation;
  */
 public interface BookDrawScreenCallback {
 	Event<BookDrawScreenCallback> EVENT = EventFactory.createArrayBacked(BookDrawScreenCallback.class,
-			(listeners) -> (b, g, mx, my, pt, ms) -> {
+			(listeners) -> (b, g, mx, my, pt, gr) -> {
 				for (BookDrawScreenCallback l : listeners) {
-					l.trigger(b, g, mx, my, pt, ms);
+					l.trigger(b, g, mx, my, pt, gr);
 				}
 			});
 
-	void trigger(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, PoseStack ms);
+	void trigger(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics);
 }

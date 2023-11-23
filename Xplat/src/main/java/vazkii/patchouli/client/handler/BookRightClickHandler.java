@@ -1,11 +1,11 @@
 package vazkii.patchouli.client.handler;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class BookRightClickHandler {
 
-	public static void onRenderHUD(PoseStack ms, float partialTicks) {
+	public static void onRenderHUD(GuiGraphics graphics, float partialTicks) {
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
 		ItemStack bookStack = player.getMainHandItem();
@@ -41,22 +41,23 @@ public class BookRightClickHandler {
 						Window window = mc.getWindow();
 						int x = window.getGuiScaledWidth() / 2 + 3;
 						int y = window.getGuiScaledHeight() / 2 + 3;
-						entry.getIcon().render(ms, x, y);
+						entry.getIcon().render(graphics, x, y);
 
-						ms.pushPose();
-						ms.translate(0, 0, 10);
-						ms.scale(0.5F, 0.5F, 1);
-						Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(ms, bookStack, (x + 8) * 2, (y + 8) * 2);
-						ms.popPose();
+						graphics.pose().pushPose();
+						graphics.pose().translate(0, 0, 10);
+						graphics.pose().scale(0.5F, 0.5F, 1);
+						graphics.renderItem(bookStack, (x + 8) * 2, (y + 8) * 2);
+						graphics.renderItemDecorations(mc.font, bookStack, (x + 8) * 2, (y + 8) * 2);
+						graphics.pose().popPose();
 
-						mc.font.draw(ms, entry.getName(), x + 18, y + 3, 0xFFFFFF);
+						graphics.drawString(mc.font, entry.getName(), x + 18, y + 3, 0xFFFFFF, false);
 
-						ms.pushPose();
-						ms.scale(0.75F, 0.75F, 1F);
+						graphics.pose().pushPose();
+						graphics.pose().scale(0.75F, 0.75F, 1F);
 						Component s = Component.translatable("patchouli.gui.lexicon." + (player.isShiftKeyDown() ? "view" : "sneak"))
 								.withStyle(ChatFormatting.ITALIC);
-						mc.font.draw(ms, s, (x + 18) / 0.75F, (y + 14) / 0.75F, 0xBBBBBB);
-						ms.popPose();
+						graphics.drawString(mc.font, s, (int) ((x + 18) / 0.75F), (int) ((y + 14) / 0.75F), 0xBBBBBB, false);
+						graphics.pose().popPose();
 					}
 				}
 			}

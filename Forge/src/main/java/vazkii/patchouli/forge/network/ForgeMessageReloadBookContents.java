@@ -23,7 +23,7 @@ public class ForgeMessageReloadBookContents {
 	}
 
 	public void handle(Supplier<NetworkEvent.Context> ctx) {
-		ctx.get().enqueueWork(() -> ClientBookRegistry.INSTANCE.reload(false));
+		ctx.get().enqueueWork(() -> ClientBookRegistry.INSTANCE.reload());
 		ctx.get().setPacketHandled(true);
 	}
 }

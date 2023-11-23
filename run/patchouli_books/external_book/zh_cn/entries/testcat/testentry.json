@@ -1,0 +1,11 @@
+{
+  "name": "燃",
+  "icon": "minecraft:writable_book",
+  "category": "patchouli:testcat",
+  "pages": [
+    {
+      "type": "text",
+      "text": "燒生命"
+    }
+  ]
+}

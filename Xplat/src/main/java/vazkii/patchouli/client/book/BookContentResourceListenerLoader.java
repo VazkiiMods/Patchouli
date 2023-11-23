@@ -84,19 +84,25 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 
 	@Nullable
 	@Override
-	public JsonElement loadJson(Book book, ResourceLocation location, @Nullable ResourceLocation fallback) {
-		PatchouliAPI.LOGGER.trace("Loading {} with fallback {}", location, fallback);
+	public LoadResult loadJson(Book book, ResourceLocation file) {
+		PatchouliAPI.LOGGER.trace("Loading {}", file);
 		var map = data.get(book.id);
 		if (map == null) {
 			return null;
 		}
-		String path = location.getPath();
+		String path = file.getPath();
+		// Drop patchouli_books/ and json suffix
+		String relativizedPath = path.substring(0, path.length() - 5).split("/", 2)[1];
 
-		JsonElement json = map.get(new ResourceLocation(location.getNamespace(), path.substring(0, path.length() - 5).split("/", 2)[1]));
-		if (json == null && fallback != null) {
-			path = fallback.getPath();
-			json = map.get(new ResourceLocation(fallback.getNamespace(), path.substring(0, path.length() - 5).split("/", 2)[1]));
+		JsonElement json = map.get(new ResourceLocation(file.getNamespace(), relativizedPath));
+		if (json != null) {
+			return new LoadResult(
+					json,
+					// todo implement this
+					null
+			);
 		}
-		return json;
+
+		return null;
 	}
 }

@@ -45,26 +45,38 @@ jobs:
     - name: Sign jars
       env:
         SIGNING_KEY: ${{ secrets.VIOLET_MOON_SIGNING_KEY }}
-      if: ${{ env.SIGNING_KEY != '' }}
+      if: ${{ env.SIGNING_KEY != '' && startsWith(github.ref, 'refs/tags/release-')}}
       run: |
         echo "${SIGNING_KEY}" | gpg --import -
         gpg --local-user "Violet Moon Signing Key" --armor \
           --detach-sign ${{ steps.calculate_artifact_names.outputs.forge }}
         gpg --local-user "Violet Moon Signing Key" --armor \
           --detach-sign ${{ steps.calculate_artifact_names.outputs.fabric }}
-    - name: Archive Forge Artifacts
+    - name: Archive Forge Jar
       uses: actions/upload-artifact@v2
       with:
-        name: Forge
+        name: Forge Jar
         path: |
           ${{ steps.calculate_artifact_names.outputs.forge }}
+    - name: Archive Forge Signature
+      uses: actions/upload-artifact@v2
+      if: ${{ env.SIGNING_KEY != '' && startsWith(github.ref, 'refs/tags/release-')}}
+      with:
+        name: Forge Signature
+        path: |
           ${{ steps.calculate_artifact_names.outputs.forge }}.asc
-    - name: Archive Fabric Artifacts
+    - name: Archive Fabric Jar
       uses: actions/upload-artifact@v2
       with:
-        name: Fabric
+        name: Fabric Jar
         path: |
           ${{ steps.calculate_artifact_names.outputs.fabric }}
+    - name: Archive Fabric Signature
+      uses: actions/upload-artifact@v2
+      if: ${{ env.SIGNING_KEY != '' && startsWith(github.ref, 'refs/tags/release-')}}
+      with:
+        name: Fabric Signature
+        path: |
           ${{ steps.calculate_artifact_names.outputs.fabric }}.asc
     - name: Upload Releases
       if: startsWith(github.ref, 'refs/tags/release-')

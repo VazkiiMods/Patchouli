@@ -1,9 +1,9 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
@@ -46,14 +46,14 @@ public class ComponentEntity extends TemplateComponent {
 	}
 
 	@Override
-	public void render(PoseStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (errored) {
-			page.fontRenderer.drawShadow(ms, I18n.get("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000);
+			graphics.drawString(page.fontRenderer, Component.translatable("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000, false);
 		}
 
 		if (entity != null) {
 			float rotation = rotate ? ClientTicker.total : defaultRotation;
-			PageEntity.renderEntity(ms, entity, page.mc.level, x, y, rotation, renderScale, offset);
+			PageEntity.renderEntity(graphics, entity, x, y, rotation, renderScale, offset);
 		}
 	}
 
@@ -64,7 +64,7 @@ public class ComponentEntity extends TemplateComponent {
 	}
 
 	private void loadEntity(Level world) {
-		if (!errored && (entity == null || !entity.isAlive())) {
+		if (!errored && (entity == null || !entity.isAlive() || entity.level() != world)) {
 			try {
 				entity = creator.apply(world);
 				float width = entity.getBbWidth();

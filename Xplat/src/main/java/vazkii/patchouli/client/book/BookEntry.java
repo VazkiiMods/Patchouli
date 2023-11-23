@@ -48,8 +48,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 	private final ResourceLocation id;
 	// Logical book we belong to
 	private final Book book;
-	// If we are part of an extension, the Book representing our real parent
-	@Nullable private final Book trueProvider;
+	@Nullable private final String addedBy;
 	private final ResourceLocation categoryId;
 	private BookCategory category;
 	private final BookIcon icon;
@@ -61,24 +60,16 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 	private boolean built;
 	// End mutable state
 
-	public BookEntry(JsonObject root, ResourceLocation id, Book book) {
+	public BookEntry(JsonObject root, ResourceLocation id, Book book, @Nullable String addedBy) {
 		this.id = id;
-		if (book.isExtension) {
-			this.book = book.extensionTarget;
-			this.trueProvider = book;
-		} else {
-			this.book = book;
-			this.trueProvider = null;
-		}
+		this.book = book;
+		this.addedBy = addedBy;
 
 		var categoryId = GsonHelper.getAsString(root, "category");
 		if (categoryId.contains(":")) { // full category ID
 			this.categoryId = new ResourceLocation(categoryId);
 		} else {
-			String hint = String.format("`%s:%s`", book.getModNamespace(), categoryId);
-			if (isExtension() && !trueProvider.getModNamespace().equals(book.getModNamespace())) {
-				hint += String.format("or `%s:%s`", trueProvider.getModNamespace(), categoryId);
-			}
+			String hint = String.format("`%s:%s`", book.id.getNamespace(), categoryId);
 			throw new IllegalArgumentException("`category` must be fully qualified (domain:name). Hint: Try " + hint);
 		}
 
@@ -247,7 +238,8 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 					pages[i].build(level, this, builder, i);
 					realPages.add(pages[i]);
 				} catch (Exception e) {
-					throw new RuntimeException("Error while loading entry " + id + " page " + i, e);
+					throw new RuntimeException("Error while building entry %s page %d of book %s"
+							.formatted(id, i, book.id), e);
 				}
 			}
 		}
@@ -295,12 +287,8 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 	}
 
 	@Nullable
-	public Book getTrueProvider() {
-		return trueProvider;
-	}
-
-	public boolean isExtension() {
-		return getTrueProvider() != null && getTrueProvider() != getBook();
+	public String getAddedBy() {
+		return this.addedBy;
 	}
 
 	@Override

@@ -40,12 +40,7 @@ public final class BookCategory extends AbstractReadStateHolder implements Compa
 	// End mutable state
 
 	public BookCategory(JsonObject root, ResourceLocation id, Book book) {
-		if (book.isExtension) {
-			this.book = book.extensionTarget;
-		} else {
-			this.book = book;
-		}
-
+		this.book = book;
 		this.id = id;
 		this.name = GsonHelper.getAsString(root, "name");
 		this.description = GsonHelper.getAsString(root, "description");
@@ -169,7 +164,7 @@ public final class BookCategory extends AbstractReadStateHolder implements Compa
 					this.parentCategory = parentCat;
 				}
 			} else {
-				String hint = String.format("`%s:%s`", book.getModNamespace(), parent);
+				String hint = String.format("`%s:%s`", book.id.getNamespace(), parent);
 				throw new IllegalArgumentException("`parent` must be fully qualified (domain:name). Hint: Try " + hint);
 			}
 		}

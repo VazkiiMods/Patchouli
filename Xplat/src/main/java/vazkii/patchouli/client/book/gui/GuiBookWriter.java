@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
@@ -39,20 +38,20 @@ public class GuiBookWriter extends GuiBook {
 	}
 
 	@Override
-	void drawForegroundElements(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.drawForegroundElements(ms, mouseX, mouseY, partialTicks);
+	void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.drawForegroundElements(graphics, mouseX, mouseY, partialTicks);
 
-		drawCenteredStringNoShadow(ms, I18n.get("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-		drawSeparator(ms, book, LEFT_PAGE_X, TOP_PADDING + 12);
+		drawCenteredStringNoShadow(graphics, I18n.get("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+		drawSeparator(graphics, book, LEFT_PAGE_X, TOP_PADDING + 12);
 
 		if (drawHeader) {
-			drawCenteredStringNoShadow(ms, I18n.get("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
-			drawSeparator(ms, book, RIGHT_PAGE_X, TOP_PADDING + 12);
+			drawCenteredStringNoShadow(graphics, I18n.get("patchouli.gui.lexicon.editor.mock_header"), RIGHT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);
+			drawSeparator(graphics, book, RIGHT_PAGE_X, TOP_PADDING + 12);
 		}
 
-		textfield.render(ms, mouseX, mouseY, partialTicks);
-		text.render(ms, mouseX, mouseY);
-		editableText.render(ms, mouseX, mouseY);
+		textfield.render(graphics, mouseX, mouseY, partialTicks);
+		text.render(graphics, mouseX, mouseY);
+		editableText.render(graphics, mouseX, mouseY);
 	}
 
 	@Override

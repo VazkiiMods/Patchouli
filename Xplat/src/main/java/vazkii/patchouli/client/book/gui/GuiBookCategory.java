@@ -1,8 +1,7 @@
 package vazkii.patchouli.client.book.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.resources.language.I18n;
@@ -35,11 +34,11 @@ public class GuiBookCategory extends GuiBookEntryList {
 	}
 
 	@Override
-	void drawForegroundElements(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
-		super.drawForegroundElements(ms, mouseX, mouseY, partialTicks);
+	void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.drawForegroundElements(graphics, mouseX, mouseY, partialTicks);
 		if (getEntries().isEmpty() && subcategoryButtonCount <= 16 && subcategoryButtonCount > 0) {
 			int bottomSeparator = TOP_PADDING + 37 + 24 * ((subcategoryButtonCount - 1) / 4 + 1);
-			drawSeparator(ms, book, RIGHT_PAGE_X, bottomSeparator);
+			drawSeparator(graphics, book, RIGHT_PAGE_X, bottomSeparator);
 		}
 	}
 

@@ -1,5 +1,7 @@
 {
 	"item.patchouli.guide_book.name": "指南书",
+	"item.patchouli.guide_book.undefined": "无效的书: 没有定义ID",
+	"item.patchouli.guide_book.invalid": "无效的书: %s",
 	
 	"item.patchouli.comprehensive_test_book.name": "综合测试书",
 	"item.patchouli.comprehensive_test_book.landing": "希望能成为全面测试 Patchouli 的测试书，而不是现在这样一盘散沙。",
@@ -16,6 +18,9 @@
 	"item.patchouli:intro_book.name": "Patchouli",
 	"item.patchouli:intro_book.subtitle": "为所有人的文档",
 	"item.patchouli:intro_book.landing": "安装 $(item)Patchouli$() 后，模组和整合包作者可以制作易于阅读、可解锁进度的$(thing)书籍$()了！",
+	
+	"item.patchouli:pamphlet.name": "测试手册",
+	"item.patchouli:pamphlet.landing": "一本测试手册，一本只有一个类别的书。",
 	
 	"patchouli.subtitle.book_open": "书：翻开",
 	"patchouli.subtitle.book_flip": "书：翻页",
@@ -90,4 +95,6 @@
 	"patchouli.gui.lexicon.button.visualize": "可视化",
 	"patchouli.gui.lexicon.button.visualize.info": "（再次点击以清除）",
 	"patchouli.gui.lexicon.button.history": "浏览历史"
+	"patchouli.gui.lexicon.button.mark_all_read": "全部标记为已读",
+	"patchouli.gui.lexicon.button.mark_category_read": "将此类别标记为已读"
 }

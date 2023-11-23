@@ -90,10 +90,10 @@ public class ForgeClientInitializer {
 
 		e.registerReloadListener((ResourceManagerReloadListener) manager -> {
 			if (Minecraft.getInstance().level != null) {
-				PatchouliAPI.LOGGER.info("Reloading resource pack-based books, world is nonnull");
-				ClientBookRegistry.INSTANCE.reload(true);
+				PatchouliAPI.LOGGER.info("Reloading resource pack-based books");
+				ClientBookRegistry.INSTANCE.reload();
 			} else {
-				PatchouliAPI.LOGGER.info("Not reloading resource pack-based books as client world is missing");
+				PatchouliAPI.LOGGER.debug("Not reloading resource pack-based books as client world is missing");
 			}
 		});
 	}
@@ -144,12 +144,13 @@ public class ForgeClientInitializer {
 		});
 
 		MinecraftForge.EVENT_BUS.addListener((RenderTooltipEvent.Pre e) -> {
-			TooltipHandler.onTooltip(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY());
+			TooltipHandler.onTooltip(e.getGraphics(), e.getItemStack(), e.getX(), e.getY());
 		});
 	}
 
 	@SubscribeEvent
 	public static void replaceBookModel(ModelEvent.ModifyBakingResult evt) {
-		BookModel.replace(evt.getModels(), evt.getModelBakery());
+		ModelResourceLocation key = new ModelResourceLocation(PatchouliItems.BOOK_ID, "inventory");
+		evt.getModels().computeIfPresent(key, (k, oldModel) -> new BookModel(oldModel, evt.getModelBakery()));
 	}
 }

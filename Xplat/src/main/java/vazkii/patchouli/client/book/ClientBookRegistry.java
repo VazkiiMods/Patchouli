@@ -5,6 +5,7 @@ import com.google.gson.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.GsonHelper;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.page.*;
@@ -58,9 +59,9 @@ public class ClientBookRegistry {
 		pageTypes.put(new ResourceLocation(PatchouliAPI.MOD_ID, "quest"), PageQuest.class);
 	}
 
-	public void reload(boolean resourcePackBooksOnly) {
+	public void reload() {
 		currentLang = Minecraft.getInstance().getLanguageManager().getSelected();
-		BookRegistry.INSTANCE.reloadContents(Minecraft.getInstance().level, resourcePackBooksOnly);
+		BookRegistry.INSTANCE.reloadContents(Minecraft.getInstance().level);
 	}
 
 	public void reloadLocks(boolean suppressToasts) {
@@ -77,7 +78,7 @@ public class ClientBookRegistry {
 
 		Book book = BookRegistry.INSTANCE.books.get(bookStr);
 
-		if (book != null && !book.isExtension) {
+		if (book != null) {
 			book.getContents().checkValidCurrentEntry();
 
 			if (entryId != null) {
@@ -105,8 +106,7 @@ public class ClientBookRegistry {
 			}
 
 			JsonObject obj = json.getAsJsonObject();
-			JsonPrimitive prim = (JsonPrimitive) obj.get("type");
-			String string = prim.getAsString();
+			String string = GsonHelper.getAsString(obj, "type");
 			if (string.indexOf(':') < 0) {
 				string = PatchouliAPI.MOD_ID + ":" + string;
 			}

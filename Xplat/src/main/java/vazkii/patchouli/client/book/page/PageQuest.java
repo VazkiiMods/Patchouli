@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -76,20 +75,20 @@ public class PageQuest extends PageWithText {
 	}
 
 	@Override
-	public void render(PoseStack ms, int mouseX, int mouseY, float pticks) {
-		super.render(ms, mouseX, mouseY, pticks);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+		super.render(graphics, mouseX, mouseY, pticks);
 
-		parent.drawCenteredStringNoShadow(ms, title == null || title.isEmpty() ? I18n.get("patchouli.gui.lexicon.objective") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
-		GuiBook.drawSeparator(ms, book, 0, 12);
+		parent.drawCenteredStringNoShadow(graphics, title == null || title.isEmpty() ? I18n.get("patchouli.gui.lexicon.objective") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		GuiBook.drawSeparator(graphics, book, 0, 12);
 
 		if (!isManual) {
-			GuiBook.drawSeparator(ms, book, 0, GuiBook.PAGE_HEIGHT - 25);
+			GuiBook.drawSeparator(graphics, book, 0, GuiBook.PAGE_HEIGHT - 25);
 
 			boolean completed = isCompleted(parent.book);
 			String s = I18n.get(completed ? "patchouli.gui.lexicon.complete" : "patchouli.gui.lexicon.incomplete");
 			int color = completed ? 0x008b1a : book.headerColor;
 
-			parent.drawCenteredStringNoShadow(ms, s, GuiBook.PAGE_WIDTH / 2, GuiBook.PAGE_HEIGHT - 17, color);
+			parent.drawCenteredStringNoShadow(graphics, s, GuiBook.PAGE_WIDTH / 2, GuiBook.PAGE_HEIGHT - 17, color);
 		}
 
 	}

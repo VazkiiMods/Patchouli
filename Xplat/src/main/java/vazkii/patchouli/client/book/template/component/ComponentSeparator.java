@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.template.component;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
@@ -21,8 +21,8 @@ public class ComponentSeparator extends TemplateComponent {
 	}
 
 	@Override
-	public void render(PoseStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
-		GuiBook.drawSeparator(ms, page.book, x, y);
+	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+		GuiBook.drawSeparator(graphics, page.book, x, y);
 	}
 
 }

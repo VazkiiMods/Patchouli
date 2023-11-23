@@ -23,11 +23,11 @@ The [Wikipedia page](https://en.wikipedia.org/wiki/JSON#Syntax) provides a good 
 
 ### Namespaced ID's
 Namespaced ID's are how Minecraft gives things unique names. Please read the [vanilla wiki
-page](https://minecraft.fandom.com/wiki/Resource_location) on the subject carefully.
+page](https://minecraft.wiki/w/Resource_location) on the subject carefully.
 
 ### Pack Layout
 You should have a basic understanding of how resource packs and data packs are laid out,
 from the root folder to the `/assets/` and `/data/` directories. The corresponding vanilla
 wiki pages have more information about this for [resource
-packs](https://minecraft.fandom.com/wiki/Resource_Pack#Folder_structure) and [data
-packs](https://minecraft.fandom.com/wiki/Data_Pack#Folder_structure) respectively.
+packs](https://minecraft.wiki/w/Resource_Pack#Folder_structure) and [data
+packs](https://minecraft.wiki/w/Data_Pack#Folder_structure) respectively.

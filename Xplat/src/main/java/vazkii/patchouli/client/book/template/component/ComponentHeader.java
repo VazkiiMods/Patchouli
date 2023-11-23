@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 import vazkii.patchouli.api.IVariable;
@@ -43,17 +43,17 @@ public class ComponentHeader extends TemplateComponent {
 	}
 
 	@Override
-	public void render(PoseStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
-		ms.pushPose();
-		ms.translate(x, y, 0);
-		ms.scale(scale, scale, scale);
+	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+		graphics.pose().pushPose();
+		graphics.pose().translate(x, y, 0);
+		graphics.pose().scale(scale, scale, scale);
 
 		if (centered) {
-			page.parent.drawCenteredStringNoShadow(ms, page.i18n(actualText.getString()), 0, 0, color);
+			page.parent.drawCenteredStringNoShadow(graphics, page.i18n(actualText.getString()), 0, 0, color);
 		} else {
-			page.fontRenderer.draw(ms, page.i18n(actualText.getString()), 0, 0, color);
+			graphics.drawString(page.fontRenderer, page.i18n(actualText.getString()), 0, 0, color, false);
 		}
-		ms.popPose();
+		graphics.pose().popPose();
 	}
 
 	@Override

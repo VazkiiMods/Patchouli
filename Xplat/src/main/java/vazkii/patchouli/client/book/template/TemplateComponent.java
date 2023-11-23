@@ -2,8 +2,8 @@ package vazkii.patchouli.client.book.template;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.IComponentProcessor;
@@ -81,7 +81,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 		// NO-OP
 	}
 
-	public void render(PoseStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
 		// NO-OP
 	}
 

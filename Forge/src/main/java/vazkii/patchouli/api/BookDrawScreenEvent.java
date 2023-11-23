@@ -1,7 +1,6 @@
 package vazkii.patchouli.api;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.Event;
@@ -19,15 +18,15 @@ public class BookDrawScreenEvent extends Event {
 	private final int mouseX;
 	private final int mouseY;
 	private final float partialTicks;
-	private final PoseStack poseStack;
+	private final GuiGraphics graphics;
 
-	public BookDrawScreenEvent(ResourceLocation book, Screen screen, int mouseX, int mouseY, float partialTicks, PoseStack poseStack) {
+	public BookDrawScreenEvent(ResourceLocation book, Screen screen, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics) {
 		this.book = book;
 		this.screen = screen;
 		this.mouseX = mouseX;
 		this.mouseY = mouseY;
 		this.partialTicks = partialTicks;
-		this.poseStack = poseStack;
+		this.graphics = graphics;
 	}
 
 	public ResourceLocation getBook() {
@@ -50,7 +49,7 @@ public class BookDrawScreenEvent extends Event {
 		return partialTicks;
 	}
 
-	public PoseStack getPoseStack() {
-		return poseStack;
+	public GuiGraphics getGraphics() {
+		return graphics;
 	}
 }

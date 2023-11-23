@@ -8,6 +8,7 @@ Xplat/logs/
 
 ## ForgeGradle
 /run/*
+!/run/patchouli_books/
 !/run/resourcepacks/
 
 ### OSX (adds a lot of garbage)###

@@ -119,7 +119,7 @@ public final class ItemStackUtil {
 
 		Collection<Book> books = BookRegistry.INSTANCE.books.values();
 		for (Book b : books) {
-			if (b.getBookItem().sameItem(stack)) {
+			if (ItemStack.isSameItem(b.getBookItem(), stack)) {
 				return b;
 			}
 		}
@@ -139,7 +139,7 @@ public final class ItemStackUtil {
 
 		@Override
 		public boolean equals(Object obj) {
-			return obj == this || (obj instanceof StackWrapper && ItemStack.isSame(stack, ((StackWrapper) obj).stack));
+			return obj == this || (obj instanceof StackWrapper && ItemStack.isSameItem(stack, ((StackWrapper) obj).stack));
 		}
 
 		@Override

@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
@@ -22,16 +21,16 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	}
 
 	@Override
-	public void renderWidget(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		int px = getX() + 1;
 		int py = (int) (getY() + 0.5);
-		GuiBook.drawFromTexture(ms, book, getX(), getY(), 285, 160, 13, 10);
-		GuiBook.drawFromTexture(ms, book, px, py, u, v, width, height);
+		GuiBook.drawFromTexture(graphics, book, getX(), getY(), 285, 160, 13, 10);
+		GuiBook.drawFromTexture(graphics, book, px, py, u, v, width, height);
 		if (isHoveredOrFocused()) {
-			GuiBook.drawFromTexture(ms, book, px, py, u + 11, v, width, height);
-			parent.setTooltip(getTooltip());
+			GuiBook.drawFromTexture(graphics, book, px, py, u + 11, v, width, height);
+			parent.setTooltip(getTooltipLines());
 		}
-		parent.getMinecraft().font.drawShadow(ms, "+", px - 0.5F, py - 0.2F, 0x00FF01);
+		graphics.drawString(parent.getMinecraft().font, "+", px, py, 0x00FF01, true);
 	}
 
 	@Override

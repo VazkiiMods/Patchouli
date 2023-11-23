@@ -1,10 +1,10 @@
 package vazkii.patchouli.client.book;
 
 import com.google.gson.JsonObject;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -64,7 +64,7 @@ public abstract class BookPage {
 		parent.addRenderableWidget(button);
 	}
 
-	public void render(PoseStack ms, int mouseX, int mouseY, float pticks) {}
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {}
 
 	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		return false;

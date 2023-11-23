@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.book.template;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
@@ -62,7 +62,7 @@ public class BookTemplate {
 		if (type.contains(":")) {
 			key = new ResourceLocation(type);
 		} else {
-			key = new ResourceLocation(book.getModNamespace(), type);
+			key = new ResourceLocation(book.id.getNamespace(), type);
 		}
 
 		Supplier<BookTemplate> supplier = builder.getTemplate(key);
@@ -135,11 +135,11 @@ public class BookTemplate {
 		}
 	}
 
-	public void render(PoseStack ms, BookPage page, int mouseX, int mouseY, float pticks) {
+	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (compiled) {
 			components.forEach(c -> {
 				if (c.isVisible) {
-					c.render(ms, page, mouseX, mouseY, pticks);
+					c.render(graphics, page, mouseX, mouseY, pticks);
 				}
 			});
 		}

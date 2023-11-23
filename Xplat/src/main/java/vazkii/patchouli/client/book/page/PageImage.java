@@ -1,9 +1,8 @@
 package vazkii.patchouli.client.book.page;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.resources.ResourceLocation;
 
@@ -31,33 +30,32 @@ public class PageImage extends PageWithText {
 	}
 
 	@Override
-	public void render(PoseStack ms, int mouseX, int mouseY, float pticks) {
-		RenderSystem.setShaderTexture(0, images[index]);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
 
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
-		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+		graphics.setColor(1F, 1F, 1F, 1F);
 		RenderSystem.enableBlend();
-		ms.scale(0.5F, 0.5F, 0.5F);
-		parent.blit(ms, x * 2 + 6, y * 2 + 6, 0, 0, 200, 200);
-		ms.scale(2F, 2F, 2F);
+		graphics.pose().scale(0.5F, 0.5F, 0.5F);
+		graphics.blit(images[index], x * 2 + 6, y * 2 + 6, 0, 0, 200, 200);
+		graphics.pose().scale(2F, 2F, 2F);
 
 		if (border) {
-			GuiBook.drawFromTexture(ms, book, x, y, 405, 149, 106, 106);
+			GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
 		}
 
 		if (title != null && !title.isEmpty()) {
-			parent.drawCenteredStringNoShadow(ms, i18n(title), GuiBook.PAGE_WIDTH / 2, -3, book.headerColor);
+			parent.drawCenteredStringNoShadow(graphics, i18n(title), GuiBook.PAGE_WIDTH / 2, -3, book.headerColor);
 		}
 
 		if (images.length > 1 && border) {
 			int xs = x + 83;
 			int ys = y + 92;
-			GuiComponent.fill(ms, xs, ys, xs + 20, ys + 11, 0x44000000);
-			GuiComponent.fill(ms, xs - 1, ys - 1, xs + 20, ys + 11, 0x44000000);
+			graphics.fill(xs, ys, xs + 20, ys + 11, 0x44000000);
+			graphics.fill(xs - 1, ys - 1, xs + 20, ys + 11, 0x44000000);
 		}
 
-		super.render(ms, mouseX, mouseY, pticks);
+		super.render(graphics, mouseX, mouseY, pticks);
 	}
 
 	public void handleButtonArrow(Button button) {

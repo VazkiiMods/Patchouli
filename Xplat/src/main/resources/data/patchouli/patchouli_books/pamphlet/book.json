@@ -3,5 +3,6 @@
 	"landing_text": "item.patchouli:pamphlet.landing",
 	"creative_tab": "minecraft:natural_blocks",
 	"advancements_tab": "patchouli",
-	"pamphlet": true
+	"pamphlet": true,
+	"use_resource_pack": true
 }

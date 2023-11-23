@@ -1,11 +1,21 @@
 pluginManagement {
+    plugins {
+        id 'net.minecraftforge.gradle' version '6.0.6' apply false
+        id 'org.spongepowered.mixin' version '0.7-SNAPSHOT' apply false
+        id 'org.spongepowered.gradle.vanilla' version '0.2.1-SNAPSHOT' apply false
+        id 'fabric-loom' version '1.2.7' apply false
+    }
     repositories {
         maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
         maven {
-            name = 'Sponge Snapshots'
+            name = 'Forge'
+            url = 'https://maven.minecraftforge.net'
+        }
+        maven {
+            name = 'Sponge'
             url = 'https://repo.spongepowered.org/repository/maven-public/'
         }
         gradlePluginPortal()

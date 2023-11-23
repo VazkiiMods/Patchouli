@@ -18,7 +18,7 @@ public class GuiButtonBookResize extends GuiButtonBook {
 	}
 
 	@Override
-	public List<Component> getTooltip() {
+	public List<Component> getTooltipLines() {
 		var size = PersistentData.data.bookGuiScale;
 		// The last size with a dedicated message. For sizes 6 and above, we display
 		// verybig.message, wrapped in (scale - 5) iterations of verybig.container

@@ -17,4 +17,4 @@ use it.
 
 See:
 
-![](https://i.imgur.com/BoV7U6g.png)
+![Screenshot of Patchouli pamphlet](/img/pamphlet.png)
