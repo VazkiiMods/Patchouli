@@ -4,6 +4,7 @@
   "package": "vazkii.patchouli.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AccessorCriteriaTriggers",
     "AccessorSmithingTransformRecipe",
     "AccessorSmithingTrimRecipe"
   ],
