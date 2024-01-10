@@ -1,23 +1,17 @@
 package vazkii.patchouli.forge.network;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.simple.SimpleChannel;
-
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.forge.network.handler.ClientPayloadHandler;
 
 public class ForgeNetworkHandler {
-	private static final String PROTOCOL_VERSION = "1";
-	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder
-			.named(new ResourceLocation(PatchouliAPI.MOD_ID, "main"))
-			.networkProtocolVersion(() -> PROTOCOL_VERSION)
-			.clientAcceptedVersions(PROTOCOL_VERSION::equals)
-			.serverAcceptedVersions(PROTOCOL_VERSION::equals)
-			.simpleChannel();
 
-	public static void registerMessages() {
-		int i = 0;
-		CHANNEL.registerMessage(i++, ForgeMessageOpenBookGui.class, ForgeMessageOpenBookGui::encode, ForgeMessageOpenBookGui::decode, ForgeMessageOpenBookGui::handle);
-		CHANNEL.registerMessage(i++, ForgeMessageReloadBookContents.class, ForgeMessageReloadBookContents::encode, ForgeMessageReloadBookContents::decode, ForgeMessageReloadBookContents::handle);
+	public static void setupPackets(final RegisterPayloadHandlerEvent event) {
+		final IPayloadRegistrar registrar = event.registrar(PatchouliAPI.MOD_ID);
+		registrar.play(ForgeMessageOpenBookGui.ID, ForgeMessageOpenBookGui::new, handler -> handler
+				.client(ClientPayloadHandler.getInstance()::handleData));
+		registrar.play(ForgeMessageReloadBookContents.ID, ForgeMessageReloadBookContents::new, handler -> handler
+				.client(ClientPayloadHandler.getInstance()::handleData));
 	}
 }

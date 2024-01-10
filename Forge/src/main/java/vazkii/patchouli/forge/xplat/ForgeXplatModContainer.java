@@ -1,6 +1,6 @@
 package vazkii.patchouli.forge.xplat;
 
-import net.minecraftforge.fml.ModContainer;
+import net.neoforged.fml.ModContainer;
 
 import vazkii.patchouli.xplat.XplatModContainer;
 

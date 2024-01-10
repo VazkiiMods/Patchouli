@@ -1,29 +1,27 @@
 package vazkii.patchouli.forge.network;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.PacketDistributor;
+import vazkii.patchouli.api.PatchouliAPI;
 
-import vazkii.patchouli.client.book.ClientBookRegistry;
+public record ForgeMessageReloadBookContents() implements CustomPacketPayload {
+	public static final ResourceLocation ID = new ResourceLocation(PatchouliAPI.MOD_ID, "reload_books");
 
-import java.util.function.Supplier;
-
-public class ForgeMessageReloadBookContents {
-	public ForgeMessageReloadBookContents() {}
+	public ForgeMessageReloadBookContents(final FriendlyByteBuf packetBuffer) {
+		this();
+	}
 
 	public static void sendToAll(MinecraftServer server) {
-		ForgeNetworkHandler.CHANNEL.send(PacketDistributor.ALL.noArg(), new ForgeMessageReloadBookContents());
+		PacketDistributor.ALL.noArg().send(new ForgeMessageReloadBookContents());
 	}
 
-	public void encode(FriendlyByteBuf buf) {}
+	public void write(FriendlyByteBuf buf) {}
 
-	public static ForgeMessageReloadBookContents decode(FriendlyByteBuf buf) {
-		return new ForgeMessageReloadBookContents();
-	}
-
-	public void handle(Supplier<NetworkEvent.Context> ctx) {
-		ctx.get().enqueueWork(() -> ClientBookRegistry.INSTANCE.reload());
-		ctx.get().setPacketHandled(true);
+	@Override
+	public ResourceLocation id() {
+		return ID;
 	}
 }

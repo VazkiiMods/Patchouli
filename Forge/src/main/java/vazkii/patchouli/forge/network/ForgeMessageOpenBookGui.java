@@ -1,54 +1,31 @@
 package vazkii.patchouli.forge.network;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
-
-import vazkii.patchouli.client.book.ClientBookRegistry;
-
 import org.jetbrains.annotations.Nullable;
+import vazkii.patchouli.api.PatchouliAPI;
 
-import java.util.function.Supplier;
+public record ForgeMessageOpenBookGui(ResourceLocation book, @Nullable ResourceLocation entry, int page) implements CustomPacketPayload {
+	public static final ResourceLocation ID = new ResourceLocation(PatchouliAPI.MOD_ID, "open_book");
 
-public class ForgeMessageOpenBookGui {
-	private final ResourceLocation book;
-	@Nullable private final ResourceLocation entry;
-	private final int page;
-
-	public ForgeMessageOpenBookGui(ResourceLocation book, @Nullable ResourceLocation entry, int page) {
-		this.book = book;
-		this.entry = entry;
-		this.page = page;
+	public ForgeMessageOpenBookGui(FriendlyByteBuf buf) {
+		this(buf.readResourceLocation(), ResourceLocation.tryParse(buf.readUtf()), buf.readVarInt());
 	}
 
-	public static ForgeMessageOpenBookGui decode(FriendlyByteBuf buf) {
-		ResourceLocation book = buf.readResourceLocation();
-		ResourceLocation entry;
-		String tmp = buf.readUtf();
-		if (tmp.isEmpty()) {
-			entry = null;
-		} else {
-			entry = ResourceLocation.tryParse(tmp);
-		}
-
-		int page = buf.readVarInt();
-		return new ForgeMessageOpenBookGui(book, entry, page);
-	}
-
-	public void encode(FriendlyByteBuf buf) {
+	public void write(FriendlyByteBuf buf) {
 		buf.writeResourceLocation(book);
 		buf.writeUtf(entry == null ? "" : entry.toString());
 		buf.writeVarInt(page);
 	}
 
 	public static void send(ServerPlayer player, ResourceLocation book, @Nullable ResourceLocation entry, int page) {
-		ForgeNetworkHandler.CHANNEL.send(PacketDistributor.PLAYER.with(() -> player), new ForgeMessageOpenBookGui(book, entry, page));
+		player.connection.send(new ForgeMessageOpenBookGui(book, entry, page));
 	}
 
-	public void handle(Supplier<NetworkEvent.Context> ctx) {
-		ctx.get().enqueueWork(() -> ClientBookRegistry.INSTANCE.displayBookGui(book, entry, page));
-		ctx.get().setPacketHandled(true);
+	@Override
+	public ResourceLocation id() {
+		return ID;
 	}
 }
