@@ -28,4 +28,4 @@ plugins {
 }
 
 rootProject.name = 'Patchouli'
-include("Xplat", "Fabric", "Forge")
+include("Xplat", "Fabric", "NeoForge")
