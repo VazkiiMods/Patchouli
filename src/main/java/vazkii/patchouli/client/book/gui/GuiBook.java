@@ -17,6 +17,7 @@ import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.Util;
 import net.minecraft.util.text.*;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
@@ -180,6 +181,18 @@ public abstract class GuiBook extends Screen {
 
 	@Override // make public
 	public void renderComponentHoverEffect(MatrixStack matrices, @Nullable Style style, int mouseX, int mouseY) {
+		// super function will render tooltip *immediately*, before render method is called
+		// thus tooltip will be covered by what is rendered later
+		// let's check if this style is a tooltip here
+		if (style != null && style.getHoverEvent() != null) {
+			HoverEvent hoverevent = style.getHoverEvent();
+			ITextComponent itextcomponent = hoverevent.getParameter(HoverEvent.Action.SHOW_TEXT);
+			if (itextcomponent != null) {
+				// this style is a tooltip, do not delegate it to super
+				this.setTooltip(itextcomponent);
+				return;
+			}
+		}
 		super.renderComponentHoverEffect(matrices, style, mouseX, mouseY);
 	}
 
@@ -219,6 +232,10 @@ public abstract class GuiBook extends Screen {
 	}
 
 	void drawForegroundElements(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {}
+
+	public boolean haveTooltip() {
+		return tooltipStack != null || (tooltip != null && !tooltip.isEmpty());
+	}
 
 	final void drawTooltip(MatrixStack ms, int mouseX, int mouseY) {
 		if (tooltipStack != null) {
