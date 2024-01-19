@@ -8,13 +8,13 @@ if (System.getenv().RELEASE_MODE != "1") {
 }
 
 repositories {
-//	maven {
-//		name = "JEI"
-//		url "https://maven.blamejared.com/"
-//		content {
-//			includeGroup "mezz.jei"
-//		}
-//	}
+	maven {
+		name = "JEI"
+		url "https://maven.blamejared.com/"
+		content {
+			includeGroup "mezz.jei"
+		}
+	}
 	maven {
 		name = "Modmuss"
 		url = "https://maven.modmuss50.me/"
@@ -66,7 +66,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:0.92.1+1.20.4"
     compileOnly project(":Xplat")
 
-//	modCompileOnly "mezz.jei:jei-1.20.1-common-api:15.2.0.27"
+	modCompileOnly "mezz.jei:jei-1.20.4-common-api:17.0.0.30"
 
 	modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:14.0.688") { transitive = false }
 	modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:13.0.121") { transitive = false }

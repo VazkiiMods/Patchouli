@@ -11,13 +11,13 @@ if (System.getenv().RELEASE_MODE != "1") {
 }
 
 repositories {
-//    maven {
-//        name = "JEI"
-//        url "https://maven.blamejared.com/"
-//        content {
-//            includeGroup "mezz.jei"
-//        }
-//    }
+    maven {
+        name = "JEI"
+        url "https://maven.blamejared.com/"
+        content {
+            includeGroup "mezz.jei"
+        }
+    }
 }
 
 runs {
@@ -40,7 +40,7 @@ dependencies {
     implementation "net.neoforged:neoforge:20.4.83-beta"
     implementation project(":Xplat")
 
-//    compileOnly fg.deobf("mezz.jei:jei-1.20.1-common-api:15.2.0.27")
+    compileOnly "mezz.jei:jei-1.20.4-common-api:17.0.0.30"
 }
 
 TaskCollection.metaClass.excludingNeoTasks = { ->
