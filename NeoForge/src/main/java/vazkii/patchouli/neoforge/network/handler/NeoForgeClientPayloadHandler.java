@@ -1,19 +1,19 @@
-package vazkii.patchouli.forge.network.handler;
+package vazkii.patchouli.neoforge.network.handler;
 
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 import vazkii.patchouli.client.book.ClientBookRegistry;
-import vazkii.patchouli.forge.network.ForgeMessageOpenBookGui;
-import vazkii.patchouli.forge.network.ForgeMessageReloadBookContents;
+import vazkii.patchouli.neoforge.network.NeoForgeMessageOpenBookGui;
+import vazkii.patchouli.neoforge.network.NeoForgeMessageReloadBookContents;
 
-public class ClientPayloadHandler {
-	private static final ClientPayloadHandler INSTANCE = new ClientPayloadHandler();
+public class NeoForgeClientPayloadHandler {
+	private static final NeoForgeClientPayloadHandler INSTANCE = new NeoForgeClientPayloadHandler();
 
-	public static ClientPayloadHandler getInstance() {
+	public static NeoForgeClientPayloadHandler getInstance() {
 		return INSTANCE;
 	}
 
-	public void handleData(final ForgeMessageOpenBookGui data, final PlayPayloadContext context) {
+	public void handleData(final NeoForgeMessageOpenBookGui data, final PlayPayloadContext context) {
 		context.workHandler().submitAsync(() -> {
 					ClientBookRegistry.INSTANCE.displayBookGui(data.book(), data.entry(), data.page());
 				})
@@ -24,7 +24,7 @@ public class ClientPayloadHandler {
 				});
 	}
 
-	public void handleData(final ForgeMessageReloadBookContents data, final PlayPayloadContext context) {
+	public void handleData(final NeoForgeMessageReloadBookContents data, final PlayPayloadContext context) {
 		context.workHandler().submitAsync(() -> {
 					ClientBookRegistry.INSTANCE.reload();
 				})

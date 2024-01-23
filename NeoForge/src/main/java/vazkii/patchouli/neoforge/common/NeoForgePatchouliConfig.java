@@ -1,4 +1,4 @@
-package vazkii.patchouli.forge.common;
+package vazkii.patchouli.neoforge.common;
 
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -11,7 +11,7 @@ import vazkii.patchouli.common.base.PatchouliConfig;
 import java.util.Collections;
 import java.util.List;
 
-public class ForgePatchouliConfig {
+public class NeoForgePatchouliConfig {
 	public static final ModConfigSpec.ConfigValue<Boolean> disableAdvancementLocking;
 	public static final ModConfigSpec.ConfigValue<List<? extends String>> noAdvancementBooks;
 	public static final ModConfigSpec.ConfigValue<Boolean> testingMode;

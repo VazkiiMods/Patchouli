@@ -1,4 +1,4 @@
-package vazkii.patchouli.forge.client;
+package vazkii.patchouli.neoforge.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -37,7 +37,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Mod.EventBusSubscriber(modid = PatchouliAPI.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class ForgeClientInitializer {
+public class NeoForgeClientInitializer {
 	/**
 	 * Why are these necessary?
 	 * BookRegistry.init is called from CommonSetupEvent. We need the models to be known in ModelRegistryEvent.

@@ -1,4 +1,4 @@
-package vazkii.patchouli.forge.client;
+package vazkii.patchouli.neoforge.client;
 
 import com.mojang.blaze3d.vertex.*;
 
@@ -16,7 +16,7 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 
 import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
-public class ForgeClientXplatImpl implements IClientXplatAbstractions {
+public class NeoForgeClientXplatImpl implements IClientXplatAbstractions {
 	@Override
 	public void renderForMultiblock(BlockState state, BlockPos pos, BlockAndTintGetter multiblock, PoseStack ps, MultiBufferSource buffers, RandomSource rand) {
 		final BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();

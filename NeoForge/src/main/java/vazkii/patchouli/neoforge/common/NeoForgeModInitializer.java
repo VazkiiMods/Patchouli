@@ -1,4 +1,4 @@
-package vazkii.patchouli.forge.common;
+package vazkii.patchouli.neoforge.common;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -13,8 +13,6 @@ import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 import vazkii.patchouli.api.PatchouliAPI;
@@ -25,15 +23,15 @@ import vazkii.patchouli.common.handler.LecternEventHandler;
 import vazkii.patchouli.common.handler.ReloadContentsHandler;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
-import vazkii.patchouli.forge.network.ForgeNetworkHandler;
+import vazkii.patchouli.neoforge.network.NeoForgeNetworkHandler;
 
 @Mod.EventBusSubscriber(modid = PatchouliAPI.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 @Mod(PatchouliAPI.MOD_ID)
-public class ForgeModInitializer {
-	public ForgeModInitializer(IEventBus eventBus) {
-		ForgePatchouliConfig.setup();
+public class NeoForgeModInitializer {
+	public NeoForgeModInitializer(IEventBus eventBus) {
+		NeoForgePatchouliConfig.setup();
 
-		eventBus.addListener(ForgeNetworkHandler::setupPackets);
+		eventBus.addListener(NeoForgeNetworkHandler::setupPackets);
 	}
 
 	@SubscribeEvent
