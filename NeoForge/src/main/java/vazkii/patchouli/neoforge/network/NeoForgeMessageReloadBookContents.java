@@ -5,6 +5,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.neoforge.network.PacketDistributor;
+
 import vazkii.patchouli.api.PatchouliAPI;
 
 public record NeoForgeMessageReloadBookContents() implements CustomPacketPayload {

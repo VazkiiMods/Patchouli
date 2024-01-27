@@ -2,6 +2,7 @@ package vazkii.patchouli.common.recipe;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
@@ -51,11 +52,11 @@ public class ShapedBookRecipe extends ShapedRecipe {
 	public static class Serializer implements RecipeSerializer<ShapedBookRecipe> {
 		public static final Codec<ShapedBookRecipe> CODEC = RecordCodecBuilder.create(
 				instance -> instance.group(
-								ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(bookRecipe -> bookRecipe.group),
-								ShapedRecipePattern.MAP_CODEC.forGetter(bookRecipe -> bookRecipe.pattern),
-								ExtraCodecs.strictOptionalField(ItemStack.ITEM_WITH_COUNT_CODEC, "result", ItemStack.EMPTY).forGetter(bookRecipe -> bookRecipe.result),
-								ExtraCodecs.strictOptionalField(ResourceLocation.CODEC, "book", null).forGetter(bookRecipe -> bookRecipe.outputBook)
-						)
+						ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(bookRecipe -> bookRecipe.group),
+						ShapedRecipePattern.MAP_CODEC.forGetter(bookRecipe -> bookRecipe.pattern),
+						ExtraCodecs.strictOptionalField(ItemStack.ITEM_WITH_COUNT_CODEC, "result", ItemStack.EMPTY).forGetter(bookRecipe -> bookRecipe.result),
+						ExtraCodecs.strictOptionalField(ResourceLocation.CODEC, "book", null).forGetter(bookRecipe -> bookRecipe.outputBook)
+				)
 						.apply(instance, ShapedBookRecipe::new)
 		);
 

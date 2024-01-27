@@ -1,9 +1,9 @@
 package vazkii.patchouli.neoforge.common;
 
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import vazkii.patchouli.api.PatchouliConfigAccess;
 import vazkii.patchouli.common.base.PatchouliConfig;

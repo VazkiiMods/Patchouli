@@ -3,6 +3,7 @@ package vazkii.patchouli.common.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -55,28 +56,28 @@ public class ShapelessBookRecipe extends ShapelessRecipe {
 		static int maxHeight = 3;
 		private static final Codec<ShapelessBookRecipe> CODEC = RecordCodecBuilder.create(
 				instance -> instance.group(
-								ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(bookRecipe -> bookRecipe.group),
-								ExtraCodecs.strictOptionalField(ItemStack.ITEM_WITH_COUNT_CODEC, "result", ItemStack.EMPTY).forGetter(bookRecipe -> bookRecipe.result),
-								Ingredient.CODEC_NONEMPTY
-										.listOf()
-										.fieldOf("ingredients")
-										.flatXmap(
-												ingredientList -> {
-													Ingredient[] aingredient = ingredientList
-															.toArray(Ingredient[]::new);
-													if (aingredient.length == 0) {
-														return DataResult.error(() -> "No ingredients for shapeless book recipe");
-													} else {
-														return aingredient.length > maxHeight * maxWidth
-																? DataResult.error(() -> "Too many ingredients for shapeless book recipe. The maximum is: %s".formatted(maxHeight * maxWidth))
-																: DataResult.success(NonNullList.of(Ingredient.EMPTY, aingredient));
-													}
-												},
-												DataResult::success
-										)
-										.forGetter(bookRecipe -> bookRecipe.ingredients),
-								ExtraCodecs.strictOptionalField(ResourceLocation.CODEC, "book", null).forGetter(bookRecipe -> bookRecipe.outputBook)
-						)
+						ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(bookRecipe -> bookRecipe.group),
+						ExtraCodecs.strictOptionalField(ItemStack.ITEM_WITH_COUNT_CODEC, "result", ItemStack.EMPTY).forGetter(bookRecipe -> bookRecipe.result),
+						Ingredient.CODEC_NONEMPTY
+								.listOf()
+								.fieldOf("ingredients")
+								.flatXmap(
+										ingredientList -> {
+											Ingredient[] aingredient = ingredientList
+													.toArray(Ingredient[]::new);
+											if (aingredient.length == 0) {
+												return DataResult.error(() -> "No ingredients for shapeless book recipe");
+											} else {
+												return aingredient.length > maxHeight * maxWidth
+														? DataResult.error(() -> "Too many ingredients for shapeless book recipe. The maximum is: %s".formatted(maxHeight * maxWidth))
+														: DataResult.success(NonNullList.of(Ingredient.EMPTY, aingredient));
+											}
+										},
+										DataResult::success
+								)
+								.forGetter(bookRecipe -> bookRecipe.ingredients),
+						ExtraCodecs.strictOptionalField(ResourceLocation.CODEC, "book", null).forGetter(bookRecipe -> bookRecipe.outputBook)
+				)
 						.apply(instance, ShapelessBookRecipe::new)
 		);
 

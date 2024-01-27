@@ -7,8 +7,8 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-
 import net.minecraft.network.chat.contents.PlainTextContents;
+
 import vazkii.patchouli.client.book.text.BookTextParser;
 import vazkii.patchouli.client.book.text.TextLayouter;
 import vazkii.patchouli.client.book.text.Word;

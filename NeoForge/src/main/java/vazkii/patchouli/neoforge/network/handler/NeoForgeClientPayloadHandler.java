@@ -2,6 +2,7 @@ package vazkii.patchouli.neoforge.network.handler;
 
 import net.minecraft.network.chat.Component;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.neoforge.network.NeoForgeMessageOpenBookGui;
 import vazkii.patchouli.neoforge.network.NeoForgeMessageReloadBookContents;
@@ -15,8 +16,8 @@ public class NeoForgeClientPayloadHandler {
 
 	public void handleData(final NeoForgeMessageOpenBookGui data, final PlayPayloadContext context) {
 		context.workHandler().submitAsync(() -> {
-					ClientBookRegistry.INSTANCE.displayBookGui(data.book(), data.entry(), data.page());
-				})
+			ClientBookRegistry.INSTANCE.displayBookGui(data.book(), data.entry(), data.page());
+		})
 				.exceptionally(e -> {
 					// Handle exception
 					context.packetHandler().disconnect(Component.translatable("patchouli.networking.failed", e.getMessage()));
@@ -26,8 +27,8 @@ public class NeoForgeClientPayloadHandler {
 
 	public void handleData(final NeoForgeMessageReloadBookContents data, final PlayPayloadContext context) {
 		context.workHandler().submitAsync(() -> {
-					ClientBookRegistry.INSTANCE.reload();
-				})
+			ClientBookRegistry.INSTANCE.reload();
+		})
 				.exceptionally(e -> {
 					// Handle exception
 					context.packetHandler().disconnect(Component.translatable("patchouli.networking.failed", e.getMessage()));

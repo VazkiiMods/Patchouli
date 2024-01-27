@@ -2,6 +2,7 @@ package vazkii.patchouli.neoforge.network;
 
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
 import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.neoforge.network.handler.NeoForgeClientPayloadHandler;
 
