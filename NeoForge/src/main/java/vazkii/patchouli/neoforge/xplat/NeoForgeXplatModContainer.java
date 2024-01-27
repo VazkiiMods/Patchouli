@@ -1,6 +1,6 @@
-package vazkii.patchouli.forge.xplat;
+package vazkii.patchouli.neoforge.xplat;
 
-import net.minecraftforge.fml.ModContainer;
+import net.neoforged.fml.ModContainer;
 
 import vazkii.patchouli.xplat.XplatModContainer;
 
@@ -8,10 +8,10 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-public class ForgeXplatModContainer implements XplatModContainer {
+public class NeoForgeXplatModContainer implements XplatModContainer {
 	private final ModContainer container;
 
-	public ForgeXplatModContainer(ModContainer container) {
+	public NeoForgeXplatModContainer(ModContainer container) {
 		this.container = container;
 	}
 

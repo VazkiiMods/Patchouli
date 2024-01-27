@@ -7,7 +7,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.contents.LiteralContents;
+import net.minecraft.network.chat.contents.PlainTextContents;
 
 import vazkii.patchouli.client.book.text.BookTextParser;
 import vazkii.patchouli.client.book.text.TextLayouter;
@@ -30,7 +30,7 @@ public class BookTextRenderer {
 	public BookTextRenderer(GuiBook gui, Component text, int x, int y, int width, int lineHeight, int baseColor) {
 		this.book = gui.book;
 		Component text1;
-		if (book.i18n && text.getContents() instanceof LiteralContents lc) {
+		if (book.i18n && text.getContents() instanceof PlainTextContents.LiteralContents lc) {
 			text1 = Component.literal(I18n.get(lc.text()));
 		} else {
 			text1 = text;

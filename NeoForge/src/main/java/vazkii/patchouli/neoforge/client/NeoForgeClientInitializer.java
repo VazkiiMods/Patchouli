@@ -1,4 +1,4 @@
-package vazkii.patchouli.forge.client;
+package vazkii.patchouli.neoforge.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -7,15 +7,15 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.InteractionResult;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.gui.overlay.VanillaGuiOverlay;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.BookModel;
@@ -37,7 +37,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Mod.EventBusSubscriber(modid = PatchouliAPI.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-public class ForgeClientInitializer {
+public class NeoForgeClientInitializer {
 	/**
 	 * Why are these necessary?
 	 * BookRegistry.init is called from CommonSetupEvent. We need the models to be known in ModelRegistryEvent.
@@ -100,10 +100,10 @@ public class ForgeClientInitializer {
 
 	@SubscribeEvent
 	public static void registerOverlays(RegisterGuiOverlaysEvent evt) {
-		evt.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "book_right_click",
+		evt.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), new ResourceLocation(PatchouliAPI.MOD_ID, "book_overlay"),
 				(gui, poseStack, partialTick, width, height) -> BookRightClickHandler.onRenderHUD(poseStack, partialTick)
 		);
-		evt.registerBelow(VanillaGuiOverlay.BOSS_EVENT_PROGRESS.id(), "multiblock_progress",
+		evt.registerBelow(VanillaGuiOverlay.BOSS_EVENT_PROGRESS.id(), new ResourceLocation(PatchouliAPI.MOD_ID, "multiblock_progress"),
 				(gui, poseStack, partialTick, width, height) -> MultiblockVisualizationHandler.onRenderHUD(poseStack, partialTick)
 		);
 	}
@@ -112,26 +112,26 @@ public class ForgeClientInitializer {
 	public static void onInitializeClient(FMLClientSetupEvent evt) {
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
-		MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent e) -> {
+		NeoForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent e) -> {
 			if (e.phase == TickEvent.Phase.END) {
 				ClientTicker.endClientTick(Minecraft.getInstance());
 			}
 		});
-		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> BookRightClickHandler.onRightClick(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec()));
-		MinecraftForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
+		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> BookRightClickHandler.onRightClick(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec()));
+		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
 			InteractionResult result = MultiblockVisualizationHandler.onPlayerInteract(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec());
 			if (result.consumesAction()) {
 				e.setCanceled(true);
 				e.setCancellationResult(result);
 			}
 		});
-		MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent e) -> {
+		NeoForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent e) -> {
 			if (e.phase == TickEvent.Phase.END) {
 				MultiblockVisualizationHandler.onClientTick(Minecraft.getInstance());
 			}
 		});
 
-		MinecraftForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent e) -> {
+		NeoForge.EVENT_BUS.addListener((TickEvent.RenderTickEvent e) -> {
 			if (e.phase == TickEvent.Phase.START) {
 				ClientTicker.renderTickStart(e.renderTickTime);
 			} else {
@@ -139,11 +139,11 @@ public class ForgeClientInitializer {
 			}
 		});
 
-		MinecraftForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut e) -> {
+		NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut e) -> {
 			ClientAdvancements.playerLogout();
 		});
 
-		MinecraftForge.EVENT_BUS.addListener((RenderTooltipEvent.Pre e) -> {
+		NeoForge.EVENT_BUS.addListener((RenderTooltipEvent.Pre e) -> {
 			TooltipHandler.onTooltip(e.getGraphics(), e.getItemStack(), e.getX(), e.getY());
 		});
 	}

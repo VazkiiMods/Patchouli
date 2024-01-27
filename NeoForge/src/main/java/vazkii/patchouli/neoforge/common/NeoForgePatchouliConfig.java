@@ -1,9 +1,9 @@
-package vazkii.patchouli.forge.common;
+package vazkii.patchouli.neoforge.common;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.config.ModConfig;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import vazkii.patchouli.api.PatchouliConfigAccess;
 import vazkii.patchouli.common.base.PatchouliConfig;
@@ -11,18 +11,18 @@ import vazkii.patchouli.common.base.PatchouliConfig;
 import java.util.Collections;
 import java.util.List;
 
-public class ForgePatchouliConfig {
-	public static final ForgeConfigSpec.ConfigValue<Boolean> disableAdvancementLocking;
-	public static final ForgeConfigSpec.ConfigValue<List<? extends String>> noAdvancementBooks;
-	public static final ForgeConfigSpec.ConfigValue<Boolean> testingMode;
-	public static final ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
-	public static final ForgeConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
-	public static final ForgeConfigSpec.EnumValue<PatchouliConfigAccess.TextOverflowMode> overflowMode;
-	public static final ForgeConfigSpec.ConfigValue<Integer> quickLookupTime;
+public class NeoForgePatchouliConfig {
+	public static final ModConfigSpec.ConfigValue<Boolean> disableAdvancementLocking;
+	public static final ModConfigSpec.ConfigValue<List<? extends String>> noAdvancementBooks;
+	public static final ModConfigSpec.ConfigValue<Boolean> testingMode;
+	public static final ModConfigSpec.ConfigValue<String> inventoryButtonBook;
+	public static final ModConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
+	public static final ModConfigSpec.EnumValue<PatchouliConfigAccess.TextOverflowMode> overflowMode;
+	public static final ModConfigSpec.ConfigValue<Integer> quickLookupTime;
 
-	private static final ForgeConfigSpec SPEC;
+	private static final ModConfigSpec SPEC;
 	static {
-		ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+		ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 		disableAdvancementLocking = builder
 				.comment("Set this to true to disable advancement locking for ALL books, making all entries visible at all times. Config Flag: advancements_disabled")
 				.define("disableAdvancementLocking", false);
