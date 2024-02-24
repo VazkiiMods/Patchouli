@@ -20,7 +20,7 @@ public class NeoForgeClientPayloadHandler {
 		})
 				.exceptionally(e -> {
 					// Handle exception
-					context.packetHandler().disconnect(Component.translatable("patchouli.networking.failed", e.getMessage()));
+					context.packetHandler().disconnect(Component.translatable("patchouli.networking.open_book.failed", e.getMessage()));
 					return null;
 				});
 	}
@@ -31,7 +31,7 @@ public class NeoForgeClientPayloadHandler {
 		})
 				.exceptionally(e -> {
 					// Handle exception
-					context.packetHandler().disconnect(Component.translatable("patchouli.networking.failed", e.getMessage()));
+					context.packetHandler().disconnect(Component.translatable("patchouli.networking.reload_contents.failed", e.getMessage()));
 					return null;
 				});
 	}
