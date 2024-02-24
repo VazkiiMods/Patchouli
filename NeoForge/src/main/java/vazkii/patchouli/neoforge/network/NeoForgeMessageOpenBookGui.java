@@ -14,7 +14,12 @@ public record NeoForgeMessageOpenBookGui(ResourceLocation book, @Nullable Resour
 	public static final ResourceLocation ID = new ResourceLocation(PatchouliAPI.MOD_ID, "open_book");
 
 	public NeoForgeMessageOpenBookGui(FriendlyByteBuf buf) {
-		this(buf.readResourceLocation(), ResourceLocation.tryParse(buf.readUtf()), buf.readVarInt());
+		this(buf.readResourceLocation(), getEntry(buf), buf.readVarInt());
+	}
+
+	private static ResourceLocation getEntry(FriendlyByteBuf buf) {
+		String entry = buf.readUtf();
+		return entry.isEmpty() ? null : new ResourceLocation(entry);
 	}
 
 	public void write(FriendlyByteBuf buf) {
