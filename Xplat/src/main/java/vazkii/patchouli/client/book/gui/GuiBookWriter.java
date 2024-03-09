@@ -61,10 +61,12 @@ public class GuiBookWriter extends GuiBook {
 			textfield.setFocused(true);
 			return true;
 		}
-		if (text.click(mouseX, mouseY, mouseButton))
+		if (text.click(mouseX, mouseY, mouseButton)) {
 			return true;
-		if (editableText.click(mouseX, mouseY, mouseButton))
+		}
+		if (editableText.click(mouseX, mouseY, mouseButton)) {
 			return true;
+		}
 		return super.mouseClickedScaled(mouseX, mouseY, mouseButton);
 	}
 
