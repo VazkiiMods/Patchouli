@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.base;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;
@@ -83,14 +81,11 @@ public class ClientAdvancements {
 		@NotNull
 		@Override
 		public Visibility render(GuiGraphics graphics, ToastComponent toastGui, long delta) {
-			RenderSystem.setShaderTexture(0, BACKGROUND_SPRITE);
-
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-			graphics.blit(BACKGROUND_SPRITE, 0, 0, 0, 32, 160, 32);
+			graphics.blitSprite(BACKGROUND_SPRITE, 0, 0, width(), height());
 
 			Font font = toastGui.getMinecraft().font;
-			graphics.drawString(font, Component.translatable(book.name), 30, 7, -11534256, false);
-			graphics.drawString(font, Component.translatable("patchouli.gui.lexicon.toast.info"), 30, 17, -16777216, false);
+			graphics.drawString(font, Component.translatable(book.name), 30, 7, 0xfff000f0, false);
+			graphics.drawString(font, Component.translatable("patchouli.gui.lexicon.toast.info"), 30, 17, 0xffffffff, false);
 
 			graphics.renderItem(book.getBookItem(), 8, 8);
 			graphics.renderItemDecorations(font, book.getBookItem(), 8, 8);
