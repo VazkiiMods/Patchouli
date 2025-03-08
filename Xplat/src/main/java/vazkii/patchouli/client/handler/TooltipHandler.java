@@ -1,16 +1,14 @@
 package vazkii.patchouli.client.handler;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat.Mode;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -59,8 +57,8 @@ public class TooltipHandler {
 				int x = tooltipX - 34;
 				RenderSystem.disableDepthTest();
 
-				graphics.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
-				graphics.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
+				graphics.fill(RenderType.guiOverlay(),x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
+				graphics.fill(RenderType.guiOverlay(),x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
 
 				if (PatchouliConfig.get().useShiftForQuickLookup() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
 					lexiconLookupTime += ClientTicker.delta;
@@ -68,25 +66,36 @@ public class TooltipHandler {
 					int cx = x + 8;
 					int cy = tooltipY + 8;
 					float r = 12;
-					float requiredTime = PatchouliConfig.get().quickLookupTime();
-					float angles = lexiconLookupTime / requiredTime * 360F;
+					float requiredTime = Math.max(PatchouliConfig.get().quickLookupTime(),0);
+					float angles = Math.min(lexiconLookupTime / (requiredTime>1F?requiredTime-1F:requiredTime),1F) * 360F;
 
 					RenderSystem.enableBlend();
 					RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-					BufferBuilder buf = Tesselator.getInstance().getBuilder();
+					final float a = 0.5F + 0.2F * ((float) Math.cos(ClientTicker.total / 10) * 0.5F + 0.5F);
+
+					VertexConsumer buf = graphics.bufferSource().getBuffer(RenderType.guiOverlay());
+					final double PI_mul = Math.PI/ 180F;
+					for (float i = 1 ; i < angles; i+=2) { //to render in guiOverlay buffer [has DrawMode.QUAD]
+						float ti=i-90;
+						buf.vertex( cx, cy, 0).color(0F, 0.5F, 0F, a).endVertex();//base vertex
+						double rad = ti-- * PI_mul; buf.vertex(cx + Math.cos(rad) * r,cy + Math.sin(rad) * r, 0).color(0F, 1F, 0F, 1F).endVertex();
+						       rad = ti-- * PI_mul; buf.vertex(cx + Math.cos(rad) * r,cy + Math.sin(rad) * r, 0).color(0F, 1F, 0F, 1F).endVertex();
+						       rad = ti   * PI_mul; buf.vertex(cx + Math.cos(rad) * r,cy + Math.sin(rad) * r, 0).color(0F, 1F, 0F, 1F).endVertex();
+					}
+					graphics.flush();
+
+					/*BufferBuilder buf = Tesselator.getInstance().getBuilder();
 					buf.begin(Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
-
-					float a = 0.5F + 0.2F * ((float) Math.cos(ClientTicker.total / 10) * 0.5F + 0.5F);
 					buf.vertex(cx, cy, 0).color(0F, 0.5F, 0F, a).endVertex();
-
 					for (float i = angles; i > 0; i--) {
 						double rad = (i - 90) / 180F * Math.PI;
 						buf.vertex(cx + Math.cos(rad) * r, cy + Math.sin(rad) * r, 0).color(0F, 1F, 0F, 1F).endVertex();
 					}
 
 					buf.vertex(cx, cy, 0).color(0F, 1F, 0F, 0F).endVertex();
-					Tesselator.getInstance().end();
+					Tesselator.getInstance().end();*/
+
 
 					RenderSystem.disableBlend();
 
