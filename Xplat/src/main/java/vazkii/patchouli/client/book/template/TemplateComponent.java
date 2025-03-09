@@ -98,4 +98,39 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 		advancement = lookup.apply(IVariable.wrap(advancement, registries)).asString();
 		guardPass = (guard == null || lookup.apply(IVariable.wrap(guard, registries)).asBoolean());
 	}
+
+	public static class ComponentTable extends TemplateComponent {
+		@SerializedName("rows") public IVariable[] rows;
+		@SerializedName("columns") public IVariable[] columns;
+
+		transient String[] actualRows;
+		transient String[] actualColumns;
+
+		@Override
+		public void build(BookContentsBuilder builder, BookPage page, BookEntry entry, int pageNum) {
+			actualRows = new String[rows.length];
+			for (int i = 0; i < rows.length; i++) {
+				actualRows[i] = rows[i].asString();
+			}
+
+			actualColumns = new String[columns.length];
+			for (int i = 0; i < columns.length; i++) {
+				actualColumns[i] = columns[i].asString();
+			}
+		}
+
+		@Override
+		public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+			int cellWidth = 100 / actualColumns.length;
+			int cellHeight = 10;
+
+			for (int row = 0; row < actualRows.length; row++) {
+				for (int col = 0; col < actualColumns.length; col++) {
+					int cellX = x + col * cellWidth;
+					int cellY = y + row * cellHeight;
+					graphics.drawString(page.fontRenderer, actualRows[row] + " " + actualColumns[col], cellX, cellY, 0xFFFFFF, false);
+				}
+			}
+		}
+	}
 }

@@ -26,6 +26,8 @@ public class ComponentText extends TemplateComponent {
 	@SerializedName("max_width") int maxWidth = GuiBook.PAGE_WIDTH;
 	@SerializedName("line_height") int lineHeight = GuiBook.TEXT_LINE_HEIGHT;
 
+	@SerializedName("is_table") boolean isTable = false;
+
 	transient Component actualText;
 	transient BookTextRenderer textRenderer;
 	transient int color;
@@ -53,7 +55,17 @@ public class ComponentText extends TemplateComponent {
 
 	@Override
 	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
-		textRenderer.render(graphics, mouseX, mouseY, pticks);
+		if (isTable) {
+			// Render text as a table
+			// This is a placeholder implementation, you may need to adjust it based on your requirements
+			String[] rows = actualText.getString().split("\n");
+			int rowHeight = lineHeight;
+			for (int i = 0; i < rows.length; i++) {
+				graphics.drawString(page.fontRenderer, rows[i], x, y + i * rowHeight, color, false);
+			}
+		} else {
+			textRenderer.render(graphics, mouseX, mouseY, pticks);
+		}
 	}
 
 	@Override

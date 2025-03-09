@@ -19,6 +19,7 @@ public class PageSpotlight extends PageWithText {
 	IVariable item;
 	String title;
 	@SerializedName("link_recipe") boolean linkRecipe;
+	@SerializedName("scale") float scale = 1.0f;
 
 	transient ItemStack[] stacks;
 
@@ -51,7 +52,11 @@ public class PageSpotlight extends PageWithText {
 
 		parent.drawCenteredStringNoShadow(graphics, toDraw.getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		if (stacks.length > 0) {
-			parent.renderItemStack(graphics, GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, stacks[(parent.ticksInBook / 20) % stacks.length]);
+			graphics.pose().pushPose();
+			graphics.pose().translate(GuiBook.PAGE_WIDTH / 2 - 8, 15, 0);
+			graphics.pose().scale(scale, scale, scale);
+			parent.renderItemStack(graphics, 0, 0, mouseX, mouseY, stacks[(parent.ticksInBook / 20) % stacks.length]);
+			graphics.pose().popPose();
 		}
 
 		super.render(graphics, mouseX, mouseY, pticks);

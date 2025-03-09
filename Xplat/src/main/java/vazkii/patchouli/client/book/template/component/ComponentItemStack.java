@@ -21,6 +21,7 @@ public class ComponentItemStack extends TemplateComponent {
 
 	private boolean framed;
 	@SerializedName("link_recipe") private boolean linkedRecipe;
+	@SerializedName("scale") private float scale = 1.0f;
 
 	private transient ItemStack[] items;
 
@@ -51,7 +52,11 @@ public class ComponentItemStack extends TemplateComponent {
 			graphics.blit(page.book.craftingTexture, x - 5, y - 5, 20, 102, 26, 26, 128, 256);
 		}
 
-		page.parent.renderItemStack(graphics, x, y, mouseX, mouseY, items[(page.parent.ticksInBook / 20) % items.length]);
+		graphics.pose().pushPose();
+		graphics.pose().translate(x, y, 0);
+		graphics.pose().scale(scale, scale, scale);
+		page.parent.renderItemStack(graphics, 0, 0, mouseX, mouseY, items[(page.parent.ticksInBook / 20) % items.length]);
+		graphics.pose().popPose();
 	}
 
 }
