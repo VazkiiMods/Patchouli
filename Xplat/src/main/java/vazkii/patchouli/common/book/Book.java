@@ -159,8 +159,16 @@ public class Book {
 		if (noBook) {
 			// Parse on load to catch errors, but need lazy loading for mods
 			// that load after Patchouli
-			var parsed = ItemStackUtil.deserializeStack(customBookItem, VanillaRegistries.createLookup());
-			bookItem = Suppliers.memoize(() -> ItemStackUtil.loadFromParsed(parsed));
+			bookItem = Suppliers.memoize(() -> {
+				try {
+					return ItemStackUtil.loadFromParsed(
+							ItemStackUtil.deserializeStack(customBookItem, VanillaRegistries.createLookup()));
+				} catch (Exception e) {
+					PatchouliAPI.LOGGER.error("Failed to parse item \"{}\" for book {} defined by mod {}, skipping",
+							customBookItem, id, owner.getId(), e);
+					return ItemStack.EMPTY;
+				}
+			});
 		} else {
 			bookItem = Suppliers.memoize(() -> ItemModBook.forBook(id));
 		}
