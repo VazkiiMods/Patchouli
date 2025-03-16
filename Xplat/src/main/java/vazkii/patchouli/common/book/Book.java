@@ -157,8 +157,8 @@ public class Book {
 
 		var customBookItem = GsonHelper.getAsString(root, "custom_book_item", "");
 		if (noBook) {
-			// Parse on load to catch errors, but need lazy loading for mods
-			// that load after Patchouli
+			// Need lazy parsing for mods that load after Patchouli, as parser looks up item and components
+			// in registries; wrap in try-catch in case of faulty item definition
 			bookItem = Suppliers.memoize(() -> {
 				try {
 					return ItemStackUtil.loadFromParsed(
