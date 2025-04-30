@@ -17,6 +17,7 @@ import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
 
 import org.jetbrains.annotations.Nullable;
+import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -38,6 +39,9 @@ public class ClientBookRegistry {
 
 	public void init() {
 		addPageTypes();
+
+		// TODO: Just poking IClientXplatAbstractions to detect ServiceLoader problems now, rather than later
+		var unused = IClientXplatAbstractions.INSTANCE;
 	}
 
 	private void addPageTypes() {
