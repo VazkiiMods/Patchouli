@@ -52,7 +52,7 @@ public interface IXplatAbstractions {
 			// No clue why. Just duct-tape it for now.
 			try {
 				IXplatAbstractions abs = (IXplatAbstractions) Class.forName("vazkii.patchouli.neoforge.xplat.NeoForgeXplatImpl").getConstructor().newInstance();
-				PatchouliAPI.LOGGER.error("Successfully loaded NeoForge backup, but the ServiceLoader wasn't working. Report this.", exception);
+				PatchouliAPI.LOGGER.fatal("Successfully loaded NeoForge backup, but the ServiceLoader wasn't working. Report this.", exception);
 				return abs;
 			} catch (Exception e) {
 				exception.addSuppressed(new RuntimeException("Failed to load NeoForge backup", e));
@@ -60,7 +60,7 @@ public interface IXplatAbstractions {
 	
 			try {
 				IXplatAbstractions abs = (IXplatAbstractions) Class.forName("vazkii.patchouli.fabric.xplat.FabricXplatImpl").getConstructor().newInstance();
-				PatchouliAPI.LOGGER.error("Successfully loaded Fabric backup, but the ServiceLoader wasn't working. Report this.", exception);
+				PatchouliAPI.LOGGER.fatal("Successfully loaded Fabric backup, but the ServiceLoader wasn't working. Report this.", exception);
 				return abs;
 			} catch (Exception e) {
 				exception.addSuppressed(new RuntimeException("Failed to load Fabric backup", e));

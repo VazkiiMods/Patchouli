@@ -27,7 +27,7 @@ public interface IClientXplatAbstractions {
 			// No clue why. Just duct-tape it for now.
 			try {
 				IClientXplatAbstractions abs = (IClientXplatAbstractions) Class.forName("vazkii.patchouli.neoforge.client.NeoForgeClientXplatImpl").getConstructor().newInstance();
-				PatchouliAPI.LOGGER.error("Successfully loaded NeoForge backup, but the ServiceLoader wasn't working. Report this.", exception);
+				PatchouliAPI.LOGGER.fatal("Successfully loaded NeoForge backup, but the ServiceLoader wasn't working. Report this.", exception);
 				return abs;
 			} catch (Exception e) {
 				exception.addSuppressed(new RuntimeException("Failed to load NeoForge backup", e));
@@ -35,7 +35,7 @@ public interface IClientXplatAbstractions {
 
 			try {
 				IClientXplatAbstractions abs = (IClientXplatAbstractions) Class.forName("vazkii.patchouli.fabric.client.FabricClientXplatImpl").getConstructor().newInstance();
-				PatchouliAPI.LOGGER.error("Successfully loaded Fabric backup, but the ServiceLoader wasn't working. Report this.", exception);
+				PatchouliAPI.LOGGER.fatal("Successfully loaded Fabric backup, but the ServiceLoader wasn't working. Report this.", exception);
 				return abs;
 			} catch (Exception e) {
 				exception.addSuppressed(new RuntimeException("Failed to load Fabric backup", e));
