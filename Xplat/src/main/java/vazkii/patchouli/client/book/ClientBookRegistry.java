@@ -15,9 +15,9 @@ import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.util.SerializationUtil;
+import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
 import org.jetbrains.annotations.Nullable;
-import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;

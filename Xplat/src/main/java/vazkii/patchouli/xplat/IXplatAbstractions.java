@@ -6,8 +6,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
+
 import vazkii.patchouli.api.PatchouliAPI;
+
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.ServiceLoader;
@@ -57,7 +59,7 @@ public interface IXplatAbstractions {
 			} catch (Exception e) {
 				exception.addSuppressed(new RuntimeException("Failed to load NeoForge backup", e));
 			}
-	
+
 			try {
 				IXplatAbstractions abs = (IXplatAbstractions) Class.forName("vazkii.patchouli.fabric.xplat.FabricXplatImpl").getConstructor().newInstance();
 				PatchouliAPI.LOGGER.fatal("Successfully loaded Fabric backup, but the ServiceLoader wasn't working. Report this.", exception);
