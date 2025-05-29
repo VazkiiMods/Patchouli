@@ -41,7 +41,7 @@
   "patchouli.gui.lexicon.index.info": "Список всех глав этой книги.$(br2)$(thing)Вы можете использовать поиск$(): начните вводить свой запрос на клавиатуре, поле поиска автоматически появится.",
   "patchouli.gui.lexicon.shapeless": "Бесформенный",
   "patchouli.gui.lexicon.no_results": "Нет результатов",
-  "patchouli.gui.lexicon.sad": "（；´д｀）",
+  "patchouli.gui.lexicon.sad": ":(",
   "patchouli.gui.lexicon.no_entries": "Нет глав",
   "patchouli.gui.lexicon.locked": "(Заблокировано)",
   "patchouli.gui.lexicon.reloaded": "Книги обновлены за %d мс.",
