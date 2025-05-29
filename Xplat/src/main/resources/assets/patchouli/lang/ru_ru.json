@@ -7,10 +7,10 @@
   "item.patchouli.comprehensive_test_book.landing": "Надеемся, что содержательная тестовая книга станет полноценной основой для Patchouli, вместо спагетти-салата, который у нас сейчас.",
 
   "item.patchouli:test_book_1.name": "Тестовая книга 1",
-  "item.patchouli:test_book_1.landing": "Не настолько весёлый эпиграф, но вот.",
+  "item.patchouli:test_book_1.landing": "Не настолько весёлый комментарий, но вот.",
 
   "item.patchouli:test_book_2.name": "Тестовая книга 2",
-  "item.patchouli:test_book_2.landing": "Эпиграф! Ещё он поддерживает $(2)цвета$() и $(4)тому $(bold)подобное$()!",
+  "item.patchouli:test_book_2.landing": "Комментарий к книге! Ещё он поддерживает $(2)цвета$() и $(4)тому $(bold)подобное$()!",
 
   "item.patchouli:test_completion.name": "Ориентированная на достижения тестовая книга",
   "item.patchouli:test_completion.landing": "Эта книга меняет цвет при разблокировке глав!",
@@ -25,7 +25,7 @@
   "patchouli.subtitle.book_open": "Книга раскрыта",
   "patchouli.subtitle.book_flip": "Шелест страниц",
 
-  "patchouli.gui.lexicon.landing_info": "(Замещающий эпиграф, создайте свой собственный в .json-файле вашей книги!)",
+  "patchouli.gui.lexicon.landing_info": "(Замещающий комментарий к книге, создайте свой собственный в .json-файле вашей книги!)",
   "patchouli.gui.lexicon.progress_meter": "Прогресс разблокировки:",
   "patchouli.gui.lexicon.progress_tooltip": "%d/%d открыто",
   "patchouli.gui.lexicon.progress_tooltip.secret1": "и последний секрет!",
