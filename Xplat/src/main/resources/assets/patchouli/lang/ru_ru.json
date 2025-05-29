@@ -62,7 +62,7 @@
   "patchouli.gui.lexicon.loading_error": "Ошибка загрузки!",
   "patchouli.gui.lexicon.loading_error_hover": "(Наведите курсор для ознакомления)",
   "patchouli.gui.lexicon.loading_error_log": "Проверьте лог-файлы для подробностей",
-  "patchouli.gui.lexicon.dev_edition": "Рукописное",
+  "patchouli.gui.lexicon.dev_edition": "Авторское",
   "patchouli.gui.lexicon.edition_str": "%s издание",
   "patchouli.gui.lexicon.added_by": "Добавлено %s",
   "patchouli.gui.lexicon.sneak": "§eКрадитесь§r для изучения",
