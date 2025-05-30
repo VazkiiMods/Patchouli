@@ -16,7 +16,7 @@ Below is a brief example:
 Replace `yourbooknamespace` with the namespace part of your book ID (see [Getting
 Started](/docs/patchouli-basics/getting-started)) for information about your book ID.
 
-```json title="/data/yourbooknamespace/advancements/grant_book_on_first_join.json"
+```json title="/data/yourbooknamespace/advancement/grant_book_on_first_join.json"
 {
   "criteria": {
     "tick": {
@@ -31,7 +31,7 @@ Started](/docs/patchouli-basics/getting-started)) for information about your boo
 }
 ```
 
-```json title="/data/yourbooknamespace/loot_tables/grant_book_on_first_join.json"
+```json title="/data/yourbooknamespace/loot_table/grant_book_on_first_join.json"
 {
   "type": "advancement_reward",
   "pools": [
@@ -43,8 +43,10 @@ Started](/docs/patchouli-basics/getting-started)) for information about your boo
           "name": "patchouli:guide_book",
           "functions": [
             {
-              "function": "set_nbt",
-              "tag": "{\"patchouli:book\": \"YOURBOOKIDHERE\"}"
+              "function": "minecraft:set_components",
+              "components": {
+                "patchouli:book": "YOURBOOKIDHERE"
+              }
             }
           ]
         }
