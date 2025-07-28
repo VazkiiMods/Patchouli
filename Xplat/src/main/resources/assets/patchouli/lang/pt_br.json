@@ -1,9 +1,11 @@
 {
-	"item.patchouli.guide_book.name": "Livro Guia",
-
+	"item.patchouli.guide_book": "Livro Guia",
+	"item.patchouli.guide_book.undefined": "Livro inválido: nenhum ID definido",
+	"item.patchouli.guide_book.invalid": "Livro inválido: %s",
+	
 	"item.patchouli.comprehensive_test_book.name": "Livro de Teste Abrangente",
 	"item.patchouli.comprehensive_test_book.landing": "O que esperançosamente se tornará um livro de teste abrangente para todos Patchouli, em vez da confusão de espaguete aleatório que temos agora.",
-
+	
 	"item.patchouli:test_book_1.name": "Livro de Teste 1",
 	"item.patchouli:test_book_1.landing": "Não é um texto inicial tão divertido, mas ainda está aqui.",
 	
@@ -15,11 +17,14 @@
 	
 	"item.patchouli:intro_book.name": "Patchouli",
 	"item.patchouli:intro_book.subtitle": "Documentação para todos",
+	
 	"item.patchouli:intro_book.landing": "Com o $(item)Patchouli$(), você pode fazer $(thing)livros$() desbloqueáveis de avanço fácil de ler para mods e modpacks!",
+	"item.patchouli:pamphlet.name": "Panfleto de Teste",
 	
+	"item.patchouli:pamphlet.landing": "Um folheto de teste, que é um livro com apenas uma categoria.",
 	"patchouli.subtitle.book_open": "Livro Abre",
-	"patchouli.subtitle.book_flip": "Viradas de Pgina",
 	
+	"patchouli.subtitle.book_flip": "Viradas de Pgina",
 	"patchouli.gui.lexicon.landing_info": "(Texto inicial do marcador de posição, defina seu próprio no arquivo json do livro!)",
 	"patchouli.gui.lexicon.progress_meter": "Progresso de Desbloqueio:",
 	"patchouli.gui.lexicon.progress_tooltip": "%d/%d Desbloqueado",
@@ -75,6 +80,7 @@
 	"patchouli.gui.lexicon.button.back": "Voltar",
 	"patchouli.gui.lexicon.button.back.info": "Shift + botão esquedo para voltar à página inicial",
 	"patchouli.gui.lexicon.button.resize": "Redimensionar IU",
+	"patchouli.gui.lexicon.button.toggle_mock_header": "Alternar Cabeçalho Simulado",
 	"patchouli.gui.lexicon.button.resize.size0": "Padrão",
 	"patchouli.gui.lexicon.button.resize.size1": "Pequeno",
 	"patchouli.gui.lexicon.button.resize.size2": "Médio",
@@ -89,5 +95,10 @@
 	"patchouli.gui.lexicon.button.config": "Configuração",
 	"patchouli.gui.lexicon.button.visualize": "Visualizar",
 	"patchouli.gui.lexicon.button.visualize.info": "(Clique novamente para limpar)",
-	"patchouli.gui.lexicon.button.history": "História"
+	"patchouli.gui.lexicon.button.history": "História",
+	"patchouli.gui.lexicon.button.mark_all_read": "Marcar tudo como lido",
+	"patchouli.gui.lexicon.button.mark_category_read": "Marcar esta categoria como lida",
+	
+	"patchouli.networking.open_book.failed": "Falha ao abrir o livro %s",
+	"patchouli.networking.reload_contents.failed": "Falha ao recarregar o conteúdo %S"
 }
