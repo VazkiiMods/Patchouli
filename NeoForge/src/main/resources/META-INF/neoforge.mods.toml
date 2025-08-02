@@ -21,7 +21,7 @@ versionRange="[21.0.31-beta,)"
 [[dependencies.patchouli]]
 modId="minecraft"
 type="REQUIRED"
-versionRange="[1.21,1.22)"
+versionRange="[1.21.1,1.21.2)"
 
 [[mixins]]
 config="patchouli_xplat.mixins.json"
