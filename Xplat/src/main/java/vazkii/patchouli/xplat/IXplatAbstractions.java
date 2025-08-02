@@ -45,7 +45,7 @@ public interface IXplatAbstractions {
 	IXplatAbstractions INSTANCE = find();
 
 	private static IXplatAbstractions find() {
-		var providers = ServiceLoader.load(IXplatAbstractions.class).stream().toList();
+		var providers = ServiceLoader.load(IXplatAbstractions.class, IXplatAbstractions.class.getClassLoader()).stream().toList();
 		if (providers.size() != 1) {
 			var names = providers.stream().map(p -> p.type().getName()).collect(Collectors.joining(",", "[", "]"));
 			throw new IllegalStateException("There should be exactly one IXplatAbstractions implementation on the classpath. Found: " + names);

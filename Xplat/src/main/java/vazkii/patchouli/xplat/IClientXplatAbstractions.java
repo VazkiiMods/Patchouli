@@ -20,7 +20,7 @@ public interface IClientXplatAbstractions {
 	IClientXplatAbstractions INSTANCE = find();
 
 	private static IClientXplatAbstractions find() {
-		var providers = ServiceLoader.load(IClientXplatAbstractions.class).stream().toList();
+		var providers = ServiceLoader.load(IClientXplatAbstractions.class, IClientXplatAbstractions.class.getClassLoader()).stream().toList();
 		if (providers.size() != 1) {
 			var names = providers.stream().map(p -> p.type().getName()).collect(Collectors.joining(",", "[", "]"));
 			throw new IllegalStateException("There should be exactly one IClientXplatAbstractions implementation on the classpath. Found: " + names);
