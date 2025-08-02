@@ -164,7 +164,7 @@ public class Book {
 					return ItemStackUtil.loadFromParsed(
 							ItemStackUtil.deserializeStack(customBookItem, VanillaRegistries.createLookup()));
 				} catch (Exception e) {
-					PatchouliAPI.LOGGER.error("Failed to parse item \"{}\" for book {} defined by mod {}, skipping",
+					PatchouliAPI.LOGGER.warn("Failed to parse item \"{}\" for book {} defined by mod {}, skipping",
 							customBookItem, id, owner.getId(), e);
 					return ItemStack.EMPTY;
 				}
