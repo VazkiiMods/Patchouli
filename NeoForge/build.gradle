@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'idea'
-    id 'net.neoforged.gradle.userdev'
+    id 'net.neoforged.moddev'
     id 'eclipse'
 }
 
@@ -20,24 +20,33 @@ repositories {
     }
 }
 
-runs {
-    configureEach {
-        workingDirectory project.file('../run')
-        systemProperty 'forge.logging.console.level', 'debug'
-        systemProperty 'fml.earlyprogresswindow', 'false'
+neoForge {
+    version = "21.0.143"
 
-        modSource project.sourceSets.main
+    runs {
+        configureEach {
+            gameDirectory = project.file('../run')
+            systemProperty 'forge.logging.console.level', 'debug'
+            systemProperty 'fml.earlyprogresswindow', 'false'
+        }
+
+        client {
+            client()
+        }
+        server {
+            server()
+            programArgument '--nogui'
+        }
     }
 
-    client {
-    }
-    server {
-        programArgument '--nogui'
+    mods {
+        "${mod_id}" {
+            sourceSet sourceSets.main
+        }
     }
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:21.0.143"
     implementation project(":Xplat")
 
     compileOnly "mezz.jei:jei-1.21-common-api:19.5.0.33"
@@ -48,27 +57,6 @@ tasks.named('test').configure {
     //Disable builtin test as we have JUnit enabled in Xplat
     enabled(false)
 }
-
-TaskCollection.metaClass.excludingNeoTasks = { ->
-    delegate.matching { !it.name.startsWith("neo") }
-}
-
-tasks.withType(JavaCompile).excludingNeoTasks().configureEach {
-    source(project(":Xplat").sourceSets.main.allSource)
-}
-
-tasks.withType(Javadoc).excludingNeoTasks().configureEach {
-    source(project(":Xplat").sourceSets.main.allJava)
-}
-
-tasks.named("sourcesJar", Jar) {
-    from(project(":Xplat").sourceSets.main.allSource)
-}
-
-tasks.withType(ProcessResources).excludingNeoTasks().configureEach {
-    from project(":Xplat").sourceSets.main.resources
-}
-
 jar {
     manifest {
         attributes([
@@ -80,6 +68,18 @@ jar {
                 "Implementation-Vendor" :"vazkii"
         ])
     }
+}
+
+compileJava {
+    source(project(":Xplat").sourceSets.main.allSource)
+}
+
+sourcesJar {
+    from project(":Xplat").sourceSets.main.allJava
+}
+
+processResources {
+    from project(":Xplat").sourceSets.main.resources
 }
 
 task apiJar(type: Jar, dependsOn: classes) {
