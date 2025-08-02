@@ -21,7 +21,7 @@ repositories {
 }
 
 neoForge {
-    version = "21.0.143"
+    version = "21.1.143"
 
     runs {
         configureEach {
