@@ -157,10 +157,18 @@ public class Book {
 
 		var customBookItem = GsonHelper.getAsString(root, "custom_book_item", "");
 		if (noBook) {
-			// Parse on load to catch errors, but need lazy loading for mods
-			// that load after Patchouli
-			var parsed = ItemStackUtil.deserializeStack(customBookItem, VanillaRegistries.createLookup());
-			bookItem = Suppliers.memoize(() -> ItemStackUtil.loadFromParsed(parsed));
+			// Need lazy parsing for mods that load after Patchouli, as parser looks up item and components
+			// in registries; wrap in try-catch in case of faulty item definition
+			bookItem = Suppliers.memoize(() -> {
+				try {
+					return ItemStackUtil.loadFromParsed(
+							ItemStackUtil.deserializeStack(customBookItem, VanillaRegistries.createLookup()));
+				} catch (Exception e) {
+					PatchouliAPI.LOGGER.warn("Failed to parse item \"{}\" for book {} defined by mod {}, skipping",
+							customBookItem, id, owner.getId(), e);
+					return ItemStack.EMPTY;
+				}
+			});
 		} else {
 			bookItem = Suppliers.memoize(() -> ItemModBook.forBook(id));
 		}
