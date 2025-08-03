@@ -35,21 +35,20 @@ repositories {
 loom {
 	mixin.defaultRefmapName = "patchouli.refmap.json"
 	runs {
+		configureEach {
+			ideConfigGenerated(true)
+			runDir("../run")
+		}
 		client {
 			client()
 			setConfigName("Fabric Client")
-			ideConfigGenerated(true)
-			runDir("../run")
 		}
 		server {
 			server()
 			setConfigName("Fabric Server")
-			ideConfigGenerated(true)
-			runDir("../run")
 		}
 		gameTest {
 			server()
-			ideConfigGenerated(true)
 			vmArg "-Dfabric-api.gametest=1"
 		}
 	}
