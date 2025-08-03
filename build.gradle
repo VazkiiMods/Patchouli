@@ -25,11 +25,6 @@ subprojects {
 
     repositories {
         mavenCentral()
-
-        maven {
-            name = 'Sponge / Mixin'
-            url = 'https://repo.spongepowered.org/repository/maven-public/'
-        }
     }
 
     tasks.withType(JavaCompile).configureEach {
