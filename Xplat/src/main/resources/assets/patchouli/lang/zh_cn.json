@@ -80,7 +80,7 @@
 	"patchouli.gui.lexicon.button.back": "返回",
 	"patchouli.gui.lexicon.button.back.info": "Shift 并点击可返回主页",
 	"patchouli.gui.lexicon.button.resize": "调整界面尺寸",
-		"patchouli.gui.lexicon.button.toggle_mock_header": "标题演示",
+	"patchouli.gui.lexicon.button.toggle_mock_header": "标题演示",
 	"patchouli.gui.lexicon.button.resize.size0": "默认",
 	"patchouli.gui.lexicon.button.resize.size1": "小",
 	"patchouli.gui.lexicon.button.resize.size2": "中",
@@ -97,7 +97,7 @@
 	"patchouli.gui.lexicon.button.visualize.info": "（再次点击以清除）",
 	"patchouli.gui.lexicon.button.history": "浏览历史",
 	"patchouli.gui.lexicon.button.mark_all_read": "全部标记为已读",
-	"patchouli.gui.lexicon.button.mark_category_read": "将此类别标记为已读"
+	"patchouli.gui.lexicon.button.mark_category_read": "将此类别标记为已读",
 
 	"patchouli.networking.open_book.failed": "未能打开手册 %s",
 	"patchouli.networking.reload_contents.failed": "重载内容失败 %S"
