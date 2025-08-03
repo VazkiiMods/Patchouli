@@ -26,7 +26,7 @@
 	"patchouli.subtitle.book_flip": "Страница перевёрнута",
 	
 	"patchouli.gui.lexicon.landing_info": "(Замещающий текст, создайте свой собственный в json файле вашей книги!)",
-	"patchouli.gui.lexicon.progress_meter": "Разблокировано прогресса:",
+	"patchouli.gui.lexicon.progress_meter": "Прогресс:",
 	"patchouli.gui.lexicon.progress_tooltip": "%d/%d открыто",
 	"patchouli.gui.lexicon.progress_tooltip.secret1": "Ещё 1 секрет",
 	"patchouli.gui.lexicon.progress_tooltip.secret": "Ещё %d секретов",
