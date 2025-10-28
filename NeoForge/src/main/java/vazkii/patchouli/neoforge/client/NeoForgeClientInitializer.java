@@ -1,9 +1,10 @@
 package vazkii.patchouli.neoforge.client;
 
 import net.minecraft.client.Minecraft;
+
+
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.item.ItemPropertyFunction;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.InteractionResult;
@@ -11,13 +12,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
-import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RenderFrameEvent;
-import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.event.ModelEvent.RegisterStandalone;
+
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -35,13 +32,14 @@ import vazkii.patchouli.client.handler.TooltipHandler;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
+import net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent;
 
 import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-@EventBusSubscriber(modid = PatchouliAPI.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = PatchouliAPI.MOD_ID, value = Dist.CLIENT) // Explicitly set bus
 public class NeoForgeClientInitializer {
 	/**
 	 * Why are these necessary?
@@ -79,10 +77,10 @@ public class NeoForgeClientInitializer {
 	}
 
 	@SubscribeEvent
-	public static void modelRegistry(ModelEvent.RegisterAdditional e) {
+	public static void modelRegistry(RegisterStandalone e) {
 		getBookModels()
 				.stream()
-				.map(ModelResourceLocation::standalone)
+				.map(ModelResourceLocation::new)
 				.forEach(e::register);
 
 		ItemPropertyFunction prop = (stack, world, entity, seed) -> ItemModBook.getCompletion(stack);
@@ -90,8 +88,8 @@ public class NeoForgeClientInitializer {
 	}
 
 	@SubscribeEvent
-	public static void registerReloadListeners(RegisterClientReloadListenersEvent e) {
-		e.registerReloadListener(BookContentResourceListenerLoader.INSTANCE);
+	public static void onRegisterReloadListeners(RegisterClientReloadListenersEvent event) {
+		event.registerReloadListener(BookContentResourceListenerLoader.INSTANCE);
 
 		e.registerReloadListener((ResourceManagerReloadListener) manager -> {
 			if (Minecraft.getInstance().level != null) {

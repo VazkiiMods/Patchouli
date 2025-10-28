@@ -31,7 +31,7 @@ import vazkii.patchouli.common.item.PatchouliDataComponents;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.neoforge.network.NeoForgeNetworkHandler;
 
-@EventBusSubscriber(modid = PatchouliAPI.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = PatchouliAPI.MOD_ID)
 @Mod(PatchouliAPI.MOD_ID)
 public class NeoForgeModInitializer {
 	public NeoForgeModInitializer(IEventBus eventBus, Dist dist, ModContainer container) {
