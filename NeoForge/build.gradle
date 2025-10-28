@@ -82,7 +82,8 @@ processResources {
     from project(":Xplat").sourceSets.main.resources
 }
 
-task apiJar(type: Jar, dependsOn: classes) {
+tasks.register('apiJar', Jar) {
+    dependsOn classes
     // Sources included because of MinecraftForge/ForgeGradle#369
     from project(":Xplat").sourceSets.main.allJava
     from(sourceSets.main.allJava)
