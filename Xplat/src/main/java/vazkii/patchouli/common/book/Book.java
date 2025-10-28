@@ -122,8 +122,8 @@ public class Book {
 		this.linkHoverColor = parseColor(root, "link_hover_color", "8800EE");
 		this.progressBarColor = parseColor(root, "progress_bar_color", "FFFF55");
 		this.progressBarBackground = parseColor(root, "progress_bar_background", "DDDDDD");
-		this.openSound = SerializationUtil.getAsResourceLocation(root, "open_sound", PatchouliSounds.BOOK_OPEN.getLocation());
-		this.flipSound = SerializationUtil.getAsResourceLocation(root, "flip_sound", PatchouliSounds.BOOK_FLIP.getLocation());
+		this.openSound = SerializationUtil.getAsResourceLocation(root, "open_sound", PatchouliSounds.BOOK_OPEN.location());
+		this.flipSound = SerializationUtil.getAsResourceLocation(root, "flip_sound", PatchouliSounds.BOOK_FLIP.location());
 		this.showProgress = GsonHelper.getAsBoolean(root, "show_progress", true);
 		this.indexIconRaw = GsonHelper.getAsString(root, "index_icon", "");
 		this.version = GsonHelper.getAsString(root, "version", "0");

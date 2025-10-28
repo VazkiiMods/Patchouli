@@ -61,7 +61,6 @@ public class GuiButtonCategory extends Button {
 			}
 
 			graphics.pose().pushPose();
-			RenderSystem.enableBlend();
 			RenderSystem.setShaderColor(1F, 1F, 1F, transparency);
 			graphics.pose().translate(0, 0, 200);
 			GuiBook.drawFromTexture(graphics, parent.book, getX(), getY(), u, v, width, height);

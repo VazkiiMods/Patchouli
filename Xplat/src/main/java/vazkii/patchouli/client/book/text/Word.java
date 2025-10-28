@@ -32,7 +32,12 @@ public class Word {
 		this.onClick = span.onClick;
 		this.linkCluster = cluster;
 		if (!span.tooltip.getString().isEmpty()) {
-			text = text.withStyle(s -> s.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, span.tooltip)));
+			text = text.withStyle(s -> s.withHoverEvent(new HoverEvent() {
+				@Override
+				public Action action() {
+					return null;
+				}
+			}));
 		}
 		this.text = text;
 	}

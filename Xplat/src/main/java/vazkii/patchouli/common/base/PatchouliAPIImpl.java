@@ -239,29 +239,34 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 		return StateMatcher.displayOnly(block);
 	}
 
-	@NotNull
 	@Override
-	public IStateMatcher tagMatcher(@NotNull TagKey<Block> tag) {
-		/* TODO deduplicate with StringStateMatcher's version. This one is okay with
-		* tags that don't exist but that one validates that the tag exists.
-		*/
-		return new IStateMatcher() {
-			@NotNull
-			@Override
-			public BlockState getDisplayedState(long ticks) {
-				return BuiltInRegistries.BLOCK.getTag(tag).map(n -> {
-					int idx = (int) ((ticks / 20) % n.size());
-					return n.get(idx).value().defaultBlockState();
-				}).orElse(Blocks.BEDROCK.defaultBlockState());
-			}
-
-			@NotNull
-			@Override
-			public TriPredicate<BlockGetter, BlockPos, BlockState> getStatePredicate() {
-				return (w, p, s) -> s.is(tag);
-			}
-		};
+	public IStateMatcher tagMatcher(TagKey<Block> block) {
+		return null;
 	}
+
+//	@NotNull
+//	@Override
+//	public IStateMatcher tagMatcher(@NotNull TagKey<Block> tag) {
+//		/* TODO deduplicate with StringStateMatcher's version. This one is okay with
+//		* tags that don't exist but that one validates that the tag exists.
+//		*/
+////		return new IStateMatcher() {
+////			@NotNull
+////			@Override
+////			public BlockState getDisplayedState(long ticks) {
+//////				return BuiltInRegistries.BLOCK.getTag(tag).map(n -> {
+//////					int idx = (int) ((ticks / 20) % n.size());
+//////					return n.get(idx).value().defaultBlockState();
+////				}).orElse(Blocks.BEDROCK.defaultBlockState());
+////			}
+//
+////			@NotNull
+////			@Override
+////			public TriPredicate<BlockGetter, BlockPos, BlockState> getStatePredicate() {
+////				return (w, p, s) -> s.is(tag);
+////			}
+////		};
+//	}
 
 	@Override
 	public IStateMatcher airMatcher() {

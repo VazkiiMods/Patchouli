@@ -5,11 +5,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 
+import net.minecraft.network.chat.FormattedText;
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.api.ICustomComponent;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.PatchouliAPI;
 
+import java.util.Objects;
 import java.util.function.UnaryOperator;
 
 public class ComponentCustomTest implements ICustomComponent {
@@ -25,7 +27,7 @@ public class ComponentCustomTest implements ICustomComponent {
 
 	@Override
 	public void render(GuiGraphics graphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
-		Component toRender = Component.literal(text).setStyle(context.getFont());
+		Component toRender = Component.literal(text).setStyle(Objects.requireNonNull(context.getFont().getSplitter().componentStyleAtWidth(FormattedText.of(text), 1)));
 		graphics.drawString(Minecraft.getInstance().font, toRender, x, y, -1, true);
 	}
 

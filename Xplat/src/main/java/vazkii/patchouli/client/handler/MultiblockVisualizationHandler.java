@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.handler;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+
+import com.mojang.blaze3d.systems.RenderPass;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
@@ -135,7 +136,7 @@ public class MultiblockVisualizationHandler {
 					// which isn't really expected behavior for getPickBlock
 					try {
 						Block block = lookingState.getBlock();
-						ItemStack stack = block.getCloneItemStack(mc.level, lookingPos, lookingState);
+						ItemStack stack = block.defaultBlockState().getCloneItemStack(mc.level, lookingPos, true);
 
 						if (!stack.isEmpty()) {
 							graphics.drawString(mc.font, stack.getHoverName(), left + 20, top + height + 8, 0xFFFFFF, true);
@@ -319,8 +320,8 @@ public class MultiblockVisualizationHandler {
 		float f5 = (float) (endColor >> 16 & 255) / 255.0F;
 		float f6 = (float) (endColor >> 8 & 255) / 255.0F;
 		float f7 = (float) (endColor & 255) / 255.0F;
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+//		RenderSystem.enableBlend();
+//		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.begin(Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 		Matrix4f mat = graphics.pose().last().pose();
@@ -328,8 +329,8 @@ public class MultiblockVisualizationHandler {
 		bufferbuilder.addVertex(mat, left, top, 0).setColor(f1, f2, f3, f);
 		bufferbuilder.addVertex(mat, left, bottom, 0).setColor(f5, f6, f7, f4);
 		bufferbuilder.addVertex(mat, right, bottom, 0).setColor(f5, f6, f7, f4);
-		BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
-		RenderSystem.disableBlend();
+//		RenderPass.UniformUploader.dra(bufferbuilder.buildOrThrow());
+//		RenderSystem.disableBlend();
 	}
 
 	/**
@@ -344,7 +345,7 @@ public class MultiblockVisualizationHandler {
 		SequencedMap<RenderType, ByteBufferBuilder> layerBuffers = ((AccessorMultiBufferSource) original).getFixedBuffers();
 		SequencedMap<RenderType, ByteBufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
 		for (Map.Entry<RenderType, ByteBufferBuilder> e : layerBuffers.entrySet()) {
-			remapped.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
+//			remapped.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
 		}
 		return new GhostBuffers(fallback, remapped);
 	}
@@ -354,38 +355,36 @@ public class MultiblockVisualizationHandler {
 			super(fallback, layerBuffers);
 		}
 
-		@Override
-		public VertexConsumer getBuffer(RenderType type) {
-			return super.getBuffer(GhostRenderLayer.remap(type));
-		}
+//		@Override
+//		public VertexConsumer getBuffer(RenderType type) {
+//			return super.getBuffer(GhostRenderLayer.remap(type));
+//		}
 	}
 
-	private static class GhostRenderLayer extends RenderType {
-		private static final Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
-
-		private GhostRenderLayer(RenderType original) {
-			super(String.format("%s_%s_ghost", original.toString(), PatchouliAPI.MOD_ID), original.format(), original.mode(), original.bufferSize(), original.affectsCrumbling(), true, () -> {
-				original.setupRenderState();
-
-				RenderSystem.disableDepthTest();
-				RenderSystem.enableBlend();
-				RenderSystem.setShaderColor(1, 1, 1, 0.4F);
-			}, () -> {
-				RenderSystem.setShaderColor(1, 1, 1, 1);
-				RenderSystem.disableBlend();
-				RenderSystem.enableDepthTest();
-
-				original.clearRenderState();
-			});
-		}
-
-		public static RenderType remap(RenderType in) {
-			if (in instanceof GhostRenderLayer) {
-				return in;
-			} else {
-				return remappedTypes.computeIfAbsent(in, GhostRenderLayer::new);
-			}
-		}
-	}
+//	private static class GhostRenderLayer extends RenderType {
+//		private static final Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
+//
+//		private GhostRenderLayer(RenderType original) {
+//			super(String.format("%s_%s_ghost", original.toString(), PatchouliAPI.MOD_ID), original.format(), original.mode(), original.bufferSize(), original.affectsCrumbling(), true, () -> {
+//				original.setupRenderState();
+//
+//
+//				RenderSystem.setShaderColor(1, 1, 1, 0.4F);
+//			}, () -> {
+//				RenderSystem.setShaderColor(1, 1, 1, 1);
+//
+//
+//				original.clearRenderState();
+//			});
+//		}
+//
+//		public static RenderType remap(RenderType in) {
+//			if (in instanceof GhostRenderLayer) {
+//				return in;
+//			} else {
+//				return remappedTypes.computeIfAbsent(in, GhostRenderLayer::new);
+//			}
+//		}
+//	}
 
 }

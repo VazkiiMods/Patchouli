@@ -42,7 +42,7 @@ public class VariableAssigner {
 		FUNCTIONS.put("exists", VariableAssigner::exists);
 		FUNCTIONS.put("iexists", VariableAssigner::iexists);
 		FUNCTIONS.put("inv", VariableAssigner::inv);
-		FUNCTIONS.put("stacks", VariableAssigner::stacks);
+//		FUNCTIONS.put("stacks", VariableAssigner::stacks);
 	}
 
 	public static void assignVariableHolders(Level level, IVariablesAvailableCallback object, IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
@@ -169,9 +169,9 @@ public class VariableAssigner {
 		return IVariable.wrap(!arg.unwrap().getAsBoolean(), registries);
 	}
 
-	private static IVariable stacks(IVariable arg, HolderLookup.Provider registries) {
-		return IVariable.from(arg.as(Ingredient.class).getItems(), registries);
-	}
+//	private static IVariable stacks(IVariable arg, HolderLookup.Provider registries) {
+//		return IVariable.from(arg.as(Ingredient.class).getItems(), registries);
+//	}
 
 	private static String ename(String arg) {
 		return EntityUtil.getEntityName(arg);

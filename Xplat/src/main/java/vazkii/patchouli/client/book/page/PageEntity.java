@@ -63,7 +63,7 @@ public class PageEntity extends PageWithText {
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
-		RenderSystem.enableBlend();
+
 		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
 
@@ -98,7 +98,7 @@ public class PageEntity extends PageWithText {
 		EntityRenderDispatcher erd = Minecraft.getInstance().getEntityRenderDispatcher();
 		MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();
 		erd.setRenderShadow(false);
-		erd.render(entity, 0, 0, 0, 0, 1, ms, immediate, 0xF000F0);
+
 		erd.setRenderShadow(true);
 		immediate.endBatch();
 		ms.popPose();

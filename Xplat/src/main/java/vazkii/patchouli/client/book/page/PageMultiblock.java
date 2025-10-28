@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 
+import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
@@ -102,8 +103,8 @@ public class PageMultiblock extends PageWithText {
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
-		RenderSystem.enableBlend();
-		graphics.setColor(1F, 1F, 1F, 1F);
+
+
 		GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
 
 		parent.drawCenteredStringNoShadow(graphics, i18n(name), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
@@ -184,7 +185,7 @@ public class PageMultiblock extends PageWithText {
 
 	private void renderElements(GuiGraphics graphics, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, Vector4f eye) {
 		graphics.pose().pushPose();
-		graphics.setColor(1F, 1F, 1F, 1F);
+
 		graphics.pose().translate(0, 0, -1);
 
 		MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
@@ -232,7 +233,7 @@ public class PageMultiblock extends PageWithText {
 				try {
 					BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(te);
 					if (renderer != null) {
-						renderer.render(te, ClientTicker.partialTicks, graphics.pose(), buffers, 0xF000F0, OverlayTexture.NO_OVERLAY);
+						renderer.render(te, ClientTicker.partialTicks, graphics.pose(), buffers, 0xF000F0, OverlayTexture.NO_OVERLAY, Vec3.ZERO);
 					}
 				} catch (Exception e) {
 					erroredTiles.add(te);

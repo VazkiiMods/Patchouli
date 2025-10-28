@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.page.abstr;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -22,8 +23,8 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 
 	@Nullable
 	private T getRecipe(Level level, ResourceLocation id) {
-		RecipeManager manager = level.getRecipeManager();
-		var recipeHolder = manager.byKey(id).filter(recipe -> recipe.value().getType() == recipeType).orElse(null);
+		RecipeManager manager = (RecipeManager) level.recipeAccess();
+		var recipeHolder = manager.byKey(ResourceKey.create(ResourceKey.createRegistryKey(id), id)).filter(recipe -> recipe.value().getType() == recipeType).orElse(null);
 		return recipeHolder != null ? (T) recipeHolder.value() : null;
 	}
 
@@ -38,12 +39,12 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 			tempRecipe = getRecipe(level, ResourceLocation.fromNamespaceAndPath("crafttweaker", res.getPath()));
 		}
 
-		if (tempRecipe != null) {
-			if (linkRecipe) {
-				entry.addRelevantStack(builder, tempRecipe.getResultItem(level.registryAccess()), pageNum);
-			}
-			return tempRecipe;
-		}
+//		if (tempRecipe != null) {
+//			if (linkRecipe) {
+//				entry.addRelevantStack(builder, tempRecipe.assemble(tempRecipe, level.registryAccess()));
+//			}
+//			return tempRecipe;
+//		}
 
 		PatchouliAPI.LOGGER.warn("Recipe {} (of type {}) not found", res, BuiltInRegistries.RECIPE_TYPE.getKey(recipeType));
 		return null;

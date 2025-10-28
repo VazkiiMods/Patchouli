@@ -90,7 +90,7 @@ public class BookRightClickHandler {
 			BlockPos pos = hit.getBlockPos();
 			BlockState state = mc.level.getBlockState(pos);
 			Block block = state.getBlock();
-			ItemStack picked = block.getCloneItemStack(mc.level, pos, state);
+			ItemStack picked = block.defaultBlockState().getCloneItemStack(mc.level, pos, true);
 
 			if (!picked.isEmpty()) {
 				return book.getContents().getEntryForStack(picked);

@@ -26,15 +26,16 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
+
 public class BookRegistry {
 
 	public static final BookRegistry INSTANCE = new BookRegistry();
 	public static final String BOOKS_LOCATION = PatchouliAPI.MOD_ID + "_books";
 
 	public final Map<ResourceLocation, Book> books = new HashMap<>();
-	public static final Gson GSON = new GsonBuilder()
-			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
-			.create();
+//	public static final Gson GSON = new GsonBuilder()
+//			.registerTypeAdapter(ResourceLocation.class, ResourceLocation.parse();
+//			.create();
 
 	private BookRegistry() {}
 
@@ -72,7 +73,7 @@ public class BookRegistry {
 			ResourceLocation res = pair.getRight();
 
 			try (InputStream stream = Files.newInputStream(mod.getPath(file))) {
-				loadBook(mod, res, stream, false);
+				//loadBook(mod, res, stream, false);
 			} catch (Exception e) {
 				PatchouliAPI.LOGGER.error("Failed to load book {} defined by mod {}, skipping",
 						res, mod.getId(), e);
@@ -83,12 +84,12 @@ public class BookRegistry {
 		IXplatAbstractions.INSTANCE.signalBooksLoaded();
 	}
 
-	public void loadBook(XplatModContainer mod, ResourceLocation res, InputStream stream,
-			boolean external) {
-		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-		var tree = GSON.fromJson(reader, JsonObject.class);
-		books.put(res, new Book(tree, mod, res, external));
-	}
+//	public void loadBook(XplatModContainer mod, ResourceLocation res, InputStream stream,
+//			boolean external) {
+//		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
+//		var tree = GSON.fromJson(reader, JsonObject.class);
+//		books.put(res, new Book(tree, mod, res, external));
+//	}
 
 	/**
 	 * Must only be called on client

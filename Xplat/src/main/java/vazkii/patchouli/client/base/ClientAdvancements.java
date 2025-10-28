@@ -6,16 +6,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+
+import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.mixin.client.AccessorClientAdvancements;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -58,7 +56,7 @@ public class ClientAdvancements {
 	}
 
 	public static void sendBookToast(Book book) {
-		ToastComponent gui = Minecraft.getInstance().getToasts();
+		ToastManager gui = Minecraft.getInstance().getToastManager();
 		if (gui.getToast(LexiconToast.class, book) == null) {
 			gui.addToast(new LexiconToast(book));
 		}
@@ -72,26 +70,21 @@ public class ClientAdvancements {
 			this.book = book;
 		}
 
-		@NotNull
 		@Override
-		public Book getToken() {
-			return book;
+		public Visibility getWantedVisibility() {
+			return null;
 		}
 
-		@NotNull
 		@Override
-		public Visibility render(GuiGraphics graphics, ToastComponent toastGui, long delta) {
-			graphics.blitSprite(BACKGROUND_SPRITE, 0, 0, width(), height());
+		public void update(ToastManager toastManager, long l) {
 
-			Font font = toastGui.getMinecraft().font;
-			graphics.drawString(font, Component.translatable(book.name), 30, 7, 0xfff000f0, false);
-			graphics.drawString(font, Component.translatable("patchouli.gui.lexicon.toast.info"), 30, 17, 0xffffffff, false);
-
-			graphics.renderItem(book.getBookItem(), 8, 8);
-			graphics.renderItemDecorations(font, book.getBookItem(), 8, 8);
-
-			return delta >= 5000L ? Toast.Visibility.HIDE : Toast.Visibility.SHOW;
 		}
+
+		@Override
+		public void render(GuiGraphics guiGraphics, Font font, long l) {
+
+		}
+
 
 	}
 

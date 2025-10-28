@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 
@@ -46,9 +47,8 @@ public class ComponentItemStack extends TemplateComponent {
 		}
 
 		if (framed) {
-			RenderSystem.enableBlend();
-			graphics.setColor(1F, 1F, 1F, 1F);
-			graphics.blit(page.book.craftingTexture, x - 5, y - 5, 20, 102, 26, 26, 128, 256);
+
+			graphics.blit(RenderType::guiTextured, page.book.craftingTexture, x - 5, y - 5, 20, 102, 26, 26, 128, 256);
 		}
 
 		page.parent.renderItemStack(graphics, x, y, mouseX, mouseY, items[(page.parent.ticksInBook / 20) % items.length]);

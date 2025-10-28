@@ -1,5 +1,6 @@
 package vazkii.patchouli.api;
 
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -19,7 +20,7 @@ public interface IComponentRenderContext {
 
 	Screen getGui();
 
-	Style getFont();
+	Font getFont();
 
 	void renderItemStack(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, ItemStack stack);
 

@@ -4,6 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.toasts.Toast;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -15,6 +17,8 @@ import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
+
+import java.util.List;
 
 public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 
@@ -29,14 +33,14 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 			return;
 		}
 
-		RenderSystem.enableBlend();
-		graphics.blit(book.craftingTexture, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 256);
+
+		graphics.blit(RenderType::guiTextured, book.craftingTexture, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 256);
 
 		boolean shaped = recipe instanceof ShapedRecipe;
 		if (!shaped) {
 			int iconX = recipeX + 62;
 			int iconY = recipeY + 2;
-			graphics.blit(book.craftingTexture, iconX, iconY, 0, 64, 11, 11, 128, 256);
+			graphics.blit(RenderType::guiTextured, book.craftingTexture, iconX, iconY, 0, 64, 11, 11, 128, 256);
 			if (parent.isMouseInRelativeRange(mouseX, mouseY, iconX, iconY, 11, 11)) {
 				parent.setTooltip(Component.translatable("patchouli.gui.lexicon.shapeless"));
 			}
@@ -44,9 +48,9 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 
 		parent.drawCenteredStringNoShadow(graphics, getTitle(second).getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-		parent.renderItemStack(graphics, recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getResultItem(level.registryAccess()));
+		parent.renderItemStack(graphics, recipeX + 79, recipeY + 22, mouseX, mouseY, getRecipeOutput(level, recipe));
 
-		NonNullList<Ingredient> ingredients = recipe.getIngredients();
+		List<Ingredient> ingredients = recipe.placementInfo().ingredients();
 		int wrap = 3;
 		if (shaped) {
 			wrap = ((ShapedRecipe) recipe).getWidth();
@@ -56,7 +60,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 			parent.renderIngredient(graphics, recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
 		}
 
-		parent.renderItemStack(graphics, recipeX + 79, recipeY + 41, mouseX, mouseY, recipe.getToastSymbol());
+		parent.renderItemStack(graphics, recipeX + 79, recipeY + 41, mouseX, mouseY, getRecipeOutput(level, recipe));
 	}
 
 	@Override
@@ -70,7 +74,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 			return ItemStack.EMPTY;
 		}
 
-		return recipe.getResultItem(level.registryAccess());
+		return getRecipeOutput(level, recipe);
 	}
 
 }

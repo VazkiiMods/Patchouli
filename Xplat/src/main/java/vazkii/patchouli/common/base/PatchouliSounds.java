@@ -14,8 +14,8 @@ public class PatchouliSounds {
 	public static final SoundEvent BOOK_FLIP = SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "book_flip"));
 
 	public static void submitRegistrations(BiConsumer<ResourceLocation, SoundEvent> e) {
-		e.accept(BOOK_OPEN.getLocation(), BOOK_OPEN);
-		e.accept(BOOK_FLIP.getLocation(), BOOK_FLIP);
+		e.accept(BOOK_OPEN.location(), BOOK_OPEN);
+		e.accept(BOOK_FLIP.location(), BOOK_FLIP);
 	}
 
 	public static SoundEvent getSound(ResourceLocation key, SoundEvent fallback) {

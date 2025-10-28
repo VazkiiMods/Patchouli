@@ -2,7 +2,7 @@ package vazkii.patchouli.client.handler;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
+
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
@@ -58,7 +58,7 @@ public class TooltipHandler {
 
 			if (lexSlot > -1) {
 				int x = tooltipX - 34;
-				RenderSystem.disableDepthTest();
+				RenderSystem.disableScissor();
 
 				graphics.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
 				graphics.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
@@ -72,8 +72,8 @@ public class TooltipHandler {
 					float requiredTime = PatchouliConfig.get().quickLookupTime();
 					float angles = lexiconLookupTime / requiredTime * 360F;
 
-					RenderSystem.enableBlend();
-					RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+//					RenderSystem.enableBlend();
+//					RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 					BufferBuilder buf = Tesselator.getInstance().begin(Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
 
@@ -86,12 +86,12 @@ public class TooltipHandler {
 					}
 
 					buf.addVertex(cx, cy, 0).setColor(0F, 1F, 0F, 0F);
-					BufferUploader.drawWithShader(buf.buildOrThrow());
-
-					RenderSystem.disableBlend();
+//					BufferUploader.drawWithShader(buf.buildOrThrow());
+//
+//					RenderSystem.disableBlend();
 
 					if (lexiconLookupTime >= requiredTime) {
-						mc.player.getInventory().selected = lexSlot;
+//						mc.player.getInventory().slot() = lexSlot;
 						int spread = lexiconEntry.getSecond();
 						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), spread * 2);
 					}
@@ -116,7 +116,7 @@ public class TooltipHandler {
 				graphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF, true);
 				graphics.pose().popPose();
 
-				RenderSystem.enableDepthTest();
+//				RenderSystem.enableDepthTest();
 			} else {
 				lexiconLookupTime = 0F;
 			}

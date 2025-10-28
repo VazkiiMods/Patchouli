@@ -1,29 +1,33 @@
 package vazkii.patchouli.client.book.gui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
+
+
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.navigation.FocusNavigationEvent;
+import net.minecraft.client.gui.navigation.ScreenDirection;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.client.base.PersistentData;
-import vazkii.patchouli.client.base.PersistentData.BookData;
-import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
@@ -57,7 +61,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		boolean dirty = false;
 		var key = entry.getId();
 
-		BookData data = PersistentData.data.getBookData(book);
+		PersistentData.BookData data = PersistentData.data.getBookData(book);
 
 		if (!data.viewedEntries.contains(key)) {
 			data.viewedEntries.add(key);
@@ -149,6 +153,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		}
 	}
 
+
+
 	public BookEntry getEntry() {
 		return entry;
 	}
@@ -179,9 +185,9 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		}
 
 		String entryKey = entry.getId().toString();
-		BookData data = PersistentData.data.getBookData(book);
+		PersistentData.BookData data = PersistentData.data.getBookData(book);
 
-		for (Bookmark bookmark : data.bookmarks) {
+		for (PersistentData.Bookmark bookmark : data.bookmarks) {
 			if (bookmark.entry.equals(entryKey) && bookmark.spread == spread) {
 				return true;
 			}
@@ -193,8 +199,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	@Override
 	public void bookmarkThis() {
 		var entryKey = entry.getId();
-		BookData data = PersistentData.data.getBookData(book);
-		data.bookmarks.add(new Bookmark(entryKey, spread));
+		PersistentData.BookData data = PersistentData.data.getBookData(book);
+		data.bookmarks.add(new PersistentData.Bookmark(entryKey, spread));
 		PersistentData.save();
 		needsBookmarkUpdate = true;
 	}
@@ -204,7 +210,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		GuiBookEntry gui = new GuiBookEntry(currGui.book, entry);
 
 		if (Screen.hasShiftDown()) {
-			BookData data = PersistentData.data.getBookData(book);
+			PersistentData.BookData data = PersistentData.data.getBookData(book);
 
 			if (gui.isBookmarkedAlready()) {
 				String key = entry.getId().toString();
@@ -227,10 +233,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		return this;
 	}
 
-	@Override
-	public Style getFont() {
-		return book.getFontStyle();
-	}
+
 
 	@Override
 	public void renderItemStack(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, ItemStack stack) {
@@ -248,7 +251,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
-		ItemStack[] stacks = ingr.getItems();
+		ItemStack[] stacks = ingr.items().toArray(ItemStack[]::new);
 		if (stacks.length > 0) {
 			renderItemStack(graphics, x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
 		}
@@ -293,12 +296,67 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
+	public Optional<GuiEventListener> getChildAt(double mouseX, double mouseY) {
+		return super.getChildAt(mouseX, mouseY);
+	}
+
+	@Override
+	public void mouseMoved(double mouseX, double mouseY) {
+		super.mouseMoved(mouseX, mouseY);
+	}
+
+	@Override
+	public boolean mouseReleased(double mouseX, double mouseY, int button) {
+		return super.mouseReleased(mouseX, mouseY, button);
+	}
+
+	@Override
+	public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+		return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+	}
+
+	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
 		if (Minecraft.getInstance().options.keyInventory.matches(keyCode, scanCode)) {
 			this.onClose();
 			return true;
 		}
 		return super.keyPressed(keyCode, scanCode, modifiers);
+	}
+
+	@Override
+	public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+		return super.keyReleased(keyCode, scanCode, modifiers);
+	}
+
+	@Override
+	public boolean charTyped(char codePoint, int modifiers) {
+		return super.charTyped(codePoint, modifiers);
+	}
+
+	@Override
+	public void setFocused(boolean p_265504_) {
+		super.setFocused(p_265504_);
+	}
+
+	@Override
+	public boolean isFocused() {
+		return super.isFocused();
+	}
+
+	@Override
+	public @Nullable ComponentPath getCurrentFocusPath() {
+		return super.getCurrentFocusPath();
+	}
+
+	@Override
+	public ScreenRectangle getBorderForArrowNavigation(ScreenDirection direction) {
+		return super.getBorderForArrowNavigation(direction);
+	}
+
+	@Override
+	public @Nullable ComponentPath nextFocusPath(FocusNavigationEvent p_265668_) {
+		return super.nextFocusPath(p_265668_);
 	}
 
 	@Override
@@ -329,5 +387,10 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	@Override
 	public int getTicksInBook() {
 		return ticksInBook;
+	}
+
+	@Override
+	public int getTabOrderGroup() {
+		return super.getTabOrderGroup();
 	}
 }

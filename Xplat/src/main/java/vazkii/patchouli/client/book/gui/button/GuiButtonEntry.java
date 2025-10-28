@@ -45,10 +45,10 @@ public class GuiButtonEntry extends Button {
 
 		graphics.pose().scale(0.5F, 0.5F, 0.5F);
 		graphics.fill(getX() * 2, getY() * 2, (getX() + (int) ((float) width * widthFract)) * 2, (getY() + height) * 2, 0x22000000);
-		RenderSystem.enableBlend();
+
 
 		if (locked) {
-			graphics.setColor(1F, 1F, 1F, 0.7F);
+			graphics.fill(1, 1, 1, 1, 1);
 			GuiBook.drawLock(graphics, parent.book, getX() * 2 + 2, getY() * 2 + 2);
 		} else {
 			entry.getIcon().render(graphics, getX() * 2 + 2, getY() * 2 + 2);

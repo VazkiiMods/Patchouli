@@ -14,8 +14,10 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
@@ -137,7 +139,7 @@ public abstract class GuiBook extends Screen {
 
 		graphics.pose().pushPose();
 		graphics.pose().translate(bookLeft, bookTop, 0);
-		graphics.setColor(1F, 1F, 1F, 1F);
+
 		drawBackgroundElements(graphics, mouseX, mouseY, partialTicks);
 		drawForegroundElements(graphics, mouseX, mouseY, partialTicks);
 		graphics.pose().popPose();
@@ -255,8 +257,9 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public static void drawFromTexture(GuiGraphics graphics, Book book, int x, int y, int u, int v, int w, int h) {
-		graphics.blit(book.bookTexture, x, y, u, v, w, h, 512, 256);
+		graphics.blit(RenderType::guiTextured, book.bookTexture, x, y, u, v, w, h, 512, 256);
 	}
+
 
 	@Override
 	public boolean isPauseScreen() {
@@ -527,10 +530,10 @@ public abstract class GuiBook extends Screen {
 		int h = 3;
 		int rx = x + PAGE_WIDTH / 2 - w / 2;
 
-		RenderSystem.enableBlend();
-		graphics.setColor(1F, 1F, 1F, 0.8F);
+
+		graphics.fill(1, 1, 1, 1, 1);
 		drawFromTexture(graphics, book, rx, y, 140, 180, w, h);
-		graphics.setColor(1F, 1F, 1F, 1F);
+		graphics.fill(1, 1, 1, 1, 1);
 	}
 
 	public static void drawLock(GuiGraphics graphics, Book book, int x, int y) {
@@ -542,7 +545,7 @@ public abstract class GuiBook extends Screen {
 			return;
 		}
 
-		RenderSystem.enableBlend();
+
 		//RenderSystem.disableAlphaTest();
 		float alpha = state.hasAnimation ? ((float) Math.sin(ClientTicker.total * 0.2F) * 0.3F + 0.7F) : 1F;
 		RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
@@ -556,9 +559,9 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public static void drawPageFiller(GuiGraphics graphics, Book book, int x, int y) {
-		RenderSystem.enableBlend();
-		graphics.setColor(1F, 1F, 1F, 1F);
-		graphics.blit(book.fillerTexture, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
+
+		graphics.fill(1, 1, 1, 1, 1);
+		graphics.blit(RenderType::guiTextured, book.fillerTexture, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 
 	public static void playBookFlipSound(Book book) {
