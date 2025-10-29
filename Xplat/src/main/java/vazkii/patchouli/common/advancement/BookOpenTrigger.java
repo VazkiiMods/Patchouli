@@ -14,17 +14,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-/**
- * An advancement trigger for opening Patchouli books.
- */
 public class BookOpenTrigger extends SimpleCriterionTrigger<BookOpenTrigger.TriggerInstance> {
 	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "open_book");
 	public static final BookOpenTrigger INSTANCE = new BookOpenTrigger();
 
+	
+	public ResourceLocation getId() {
+		return ID;
+	}
+	
+
 	@NotNull
 	@Override
 	public Codec<TriggerInstance> codec() {
-		return BookOpenTrigger.TriggerInstance.CODEC;
+		return TriggerInstance.CODEC;
 	}
 
 	public void trigger(@NotNull ServerPlayer player, @NotNull ResourceLocation book) {
@@ -35,9 +38,10 @@ public class BookOpenTrigger extends SimpleCriterionTrigger<BookOpenTrigger.Trig
 		trigger(player, instance -> instance.matches(book, entry, page));
 	}
 
-	public record TriggerInstance(Optional<ContextAwarePredicate> player, ResourceLocation book, Optional<ResourceLocation> entry, MinMaxBounds.Ints page) implements SimpleInstance {
+	public record TriggerInstance(Optional<ContextAwarePredicate> player, ResourceLocation book,
+	                              Optional<ResourceLocation> entry, MinMaxBounds.Ints page) implements SimpleCriterionTrigger.SimpleInstance {
 
-		public static Codec<BookOpenTrigger.TriggerInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 				EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player),
 				ResourceLocation.CODEC.fieldOf("book").forGetter(TriggerInstance::book),
 				ResourceLocation.CODEC.optionalFieldOf("entry").forGetter(TriggerInstance::entry),
@@ -45,7 +49,9 @@ public class BookOpenTrigger extends SimpleCriterionTrigger<BookOpenTrigger.Trig
 		).apply(instance, TriggerInstance::new));
 
 		public boolean matches(@NotNull ResourceLocation book, @Nullable ResourceLocation entry, int page) {
-			return this.book.equals(book) && (this.entry.isEmpty() || this.entry.get().equals(entry)) && this.page.matches(page);
+			return this.book.equals(book)
+					&& (this.entry.isEmpty() || this.entry.get().equals(entry))
+					&& this.page.matches(page);
 		}
 	}
 }

@@ -21,6 +21,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 		this.recipeType = recipeType;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Nullable
 	private T getRecipe(Level level, ResourceLocation id) {
 		RecipeManager manager = (RecipeManager) level.recipeAccess();

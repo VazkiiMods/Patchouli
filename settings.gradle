@@ -1,13 +1,13 @@
 pluginManagement {
     plugins {
         id 'net.neoforged.moddev' version '2.0.105' apply false
-        id 'fabric-loom' version '1.11-SNAPSHOT' apply false
+        //id 'fabric-loom' version '1.11-SNAPSHOT' apply false
     }
     repositories {
-        maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
-        }
+        //maven {
+        //    name = 'Fabric'
+        //    url = 'https://maven.fabricmc.net/'
+        //}
         maven {
             name = 'NeoForge'
             url = 'https://maven.neoforged.net/releases'
@@ -22,4 +22,4 @@ plugins {
 }
 
 rootProject.name = 'Patchouli'
-include("Xplat", "Fabric", "NeoForge")
+include("Xplat", "NeoForge")

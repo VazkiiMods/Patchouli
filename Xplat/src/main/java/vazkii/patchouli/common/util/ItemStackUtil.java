@@ -72,7 +72,7 @@ public final class ItemStackUtil {
 	}
 
 	public static Ingredient loadIngredientFromString(String ingredientString, HolderLookup.Provider registries) {
-		return Ingredient.of(loadStackListFromString(ingredientString, registries).toArray(new ItemStack[0]));
+		return Ingredient.of(loadStackListFromString(ingredientString, registries).stream().map(ItemStack::getItem).toArray(Item[]::new));
 	}
 
 	public static List<ItemStack> loadStackListFromString(String ingredientString, HolderLookup.Provider registries) {

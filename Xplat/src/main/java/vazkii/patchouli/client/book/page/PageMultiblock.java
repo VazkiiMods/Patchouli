@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 
@@ -63,6 +62,7 @@ public class PageMultiblock extends PageWithText {
 	@SerializedName("enable_visualize") boolean showVisualizeButton = true;
 
 	private transient AbstractMultiblock multiblockObj;
+	@SuppressWarnings("unused")
 	private transient Button visualizeButton;
 
 	@Override
@@ -173,8 +173,8 @@ public class PageMultiblock extends PageWithText {
 
 		// Finally apply the rotations
 		eye.mul(rotMat);
-		//eye.perspectiveDivide();//TODO find what replaces this
-		/* TODO XXX This does not handle visualization of sparse multiblocks correctly.
+		//eye.perspectiveDivide();// find what replaces this
+		/*   This does not handle visualization of sparse multiblocks correctly.
 			Dense multiblocks store everything in positive X/Z, so this works, but sparse multiblocks store everything from the JSON as-is.
 			Potential solution: Rotate around the offset vars of the multiblock, and add AABB method for extent of the multiblock
 		*/
@@ -218,6 +218,7 @@ public class PageMultiblock extends PageWithText {
 	// Hold errored TEs weakly, this may cause some dupe errors but will prevent spamming it every frame
 	private final transient Set<BlockEntity> erroredTiles = Collections.newSetFromMap(new WeakHashMap<>());
 
+	@SuppressWarnings("deprecation")
 	private void doTileEntityRenderPass(GuiGraphics graphics, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, MultiBufferSource buffers, Vector4f eye) {
 		for (BlockPos pos : blocks) {
 			BlockEntity te = mb.getBlockEntity(pos);

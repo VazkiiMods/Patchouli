@@ -2,11 +2,13 @@ package vazkii.patchouli.common.util;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 
@@ -23,9 +25,9 @@ public final class EntityUtil {
 
 	public static String getEntityName(String entityId) {
 		Pair<String, String> nameAndNbt = splitNameAndNBT(entityId);
-		EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.tryParse(nameAndNbt.getLeft()));
+		Optional<Reference<EntityType<?>>> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.tryParse(nameAndNbt.getLeft()));
 
-		return type.getDescriptionId();
+		return type.get().getRegisteredName();
 	}
 
 	public static Function<Level, Entity> loadEntity(String entityId) {
@@ -36,7 +38,7 @@ public final class EntityUtil {
 
 		if (!nbtStr.isEmpty()) {
 			try {
-				nbt = TagParser.parseTag(nbtStr);
+				nbt = TagParser.parseCompoundFully(nbtStr);
 			} catch (CommandSyntaxException e) {
 				PatchouliAPI.LOGGER.error("Failed to load entity data", e);
 			}
@@ -53,7 +55,7 @@ public final class EntityUtil {
 		return (world) -> {
 			Entity entity;
 			try {
-				entity = type.create(world);
+				entity = type.create(world, EntitySpawnReason.COMMAND);
 				if (useNbt != null) {
 					entity.load(useNbt);
 				}

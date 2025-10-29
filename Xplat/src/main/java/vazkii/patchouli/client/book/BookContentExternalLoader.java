@@ -1,8 +1,12 @@
 package vazkii.patchouli.client.book;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 
 import org.apache.commons.io.FilenameUtils;
+
+import com.google.gson.JsonElement;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.Book;
@@ -12,6 +16,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * BookContentLoader that loads from the .minecraft/patchouli_books folder
@@ -70,5 +75,13 @@ public final class BookContentExternalLoader implements BookContentLoader {
 
 		return null;
 	}
+
+	@Override
+	public void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profiler) {
+		// Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'apply'");
+	}
+
+	
 
 }

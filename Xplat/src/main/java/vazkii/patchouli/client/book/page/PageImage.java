@@ -1,10 +1,7 @@
 package vazkii.patchouli.client.book.page;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 import vazkii.patchouli.client.book.gui.GuiBook;

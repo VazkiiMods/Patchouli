@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ComponentPath;
 
 
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -179,6 +178,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		return !isBookmarkedAlready();
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
 	boolean isBookmarkedAlready() {
 		if (entry == null || entry.getId() == null) {
 			return false;
@@ -205,6 +205,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		needsBookmarkUpdate = true;
 	}
 
+	@SuppressWarnings("unlikely-arg-type")
 	public static void displayOrBookmark(GuiBook currGui, BookEntry entry) {
 		Book book = currGui.book;
 		GuiBookEntry gui = new GuiBookEntry(currGui.book, entry);
@@ -249,6 +250,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
 		ItemStack[] stacks = ingr.items().toArray(ItemStack[]::new);
@@ -282,7 +284,6 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		return false;
 	}
 
-	@SuppressWarnings("removal")
 	@Override
 	public void registerButton(Button button, int pageNum, Runnable onClick) {
 		addWidget(button, pageNum);

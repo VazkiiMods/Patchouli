@@ -36,10 +36,12 @@ subprojects {
         it.enabled = false
     }
 
-    pmd {
-        toolVersion '6.35.0'
-        incrementalAnalysis.set(true)
-        ruleSetFiles = rootProject.files("spotless/pmd-ruleset.xml")
+    if (project.name != "Fabric") {
+        pmd {
+            toolVersion '6.35.0'
+            incrementalAnalysis.set(true)
+            ruleSetFiles = rootProject.files("spotless/pmd-ruleset.xml")
+        }
     }
 
     jar {

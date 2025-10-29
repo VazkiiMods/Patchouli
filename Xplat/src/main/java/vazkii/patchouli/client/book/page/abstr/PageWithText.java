@@ -14,6 +14,7 @@ public abstract class PageWithText extends BookPage {
 
 	transient BookTextRenderer textRender;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);

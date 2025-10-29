@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -98,13 +97,14 @@ public class ItemModBook extends Item {
 
 		return super.getName(stack);
 	}
+	
 
-	@Override
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-		super.appendHoverText(stack, context, tooltip, flagIn);
-
+	
+	
+	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+		
 		ResourceLocation rl = getBookId(stack);
-		if (flagIn.isAdvanced()) {
+		if (flag.isAdvanced()) {
 			tooltip.add(Component.literal("Book ID: " + rl).withStyle(ChatFormatting.GRAY));
 		}
 
@@ -113,21 +113,19 @@ public class ItemModBook extends Item {
 			tooltip.add(book.getSubtitle().withStyle(ChatFormatting.GRAY));
 		} else if (book == null) {
 			if (rl == null) {
-				tooltip.add(Component.translatable("item.patchouli.guide_book.undefined")
-						.withStyle(ChatFormatting.DARK_GRAY));
+				tooltip.add(Component.translatable("item.patchouli.guide_book.undefined").withStyle(ChatFormatting.DARK_GRAY));
 			} else {
-				tooltip.add(Component.translatable("item.patchouli.guide_book.invalid", rl)
-						.withStyle(ChatFormatting.DARK_GRAY));
+				tooltip.add(Component.translatable("item.patchouli.guide_book.invalid", rl).withStyle(ChatFormatting.DARK_GRAY));
 			}
 		}
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+	public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
 		ItemStack stack = playerIn.getItemInHand(handIn);
 		Book book = getBook(stack);
 		if (book == null) {
-			return new InteractionResultHolder<>(InteractionResult.FAIL, stack);
+			return InteractionResult.FAIL;
 		}
 
 		if (playerIn instanceof ServerPlayer) {
@@ -138,7 +136,7 @@ public class ItemModBook extends Item {
 			playerIn.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
 		}
 
-		return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+		return InteractionResult.SUCCESS;
 	}
 
 }

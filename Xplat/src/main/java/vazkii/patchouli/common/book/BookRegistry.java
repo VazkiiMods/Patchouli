@@ -33,9 +33,9 @@ public class BookRegistry {
 	public static final String BOOKS_LOCATION = PatchouliAPI.MOD_ID + "_books";
 
 	public final Map<ResourceLocation, Book> books = new HashMap<>();
-//	public static final Gson GSON = new GsonBuilder()
-//			.registerTypeAdapter(ResourceLocation.class, ResourceLocation.parse();
-//			.create();
+	public static final Gson GSON = new GsonBuilder()
+			.registerTypeAdapter(ResourceLocation.class, ResourceLocation.parse(BOOKS_LOCATION))
+			.create();
 
 	private BookRegistry() {}
 
@@ -84,15 +84,15 @@ public class BookRegistry {
 		IXplatAbstractions.INSTANCE.signalBooksLoaded();
 	}
 
-//	public void loadBook(XplatModContainer mod, ResourceLocation res, InputStream stream,
-//			boolean external) {
-//		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-//		var tree = GSON.fromJson(reader, JsonObject.class);
-//		books.put(res, new Book(tree, mod, res, external));
-//	}
+	public void loadBook(XplatModContainer mod, ResourceLocation res, InputStream stream,
+			boolean external) {
+		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
+		var tree = GSON.fromJson(reader, JsonObject.class);
+		books.put(res, new Book(tree, mod, res, external));
+	}
 
 	/**
-	 * Must only be called on client
+	 * Must only be called on clientr
 	 */
 	public void reloadContents(Level level) {
 		PatchouliConfig.reloadBuiltinFlags();

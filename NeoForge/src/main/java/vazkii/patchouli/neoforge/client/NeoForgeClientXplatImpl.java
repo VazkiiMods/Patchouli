@@ -13,7 +13,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.model.data.ModelData;
 import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ import java.util.List;
 
 
 public class NeoForgeClientXplatImpl implements IClientXplatAbstractions {
+	@SuppressWarnings("deprecation")
 	@Override
 	public void renderForMultiblock(BlockState state, BlockPos pos, BlockAndTintGetter multiblock, PoseStack ps, MultiBufferSource buffers, RandomSource rand) {
 		BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();

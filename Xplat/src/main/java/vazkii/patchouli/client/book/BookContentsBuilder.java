@@ -146,7 +146,7 @@ public class BookContentsBuilder {
 	@Nullable
 	private static BookCategory loadCategory(Book book, BookContentLoader loader, ResourceLocation id, ResourceLocation file) {
 		BookContentLoader.LoadResult result = loadLocalizedJson(book, loader, file);
-		// TODO: Render the "added by" text in the category UI somewhere
+		// : Render the "added by" text in the category UI somewhere
 		var category = new BookCategory(result.json().getAsJsonObject(), id, book);
 		if (category.canAdd()) {
 			return category;

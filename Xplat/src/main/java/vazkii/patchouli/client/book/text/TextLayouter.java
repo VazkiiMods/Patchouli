@@ -100,6 +100,7 @@ public class TextLayouter {
 	}
 
 	// a paragraph is a series of spans without explicit line break
+	@SuppressWarnings("deprecation")
 	private void layoutParagraph(List<Span> paragraph) {
 		String text = toString(paragraph);
 		Locale locale = new Locale(Minecraft.getInstance().getLanguageManager().getSelected());

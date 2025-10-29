@@ -1,19 +1,13 @@
 package vazkii.patchouli.client.handler;
 
-
-import com.mojang.blaze3d.systems.RenderPass;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.datafixers.util.Pair;
-
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.language.I18n;
@@ -37,18 +31,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.joml.Matrix4f;
 
 import vazkii.patchouli.api.IMultiblock;
-import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
-import vazkii.patchouli.mixin.client.AccessorMultiBufferSource;
-
 import java.awt.*;
 import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.SequencedMap;
 import java.util.function.Function;
 
 public class MultiblockVisualizationHandler {
@@ -228,7 +216,8 @@ public class MultiblockVisualizationHandler {
 		ms.translate(-renderPosX, -renderPosY, -renderPosZ);
 
 		if (buffers == null) {
-			buffers = initBuffers(mc.renderBuffers().bufferSource());
+			return;
+			// buffers = initBuffers(mc.renderBuffers().bufferSource());
 		}
 
 		BlockPos checkPos = null;
@@ -340,51 +329,81 @@ public class MultiblockVisualizationHandler {
 		return RotationUtil.rotationFromFacing(entity.getDirection());
 	}
 
-	private static MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
-		ByteBufferBuilder fallback = ((AccessorMultiBufferSource) original).getFallbackBuffer();
-		SequencedMap<RenderType, ByteBufferBuilder> layerBuffers = ((AccessorMultiBufferSource) original).getFixedBuffers();
-		SequencedMap<RenderType, ByteBufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
-		for (Map.Entry<RenderType, ByteBufferBuilder> e : layerBuffers.entrySet()) {
-//			remapped.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
-		}
-		return new GhostBuffers(fallback, remapped);
+	// private static MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
+	// 	ByteBufferBuilder fallback = ((AccessorMultiBufferSource) original).getFallbackBuffer();
+	// 	SequencedMap<RenderType, ByteBufferBuilder> layerBuffers = ((AccessorMultiBufferSource) original).getFixedBuffers();
+	// 	SequencedMap<RenderType, ByteBufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
+	// 	// for (Map.Entry<RenderType, ByteBufferBuilder> e : layerBuffers.entrySet()) {
+	// 	// 	remapped.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
+	// 	// }
+	// 	// return new GhostBuffers(fallback, remapped);
 	}
 
-	private static class GhostBuffers extends MultiBufferSource.BufferSource {
-		protected GhostBuffers(ByteBufferBuilder fallback, SequencedMap<RenderType, ByteBufferBuilder> layerBuffers) {
-			super(fallback, layerBuffers);
-		}
+	// private static class GhostBuffers extends MultiBufferSource.BufferSource {
+	// 	protected GhostBuffers(ByteBufferBuilder fallback, SequencedMap<RenderType, ByteBufferBuilder> layerBuffers) {
+	// 		super(fallback, layerBuffers);
+	// 	}
 
-//		@Override
-//		public VertexConsumer getBuffer(RenderType type) {
-//			return super.getBuffer(GhostRenderLayer.remap(type));
-//		}
-	}
+	// 	@Override
+	// 	public VertexConsumer getBuffer(RenderType type) {
+	// 		return super.getBuffer(GhostRenderLayer.remap(type));
+	// 	}
+	// }
 
-//	private static class GhostRenderLayer extends RenderType {
-//		private static final Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
-//
-//		private GhostRenderLayer(RenderType original) {
-//			super(String.format("%s_%s_ghost", original.toString(), PatchouliAPI.MOD_ID), original.format(), original.mode(), original.bufferSize(), original.affectsCrumbling(), true, () -> {
-//				original.setupRenderState();
-//
-//
-//				RenderSystem.setShaderColor(1, 1, 1, 0.4F);
-//			}, () -> {
-//				RenderSystem.setShaderColor(1, 1, 1, 1);
-//
-//
-//				original.clearRenderState();
-//			});
-//		}
-//
-//		public static RenderType remap(RenderType in) {
-//			if (in instanceof GhostRenderLayer) {
-//				return in;
-//			} else {
-//				return remappedTypes.computeIfAbsent(in, GhostRenderLayer::new);
-//			}
-//		}
-//	}
+	// private static class GhostRenderLayer extends RenderType {
+	// 	private static final Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
 
-}
+	// 	// private GhostRenderLayer(RenderType original) {
+	// 	// 	super(String.format("%s_%s_ghost", original.toString(), "patchouli"), original.format(), original.mode(), original.bufferSize(), original.affectsCrumbling(), true, () -> {
+	// 	// 		original.setupRenderState();
+
+
+	// 	// 		RenderSystem.setShaderColor(1, 1, 1, 0.4F);
+	// 	// 	}, () -> {
+	// 	// 		RenderSystem.setShaderColor(1, 1, 1, 1);
+
+
+	// 	// 		original.clearRenderState();
+	// 	// 	});
+	// 	// }
+
+	// 	public static RenderType remap(RenderType in) {
+	// 		if (in instanceof GhostRenderLayer) {
+	// 			return in;
+	// 		} else {
+	// 			return remappedTypes.computeIfAbsent(in, GhostRenderLayer::new);
+	// 		}
+	// 	}
+
+	// 	@Override
+	// 	public void draw(MeshData arg0) {
+	// 		//  Auto-generated method stub
+	// 		throw new UnsupportedOperationException("Unimplemented method 'draw'");
+	// 	}
+
+	// 	@Override
+	// 	public VertexFormat format() {
+	// 		//  Auto-generated method stub
+	// 		throw new UnsupportedOperationException("Unimplemented method 'format'");
+	// 	}
+
+	// 	@Override
+	// 	public RenderPipeline getRenderPipeline() {
+	// 		//  Auto-generated method stub
+	// 		throw new UnsupportedOperationException("Unimplemented method 'getRenderPipeline'");
+	// 	}
+
+	// 	@Override
+	// 	public RenderTarget getRenderTarget() {
+	// 		//  Auto-generated method stub
+	// 		throw new UnsupportedOperationException("Unimplemented method 'getRenderTarget'");
+	// 	}
+
+	// 	@Override
+	// 	public Mode mode() {
+	// 		//  Auto-generated method stub
+	// 		throw new UnsupportedOperationException("Unimplemented method 'mode'");
+	// 	}
+	// }
+
+

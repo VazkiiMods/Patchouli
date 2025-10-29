@@ -92,7 +92,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 
 	@Override
 	public void onVariablesAvailable(UnaryOperator<IVariable> lookup, HolderLookup.Provider registries) {
-		// TODO fix this up to use IVariable more intelligently
+		//  fix this up to use IVariable more intelligently
 		group = lookup.apply(IVariable.wrap(group, registries)).asString();
 		flag = lookup.apply(IVariable.wrap(flag, registries)).asString();
 		advancement = lookup.apply(IVariable.wrap(advancement, registries)).asString();

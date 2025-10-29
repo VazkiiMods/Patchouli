@@ -17,7 +17,7 @@ public final class SerializationUtil {
 
 	public static final IVariable.Serializer VARIABLE_SERIALIZER = new IVariable.Serializer();
 	public static final Gson RAW_GSON = new GsonBuilder()
-			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+			.registerTypeAdapter(ResourceLocation.class, ResourceLocation.CODEC.getClass())
 			.registerTypeAdapter(IVariable.class, VARIABLE_SERIALIZER)
 			.create();
 	public static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();

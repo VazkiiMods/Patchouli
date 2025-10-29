@@ -1,0 +1,49 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "NeoForge - Client",
+      "presentation": {
+        "group": "Mod Development - NeoForge",
+        "order": 0
+      },
+      "projectName": "NeoForge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\chrjaf\\Documents\\New folder\\Patchouli\\NeoForge\\build\\moddev\\clientRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\chrjaf\\Documents\\New folder\\Patchouli\\NeoForge\\build\\moddev\\clientRunVmArgs.txt",
+        "-Dfml.modFolders\u003dnet.neoforged.moddevgradle.dsl.ModModel$Inject@b9b797c%%C:\\Users\\chrjaf\\Documents\\New folder\\Patchouli\\NeoForge\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    },
+    {
+      "type": "java",
+      "request": "launch",
+      "name": "NeoForge - Server",
+      "presentation": {
+        "group": "Mod Development - NeoForge",
+        "order": 1
+      },
+      "projectName": "NeoForge",
+      "mainClass": "net.neoforged.devlaunch.Main",
+      "args": [
+        "@C:\\Users\\chrjaf\\Documents\\New folder\\Patchouli\\NeoForge\\build\\moddev\\serverRunProgramArgs.txt"
+      ],
+      "vmArgs": [
+        "@C:\\Users\\chrjaf\\Documents\\New folder\\Patchouli\\NeoForge\\build\\moddev\\serverRunVmArgs.txt",
+        "-Dfml.modFolders\u003dnet.neoforged.moddevgradle.dsl.ModModel$Inject@b9b797c%%C:\\Users\\chrjaf\\Documents\\New folder\\Patchouli\\NeoForge\\bin\\main"
+      ],
+      "cwd": "${workspaceFolder}\\run",
+      "env": {},
+      "console": "internalConsole",
+      "shortenCommandLine": "none"
+    }
+  ]
+}

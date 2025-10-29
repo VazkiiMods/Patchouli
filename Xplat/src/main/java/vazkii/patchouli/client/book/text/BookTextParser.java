@@ -27,7 +27,7 @@ public class BookTextParser {
 	// A command lookup takes the body of a command $(...) and the current span state.
 	// If it understands the command, it can modify the span state and return Optional.of(command replacement).
 	// Otherwise, it just returns Optional.empty().
-	// TODO: Make this part of the API, perhaps?
+	// : Make this part of the API, perhaps?
 	private static final List<CommandLookup> COMMAND_LOOKUPS = new ArrayList<>();
 	private static final Map<String, CommandProcessor> COMMANDS = new ConcurrentHashMap<>();
 	private static final Map<String, FunctionProcessor> FUNCTIONS = new ConcurrentHashMap<>();
@@ -76,7 +76,7 @@ public class BookTextParser {
 			state.tooltip = EMPTY_STRING_COMPONENT;
 			return "";
 		}, "/t");
-		register(state -> state.gui.getMinecraft().player.getName().getString(), "playername"); // TODO 1.16: dropped format codes
+		register(state -> state.gui.getMinecraft().player.getName().getString(), "playername"); //  1.16: dropped format codes
 		register(state -> {
 			state.modifyStyle(s -> s.applyFormat(ChatFormatting.OBFUSCATED));
 			return "";
@@ -211,7 +211,9 @@ public class BookTextParser {
 
 	private final GuiBook gui;
 	private final Book book;
+	@SuppressWarnings("unused")
 	private final int x, y, width;
+	@SuppressWarnings("unused")
 	private final int lineHeight;
 	private final Style baseStyle;
 

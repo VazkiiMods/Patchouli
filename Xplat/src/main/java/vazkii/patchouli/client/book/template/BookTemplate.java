@@ -161,6 +161,7 @@ public class BookTemplate {
 		componentTypes.put(name, clazz);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void createProcessor() {
 		if (!attemptedCreatingProcessor) {
 			if (processorClass != null && !processorClass.isEmpty()) {

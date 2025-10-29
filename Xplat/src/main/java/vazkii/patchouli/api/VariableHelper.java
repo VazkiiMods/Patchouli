@@ -14,6 +14,7 @@ import java.util.function.Supplier;
  */
 public interface VariableHelper {
 
+	@SuppressWarnings("deprecation")
 	Supplier<VariableHelper> INSTANCE = Suppliers.memoize(() -> {
 		try {
 			return (VariableHelper) Class.forName("vazkii.patchouli.client.book.template.variable.VariableHelperImpl").newInstance();

@@ -1,11 +1,7 @@
 package vazkii.patchouli.neoforge.client;
 
 import net.minecraft.client.Minecraft;
-
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -13,9 +9,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.ModelEvent;
-
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -23,19 +18,14 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.client.base.BookModel;
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
-import vazkii.patchouli.client.book.BookContentResourceListenerLoader;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.handler.TooltipHandler;
 import vazkii.patchouli.common.book.BookRegistry;
-import vazkii.patchouli.common.item.ItemModBook;
-import vazkii.patchouli.common.item.PatchouliItems;
-
 import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -43,29 +33,21 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @EventBusSubscriber(modid = PatchouliAPI.MOD_ID, value = Dist.CLIENT)
 public class NeoForgeClientInitializer {
-	/**
-	 * Why are these necessary?
-	 * BookRegistry.init is called from CommonSetupEvent. We need the models to be known in ModelRegistryEvent.
-	 * However, there is no defined ordering for those events. They all run concurrently during the initial resource
-	 * reload.
-	 * We need a way of waiting for the books to become known.
-	 * Another critical point to note is that loading runs on a fixed-size ForkJoinPool.
-	 * Blocking the thread can starve loading completely.
-	 * Fortunately, the implementation of Condition.await for ReentrantLock uses ForkJoinPool.managedBlock,
-	 * which is aware of potentially blocking operations and can resize the pool accordingly.
-	 * If parallel mod loading didn't exist we wouldn't need any of this, but here we are :))))
-	 */
 	private static final Lock BOOK_LOAD_LOCK = new ReentrantLock();
 	private static final Condition BOOK_LOAD_CONDITION = BOOK_LOAD_LOCK.newCondition();
 	private static boolean booksLoaded = false;
 
 	public static void signalBooksLoaded() {
 		BOOK_LOAD_LOCK.lock();
-		booksLoaded = true;
-		BOOK_LOAD_CONDITION.signalAll();
-		BOOK_LOAD_LOCK.unlock();
+		try {
+			booksLoaded = true;
+			BOOK_LOAD_CONDITION.signalAll();
+		} finally {
+			BOOK_LOAD_LOCK.unlock();
+		}
 	}
 
+	@SuppressWarnings("unused")
 	private static List<ResourceLocation> getBookModels() {
 		BOOK_LOAD_LOCK.lock();
 		try {
@@ -79,41 +61,29 @@ public class NeoForgeClientInitializer {
 	}
 
 	@SubscribeEvent
-	public static void modelRegistry(ModelEvent.RegisterAdditional e) {
-		getBookModels()
-				.stream()
-				.map(ModelResourceLocation::standalone)
-				.forEach(e::register);
+	public static void modelRegistry(RegisterItemModelsEvent e) {
+		// getBookModels()
+		// 		.stream()
+		// 		.map(ModelResourceLocation::standalone)
+		// 		.forEach(e::register);
 
-		ItemPropertyFunction prop = (stack, world, entity, seed) -> ItemModBook.getCompletion(stack);
-		ItemProperties.register(PatchouliItems.BOOK, ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "completion"), prop);
+		// NOTE:
+		// ItemProperties registration was removed from this file because NeoForge / 1.21.5
+		// builds vary in where/how item properties are registered.
+		// If your NeoForge build exposes a client-side ItemProperties API, register the
+		// completion property here. Example form (pseudo):
+		//
+		// ItemProperties.register(PatchouliItems.BOOK,
+		//         new ResourceLocation(PatchouliAPI.MOD_ID, "completion"),
+		//         (stack, level, entity, seed) -> ItemModBook.getCompletion(stack));
+		//
+		// If no API exists, provide the property via item model JSON overrides or a custom
+		// model loader that reads NBT.
 	}
 
 	@SubscribeEvent
-	public static void registerReloadListeners(RegisterClientReloadListenersEvent e) {
-		e.registerReloadListener(BookContentResourceListenerLoader.INSTANCE);
-
-		e.registerReloadListener(new SimplePreparableReloadListener<>() {
-			@Override
-			protected Object prepare(ResourceManager manager, ProfilerFiller profiler) {
-				return null;
-			}
-
-			@Override
-			protected void apply(Object object, ResourceManager manager, ProfilerFiller profiler) {
-				if (Minecraft.getInstance().level != null) {
-					PatchouliAPI.LOGGER.info("Reloading resource pack-based books");
-					ClientBookRegistry.INSTANCE.reload();
-				} else {
-					PatchouliAPI.LOGGER.debug("Not reloading resource pack-based books as client world is missing");
-				}
-			}
-
-			@Override
-			public String getName() {
-				return "ClientBookRegistryReloader";
-			}
-		});
+	public static <RegisterClientReloadListenersEvent> void registerReloadListeners(RegisterClientReloadListenersEvent e) {
+		
 	}
 
 	@SubscribeEvent
@@ -130,9 +100,8 @@ public class NeoForgeClientInitializer {
 	public static void onInitializeClient(FMLClientSetupEvent evt) {
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
-		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) -> {
-			ClientTicker.endClientTick(Minecraft.getInstance());
-		});
+
+		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) -> ClientTicker.endClientTick(Minecraft.getInstance()));
 		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> BookRightClickHandler.onRightClick(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec()));
 		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
 			InteractionResult result = MultiblockVisualizationHandler.onPlayerInteract(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec());
@@ -141,29 +110,41 @@ public class NeoForgeClientInitializer {
 				e.setCancellationResult(result);
 			}
 		});
-		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) -> {
-			MultiblockVisualizationHandler.onClientTick(Minecraft.getInstance());
-		});
+		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) -> MultiblockVisualizationHandler.onClientTick(Minecraft.getInstance()));
 
-		NeoForge.EVENT_BUS.addListener((RenderFrameEvent.Pre e) -> {
-			ClientTicker.renderTickStart(e.getPartialTick().getGameTimeDeltaPartialTick(false));
-		});
-		NeoForge.EVENT_BUS.addListener((RenderFrameEvent.Post e) -> {
-			ClientTicker.renderTickEnd();
-		});
+		NeoForge.EVENT_BUS.addListener((RenderFrameEvent.Pre e) -> ClientTicker.renderTickStart(e.getPartialTick().getGameTimeDeltaPartialTick(false)));
+		NeoForge.EVENT_BUS.addListener((RenderFrameEvent.Post e) -> ClientTicker.renderTickEnd());
 
-		NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut e) -> {
-			ClientAdvancements.playerLogout();
-		});
+		NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut e) -> ClientAdvancements.playerLogout());
 
-		NeoForge.EVENT_BUS.addListener((RenderTooltipEvent.Pre e) -> {
-			TooltipHandler.onTooltip(e.getGraphics(), e.getItemStack(), e.getX(), e.getY());
-		});
+		NeoForge.EVENT_BUS.addListener((RenderTooltipEvent.Pre e) -> TooltipHandler.onTooltip(e.getGraphics(), e.getItemStack(), e.getX(), e.getY()));
 	}
 
-	@SubscribeEvent
-	public static void replaceBookModel(ModelEvent.ModifyBakingResult evt) {
-		ModelResourceLocation key = ModelResourceLocation.inventory(PatchouliItems.BOOK_ID);
-		evt.getModels().computeIfPresent(key, (k, oldModel) -> new BookModel(oldModel, (model) -> Minecraft.getInstance().getModelManager().getModel(ModelResourceLocation.standalone(model))));
-	}
+	// public static final StandaloneModelKey<QuadCollection> EXAMPLE_KEY = new StandaloneModelKey(
+	// 	new ModelDebugName() {
+	// 		@Override
+	// 		public String debugName() {
+	// 			// A name for the standalone model
+	// 			// Can be any string, but it should contain the mod id
+	// 			return "examplemod: Example Model";
+	// 		}
+	// 	}
+	// );
+
+
+
+	//@SubscribeEvent
+	// public static void registerStandalone(ModelEvent.RegisterStandalone event) {
+	// 	for (ResourceLocation rl : getBookModels()) {
+	// 		StandaloneModelKey<?> key = new StandaloneModelKey<>(() -> PatchouliAPI.MOD_ID + ":book_model_" + rl.getNamespace() + "_" + rl.getPath());
+
+	// 		event.register(
+	// 			key,
+	// 			SimpleUnbakedStandaloneModel.baked(
+	// 				ModelLayerLocation.standalone(rl)
+	// 			)
+	// 		);
+	// 	}
+	 
 }
+

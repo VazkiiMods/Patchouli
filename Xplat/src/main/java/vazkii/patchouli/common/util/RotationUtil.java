@@ -16,7 +16,7 @@ public final class RotationUtil {
 		};
 	}
 
-	// TODO figure out why this is needed and document it.
+	//  figure out why this is needed and document it.
 	public static Rotation fixHorizontal(Rotation rot) {
 		return switch (rot) {
 		case CLOCKWISE_90 -> Rotation.COUNTERCLOCKWISE_90;

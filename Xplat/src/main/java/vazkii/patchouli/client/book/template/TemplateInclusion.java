@@ -56,6 +56,7 @@ public class TemplateInclusion {
 		y += parent.y;
 
 		for (Map.Entry<String, JsonElement> entry : localBindings.entrySet()) {
+			@SuppressWarnings("unused")
 			String key = entry.getKey();
 			JsonElement val = entry.getValue();
 			if (val.isJsonPrimitive() && val.getAsString().startsWith("#")) {
@@ -73,6 +74,7 @@ public class TemplateInclusion {
 		}
 
 		for (Map.Entry<String, JsonElement> entry : localBindings.entrySet()) {
+			@SuppressWarnings("unused")
 			String key = entry.getKey();
 			JsonElement val = entry.getValue();
 			if (val.isJsonPrimitive() && val.getAsString().startsWith("#")) {

@@ -5,15 +5,12 @@ import com.google.common.base.Preconditions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -247,7 +244,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 //	@NotNull
 //	@Override
 //	public IStateMatcher tagMatcher(@NotNull TagKey<Block> tag) {
-//		/* TODO deduplicate with StringStateMatcher's version. This one is okay with
+//		/*  deduplicate with StringStateMatcher's version. This one is okay with
 //		* tags that don't exist but that one validates that the tag exists.
 //		*/
 ////		return new IStateMatcher() {

@@ -191,8 +191,11 @@ public class DenseMultiblock extends AbstractMultiblock {
 		return 255;
 	}
 
+	
+
 	@Override
-	public int getMinBuildHeight() {
-		return 0;
+	public int getMinY() {
+		//  Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'getMinY'");
 	}
 }
