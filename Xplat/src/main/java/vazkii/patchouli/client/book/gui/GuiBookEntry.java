@@ -6,7 +6,6 @@ import net.minecraft.client.gui.ComponentPath;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.navigation.FocusNavigationEvent;
 import net.minecraft.client.gui.navigation.ScreenDirection;
@@ -252,8 +251,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
-		ItemStack[] stacks = ingr.items().toArray(ItemStack[]::new);
+	public void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Optional<Ingredient> ingr) {
+		ItemStack[] stacks = ingr.get().items().toArray(ItemStack[]::new);
 		if (stacks.length > 0) {
 			renderItemStack(graphics, x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
 		}
@@ -284,10 +283,6 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		return false;
 	}
 
-	@Override
-	public void registerButton(Button button, int pageNum, Runnable onClick) {
-		addWidget(button, pageNum);
-	}
 
 	@Override
 	public void addWidget(AbstractWidget widget, int pageNum) {

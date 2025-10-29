@@ -81,10 +81,10 @@ public class NeoForgeClientInitializer {
 		// model loader that reads NBT.
 	}
 
-	@SubscribeEvent
-	public static <RegisterClientReloadListenersEvent> void registerReloadListeners(RegisterClientReloadListenersEvent e) {
-		
-	}
+//	@SubscribeEvent
+//	public static <RegisterClientReloadListenersEvent> void registerReloadListeners(RegisterClientReloadListenersEvent e) {
+//
+//	}
 
 	@SubscribeEvent
 	public static void registerOverlays(RegisterGuiLayersEvent evt) {

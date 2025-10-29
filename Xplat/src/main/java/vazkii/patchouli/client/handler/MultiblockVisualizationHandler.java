@@ -30,6 +30,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import org.joml.Matrix4f;
 
+import org.joml.Quaternionfc;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
@@ -156,7 +157,7 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static void onWorldRenderLast(PoseStack ms, Matrix4f pose) {
+	public static void onWorldRenderLast(PoseStack ms, PoseStack pose) {
 		if (hasMultiblock && multiblock != null) {
 			renderMultiblock(Minecraft.getInstance().level, ms, pose);
 		}
@@ -189,8 +190,8 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static void renderMultiblock(Level world, PoseStack ms, Matrix4f pose) {
-		ms.mulPose(pose);
+	public static void renderMultiblock(Level world, PoseStack ms, PoseStack pose) {
+		ms.mulPose((Quaternionfc) pose);
 		Minecraft mc = Minecraft.getInstance();
 		if (!isAnchored) {
 			facingRotation = getRotation(mc.player);

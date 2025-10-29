@@ -12,6 +12,7 @@ import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 import vazkii.patchouli.mixin.AccessorSmithingTransformRecipe;
 import vazkii.patchouli.mixin.AccessorSmithingTrimRecipe;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
@@ -31,7 +32,7 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 		graphics.blit(RenderType::guiTextured, book.craftingTexture, recipeX, recipeY, 11, 135, 96, 43, 128, 256);
 		parent.drawCenteredStringNoShadow(graphics, getTitle(second).getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-		parent.renderIngredient(graphics, recipeX + 4, recipeY + 4, mouseX, mouseY, getBase(recipe));
+		parent.renderIngredient(graphics, recipeX + 4, recipeY + 4, mouseX, mouseY, Optional.ofNullable(getBase(recipe)));
 		parent.renderIngredient(graphics, recipeX + 4, recipeY + 23, mouseX, mouseY, getAddition(recipe));
 		parent.renderIngredient(graphics, recipeX + 40, recipeY + 4, mouseX, mouseY, getTemplate(recipe));
 		parent.renderItemStack(graphics, recipeX + 40, recipeY + 20, mouseX, mouseY, getRecipeOutput(level, recipe));
@@ -48,24 +49,24 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 		return Ingredient.of(Stream.empty());
 	}
 
-	private Ingredient getAddition(SmithingRecipe recipe) {
+	private Optional<Ingredient> getAddition(SmithingRecipe recipe) {
 		if (recipe instanceof SmithingTrimRecipe) {
-			return ((AccessorSmithingTrimRecipe) recipe).getAddition();
+			return Optional.ofNullable(((AccessorSmithingTrimRecipe) recipe).getAddition());
 		}
 		if (recipe instanceof SmithingTransformRecipe) {
 			return ((AccessorSmithingTransformRecipe) recipe).getAddition();
 		}
-		return Ingredient.of(Stream.empty());
+		return Optional.of(Ingredient.of(Stream.empty()));
 	}
 
-	private Ingredient getTemplate(SmithingRecipe recipe) {
+	private Optional<Ingredient> getTemplate(SmithingRecipe recipe) {
 		if (recipe instanceof SmithingTrimRecipe) {
-			return ((AccessorSmithingTrimRecipe) recipe).getTemplate();
+			return Optional.ofNullable(((AccessorSmithingTrimRecipe) recipe).getTemplate());
 		}
 		if (recipe instanceof SmithingTransformRecipe) {
 			return ((AccessorSmithingTransformRecipe) recipe).getTemplate();
 		}
-		return Ingredient.of(Stream.empty());
+		return Optional.of(Ingredient.of(Stream.empty()));
 	}
 
 	@Override

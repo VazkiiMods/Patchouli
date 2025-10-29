@@ -1,8 +1,6 @@
 package vazkii.patchouli.common.book;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -16,6 +14,7 @@ import vazkii.patchouli.xplat.IXplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,7 +33,24 @@ public class BookRegistry {
 
 	public final Map<ResourceLocation, Book> books = new HashMap<>();
 	public static final Gson GSON = new GsonBuilder()
-			.registerTypeAdapter(ResourceLocation.class, ResourceLocation.parse(BOOKS_LOCATION))
+			.registerTypeAdapter(ResourceLocation.class, new JsonSerializer<ResourceLocation>() {
+				@Override
+				public JsonElement serialize(ResourceLocation src, Type typeOfSrc, JsonSerializationContext context) {
+					return new JsonPrimitive(src.toString());
+				}
+			})
+			.registerTypeAdapter(ResourceLocation.class, new JsonDeserializer<ResourceLocation>() {
+				@Override
+				public ResourceLocation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+						throws JsonParseException {
+					String s = json.getAsString();
+					try {
+						return ResourceLocation.parse(s);
+					} catch (Exception e) {
+						throw new JsonParseException("Invalid ResourceLocation: " + s, e);
+					}
+				}
+			})
 			.create();
 
 	private BookRegistry() {}

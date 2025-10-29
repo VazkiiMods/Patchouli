@@ -3,6 +3,7 @@ package vazkii.patchouli.common.item;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -24,8 +25,11 @@ import java.util.List;
 
 public class ItemModBook extends Item {
 
+
+
 	public ItemModBook() {
-		super(new Item.Properties().stacksTo(1));
+
+		super(new Item.Properties().stacksTo(1).setId(ResourceKey.create(ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "book")), ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "book"))));
 	}
 
 	public static float getCompletion(ItemStack stack) {

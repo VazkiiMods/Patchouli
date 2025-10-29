@@ -21,7 +21,7 @@ repositories {
 }
 
 neoForge {
-    version = "21.5.0-beta"
+    version = "21.5.95"
 
     runs {
         configureEach {
@@ -49,8 +49,8 @@ neoForge {
 dependencies {
     implementation project(":Xplat")
 
-    compileOnly "mezz.jei:jei-1.21.5-common-api:21.5.93"
-    runtimeOnly "mezz.jei:jei-1.21.5-neoforge:21.5.93"
+    compileOnly "mezz.jei:jei-1.21.5-neoforge-api:21.4.0.27"
+    runtimeOnly "mezz.jei:jei-1.21.5-neoforge:21.4.0.27"
 }
 
 tasks.named('test').configure {

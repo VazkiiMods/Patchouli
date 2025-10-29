@@ -17,9 +17,13 @@ public final class SerializationUtil {
 
 	public static final IVariable.Serializer VARIABLE_SERIALIZER = new IVariable.Serializer();
 	public static final Gson RAW_GSON = new GsonBuilder()
-			.registerTypeAdapter(ResourceLocation.class, ResourceLocation.CODEC.getClass())
+			.registerTypeAdapter(ResourceLocation.class, (com.google.gson.JsonSerializer<ResourceLocation>) (src, type, ctx) ->
+					new com.google.gson.JsonPrimitive(src.toString()))
+			.registerTypeAdapter(ResourceLocation.class, (com.google.gson.JsonDeserializer<ResourceLocation>) (el, type, ctx) ->
+					ResourceLocation.tryParse(el.getAsString()))
 			.registerTypeAdapter(IVariable.class, VARIABLE_SERIALIZER)
 			.create();
+
 	public static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();
 
 	private SerializationUtil() {}

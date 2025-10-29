@@ -15,6 +15,7 @@ import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 
@@ -53,7 +54,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 		}
 
 		for (int i = 0; i < ingredients.size(); i++) {
-			parent.renderIngredient(graphics, recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
+			parent.renderIngredient(graphics, recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, Optional.ofNullable(ingredients.get(i)));
 		}
 
 		parent.renderItemStack(graphics, recipeX + 79, recipeY + 41, mouseX, mouseY, getRecipeOutput(level, recipe));
@@ -70,7 +71,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 			return ItemStack.EMPTY;
 		}
 
-		return getRecipeOutput(level, recipe);
+		return null;
 	}
 
 }

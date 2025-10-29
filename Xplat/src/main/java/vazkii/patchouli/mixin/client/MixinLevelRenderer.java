@@ -1,5 +1,6 @@
 package vazkii.patchouli.mixin.client;
 
+import com.mojang.blaze3d.resource.GraphicsResourceAllocator;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Camera;
@@ -19,7 +20,8 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 @Mixin(LevelRenderer.class)
 public class MixinLevelRenderer {
 	@Inject(at = @At("RETURN"), method = "renderLevel")
-	public void onRender(DeltaTracker deltaTracker, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightmapTextureManager, Matrix4f pose, Matrix4f matrix4f, CallbackInfo info) {
+	public void onRender(GraphicsResourceAllocator graphicsResourceAllocator, DeltaTracker deltaTracker, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, Matrix4f frustumMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
+		PoseStack pose = new PoseStack();
 		MultiblockVisualizationHandler.onWorldRenderLast(new PoseStack(), pose);
 	}
 }
