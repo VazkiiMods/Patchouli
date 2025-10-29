@@ -284,10 +284,6 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		return false;
 	}
 
-	@Override
-	public void registerButton(Button button, int pageNum, Runnable onClick) {
-		addWidget(button, pageNum);
-	}
 
 	@Override
 	public void addWidget(AbstractWidget widget, int pageNum) {

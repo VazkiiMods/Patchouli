@@ -34,8 +34,6 @@ public interface IComponentRenderContext {
 
 	void setHoverTooltipComponents(List<Component> tooltip);
 
-	@Deprecated(forRemoval = true) // use addWidget
-	void registerButton(Button button, int pageNum, Runnable onClick);
 
 	void addWidget(AbstractWidget button, int pageNum);
 
