@@ -1,6 +1,7 @@
 package vazkii.patchouli.neoforge.client;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
@@ -11,6 +12,7 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
+import net.neoforged.neoforge.client.event.ModelEvent.RegisterAdditional;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -22,10 +24,13 @@ import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.client.book.model.BookModel;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.handler.TooltipHandler;
 import vazkii.patchouli.common.book.BookRegistry;
+import vazkii.patchouli.common.item.ItemModBook;
+import vazkii.patchouli.common.item.PatchouliItems;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -62,23 +67,12 @@ public class NeoForgeClientInitializer {
 
 	@SubscribeEvent
 	public static void modelRegistry(RegisterItemModelsEvent e) {
-		// getBookModels()
-		// 		.stream()
-		// 		.map(ModelResourceLocation::standalone)
-		// 		.forEach(e::register);
+		e.register(ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "book"), BookModel.Unbaked.MAP_CODEC);
+	}
 
-		// NOTE:
-		// ItemProperties registration was removed from this file because NeoForge / 1.21.5
-		// builds vary in where/how item properties are registered.
-		// If your NeoForge build exposes a client-side ItemProperties API, register the
-		// completion property here. Example form (pseudo):
-		//
-		// ItemProperties.register(PatchouliItems.BOOK,
-		//         new ResourceLocation(PatchouliAPI.MOD_ID, "completion"),
-		//         (stack, level, entity, seed) -> ItemModBook.getCompletion(stack));
-		//
-		// If no API exists, provide the property via item model JSON overrides or a custom
-		// model loader that reads NBT.
+	@SubscribeEvent
+	public static void onRegisterAdditionalModels(RegisterAdditional e) {
+		getBookModels().forEach(e::register);
 	}
 
 //	@SubscribeEvent
@@ -98,6 +92,11 @@ public class NeoForgeClientInitializer {
 
 	@SubscribeEvent
 	public static void onInitializeClient(FMLClientSetupEvent evt) {
+		evt.enqueueWork(() -> {
+			ItemProperties.register(PatchouliItems.BOOK,
+					ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "completion"),
+					(stack, level, entity, seed) -> ItemModBook.getCompletion(stack));
+		});
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
 

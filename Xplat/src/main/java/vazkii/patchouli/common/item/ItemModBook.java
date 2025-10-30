@@ -132,12 +132,14 @@ public class ItemModBook extends Item {
 			return InteractionResult.FAIL;
 		}
 
-		if (playerIn instanceof ServerPlayer) {
-			PatchouliAPI.get().openBookGUI((ServerPlayer) playerIn, book.id);
+		if (playerIn instanceof ServerPlayer serverPlayer) {
+			PatchouliAPI.get().openBookGUI(serverPlayer, book.id);
 
 			// This plays the sound to others nearby, playing to the actual opening player handled from the packet
 			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.BOOK_OPEN);
 			playerIn.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
+		} else {
+			PatchouliAPI.get().openBookGUI(book.id);
 		}
 
 		return InteractionResult.SUCCESS;
