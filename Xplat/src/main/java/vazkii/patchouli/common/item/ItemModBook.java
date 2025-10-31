@@ -9,6 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -128,18 +129,19 @@ public class ItemModBook extends Item {
 	public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
 		ItemStack stack = playerIn.getItemInHand(handIn);
 		Book book = getBook(stack);
+		ResourceLocation rl = getBookId(stack);
+		PatchouliAPI.LOGGER.info("Right click book stack, book id = {}", rl);
 		if (book == null) {
 			return InteractionResult.FAIL;
 		}
 
-		if (playerIn instanceof ServerPlayer serverPlayer) {
-			PatchouliAPI.get().openBookGUI(serverPlayer, book.id);
+		if (playerIn instanceof ServerPlayer) {
+			PatchouliAPI.get().openBookGUI((ServerPlayer) playerIn, book.id);
+			PatchouliAPI.LOGGER.info("ItemModBook.use called on server? {}", playerIn instanceof ServerPlayer);
 
 			// This plays the sound to others nearby, playing to the actual opening player handled from the packet
 			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.BOOK_OPEN);
 			playerIn.playSound(sfx, 1F, (float) (0.7 + Math.random() * 0.4));
-		} else {
-			PatchouliAPI.get().openBookGUI(book.id);
 		}
 
 		return InteractionResult.SUCCESS;

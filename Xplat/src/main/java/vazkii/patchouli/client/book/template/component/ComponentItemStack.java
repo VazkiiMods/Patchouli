@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.gui.GuiGraphics;
+
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;

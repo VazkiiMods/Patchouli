@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.core.BlockPos;
 
 /**
- * Since {@link net.minecraft.client.renderer.block.LiquidBlockRenderer} doesn't use the pose stack at all, we need to
+ * Since {@link block.LiquidBlockRenderer} doesn't use the pose stack at all, we need to
  * both (1) un-transform the positions by {@code pos}, and also re-transform them using the {@link PoseStack}.
  */
 public record LiquidBlockVertexConsumer(VertexConsumer prior, PoseStack pose, BlockPos pos) implements VertexConsumer {

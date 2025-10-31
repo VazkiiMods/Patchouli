@@ -1,11 +1,11 @@
 {
-  "name": "Burned",
-  "icon": "minecraft:writable_book",
+  "name": "Diamonds",
+  "icon": "minecraft:diamond",
   "category": "patchouli:testcat",
   "pages": [
     {
       "type": "text",
-      "text": "Out"
+      "text": "Diamonds are awesome!"
     }
   ]
 }

@@ -2,8 +2,8 @@ package vazkii.patchouli.neoforge.client;
 
 import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
+
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
@@ -13,6 +13,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ import java.util.List;
 public class NeoForgeClientXplatImpl implements IClientXplatAbstractions {
 	@SuppressWarnings("deprecation")
 	@Override
-	public void renderForMultiblock(BlockState state, BlockPos pos, BlockAndTintGetter multiblock, PoseStack ps, MultiBufferSource buffers, RandomSource rand) {
+	public void renderForMultiblock(BlockState state, BlockPos pos, BlockAndTintGetter multiblock, PoseStack ps, net.minecraft.client.renderer.MultiBufferSource.@NotNull BufferSource buffers, RandomSource rand) {
 		BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 		if (state.getRenderShape() != RenderShape.INVISIBLE) {
 			// Define a list of common render types to iterate through.
