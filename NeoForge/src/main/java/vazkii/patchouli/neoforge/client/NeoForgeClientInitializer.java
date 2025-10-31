@@ -1,10 +1,15 @@
 package vazkii.patchouli.neoforge.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -12,7 +17,6 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
-import net.neoforged.neoforge.client.event.ModelEvent.RegisterAdditional;
 import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -24,13 +28,10 @@ import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.ClientBookRegistry;
-import vazkii.patchouli.client.book.model.BookModel;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.handler.TooltipHandler;
 import vazkii.patchouli.common.book.BookRegistry;
-import vazkii.patchouli.common.item.ItemModBook;
-import vazkii.patchouli.common.item.PatchouliItems;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -65,20 +66,7 @@ public class NeoForgeClientInitializer {
 		}
 	}
 
-	@SubscribeEvent
-	public static void modelRegistry(RegisterItemModelsEvent e) {
-		e.register(ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "book"), BookModel.Unbaked.MAP_CODEC);
-	}
 
-	@SubscribeEvent
-	public static void onRegisterAdditionalModels(RegisterAdditional e) {
-		getBookModels().forEach(e::register);
-	}
-
-//	@SubscribeEvent
-//	public static <RegisterClientReloadListenersEvent> void registerReloadListeners(RegisterClientReloadListenersEvent e) {
-//
-//	}
 
 	@SubscribeEvent
 	public static void registerOverlays(RegisterGuiLayersEvent evt) {
@@ -92,11 +80,6 @@ public class NeoForgeClientInitializer {
 
 	@SubscribeEvent
 	public static void onInitializeClient(FMLClientSetupEvent evt) {
-		evt.enqueueWork(() -> {
-			ItemProperties.register(PatchouliItems.BOOK,
-					ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "completion"),
-					(stack, level, entity, seed) -> ItemModBook.getCompletion(stack));
-		});
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
 
@@ -119,31 +102,5 @@ public class NeoForgeClientInitializer {
 		NeoForge.EVENT_BUS.addListener((RenderTooltipEvent.Pre e) -> TooltipHandler.onTooltip(e.getGraphics(), e.getItemStack(), e.getX(), e.getY()));
 	}
 
-	// public static final StandaloneModelKey<QuadCollection> EXAMPLE_KEY = new StandaloneModelKey(
-	// 	new ModelDebugName() {
-	// 		@Override
-	// 		public String debugName() {
-	// 			// A name for the standalone model
-	// 			// Can be any string, but it should contain the mod id
-	// 			return "examplemod: Example Model";
-	// 		}
-	// 	}
-	// );
-
-
-
-	//@SubscribeEvent
-	// public static void registerStandalone(ModelEvent.RegisterStandalone event) {
-	// 	for (ResourceLocation rl : getBookModels()) {
-	// 		StandaloneModelKey<?> key = new StandaloneModelKey<>(() -> PatchouliAPI.MOD_ID + ":book_model_" + rl.getNamespace() + "_" + rl.getPath());
-
-	// 		event.register(
-	// 			key,
-	// 			SimpleUnbakedStandaloneModel.baked(
-	// 				ModelLayerLocation.standalone(rl)
-	// 			)
-	// 		);
-	// 	}
-	 
 }
 
