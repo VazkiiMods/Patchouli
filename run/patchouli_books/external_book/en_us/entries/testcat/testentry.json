@@ -4,7 +4,8 @@
   "category": "patchouli:testcat",
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:crafting",
+      "recipe": "minecraft:diamond_boots",
       "text": "Diamonds are awesome!"
     }
   ]

@@ -25,6 +25,7 @@ import net.neoforged.neoforge.client.event.RenderFrameEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 import org.jetbrains.annotations.NotNull;
@@ -131,6 +132,8 @@ public class NeoForgeClientInitializer {
 
 		NeoForge.EVENT_BUS.addListener((RenderTooltipEvent.Pre e) -> TooltipHandler.onTooltip(e.getGraphics(), e.getItemStack(), e.getX(), e.getY()));
 	}
+
+
 
 
 }

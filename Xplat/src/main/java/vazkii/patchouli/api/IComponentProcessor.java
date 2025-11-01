@@ -1,7 +1,6 @@
 package vazkii.patchouli.api;
 
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.world.level.Level;
 
 /**
  * Implement this on a class designed to process a template and the variables bound
@@ -20,7 +19,7 @@ public interface IComponentProcessor {
 	 * will be caught by the book loader, and graciously displayed in a user friendly
 	 * way, so feel free to throw on any unrecoverable states.
 	 */
-	void setup(Level level, IVariableProvider variables);
+	void setup(IVariableProvider variables);
 
 	/**
 	 * Processes a variable. You should return what you think the result should be, or
@@ -32,7 +31,7 @@ public interface IComponentProcessor {
 	 * any included templates. It is not called for the variables used inside said
 	 * templates.
 	 */
-	IVariable process(Level level, String key);
+	IVariable process(String key);
 
 	/**
 	 * Called when a book GUI containing this page is showed (by guiInit).

@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
@@ -77,7 +76,7 @@ public class BookTemplate {
 		return template;
 	}
 
-	public void compile(Level level, BookContentsBuilder builder, IVariableProvider variables) {
+	public void compile(BookContentsBuilder builder, IVariableProvider variables) {
 		if (compiled) {
 			return;
 		}
@@ -92,7 +91,7 @@ public class BookTemplate {
 			}
 
 			try {
-				processor.setup(level, processorVars);
+				processor.setup(processorVars);
 			} catch (Exception e) {
 				throw new RuntimeException("Error setting up template processor", e);
 			}
@@ -104,15 +103,15 @@ public class BookTemplate {
 			}
 
 			include.upperMerge(encapsulation);
-			include.process(level, processor);
+			include.process(processor);
 
 			BookTemplate template = createTemplate(book, builder, include.template, include);
-			template.compile(level, builder, variables);
+			template.compile(builder, variables);
 			components.addAll(template.components);
 		}
 
 		for (TemplateComponent c : components) {
-			c.compile(level, variables, processor, encapsulation);
+			c.compile(variables, processor, encapsulation);
 		}
 
 		compiled = true;

@@ -237,7 +237,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 		for (int i = 0; i < pages.length; i++) {
 			if (pages[i].canAdd(book)) {
 				try {
-					pages[i].build(level, this, builder, i);
+					pages[i].build(this, builder, i);
 					realPages.add(pages[i]);
 				} catch (Exception e) {
 					throw new RuntimeException("Error while building entry %s page %d of book %s"

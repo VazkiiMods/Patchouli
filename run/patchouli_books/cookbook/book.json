@@ -1,0 +1,7 @@
+{
+    "name": "Plenty of Food Cookbook",
+    "landing_text": "A cookbook containing all the recipes for the Plenty of Food mod.",
+    "version": 1,
+    "creative_tab": "minecraft:tools_and_utilities",
+    "use_resource_pack": true
+}

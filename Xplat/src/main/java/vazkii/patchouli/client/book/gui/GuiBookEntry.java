@@ -252,9 +252,11 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Optional<Ingredient> ingr) {
-		ItemStack[] stacks = ingr.get().items().toArray(ItemStack[]::new);
-		if (stacks.length > 0) {
-			renderItemStack(graphics, x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
+		if (ingr.isPresent()) {
+			ItemStack[] stacks = ingr.get().items().toList().toArray(ItemStack[]::new);
+			if (stacks.length > 0) {
+				renderItemStack(graphics, x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
+			}
 		}
 	}
 

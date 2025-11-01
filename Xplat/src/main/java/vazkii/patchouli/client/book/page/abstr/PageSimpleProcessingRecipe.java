@@ -2,48 +2,82 @@ package vazkii.patchouli.client.book.page.abstr;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.crafting.*;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.page.DummyCraftingInventory;
+import vazkii.patchouli.client.book.page.DummySingleRecipeInput;
+import vazkii.patchouli.client.book.page.DummySmithingRecipeInput;
+import vazkii.patchouli.common.util.RecipeUtil;
 
-public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends PageDoubleRecipeRegistry<T> {
+import java.util.Optional;
 
-	public PageSimpleProcessingRecipe(RecipeType<T> recipeType) {
-		super(recipeType);
-	}
+public abstract class PageSimpleProcessingRecipe<T extends RecipeHolder<?>> extends PageDoubleRecipeRegistry<T> {
+    public PageSimpleProcessingRecipe(RecipeType<? extends Recipe<?>> recipeType) {
+        super(recipeType);
+    }
 
-	@Override
-	protected void drawRecipe(GuiGraphics graphics, T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-		Level level = Minecraft.getInstance().level;
-		if (level == null) {
-			return;
-		}
+    @Override
+    protected void drawRecipe(GuiGraphics graphics, T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
+        // keep render safe if no client world present (used only for hover/tooltips etc)
+        if (Minecraft.getInstance().level == null) {
+            return;
+        }
 
-	
-		graphics.blit(RenderType::guiTextured,book.craftingTexture, recipeX, recipeY, 11, 71, 96, 24, 128, 256);
-		parent.drawCenteredStringNoShadow(graphics, getTitle(second).getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
+        graphics.blit(RenderType::guiTextured, book.craftingTexture, recipeX, recipeY, 11, 71, 96, 24, 128, 256);
+        parent.drawCenteredStringNoShadow(graphics, getTitle(second).getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-		parent.renderIngredient(graphics, recipeX + 4, recipeY + 4, mouseX, mouseY, null);
-		parent.renderItemStack(graphics, recipeX + 40, recipeY + 4, mouseX, mouseY, getRecipeOutput(level, recipe));
-		parent.renderItemStack(graphics, recipeX + 76, recipeY + 4, mouseX, mouseY, getRecipeOutput(level, recipe));
-	}
+        // render ingredient. keep the original behaviour but guard against empty display
+        try {
+            Recipe<?> r2 = recipe.value();
+            Optional<Ingredient> ing = Optional.empty();
+            r2.display();// recipe.display() may be a collection of ItemStacks; attempt to build an Ingredient where possible
+            ItemStack[] stacks = r2.display().stream().map(ItemStack.class::cast).toArray(ItemStack[]::new);
+            if (stacks.length > 0) {
+                ing = Optional.of(Ingredient.of());
+            }
+            parent.renderIngredient(graphics, recipeX + 4, recipeY + 4, mouseX, mouseY, ing);
+        } catch (Exception ignored) {
+            // fall back to no ingredient render on error
+        }
 
-	@Override
-	protected ItemStack getRecipeOutput(Level level, T recipe) {
-		if (recipe == null || level == null) {
-			return ItemStack.EMPTY;
-		}
+        ItemStack out = getRecipeOutput(recipe);
+        parent.renderItemStack(graphics, recipeX + 40, recipeY + 4, mouseX, mouseY, out);
+        parent.renderItemStack(graphics, recipeX + 76, recipeY + 4, mouseX, mouseY, out);
+    }
 
-		return recipe.assemble(null, level.registryAccess());
-	}
+    @Override
+    protected ItemStack getRecipeOutput(T recipe) {
+        if (recipe == null) return ItemStack.EMPTY;
+        // get registry access via RecipeUtil
+        var regsOpt = RecipeUtil.getRegistryAccess();
+        if (regsOpt.isEmpty()) return ItemStack.EMPTY;
+        var regs = regsOpt.get();
 
-	@Override
-	protected int getRecipeHeight() {
-		return 45;
-	}
+        Recipe<?> r = recipe.value();
+        return switch (r) {
+            case CraftingRecipe craftingRecipe ->
+                    craftingRecipe.assemble(DummyCraftingInventory.INSTANCE.asCraftInput(), regs);
+            case SmeltingRecipe smeltingRecipe ->
+                    smeltingRecipe.assemble((SingleRecipeInput) DummySingleRecipeInput.INSTANCE, regs);
+            case BlastingRecipe blastingRecipe ->
+                    blastingRecipe.assemble((SingleRecipeInput) DummySingleRecipeInput.INSTANCE, regs);
+            case SmokingRecipe smokingRecipe ->
+                    smokingRecipe.assemble((SingleRecipeInput) DummySingleRecipeInput.INSTANCE, regs);
+            case CampfireCookingRecipe campfireCookingRecipe ->
+                    campfireCookingRecipe.assemble((SingleRecipeInput) DummySingleRecipeInput.INSTANCE, regs);
+            case StonecutterRecipe stonecutterRecipe ->
+                    stonecutterRecipe.assemble((SingleRecipeInput) DummySingleRecipeInput.INSTANCE, regs);
+            case SmithingRecipe smithingRecipe ->
+                    smithingRecipe.assemble(DummySmithingRecipeInput.INSTANCE, regs);
+            default -> ItemStack.EMPTY;
+        };
+    }
+
+    @Override
+    protected int getRecipeHeight() {
+        return 45;
+    }
 }

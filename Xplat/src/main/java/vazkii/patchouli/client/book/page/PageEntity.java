@@ -43,8 +43,8 @@ public class PageEntity extends PageWithText {
 	transient float renderScale, offset;
 
 	@Override
-	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
-		super.build(level, entry, builder, pageNum);
+	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(entry, builder, pageNum);
 
 		creator = EntityUtil.loadEntity(entityId);
 	}
