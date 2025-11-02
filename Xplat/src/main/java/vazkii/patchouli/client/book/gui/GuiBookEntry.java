@@ -249,16 +249,20 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Optional<Ingredient> ingr) {
-		if (ingr.isPresent()) {
-			ItemStack[] stacks = ingr.get().items().toList().toArray(ItemStack[]::new);
-			if (stacks.length > 0) {
-				renderItemStack(graphics, x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
-			}
+		ItemStack[] stacks = ingr
+				.map(i -> i.items()
+						.map(holder -> new ItemStack(holder.value()))
+						.toArray(ItemStack[]::new))
+				.orElse(new ItemStack[0]);
+
+		if (stacks.length > 0) {
+			ItemStack stack = stacks[(ticksInBook / 20) % stacks.length];
+			renderItemStack(graphics, x, y, mouseX, mouseY, stack);
 		}
 	}
+
 
 	@Override
 	public void setHoverTooltip(List<String> tooltip) {
