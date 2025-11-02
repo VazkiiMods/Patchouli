@@ -57,7 +57,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<RecipeHolder<Crafting
 			List<RecipeDisplay> displays = shapedRecipe.display();
 			ingredientsList = new ArrayList<>();
 
-			if (!displays.isEmpty() && displays.getFirst() instanceof ShapelessCraftingRecipeDisplay display) {
+			if (!displays.isEmpty() && displays.getFirst() instanceof net.minecraft.world.item.crafting.display.ShapedCraftingRecipeDisplay display) {
 				for (SlotDisplay slot : display.ingredients()) {
 					if (slot instanceof SlotDisplay.ItemStackSlotDisplay itemSlot) {
 						ingredientsList.add(List.of(itemSlot.stack()));
