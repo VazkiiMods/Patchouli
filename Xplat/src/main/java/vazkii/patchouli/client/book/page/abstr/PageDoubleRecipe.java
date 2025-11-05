@@ -1,13 +1,10 @@
 package vazkii.patchouli.client.book.page.abstr;
 
 import com.google.gson.annotations.SerializedName;
-
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -24,11 +21,11 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	protected transient Component title1, title2;
 
 	@Override
-	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
-		super.build(level, entry, builder, pageNum);
+	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(entry, builder, pageNum);
 
-		recipe1 = loadRecipe(level, builder, entry, recipeId, linkRecipe);
-		recipe2 = loadRecipe(level, builder, entry, recipe2Id, linkRecipe2);
+		recipe1 = loadRecipe(builder, entry, recipeId, linkRecipe, pageNum);
+		recipe2 = loadRecipe(builder, entry, recipe2Id, linkRecipe2, pageNum);
 
 		if (recipe1 == null && recipe2 != null) {
 			recipe1 = recipe2;
@@ -36,10 +33,10 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 		}
 
 		boolean customTitle = title != null && !title.isEmpty();
-		title1 = !customTitle ? getRecipeOutput(level, recipe1).getHoverName() : i18nText(title);
+		title1 = !customTitle ? getRecipeOutput(recipe1).getHoverName() : i18nText(title);
 		title2 = Component.literal("-");
 		if (recipe2 != null) {
-			title2 = !customTitle ? getRecipeOutput(level, recipe2).getHoverName() : Component.empty();
+			title2 = !customTitle ? getRecipeOutput(recipe2).getHoverName() : Component.empty();
 			if (title1.equals(title2)) {
 				title2 = Component.empty();
 			}
@@ -72,8 +69,13 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	}
 
 	protected abstract void drawRecipe(GuiGraphics graphics, T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
-	protected abstract T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, ResourceLocation loc, boolean linkRecipe);
-	protected abstract ItemStack getRecipeOutput(Level level, T recipe);
+
+	/** Adapted: no Level required */
+	protected abstract T loadRecipe(BookContentsBuilder builder, BookEntry entry, ResourceLocation loc, boolean linkRecipe, int page);
+
+	/** Adapted: no Level required */
+	protected abstract ItemStack getRecipeOutput(T recipe);
+
 	protected abstract int getRecipeHeight();
 
 	protected int getX() {
@@ -87,5 +89,4 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	protected Component getTitle(boolean second) {
 		return second ? title2 : title1;
 	}
-
 }

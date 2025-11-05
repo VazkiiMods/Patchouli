@@ -1,0 +1,13 @@
+{
+  "name": "Link",
+  "category": "patchouli:page_types",
+  "icon": "minecraft:chain",
+  "pages": [
+    {
+      "type": "patchouli:link",
+      "url": "https://example.com",
+      "link_text": "Link to example.com",
+      "text": "Button below opens example.com"
+    }
+  ]
+}

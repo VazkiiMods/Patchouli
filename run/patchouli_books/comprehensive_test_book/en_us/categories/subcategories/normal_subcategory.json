@@ -1,0 +1,6 @@
+{
+  "name": "Normal Subcategory",
+  "parent": "patchouli:subcategories",
+  "description": "Normal subcategory with some entries and some empty subcategories to observe the behavior of category button wrapping.",
+  "icon": "minecraft:cooked_chicken"
+}

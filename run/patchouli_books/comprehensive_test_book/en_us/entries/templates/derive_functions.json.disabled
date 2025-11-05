@@ -1,0 +1,14 @@
+{
+  "name": "Derivation Functions",
+  "category": "patchouli:templates",
+  "icon": "minecraft:written_book",
+  "pages": [
+    {
+      "type": "patchouli:derive_ingr_to_stack",
+      "input": {
+        "tag": "minecraft:creeper_drop_music_discs"
+      }
+
+    }
+  ]
+}

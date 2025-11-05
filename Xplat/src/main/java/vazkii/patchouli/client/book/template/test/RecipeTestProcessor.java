@@ -1,68 +1,72 @@
 package vazkii.patchouli.client.book.template.test;
 
-import net.minecraft.world.level.Level;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.*;
 
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
+import vazkii.patchouli.common.util.RecipeUtil;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class RecipeTestProcessor implements IComponentProcessor {
 
-	@Override
-	public void setup(Level level, IVariableProvider variables) {
-		//  Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'setup'");
-	}
+	private Recipe<?> recipe;
 
 	@Override
-	public IVariable process(Level level, String key) {
-		//  Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'process'");
+	public void setup(IVariableProvider variables) {
+		// TODO probably add a recipe serializer?
+		String recipeId = variables.get("recipe", RecipeUtil.getRegistryAccess().orElseThrow()).asString();
+		RecipeManager manager = RecipeUtil.getRecipeManager().orElseThrow();
+		recipe = manager.byKey(ResourceKey.create(ResourceKey.createRegistryKey(ResourceLocation.parse(recipeId)), ResourceLocation.parse(recipeId))
+		).orElseThrow(IllegalArgumentException::new).value();
 	}
+	@SuppressWarnings("deprecation")
+	public ItemStack[] getItemStacks (){
+		ItemStack [] stacks = new ItemStack[0];
 
-	// private RecipeHolder<?> recipe;
+		if (recipe instanceof ShapedRecipe){
+			List<Optional<Ingredient>> shapedIngredients = ((ShapedRecipe) recipe).getIngredients();
+			Optional<Ingredient> ingredient = shapedIngredients.getFirst();
+			if (ingredient.isPresent()) {
+                stacks = ingredient.get().items().map(ItemStack.class::cast).toArray(ItemStack[]::new);
 
-	// @Override
-	// public void setup(Level level, IVariableProvider variables) {
-	// 	//  probably add a recipe serializer?
-	// 	String recipeId = variables.get("recipe", level.registryAccess()).asString();
-	// 	RecipeManager manager = level.getServer().getRecipeManager();
-	// 	ResourceLocation rL = ResourceLocation.fromNamespaceAndPath("patchouli", recipeId);
-	// 	Optional<RecipeHolder<?>> recipeHolder = manager.byKey(ResourceKey.create(ResourceKey.createRegistryKey(rL), rL));
+			}
+		}
+		else if (recipe instanceof ShapelessRecipe){
+			List<Ingredient> shapelessIngredients = RecipeUtil.getShapelessIngredients((ShapelessRecipe) recipe);
+			Ingredient ingredient = shapelessIngredients.getFirst();
+            stacks = ingredient.items().map(ItemStack.class::cast).toArray(ItemStack[]::new);
+		}
 
-		
+        return stacks;
+    }
 
-	// 	if (recipeHolder.isPresent()) {
-	// 		recipe = recipeHolder.get();
-	// 		Recipe<?> result = null;
+	@Override
+	public IVariable process(String key) {
+		if (key.startsWith("item")) {
+			int index = Integer.parseInt(key.substring(4)) - 1;
 
-	// 		if (recipe.value() instanceof Recipe<?> recipe2) {
-	// 			result = recipe2;
-	// 		}
-	// 	} else {
-	// 		throw new IllegalArgumentException("Could not find recipe: " + recipeId);
-	// 	}
-	// }
 
-	// @Override
-	// public IVariable process(Level level, String key) {
-	// 	if (key.startsWith("item")) {
-	// 		int index = Integer.parseInt(key.substring(4)) - 1;
-	// 		Ingredient ingredient = recipe().get(index);
-	// 		ItemStack[] stacks = ingredient.getItems();
-	// 		ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
+			ItemStack[] stacks = getItemStacks();
+			ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
 
-	// 		return IVariable.from(stack, level.registryAccess());
-	// 	} else if (key.equals("text")) {
-	// 		return IVariable.wrap(result.getCount() + "x$(br)" + result.getHoverName().getString(), level.registryAccess());
-	// 	} else if (key.equals("icount")) {
-	// 		return IVariable.wrap(result.getCount(), level.registryAccess());
-	// 	} else if (key.equals("iname")) {
-	// 		return IVariable.wrap(result.getHoverName().getString(), level.registryAccess());
-	// 	}
+			return IVariable.from(stack, RecipeUtil.getRegistryAccess().orElseThrow());
+		} else if (key.equals("text")) {
+			ItemStack out = RecipeUtil.getCraftingResult(Arrays.stream(getItemStacks()).toList());
+			return IVariable.wrap(out.getCount() + "x$(br)" + out.getHoverName(), RecipeUtil.getRegistryAccess().orElseThrow());
+		} else if (key.equals("icount")) {
+			return IVariable.wrap(RecipeUtil.getCraftingResult(Arrays.stream(getItemStacks()).toList()).getCount(), RecipeUtil.getRegistryAccess().orElseThrow());
+		} else if (key.equals("iname")) {
+			return IVariable.wrap(RecipeUtil.getCraftingResult(Arrays.stream(getItemStacks()).toList()).getHoverName().getString(), RecipeUtil.getRegistryAccess().orElseThrow());
+		}
 
-	// 	return null;
-	// }
-	
+		return null;
+	}
 
 }

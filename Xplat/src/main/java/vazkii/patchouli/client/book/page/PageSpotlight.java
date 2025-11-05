@@ -2,10 +2,10 @@ package vazkii.patchouli.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.gui.GuiGraphics;
+
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -22,8 +22,8 @@ public class PageSpotlight extends PageWithText {
 	transient ItemStack[] stacks;
 
 	@Override
-	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
-		super.build(level, entry, builder, pageNum);
+	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
+		super.build(entry, builder, pageNum);
 		stacks = item.as(ItemStack[].class);
 
 		if (linkRecipe) {

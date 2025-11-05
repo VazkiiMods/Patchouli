@@ -42,13 +42,11 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 			int py = getY() * 2 + 2;
 			entry.getIcon().render(graphics, px, py);
 
-			RenderSystem.disableScissor();
 			String s = Integer.toString(bookmark.spread + 1);
 			if (multiblock) {
 				s = I18n.get("patchouli.gui.lexicon.visualize_letter");
 			}
 			graphics.drawString(parent.getMinecraft().font, s, px + 12, py + 10, 0xFFFFFF, true);
-			RenderSystem.enableScissor(px, py, mouseX, mouseY);
 			graphics.pose().popPose();
 		}
 	}

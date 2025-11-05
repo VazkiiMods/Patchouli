@@ -3,8 +3,8 @@ package vazkii.patchouli.client.book.template;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 
+import net.minecraft.world.item.crafting.Ingredient;
 import org.apache.commons.lang3.text.WordUtils;
 
 import vazkii.patchouli.api.IComponentProcessor;
@@ -14,6 +14,7 @@ import vazkii.patchouli.api.IVariablesAvailableCallback;
 import vazkii.patchouli.common.util.EntityUtil;
 
 import org.jetbrains.annotations.Nullable;
+import vazkii.patchouli.common.util.RecipeUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,26 +43,26 @@ public class VariableAssigner {
 		FUNCTIONS.put("exists", VariableAssigner::exists);
 		FUNCTIONS.put("iexists", VariableAssigner::iexists);
 		FUNCTIONS.put("inv", VariableAssigner::inv);
-//		FUNCTIONS.put("stacks", VariableAssigner::stacks);
+		FUNCTIONS.put("stacks", VariableAssigner::stacks);
 	}
 
-	public static void assignVariableHolders(Level level, IVariablesAvailableCallback object, IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
+	public static void assignVariableHolders(IVariablesAvailableCallback object, IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
 		Context c = new Context(variables, processor, encapsulation);
 		object.onVariablesAvailable(input -> {
 			if (input == null) {
 				return IVariable.empty();
 			}
 			if (input.unwrap().isJsonPrimitive() && input.unwrap().getAsJsonPrimitive().isString()) {
-				IVariable resolved = resolveString(level, input.asString(), c);
+				IVariable resolved = resolveString(input.asString(), c);
 				if (resolved != null) {
 					return resolved;
 				}
 			}
 			return input;
-		}, level.registryAccess());
+		}, RecipeUtil.getRegistryAccess().orElseThrow());
 	}
 
-	private static IVariable resolveString(Level level, @Nullable String curr, Context c) {
+	private static IVariable resolveString(@Nullable String curr, Context c) {
 		if (curr == null || curr.isEmpty()) {
 			return null;
 		}
@@ -73,16 +74,16 @@ public class VariableAssigner {
 			String var = m.group(2);
 			String after = m.group(3);
 
-			String resolved = resolveStringFunctions(level, var, c).asString();
+			String resolved = resolveStringFunctions(var, c).asString();
 
 			s = String.format("%s%s%s", before, resolved, after);
 			m = INLINE_VAR_PATTERN.matcher(s);
 		}
 
-		return resolveStringFunctions(level, s, c);
+		return resolveStringFunctions(s, c);
 	}
 
-	private static IVariable resolveStringFunctions(Level level, String curr, Context c) {
+	private static IVariable resolveStringFunctions(String curr, Context c) {
 		IVariable cached = c.getCached(curr);
 		if (cached != null) {
 			return cached;
@@ -96,19 +97,19 @@ public class VariableAssigner {
 
 			if (FUNCTIONS.containsKey(funcStr)) {
 				BiFunction<IVariable, HolderLookup.Provider, IVariable> func = FUNCTIONS.get(funcStr);
-				IVariable parsedArg = resolveStringFunctions(level, arg, c);
-				return c.cache(curr, func.apply(parsedArg, level.registryAccess()));
+				IVariable parsedArg = resolveStringFunctions(arg, c);
+				return c.cache(curr, func.apply(parsedArg, RecipeUtil.getRegistryAccess().orElseThrow()));
 			} else {
 				throw new IllegalArgumentException("Invalid Function " + funcStr);
 			}
 		}
 
-		IVariable ret = resolveStringVar(level, curr, c);
+		IVariable ret = resolveStringVar(curr, c);
 
 		return c.cache(curr, ret);
 	}
 
-	private static IVariable resolveStringVar(Level level, String original, Context c) {
+	private static IVariable resolveStringVar(String original, Context c) {
 		String curr = original;
 		IVariable val = null;
 
@@ -118,7 +119,7 @@ public class VariableAssigner {
 
 		if (curr.startsWith("#")) {
 			if (c.encapsulation != null) {
-				val = c.encapsulation.attemptVariableLookup(curr, level.registryAccess());
+				val = c.encapsulation.attemptVariableLookup(curr, RecipeUtil.getRegistryAccess().orElseThrow());
 				if (val != null) {
 					return val;
 				} else {
@@ -130,16 +131,16 @@ public class VariableAssigner {
 			String originalKey = original.substring(1);
 
 			if (c.processor != null) {
-				val = c.processor.process(level, originalKey);
+				val = c.processor.process(originalKey);
 			}
 
 			if (val == null && c.variables.has(key)) {
-				val = c.variables.get(key, level.registryAccess());
+				val = c.variables.get(key, RecipeUtil.getRegistryAccess().orElseThrow());
 			}
 
 			return val == null ? IVariable.empty() : val;
 		}
-		return IVariable.wrap(curr, level.registryAccess());
+		return IVariable.wrap(curr, RecipeUtil.getRegistryAccess().orElseThrow());
 	}
 
 	private static BiFunction<IVariable, HolderLookup.Provider, IVariable> wrapStringFunc(Function<String, String> inner) {
@@ -162,16 +163,16 @@ public class VariableAssigner {
 
 	private static IVariable iexists(IVariable arg, HolderLookup.Provider registries) {
 		ItemStack stack = arg.as(ItemStack.class);
-		return IVariable.wrap(stack != null && !stack.isEmpty(), registries);
+		return IVariable.wrap(!stack.isEmpty(), registries);
 	}
 
 	private static IVariable inv(IVariable arg, HolderLookup.Provider registries) {
 		return IVariable.wrap(!arg.unwrap().getAsBoolean(), registries);
 	}
 
-//	private static IVariable stacks(IVariable arg, HolderLookup.Provider registries) {
-//		return IVariable.from(arg.as(Ingredient.class).getItems(), registries);
-//	}
+	private static IVariable stacks(IVariable arg, HolderLookup.Provider registries) {
+		return IVariable.from(arg.as(Ingredient.class).items(), registries);
+	}
 
 	private static String ename(String arg) {
 		return EntityUtil.getEntityName(arg);

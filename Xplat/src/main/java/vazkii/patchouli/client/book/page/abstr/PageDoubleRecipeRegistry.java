@@ -1,54 +1,87 @@
 package vazkii.patchouli.client.book.page.abstr;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
-
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
+import vazkii.patchouli.client.book.page.DummyCraftingInventory;
+import vazkii.patchouli.common.util.RecipeUtil;
 
-import org.jetbrains.annotations.Nullable;
+import java.util.Optional;
 
-public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends PageDoubleRecipe<T> {
-	private final RecipeType<? extends T> recipeType;
+public abstract class PageDoubleRecipeRegistry<T extends RecipeHolder<?>> extends PageDoubleRecipe<T> {
+	private final RecipeType<?> recipeType;
 
-	public PageDoubleRecipeRegistry(RecipeType<? extends T> recipeType) {
+	public PageDoubleRecipeRegistry(RecipeType<?> recipeType) {
 		this.recipeType = recipeType;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nullable
-	private T getRecipe(Level level, ResourceLocation id) {
-		RecipeManager manager = (RecipeManager) level.recipeAccess();
-		var recipeHolder = manager.byKey(ResourceKey.create(ResourceKey.createRegistryKey(id), id)).filter(recipe -> recipe.value().getType() == recipeType).orElse(null);
-		return recipeHolder != null ? (T) recipeHolder.value() : null;
-	}
-
-	@Override
-	protected T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, ResourceLocation res, boolean linkRecipe) {
-		if (res == null || level == null) {
+	private T getRecipe(ResourceLocation id) {
+		if (id == null) {
+			PatchouliAPI.LOGGER.debug("getRecipe called with null id");
 			return null;
 		}
 
-		T tempRecipe = getRecipe(level, res);
-		if (tempRecipe == null) { // this is hacky but it works around Forge requiring custom recipes to have the prefix of the adding mod
-			tempRecipe = getRecipe(level, ResourceLocation.fromNamespaceAndPath("crafttweaker", res.getPath()));
+		Optional<RecipeHolder<?>> recipeHolder = RecipeUtil.getRecipeByKey(id.getNamespace(), id.getPath());
+
+		if (recipeHolder.isPresent()) {
+			RecipeHolder<?> found = recipeHolder.get();
+			PatchouliAPI.LOGGER.debug("Found recipe {} of type {} (class {})",
+					id,
+					BuiltInRegistries.RECIPE_TYPE.getKey(recipeType),
+					found.value().getClass().getName());
+			return (T) found;
+		} else {
+			PatchouliAPI.LOGGER.debug("No recipe found for key {}", id);
 		}
 
-//		if (tempRecipe != null) {
-//			if (linkRecipe) {
-//				entry.addRelevantStack(builder, tempRecipe.assemble(tempRecipe, level.registryAccess()));
-//			}
-//			return tempRecipe;
-//		}
+		return null;
+	}
+
+	protected ItemStack getRecipeOutput(T recipe) {
+		if (recipe == null) return ItemStack.EMPTY;
+
+		if (recipe.value() instanceof CraftingRecipe crafting) {
+			return crafting.assemble(DummyCraftingInventory.INSTANCE.asCraftInput(), RecipeUtil.getRegistryAccess().orElseThrow());
+		}
+
+		// Extend with other recipe types as needed, using RecipeUtil.getRegistryAccess() for registry
+		return ItemStack.EMPTY;
+	}
+
+	@Override
+	protected T loadRecipe(BookContentsBuilder builder, BookEntry entry, ResourceLocation res, boolean linkRecipe, int page) {
+		if (res == null) {
+			PatchouliAPI.LOGGER.debug("loadRecipe called with null res");
+			return null;
+		}
+
+		T tempRecipe = getRecipe(res);
+		boolean usedFallback = false;
+		if (tempRecipe == null) {
+			ResourceLocation fallback = ResourceLocation.fromNamespaceAndPath("crafttweaker", res.getPath());
+			PatchouliAPI.LOGGER.debug("Trying fallback recipe id {}", fallback);
+			tempRecipe = getRecipe(fallback);
+			usedFallback = tempRecipe != null;
+		}
+
+		if (tempRecipe != null) {
+			PatchouliAPI.LOGGER.info("Recipe {} found (type {}). Fallback used: {}", res, BuiltInRegistries.RECIPE_TYPE.getKey(recipeType), usedFallback);
+			if (linkRecipe) {
+				ItemStack out = getRecipeOutput(tempRecipe);
+				entry.addRelevantStack(builder, out, page);
+				PatchouliAPI.LOGGER.debug("Linked recipe {} to entry page {} with output {}", res, page, out.isEmpty() ? "EMPTY" : out);
+			}
+			return tempRecipe;
+		}
 
 		PatchouliAPI.LOGGER.warn("Recipe {} (of type {}) not found", res, BuiltInRegistries.RECIPE_TYPE.getKey(recipeType));
 		return null;
 	}
-
 }

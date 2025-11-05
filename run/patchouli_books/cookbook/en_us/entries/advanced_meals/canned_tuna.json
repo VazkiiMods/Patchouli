@@ -1,0 +1,13 @@
+{
+    "name": "Canned Tuna",
+    "icon": "minecraft:diamond",
+    "category": "patchouli:advanced_meals",
+    "pages": [
+        {
+            "type": "patchouli:crafting",
+            "recipe": "minecraft:diamond_block",
+            "recipe2": "minecraft:diamond_sword",
+            "text": "Tuna in a can."
+        }
+    ]
+}

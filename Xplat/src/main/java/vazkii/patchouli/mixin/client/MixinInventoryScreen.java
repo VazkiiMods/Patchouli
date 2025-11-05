@@ -4,7 +4,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -24,10 +24,13 @@ import vazkii.patchouli.common.book.BookRegistry;
 import java.util.List;
 
 @Mixin(InventoryScreen.class)
-public abstract class MixinInventoryScreen extends InventoryScreen {
-	public MixinInventoryScreen(InventoryMenu container, Inventory playerInventory, Component text) {
-		super(null);
+public abstract class MixinInventoryScreen extends Screen {
+	protected MixinInventoryScreen(Component title) {
+		super(title);
 	}
+	// Constructor is not needed for mixins that don't directly extend the target class
+	// and only inject methods.
+	// If a constructor was needed, it would typically call super(title) for Screen.
 
 	@SuppressWarnings({ "unchecked", "unlikely-arg-type" })
 	@Inject(at = @At("RETURN"), method = "init()V")

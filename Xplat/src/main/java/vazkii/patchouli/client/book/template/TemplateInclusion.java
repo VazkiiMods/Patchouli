@@ -68,7 +68,7 @@ public class TemplateInclusion {
 		}
 	}
 
-	public void process(Level level, IComponentProcessor processor) {
+	public void process(IComponentProcessor processor) {
 		if (processor == null) {
 			return;
 		}
@@ -79,7 +79,7 @@ public class TemplateInclusion {
 			JsonElement val = entry.getValue();
 			if (val.isJsonPrimitive() && val.getAsString().startsWith("#")) {
 				String realVal = val.getAsString().substring(1);
-				IVariable res = processor.process(level, realVal);
+				IVariable res = processor.process(realVal);
 				if (res != null) {
 					entry.setValue(res.unwrap());
 				}

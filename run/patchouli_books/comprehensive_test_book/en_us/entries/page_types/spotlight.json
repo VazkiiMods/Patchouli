@@ -1,0 +1,35 @@
+{
+  "name": "Spotlights",
+  "category": "patchouli:page_types",
+  "icon": "minecraft:oak_sapling",
+  "pages": [
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:oak_sapling",
+      "link_recipe": true
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:dead_bush,minecraft:spruce_sapling",
+      "title": "Custom title",
+      "text": "Custom text $(l)with formatting$()."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "tag:minecraft:piglin_loved",
+      "title": "Tag Spotlight",
+      "text": "Piglins love these!",
+      "link_recipe": true
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "tag:minecraft:piglin_repellents"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "tag:minecraft:wool,minecraft:bone",
+      "title": "Wool",
+      "text": "But also a bone?"
+    }
+  ]
+}

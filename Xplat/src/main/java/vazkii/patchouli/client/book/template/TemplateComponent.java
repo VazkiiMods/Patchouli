@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
@@ -40,7 +39,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 
 	public transient JsonObject sourceObject;
 
-	public final void compile(Level level, IVariableProvider variables, IComponentProcessor processor, @Nullable TemplateInclusion encapsulation) {
+	public final void compile(IVariableProvider variables, IComponentProcessor processor, @Nullable TemplateInclusion encapsulation) {
 		if (compiled) {
 			return;
 		}
@@ -50,7 +49,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 			y += encapsulation.y;
 		}
 
-		VariableAssigner.assignVariableHolders(level, this, variables, processor, encapsulation);
+		VariableAssigner.assignVariableHolders(this, variables, processor, encapsulation);
 		compiled = true;
 	}
 

@@ -8,7 +8,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
@@ -33,7 +32,7 @@ public abstract class BookPage {
 
 	protected String type, flag, advancement, anchor;
 
-	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
+	public void build(BookEntry entry, BookContentsBuilder builder, int pageNum) {
 		this.book = entry.getBook();
 		this.entry = entry;
 		this.pageNum = pageNum;

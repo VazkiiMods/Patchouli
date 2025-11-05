@@ -1,0 +1,15 @@
+{
+  "name": "Overflow Render Test",
+  "category": "patchouli:deserialization",
+  "flag": "!mod:gardenofglass",
+  "icon": "minecraft:water_bucket",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. $(l:https://www.lipsum.com/)Source.$(/l) Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+    }, {
+      "type": "patchouli:text",
+      "text": "PsiDust is now completely uncraftable, player is stuck at level 0 permanently No bypass commands work.$(br)Tried every available suggestion, and still nothing. Also noticed that apparently every time someone as else posted a similar problem on here, its closed immediately, which makes me believe that this mod should be removed from Stoneblock in the future.$(br)I will be forwarding the recommendation to all Modpack developers. Not even going to ask for help from the staff here, As I have had it with most of the Mod Developers who are github these days and their inability to act with any form of decorum or actually attempting to resolve issues. Do not bother responding, as I am going to take an immediate screenshot for my records, and will spend my now limitless amount of available time to getting certain mod developers (if you can call them that) removed."
+    }
+  ]
+}
