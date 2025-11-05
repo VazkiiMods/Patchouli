@@ -1,0 +1,33 @@
+{
+  "name": "Sparse Multiblocks",
+  "category": "patchouli:multiblocks",
+  "icon": "minecraft:stone_brick_stairs",
+  "pages": [
+    {
+      "type": "patchouli:multiblock",
+      "name": "stair end portal (sparse)",
+      "multiblock": {
+        "sparse_pattern": {
+          "N": [
+            [-1, 0, -2], [0, 0, -2], [1, 0, -2]
+          ],
+          "S": [
+            [-1, 0, 2], [0, 0, 2], [1, 0, 2]
+          ],
+          "W": [
+            [-2, 0, -1], [-2, 0, 0], [-2, 0, 1]
+          ],
+          "E": [
+            [2, 0, -1], [2, 0, 0], [2, 0, 1]
+          ]
+        },
+        "mapping": {
+          "N": "minecraft:oak_stairs[facing=north]",
+          "S": "minecraft:birch_stairs[facing=south]",
+          "W": "minecraft:brick_stairs[facing=west]",
+          "E": "minecraft:stone_brick_stairs[facing=east]"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+    "name": "Testing book",
+    "landing_text": "Comprehensive test book.",
+    "version": 1,
+    "creative_tab": "minecraft:tools_and_utilities",
+    "use_resource_pack": true
+}

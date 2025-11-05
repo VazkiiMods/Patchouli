@@ -1,0 +1,13 @@
+{
+  "name": "Shapeless Test",
+  "icon": "minecraft:",
+  "category": "patchouli:advanced_meals",
+  "pages": [
+    {
+      "type": "patchouli:crafting",
+      "recipe": "minecraft:bread",
+      "recipe2": "minecraft:magma_cream",
+      "text": "Tuna in a can."
+    }
+  ]
+}

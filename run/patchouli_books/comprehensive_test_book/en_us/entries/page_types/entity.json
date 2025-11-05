@@ -1,0 +1,23 @@
+{
+  "name": "Entities",
+  "category": "patchouli:page_types",
+  "icon": "minecraft:creeper_spawn_egg",
+  "pages": [
+    {
+      "type": "patchouli:entity",
+      "entity": "minecraft:creeper"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "minecraft:creeper{powered:1}"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "minecraft:snow_golem"
+    },
+    {
+      "type": "patchouli:entity",
+      "entity": "minecraft:slime{Size:2}"
+    }
+  ]
+}

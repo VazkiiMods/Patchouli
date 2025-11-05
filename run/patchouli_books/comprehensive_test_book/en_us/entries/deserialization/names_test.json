@@ -1,0 +1,34 @@
+{
+  "name": "Names Test",
+  "category": "patchouli:deserialization",
+  "flag": "!mod:gardenofglass",
+  "icon": "minecraft:name_tag",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The following page should read \"<playername> pressed <use binding> with their <shears name> on a <sheep name> and got some <wool name>\""
+    },
+    {
+      "type": "patchouli:text",
+      "text": {
+        "translate": "$(l)%s$() pressed %s with their $(6)%s on a %s$(0) and got some $(8)%s$(0)",
+        "with": [
+          "$(playername)",
+          {
+            "keybind": "key.use"
+          },
+          {
+            "translate": "item.minecraft.shears",
+            "italic": true
+          },
+          {
+            "translate": "entity.minecraft.sheep"
+          },
+          {
+            "translate": "block.minecraft.white_wool"
+          }
+        ]
+      }
+    }
+  ]
+}

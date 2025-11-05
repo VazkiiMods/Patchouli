@@ -1,0 +1,12 @@
+{
+  "name": "Advancement Quest",
+  "category": "patchouli:page_types",
+  "icon": "minecraft:vindicator_spawn_egg",
+  "pages": [
+    {
+      "type": "patchouli:quest",
+      "trigger": "minecraft:nether/create_beacon",
+      "text": "This quest is completed when the vanilla beacon advancement is completed. Click $(c:/advancement grant @s only minecraft:nether/create_beacon)here$(/c) to grant it. Click $(c:/advancement revoke @s only minecraft:nether/create_beacon)here$(/c) to revoke it. (You may need to unpause the game to see changes take effect)"
+    }
+  ]
+}

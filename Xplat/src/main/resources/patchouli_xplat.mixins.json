@@ -2,7 +2,6 @@
   "required": true,
   "minVersion": "0.8.4",
   "package": "vazkii.patchouli.mixin",
-  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AccessorSmithingTransformRecipe",
     "AccessorSmithingTrimRecipe"
@@ -12,6 +11,7 @@
     "client.AccessorKeyMapping",
     "client.AccessorMultiBufferSource",
     "client.AccessorScreen",
+    "client.GameRendererMixin",
     "client.MixinClientAdvancements",
     "client.MixinInventoryScreen",
     "client.MixinLevelRenderer",
