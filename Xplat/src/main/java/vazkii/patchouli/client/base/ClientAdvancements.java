@@ -11,6 +11,7 @@ import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.resources.ResourceLocation;
 
+import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.mixin.client.AccessorClientAdvancements;
@@ -61,29 +62,26 @@ public class ClientAdvancements {
 			gui.addToast(new LexiconToast(book));
 		}
 	}
-
+	@SuppressWarnings("unused")
 	public static class LexiconToast implements Toast {
-		@SuppressWarnings("unused")
+
 		private static final ResourceLocation BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("toast/advancement");
-		@SuppressWarnings("unused")
-		private final Book book;
 
-		public LexiconToast(Book book) {
-			this.book = book;
+        public LexiconToast(Book book) {
+        }
+
+		@Override
+		public @NotNull Visibility getWantedVisibility() {
+			return Visibility.SHOW;
 		}
 
 		@Override
-		public Visibility getWantedVisibility() {
-			return null;
-		}
-
-		@Override
-		public void update(ToastManager toastManager, long l) {
+		public void update(@NotNull ToastManager toastManager, long l) {
 
 		}
 
 		@Override
-		public void render(GuiGraphics guiGraphics, Font font, long l) {
+		public void render(@NotNull GuiGraphics guiGraphics, @NotNull Font font, long l) {
 
 		}
 

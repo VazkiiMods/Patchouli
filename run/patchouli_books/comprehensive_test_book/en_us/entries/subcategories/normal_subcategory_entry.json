@@ -1,0 +1,11 @@
+{
+  "name": "Normal Subcategory Entry",
+  "category": "patchouli:subcategories/normal_subcategory",
+  "icon": "minecraft:carrot_on_a_stick",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "hello world"
+    }
+  ]
+}

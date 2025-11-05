@@ -1,0 +1,54 @@
+{
+  "name": "Dense Multiblocks",
+  "category": "patchouli:multiblocks",
+  "icon": "minecraft:oak_stairs",
+  "pages": [
+    {
+      "type": "patchouli:multiblock",
+      "name": "stair end portal (dense)",
+      "multiblock": {
+        "pattern": [
+          [
+            " WWW ",
+            "N   S",
+            "N 0 S",
+            "N   S",
+            " EEE "
+          ]
+        ],
+        "mapping": {
+          "N": "minecraft:oak_stairs[facing=north]",
+          "S": "minecraft:birch_stairs[facing=south]",
+          "W": "minecraft:brick_stairs[facing=west]",
+          "E": "minecraft:stone_brick_stairs[facing=east]"
+        }
+      }
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "issue 233",
+      "multiblock": {
+        "pattern": [
+          [
+            "   ",
+            " L ",
+            "   "
+          ],
+          [
+            " W ",
+            "N0S",
+            " E "
+          ]
+        ],
+        "mapping": {
+          "L": "minecraft:lectern",
+          "N": "minecraft:sandstone_stairs[facing=north]",
+          "S": "minecraft:red_sandstone_stairs[facing=south]",
+          "W": "minecraft:prismarine_stairs[facing=west]",
+          "E": "minecraft:purpur_stairs[facing=east]",
+          "0": "minecraft:sandstone"
+        }
+      }
+    }
+  ]
+}

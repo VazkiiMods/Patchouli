@@ -94,7 +94,7 @@ public class BookContentsBuilder {
 
 		entries.values().forEach(entry -> {
 			try {
-				entry.build(level, this);
+				entry.build(this);
 			} catch (Exception e) {
 				throw new RuntimeException("Error building entry %s of book %s".formatted(entry.getId(), book.id), e);
 			}

@@ -1,0 +1,16 @@
+{
+  "name": "Relations",
+  "category": "patchouli:page_types",
+  "icon": "minecraft:vindicator_spawn_egg",
+  "pages": [
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "patchouli:page_types/link",
+        "patchouli:multiblocks/dense"
+      ],
+      "title": "Check These Out",
+      "text": "Very cool."
+    }
+  ]
+}

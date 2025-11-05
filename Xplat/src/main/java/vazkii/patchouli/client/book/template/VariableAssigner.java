@@ -4,6 +4,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 
+import net.minecraft.world.item.crafting.Ingredient;
 import org.apache.commons.lang3.text.WordUtils;
 
 import vazkii.patchouli.api.IComponentProcessor;
@@ -42,7 +43,7 @@ public class VariableAssigner {
 		FUNCTIONS.put("exists", VariableAssigner::exists);
 		FUNCTIONS.put("iexists", VariableAssigner::iexists);
 		FUNCTIONS.put("inv", VariableAssigner::inv);
-//		FUNCTIONS.put("stacks", VariableAssigner::stacks);
+		FUNCTIONS.put("stacks", VariableAssigner::stacks);
 	}
 
 	public static void assignVariableHolders(IVariablesAvailableCallback object, IVariableProvider variables, IComponentProcessor processor, TemplateInclusion encapsulation) {
@@ -162,16 +163,16 @@ public class VariableAssigner {
 
 	private static IVariable iexists(IVariable arg, HolderLookup.Provider registries) {
 		ItemStack stack = arg.as(ItemStack.class);
-		return IVariable.wrap(stack != null && !stack.isEmpty(), registries);
+		return IVariable.wrap(!stack.isEmpty(), registries);
 	}
 
 	private static IVariable inv(IVariable arg, HolderLookup.Provider registries) {
 		return IVariable.wrap(!arg.unwrap().getAsBoolean(), registries);
 	}
 
-//	private static IVariable stacks(IVariable arg, HolderLookup.Provider registries) {
-//		return IVariable.from(arg.as(Ingredient.class).getItems(), registries);
-//	}
+	private static IVariable stacks(IVariable arg, HolderLookup.Provider registries) {
+		return IVariable.from(arg.as(Ingredient.class).items(), registries);
+	}
 
 	private static String ename(String arg) {
 		return EntityUtil.getEntityName(arg);

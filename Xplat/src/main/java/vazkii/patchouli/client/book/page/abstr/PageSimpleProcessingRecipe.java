@@ -8,7 +8,7 @@ import net.minecraft.world.item.crafting.*;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.DummyCraftingInventory;
-import vazkii.patchouli.client.book.page.DummySingleRecipeInput;
+
 import vazkii.patchouli.client.book.page.DummySmithingRecipeInput;
 import vazkii.patchouli.common.util.RecipeUtil;
 
@@ -61,15 +61,15 @@ public abstract class PageSimpleProcessingRecipe<T extends RecipeHolder<?>> exte
             case CraftingRecipe craftingRecipe ->
                     craftingRecipe.assemble(DummyCraftingInventory.INSTANCE.asCraftInput(), regs);
             case SmeltingRecipe smeltingRecipe ->
-                    smeltingRecipe.assemble((SingleRecipeInput) DummySingleRecipeInput.INSTANCE, regs);
+                    smeltingRecipe.assemble(new SingleRecipeInput(smeltingRecipe.input().items().toList().getFirst().value().getDefaultInstance()), regs);
             case BlastingRecipe blastingRecipe ->
-                    blastingRecipe.assemble((SingleRecipeInput) DummySingleRecipeInput.INSTANCE, regs);
+                    blastingRecipe.assemble(new SingleRecipeInput(blastingRecipe.input().items().toList().getFirst().value().getDefaultInstance()), regs);
             case SmokingRecipe smokingRecipe ->
-                    smokingRecipe.assemble((SingleRecipeInput) DummySingleRecipeInput.INSTANCE, regs);
+                    smokingRecipe.assemble(new SingleRecipeInput(smokingRecipe.input().items().toList().getFirst().value().getDefaultInstance()), regs);
             case CampfireCookingRecipe campfireCookingRecipe ->
-                    campfireCookingRecipe.assemble((SingleRecipeInput) DummySingleRecipeInput.INSTANCE, regs);
+                    campfireCookingRecipe.assemble(new SingleRecipeInput(campfireCookingRecipe.input().items().toList().getFirst().value().getDefaultInstance()), regs);
             case StonecutterRecipe stonecutterRecipe ->
-                    stonecutterRecipe.assemble((SingleRecipeInput) DummySingleRecipeInput.INSTANCE, regs);
+                    stonecutterRecipe.assemble(new SingleRecipeInput(stonecutterRecipe.input().items().toList().getFirst().value().getDefaultInstance()), regs);
             case SmithingRecipe smithingRecipe ->
                     smithingRecipe.assemble(DummySmithingRecipeInput.INSTANCE, regs);
             default -> ItemStack.EMPTY;

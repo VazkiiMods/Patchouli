@@ -30,7 +30,7 @@ public final class RecipeUtil {
         return Optional.ofNullable(ServerGetter.get().server());
     }
 
-    private static Optional<RecipeManager> getRecipeManager() {
+    public static Optional<RecipeManager> getRecipeManager() {
         return getServer().map(MinecraftServer::getRecipeManager);
     }
 
@@ -64,21 +64,8 @@ public final class RecipeUtil {
         return opt.get().value().assemble(input, regs);
     }
     @SuppressWarnings("unchecked")
-    public static List<List<ItemStack>> getShapelessIngredients(ShapelessRecipe recipe) {
-        List<RecipeDisplay> displays = recipe.display();
-        List<List<ItemStack>> ingredientsList = new ArrayList<>();
-
-        if (!displays.isEmpty() && displays.getFirst() instanceof ShapelessCraftingRecipeDisplay display) {
-            for (SlotDisplay slot : display.ingredients()) {
-                if (slot instanceof SlotDisplay.ItemStackSlotDisplay itemSlot) {
-                    ingredientsList.add(List.of(itemSlot.stack()));
-                } else {
-                    ingredientsList.add(List.of(ItemStack.EMPTY)); // fallback for non-item slots
-                }
-            }
-        }
-
-        return ingredientsList; // <-- return the filled list
+    public static List<Ingredient> getShapelessIngredients(ShapelessRecipe recipe) {
+        return recipe.placementInfo().ingredients();
     }
 
     /**

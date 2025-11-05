@@ -1,0 +1,5 @@
+{
+  "name": "Builtin Page Types",
+  "description": "Tests for builtin page types. Recipes, multiblocks, and templates have their own category.",
+  "icon": "minecraft:diamond"
+}

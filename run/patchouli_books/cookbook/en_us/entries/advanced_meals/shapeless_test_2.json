@@ -1,0 +1,13 @@
+{
+  "name": "Shapeless Test 2",
+  "icon": "minecraft:pumpkin_pie",
+  "category": "patchouli:advanced_meals",
+  "pages": [
+    {
+      "type": "patchouli:crafting",
+      "recipe": "minecraft:wheat",
+      "recipe2": "minecraft:pumpkin_pie",
+      "text": "Tuna in a can."
+    }
+  ]
+}
