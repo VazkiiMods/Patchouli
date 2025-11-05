@@ -11,8 +11,11 @@ import net.minecraft.client.gui.GuiGraphics;
 
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.PatchouliAPI;
@@ -26,6 +29,7 @@ import vazkii.patchouli.common.util.EntityUtil;
 
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public class PageEntity extends PageWithText {
 
 	@SerializedName("entity") public String entityId;
@@ -53,8 +57,10 @@ public class PageEntity extends PageWithText {
 	public void onDisplayed(GuiBookEntry parent, int left, int top) {
 		super.onDisplayed(parent, left, top);
 
-		loadEntity(parent.getMinecraft().level);
-	}
+        if (parent.getMinecraft() != null) {
+            loadEntity(parent.getMinecraft().level);
+        }
+    }
 
 	@Override
 	public int getTextHeight() {
@@ -82,27 +88,36 @@ public class PageEntity extends PageWithText {
 		}
 
 		if (entity != null) {
-			float rotation = rotate ? ClientTicker.total : defaultRotation;
-			renderEntity(graphics, entity, 58, 60, rotation, renderScale, offset);
+			float rotation = rotate ? (ClientTicker.total + pticks) : defaultRotation;
+			renderEntity(graphics, (LivingEntity) entity, 58, 60, rotation, renderScale, offset, pticks);
 		}
 
 		super.render(graphics, mouseX, mouseY, pticks);
 	}
+	@SuppressWarnings("unchecked")
+	public static void renderEntity(GuiGraphics graphics, LivingEntity entity, float x, float y, float rotation, float scale, float offset, float pticks) {
+		Minecraft mc = Minecraft.getInstance();
+		EntityRenderDispatcher dispatcher = mc.getEntityRenderDispatcher();
 
-	public static void renderEntity(GuiGraphics graphics, Entity entity, float x, float y, float rotation, float renderScale, float offset) {
+		// Bind renderer with correct generics
+		EntityRenderer<LivingEntity, EntityRenderState> renderer = (EntityRenderer<LivingEntity, EntityRenderState>) dispatcher.getRenderer(entity);
+		EntityRenderState state = renderer.createRenderState();
+		renderer.extractRenderState(entity, state, pticks);
+
 		PoseStack ms = graphics.pose();
 		ms.pushPose();
 		ms.translate(x, y, 50);
-		ms.scale(renderScale, renderScale, renderScale);
+		ms.scale(scale, scale, scale);
 		ms.translate(0, offset, 0);
 		ms.mulPose(Axis.ZP.rotationDegrees(180));
 		ms.mulPose(Axis.YP.rotationDegrees(rotation));
-		EntityRenderDispatcher erd = Minecraft.getInstance().getEntityRenderDispatcher();
-		MultiBufferSource.BufferSource immediate = Minecraft.getInstance().renderBuffers().bufferSource();
-		erd.setRenderShadow(false);
 
-		erd.setRenderShadow(true);
-		immediate.endBatch();
+		MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
+		dispatcher.setRenderShadow(false);
+		renderer.render(state, ms, buffers, 0x00F000F0);
+		dispatcher.setRenderShadow(true);
+
+		buffers.endBatch();
 		ms.popPose();
 	}
 
