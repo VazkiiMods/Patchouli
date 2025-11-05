@@ -18,8 +18,6 @@ import vazkii.patchouli.common.util.RecipeUtil;
 
 import java.util.*;
 
-import static net.minecraft.data.recipes.RecipeCategory.BREWING;
-
 public class PageCrafting extends PageDoubleRecipeRegistry<RecipeHolder<CraftingRecipe>> {
 
 	public PageCrafting() {

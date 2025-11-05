@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.*;
 
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public final class DummyCraftingInventory implements CraftingContainer, Container {
     public static final DummyCraftingInventory INSTANCE = new DummyCraftingInventory();
@@ -23,7 +24,7 @@ public final class DummyCraftingInventory implements CraftingContainer, Containe
     }
 
     @Override
-    public net.minecraft.core.NonNullList<ItemStack> getItems() {
+    public net.minecraft.core.@NotNull NonNullList<ItemStack> getItems() {
         return net.minecraft.core.NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
     }
 
@@ -38,22 +39,22 @@ public final class DummyCraftingInventory implements CraftingContainer, Containe
     }
 
     @Override
-    public ItemStack getItem(int i) {
+    public @NotNull ItemStack getItem(int i) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack removeItem(int i, int j) {
+    public @NotNull ItemStack removeItem(int i, int j) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int i) {
+    public @NotNull ItemStack removeItemNoUpdate(int i) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setItem(int i, ItemStack itemStack) {
+    public void setItem(int i, @NotNull ItemStack itemStack) {
         // NO-OP
     }
 
@@ -63,7 +64,7 @@ public final class DummyCraftingInventory implements CraftingContainer, Containe
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@NotNull Player player) {
         return false;
     }
 
@@ -73,7 +74,7 @@ public final class DummyCraftingInventory implements CraftingContainer, Containe
     }
 
     @Override
-    public void fillStackedContents(StackedItemContents stackedItemContents) {
+    public void fillStackedContents(@NotNull StackedItemContents stackedItemContents) {
         // NO-OP
     }
 

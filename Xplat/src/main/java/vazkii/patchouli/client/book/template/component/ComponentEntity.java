@@ -3,9 +3,12 @@ package vazkii.patchouli.client.book.template.component;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.IVariable;
@@ -54,7 +57,7 @@ public class ComponentEntity extends TemplateComponent {
 
 		if (entity != null) {
 			float rotation = rotate ? ClientTicker.total : defaultRotation;
-			PageEntity.renderEntity(graphics, entity, x, y, rotation, renderScale, offset);
+			PageEntity.renderEntity(graphics, (LivingEntity) entity, x, y, rotation, renderScale, offset, pticks);
 		}
 	}
 
