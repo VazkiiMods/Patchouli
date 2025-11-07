@@ -15,16 +15,15 @@ import vazkii.patchouli.mixin.AccessorSmithingTrimRecipe;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public class PageSmithing extends PageDoubleRecipeRegistry<RecipeHolder<SmithingRecipe>> {
+public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 
 	public PageSmithing() {
 		super(RecipeType.SMITHING);
 	}
 
 	@Override
-	protected void drawRecipe(GuiGraphics g, RecipeHolder<SmithingRecipe> holder,
+	protected void drawRecipe(GuiGraphics g, SmithingRecipe recipe,
 							  int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-		SmithingRecipe recipe = holder.value();
 		Level level = Minecraft.getInstance().level;
 		if (level == null) return;
 
@@ -36,7 +35,7 @@ public class PageSmithing extends PageDoubleRecipeRegistry<RecipeHolder<Smithing
 		parent.renderIngredient(g, recipeX + 4,  recipeY + 23, mouseX, mouseY, getAddition(recipe));
 		parent.renderIngredient(g, recipeX + 40, recipeY + 4,  mouseX, mouseY, getTemplate(recipe));
 
-		ItemStack out = getRecipeOutput(holder);
+		ItemStack out = getRecipeOutput(recipe);
 
 		parent.renderItemStack(g, recipeX + 40, recipeY + 20, mouseX, mouseY, out);
 		parent.renderItemStack(g, recipeX + 76, recipeY + 13, mouseX, mouseY, out);
@@ -59,13 +58,17 @@ public class PageSmithing extends PageDoubleRecipeRegistry<RecipeHolder<Smithing
 		if (r instanceof SmithingTransformRecipe t) return ((AccessorSmithingTransformRecipe) t).getTemplate();
 		return Optional.of(Ingredient.of(Stream.empty()));
 	}
-
+	@SuppressWarnings("deprecation")
 	@Override
-	protected ItemStack getRecipeOutput(RecipeHolder<SmithingRecipe> holder) {
+	protected ItemStack getRecipeOutput(SmithingRecipe recipe) {
+		ItemStack templateStack = getTemplate(recipe).get().items().toList().getFirst().value().getDefaultInstance();
+		ItemStack baseStack = getBase(recipe).items().toList().getFirst().value().getDefaultInstance();
+		ItemStack additionStack = getAddition(recipe).get().items().toList().getFirst().value().getDefaultInstance();
 
-		SmithingRecipe recipe = holder.value();
+
 		// DummySmithingRecipeInput must wrap base, addition, template
-		return recipe.assemble(DummySmithingRecipeInput.INSTANCE, RecipeUtil.getRegistryAccess().orElseThrow());
+		return recipe.assemble(
+			new SmithingRecipeInput(templateStack, baseStack, additionStack), RecipeUtil.getRegistryAccess().orElseThrow());
 	}
 
 	@Override

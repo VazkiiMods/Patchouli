@@ -4,6 +4,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import vazkii.patchouli.api.PatchouliAPI;
@@ -14,7 +15,7 @@ import vazkii.patchouli.common.util.RecipeUtil;
 
 import java.util.Optional;
 
-public abstract class PageDoubleRecipeRegistry<T extends RecipeHolder<?>> extends PageDoubleRecipe<T> {
+public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends PageDoubleRecipe<T> {
 	private final RecipeType<?> recipeType;
 
 	public PageDoubleRecipeRegistry(RecipeType<?> recipeType) {
@@ -31,12 +32,18 @@ public abstract class PageDoubleRecipeRegistry<T extends RecipeHolder<?>> extend
 		Optional<RecipeHolder<?>> recipeHolder = RecipeUtil.getRecipeByKey(id.getNamespace(), id.getPath());
 
 		if (recipeHolder.isPresent()) {
-			RecipeHolder<?> found = recipeHolder.get();
-			PatchouliAPI.LOGGER.debug("Found recipe {} of type {} (class {})",
-					id,
-					BuiltInRegistries.RECIPE_TYPE.getKey(recipeType),
-					found.value().getClass().getName());
-			return (T) found;
+			RecipeHolder<?> holder = recipeHolder.get();
+			if (holder.value().getType() == recipeType) {
+				PatchouliAPI.LOGGER.debug("Found recipe {} of type {} (class {})",
+						id,
+						BuiltInRegistries.RECIPE_TYPE.getKey(recipeType),
+						holder.value().getClass().getName()); // Cast is safe here because we check the type
+				return (T) holder.value();
+			} else {
+				PatchouliAPI.LOGGER.warn("Recipe {} found, but its type ({}) does not match expected type ({})",
+						id, BuiltInRegistries.RECIPE_TYPE.getKey(holder.value().getType()), BuiltInRegistries.RECIPE_TYPE.getKey(recipeType));
+			}
+
 		} else {
 			PatchouliAPI.LOGGER.debug("No recipe found for key {}", id);
 		}
@@ -47,7 +54,7 @@ public abstract class PageDoubleRecipeRegistry<T extends RecipeHolder<?>> extend
 	protected ItemStack getRecipeOutput(T recipe) {
 		if (recipe == null) return ItemStack.EMPTY;
 
-		if (recipe.value() instanceof CraftingRecipe crafting) {
+		if (recipe instanceof CraftingRecipe crafting) {
 			return crafting.assemble(DummyCraftingInventory.INSTANCE.asCraftInput(), RecipeUtil.getRegistryAccess().orElseThrow());
 		}
 

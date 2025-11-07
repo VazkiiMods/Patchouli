@@ -13,15 +13,15 @@ import vazkii.patchouli.common.util.RecipeUtil;
 
 import java.util.*;
 
-public class PageCrafting extends PageDoubleRecipeRegistry<RecipeHolder<CraftingRecipe>> {
+public class PageCrafting extends PageDoubleRecipeRegistry<CraftingRecipe> {
 
 	public PageCrafting() {
 		super(RecipeType.CRAFTING);
 	}
 
 	@Override
-	protected void drawRecipe(GuiGraphics graphics, RecipeHolder<CraftingRecipe> holder, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-		CraftingRecipe recipe = holder.value();
+	protected void drawRecipe(GuiGraphics graphics, CraftingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
+		
 		Level level = Minecraft.getInstance().level;
 		if (level == null) return;
 
@@ -97,12 +97,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<RecipeHolder<Crafting
 	}
 
 	@Override
-	protected ItemStack getRecipeOutput( RecipeHolder<CraftingRecipe> holder) {
-		if (holder == null) return ItemStack.EMPTY;
-		return getRecipeOutput(holder.value());
-	}
-
-	private ItemStack getRecipeOutput(CraftingRecipe recipe) {
+	public ItemStack getRecipeOutput(CraftingRecipe recipe) {
 		var regs = RecipeUtil.getRegistryAccess().orElse(null);
 		if (regs == null) return ItemStack.EMPTY;
 		return recipe.assemble(DummyCraftingInventory.INSTANCE.asCraftInput(), regs);

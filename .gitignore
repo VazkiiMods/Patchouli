@@ -5,6 +5,7 @@ out
 .idea/*
 !.idea/scopes
 Xplat/logs/
+.vscode
 
 ## ForgeGradle
 /run/*

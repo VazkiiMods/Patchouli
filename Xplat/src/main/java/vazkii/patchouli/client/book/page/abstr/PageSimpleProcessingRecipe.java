@@ -14,7 +14,7 @@ import vazkii.patchouli.common.util.RecipeUtil;
 
 import java.util.Optional;
 
-public abstract class PageSimpleProcessingRecipe<T extends RecipeHolder<?>> extends PageDoubleRecipeRegistry<T> {
+public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends PageDoubleRecipeRegistry <T> {
     public PageSimpleProcessingRecipe(RecipeType<? extends Recipe<?>> recipeType) {
         super(recipeType);
     }
@@ -31,7 +31,7 @@ public abstract class PageSimpleProcessingRecipe<T extends RecipeHolder<?>> exte
 
         // render ingredient. keep the original behaviour but guard against empty display
         try {
-            Recipe<?> r2 = recipe.value();
+            Recipe<?> r2 = recipe;
             Optional<Ingredient> ing = Optional.empty();
             r2.display();// recipe.display() may be a collection of ItemStacks; attempt to build an Ingredient where possible
             ItemStack[] stacks = r2.display().stream().map(ItemStack.class::cast).toArray(ItemStack[]::new);
@@ -56,7 +56,7 @@ public abstract class PageSimpleProcessingRecipe<T extends RecipeHolder<?>> exte
         if (regsOpt.isEmpty()) return ItemStack.EMPTY;
         var regs = regsOpt.get();
 
-        Recipe<?> r = recipe.value();
+        Recipe<?> r = recipe;
         return switch (r) {
             case CraftingRecipe craftingRecipe ->
                     craftingRecipe.assemble(DummyCraftingInventory.INSTANCE.asCraftInput(), regs);
