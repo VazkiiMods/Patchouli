@@ -16,7 +16,7 @@
       ],
       "vmArgs": [
         "@C:\\Users\\chrjaf\\Documents\\New folder\\Patchouli\\NeoForge\\build\\moddev\\clientRunVmArgs.txt",
-        "-Dfml.modFolders\u003dnet.neoforged.moddevgradle.dsl.ModModel$Inject@7f6bcf43%%C:\\Users\\chrjaf\\Documents\\New folder\\Patchouli\\NeoForge\\bin\\main"
+        "-Dfml.modFolders\u003dnet.neoforged.moddevgradle.dsl.ModModel$Inject@76fa423c%%C:\\Users\\chrjaf\\Documents\\New folder\\Patchouli\\NeoForge\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
@@ -38,7 +38,7 @@
       ],
       "vmArgs": [
         "@C:\\Users\\chrjaf\\Documents\\New folder\\Patchouli\\NeoForge\\build\\moddev\\serverRunVmArgs.txt",
-        "-Dfml.modFolders\u003dnet.neoforged.moddevgradle.dsl.ModModel$Inject@7f6bcf43%%C:\\Users\\chrjaf\\Documents\\New folder\\Patchouli\\NeoForge\\bin\\main"
+        "-Dfml.modFolders\u003dnet.neoforged.moddevgradle.dsl.ModModel$Inject@76fa423c%%C:\\Users\\chrjaf\\Documents\\New folder\\Patchouli\\NeoForge\\bin\\main"
       ],
       "cwd": "${workspaceFolder}\\run",
       "env": {},
