@@ -1,7 +1,7 @@
 package vazkii.patchouli.mixin.client;
 
 import net.minecraft.client.DeltaTracker;
-import GameRenderer;
+import net.minecraft.client.renderer.GameRenderer;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
