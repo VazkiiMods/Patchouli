@@ -3,17 +3,17 @@ package vazkii.patchouli.common.item;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.PathfinderMob;
+
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.PatchouliAPI;
@@ -22,15 +22,12 @@ import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class ItemModBook extends Item {
 
-
-
-	public ItemModBook() {
-
-		super(new Item.Properties().stacksTo(1).setId(ResourceKey.create(ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "book")), ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "book"))));
+	public ItemModBook(Properties properties) {
+		super(properties.stacksTo(1));
 	}
 
 	public static float getCompletion(ItemStack stack) {
@@ -102,42 +99,41 @@ public class ItemModBook extends Item {
 
 		return super.getName(stack);
 	}
-	
 
-	
-	
-	public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-		
+	@Override
+	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+   
+
 		ResourceLocation rl = getBookId(stack);
 		if (flag.isAdvanced()) {
-			tooltip.add(Component.literal("Book ID: " + rl).withStyle(ChatFormatting.GRAY));
+			tooltipAdder.accept(Component.literal("Book ID: " + rl).withStyle(ChatFormatting.GRAY));
 		}
 
 		Book book = getBook(stack);
 		if (book != null && !book.getContents().isErrored()) {
-			tooltip.add(book.getSubtitle().withStyle(ChatFormatting.GRAY));
+			tooltipAdder.accept(book.getSubtitle().withStyle(ChatFormatting.GRAY));
 		} else if (book == null) {
 			if (rl == null) {
-				tooltip.add(Component.translatable("item.patchouli.guide_book.undefined").withStyle(ChatFormatting.DARK_GRAY));
+				tooltipAdder.accept(Component.translatable("item.patchouli.guide_book.undefined")
+						.withStyle(ChatFormatting.DARK_GRAY));
 			} else {
-				tooltip.add(Component.translatable("item.patchouli.guide_book.invalid", rl).withStyle(ChatFormatting.DARK_GRAY));
+				tooltipAdder.accept(Component.translatable("item.patchouli.guide_book.invalid", rl)
+						.withStyle(ChatFormatting.DARK_GRAY));
 			}
 		}
 	}
+
 
 	@Override
 	public InteractionResult use(Level worldIn, Player playerIn, InteractionHand handIn) {
 		ItemStack stack = playerIn.getItemInHand(handIn);
 		Book book = getBook(stack);
-		ResourceLocation rl = getBookId(stack);
-		PatchouliAPI.LOGGER.info("Right click book stack, book id = {}", rl);
 		if (book == null) {
 			return InteractionResult.FAIL;
 		}
 
 		if (playerIn instanceof ServerPlayer) {
 			PatchouliAPI.get().openBookGUI((ServerPlayer) playerIn, book.id);
-			PatchouliAPI.LOGGER.info("ItemModBook.use called on server? {}", playerIn instanceof ServerPlayer);
 
 			// This plays the sound to others nearby, playing to the actual opening player handled from the packet
 			SoundEvent sfx = PatchouliSounds.getSound(book.openSound, PatchouliSounds.BOOK_OPEN);

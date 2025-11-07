@@ -1,6 +1,5 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.*;
@@ -8,7 +7,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public final class DummyCraftingInventory implements CraftingContainer, Container {
+public final class DummyCraftingInventory implements CraftingContainer {
     public static final DummyCraftingInventory INSTANCE = new DummyCraftingInventory();
 
     public DummyCraftingInventory() {}

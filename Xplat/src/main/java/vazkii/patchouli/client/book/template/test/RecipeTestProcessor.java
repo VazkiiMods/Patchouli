@@ -14,13 +14,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+
 public class RecipeTestProcessor implements IComponentProcessor {
 
 	private Recipe<?> recipe;
 
 	@Override
 	public void setup(IVariableProvider variables) {
-		// TODO probably add a recipe serializer?
+		//to do probably add a recipe serializer?
 		String recipeId = variables.get("recipe", RecipeUtil.getRegistryAccess().orElseThrow()).asString();
 		RecipeManager manager = RecipeUtil.getRecipeManager().orElseThrow();
 		recipe = manager.byKey(ResourceKey.create(ResourceKey.createRegistryKey(ResourceLocation.parse(recipeId)), ResourceLocation.parse(recipeId))
@@ -47,6 +48,7 @@ public class RecipeTestProcessor implements IComponentProcessor {
         return stacks;
     }
 
+	@SuppressWarnings("unused")
 	@Override
 	public IVariable process(String key) {
 		if (key.startsWith("item")) {

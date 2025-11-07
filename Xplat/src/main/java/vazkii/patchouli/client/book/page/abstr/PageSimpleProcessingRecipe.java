@@ -47,7 +47,7 @@ public abstract class PageSimpleProcessingRecipe<T extends RecipeHolder<?>> exte
         parent.renderItemStack(graphics, recipeX + 40, recipeY + 4, mouseX, mouseY, out);
         parent.renderItemStack(graphics, recipeX + 76, recipeY + 4, mouseX, mouseY, out);
     }
-
+    @SuppressWarnings("deprecation")
     @Override
     protected ItemStack getRecipeOutput(T recipe) {
         if (recipe == null) return ItemStack.EMPTY;

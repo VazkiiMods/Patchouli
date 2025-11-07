@@ -249,6 +249,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Optional<Ingredient> ingr) {
 		ItemStack[] stacks = ingr

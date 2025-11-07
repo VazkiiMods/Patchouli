@@ -1,8 +1,10 @@
 package vazkii.patchouli.neoforge.common;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -51,6 +53,7 @@ public class NeoForgeModInitializer {
 			PatchouliDataComponents.submitDataComponentRegistrations(rh::register);
 		});
 		evt.register(Registries.ITEM, rh -> {
+			PatchouliItems.BOOK = new ItemModBook(new Item.Properties().stacksTo(1).setId(ResourceKey.create(Registries.ITEM, PatchouliItems.BOOK_ID)));
 			PatchouliItems.submitItemRegistrations(rh::register);
 		});
 		evt.register(Registries.TRIGGER_TYPE, rh -> PatchouliCriteriaTriggers.submitTriggerRegistrations(rh::register));

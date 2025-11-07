@@ -69,7 +69,6 @@ public final class RecipeUtil {
      * Returns all crafting recipes available on the server.
      * Internally calls RecipeManager#getAllRecipesFor(...)
      */
-    @SuppressWarnings("unused")
     public static Collection<RecipeHolder<?>> getAllCrafting() {
         return getRecipeManager()
                 .map(RecipeManager::getRecipes)

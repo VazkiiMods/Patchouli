@@ -29,7 +29,7 @@ import vazkii.patchouli.common.util.EntityUtil;
 
 import java.util.function.Function;
 
-@SuppressWarnings("unused")
+
 public class PageEntity extends PageWithText {
 
 	@SerializedName("entity") public String entityId;
