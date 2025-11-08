@@ -10,7 +10,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.page.DummyCraftingInventory;
+import vazkii.patchouli.client.book.page.PageCrafting.DummyCraftingInventory;
 import vazkii.patchouli.common.util.RecipeUtil;
 
 import java.util.Optional;

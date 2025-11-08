@@ -57,7 +57,11 @@ public class GuiButtonCategory extends Button {
 				RenderSystem.setShaderColor(1F, 1F, 1F, 0.7F);
 				GuiBook.drawLock(graphics, parent.book, getX() + 2, getY() + 2);
 			} else {
+				graphics.pose().pushPose();
+				graphics.pose().translate(0, 0, 100F);
+				RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 				icon.render(graphics, getX() + 2, getY() + 2);
+				graphics.pose().popPose();
 			}
 
 			graphics.pose().pushPose();

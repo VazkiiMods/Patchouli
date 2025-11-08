@@ -7,9 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
-import vazkii.patchouli.client.book.page.DummyCraftingInventory;
-
-import vazkii.patchouli.client.book.page.DummySmithingRecipeInput;
+import vazkii.patchouli.client.book.page.WorkstationIcons;
 import vazkii.patchouli.common.util.RecipeUtil;
 
 import java.util.Optional;
@@ -29,24 +27,24 @@ public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends Pa
         graphics.blit(RenderType::guiTextured, book.craftingTexture, recipeX, recipeY, 11, 71, 96, 24, 128, 256);
         parent.drawCenteredStringNoShadow(graphics, getTitle(second).getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-        // render ingredient. keep the original behaviour but guard against empty display
-        try {
-            Recipe<?> r2 = recipe;
-            Optional<Ingredient> ing = Optional.empty();
-            r2.display();// recipe.display() may be a collection of ItemStacks; attempt to build an Ingredient where possible
-            ItemStack[] stacks = r2.display().stream().map(ItemStack.class::cast).toArray(ItemStack[]::new);
-            if (stacks.length > 0) {
-                ing = Optional.of(Ingredient.of());
-            }
-            parent.renderIngredient(graphics, recipeX + 4, recipeY + 4, mouseX, mouseY, ing);
-        } catch (Exception ignored) {
-            // fall back to no ingredient render on error
-        }
+        Recipe<?> r = recipe;
+        Ingredient ing = switch (r) {
+            case SmeltingRecipe smeltingRecipe -> smeltingRecipe.input();
+            case BlastingRecipe blastingRecipe -> blastingRecipe.input();
+            case SmokingRecipe smokingRecipe -> smokingRecipe.input();
+            case CampfireCookingRecipe campfireCookingRecipe -> campfireCookingRecipe.input();
+            case StonecutterRecipe stonecutterRecipe -> stonecutterRecipe.input();
+            default -> Ingredient.of();
+        };
 
+        Optional<Ingredient> oIng = Optional.of(ing);
         ItemStack out = getRecipeOutput(recipe);
-        parent.renderItemStack(graphics, recipeX + 40, recipeY + 4, mouseX, mouseY, out);
+        ItemStack workstation = WorkstationIcons.iconFor(recipe.getType());
+        parent.renderIngredient(graphics, recipeX + 4, recipeY + 4, mouseX, mouseY, oIng);
+        parent.renderItemStack(graphics, recipeX + 40, recipeY + 4, mouseX, mouseY, workstation);
         parent.renderItemStack(graphics, recipeX + 76, recipeY + 4, mouseX, mouseY, out);
     }
+
     @SuppressWarnings("deprecation")
     @Override
     protected ItemStack getRecipeOutput(T recipe) {
@@ -58,8 +56,6 @@ public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends Pa
 
         Recipe<?> r = recipe;
         return switch (r) {
-            case CraftingRecipe craftingRecipe ->
-                    craftingRecipe.assemble(DummyCraftingInventory.INSTANCE.asCraftInput(), regs);
             case SmeltingRecipe smeltingRecipe ->
                     smeltingRecipe.assemble(new SingleRecipeInput(smeltingRecipe.input().items().toList().getFirst().value().getDefaultInstance()), regs);
             case BlastingRecipe blastingRecipe ->
@@ -70,8 +66,7 @@ public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends Pa
                     campfireCookingRecipe.assemble(new SingleRecipeInput(campfireCookingRecipe.input().items().toList().getFirst().value().getDefaultInstance()), regs);
             case StonecutterRecipe stonecutterRecipe ->
                     stonecutterRecipe.assemble(new SingleRecipeInput(stonecutterRecipe.input().items().toList().getFirst().value().getDefaultInstance()), regs);
-            case SmithingRecipe smithingRecipe ->
-                    smithingRecipe.assemble(DummySmithingRecipeInput.INSTANCE, regs);
+
             default -> ItemStack.EMPTY;
         };
     }

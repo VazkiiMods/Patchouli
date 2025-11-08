@@ -65,8 +65,6 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 		ItemStack baseStack = getBase(recipe).items().toList().getFirst().value().getDefaultInstance();
 		ItemStack additionStack = getAddition(recipe).get().items().toList().getFirst().value().getDefaultInstance();
 
-
-		// DummySmithingRecipeInput must wrap base, addition, template
 		return recipe.assemble(
 			new SmithingRecipeInput(templateStack, baseStack, additionStack), RecipeUtil.getRegistryAccess().orElseThrow());
 	}
