@@ -51,7 +51,9 @@ import java.awt.*;
 import java.util.*;
 import java.util.function.Function;
 
+
 @SuppressWarnings("unused")
+
 public class MultiblockVisualizationHandler {
 
 	public static boolean hasMultiblock;
@@ -202,6 +204,7 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
+	
 	public static void renderMultiblock(Level world, PoseStack ms) {
 		Minecraft mc = Minecraft.getInstance();
 
@@ -306,6 +309,10 @@ public class MultiblockVisualizationHandler {
 
 	public static Rotation getFacingRotation() {
 		return multiblock.isSymmetrical() ? Rotation.NONE : facingRotation;
+	}
+
+	public static boolean canPickGhost() {
+		return hasMultiblock && lookingStack != null && !lookingStack.isEmpty();
 	}
 
 	public static BlockPos getStartPos() {
@@ -415,8 +422,10 @@ public class MultiblockVisualizationHandler {
 			return original.mode();
 		}
 	}
-	public static void handleMiddleClick(Player player) {
-		if (!hasMultiblock || lookingStack == null || lookingStack.isEmpty()) return;
+	public static boolean handleMiddleClick(Player player) {
+		if (!hasMultiblock || lookingStack == null || lookingStack.isEmpty()) {
+			return false;
+		}
 
 		Inventory inv = player.getInventory();
 
@@ -442,15 +451,15 @@ public class MultiblockVisualizationHandler {
 						new ServerboundSetCreativeModeSlotPacket(36 + slot, copy)
 				);
 			}
-			return;
+			return true;
 		}
 
 		// SURVIVAL:
 		// Only allow item pick if player already has at least one
 		int found = inv.findSlotMatchingItem(lookingStack);
 		if (found == -1) {
-			// player doesn't own this item -> do nothing
-			return;
+			// player doesn't own this item -> consume the click without changing inventory
+			return true;
 		}
 
 		int selected = inv.getSelectedSlot();
@@ -464,7 +473,7 @@ public class MultiblockVisualizationHandler {
 						new ServerboundSetCarriedItemPacket(found)
 				);
 			}
-			return;
+			return true;
 		}
 
 		// Item in main inventory -> swap it into the selected slot
@@ -480,6 +489,7 @@ public class MultiblockVisualizationHandler {
 					new ServerboundSetCarriedItemPacket(selected)
 			);
 		}
+		return true;
 	}
 	public static BlockHitResult getAdjustedHitResult(Player player, double unusedReach) {
 		Minecraft mc = Minecraft.getInstance();

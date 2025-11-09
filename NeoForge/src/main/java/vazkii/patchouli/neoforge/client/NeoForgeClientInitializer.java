@@ -1,5 +1,6 @@
 package vazkii.patchouli.neoforge.client;
 
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
@@ -136,6 +137,25 @@ public class NeoForgeClientInitializer {
         NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) ->
                 ClientTicker.endClientTick(Minecraft.getInstance())
         );
+
+        NeoForge.EVENT_BUS.addListener((ClientTickEvent.Pre e) -> {
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.player == null || mc.screen != null || mc.isPaused()) {
+                return;
+            }
+            if (!MultiblockVisualizationHandler.canPickGhost()) {
+                return;
+            }
+
+            KeyMapping pickKey = mc.options.keyPickItem;
+            if (pickKey == null) {
+                return;
+            }
+
+            while (pickKey.consumeClick()) {
+                MultiblockVisualizationHandler.handleMiddleClick(mc.player);
+            }
+        });
 
         NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock e) ->
                 BookRightClickHandler.onRightClick(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec())
