@@ -21,31 +21,55 @@ import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-// --- ADD THESE IMPORTS ---
 import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.item.ItemModBook;
-// -------------------------
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-// 1. ADD `ModelBaker baker` to the record
 public record BookModel(ResourceLocation model, List<BakedQuad> quads, ModelRenderProperties properties, RenderType type, ModelBaker baker) implements ItemModel {
 
-    // 3. THIS IS THE FULLY CORRECTED UPDATE METHOD
+    private static final Map<ResourceLocation, ResolvedModel> MODEL_CACHE = new ConcurrentHashMap<>();
+    private static final Set<ResourceLocation> LOGGED_RESOLVES = ConcurrentHashMap.newKeySet();
+    private static final Set<ResourceLocation> LOGGED_FALLBACKS = ConcurrentHashMap.newKeySet();
+
     @Override
     public void update(ItemStackRenderState state, ItemStack stack, ItemModelResolver resolver, ItemDisplayContext displayContext, @Nullable ClientLevel level, @Nullable LivingEntity entity, int seed) {
         Book book = ItemModBook.getBook(stack);
         ResourceLocation modelLocation = book.model;
+        if (LOGGED_RESOLVES.add(modelLocation)) {
+            PatchouliAPI.LOGGER.info("Resolving model for book: " + book.id + ", model: " + modelLocation);
+            String msg = ">>> PATCHOULI_MODEL >>> Resolving model for book: " + book.id + ", model: " + modelLocation;
+            System.out.println(msg);
+            ModelLog.log(msg);
+        }
+        ResourceLocation modelPath = modelLocation; 
 
-        // --- This MUST be "item/" ---
-        ResourceLocation modelPath = modelLocation.withPrefix("item/"); 
-
-        // Resolve the correct model using the stored baker
-        ResolvedModel resolvedModel = this.baker.getModel(modelPath);
+        // Resolve the correct model using the stored baker or cached resolve
+        ResolvedModel resolvedModel = MODEL_CACHE.get(modelPath);
         if (resolvedModel == null) {
-            // Fallback to the default baked model
-            resolvedModel = this.baker.getModel(this.model); 
+            resolvedModel = this.baker.getModel(modelPath);
+            if (resolvedModel != null) {
+                MODEL_CACHE.put(modelPath, resolvedModel);
+                LOGGED_FALLBACKS.remove(modelPath);
+            }
+        }
+
+        if (resolvedModel == null) {
+            if (LOGGED_FALLBACKS.add(modelPath)) {
+                PatchouliAPI.LOGGER.warn("Model not found for: " + modelPath + ", falling back to default model: " + this.model);
+                String warn = ">>> PATCHOULI_MODEL >>> Model not found for: " + modelPath + ", falling back to default model: " + this.model;
+                System.out.println(warn);
+                ModelLog.log(warn);
+            }
+            resolvedModel = MODEL_CACHE.computeIfAbsent(this.model, key -> this.baker.getModel(key));
+            if (resolvedModel == null) {
+                return;
+            }
         }
 
         // --- This part renders the resolved model ---
@@ -73,12 +97,11 @@ public record BookModel(ResourceLocation model, List<BakedQuad> quads, ModelRend
         });
         public static final Codec<RenderType> RENDER_TYPE_CODEC = ExtraCodecs.idResolverCodec(Codec.STRING, RENDER_TYPES::get, RENDER_TYPES.inverse()::get);
 
-        // This is your correct MAP_CODEC with the .xmap() fix
         public static final MapCodec<BookModel.Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(instance ->
                 instance.group(
                         ResourceLocation.CODEC.fieldOf("model").xmap(
-                                (rl) -> rl.withPrefix("item/"), // On read, add "item/"
-                                (rl) -> rl.withPath(p -> p.startsWith("item/") ? p.substring(5) : p) // On write, remove "item/"
+                                (rl) -> rl.withPrefix("item/"),
+                                (rl) -> rl.withPath(p -> p.startsWith("item/") ? p.substring(5) : p)
                         ).forGetter(BookModel.Unbaked::model),
 
                         RENDER_TYPE_CODEC.fieldOf("render_type").forGetter(BookModel.Unbaked::types)
@@ -88,22 +111,27 @@ public record BookModel(ResourceLocation model, List<BakedQuad> quads, ModelRend
 
         @Override
         public void resolveDependencies(ResolvableModel.Resolver resolver) {
+            String msg = ">>> PATCHOULI_MODEL >>> BookModel.Unbaked.resolveDependencies for model: " + this.model;
+            System.out.println(msg);
+            ModelLog.log(msg);
             resolver.markDependency(this.model);
         }
 
         @Override
         public ItemModel bake(ItemModel.BakingContext context) {
+            String msg = ">>> PATCHOULI_MODEL >>> BookModel.Unbaked.bake called for model: " + this.model;
+            System.out.println(msg);
+            ModelLog.log(msg);
             ModelBaker baker = context.blockModelBaker();
             ResolvedModel resolvedModel = baker.getModel(this.model);
             TextureSlots slots = resolvedModel.getTopTextureSlots();
 
-            // 2. PASS `this.model` AND `baker` TO THE CONSTRUCTOR
             return new BookModel(
-                    this.model, // <-- Pass the model location
+                    this.model,
                     resolvedModel.bakeTopGeometry(slots, baker, BlockModelRotation.X0_Y0).getAll(),
                     ModelRenderProperties.fromResolvedModel(baker, resolvedModel, slots),
                     this.types,
-                    baker // <-- Pass the baker
+                    baker
             );
         }
 

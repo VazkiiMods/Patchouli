@@ -4,7 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariableProvider;
 import vazkii.patchouli.api.PatchouliAPI;
@@ -93,7 +92,8 @@ public class BookTemplate {
 			try {
 				processor.setup(processorVars);
 			} catch (Exception e) {
-				throw new RuntimeException("Error setting up template processor", e);
+				PatchouliAPI.LOGGER.warn("Failed to set up template processor", e);
+				processor = null;
 			}
 		}
 
@@ -159,7 +159,6 @@ public class BookTemplate {
 	public static void registerComponent(ResourceLocation name, Class<? extends TemplateComponent> clazz) {
 		componentTypes.put(name, clazz);
 	}
-
 	@SuppressWarnings("deprecation")
 	private void createProcessor() {
 		if (!attemptedCreatingProcessor) {

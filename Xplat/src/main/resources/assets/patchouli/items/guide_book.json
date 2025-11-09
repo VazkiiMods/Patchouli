@@ -1,6 +1,7 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "patchouli:item/guide_book"
+    "type": "patchouli:book",
+    "model": "patchouli:book_brown",
+    "render_type": "translucent_item"
   }
 }

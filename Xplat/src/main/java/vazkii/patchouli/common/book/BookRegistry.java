@@ -1,6 +1,10 @@
 package vazkii.patchouli.common.book;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -14,7 +18,6 @@ import vazkii.patchouli.xplat.IXplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,7 +28,6 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-
 public class BookRegistry {
 
 	public static final BookRegistry INSTANCE = new BookRegistry();
@@ -33,24 +35,7 @@ public class BookRegistry {
 
 	public final Map<ResourceLocation, Book> books = new HashMap<>();
 	public static final Gson GSON = new GsonBuilder()
-			.registerTypeAdapter(ResourceLocation.class, new JsonSerializer<ResourceLocation>() {
-				@Override
-				public JsonElement serialize(ResourceLocation src, Type typeOfSrc, JsonSerializationContext context) {
-					return new JsonPrimitive(src.toString());
-				}
-			})
-			.registerTypeAdapter(ResourceLocation.class, new JsonDeserializer<ResourceLocation>() {
-				@Override
-				public ResourceLocation deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-						throws JsonParseException {
-					String s = json.getAsString();
-					try {
-						return ResourceLocation.parse(s);
-					} catch (Exception e) {
-						throw new JsonParseException("Invalid ResourceLocation: " + s, e);
-					}
-				}
-			})
+			.registerTypeAdapter(ResourceLocation.class, (JsonSerializer<ResourceLocation>) (src, type, context) -> new JsonPrimitive(src.toString()))
 			.create();
 
 	private BookRegistry() {}
@@ -89,7 +74,7 @@ public class BookRegistry {
 			ResourceLocation res = pair.getRight();
 
 			try (InputStream stream = Files.newInputStream(mod.getPath(file))) {
-				//loadBook(mod, res, stream, false);
+				loadBook(mod, res, stream, false);
 			} catch (Exception e) {
 				PatchouliAPI.LOGGER.error("Failed to load book {} defined by mod {}, skipping",
 						res, mod.getId(), e);
@@ -97,6 +82,21 @@ public class BookRegistry {
 		});
 
 		BookFolderLoader.findBooks();
+		// Log loaded books and their configured models to help debug model registration
+		if (!books.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			books.forEach((id, book) -> sb.append(id).append(" -> ").append(book.model).append(", "));
+			PatchouliAPI.LOGGER.info("Loaded Patchouli books and models: {}", sb.toString());
+			String msg = ">>> PATCHOULI_MODEL >>> Loaded Patchouli books and models: " + sb.toString();
+			System.out.println(msg);
+			// write to separate file for easy grepping when the main log is noisy
+			try {
+				java.nio.file.Path p = java.nio.file.Paths.get("run", "patchouli_models.log");
+				if (p.getParent() != null) java.nio.file.Files.createDirectories(p.getParent());
+				java.nio.file.Files.writeString(p, msg + System.lineSeparator(), java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND);
+			} catch (Exception ignored) {
+			}
+		}
 		IXplatAbstractions.INSTANCE.signalBooksLoaded();
 	}
 
@@ -108,7 +108,7 @@ public class BookRegistry {
 	}
 
 	/**
-	 * Must only be called on clientr
+	 * Must only be called on client
 	 */
 	public void reloadContents(Level level) {
 		PatchouliConfig.reloadBuiltinFlags();

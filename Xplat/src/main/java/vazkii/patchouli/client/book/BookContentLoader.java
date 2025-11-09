@@ -3,9 +3,8 @@ package vazkii.patchouli.client.book;
 import com.google.gson.JsonElement;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.util.profiling.ProfilerFiller;
+
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
 
@@ -18,7 +17,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 
 public interface BookContentLoader {
 	void findFiles(Book book, String dir, List<ResourceLocation> list);
@@ -39,6 +37,4 @@ public interface BookContentLoader {
 			return GsonHelper.fromJson(BookRegistry.GSON, reader, JsonElement.class);
 		}
 	}
-
-	void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profiler);
 }

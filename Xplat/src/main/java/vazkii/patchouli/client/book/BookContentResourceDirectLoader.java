@@ -1,13 +1,10 @@
 package vazkii.patchouli.client.book;
 
 import com.google.common.base.Preconditions;
-import com.google.gson.JsonElement;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.profiling.ProfilerFiller;
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -18,7 +15,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * BookContentLoader that directly queries the Resource Pack system when queried
@@ -91,9 +87,5 @@ public final class BookContentResourceDirectLoader implements BookContentLoader 
 		return sourcePackId;
 	}
 
-	@Override
-	public void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profiler) {
-		//  Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'apply'");
-	}
+	
 }

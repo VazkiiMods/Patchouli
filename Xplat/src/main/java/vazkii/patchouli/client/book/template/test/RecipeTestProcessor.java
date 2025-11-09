@@ -25,7 +25,7 @@ public class RecipeTestProcessor implements IComponentProcessor {
 		String recipeId = variables.get("recipe", RecipeUtil.getRegistryAccess().orElseThrow()).asString();
 		RecipeManager manager = RecipeUtil.getRecipeManager().orElseThrow();
 		recipe = manager.byKey(ResourceKey.create(ResourceKey.createRegistryKey(ResourceLocation.parse(recipeId)), ResourceLocation.parse(recipeId))
-		).orElseThrow(IllegalArgumentException::new).value();
+		).orElseThrow(() -> new RuntimeException("Could not find recipe: " + recipeId)).value();
 	}
 	@SuppressWarnings("deprecation")
 	public ItemStack[] getItemStacks (){

@@ -1,6 +1,5 @@
 {
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "patchouli:item/book_brown"
-	}
+  "loader": "patchouli:book",
+  "model": "patchouli:book_brown",
+  "render_type": "translucent_item"
 }

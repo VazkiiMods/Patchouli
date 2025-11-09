@@ -2,10 +2,11 @@ package vazkii.patchouli.client.book;
 
 import com.google.common.base.Stopwatch;
 import com.google.gson.JsonElement;
-
 import com.mojang.serialization.Codec;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceKey;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
+
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -13,6 +14,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.Book;
+import vazkii.patchouli.common.book.BookRegistry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -24,10 +26,9 @@ import java.util.regex.Pattern;
  * BookContentLoader similar to {@link BookContentResourceDirectLoader}, but it
  * pre-caches the JSONs at during resource load to avoid I/O during book reloads.
  */
-@SuppressWarnings("rawtypes")
-public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadListener
+public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadListener<JsonElement>
 		implements BookContentLoader {
-	public static final BookContentResourceListenerLoader INSTANCE = new BookContentResourceListenerLoader(null, null, null);
+	public static final BookContentResourceListenerLoader INSTANCE = new BookContentResourceListenerLoader();
 	private static final Pattern ID_READER = Pattern.compile(
 			"(?<bookId>[a-z0-9_.-]+)" +
 					"/(?<lang>[a-z0-9_.-]+)" +
@@ -37,14 +38,17 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 	// book id -> (entry id -> entry json)
 	private Map<ResourceLocation, Map<ResourceLocation, JsonElement>> data;
 
-	@SuppressWarnings("unchecked")
-	protected BookContentResourceListenerLoader(HolderLookup.Provider provider, Codec codec, ResourceKey registryKey) {
-		super(provider, codec, registryKey);
+	private static final Codec<JsonElement> JSON_ELEMENT_CODEC = Codec.PASSTHROUGH.xmap(
+			d -> d.convert(JsonOps.INSTANCE).getValue(),
+			e -> new Dynamic<>(JsonOps.INSTANCE, e)
+	);
+
+	private BookContentResourceListenerLoader() {
+		super(JSON_ELEMENT_CODEC, FileToIdConverter.json(BookRegistry.BOOKS_LOCATION));
 	}
 
-
 	@Override
-	public void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profiler) {
+	protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profiler) {
 		Map<ResourceLocation, Map<ResourceLocation, JsonElement>> data = new HashMap<>();
 		for (var entry : map.entrySet()) {
 			// namespace:book_name/en_us/entries/entry
@@ -66,6 +70,10 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 
 	@Override
 	public void findFiles(Book book, String dir, List<ResourceLocation> list) {
+		if (this.data == null) {
+			BookContentResourceDirectLoader.INSTANCE.findFiles(book, dir, list);
+			return;
+		}
 		var stopwatch = Stopwatch.createStarted();
 
 		var map = data.get(book.id);
@@ -89,6 +97,9 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 	@Nullable
 	@Override
 	public LoadResult loadJson(Book book, ResourceLocation file) {
+		if (this.data == null) {
+			return BookContentResourceDirectLoader.INSTANCE.loadJson(book, file);
+		}
 		PatchouliAPI.LOGGER.trace("Loading {}", file);
 		var map = data.get(book.id);
 		if (map == null) {
@@ -108,12 +119,5 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 		}
 
 		return null;
-	}
-
-
-	@Override
-	protected void apply(Object arg0, ResourceManager arg1, ProfilerFiller arg2) {
-		//  Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'apply'");
 	}
 }
