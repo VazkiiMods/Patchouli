@@ -45,7 +45,6 @@ public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends Pa
         parent.renderItemStack(graphics, recipeX + 76, recipeY + 4, mouseX, mouseY, out);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected ItemStack getRecipeOutput(T recipe) {
         if (recipe == null) return ItemStack.EMPTY;

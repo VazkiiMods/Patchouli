@@ -7,11 +7,12 @@
     "AccessorSmithingTrimRecipe"
   ],
   "client": [
-    "client.AccessorClientAdvancements",
-    "client.AccessorKeyMapping",
-    "client.AccessorMultiBufferSource",
+  "client.AccessorClientAdvancements",
+  "client.AccessorKeyMapping",
+  "client.AccessorMultiBufferSource",
     "client.AccessorScreen",
     "client.GameRendererMixin",
+    "client.MinecraftGhostPickMixin",
     "client.MixinClientAdvancements",
     "client.MixinInventoryScreen",
     "client.MixinLevelRenderer",

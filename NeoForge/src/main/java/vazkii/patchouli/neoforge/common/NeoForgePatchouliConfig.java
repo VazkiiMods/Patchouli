@@ -11,7 +11,6 @@ import vazkii.patchouli.common.base.PatchouliConfig;
 import java.util.Collections;
 import java.util.List;
 
-@SuppressWarnings("deprecation")
 public class NeoForgePatchouliConfig {
 	public static final ModConfigSpec.ConfigValue<Boolean> disableAdvancementLocking;
 	public static final ModConfigSpec.ConfigValue<List<? extends String>> noAdvancementBooks;

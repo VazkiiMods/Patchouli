@@ -28,7 +28,6 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class PatchouliAPI {
-	@SuppressWarnings("deprecation")
 	private static final Supplier<IPatchouliAPI> LAZY_INSTANCE = Suppliers.memoize(() -> {
 		try {
 			return (IPatchouliAPI) Class.forName("vazkii.patchouli.common.base.PatchouliAPIImpl").newInstance();

@@ -159,7 +159,7 @@ public class BookTemplate {
 	public static void registerComponent(ResourceLocation name, Class<? extends TemplateComponent> clazz) {
 		componentTypes.put(name, clazz);
 	}
-	@SuppressWarnings("deprecation")
+	
 	private void createProcessor() {
 		if (!attemptedCreatingProcessor) {
 			if (processorClass != null && !processorClass.isEmpty()) {

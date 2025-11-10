@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.handler;
 
+import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.DepthTestFunction;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.datafixers.util.Pair;
@@ -18,8 +18,6 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -48,6 +46,10 @@ import vazkii.patchouli.common.util.RotationUtil;
 import vazkii.patchouli.mixin.client.AccessorMultiBufferSource;
 
 import java.awt.*;
+import com.mojang.blaze3d.systems.RenderSystem;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Function;
 
@@ -68,7 +70,6 @@ public class MultiblockVisualizationHandler {
 	private static int blocks, blocksDone, airFilled;
 	private static int timeComplete;
 	private static BlockState lookingState;
-	private static BlockPos lookingPos;
 	private static MultiBufferSource.BufferSource buffers = null;
 	public static ItemStack lookingStack = ItemStack.EMPTY;
 
@@ -207,6 +208,9 @@ public class MultiblockVisualizationHandler {
 	
 	public static void renderMultiblock(Level world, PoseStack ms) {
 		Minecraft mc = Minecraft.getInstance();
+		BlockHitResult ghostHit = MultiblockGhostHandler.getHit();
+		BlockPos ghostPos = ghostHit != null ? ghostHit.getBlockPos() : null;
+		MultiblockGhostHandler.clearPreview();
 
 		if (!isAnchored) {
 			if (mc.player != null) {
@@ -234,15 +238,23 @@ public class MultiblockVisualizationHandler {
 		if (mc.hitResult instanceof BlockHitResult blockRes) {
 			checkPos = blockRes.getBlockPos().relative(blockRes.getDirection());
 		}
+		BlockPos targetPos = ghostPos != null ? ghostPos : checkPos;
 
 		blocks = blocksDone = airFilled = 0;
 		lookingState = null;
-		lookingPos = checkPos;
+		lookingStack = ItemStack.EMPTY;
+
+		// Save shader color before rendering
+		float[] prevColor = RenderSystem.getShaderColor();
+		float prevR = prevColor[0];
+		float prevG = prevColor[1];
+		float prevB = prevColor[2];
+		float prevA = prevColor[3];
 
 		Pair<BlockPos, Collection<IMultiblock.SimulateResult>> sim = multiblock.simulate(world, getStartPos(), getFacingRotation(), true);
 		for (IMultiblock.SimulateResult r : sim.getSecond()) {
 			float alpha = 0.3F;
-			if (r.getWorldPosition().equals(checkPos)) {
+			if (targetPos != null && r.getWorldPosition().equals(targetPos)) {
 				lookingState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame);
 				alpha = 0.6F + (float) (Math.sin(ClientTicker.total * 0.3F) + 1F) * 0.1F;
 			}
@@ -267,14 +279,29 @@ public class MultiblockVisualizationHandler {
 		}
 
 		buffers.endBatch();
+		
+		// Restore shader color after batch is drawn
+		RenderSystem.setShaderColor(prevR, prevG, prevB, prevA);
+
+		if (ghostPos != null) {
+			for (IMultiblock.SimulateResult r : sim.getSecond()) {
+				if (r.getWorldPosition().equals(ghostPos) && r.getStateMatcher() != StateMatcher.ANY) {
+					BlockState displayState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame);
+					BlockState renderState = displayState.rotate(facingRotation);
+					MultiblockGhostHandler.updatePreview(renderState, displayState, r.getStateMatcher() == StateMatcher.AIR);
+					break;
+				}
+			}
+		}
 
 		if (!isAnchored) {
 			blocks = blocksDone = 0;
 		}
 		for (IMultiblock.SimulateResult r : sim.getSecond()) {
-			if (r.getWorldPosition().equals(checkPos)) {
+			if (targetPos != null && r.getWorldPosition().equals(targetPos)) {
 				lookingState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame);
 				lookingStack = new ItemStack(lookingState.getBlock().asItem());
+				break;
 			}
 		}
 	}
@@ -290,9 +317,10 @@ public class MultiblockVisualizationHandler {
 				ms.translate(off, off, -off);
 				ms.scale(scale, scale, scale);
 
-				state = Blocks.RED_CONCRETE.defaultBlockState();
+				state = Blocks.BARRIER.defaultBlockState();
 			}
 
+			RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
 			Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, ms, buffers, 0xF000F0, OverlayTexture.NO_OVERLAY);
 
 			ms.popPose();
@@ -312,7 +340,7 @@ public class MultiblockVisualizationHandler {
 	}
 
 	public static boolean canPickGhost() {
-		return hasMultiblock && lookingStack != null && !lookingStack.isEmpty();
+		return MultiblockGhostHandler.canPick();
 	}
 
 	public static BlockPos getStartPos() {
@@ -344,13 +372,12 @@ public class MultiblockVisualizationHandler {
 	}
 
 	private static MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
-		ByteBufferBuilder fallback = ((AccessorMultiBufferSource) original).getFallbackBuffer();
-		SequencedMap<RenderType, ByteBufferBuilder> layerBuffers = ((AccessorMultiBufferSource) original).getFixedBuffers();
 		SequencedMap<RenderType, ByteBufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
-		for (Map.Entry<RenderType, ByteBufferBuilder> e : layerBuffers.entrySet()) {
-			remapped.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
+		for (RenderType type : ((AccessorMultiBufferSource) original).getFixedBuffers().keySet()) {
+			RenderType ghostType = GhostRenderLayer.remap(type);
+			remapped.put(ghostType, new ByteBufferBuilder(type.bufferSize()));
 		}
-		return new GhostBuffers(fallback, remapped);
+		return new GhostBuffers(new ByteBufferBuilder(RenderType.SMALL_BUFFER_SIZE), remapped);
 	}
 
 	private static class GhostBuffers extends MultiBufferSource.BufferSource {
@@ -364,193 +391,130 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	private static class GhostRenderLayer extends RenderType {
-		private static final Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
-		private final RenderType original;
+	private static class GhostRenderLayer {
+		private static final RenderType TRANSLUCENT = RenderType.translucent();
+		private static final Map<RenderType, RenderType> CACHE = new IdentityHashMap<>();
+		private static final Class<?> COMPOSITE_RENDER_TYPE_CLASS;
+		private static final Class<?> COMPOSITE_STATE_CLASS;
+		private static final Method CREATE_METHOD;
+		private static final Method PIPELINE_CLONE_METHOD;
+		private static final Field COMPOSITE_STATE_FIELD;
 
-		private GhostRenderLayer(RenderType original) {
-			super(
-					String.format("%s_%s_ghost", original.toString(), PatchouliAPI.MOD_ID),
+		static {
+			try {
+				COMPOSITE_RENDER_TYPE_CLASS = Class.forName("net.minecraft.client.renderer.RenderType$CompositeRenderType");
+				COMPOSITE_STATE_CLASS = Class.forName("net.minecraft.client.renderer.RenderType$CompositeState");
+				CREATE_METHOD = RenderType.class.getDeclaredMethod("create",
+						String.class,
+						int.class,
+						boolean.class,
+						boolean.class,
+						RenderPipeline.class,
+						COMPOSITE_STATE_CLASS);
+				CREATE_METHOD.setAccessible(true);
 
-					original.bufferSize(),
-					original.affectsCrumbling(),
-					true, // sortOnUpload
-					() -> {
-						original.setupRenderState();
-
-						RenderSystem.setShaderColor(1, 1, 1, 0.4F);
-					},
-					() -> {
-						RenderSystem.setShaderColor(1, 1, 1, 1);
-
-						original.clearRenderState();
-					}
-			);
-			this.original = original;
-		}
-
-		public static RenderType remap(RenderType in) {
-			if (in instanceof GhostRenderLayer) {
-				return in;
-			} else {
-				return remappedTypes.computeIfAbsent(in, GhostRenderLayer::new);
-			}
-		}
-
-		@Override
-		public void draw(@NotNull MeshData meshData) {
-			original.draw(meshData);
-		}
-
-		@Override
-		public @NotNull RenderTarget getRenderTarget() {
-			return original.getRenderTarget();
-		}
-
-		@Override
-		public @NotNull RenderPipeline getRenderPipeline() {
-			return original.getRenderPipeline();
-		}
-
-		@Override
-		public @NotNull VertexFormat format() {
-			return original.format();
-		}
-
-		@Override
-		public @NotNull Mode mode() {
-			return original.mode();
-		}
-	}
-	public static boolean handleMiddleClick(Player player) {
-		if (!hasMultiblock || lookingStack == null || lookingStack.isEmpty()) {
-			return false;
-		}
-
-		Inventory inv = player.getInventory();
-
-		// CREATIVE: clone the item into hotbar like vanilla
-		if (player.isCreative()) {
-			int slot = inv.findSlotMatchingItem(lookingStack);
-			if (slot == -1) {
-				// try to put in empty hotbar
-				for (int i = 0; i < 9; i++) {
-					if (inv.getItem(i).isEmpty()) {
-						slot = i;
+				Method clone = null;
+				for (Method method : RenderPipeline.class.getDeclaredMethods()) {
+					if (method.getParameterCount() == 0
+							&& method.getReturnType().getName().equals("com.mojang.blaze3d.pipeline.RenderPipeline$Builder")) {
+						clone = method;
+						clone.setAccessible(true);
 						break;
 					}
 				}
+
+				if (clone == null) {
+					throw new IllegalStateException("Unable to locate RenderPipeline builder accessor");
+				}
+				PIPELINE_CLONE_METHOD = clone;
+
+				Field stateField;
+				try {
+					stateField = COMPOSITE_RENDER_TYPE_CLASS.getDeclaredField("state");
+				} catch (NoSuchFieldException ignored) {
+					stateField = null;
+					for (Field field : COMPOSITE_RENDER_TYPE_CLASS.getDeclaredFields()) {
+						if (field.getType() == COMPOSITE_STATE_CLASS) {
+							stateField = field;
+							break;
+						}
+					}
+					if (stateField == null) {
+						throw new IllegalStateException("Failed to locate CompositeRenderType state field");
+					}
+				}
+				stateField.setAccessible(true);
+				COMPOSITE_STATE_FIELD = stateField;
+			} catch (ReflectiveOperationException e) {
+				throw new IllegalStateException("Failed to resolve RenderType#create for ghost rendering", e);
 			}
-			if (slot == -1) slot = inv.getSelectedSlot();
+		}
 
-			ItemStack copy = lookingStack.copy();
-			inv.setItem(slot, copy);
+		private GhostRenderLayer() {
+		}
 
-			if (Minecraft.getInstance().getConnection() != null) {
-				Minecraft.getInstance().getConnection().send(
-						new ServerboundSetCreativeModeSlotPacket(36 + slot, copy)
-				);
+		public static RenderType remap(RenderType type) {
+			if (type == TRANSLUCENT || type.toString().startsWith("patchouli_ghost/")) {
+				return type;
 			}
-			return true;
-		}
 
-		// SURVIVAL:
-		// Only allow item pick if player already has at least one
-		int found = inv.findSlotMatchingItem(lookingStack);
-		if (found == -1) {
-			// player doesn't own this item -> consume the click without changing inventory
-			return true;
-		}
-
-		int selected = inv.getSelectedSlot();
-
-		// Item already in hotbar -> just select that slot
-		if (Inventory.isHotbarSlot(found)) {
-			inv.setSelectedSlot(found);
-
-			if (Minecraft.getInstance().getConnection() != null) {
-				Minecraft.getInstance().getConnection().send(
-						new ServerboundSetCarriedItemPacket(found)
-				);
+			if (!COMPOSITE_RENDER_TYPE_CLASS.isInstance(type)) {
+				return type;
 			}
-			return true;
+
+			return CACHE.computeIfAbsent(type, GhostRenderLayer::createGhostType);
 		}
 
-		// Item in main inventory -> swap it into the selected slot
-		ItemStack selectedStack = inv.getItem(selected);
-		ItemStack foundStack = inv.getItem(found);
+		private static RenderType createGhostType(RenderType original) {
+			Object state = getCompositeState(original);
+			if (!COMPOSITE_STATE_CLASS.isInstance(state)) {
+				throw new IllegalStateException("Unexpected composite state type for render layer " + original);
+			}
 
-		inv.setItem(selected, foundStack); // move found to hand
-		inv.setItem(found, selectedStack); // move hand item to old slot
+			RenderPipeline.Builder builder = clonePipeline(original.getRenderPipeline())
+					.withCull(false)
+					.withDepthWrite(false)
+					.withBlend(BlendFunction.TRANSLUCENT)
+					.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST);
+			RenderPipeline pipeline = builder.build();
+			String name = "patchouli_ghost/" + original;
 
-		// Send slot change to server
-		if (Minecraft.getInstance().getConnection() != null) {
-			Minecraft.getInstance().getConnection().send(
-					new ServerboundSetCarriedItemPacket(selected)
-			);
+			try {
+				return (RenderType) CREATE_METHOD.invoke(null,
+						name,
+						original.bufferSize(),
+						original.affectsCrumbling(),
+						true,
+						pipeline,
+						state);
+			} catch (ReflectiveOperationException e) {
+				throw new IllegalStateException("Failed to create ghost render type for " + original, e);
+			}
 		}
-		return true;
+
+		private static RenderPipeline.Builder clonePipeline(RenderPipeline source) {
+			try {
+				return (RenderPipeline.Builder) PIPELINE_CLONE_METHOD.invoke(source);
+			} catch (ReflectiveOperationException e) {
+				throw new IllegalStateException("Failed to clone render pipeline", e);
+			}
+		}
+
+		private static Object getCompositeState(RenderType original) {
+			try {
+				return COMPOSITE_STATE_FIELD.get(original);
+			} catch (IllegalAccessException e) {
+				throw new IllegalStateException("Failed to read composite state for " + original, e);
+			}
+		}
 	}
-	public static BlockHitResult getAdjustedHitResult(Player player, double unusedReach) {
-		Minecraft mc = Minecraft.getInstance();
-		if (!hasMultiblock || lookingState == null || lookingPos == null) {
-			return mc.hitResult instanceof BlockHitResult bhr ? bhr : null;
-		}
-
-		// reach distance: prefer client game mode pick range if present
-        double reach = 0;
-        if (mc.player != null) {
-            reach = mc.gameMode != null ? mc.player.blockInteractionRange() : 6.0D;
-        }
-
-        Vec3 eye = player.getEyePosition(1f);
-		Vec3 look = player.getViewVector(1f);
-		Vec3 end = eye.add(look.scale(reach));
-
-		// ghost block AABB in world space
-        AABB box = null;
-        if (mc.level != null) {
-            box = lookingState.getShape(mc.level, lookingPos).bounds().move(lookingPos.getX(), lookingPos.getY(), lookingPos.getZ());
-        }
-
-        Optional<Vec3> opt = Objects.requireNonNull(box).clip(eye, end);
-		if (opt.isEmpty()) {
-			return mc.hitResult instanceof BlockHitResult bhr ? bhr : null;
-		}
-
-		Vec3 hit = opt.get();
-		double hitDist = hit.distanceTo(eye);
-
-		// if there is an existing real hit, keep whichever is closer
-		double currentDist = Double.POSITIVE_INFINITY;
-		if (mc.hitResult instanceof BlockHitResult realBhr) {
-			currentDist = realBhr.getLocation().distanceTo(eye);
-		}
-
-		if (hitDist > currentDist) {
-			return mc.hitResult instanceof BlockHitResult bhr ? bhr : null;
-		}
-
-		// determine face by comparing hit relative to block center
-		Vec3 center = new Vec3(lookingPos.getX() + 0.5D, lookingPos.getY() + 0.5D, lookingPos.getZ() + 0.5D);
-		Vec3 rel = hit.subtract(center);
-		double ax = Math.abs(rel.x);
-		double ay = Math.abs(rel.y);
-		double az = Math.abs(rel.z);
-		Direction face;
-		if (ax >= ay && ax >= az) {
-			face = rel.x > 0 ? Direction.EAST : Direction.WEST;
-		} else if (ay >= ax && ay >= az) {
-			face = rel.y > 0 ? Direction.UP : Direction.DOWN;
-		} else {
-			face = rel.z > 0 ? Direction.SOUTH : Direction.NORTH;
-		}
-
-		return new BlockHitResult(hit, face, lookingPos, false);
+	public static boolean handleMiddleClick(Player player) {
+		return MultiblockGhostHandler.handleMiddleClick(player);
 	}
-
 	public static InteractionResult onPlayerInteract(Player player, InteractionHand hand) {
-		BlockHitResult bhr = getAdjustedHitResult(player,  Objects.requireNonNull(player.getAttribute(Attributes.ENTITY_INTERACTION_RANGE)).getValue());
+		Minecraft mc = Minecraft.getInstance();
+		BlockHitResult realHit = mc.hitResult instanceof BlockHitResult bhr ? bhr : null;
+		BlockHitResult bhr = MultiblockGhostHandler.getAdjustedHitResult(player, realHit);
 		if (bhr != null && hasMultiblock && !isAnchored) {
 			anchorTo(bhr.getBlockPos(), getRotation(player));
 			return InteractionResult.SUCCESS;

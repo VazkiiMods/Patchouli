@@ -58,7 +58,6 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe> {
 		if (r instanceof SmithingTransformRecipe t) return ((AccessorSmithingTransformRecipe) t).getTemplate();
 		return Optional.of(Ingredient.of(Stream.empty()));
 	}
-	@SuppressWarnings("deprecation")
 	@Override
 	protected ItemStack getRecipeOutput(SmithingRecipe recipe) {
 		ItemStack templateStack = getTemplate(recipe).get().items().toList().getFirst().value().getDefaultInstance();

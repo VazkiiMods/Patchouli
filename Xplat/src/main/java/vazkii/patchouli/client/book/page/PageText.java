@@ -12,7 +12,7 @@ public class PageText extends PageWithText {
 
 	String title;
 
-	@SuppressWarnings("deprecation")
+	
 	public void setText(String text) {
 		this.text = IVariable.wrap(text);
 	}

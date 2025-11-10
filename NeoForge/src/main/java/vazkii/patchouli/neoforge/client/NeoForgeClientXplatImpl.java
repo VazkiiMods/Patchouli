@@ -22,7 +22,6 @@ import java.util.List;
 
 
 public class NeoForgeClientXplatImpl implements IClientXplatAbstractions {
-	@SuppressWarnings("deprecation")
 	@Override
 	public void renderForMultiblock(BlockState state, BlockPos pos, BlockAndTintGetter multiblock, PoseStack ps, net.minecraft.client.renderer.MultiBufferSource.@NotNull BufferSource buffers, RandomSource rand) {
 		BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
