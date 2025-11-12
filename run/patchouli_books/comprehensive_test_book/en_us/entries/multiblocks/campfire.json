@@ -1,0 +1,25 @@
+{
+  "name": "Campfire NBT",
+  "category": "patchouli:multiblocks",
+  "icon": "minecraft:campfire",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "A simple multiblock showcasing block entity NBT support. This lit campfire renders four raw pork chops defined directly in the mapping string."
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "lit campfire",
+      "multiblock": {
+        "pattern": [
+          [
+            "0"
+          ]
+        ],
+        "mapping": {
+          "0": "minecraft:campfire[lit=true]{Items:[{Slot:0b,id:\"minecraft:porkchop\",Count:1b},{Slot:1b,id:\"minecraft:porkchop\",Count:1b},{Slot:2b,id:\"minecraft:porkchop\",Count:1b},{Slot:3b,id:\"minecraft:porkchop\",Count:1b}],CookingTimes:[0,0,0,0],CookingTotalTimes:[200,200,200,200]}"
+        }
+      }
+    }
+  ]
+}

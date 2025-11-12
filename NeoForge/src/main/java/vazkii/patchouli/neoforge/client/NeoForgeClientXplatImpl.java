@@ -17,8 +17,9 @@ import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class NeoForgeClientXplatImpl implements IClientXplatAbstractions {
@@ -26,28 +27,27 @@ public class NeoForgeClientXplatImpl implements IClientXplatAbstractions {
 	public void renderForMultiblock(BlockState state, BlockPos pos, BlockAndTintGetter multiblock, PoseStack ps, net.minecraft.client.renderer.MultiBufferSource.@NotNull BufferSource buffers, RandomSource rand) {
 		BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
 		if (state.getRenderShape() != RenderShape.INVISIBLE) {
-			// Define a list of common render types to iterate through.
-			// This covers most blocks that render in multiple layers (e.g., solid, cutout, translucent).
-			// We will check if the block can render in each of these.
-			// Collect the model parts to be rendered.
 			BlockStateModel model = blockRenderer.getBlockModel(state);
 			List<BlockModelPart> parts = new ArrayList<>();
 			model.collectParts(multiblock, pos, state, rand, parts);
 
-			List<RenderType> renderTypes = Arrays.asList(
-					RenderType.solid(),
-					RenderType.cutoutMipped(),
-					RenderType.cutout(),
-					RenderType.translucent()
-			);
+			if (parts.isEmpty()) {
+				return;
+			}
 
-			for (RenderType layer : renderTypes) {
-				// Check if the block state can actually render in this specific layer.
-				if (ItemBlockRenderTypes.getRenderType(state) != null) {
-					VertexConsumer buffer = buffers.getBuffer(layer);
-					// Call the correct renderBatched method signature, which requires the list of parts.
-					blockRenderer.renderBatched(state, pos, multiblock, ps, buffer, true, parts);
+			// Group model parts by their declared render type so mixed-layer blocks pick the right buffer.
+			Map<RenderType, List<BlockModelPart>> partsByLayer = new LinkedHashMap<>();
+			for (BlockModelPart part : parts) {
+				RenderType layer = part.getRenderType(state);
+				if (layer == null) {
+					layer = ItemBlockRenderTypes.getChunkRenderType(state);
 				}
+				partsByLayer.computeIfAbsent(layer, key -> new ArrayList<>()).add(part);
+			}
+
+			for (Map.Entry<RenderType, List<BlockModelPart>> entry : partsByLayer.entrySet()) {
+				VertexConsumer buffer = buffers.getBuffer(entry.getKey());
+				blockRenderer.renderBatched(state, pos, multiblock, ps, buffer, true, entry.getValue());
 			}
 		}
 	}

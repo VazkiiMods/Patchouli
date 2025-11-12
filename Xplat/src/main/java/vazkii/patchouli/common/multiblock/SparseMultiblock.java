@@ -51,6 +51,11 @@ public class SparseMultiblock extends AbstractMultiblock {
 	}
 
 	@Override
+	protected IStateMatcher getMatcher(BlockPos pos) {
+		return data.getOrDefault(pos, StateMatcher.AIR);
+	}
+
+	@Override
 	public Pair<BlockPos, Collection<SimulateResult>> simulate(Level world, BlockPos anchor, Rotation rotation, boolean forView) {
 		BlockPos disp = forView
 				? new BlockPos(-viewOffX, -viewOffY + 1, -viewOffZ).rotate(rotation)

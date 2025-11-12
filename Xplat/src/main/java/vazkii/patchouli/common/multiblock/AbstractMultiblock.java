@@ -4,8 +4,10 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biomes;
@@ -18,6 +20,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
 import vazkii.patchouli.api.IMultiblock;
+import vazkii.patchouli.api.IStateMatcher;
 import vazkii.patchouli.api.TriPredicate;
 import vazkii.patchouli.common.util.RotationUtil;
 
@@ -135,10 +138,45 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockAndTintGet
 	@Nullable
 	public BlockEntity getBlockEntity(BlockPos pos) {
 		BlockState state = getBlockState(pos);
-		if (state.getBlock() instanceof EntityBlock) {
-			return teCache.computeIfAbsent(pos.immutable(), p -> ((EntityBlock) state.getBlock()).newBlockEntity(pos, state));
+		if (!(state.getBlock() instanceof EntityBlock entityBlock)) {
+			return null;
 		}
-		return null;
+
+		return teCache.computeIfAbsent(pos.immutable(), cachedPos -> {
+			BlockState cachedState = getBlockState(cachedPos);
+			BlockEntity blockEntity = entityBlock.newBlockEntity(cachedPos, cachedState);
+			if (blockEntity != null) {
+				applyBlockEntityData(blockEntity, cachedPos);
+			}
+			return blockEntity;
+		});
+	}
+
+	private void applyBlockEntityData(BlockEntity blockEntity, BlockPos pos) {
+		IStateMatcher matcher = getMatcher(pos);
+		CompoundTag configuredTag = matcher != null ? matcher.getBlockEntityTag() : null;
+		if (configuredTag == null || configuredTag.isEmpty()) {
+			return;
+		}
+
+		CompoundTag data = configuredTag.copy();
+		if (!data.contains("x")) {
+			data.putInt("x", pos.getX());
+		}
+		if (!data.contains("y")) {
+			data.putInt("y", pos.getY());
+		}
+		if (!data.contains("z")) {
+			data.putInt("z", pos.getZ());
+		}
+		BlockEntity.addEntityType(data, blockEntity.getType());
+
+		RegistryAccess registryAccess = world != null ? world.registryAccess() : RegistryAccess.EMPTY;
+		blockEntity.loadWithComponents(data, registryAccess);
+	}
+
+	protected IStateMatcher getMatcher(BlockPos pos) {
+		return StateMatcher.AIR;
 	}
 
 	@Override

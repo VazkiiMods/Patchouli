@@ -6,6 +6,7 @@ import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -31,18 +32,20 @@ public class StringStateMatcher {
 
 		// c.f. BlockPredicateArgument. Similar, but doesn't use vanilla's weird caching class.
 		return BlockStateParser.parseForTesting(BuiltInRegistries.BLOCK, s, true).map(
-				blockResult -> new ExactMatcher(blockResult.blockState(), blockResult.properties()),
-				tagResult -> new TagMatcher(tagResult.tag(), tagResult.vagueProperties())
+				blockResult -> new ExactMatcher(blockResult.blockState(), blockResult.properties(), blockResult.nbt()),
+				tagResult -> new TagMatcher(tagResult.tag(), tagResult.vagueProperties(), tagResult.nbt())
 		);
 	}
 
 	private static class ExactMatcher implements IStateMatcher {
 		private final BlockState state;
 		private final Map<Property<?>, Comparable<?>> props;
+		private final CompoundTag blockEntityTag;
 
-		private ExactMatcher(BlockState state, Map<Property<?>, Comparable<?>> props) {
+		private ExactMatcher(BlockState state, Map<Property<?>, Comparable<?>> props, CompoundTag blockEntityTag) {
 			this.state = state;
 			this.props = props;
+			this.blockEntityTag = blockEntityTag;
 		}
 
 		@Override
@@ -65,6 +68,11 @@ public class StringStateMatcher {
 		}
 
 		@Override
+		public CompoundTag getBlockEntityTag() {
+			return blockEntityTag;
+		}
+
+		@Override
 		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
@@ -74,22 +82,25 @@ public class StringStateMatcher {
 			}
 			ExactMatcher that = (ExactMatcher) o;
 			return Objects.equals(state, that.state) &&
-					Objects.equals(props, that.props);
+					Objects.equals(props, that.props) &&
+					Objects.equals(blockEntityTag, that.blockEntityTag);
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(state, props);
+			return Objects.hash(state, props, blockEntityTag);
 		}
 	}
 
 	private static class TagMatcher implements IStateMatcher {
 		private final HolderSet<Block> tag;
 		private final Map<String, String> props;
+		private final CompoundTag blockEntityTag;
 
-		private TagMatcher(HolderSet<Block> tag, Map<String, String> props) {
+		private TagMatcher(HolderSet<Block> tag, Map<String, String> props, CompoundTag blockEntityTag) {
 			this.tag = tag;
 			this.props = props;
+			this.blockEntityTag = blockEntityTag;
 		}
 
 		@Override
@@ -127,6 +138,11 @@ public class StringStateMatcher {
 		}
 
 		@Override
+		public CompoundTag getBlockEntityTag() {
+			return blockEntityTag;
+		}
+
+		@Override
 		public boolean equals(Object o) {
 			if (this == o) {
 				return true;
@@ -135,12 +151,12 @@ public class StringStateMatcher {
 				return false;
 			}
 			TagMatcher that = (TagMatcher) o;
-			return Objects.equals(tag, that.tag) && Objects.equals(props, that.props);
+			return Objects.equals(tag, that.tag) && Objects.equals(props, that.props) && Objects.equals(blockEntityTag, that.blockEntityTag);
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(tag, props);
+			return Objects.hash(tag, props, blockEntityTag);
 		}
 	}
 }

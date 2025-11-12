@@ -1,6 +1,7 @@
 package vazkii.patchouli.api;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -25,5 +26,15 @@ public interface IStateMatcher {
 	 * for both performance and correctness reasons -- the state may be rotated for multiblock matching.
 	 */
 	TriPredicate<BlockGetter, BlockPos, BlockState> getStatePredicate();
+
+	/**
+	 * Optional serialized data for the block entity associated with this matcher.
+	 *
+	 * <p>Implementations should return {@code null} when no block entity data is required.
+	 * Callers are expected to copy the returned tag before mutating it.</p>
+	 */
+	default CompoundTag getBlockEntityTag() {
+		return null;
+	}
 
 }

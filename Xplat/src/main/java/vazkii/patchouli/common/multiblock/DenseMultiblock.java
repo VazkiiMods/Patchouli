@@ -181,6 +181,17 @@ public class DenseMultiblock extends AbstractMultiblock {
 	}
 
 	@Override
+	protected IStateMatcher getMatcher(BlockPos pos) {
+		int x = pos.getX();
+		int y = pos.getY();
+		int z = pos.getZ();
+		if (x < 0 || y < 0 || z < 0 || x >= size.getX() || y >= size.getY() || z >= size.getZ()) {
+			return StateMatcher.AIR;
+		}
+		return stateTargets[x][y][z];
+	}
+
+	@Override
 	public Vec3i getSize() {
 		return size;
 	}
