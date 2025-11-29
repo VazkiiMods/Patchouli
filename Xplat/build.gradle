@@ -13,7 +13,7 @@ if (System.getenv().RELEASE_MODE == null) {
 
 neoForge {
     // To find the timestamp, see https://projects.neoforged.net/neoforged/neoform
-    neoFormVersion = "1.21.1-20240808.144430"
+    neoFormVersion = neoform_version
     addModdingDependenciesTo sourceSets.test
 }
 
@@ -29,7 +29,7 @@ repositories {
 
 dependencies {
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
-    compileOnly "mezz.jei:jei-1.21-common-api:19.1.1.19"
+    compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.1'
 }
