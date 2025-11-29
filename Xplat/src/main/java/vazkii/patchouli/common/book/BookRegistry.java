@@ -2,7 +2,10 @@ package vazkii.patchouli.common.book;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -33,7 +36,7 @@ public class BookRegistry {
 
 	public final Map<ResourceLocation, Book> books = new HashMap<>();
 	public static final Gson GSON = new GsonBuilder()
-			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+			.registerTypeAdapter(ResourceLocation.class, (JsonDeserializer<ResourceLocation>) (json, typeOfT, context) -> ResourceLocation.CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, json)).getOrThrow())
 			.create();
 
 	private BookRegistry() {}
@@ -143,5 +146,4 @@ public class BookRegistry {
 			}
 		}
 	}
-
 }

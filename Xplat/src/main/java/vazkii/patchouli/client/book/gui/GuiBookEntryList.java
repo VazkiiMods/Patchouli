@@ -1,10 +1,11 @@
 package vazkii.patchouli.client.book.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
@@ -101,7 +102,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		}
 
 		if (!searchField.getValue().isEmpty()) {
-			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+			//RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 			drawFromTexture(graphics, book, searchField.getX() - 8, searchField.getY(), 140, 183, 99, 14);
 			Component toDraw = Component.literal(searchField.getValue()).setStyle(book.getFontStyle());
 			graphics.drawString(font, toDraw, searchField.getX() + 7, searchField.getY() + 1, book.textColor, false);
@@ -110,9 +111,9 @@ public abstract class GuiBookEntryList extends GuiBook {
 		if (visibleEntries.isEmpty()) {
 			if (!searchField.getValue().isEmpty()) {
 				drawCenteredStringNoShadow(graphics, I18n.get("patchouli.gui.lexicon.no_results"), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
-				graphics.pose().scale(2F, 2F, 2F);
+				graphics.pose().scale(2F, 2F);
 				drawCenteredStringNoShadow(graphics, I18n.get("patchouli.gui.lexicon.sad"), GuiBook.RIGHT_PAGE_X / 2 + GuiBook.PAGE_WIDTH / 4, 47, 0x999999);
-				graphics.pose().scale(0.5F, 0.5F, 0.5F);
+				graphics.pose().scale(0.5F, 0.5F);
 			} else {
 				drawCenteredStringNoShadow(graphics, getNoEntryMessage(), GuiBook.RIGHT_PAGE_X + GuiBook.PAGE_WIDTH / 2, 80, 0x333333);
 			}
@@ -128,16 +129,16 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 
 	@Override
-	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-		return text.click(mouseX, mouseY, mouseButton)
-				|| searchField.mouseClicked(mouseX - bookLeft, mouseY - bookTop, mouseButton)
-				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
+	public boolean mouseClickedScaled(MouseButtonEvent event, boolean doubleClick) {
+		return text.click(event, doubleClick)
+				|| searchField.mouseClicked(new MouseButtonEvent(event.x() - bookLeft, event.y() - bookTop, event.buttonInfo()), doubleClick)
+				|| super.mouseClickedScaled(event, doubleClick);
 	}
 
 	@Override
-	public boolean charTyped(char c, int i) {
+	public boolean charTyped(CharacterEvent event) {
 		String currQuery = searchField.getValue();
-		if (searchField.charTyped(c, i)) {
+		if (searchField.charTyped(event)) {
 			if (!searchField.getValue().equals(currQuery)) {
 				buildEntryButtons();
 			}
@@ -145,19 +146,19 @@ public abstract class GuiBookEntryList extends GuiBook {
 			return true;
 		}
 
-		return super.charTyped(c, i);
+		return super.charTyped(event);
 	}
 
 	@Override
-	public boolean keyPressed(int key, int scanCode, int modifiers) {
+	public boolean keyPressed(KeyEvent event) {
 		String currQuery = searchField.getValue();
 
-		if (key == GLFW.GLFW_KEY_ENTER) {
+		if (event.key() == GLFW.GLFW_KEY_ENTER) {
 			if (visibleEntries.size() == 1) {
-				displayLexiconGui(new GuiBookEntry(book, visibleEntries.get(0)), true);
+				displayLexiconGui(new GuiBookEntry(book, visibleEntries.getFirst()), true);
 				return true;
 			}
-		} else if (searchField.keyPressed(key, scanCode, modifiers)) {
+		} else if (searchField.keyPressed(event)) {
 			if (!searchField.getValue().equals(currQuery)) {
 				buildEntryButtons();
 			}
@@ -165,7 +166,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 			return true;
 		}
 
-		return super.keyPressed(key, scanCode, modifiers);
+		return super.keyPressed(event);
 	}
 
 	public void handleButtonCategory(Button button) {

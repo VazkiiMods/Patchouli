@@ -45,9 +45,9 @@ public class PageText extends PageWithText {
 			}
 
 			if (!smolText.isEmpty()) {
-				graphics.pose().scale(0.5F, 0.5F, 1F);
+				graphics.pose().scale(0.5F, 0.5F);
 				parent.drawCenteredStringNoShadow(graphics, smolText, GuiBook.PAGE_WIDTH, 12, book.headerColor);
-				graphics.pose().scale(2F, 2F, 1F);
+				graphics.pose().scale(2F, 2F);
 				renderedSmol = true;
 			}
 

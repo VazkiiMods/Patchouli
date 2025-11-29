@@ -5,8 +5,6 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonObject;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -32,6 +30,7 @@ import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class BookEntry extends AbstractReadStateHolder implements Comparable<BookEntry> {
 	private final String name;
@@ -253,7 +252,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 				List<ItemStack> stacks;
 				int pageNumber = entry.getValue();
 				try {
-					stacks = ItemStackUtil.loadStackListFromString(key, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
+					stacks = ItemStackUtil.loadStackListFromString(key, level.registryAccess()).stream().flatMap(e -> e.map(Stream::of, tag -> tag.stream().map(ItemStack::new))).toList();
 				} catch (Exception e) {
 					PatchouliAPI.LOGGER.warn("Invalid extra recipe mapping: {} to page {} in entry {}: {}", key, pageNumber, id, e.getMessage());
 					continue;

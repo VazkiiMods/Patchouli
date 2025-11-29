@@ -6,21 +6,16 @@ import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.item.ItemProperties;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.profiling.ProfilerFiller;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.BookModel;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookContentResourceListenerLoader;
+import vazkii.patchouli.client.book.BookReloadHook;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
@@ -32,9 +27,6 @@ import vazkii.patchouli.fabric.network.FabricMessageOpenBookGui;
 import vazkii.patchouli.fabric.network.FabricMessageReloadBookContents;
 import vazkii.patchouli.network.MessageOpenBookGui;
 import vazkii.patchouli.network.MessageReloadBookContents;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 public class FabricClientInitializer implements ClientModInitializer {
 	@Override
@@ -56,13 +48,10 @@ public class FabricClientInitializer implements ClientModInitializer {
 				pluginContext.addModels(book.model);
 			}
 
-			pluginContext.modifyModelAfterBake().register(
+			pluginContext.modifyItemModelAfterBake().register(
 					(oldModel, ctx) -> {
-						if (ctx.topLevelId() != null &&
-								PatchouliItems.BOOK_ID.equals(ctx.topLevelId().id()) // checks namespace and path
-								&& ctx.topLevelId().getVariant().equals("inventory")
-								&& oldModel != null) {
-							return new BookModel(oldModel, (model) -> Minecraft.getInstance().getModelManager().getModel(model));
+						if (PatchouliItems.BOOK_ID.equals(ctx.itemId()) && oldModel != null) {
+							return new BookModel(oldModel);
 						}
 						return oldModel;
 					}
@@ -73,36 +62,7 @@ public class FabricClientInitializer implements ClientModInitializer {
 				ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "completion"),
 				(stack, world, entity, seed) -> ItemModBook.getCompletion(stack));
 
-		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new IdentifiableResourceReloadListener() {
-			private static final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "resource_pack_books");
-
-			@Override
-			public CompletableFuture<Void> reload(PreparationBarrier barrier, ResourceManager manager, ProfilerFiller preparationsProfiler, ProfilerFiller reloadProfiler, Executor backgroundExecutor, Executor gameExecutor) {
-				return BookContentResourceListenerLoader.INSTANCE.reload(barrier, manager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor);
-			}
-
-			@Override
-			public ResourceLocation getFabricId() {
-				return id;
-			}
-		});
-		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-			private static final ResourceLocation id = ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "reload_hook");
-
-			@Override
-			public ResourceLocation getFabricId() {
-				return id;
-			}
-
-			@Override
-			public void onResourceManagerReload(ResourceManager manager) {
-				if (Minecraft.getInstance().level != null) {
-					PatchouliAPI.LOGGER.info("Reloading resource pack-based books");
-					ClientBookRegistry.INSTANCE.reload();
-				} else {
-					PatchouliAPI.LOGGER.debug("Not reloading resource pack-based books as client world is missing");
-				}
-			}
-		});
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(BookContentResourceListenerLoader.ID, BookContentResourceListenerLoader.INSTANCE);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(BookReloadHook.ID, BookReloadHook.INSTANCE);
 	}
 }

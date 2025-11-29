@@ -1,6 +1,7 @@
 package vazkii.patchouli.fabric.xplat;
 
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.DefaultCustomIngredients;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -8,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import vazkii.patchouli.api.BookContentsReloadCallback;
 import vazkii.patchouli.api.BookDrawScreenCallback;
@@ -82,5 +84,15 @@ public class FabricXplatImpl implements IXplatAbstractions {
 			return ReiCompat.handleRecipeKeybind(keyCode, scanCode, stack);
 		}
 		return false;
+	}
+
+	@Override
+	public Ingredient createComponentIngredient(ItemStack itemStack) {
+		return DefaultCustomIngredients.components(itemStack);
+	}
+
+	@Override
+	public Ingredient createCompoundIngredient(Ingredient[] ingredients) {
+		return DefaultCustomIngredients.any(ingredients);
 	}
 }

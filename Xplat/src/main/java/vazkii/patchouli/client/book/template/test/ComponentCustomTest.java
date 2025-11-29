@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book.template.test;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 
@@ -25,13 +26,13 @@ public class ComponentCustomTest implements ICustomComponent {
 
 	@Override
 	public void render(GuiGraphics graphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
-		Component toRender = Component.literal(text).setStyle(context.getFont());
+		Component toRender = Component.literal(text).setStyle(context.getFontStyle());
 		graphics.drawString(Minecraft.getInstance().font, toRender, x, y, -1, true);
 	}
 
 	@Override
-	public boolean mouseClicked(IComponentRenderContext context, double mouseX, double mouseY, int mouseButton) {
-		PatchouliAPI.LOGGER.debug("Custom Component Test clicked at ({}, {}) button {}", mouseX, mouseY, mouseButton);
+	public boolean mouseClicked(IComponentRenderContext context, MouseButtonEvent event, boolean doubleClick) {
+		PatchouliAPI.LOGGER.debug("Custom Component Test clicked {}", event);
 		return false;
 	}
 

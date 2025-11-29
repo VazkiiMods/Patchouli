@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.template.component;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.HolderLookup;
 
 import vazkii.patchouli.api.ICustomComponent;
@@ -50,8 +51,7 @@ public class ComponentCustom extends TemplateComponent {
 	}
 
 	@Override
-	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
-		return callbacks.mouseClicked(page.parent, mouseX, mouseY, mouseButton);
+	public boolean mouseClicked(BookPage page, MouseButtonEvent event, boolean doubleClick) {
+		return callbacks.mouseClicked(page.parent, event, doubleClick);
 	}
-
 }

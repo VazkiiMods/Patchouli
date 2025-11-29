@@ -5,11 +5,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.client.base.PersistentData;
@@ -95,10 +98,10 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-		return clickPage(leftPage, mouseX, mouseY, mouseButton)
-				|| clickPage(rightPage, mouseX, mouseY, mouseButton)
-				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
+	public boolean mouseClickedScaled(MouseButtonEvent event, boolean doubleClick) {
+		return clickPage(leftPage, event, doubleClick)
+				|| clickPage(rightPage, event, doubleClick)
+				|| super.mouseClickedScaled(event, doubleClick);
 	}
 
 	void drawPage(GuiGraphics graphics, @Nullable BookPage page, int mouseX, int mouseY, float pticks) {
@@ -106,15 +109,15 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 			return;
 		}
 
-		graphics.pose().pushPose();
-		graphics.pose().translate(page.left, page.top, 0);
+		graphics.pose().pushMatrix();
+		graphics.pose().translate(page.left, page.top);
 		page.render(graphics, mouseX - page.left, mouseY - page.top, pticks);
-		graphics.pose().popPose();
+		graphics.pose().popMatrix();
 	}
 
-	private boolean clickPage(@Nullable BookPage page, double mouseX, double mouseY, int mouseButton) {
+	private boolean clickPage(@Nullable BookPage page, MouseButtonEvent event, boolean doubleClick) {
 		if (page != null) {
-			return page.mouseClicked(mouseX - page.left, mouseY - page.top, mouseButton);
+			return page.mouseClicked(new MouseButtonEvent(event.x() - page.left, event.y() - page.top, event.buttonInfo()), doubleClick);
 		}
 
 		return false;
@@ -228,7 +231,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public Style getFont() {
+	public Style getFontStyle() {
 		return book.getFontStyle();
 	}
 
@@ -248,9 +251,9 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
-		ItemStack[] stacks = ingr.getItems();
-		if (stacks.length > 0) {
-			renderItemStack(graphics, x, y, mouseX, mouseY, stacks[(ticksInBook / 20) % stacks.length]);
+		List<ItemStack> stacks = ingr.display().resolveForStacks(SlotDisplayContext.fromLevel(Minecraft.getInstance().level));
+		if (!stacks.isEmpty()) {
+			renderItemStack(graphics, x, y, mouseX, mouseY, stacks.get((ticksInBook / 20) % stacks.size()));
 		}
 	}
 
@@ -293,12 +296,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-		if (Minecraft.getInstance().options.keyInventory.matches(keyCode, scanCode)) {
+	public boolean keyPressed(KeyEvent event) {
+		if (Minecraft.getInstance().options.keyInventory.matches(event)) {
 			this.onClose();
 			return true;
 		}
-		return super.keyPressed(keyCode, scanCode, modifiers);
+		return super.keyPressed(event);
 	}
 
 	@Override

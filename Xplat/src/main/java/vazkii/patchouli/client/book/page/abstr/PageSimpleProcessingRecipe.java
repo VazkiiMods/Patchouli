@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.book.page.abstr;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +22,7 @@ public abstract class PageSimpleProcessingRecipe<T extends Recipe<?>> extends Pa
 			return;
 		}
 
-		RenderSystem.enableBlend();
+		//RenderSystem.enableBlend();
 		graphics.blit(book.craftingTexture, recipeX, recipeY, 11, 71, 96, 24, 128, 256);
 		parent.drawCenteredStringNoShadow(graphics, getTitle(second).getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 

@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
@@ -39,7 +37,7 @@ public class GuiButtonBook extends Button {
 		if (!active) {
 			return;
 		}
-		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+		//RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		GuiBook.drawFromTexture(graphics, parent.book, getX(), getY(), u + (isHoveredOrFocused() ? width : 0), v, width, height);
 		if (isHoveredOrFocused()) {
 			parent.setTooltip(getTooltipLines());

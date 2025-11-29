@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.template.component;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 
@@ -57,8 +58,7 @@ public class ComponentText extends TemplateComponent {
 	}
 
 	@Override
-	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
-		return textRenderer.click(mouseX, mouseY, mouseButton);
+	public boolean mouseClicked(BookPage page, MouseButtonEvent event, boolean doubleClick) {
+		return textRenderer.click(event, doubleClick);
 	}
-
 }

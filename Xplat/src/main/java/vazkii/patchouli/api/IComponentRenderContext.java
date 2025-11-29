@@ -19,7 +19,7 @@ public interface IComponentRenderContext {
 
 	Screen getGui();
 
-	Style getFont();
+	Style getFontStyle();
 
 	void renderItemStack(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, ItemStack stack);
 

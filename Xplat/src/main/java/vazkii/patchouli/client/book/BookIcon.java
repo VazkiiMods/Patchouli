@@ -2,6 +2,7 @@ package vazkii.patchouli.client.book;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -23,8 +24,8 @@ public sealed interface BookIcon permits BookIcon.StackIcon, BookIcon.TextureIco
 	record TextureIcon(ResourceLocation texture) implements BookIcon {
 		@Override
 		public void render(GuiGraphics graphics, int x, int y) {
-			graphics.setColor(1F, 1F, 1F, 1F);
-			graphics.blit(texture(), x, y, 0, 0, 16, 16, 16, 16);
+			//graphics.setColor(1F, 1F, 1F, 1F);
+			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture(), x, y, 16, 16);
 		}
 	}
 

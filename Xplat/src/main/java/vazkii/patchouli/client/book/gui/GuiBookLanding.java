@@ -1,11 +1,10 @@
 package vazkii.patchouli.client.book.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
@@ -177,7 +176,7 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	private void drawHeader(GuiGraphics graphics) {
-		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+		//RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		drawFromTexture(graphics, book, -8, 12, 0, 180, 140, 31);
 
 		int color = book.nameplateColor;
@@ -205,9 +204,8 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	@Override
-	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-		return text != null && text.click(mouseX, mouseY, mouseButton)
-				|| super.mouseClickedScaled(mouseX, mouseY, mouseButton);
+	public boolean mouseClickedScaled(MouseButtonEvent event, boolean doubleClick) {
+		return text != null && text.click(event, doubleClick) || super.mouseClickedScaled(event, doubleClick);
 	}
 
 	public void handleButtonIndex(Button button) {

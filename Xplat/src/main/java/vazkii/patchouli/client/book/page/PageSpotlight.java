@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -39,7 +38,7 @@ public class PageSpotlight extends PageWithText {
 		int w = 66;
 		int h = 26;
 
-		RenderSystem.enableBlend();
+		//RenderSystem.enableBlend();
 		graphics.blit(book.craftingTexture, GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 256);
 
 		Component toDraw;

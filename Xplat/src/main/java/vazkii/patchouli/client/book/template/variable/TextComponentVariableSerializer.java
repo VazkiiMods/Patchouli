@@ -6,7 +6,6 @@ import com.mojang.serialization.JsonOps;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Component.Serializer;
 import net.minecraft.network.chat.ComponentSerialization;
 
 import vazkii.patchouli.api.IVariableSerializer;
@@ -20,7 +19,7 @@ public class TextComponentVariableSerializer implements IVariableSerializer<Comp
 		if (json.isJsonPrimitive()) {
 			return Component.literal(json.getAsString());
 		}
-		return Serializer.fromJson(json, registries);
+		return ComponentSerialization.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), json).getOrThrow();
 	}
 
 	@Override

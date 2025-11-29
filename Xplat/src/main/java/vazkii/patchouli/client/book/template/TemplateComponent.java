@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.Level;
 
@@ -86,7 +87,7 @@ public abstract class TemplateComponent implements IVariablesAvailableCallback {
 		// NO-OP
 	}
 
-	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
+	public boolean mouseClicked(BookPage page, MouseButtonEvent event, boolean doubleClick) {
 		return false;
 	}
 

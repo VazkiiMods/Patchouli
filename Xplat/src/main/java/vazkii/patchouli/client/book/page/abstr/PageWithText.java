@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.page.abstr;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 import vazkii.patchouli.api.IVariable;
@@ -35,12 +36,11 @@ public abstract class PageWithText extends BookPage {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		return shouldRenderText() && textRender.click(mouseX, mouseY, mouseButton);
+	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+		return shouldRenderText() && textRender.click(event, doubleClick);
 	}
 
 	public boolean shouldRenderText() {
 		return true;
 	}
-
 }

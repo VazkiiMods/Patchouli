@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -54,23 +52,23 @@ public class GuiButtonCategory extends Button {
 			boolean locked = category != null && category.isLocked();
 
 			if (locked) {
-				RenderSystem.setShaderColor(1F, 1F, 1F, 0.7F);
+				//RenderSystem.setShaderColor(1F, 1F, 1F, 0.7F);
 				GuiBook.drawLock(graphics, parent.book, getX() + 2, getY() + 2);
 			} else {
 				icon.render(graphics, getX() + 2, getY() + 2);
 			}
 
-			graphics.pose().pushPose();
-			RenderSystem.enableBlend();
-			RenderSystem.setShaderColor(1F, 1F, 1F, transparency);
-			graphics.pose().translate(0, 0, 200);
+			graphics.pose().pushMatrix();
+			//RenderSystem.enableBlend();
+			//RenderSystem.setShaderColor(1F, 1F, 1F, transparency);
+			//graphics.pose().translate(0, 0, 200);
 			GuiBook.drawFromTexture(graphics, parent.book, getX(), getY(), u, v, width, height);
-			RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+			//RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
 			if (category != null && !category.isLocked()) {
 				GuiBook.drawMarking(graphics, parent.book, getX(), getY(), 0, category.getReadState());
 			}
-			graphics.pose().popPose();
+			graphics.pose().popMatrix();
 
 			if (isHoveredOrFocused()) {
 				parent.setTooltip(locked

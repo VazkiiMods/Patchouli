@@ -1,6 +1,7 @@
 package vazkii.patchouli.client.book.page;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -43,7 +44,7 @@ public class PageTemplate extends BookPage {
 	}
 
 	@Override
-	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-		return template.mouseClicked(this, mouseX, mouseY, mouseButton);
+	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+		return template.mouseClicked(this, event, doubleClick);
 	}
 }

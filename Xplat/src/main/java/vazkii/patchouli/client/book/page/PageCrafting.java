@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.book.page;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
@@ -29,7 +27,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 			return;
 		}
 
-		RenderSystem.enableBlend();
+		//RenderSystem.enableBlend();
 		graphics.blit(book.craftingTexture, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 256);
 
 		boolean shaped = recipe instanceof ShapedRecipe;

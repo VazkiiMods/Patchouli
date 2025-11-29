@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import vazkii.patchouli.api.PatchouliAPI;
 
@@ -50,9 +51,13 @@ public interface IXplatAbstractions {
 			var names = providers.stream().map(p -> p.type().getName()).collect(Collectors.joining(",", "[", "]"));
 			throw new IllegalStateException("There should be exactly one IXplatAbstractions implementation on the classpath. Found: " + names);
 		} else {
-			var provider = providers.get(0);
-			PatchouliAPI.LOGGER.debug("Instantiating xplat impl: " + provider.type().getName());
+			var provider = providers.getFirst();
+			PatchouliAPI.LOGGER.debug("Instantiating xplat impl: {}", provider.type().getName());
 			return provider.get();
 		}
 	}
+
+	Ingredient createComponentIngredient(ItemStack itemStack);
+
+	Ingredient createCompoundIngredient(Ingredient[] ingredients);
 }

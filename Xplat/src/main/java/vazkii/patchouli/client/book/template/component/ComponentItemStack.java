@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.HolderLookup;
@@ -46,8 +45,8 @@ public class ComponentItemStack extends TemplateComponent {
 		}
 
 		if (framed) {
-			RenderSystem.enableBlend();
-			graphics.setColor(1F, 1F, 1F, 1F);
+			//RenderSystem.enableBlend();
+			//graphics.setColor(1F, 1F, 1F, 1F);
 			graphics.blit(page.book.craftingTexture, x - 5, y - 5, 20, 102, 26, 26, 128, 256);
 		}
 

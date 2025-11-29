@@ -1,9 +1,11 @@
 package vazkii.patchouli.client.handler;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
-import com.mojang.blaze3d.vertex.VertexFormat.Mode;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.MeshData;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.datafixers.util.Pair;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
@@ -27,7 +29,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -43,7 +44,7 @@ import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 import vazkii.patchouli.mixin.client.AccessorMultiBufferSource;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -97,8 +98,8 @@ public class MultiblockVisualizationHandler {
 				return;
 			}
 
-			graphics.pose().pushPose();
-			graphics.pose().translate(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed, 0);
+			graphics.pose().pushMatrix();
+			graphics.pose().translate(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed);
 
 			Minecraft mc = Minecraft.getInstance();
 			int x = mc.getWindow().getGuiScaledWidth() / 2;
@@ -112,20 +113,20 @@ public class MultiblockVisualizationHandler {
 			int top = y + 10;
 
 			if (timeComplete > 0) {
-				graphics.pose().pushPose();
-				graphics.pose().translate(0, Math.min(height + 5, animTime), 0);
+				graphics.pose().pushMatrix();
+				graphics.pose().translate(0, Math.min(height + 5, animTime));
 				graphics.drawCenteredString(mc.font, Component.translatable("patchouli.gui.lexicon.structure_complete"), x, top + height - 10, 0x00FF00);
-				graphics.pose().popPose();
+				graphics.pose().popMatrix();
 			}
 
 			graphics.fill(left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
-			drawGradientRect(graphics, left, top, left + width, top + height, 0xFF666666, 0xFF555555);
+			graphics.fillGradient(left, top, left + width, top + height, 0xFF666666, 0xFF555555);
 
 			float fract = (float) blocksDone / Math.max(1, blocks);
 			int progressWidth = (int) ((float) width * fract);
 			int color = Mth.hsvToRgb(fract / 3.0F, 1.0F, 1.0F) | 0xFF000000;
 			int color2 = new Color(color).darker().getRGB();
-			drawGradientRect(graphics, left, top, left + progressWidth, top + height, color, color2);
+			graphics.fillGradient(left, top, left + progressWidth, top + height, color, color2);
 
 			if (!isAnchored) {
 				graphics.drawCenteredString(mc.font, Component.translatable("patchouli.gui.lexicon.not_anchored"), x, top + height + 8, 0xFFFFFF);
@@ -134,8 +135,7 @@ public class MultiblockVisualizationHandler {
 					// try-catch around here because the state isn't necessarily present in the world in this instance,
 					// which isn't really expected behavior for getPickBlock
 					try {
-						Block block = lookingState.getBlock();
-						ItemStack stack = block.getCloneItemStack(mc.level, lookingPos, lookingState);
+						ItemStack stack = lookingState.getCloneItemStack(mc.level, lookingPos, false);
 
 						if (!stack.isEmpty()) {
 							graphics.drawString(mc.font, stack.getHoverName(), left + 20, top + height + 8, 0xFFFFFF, true);
@@ -163,7 +163,7 @@ public class MultiblockVisualizationHandler {
 				}
 			}
 
-			graphics.pose().popPose();
+			graphics.pose().popMatrix();
 		}
 	}
 
@@ -310,28 +310,6 @@ public class MultiblockVisualizationHandler {
 		return offsetApplier.apply(pos);
 	}
 
-	private static void drawGradientRect(GuiGraphics graphics, int left, int top, int right, int bottom, int startColor, int endColor) {
-		float f = (float) (startColor >> 24 & 255) / 255.0F;
-		float f1 = (float) (startColor >> 16 & 255) / 255.0F;
-		float f2 = (float) (startColor >> 8 & 255) / 255.0F;
-		float f3 = (float) (startColor & 255) / 255.0F;
-		float f4 = (float) (endColor >> 24 & 255) / 255.0F;
-		float f5 = (float) (endColor >> 16 & 255) / 255.0F;
-		float f6 = (float) (endColor >> 8 & 255) / 255.0F;
-		float f7 = (float) (endColor & 255) / 255.0F;
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.begin(Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-		Matrix4f mat = graphics.pose().last().pose();
-		bufferbuilder.addVertex(mat, right, top, 0).setColor(f1, f2, f3, f);
-		bufferbuilder.addVertex(mat, left, top, 0).setColor(f1, f2, f3, f);
-		bufferbuilder.addVertex(mat, left, bottom, 0).setColor(f5, f6, f7, f4);
-		bufferbuilder.addVertex(mat, right, bottom, 0).setColor(f5, f6, f7, f4);
-		BufferUploader.drawWithShader(bufferbuilder.buildOrThrow());
-		RenderSystem.disableBlend();
-	}
-
 	/**
 	 * Returns the Rotation of a multiblock structure based on the given entity's facing direction.
 	 */
@@ -362,21 +340,43 @@ public class MultiblockVisualizationHandler {
 
 	private static class GhostRenderLayer extends RenderType {
 		private static final Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
+		private final RenderType original;
 
 		private GhostRenderLayer(RenderType original) {
-			super(String.format("%s_%s_ghost", original.toString(), PatchouliAPI.MOD_ID), original.format(), original.mode(), original.bufferSize(), original.affectsCrumbling(), true, () -> {
+			super(String.format("%s_%s_ghost", original.toString(), PatchouliAPI.MOD_ID), original.bufferSize(), original.affectsCrumbling(), original.sortOnUpload(), () -> {
 				original.setupRenderState();
 
-				RenderSystem.disableDepthTest();
-				RenderSystem.enableBlend();
-				RenderSystem.setShaderColor(1, 1, 1, 0.4F);
+				//RenderSystem.disableDepthTest();
+				//RenderSystem.enableBlend();
+				//RenderSystem.setShaderColor(1, 1, 1, 0.4F);
 			}, () -> {
-				RenderSystem.setShaderColor(1, 1, 1, 1);
-				RenderSystem.disableBlend();
-				RenderSystem.enableDepthTest();
+				//RenderSystem.setShaderColor(1, 1, 1, 1);
+				//RenderSystem.disableBlend();
+				//RenderSystem.enableDepthTest();
 
 				original.clearRenderState();
 			});
+			this.original = original;
+		}
+
+		@Override
+		public void draw(MeshData meshData) {
+			original.draw(meshData);
+		}
+
+		@Override
+		public VertexFormat format() {
+			return original.format();
+		}
+
+		@Override
+		public VertexFormat.Mode mode() {
+			return original.mode();
+		}
+
+		@Override
+		public RenderPipeline pipeline() {
+			return original.pipeline();
 		}
 
 		public static RenderType remap(RenderType in) {
@@ -387,5 +387,4 @@ public class MultiblockVisualizationHandler {
 			}
 		}
 	}
-
 }

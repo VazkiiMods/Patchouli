@@ -9,6 +9,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -124,8 +125,8 @@ public class Book {
 		this.linkHoverColor = parseColor(root, "link_hover_color", "8800EE");
 		this.progressBarColor = parseColor(root, "progress_bar_color", "FFFF55");
 		this.progressBarBackground = parseColor(root, "progress_bar_background", "DDDDDD");
-		this.openSound = SerializationUtil.getAsResourceLocation(root, "open_sound", PatchouliSounds.BOOK_OPEN.getLocation());
-		this.flipSound = SerializationUtil.getAsResourceLocation(root, "flip_sound", PatchouliSounds.BOOK_FLIP.getLocation());
+		this.openSound = SerializationUtil.getAsResourceLocation(root, "open_sound", PatchouliSounds.BOOK_OPEN.location());
+		this.flipSound = SerializationUtil.getAsResourceLocation(root, "flip_sound", PatchouliSounds.BOOK_FLIP.location());
 		this.showProgress = GsonHelper.getAsBoolean(root, "show_progress", true);
 		this.indexIconRaw = GsonHelper.getAsString(root, "index_icon", "");
 		this.version = GsonHelper.getAsString(root, "version", "0");
@@ -232,7 +233,7 @@ public class Book {
 		if (useBlockyFont) {
 			return Style.EMPTY;
 		} else {
-			return Style.EMPTY.withFont(Minecraft.UNIFORM_FONT);
+			return Style.EMPTY.withFont(new FontDescription.Resource(Minecraft.UNIFORM_FONT));
 		}
 	}
 

@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.template;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
@@ -145,10 +146,10 @@ public class BookTemplate {
 		}
 	}
 
-	public boolean mouseClicked(BookPage page, double mouseX, double mouseY, int mouseButton) {
+	public boolean mouseClicked(BookPage page, MouseButtonEvent event, boolean doubleClick) {
 		if (compiled) {
 			for (TemplateComponent c : components) {
-				if (c.isVisible && c.mouseClicked(page, mouseX, mouseY, mouseButton)) {
+				if (c.isVisible && c.mouseClicked(page, event, doubleClick)) {
 					return true;
 				}
 			}

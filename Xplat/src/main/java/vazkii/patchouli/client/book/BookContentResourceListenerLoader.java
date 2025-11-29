@@ -3,14 +3,15 @@ package vazkii.patchouli.client.book;
 import com.google.common.base.Stopwatch;
 import com.google.gson.JsonElement;
 
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.profiling.ProfilerFiller;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.Book;
-import vazkii.patchouli.common.book.BookRegistry;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -23,8 +24,9 @@ import java.util.regex.Pattern;
  * BookContentLoader similar to {@link BookContentResourceDirectLoader}, but it
  * pre-caches the JSONs at during resource load to avoid I/O during book reloads.
  */
-public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadListener
+public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadListener<JsonElement>
 		implements BookContentLoader {
+	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "resource_pack_books");
 	public static final BookContentResourceListenerLoader INSTANCE = new BookContentResourceListenerLoader();
 	private static final Pattern ID_READER = Pattern.compile(
 			"(?<bookId>[a-z0-9_.-]+)" +
@@ -36,7 +38,7 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 	private Map<ResourceLocation, Map<ResourceLocation, JsonElement>> data;
 
 	private BookContentResourceListenerLoader() {
-		super(BookRegistry.GSON, "patchouli_books");
+		super(ExtraCodecs.JSON, FileToIdConverter.json("patchouli_books"));
 	}
 
 	@Override

@@ -3,6 +3,9 @@ package vazkii.patchouli.client.book.gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
@@ -56,38 +59,38 @@ public class GuiBookWriter extends GuiBook {
 	}
 
 	@Override
-	public boolean mouseClickedScaled(double mouseX, double mouseY, int mouseButton) {
-		if (textfield.mouseClicked(getRelativeX(mouseX), getRelativeY(mouseY), mouseButton)) {
+	public boolean mouseClickedScaled(MouseButtonEvent event, boolean doubleClick) {
+		if (textfield.mouseClicked(new MouseButtonEvent(getRelativeX(event.x()), getRelativeY(event.y()), event.buttonInfo()), doubleClick)) {
 			textfield.setFocused(true);
 			return true;
 		}
-		if (text.click(mouseX, mouseY, mouseButton)) {
+		if (text.click(event, doubleClick)) {
 			return true;
 		}
-		if (editableText.click(mouseX, mouseY, mouseButton)) {
+		if (editableText.click(event, doubleClick)) {
 			return true;
 		}
-		return super.mouseClickedScaled(mouseX, mouseY, mouseButton);
+		return super.mouseClickedScaled(event, doubleClick);
 	}
 
 	@Override
-	public boolean keyPressed(int key, int scanCode, int modifiers) {
-		if (textfield.keyPressed(key, scanCode, modifiers)) {
+	public boolean keyPressed(KeyEvent event) {
+		if (textfield.keyPressed(event)) {
 			refreshText();
 			return true;
 		}
 
-		return super.keyPressed(key, scanCode, modifiers);
+		return super.keyPressed(event);
 	}
 
 	@Override
-	public boolean charTyped(char c, int i) {
-		if (textfield.charTyped(c, i)) {
+	public boolean charTyped(CharacterEvent event) {
+		if (textfield.charTyped(event)) {
 			refreshText();
 			return true;
 		}
 
-		return super.charTyped(c, i);
+		return super.charTyped(event);
 	}
 
 	private void handleToggleHeaderButton(Button button) {

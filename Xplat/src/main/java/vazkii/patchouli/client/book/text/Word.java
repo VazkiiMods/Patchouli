@@ -2,7 +2,12 @@ package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.*;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.book.Book;
@@ -32,7 +37,7 @@ public class Word {
 		this.onClick = span.onClick;
 		this.linkCluster = cluster;
 		if (!span.tooltip.getString().isEmpty()) {
-			text = text.withStyle(s -> s.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, span.tooltip)));
+			text = text.withStyle(s -> s.withHoverEvent(new HoverEvent.ShowText(span.tooltip)));
 		}
 		this.text = text;
 	}
@@ -50,8 +55,8 @@ public class Word {
 		graphics.drawString(font, toRender, x, y, -1, false);
 	}
 
-	public boolean click(double mouseX, double mouseY, int mouseButton) {
-		if (onClick != null && mouseButton == 0 && isHovered(mouseX, mouseY)) {
+	public boolean click(MouseButtonEvent event, boolean doubleClick) {
+		if (onClick != null && event.button() == 0 && isHovered(event.x(), event.y())) {
 			return onClick.get();
 		}
 

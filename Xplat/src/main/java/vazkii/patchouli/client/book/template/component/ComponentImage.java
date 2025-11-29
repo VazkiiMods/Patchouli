@@ -1,7 +1,6 @@
 package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.HolderLookup;
@@ -45,13 +44,13 @@ public class ComponentImage extends TemplateComponent {
 			return;
 		}
 
-		graphics.pose().pushPose();
-		graphics.pose().translate(x, y, 0);
-		graphics.pose().scale(scale, scale, scale);
-		graphics.setColor(1F, 1F, 1F, 1F);
-		RenderSystem.enableBlend();
+		graphics.pose().pushMatrix();
+		graphics.pose().translate(x, y);
+		graphics.pose().scale(scale, scale);
+		//graphics.setColor(1F, 1F, 1F, 1F);
+		//RenderSystem.enableBlend();
 		graphics.blit(resource, 0, 0, u, v, width, height, textureWidth, textureHeight);
-		graphics.pose().popPose();
+		graphics.pose().popMatrix();
 	}
 
 }

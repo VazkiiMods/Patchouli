@@ -1,22 +1,20 @@
 package vazkii.patchouli.client.handler;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat.Mode;
+import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-
-import org.lwjgl.opengl.GL11;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
@@ -25,6 +23,8 @@ import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
+
+import org.jetbrains.annotations.Nullable;
 
 public class TooltipHandler {
 	private static float lexiconLookupTime = 0;
@@ -58,7 +58,6 @@ public class TooltipHandler {
 
 			if (lexSlot > -1) {
 				int x = tooltipX - 34;
-				RenderSystem.disableDepthTest();
 
 				graphics.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
 				graphics.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
@@ -72,26 +71,10 @@ public class TooltipHandler {
 					float requiredTime = PatchouliConfig.get().quickLookupTime();
 					float angles = lexiconLookupTime / requiredTime * 360F;
 
-					RenderSystem.enableBlend();
-					RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-					BufferBuilder buf = Tesselator.getInstance().begin(Mode.TRIANGLE_FAN, DefaultVertexFormat.POSITION_COLOR);
-
-					float a = 0.5F + 0.2F * ((float) Math.cos(ClientTicker.total / 10) * 0.5F + 0.5F);
-					buf.addVertex(cx, cy, 0).setColor(0F, 0.5F, 0F, a);
-
-					for (float i = angles; i > 0; i--) {
-						double rad = (i - 90) / 180F * Math.PI;
-						buf.addVertex((float) (cx + Math.cos(rad) * r), (float) (cy + Math.sin(rad) * r), 0).setColor(0F, 1F, 0F, 1F);
-					}
-
-					buf.addVertex(cx, cy, 0).setColor(0F, 1F, 0F, 0F);
-					BufferUploader.drawWithShader(buf.buildOrThrow());
-
-					RenderSystem.disableBlend();
+					graphics.guiRenderState.submitGuiElement(new TooltipRenderState(cx, cy, angles, r));
 
 					if (lexiconLookupTime >= requiredTime) {
-						mc.player.getInventory().selected = lexSlot;
+						mc.player.getInventory().setSelectedSlot(lexSlot);
 						int spread = lexiconEntry.getSecond();
 						ClientBookRegistry.INSTANCE.displayBookGui(lexiconEntry.getFirst().getBook().id, lexiconEntry.getFirst().getId(), spread * 2);
 					}
@@ -99,29 +82,80 @@ public class TooltipHandler {
 					lexiconLookupTime = 0F;
 				}
 
-				graphics.pose().pushPose();
-				graphics.pose().translate(0, 0, 300);
+				graphics.pose().pushMatrix();
+				//graphics.pose().translate(0, 0, 300);
 				graphics.renderItem(lexiconStack, x, tooltipY);
 				graphics.renderItemDecorations(mc.font, lexiconStack, x, tooltipY);
-				graphics.pose().popPose();
+				graphics.pose().popMatrix();
 
-				graphics.pose().pushPose();
-				graphics.pose().translate(0, 0, 500);
+				graphics.pose().pushMatrix();
+				//graphics.pose().translate(0, 0, 500);
 				graphics.drawString(mc.font, "?", x + 10, tooltipY + 8, 0xFFFFFFFF, true);
 
-				graphics.pose().scale(0.5F, 0.5F, 1F);
+				graphics.pose().scale(0.5F, 0.5F);
 				boolean mac = Minecraft.ON_OSX;
 				Component key = Component.literal(PatchouliConfig.get().useShiftForQuickLookup() ? "Shift" : mac ? "Cmd" : "Ctrl")
 						.withStyle(ChatFormatting.BOLD);
 				graphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF, true);
-				graphics.pose().popPose();
-
-				RenderSystem.enableDepthTest();
+				graphics.pose().popMatrix();
 			} else {
 				lexiconLookupTime = 0F;
 			}
 		} else {
 			lexiconLookupTime = 0F;
+		}
+	}
+
+	private static class TooltipRenderState implements GuiElementRenderState {
+		private final RenderPipeline pipeline;
+		private final TextureSetup textureSetup;
+		private final int cx;
+		private final int cy;
+		private final float angles;
+		private final float r;
+
+		public TooltipRenderState(int cx, int cy, float angles, float r) {
+			this.cx = cx;
+			this.cy = cy;
+			this.angles = angles;
+			this.r = r;
+			pipeline = RenderPipeline.builder()
+					.withBlend(BlendFunction.TRANSLUCENT)
+					.build();
+			textureSetup = TextureSetup.noTexture();
+		}
+
+		@Override
+		public void buildVertices(VertexConsumer buf) {
+			float a = 0.5F + 0.2F * ((float) Math.cos(ClientTicker.total / 10) * 0.5F + 0.5F);
+			buf.addVertex(cx, cy, 0).setColor(0F, 0.5F, 0F, a);
+
+			for (float i = angles; i > 0; i--) {
+				double rad = (i - 90) / 180F * Math.PI;
+				buf.addVertex((float) (cx + Math.cos(rad) * r), (float) (cy + Math.sin(rad) * r), 0).setColor(0F, 1F, 0F, 1F);
+			}
+
+			buf.addVertex(cx, cy, 0).setColor(0F, 1F, 0F, 0F);
+		}
+
+		@Override
+		public RenderPipeline pipeline() {
+			return pipeline;
+		}
+
+		@Override
+		public TextureSetup textureSetup() {
+			return textureSetup;
+		}
+
+		@Override
+		public @Nullable ScreenRectangle scissorArea() {
+			return null;
+		}
+
+		@Override
+		public @Nullable ScreenRectangle bounds() {
+			return null;
 		}
 	}
 }

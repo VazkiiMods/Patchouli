@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -43,18 +41,18 @@ public class GuiButtonEntry extends Button {
 		float widthFract = time / ANIM_TIME;
 		boolean locked = entry.isLocked();
 
-		graphics.pose().scale(0.5F, 0.5F, 0.5F);
+		graphics.pose().scale(0.5F, 0.5F);
 		graphics.fill(getX() * 2, getY() * 2, (getX() + (int) ((float) width * widthFract)) * 2, (getY() + height) * 2, 0x22000000);
-		RenderSystem.enableBlend();
+		//RenderSystem.enableBlend();
 
 		if (locked) {
-			graphics.setColor(1F, 1F, 1F, 0.7F);
+			//graphics.setColor(1F, 1F, 1F, 0.7F);
 			GuiBook.drawLock(graphics, parent.book, getX() * 2 + 2, getY() * 2 + 2);
 		} else {
 			entry.getIcon().render(graphics, getX() * 2 + 2, getY() * 2 + 2);
 		}
 
-		graphics.pose().scale(2F, 2F, 2F);
+		graphics.pose().scale(2F, 2F);
 
 		MutableComponent name;
 		if (locked) {

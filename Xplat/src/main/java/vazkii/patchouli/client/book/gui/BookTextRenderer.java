@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -45,8 +46,8 @@ public class BookTextRenderer implements Renderable {
 
 	void setText(Component text) {
 		Component text1;
-		if (this.book.i18n && text.getContents() instanceof PlainTextContents.LiteralContents lc) {
-			text1 = Component.literal(I18n.get(lc.text()));
+		if (this.book.i18n && text.getContents() instanceof PlainTextContents.LiteralContents(String text2)) {
+			text1 = Component.literal(I18n.get(text2));
 		} else {
 			text1 = text;
 		}
@@ -64,25 +65,25 @@ public class BookTextRenderer implements Renderable {
 		if (!words.isEmpty()) {
 			Font font = Minecraft.getInstance().font;
 			Style style = book.getFontStyle();
-			Word first = words.get(0);
-			graphics.pose().pushPose();
-			graphics.pose().translate(first.x, first.y, 0);
-			graphics.pose().scale(scale, scale, 1.0f);
-			graphics.pose().translate(-first.x, -first.y, 0);
+			Word first = words.getFirst();
+			graphics.pose().pushMatrix();
+			graphics.pose().translate(first.x, first.y);
+			graphics.pose().scale(scale, scale);
+			graphics.pose().translate(-first.x, -first.y);
 			int scaledX = (int) rescale(mouseX, first.x);
 			int scaledY = (int) rescale(mouseY, first.y);
 			words.forEach(word -> word.render(graphics, font, style, scaledX, scaledY));
-			graphics.pose().popPose();
+			graphics.pose().popMatrix();
 		}
 	}
 
-	public boolean click(double mouseX, double mouseY, int mouseButton) {
+	public boolean click(MouseButtonEvent event, boolean doubleClick) {
 		if (!words.isEmpty()) {
-			Word first = words.get(0);
-			double scaledX = rescale(mouseX, first.x);
-			double scaledY = rescale(mouseY, first.y);
+			Word first = words.getFirst();
+			double scaledX = rescale(event.x(), first.x);
+			double scaledY = rescale(event.y(), first.y);
 			for (Word word : words) {
-				if (word.click(scaledX, scaledY, mouseButton)) {
+				if (word.click(new MouseButtonEvent(scaledX, scaledY, event.buttonInfo()), doubleClick)) {
 					return true;
 				}
 			}

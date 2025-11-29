@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.book.template.component;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-
 import net.minecraft.client.gui.GuiGraphics;
 
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -24,8 +22,8 @@ public class ComponentFrame extends TemplateComponent {
 
 	@Override
 	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
-		RenderSystem.enableBlend();
-		RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+		//RenderSystem.enableBlend();
+		//RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		GuiBook.drawFromTexture(graphics, page.book, x, y, 405, 149, 106, 106);
 	}
 
