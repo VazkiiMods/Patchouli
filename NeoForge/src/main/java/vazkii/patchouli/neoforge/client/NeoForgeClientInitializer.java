@@ -31,6 +31,8 @@ import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.handler.TooltipHandler;
+import vazkii.patchouli.client.hud.BookOverlayHud;
+import vazkii.patchouli.client.hud.MultiblockProgressHud;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -70,18 +72,14 @@ public class NeoForgeClientInitializer {
 			e.addListener(BookReloadHook.ID, BookReloadHook.INSTANCE);
 		});
 		modBus.addListener((RegisterRangeSelectItemModelPropertyEvent e) -> {
-			e.register(modLoc("completion"), BookCompletionModelProperty.MAP_CODEC);
+			e.register(BookCompletionModelProperty.ID, BookCompletionModelProperty.MAP_CODEC);
 		});
 		modBus.addListener((RegisterItemModelsEvent e) -> {
-			e.register(modLoc("book"), BookModel.Unbaked.MAP_CODEC);
+			e.register(BookModel.Unbaked.ID, BookModel.Unbaked.MAP_CODEC);
 		});
 		modBus.addListener((RegisterGuiLayersEvent e) -> {
-			e.registerAbove(VanillaGuiLayers.CROSSHAIR, modLoc("book_overlay"),
-					BookRightClickHandler::onRenderHUD
-			);
-			e.registerBelow(VanillaGuiLayers.BOSS_OVERLAY, modLoc("multiblock_progress"),
-					MultiblockVisualizationHandler::onRenderHUD
-			);
+			e.registerAbove(VanillaGuiLayers.CROSSHAIR, BookOverlayHud.ID, BookOverlayHud::render);
+			e.registerBelow(VanillaGuiLayers.BOSS_OVERLAY, MultiblockProgressHud.ID, MultiblockProgressHud::render);
 		});
 	}
 

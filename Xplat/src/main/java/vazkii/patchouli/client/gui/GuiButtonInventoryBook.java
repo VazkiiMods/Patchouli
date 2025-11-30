@@ -27,7 +27,7 @@ public class GuiButtonInventoryBook extends Button {
 
 	@Override
 	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
-		graphics.setColor(1F, 1F, 1F, 1F);
+		//graphics.setColor(1F, 1F, 1F, 1F);
 
 		boolean hovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
 		graphics.blit(ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "textures/gui/inventory_button.png"), getX(), getY(), (hovered ? 20 : 0), 0, width, height, 64, 64);

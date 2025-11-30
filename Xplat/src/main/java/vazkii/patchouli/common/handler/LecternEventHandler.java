@@ -30,7 +30,7 @@ public class LecternEventHandler {
 				} else {
 					Book book = ItemStackUtil.getBookFromStack(lectern.getBook());
 					if (book != null) {
-						if (!world.isClientSide) {
+						if (!world.isClientSide()) {
 							PatchouliAPI.get().openBookGUI((ServerPlayer) player, book.id);
 						}
 						return InteractionResult.SUCCESS;

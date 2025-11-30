@@ -2,7 +2,9 @@ package vazkii.patchouli.common.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -17,7 +19,9 @@ public final class SerializationUtil {
 
 	public static final IVariable.Serializer VARIABLE_SERIALIZER = new IVariable.Serializer();
 	public static final Gson RAW_GSON = new GsonBuilder()
-			.registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+			.registerTypeAdapter(
+					ResourceLocation.class, (JsonDeserializer<ResourceLocation>) (json, typeOfT, context) -> ResourceLocation.CODEC.parse(JsonOps.INSTANCE, json).getOrThrow()
+			)
 			.registerTypeAdapter(IVariable.class, VARIABLE_SERIALIZER)
 			.create();
 	public static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().create();

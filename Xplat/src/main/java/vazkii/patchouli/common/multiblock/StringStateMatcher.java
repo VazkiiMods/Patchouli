@@ -30,7 +30,7 @@ public class StringStateMatcher {
 		}
 
 		// c.f. BlockPredicateArgument. Similar, but doesn't use vanilla's weird caching class.
-		return BlockStateParser.parseForTesting(BuiltInRegistries.BLOCK.asLookup(), s, true).map(
+		return BlockStateParser.parseForTesting(BuiltInRegistries.BLOCK, s, true).map(
 				blockResult -> new ExactMatcher(blockResult.blockState(), blockResult.properties()),
 				tagResult -> new TagMatcher(tagResult.tag(), tagResult.vagueProperties())
 		);

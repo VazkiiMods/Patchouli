@@ -10,24 +10,19 @@ import com.mojang.datafixers.util.Pair;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
@@ -44,142 +39,100 @@ import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 import vazkii.patchouli.mixin.client.AccessorMultiBufferSource;
 
-import java.awt.Color;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.SequencedMap;
 import java.util.function.Function;
 
-public class MultiblockVisualizationHandler {
+public final class MultiblockVisualizationHandler {
+	public static final MultiblockVisualizationHandler INSTANCE = new MultiblockVisualizationHandler();
 
-	public static boolean hasMultiblock;
-	public static Bookmark bookmark;
+	private boolean hasMultiblock;
+	private Bookmark bookmark;
+	private IMultiblock multiblock;
+	private Component name;
+	private BlockPos pos;
+	private boolean isAnchored;
+	private Rotation facingRotation;
+	private Function<BlockPos, BlockPos> offsetApplier;
+	private int blocks, blocksDone, airFilled;
+	private int timeComplete;
+	private BlockState lookingState;
+	private BlockPos lookingPos;
+	private MultiBufferSource.BufferSource buffers = null;
 
-	private static IMultiblock multiblock;
-	private static Component name;
-	private static BlockPos pos;
-	private static boolean isAnchored;
-	private static Rotation facingRotation;
-	private static Function<BlockPos, BlockPos> offsetApplier;
-	private static int blocks, blocksDone, airFilled;
-	private static int timeComplete;
-	private static BlockState lookingState;
-	private static BlockPos lookingPos;
-	private static MultiBufferSource.BufferSource buffers = null;
+	public boolean hasMultiblock() {
+		return hasMultiblock;
+	}
 
-	public static void setMultiblock(IMultiblock multiblock, Component name, Bookmark bookmark, boolean flip) {
+	public void setHasMultiblock(boolean hasMultiblock) {
+		this.hasMultiblock = hasMultiblock;
+	}
+
+	public Bookmark bookmark() {
+		return bookmark;
+	}
+
+	public Component name() {
+		return name;
+	}
+
+	public BlockState getLookingState() {
+		return lookingState;
+	}
+
+	public BlockPos getLookingPos() {
+		return lookingPos;
+	}
+
+	public int getTimeComplete() {
+		return timeComplete;
+	}
+
+	public float getProgress() {
+		return (float) blocksDone / Math.max(1, blocks);
+	}
+
+	public String getProgressString() {
+		return blocksDone + "/" + blocks;
+	}
+
+	public boolean isComplete() {
+		return blocksDone == blocks && airFilled > 0;
+	}
+
+	public void setMultiblock(IMultiblock multiblock, Component name, Bookmark bookmark, boolean flip) {
 		setMultiblock(multiblock, name, bookmark, flip, pos -> pos);
 	}
 
-	public static void setMultiblock(IMultiblock multiblock, Component name, Bookmark bookmark, boolean flip, Function<BlockPos, BlockPos> offsetApplier) {
+	public void setMultiblock(IMultiblock multiblock, Component name, Bookmark bookmark, boolean flip, Function<BlockPos, BlockPos> offsetApplier) {
 		if (flip && hasMultiblock) {
 			hasMultiblock = false;
 		} else {
-			MultiblockVisualizationHandler.multiblock = multiblock;
-			MultiblockVisualizationHandler.name = name;
-			MultiblockVisualizationHandler.bookmark = bookmark;
-			MultiblockVisualizationHandler.offsetApplier = offsetApplier;
+			this.multiblock = multiblock;
+			this.name = name;
+			this.bookmark = bookmark;
+			this.offsetApplier = offsetApplier;
 			pos = null;
 			hasMultiblock = multiblock != null;
 			isAnchored = false;
 		}
 	}
 
-	public static void onRenderHUD(GuiGraphics graphics, DeltaTracker deltaTracker) {
-		if (hasMultiblock) {
-			int waitTime = 40;
-			int fadeOutSpeed = 4;
-			int fullAnimTime = waitTime + 10;
-			float animTime = timeComplete + (timeComplete == 0 ? 0 : deltaTracker.getGameTimeDeltaPartialTick(false));
-
-			if (animTime > fullAnimTime) {
-				hasMultiblock = false;
-				return;
-			}
-
-			graphics.pose().pushMatrix();
-			graphics.pose().translate(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed);
-
-			Minecraft mc = Minecraft.getInstance();
-			int x = mc.getWindow().getGuiScaledWidth() / 2;
-			int y = 12;
-
-			graphics.drawCenteredString(mc.font, name, x, y, 0xFFFFFF);
-
-			int width = 180;
-			int height = 9;
-			int left = x - width / 2;
-			int top = y + 10;
-
-			if (timeComplete > 0) {
-				graphics.pose().pushMatrix();
-				graphics.pose().translate(0, Math.min(height + 5, animTime));
-				graphics.drawCenteredString(mc.font, Component.translatable("patchouli.gui.lexicon.structure_complete"), x, top + height - 10, 0x00FF00);
-				graphics.pose().popMatrix();
-			}
-
-			graphics.fill(left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
-			graphics.fillGradient(left, top, left + width, top + height, 0xFF666666, 0xFF555555);
-
-			float fract = (float) blocksDone / Math.max(1, blocks);
-			int progressWidth = (int) ((float) width * fract);
-			int color = Mth.hsvToRgb(fract / 3.0F, 1.0F, 1.0F) | 0xFF000000;
-			int color2 = new Color(color).darker().getRGB();
-			graphics.fillGradient(left, top, left + progressWidth, top + height, color, color2);
-
-			if (!isAnchored) {
-				graphics.drawCenteredString(mc.font, Component.translatable("patchouli.gui.lexicon.not_anchored"), x, top + height + 8, 0xFFFFFF);
-			} else {
-				if (lookingState != null) {
-					// try-catch around here because the state isn't necessarily present in the world in this instance,
-					// which isn't really expected behavior for getPickBlock
-					try {
-						ItemStack stack = lookingState.getCloneItemStack(mc.level, lookingPos, false);
-
-						if (!stack.isEmpty()) {
-							graphics.drawString(mc.font, stack.getHoverName(), left + 20, top + height + 8, 0xFFFFFF, true);
-							graphics.renderItem(stack, left, top + height + 2);
-						}
-					} catch (Exception ignored) {}
-				}
-
-				if (timeComplete == 0) {
-					color = 0xFFFFFF;
-					int posx = left + width;
-					int posy = top + height + 2;
-					int mult = 1;
-					String progress = blocksDone + "/" + blocks;
-
-					if (blocksDone == blocks && airFilled > 0) {
-						progress = I18n.get("patchouli.gui.lexicon.needs_air");
-						color = 0xDA4E3F;
-						mult *= 2;
-						posx -= width / 2;
-						posy += 2;
-					}
-
-					graphics.drawString(mc.font, progress, posx - mc.font.width(progress) / mult, posy, color, false);
-				}
-			}
-
-			graphics.pose().popMatrix();
-		}
-	}
-
-	public static void onWorldRenderLast(PoseStack ms, Matrix4f pose) {
+	public void onWorldRenderLast(PoseStack ms, Matrix4f pose) {
 		if (hasMultiblock && multiblock != null) {
 			renderMultiblock(Minecraft.getInstance().level, ms, pose);
 		}
 	}
 
-	public static void anchorTo(BlockPos target, Rotation rot) {
+	public void anchorTo(BlockPos target, Rotation rot) {
 		pos = target;
 		facingRotation = rot;
 		isAnchored = true;
 	}
 
-	public static InteractionResult onPlayerInteract(Player player, Level world, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult onPlayerInteract(Player player, Level world, InteractionHand hand, BlockHitResult hit) {
 		if (hasMultiblock && !isAnchored && player == Minecraft.getInstance().player) {
 			anchorTo(hit.getBlockPos(), getRotation(player));
 			return InteractionResult.SUCCESS;
@@ -187,7 +140,7 @@ public class MultiblockVisualizationHandler {
 		return InteractionResult.PASS;
 	}
 
-	public static void onClientTick(Minecraft mc) {
+	public void onClientTick(Minecraft mc) {
 		if (Minecraft.getInstance().level == null) {
 			hasMultiblock = false;
 		} else if (isAnchored && blocks == blocksDone && airFilled == 0) {
@@ -200,7 +153,7 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static void renderMultiblock(Level world, PoseStack ms, Matrix4f pose) {
+	public void renderMultiblock(Level world, PoseStack ms, Matrix4f pose) {
 		ms.mulPose(pose);
 		Minecraft mc = Minecraft.getInstance();
 		if (!isAnchored) {
@@ -274,7 +227,7 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static void renderBlock(Level world, BlockState state, BlockPos pos, float alpha, PoseStack ms) {
+	public void renderBlock(Level world, BlockState state, BlockPos pos, float alpha, PoseStack ms) {
 		if (pos != null) {
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
@@ -294,30 +247,30 @@ public class MultiblockVisualizationHandler {
 		}
 	}
 
-	public static IMultiblock getMultiblock() {
+	public IMultiblock getMultiblock() {
 		return multiblock;
 	}
 
-	public static boolean isAnchored() {
+	public boolean isAnchored() {
 		return isAnchored;
 	}
 
-	public static Rotation getFacingRotation() {
+	public Rotation getFacingRotation() {
 		return multiblock.isSymmetrical() ? Rotation.NONE : facingRotation;
 	}
 
-	public static BlockPos getStartPos() {
+	public BlockPos getStartPos() {
 		return offsetApplier.apply(pos);
 	}
 
 	/**
 	 * Returns the Rotation of a multiblock structure based on the given entity's facing direction.
 	 */
-	private static Rotation getRotation(Entity entity) {
+	private Rotation getRotation(Entity entity) {
 		return RotationUtil.rotationFromFacing(entity.getDirection());
 	}
 
-	private static MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
+	private MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
 		ByteBufferBuilder fallback = ((AccessorMultiBufferSource) original).getFallbackBuffer();
 		SequencedMap<RenderType, ByteBufferBuilder> layerBuffers = ((AccessorMultiBufferSource) original).getFixedBuffers();
 		SequencedMap<RenderType, ByteBufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();

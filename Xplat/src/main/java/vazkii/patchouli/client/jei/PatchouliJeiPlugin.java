@@ -8,6 +8,7 @@ import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
 
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -58,13 +59,13 @@ public class PatchouliJeiPlugin implements IModPlugin {
 		PatchouliJeiPlugin.jeiRuntime = jeiRuntime;
 	}
 
-	public static boolean handleRecipeKeybind(int keyCode, int scanCode, ItemStack stack) {
-		if (showRecipe != null && showRecipe.matches(keyCode, scanCode)) {
+	public static boolean handleRecipeKeybind(KeyEvent event, ItemStack stack) {
+		if (showRecipe != null && showRecipe.matches(event)) {
 			var focus = jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.OUTPUT, VanillaTypes.ITEM_STACK, stack);
 			jeiRuntime.getRecipesGui().show(focus);
 			return true;
 		}
-		if (showUses != null && showUses.matches(keyCode, scanCode)) {
+		if (showUses != null && showUses.matches(event)) {
 			var focus = jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.INPUT, VanillaTypes.ITEM_STACK, stack);
 			jeiRuntime.getRecipesGui().show(focus);
 			return true;

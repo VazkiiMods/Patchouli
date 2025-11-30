@@ -170,8 +170,8 @@ public abstract class GuiBook extends Screen {
 			addRenderableWidget(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + y, null));
 		}
 
-		if (MultiblockVisualizationHandler.hasMultiblock && MultiblockVisualizationHandler.bookmark != null) {
-			addRenderableWidget(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.bookmark, true));
+		if (MultiblockVisualizationHandler.INSTANCE.hasMultiblock() && MultiblockVisualizationHandler.INSTANCE.bookmark() != null) {
+			addRenderableWidget(new GuiButtonBookBookmark(this, bookLeft + FULL_WIDTH, bookTop + TOP_PADDING + PAGE_HEIGHT - 20, MultiblockVisualizationHandler.INSTANCE.bookmark(), true));
 		}
 
 		if (shouldAddMarkReadButton()) {
@@ -344,7 +344,7 @@ public abstract class GuiBook extends Screen {
 		} else if (tooltipStack != null && IXplatAbstractions.INSTANCE.handleRecipeKeybind(event.key(), event.scancode(), tooltipStack)) {
 			return true;
 		} else if (tooltipStack != null && IXplatAbstractions.INSTANCE.isModLoaded("jei")
-				&& PatchouliJeiPlugin.handleRecipeKeybind(event.key(), event.scancode(), tooltipStack)) {
+				&& PatchouliJeiPlugin.handleRecipeKeybind(event, tooltipStack)) {
 			return true;
 		}
 		return super.keyPressed(event);

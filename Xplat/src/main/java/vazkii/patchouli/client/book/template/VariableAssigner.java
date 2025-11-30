@@ -2,8 +2,10 @@ package vazkii.patchouli.client.book.template;
 
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.Level;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -170,7 +172,9 @@ public class VariableAssigner {
 	}
 
 	private static IVariable stacks(IVariable arg, HolderLookup.Provider registries) {
-		return IVariable.from(arg.as(Ingredient.class).getItems(), registries);
+		return IVariable.from(arg.as(Ingredient.class).display().resolveForStacks(new ContextMap.Builder()
+				.withParameter(SlotDisplayContext.REGISTRIES, registries)
+				.create(SlotDisplayContext.CONTEXT)), registries);
 	}
 
 	private static String ename(String arg) {

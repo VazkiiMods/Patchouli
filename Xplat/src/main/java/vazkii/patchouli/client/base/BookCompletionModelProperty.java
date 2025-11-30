@@ -4,15 +4,18 @@ import com.mojang.serialization.MapCodec;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemStack;
 
+import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 
 import org.jetbrains.annotations.Nullable;
 
 public class BookCompletionModelProperty implements RangeSelectItemModelProperty {
+	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "completion");
 	public static final MapCodec<BookCompletionModelProperty> MAP_CODEC = MapCodec.unit(new BookCompletionModelProperty());
 
 	@Override

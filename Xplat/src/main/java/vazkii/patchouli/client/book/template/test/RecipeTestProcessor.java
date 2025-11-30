@@ -10,6 +10,9 @@ import net.minecraft.world.level.Level;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
+import vazkii.patchouli.common.util.ItemStackUtil;
+
+import java.util.List;
 
 public class RecipeTestProcessor implements IComponentProcessor {
 
@@ -28,8 +31,8 @@ public class RecipeTestProcessor implements IComponentProcessor {
 		if (key.startsWith("item")) {
 			int index = Integer.parseInt(key.substring(4)) - 1;
 			Ingredient ingredient = recipe.getIngredients().get(index);
-			ItemStack[] stacks = ingredient.getItems();
-			ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
+			List<ItemStack> stacks = ItemStackUtil.getStacksFromIngredient(ingredient, level);
+			ItemStack stack = stacks.isEmpty() ? ItemStack.EMPTY : stacks.getFirst();
 
 			return IVariable.from(stack, level.registryAccess());
 		} else if (key.equals("text")) {

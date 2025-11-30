@@ -20,6 +20,8 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
+import net.minecraft.world.level.Level;
 
 import org.apache.commons.lang3.tuple.Triple;
 
@@ -120,6 +122,10 @@ public final class ItemStackUtil {
 		}
 
 		return null;
+	}
+
+	public static List<ItemStack> getStacksFromIngredient(Ingredient ingredient, Level level) {
+		return ingredient.display().resolveForStacks(SlotDisplayContext.fromLevel(level));
 	}
 
 	public static class StackWrapper {

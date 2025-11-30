@@ -173,20 +173,20 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	@Override
 	public IMultiblock getCurrentMultiblock() {
 		assertPhysicalClient();
-		return MultiblockVisualizationHandler.hasMultiblock ? MultiblockVisualizationHandler.getMultiblock() : null;
+		return MultiblockVisualizationHandler.INSTANCE.hasMultiblock() ? MultiblockVisualizationHandler.INSTANCE.getMultiblock() : null;
 	}
 
 	@Override
 	public void showMultiblock(@NotNull IMultiblock multiblock, @NotNull Component displayName, @NotNull BlockPos center, @NotNull Rotation rotation) {
 		assertPhysicalClient();
-		MultiblockVisualizationHandler.setMultiblock(multiblock, displayName, null, false);
-		MultiblockVisualizationHandler.anchorTo(center, rotation);
+		MultiblockVisualizationHandler.INSTANCE.setMultiblock(multiblock, displayName, null, false);
+		MultiblockVisualizationHandler.INSTANCE.anchorTo(center, rotation);
 	}
 
 	@Override
 	public void clearMultiblock() {
 		assertPhysicalClient();
-		MultiblockVisualizationHandler.setMultiblock(null, null, null, false);
+		MultiblockVisualizationHandler.INSTANCE.setMultiblock(null, null, null, false);
 	}
 
 	@Override
@@ -249,7 +249,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 			@NotNull
 			@Override
 			public BlockState getDisplayedState(long ticks) {
-				return BuiltInRegistries.BLOCK.getTag(tag).map(n -> {
+				return BuiltInRegistries.BLOCK.get(tag).map(n -> {
 					int idx = (int) ((ticks / 20) % n.size());
 					return n.get(idx).value().defaultBlockState();
 				}).orElse(Blocks.BEDROCK.defaultBlockState());
