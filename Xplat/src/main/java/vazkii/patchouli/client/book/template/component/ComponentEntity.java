@@ -54,7 +54,8 @@ public class ComponentEntity extends TemplateComponent {
 
 		if (entity != null) {
 			float rotation = rotate ? ClientTicker.total : defaultRotation;
-			PageEntity.renderEntity(graphics, entity, x, y, rotation, renderScale, offset);
+			// TODO check
+			PageEntity.renderEntity(graphics, entity, x, y, 100, 100, rotation, renderScale, offset);
 		}
 	}
 

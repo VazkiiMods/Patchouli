@@ -16,7 +16,6 @@ import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
 import vazkii.patchouli.api.BookContentsReloadEvent;
 import vazkii.patchouli.api.BookDrawScreenEvent;
-import vazkii.patchouli.neoforge.client.NeoForgeClientInitializer;
 import vazkii.patchouli.neoforge.network.NeoForgeNetworkHandler;
 import vazkii.patchouli.xplat.IXplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
@@ -84,7 +83,7 @@ public class NeoForgeXplatImpl implements IXplatAbstractions {
 	@Override
 	public void signalBooksLoaded() {
 		if (isPhysicalClient()) {
-			NeoForgeClientInitializer.signalBooksLoaded();
+			//NeoForgeClientInitializer.signalBooksLoaded();
 		}
 	}
 

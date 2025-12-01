@@ -2,6 +2,8 @@ package vazkii.patchouli.xplat;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -30,4 +32,6 @@ public interface IClientXplatAbstractions {
 			return provider.get();
 		}
 	}
+
+	void submitGuiElement(GuiGraphics graphics, GuiElementRenderState renderState);
 }

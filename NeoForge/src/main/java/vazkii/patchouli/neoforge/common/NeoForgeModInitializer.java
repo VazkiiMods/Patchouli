@@ -4,9 +4,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
@@ -31,49 +29,42 @@ import vazkii.patchouli.common.item.PatchouliDataComponents;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.neoforge.network.NeoForgeNetworkHandler;
 
-@EventBusSubscriber(modid = PatchouliAPI.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = PatchouliAPI.MOD_ID)
 @Mod(PatchouliAPI.MOD_ID)
 public class NeoForgeModInitializer {
-	public NeoForgeModInitializer(IEventBus eventBus, Dist dist, ModContainer container) {
+	public NeoForgeModInitializer(IEventBus modBus, ModContainer container) {
 		NeoForgePatchouliConfig.setup(container);
 
-		eventBus.addListener(NeoForgeNetworkHandler::setupPackets);
-	}
-
-	@SubscribeEvent
-	public static void register(RegisterEvent evt) {
-		evt.register(Registries.SOUND_EVENT, rh -> {
-			PatchouliSounds.submitRegistrations(rh::register);
+		modBus.addListener(NeoForgeNetworkHandler::setupPackets);
+		modBus.addListener((RegisterEvent evt) -> {
+			evt.register(Registries.SOUND_EVENT, rh -> {
+				PatchouliSounds.submitRegistrations(rh::register);
+			});
+			evt.register(Registries.DATA_COMPONENT_TYPE, rh -> {
+				PatchouliDataComponents.submitDataComponentRegistrations(rh::register);
+			});
+			evt.register(Registries.ITEM, rh -> {
+				PatchouliItems.submitItemRegistrations(rh::register);
+			});
+			evt.register(Registries.TRIGGER_TYPE, rh -> PatchouliCriteriaTriggers.submitTriggerRegistrations(rh::register));
 		});
-		evt.register(Registries.DATA_COMPONENT_TYPE, rh -> {
-			PatchouliDataComponents.submitDataComponentRegistrations(rh::register);
-		});
-		evt.register(Registries.ITEM, rh -> {
-			PatchouliItems.submitItemRegistrations(rh::register);
-		});
-		evt.register(Registries.TRIGGER_TYPE, rh -> PatchouliCriteriaTriggers.submitTriggerRegistrations(rh::register));
-	}
-
-	@SubscribeEvent
-	public static void processCreativeTabs(BuildCreativeModeTabContentsEvent evt) {
-		BookRegistry.INSTANCE.books.values().forEach(b -> {
-			if (!b.noBook) {
-				ItemStack book = ItemModBook.forBook(b);
-				if (evt.getTabKey() == CreativeModeTabs.SEARCH) {
-					if (!evt.getSearchEntries().contains(book)) {
-						evt.accept(book, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
-					}
-				} else if (b.creativeTab != null) {
-					if (evt.getTab() == CreativeModeTabRegistry.getTab(b.creativeTab)) {
-						evt.accept(book);
+		modBus.addListener((BuildCreativeModeTabContentsEvent evt) -> {
+			BookRegistry.INSTANCE.books.values().forEach(b -> {
+				if (!b.noBook) {
+					ItemStack book = ItemModBook.forBook(b);
+					if (evt.getTabKey() == CreativeModeTabs.SEARCH) {
+						if (!evt.getSearchEntries().contains(book)) {
+							evt.accept(book, CreativeModeTab.TabVisibility.SEARCH_TAB_ONLY);
+						}
+					} else if (b.creativeTab != null) {
+						if (evt.getTab() == CreativeModeTabRegistry.getTab(b.creativeTab)) {
+							evt.accept(book);
+						}
 					}
 				}
-			}
+			});
 		});
-	}
-
-	@SubscribeEvent
-	public static void onInitialize(FMLCommonSetupEvent evt) {
+		modBus.addListener((FMLCommonSetupEvent evt) -> BookRegistry.INSTANCE.init());
 		NeoForge.EVENT_BUS.addListener((RegisterCommandsEvent e) -> OpenBookCommand.register(e.getDispatcher()));
 		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
 			var result = LecternEventHandler.rightClick(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec());
@@ -82,9 +73,6 @@ public class NeoForgeModInitializer {
 				e.setCancellationResult(result);
 			}
 		});
-
-		BookRegistry.INSTANCE.init();
-
 		NeoForge.EVENT_BUS.addListener((ServerStartedEvent e) -> ReloadContentsHandler.dataReloaded(e.getServer()));
 	}
 }

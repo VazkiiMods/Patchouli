@@ -23,6 +23,7 @@ import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
+import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -71,7 +72,7 @@ public class TooltipHandler {
 					float requiredTime = PatchouliConfig.get().quickLookupTime();
 					float angles = lexiconLookupTime / requiredTime * 360F;
 
-					graphics.guiRenderState.submitGuiElement(new TooltipRenderState(cx, cy, angles, r));
+					IClientXplatAbstractions.INSTANCE.submitGuiElement(graphics, new TooltipRenderState(cx, cy, angles, r));
 
 					if (lexiconLookupTime >= requiredTime) {
 						mc.player.getInventory().setSelectedSlot(lexSlot);

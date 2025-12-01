@@ -4,9 +4,10 @@ import net.neoforged.fml.ModContainer;
 
 import vazkii.patchouli.xplat.XplatModContainer;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
+import java.util.Collection;
 
 public class NeoForgeXplatModContainer implements XplatModContainer {
 	private final ModContainer container;
@@ -26,12 +27,12 @@ public class NeoForgeXplatModContainer implements XplatModContainer {
 	}
 
 	@Override
-	public Path getPath(String s) {
-		return container.getModInfo().getOwningFile().getFile().findResource(s);
+	public @Nullable Path getPath(String s) {
+		return container.getModInfo().getOwningFile().getFile().getContents().findFile(s).map(Path::of).orElse(null);
 	}
 
 	@Override
-	public List<Path> getRootPaths() {
-		return Collections.singletonList(container.getModInfo().getOwningFile().getFile().getSecureJar().getRootPath());
+	public Collection<Path> getRootPaths() {
+		return container.getModInfo().getOwningFile().getFile().getContents().getContentRoots();
 	}
 }

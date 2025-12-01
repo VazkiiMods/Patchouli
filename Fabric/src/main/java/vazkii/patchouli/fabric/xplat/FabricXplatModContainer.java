@@ -4,6 +4,8 @@ import net.fabricmc.loader.api.ModContainer;
 
 import vazkii.patchouli.xplat.XplatModContainer;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.nio.file.Path;
 import java.util.List;
 
@@ -25,8 +27,8 @@ public class FabricXplatModContainer implements XplatModContainer {
 	}
 
 	@Override
-	public Path getPath(String file) {
-		return container.getPath(file);
+	public @Nullable Path getPath(String file) {
+		return container.findPath(file).orElse(null);
 	}
 
 	@Override

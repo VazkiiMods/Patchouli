@@ -74,7 +74,10 @@ public class BookRegistry {
 			XplatModContainer mod = pair.getLeft();
 			ResourceLocation res = pair.getRight();
 
-			try (InputStream stream = Files.newInputStream(mod.getPath(file))) {
+			Path path = mod.getPath(file);
+			if (path == null)
+				return;
+			try (InputStream stream = Files.newInputStream(path)) {
 				loadBook(mod, res, stream, false);
 			} catch (Exception e) {
 				PatchouliAPI.LOGGER.error("Failed to load book {} defined by mod {}, skipping",

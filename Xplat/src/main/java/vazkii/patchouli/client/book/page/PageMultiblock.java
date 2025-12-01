@@ -1,40 +1,18 @@
 package vazkii.patchouli.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
-
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 import vazkii.patchouli.api.IMultiblock;
-import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
-import vazkii.patchouli.client.book.LiquidBlockVertexConsumer;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookEye;
@@ -43,13 +21,6 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
-import vazkii.patchouli.xplat.IClientXplatAbstractions;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
 
 public class PageMultiblock extends PageWithText {
 	private static final RandomSource RAND = RandomSource.createNewThreadLocalInstance();
@@ -102,15 +73,15 @@ public class PageMultiblock extends PageWithText {
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
-		RenderSystem.enableBlend();
-		graphics.setColor(1F, 1F, 1F, 1F);
+		//RenderSystem.enableBlend();
+		//graphics.setColor(1F, 1F, 1F, 1F);
 		GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
 
 		parent.drawCenteredStringNoShadow(graphics, i18n(name), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 
-		if (multiblockObj != null) {
-			renderMultiblock(graphics);
-		}
+		//if (multiblockObj != null) {
+		//	renderMultiblock(graphics);
+		//}
 
 		super.render(graphics, mouseX, mouseY, pticks);
 	}
@@ -118,7 +89,7 @@ public class PageMultiblock extends PageWithText {
 	public void handleButtonVisualize(Button button) {
 		var entryKey = parent.getEntry().getId();
 		Bookmark bookmark = new Bookmark(entryKey, pageNum / 2);
-		MultiblockVisualizationHandler.setMultiblock(multiblockObj, i18nText(name), bookmark, true);
+		MultiblockVisualizationHandler.INSTANCE.setMultiblock(multiblockObj, i18nText(name), bookmark, true);
 		parent.addBookmarkButtons();
 
 		if (!PersistentData.data.clickedVisualize) {
@@ -127,6 +98,8 @@ public class PageMultiblock extends PageWithText {
 		}
 	}
 
+	// TODO multiblock PiP
+/*
 	private void renderMultiblock(GuiGraphics graphics) {
 		multiblockObj.setWorld(mc.level);
 		Vec3i size = multiblockObj.getSize();
@@ -173,10 +146,10 @@ public class PageMultiblock extends PageWithText {
 		// Finally apply the rotations
 		eye.mul(rotMat);
 		//eye.perspectiveDivide();//TODO find what replaces this
-		/* TODO XXX This does not handle visualization of sparse multiblocks correctly.
-			Dense multiblocks store everything in positive X/Z, so this works, but sparse multiblocks store everything from the JSON as-is.
-			Potential solution: Rotate around the offset vars of the multiblock, and add AABB method for extent of the multiblock
-		*/
+		// TODO XXX This does not handle visualization of sparse multiblocks correctly.
+		//	Dense multiblocks store everything in positive X/Z, so this works, but sparse multiblocks store everything from the JSON as-is.
+		//	Potential solution: Rotate around the offset vars of the multiblock, and add AABB method for extent of the multiblock
+
 		renderElements(graphics, multiblockObj, BlockPos.betweenClosed(BlockPos.ZERO, new BlockPos(sizeX - 1, sizeY - 1, sizeZ - 1)), eye);
 
 		graphics.pose().popPose();
@@ -242,5 +215,5 @@ public class PageMultiblock extends PageWithText {
 				}
 			}
 		}
-	}
+	}*/
 }
