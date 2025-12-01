@@ -7,24 +7,13 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
-import net.neoforged.neoforge.client.event.RegisterRangeSelectItemModelPropertyEvent;
-import net.neoforged.neoforge.client.event.RenderFrameEvent;
-import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.client.base.BookCompletionModelProperty;
-import vazkii.patchouli.client.base.BookModel;
-import vazkii.patchouli.client.base.ClientAdvancements;
-import vazkii.patchouli.client.base.ClientTicker;
-import vazkii.patchouli.client.base.PersistentData;
+import vazkii.patchouli.client.base.*;
 import vazkii.patchouli.client.book.BookContentResourceListenerLoader;
 import vazkii.patchouli.client.book.BookReloadHook;
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -41,7 +30,7 @@ public class NeoForgeClientInitializer {
 	public NeoForgeClientInitializer(IEventBus modBus) {
 		NeoForge.EVENT_BUS.addListener((PlayerInteractEvent.RightClickBlock e) -> {
 			BookRightClickHandler.onRightClick(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec());
-			InteractionResult result = MultiblockVisualizationHandler.onPlayerInteract(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec());
+			InteractionResult result = MultiblockVisualizationHandler.INSTANCE.onPlayerInteract(e.getEntity(), e.getLevel(), e.getHand(), e.getHitVec());
 			if (result.consumesAction()) {
 				e.setCanceled(true);
 				e.setCancellationResult(result);
@@ -49,7 +38,7 @@ public class NeoForgeClientInitializer {
 		});
 		NeoForge.EVENT_BUS.addListener((ClientTickEvent.Post e) -> {
 			ClientTicker.endClientTick(Minecraft.getInstance());
-			MultiblockVisualizationHandler.onClientTick(Minecraft.getInstance());
+			MultiblockVisualizationHandler.INSTANCE.onClientTick(Minecraft.getInstance());
 		});
 		NeoForge.EVENT_BUS.addListener((RenderFrameEvent.Pre e) -> {
 			ClientTicker.renderTickStart(e.getPartialTick().getGameTimeDeltaPartialTick(false));
@@ -62,6 +51,9 @@ public class NeoForgeClientInitializer {
 		});
 		NeoForge.EVENT_BUS.addListener((RenderTooltipEvent.Pre e) -> {
 			TooltipHandler.onTooltip(e.getGraphics(), e.getItemStack(), e.getX(), e.getY());
+		});
+		NeoForge.EVENT_BUS.addListener((RecipesReceivedEvent e) -> {
+			ClientRecipes.INSTANCE.receivedRecipes(e.getRecipeMap().values());
 		});
 		modBus.addListener((FMLClientSetupEvent e) -> {
 			ClientBookRegistry.INSTANCE.init();

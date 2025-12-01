@@ -3,6 +3,7 @@ package vazkii.patchouli.fabric.client;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.recipe.v1.sync.ClientRecipeSynchronizedEvent;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -11,10 +12,7 @@ import net.minecraft.client.renderer.item.ItemModels;
 import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperties;
 import net.minecraft.server.packs.PackType;
 
-import vazkii.patchouli.client.base.BookCompletionModelProperty;
-import vazkii.patchouli.client.base.BookModel;
-import vazkii.patchouli.client.base.ClientTicker;
-import vazkii.patchouli.client.base.PersistentData;
+import vazkii.patchouli.client.base.*;
 import vazkii.patchouli.client.book.BookContentResourceListenerLoader;
 import vazkii.patchouli.client.book.BookReloadHook;
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -46,5 +44,9 @@ public class FabricClientInitializer implements ClientModInitializer {
 
 		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(BookContentResourceListenerLoader.ID, BookContentResourceListenerLoader.INSTANCE);
 		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(BookReloadHook.ID, BookReloadHook.INSTANCE);
+
+		ClientRecipeSynchronizedEvent.EVENT.register((minecraft, synchronizedRecipes) -> {
+			ClientRecipes.INSTANCE.receivedRecipes(synchronizedRecipes.recipes());
+		});
 	}
 }

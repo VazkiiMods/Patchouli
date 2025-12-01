@@ -206,7 +206,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 		Book book = currGui.book;
 		GuiBookEntry gui = new GuiBookEntry(currGui.book, entry);
 
-		if (Screen.hasShiftDown()) {
+		if (Minecraft.getInstance().hasShiftDown()) {
 			BookData data = PersistentData.data.getBookData(book);
 
 			if (gui.isBookmarkedAlready()) {

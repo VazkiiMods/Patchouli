@@ -225,7 +225,7 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	private void handleButtonEdit(Button button) {
-		if (hasShiftDown()) {
+		if (minecraft.hasShiftDown()) {
 			long time = System.currentTimeMillis();
 			book.reloadContents(minecraft.level, true);
 			book.reloadLocks(false);

@@ -13,6 +13,8 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -215,7 +217,7 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public void tick() {
-		if (!hasShiftDown()) {
+		if (!minecraft.hasShiftDown()) {
 			ticksInBook++;
 		}
 
@@ -244,9 +246,9 @@ public abstract class GuiBook extends Screen {
 				tooltip.add(t);
 				targetPage = provider;
 			}
-			graphics.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
+			graphics.renderTooltip(this.font, tooltip.stream().map(Component::getVisualOrderText).map(ClientTooltipComponent::create).toList(), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
 		} else if (tooltip != null && !tooltip.isEmpty()) {
-			graphics.renderComponentTooltip(this.font, tooltip, mouseX, mouseY);
+			graphics.renderTooltip(this.font, tooltip.stream().map(Component::getVisualOrderText).map(ClientTooltipComponent::create).toList(), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
 		}
 	}
 
@@ -283,7 +285,7 @@ public abstract class GuiBook extends Screen {
 		if (bookmark == null || bookmark.getEntry(book) == null) {
 			bookmarkThis();
 		} else {
-			if (hasShiftDown() && !bookmarkButton.multiblock) {
+			if (minecraft.hasShiftDown() && !bookmarkButton.multiblock) {
 				List<Bookmark> bookmarks = PersistentData.data.getBookData(book).bookmarks;
 				bookmarks.remove(bookmark);
 				PersistentData.save();
@@ -309,7 +311,7 @@ public abstract class GuiBook extends Screen {
 			}
 		}
 		case GLFW.GLFW_MOUSE_BUTTON_RIGHT -> {
-			back(event, true);
+			back(true);
 			return true;
 		}
 		case GLFW.GLFW_MOUSE_BUTTON_4 -> {
@@ -363,7 +365,7 @@ public abstract class GuiBook extends Screen {
 
 	void back(boolean sfx) {
 		if (!book.getContents().guiStack.isEmpty()) {
-			if (hasShiftDown()) {
+			if (minecraft.hasShiftDown()) {
 				displayLexiconGui(new GuiBookLanding(book), false);
 				book.getContents().guiStack.clear();
 			} else {

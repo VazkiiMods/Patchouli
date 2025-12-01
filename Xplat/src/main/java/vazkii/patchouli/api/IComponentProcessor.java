@@ -3,6 +3,8 @@ package vazkii.patchouli.api;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.level.Level;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Implement this on a class designed to process a template and the variables bound
  * to the inside. This doesn't have to be registered anywhere, but any class implementing
@@ -32,6 +34,7 @@ public interface IComponentProcessor {
 	 * any included templates. It is not called for the variables used inside said
 	 * templates.
 	 */
+	@Nullable
 	IVariable process(Level level, String key);
 
 	/**

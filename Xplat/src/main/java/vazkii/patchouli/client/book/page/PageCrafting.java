@@ -2,17 +2,20 @@ package vazkii.patchouli.client.book.page;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.recipebook.PlaceRecipeHelper;
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.display.*;
 import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
+
+import java.util.List;
 
 public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 
@@ -42,19 +45,36 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 
 		parent.drawCenteredStringNoShadow(graphics, getTitle(second).getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 
-		parent.renderItemStack(graphics, recipeX + 79, recipeY + 22, mouseX, mouseY, recipe.getResultItem(level.registryAccess()));
-
-		NonNullList<Ingredient> ingredients = recipe.getIngredients();
-		int wrap = 3;
-		if (shaped) {
-			wrap = ((ShapedRecipe) recipe).getWidth();
+		List<RecipeDisplay> display = recipe.display();
+		if (display.isEmpty()) {
+			return;
+		}
+		SlotDisplay result;
+		List<SlotDisplay> ingredients;
+		SlotDisplay craftingStation;
+		switch (display.getFirst()) {
+		case ShapedCraftingRecipeDisplay shapedDisplay -> {
+			ingredients = shapedDisplay.ingredients();
+			result = shapedDisplay.result();
+			craftingStation = shapedDisplay.craftingStation();
+		}
+		case ShapelessCraftingRecipeDisplay shapelessDisplay -> {
+			ingredients = shapelessDisplay.ingredients();
+			result = shapelessDisplay.result();
+			craftingStation = shapelessDisplay.craftingStation();
+		}
+		case null, default -> {
+			return;
+		}
 		}
 
-		for (int i = 0; i < ingredients.size(); i++) {
-			parent.renderIngredient(graphics, recipeX + (i % wrap) * 19 + 3, recipeY + (i / wrap) * 19 + 3, mouseX, mouseY, ingredients.get(i));
-		}
+		ContextMap context = SlotDisplayContext.fromLevel(level);
+		PlaceRecipeHelper.placeRecipe(3, 3, recipe, ingredients, (item, slot, x, y) -> {
+			parent.renderItemStack(graphics, recipeX + x * 19 + 3, recipeY + y * 19 + 3, mouseX, mouseY, item.resolveForFirstStack(context));
+		});
+		parent.renderItemStack(graphics, recipeX + 79, recipeY + 22, mouseX, mouseY, result.resolveForFirstStack(context));
 
-		parent.renderItemStack(graphics, recipeX + 79, recipeY + 41, mouseX, mouseY, recipe.getToastSymbol());
+		parent.renderItemStack(graphics, recipeX + 79, recipeY + 41, mouseX, mouseY, craftingStation.resolveForFirstStack(context));
 	}
 
 	@Override
@@ -68,7 +88,11 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>> {
 			return ItemStack.EMPTY;
 		}
 
-		return recipe.getResultItem(level.registryAccess());
+		List<RecipeDisplay> displays = recipe.display();
+		if (displays.isEmpty()) {
+			return ItemStack.EMPTY;
+		}
+		return displays.getFirst().result().resolveForFirstStack(SlotDisplayContext.fromLevel(level));
 	}
 
 }
