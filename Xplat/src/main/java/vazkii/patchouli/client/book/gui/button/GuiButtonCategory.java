@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.ARGB;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookCategory;
@@ -51,23 +52,21 @@ public class GuiButtonCategory extends Button {
 			float transparency = 0.5F - (time / ANIM_TIME) * 0.5F;
 			boolean locked = category != null && category.isLocked();
 
+			graphics.pose().pushMatrix();
+			graphics.pose().translate(getX(), getY());
 			if (locked) {
-				//RenderSystem.setShaderColor(1F, 1F, 1F, 0.7F);
-				GuiBook.drawLock(graphics, parent.book, getX() + 2, getY() + 2);
+				GuiBook.drawLock(graphics, parent.book, 2, 2, ARGB.color(0.7F, 0xffffff));
 			} else {
-				icon.render(graphics, getX() + 2, getY() + 2);
+				icon.render(graphics, 2, 2);
 			}
 
 			graphics.pose().pushMatrix();
-			//RenderSystem.enableBlend();
-			//RenderSystem.setShaderColor(1F, 1F, 1F, transparency);
-			//graphics.pose().translate(0, 0, 200);
-			GuiBook.drawFromTexture(graphics, parent.book, getX(), getY(), u, v, width, height);
-			//RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+			GuiBook.drawFromTexture(graphics, parent.book, 0, 0, u, v, width, height, ARGB.color(transparency, 0xffffff));
 
 			if (category != null && !category.isLocked()) {
-				GuiBook.drawMarking(graphics, parent.book, getX(), getY(), 0, category.getReadState());
+				GuiBook.drawMarking(graphics, parent.book, 0, 0, 0, category.getReadState());
 			}
+			graphics.pose().popMatrix();
 			graphics.pose().popMatrix();
 
 			if (isHoveredOrFocused()) {

@@ -61,7 +61,13 @@ public class Book {
 	public final ResourceLocation id;
 	private Supplier<ItemStack> bookItem;
 
-	public final int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
+	public final int textColor;
+	public final int headerColor;
+	public final int nameplateColor;
+	public final int linkColor;
+	public final int linkHoverColor;
+	public final int progressBarColor;
+	public final int progressBarBackground;
 
 	public final boolean isExternal;
 
@@ -70,13 +76,16 @@ public class Book {
 	public final String name;
 	public final String landingText;
 
-	public final ResourceLocation bookTexture, fillerTexture, craftingTexture;
+	public final ResourceLocation bookTexture;
+	public final ResourceLocation fillerTexture;
+	public final ResourceLocation craftingTexture;
 
 	public final ResourceLocation model;
 
 	public final boolean useBlockyFont;
 
-	public final ResourceLocation openSound, flipSound;
+	public final ResourceLocation openSound;
+	public final ResourceLocation flipSound;
 
 	public final boolean showProgress;
 
@@ -103,7 +112,11 @@ public class Book {
 	public final Map<String, String> macros = new HashMap<>();
 
 	private static int parseColor(JsonObject root, String key, String defaultColor) {
-		return 0xFF000000 | Integer.parseInt(GsonHelper.getAsString(root, key, defaultColor), 16);
+		return parseColor(GsonHelper.getAsString(root, key, defaultColor));
+	}
+
+	private static int parseColor(String value) {
+		return 0xFF000000 | Integer.parseInt(value, 16);
 	}
 
 	public Book(JsonObject root, XplatModContainer owner, ResourceLocation id, boolean external) {

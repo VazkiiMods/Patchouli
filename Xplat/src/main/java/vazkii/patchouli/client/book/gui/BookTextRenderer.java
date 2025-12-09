@@ -62,19 +62,20 @@ public class BookTextRenderer implements Renderable {
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		if (!words.isEmpty()) {
-			Font font = Minecraft.getInstance().font;
-			Style style = book.getFontStyle();
-			Word first = words.getFirst();
-			graphics.pose().pushMatrix();
-			graphics.pose().translate(first.x, first.y);
-			graphics.pose().scale(scale, scale);
-			graphics.pose().translate(-first.x, -first.y);
-			int scaledX = (int) rescale(mouseX, first.x);
-			int scaledY = (int) rescale(mouseY, first.y);
-			words.forEach(word -> word.render(graphics, font, style, scaledX, scaledY));
-			graphics.pose().popMatrix();
+		if (words.isEmpty()) {
+			return;
 		}
+		Font font = Minecraft.getInstance().font;
+		Style style = book.getFontStyle();
+		Word first = words.getFirst();
+		graphics.pose().pushMatrix();
+		graphics.pose().translate(first.x, first.y);
+		graphics.pose().scale(scale, scale);
+		graphics.pose().translate(-first.x, -first.y);
+		int scaledX = (int) rescale(mouseX, first.x);
+		int scaledY = (int) rescale(mouseY, first.y);
+		words.forEach(word -> word.render(graphics, font, style, scaledX, scaledY));
+		graphics.pose().popMatrix();
 	}
 
 	public boolean click(MouseButtonEvent event, boolean doubleClick) {

@@ -25,8 +25,8 @@ import java.util.function.Consumer;
 
 public class ItemModBook extends Item {
 
-	public ItemModBook() {
-		super(new Item.Properties().stacksTo(1));
+	public ItemModBook(Properties props) {
+		super(props);
 	}
 
 	public static float getCompletion(ItemStack stack) {

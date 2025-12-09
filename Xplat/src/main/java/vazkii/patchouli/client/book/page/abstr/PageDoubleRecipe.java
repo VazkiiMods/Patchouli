@@ -5,14 +5,18 @@ import com.google.gson.annotations.SerializedName;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.util.context.ContextMap;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.GuiBook;
 
-public abstract class PageDoubleRecipe<T> extends PageWithText {
+import org.jetbrains.annotations.Nullable;
+
+public abstract class PageDoubleRecipe<D extends RecipeDisplay> extends PageWithText {
 
 	@SerializedName("recipe") ResourceLocation recipeId;
 	@SerializedName("recipe2") ResourceLocation recipe2Id;
@@ -20,8 +24,11 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 	@SerializedName("link_recipe2") boolean linkRecipe2 = true;
 	String title;
 
-	protected transient T recipe1, recipe2;
-	protected transient Component title1, title2;
+	protected transient @Nullable D recipe1;
+	protected transient @Nullable D recipe2;
+	protected transient Component title1;
+	protected transient Component title2;
+	protected transient ContextMap context;
 
 	@Override
 	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
@@ -35,11 +42,12 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 			recipe2 = null;
 		}
 
+		context = SlotDisplayContext.fromLevel(level);
 		boolean customTitle = title != null && !title.isEmpty();
-		title1 = !customTitle ? getRecipeOutput(level, recipe1).getHoverName() : i18nText(title);
+		title1 = !customTitle ? recipe1 == null ? Component.empty() : recipe1.result().resolveForFirstStack(context).getHoverName() : i18nText(title);
 		title2 = Component.literal("-");
 		if (recipe2 != null) {
-			title2 = !customTitle ? getRecipeOutput(level, recipe2).getHoverName() : Component.empty();
+			title2 = !customTitle ? recipe2.result().resolveForFirstStack(context).getHoverName() : Component.empty();
 			if (title1.equals(title2)) {
 				title2 = Component.empty();
 			}
@@ -51,10 +59,10 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 		if (recipe1 != null) {
 			int recipeX = getX();
 			int recipeY = getY();
-			drawRecipe(graphics, recipe1, recipeX, recipeY, mouseX, mouseY, false);
+			drawRecipe(graphics, recipe1, context, recipeX, recipeY, mouseX, mouseY, false);
 
 			if (recipe2 != null) {
-				drawRecipe(graphics, recipe2, recipeX, recipeY + getRecipeHeight() - (title2.getString().isEmpty() ? 10 : 0), mouseX, mouseY, true);
+				drawRecipe(graphics, recipe2, context, recipeX, recipeY + getRecipeHeight() - (title2.getString().isEmpty() ? 10 : 0), mouseX, mouseY, true);
 			}
 		}
 
@@ -71,9 +79,10 @@ public abstract class PageDoubleRecipe<T> extends PageWithText {
 		return getTextHeight() + 10 < GuiBook.PAGE_HEIGHT;
 	}
 
-	protected abstract void drawRecipe(GuiGraphics graphics, T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
-	protected abstract T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, ResourceLocation loc, boolean linkRecipe);
-	protected abstract ItemStack getRecipeOutput(Level level, T recipe);
+	protected abstract void drawRecipe(GuiGraphics graphics, D recipe, ContextMap context, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
+
+	protected abstract @Nullable D loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, ResourceLocation loc, boolean linkRecipe);
+
 	protected abstract int getRecipeHeight();
 
 	protected int getX() {

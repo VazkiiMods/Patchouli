@@ -1,5 +1,6 @@
 package vazkii.patchouli.neoforge.common;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -12,6 +13,7 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.CreativeModeTabRegistry;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
@@ -35,6 +37,7 @@ public class NeoForgeModInitializer {
 	public NeoForgeModInitializer(IEventBus modBus, ModContainer container) {
 		NeoForgePatchouliConfig.setup(container);
 
+		NeoForge.EVENT_BUS.addListener((OnDatapackSyncEvent evt) -> evt.sendRecipes(BuiltInRegistries.RECIPE_TYPE));
 		modBus.addListener(NeoForgeNetworkHandler::setupPackets);
 		modBus.addListener((RegisterEvent evt) -> {
 			evt.register(Registries.SOUND_EVENT, rh -> {

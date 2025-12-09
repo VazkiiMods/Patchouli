@@ -7,6 +7,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.ARGB;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
@@ -47,7 +48,7 @@ public class GuiButtonEntry extends Button {
 
 		if (locked) {
 			//graphics.setColor(1F, 1F, 1F, 0.7F);
-			GuiBook.drawLock(graphics, parent.book, getX() * 2 + 2, getY() * 2 + 2);
+			GuiBook.drawLock(graphics, parent.book, getX() * 2 + 2, getY() * 2 + 2, ARGB.color(0.7F, 0xffffff));
 		} else {
 			entry.getIcon().render(graphics, getX() * 2 + 2, getY() * 2 + 2);
 		}

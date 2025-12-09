@@ -11,6 +11,7 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ItemStackArrayVariableSerializer extends GenericArrayVariableSerializer<ItemStack> {
 	public ItemStackArrayVariableSerializer() {
@@ -35,7 +36,7 @@ public class ItemStackArrayVariableSerializer extends GenericArrayVariableSerial
 			return empty;
 		}
 		if (json.isJsonPrimitive()) {
-			return ItemStackUtil.loadStackListFromString(json.getAsString(), registries).toArray(empty);
+			return ItemStackUtil.loadStackListFromString(json.getAsString(), registries).stream().flatMap(e -> e.map(Stream::of, t -> t.stream().map(ItemStack::new))).toArray(ItemStack[]::new);
 		}
 		if (json.isJsonObject()) {
 			return new ItemStack[] { ItemStackUtil.loadStackFromJson(json.getAsJsonObject(), registries) };

@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "patchouli:book",
+    "model": "patchouli:item/guide_book"
+  }
+}

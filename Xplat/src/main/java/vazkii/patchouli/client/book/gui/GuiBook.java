@@ -129,8 +129,8 @@ public abstract class GuiBook extends Screen {
 		if (scaleFactor != 1) {
 			graphics.pose().scale(scaleFactor, scaleFactor);
 
-			mouseX /= scaleFactor;
-			mouseY /= scaleFactor;
+			mouseX = (int) (mouseX / scaleFactor);
+			mouseY = (int) (mouseY / scaleFactor);
 		}
 
 		drawScreenAfterScale(graphics, mouseX, mouseY, partialTicks);
@@ -535,14 +535,11 @@ public abstract class GuiBook extends Screen {
 		int h = 3;
 		int rx = x + PAGE_WIDTH / 2 - w / 2;
 
-		//RenderSystem.enableBlend();
-		//graphics.setColor(1F, 1F, 1F, 0.8F);
-		drawFromTexture(graphics, book, rx, y, 140, 180, w, h, ARGB.color((int) (255 * 0.8f), 255, 255, 255));
-		//graphics.setColor(1F, 1F, 1F, 1F);
+		drawFromTexture(graphics, book, rx, y, 140, 180, w, h, ARGB.color(0.8f, 0xffffff));
 	}
 
-	public static void drawLock(GuiGraphics graphics, Book book, int x, int y) {
-		drawFromTexture(graphics, book, x, y, 250, 180, 16, 16);
+	public static void drawLock(GuiGraphics graphics, Book book, int x, int y, int color) {
+		drawFromTexture(graphics, book, x, y, 250, 180, 16, 16, color);
 	}
 
 	public static void drawMarking(GuiGraphics graphics, Book book, int x, int y, int rand, EntryDisplayState state) {
@@ -550,13 +547,10 @@ public abstract class GuiBook extends Screen {
 			return;
 		}
 
-		//RenderSystem.enableBlend();
 		//RenderSystem.disableAlphaTest();
 		float alpha = state.hasAnimation ? ((float) Math.sin(ClientTicker.total * 0.2F) * 0.3F + 0.7F) : 1F;
-		//RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
-		drawFromTexture(graphics, book, x, y, state.u, 197, 8, 8, ARGB.color((int) (alpha * 255F), 255, 255, 255));
+		drawFromTexture(graphics, book, x, y, state.u, 197, 8, 8, ARGB.color(alpha, 0xffffff));
 		//RenderSystem.enableAlphaTest();
-		//RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 	}
 
 	public static void drawPageFiller(GuiGraphics graphics, Book book) {
@@ -564,8 +558,6 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public static void drawPageFiller(GuiGraphics graphics, Book book, int x, int y) {
-		//RenderSystem.enableBlend();
-		//graphics.setColor(1F, 1F, 1F, 1F);
 		graphics.blit(book.fillerTexture, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 

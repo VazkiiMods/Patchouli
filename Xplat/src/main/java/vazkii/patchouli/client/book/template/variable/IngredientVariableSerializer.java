@@ -12,7 +12,9 @@ import vazkii.patchouli.common.util.ItemStackUtil;
 public class IngredientVariableSerializer implements IVariableSerializer<Ingredient> {
 	@Override
 	public Ingredient fromJson(JsonElement json, HolderLookup.Provider registries) {
-		return (json.isJsonPrimitive()) ? ItemStackUtil.loadIngredientFromString(json.getAsString(), registries) : Ingredient.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), json).result().orElseThrow();
+		return (json.isJsonPrimitive() && !json.getAsString().startsWith("#"))
+				? ItemStackUtil.loadIngredientFromString(json.getAsString(), registries)
+				: Ingredient.CODEC.parse(registries.createSerializationContext(JsonOps.INSTANCE), json).result().orElseThrow();
 	}
 
 	@Override

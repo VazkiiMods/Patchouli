@@ -17,11 +17,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends PageDoubleRecipe<T> {
+public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>, D extends RecipeDisplay> extends PageDoubleRecipe<D> {
 	private final RecipeType<? extends T> recipeType;
+	private final Class<D> displayClass;
 
-	public PageDoubleRecipeRegistry(RecipeType<? extends T> recipeType) {
+	public PageDoubleRecipeRegistry(RecipeType<? extends T> recipeType, Class<D> displayClass) {
 		this.recipeType = recipeType;
+		this.displayClass = displayClass;
 	}
 
 	@Nullable
@@ -31,7 +33,7 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 	}
 
 	@Override
-	protected T loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, ResourceLocation res, boolean linkRecipe) {
+	protected @Nullable D loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, ResourceLocation res, boolean linkRecipe) {
 		if (res == null || level == null) {
 			return null;
 		}
@@ -41,18 +43,23 @@ public abstract class PageDoubleRecipeRegistry<T extends Recipe<?>> extends Page
 			tempRecipe = getRecipe(ResourceLocation.fromNamespaceAndPath("crafttweaker", res.getPath()));
 		}
 
-		if (tempRecipe != null) {
-			if (linkRecipe) {
-				List<RecipeDisplay> display = tempRecipe.display();
-				if (!display.isEmpty()) {
-					entry.addRelevantStack(builder, display.getFirst().result().resolveForFirstStack(SlotDisplayContext.fromLevel(level)), pageNum);
-				}
-			}
-			return tempRecipe;
+		if (tempRecipe == null) {
+			PatchouliAPI.LOGGER.warn("Recipe {} (of type {}) not found", res, BuiltInRegistries.RECIPE_TYPE.getKey(recipeType));
+			return null;
 		}
 
-		PatchouliAPI.LOGGER.warn("Recipe {} (of type {}) not found", res, BuiltInRegistries.RECIPE_TYPE.getKey(recipeType));
+		if (linkRecipe) {
+			List<RecipeDisplay> display = tempRecipe.display();
+			if (!display.isEmpty()) {
+				entry.addRelevantStack(builder, display.getFirst().result().resolveForFirstStack(SlotDisplayContext.fromLevel(level)), pageNum);
+			}
+		}
+
+		for (RecipeDisplay recipeDisplay : tempRecipe.display()) {
+			if (displayClass.isInstance(recipeDisplay)) {
+				return displayClass.cast(recipeDisplay);
+			}
+		}
 		return null;
 	}
-
 }

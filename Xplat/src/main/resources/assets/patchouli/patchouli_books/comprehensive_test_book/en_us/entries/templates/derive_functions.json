@@ -5,9 +5,7 @@
   "pages": [
     {
       "type": "patchouli:derive_ingr_to_stack",
-      "input": {
-        "tag": "minecraft:music_discs"
-      }
+      "input": "#c:music_discs"
     }
   ]
 }

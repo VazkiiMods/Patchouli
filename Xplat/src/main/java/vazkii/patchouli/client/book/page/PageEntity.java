@@ -12,7 +12,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
-import org.joml.Vector3f;
+import org.joml.*;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.ClientTicker;
@@ -23,6 +23,7 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.common.util.EntityUtil;
 
+import java.lang.Math;
 import java.util.function.Function;
 
 public class PageEntity extends PageWithText {
@@ -64,8 +65,6 @@ public class PageEntity extends PageWithText {
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
-		//RenderSystem.enableBlend();
-		//RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
 
 		if (name == null || name.isEmpty()) {
@@ -82,21 +81,31 @@ public class PageEntity extends PageWithText {
 
 		if (entity != null) {
 			float rotation = rotate ? ClientTicker.total : defaultRotation;
-			renderEntity(graphics, entity, 58, 60, 106, 106, rotation, renderScale, offset);
+			renderEntity(graphics, entity, parent.bookTop + x + 58, parent.bookTop + y + 60, 106, 106, rotation, renderScale, offset, pticks);
 		}
 
 		super.render(graphics, mouseX, mouseY, pticks);
 	}
 
-	public static void renderEntity(GuiGraphics graphics, Entity entity, int x, int y, int width, int height, float rotation, float renderScale, float offset) {
+	public static void renderEntity(GuiGraphics graphics, Entity entity, int x, int y, int width, int height, float rotation, float renderScale, float offset, float pticks) {
 		EntityRenderDispatcher entityrenderdispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
 		EntityRenderer<? super Entity, ?> entityrenderer = entityrenderdispatcher.getRenderer(entity);
-		EntityRenderState entityrenderstate = entityrenderer.createRenderState(entity, 1.0F);
+		EntityRenderState entityrenderstate = entityrenderer.createRenderState(entity, 1f);
 		entityrenderstate.lightCoords = 0xf000f0;
 		entityrenderstate.hitboxesRenderState = null;
 		entityrenderstate.shadowPieces.clear();
 		entityrenderstate.outlineColor = 0;
-		graphics.submitEntityRenderState(entityrenderstate, renderScale, new Vector3f(), Axis.YP.rotationDegrees(rotation), Axis.ZP.rotationDegrees(180), x, y, x + width, y + height);
+		Vector3f pos = graphics.pose().transform(x, y + offset, 0, new Vector3f());
+		Vector3f size = graphics.pose().transform(width, height, 0, new Vector3f());
+		Quaternionf rot = Axis.ZP.rotationDegrees(180);
+		rot = rot.mul(Axis.YP.rotationDegrees(rotation));
+		int x1 = (int) pos.x;
+		int y1 = (int) pos.y;
+		int x2 = (int) (pos.x + size.x);
+		int y2 = (int) (pos.y + size.y);
+		graphics.enableScissor(x, y, x + width, y + height);
+		graphics.submitEntityRenderState(entityrenderstate, renderScale, new Vector3f(), rot, new Quaternionf(), x1, y1, x2, y2);
+		graphics.disableScissor();
 	}
 
 	private void loadEntity(Level world) {

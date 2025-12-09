@@ -24,6 +24,7 @@ public final class ClientRecipes {
 			recipesByType.computeIfAbsent(recipe.value().getType(), rt -> new java.util.ArrayList<>()).add(recipe);
 			recipesById.put(recipe.id(), recipe);
 		}
+		//ClientBookRegistry.INSTANCE.reload();
 	}
 
 	@SuppressWarnings("unchecked")

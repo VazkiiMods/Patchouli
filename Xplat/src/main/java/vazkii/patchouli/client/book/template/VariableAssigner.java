@@ -174,7 +174,7 @@ public class VariableAssigner {
 	private static IVariable stacks(IVariable arg, HolderLookup.Provider registries) {
 		return IVariable.from(arg.as(Ingredient.class).display().resolveForStacks(new ContextMap.Builder()
 				.withParameter(SlotDisplayContext.REGISTRIES, registries)
-				.create(SlotDisplayContext.CONTEXT)), registries);
+				.create(SlotDisplayContext.CONTEXT)).toArray(new ItemStack[0]), registries);
 	}
 
 	private static String ename(String arg) {
