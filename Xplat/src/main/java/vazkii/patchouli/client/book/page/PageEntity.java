@@ -12,7 +12,10 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
-import org.joml.*;
+import org.joml.Matrix3x2fStack;
+import org.joml.Quaternionf;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.ClientTicker;
@@ -23,7 +26,6 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.common.util.EntityUtil;
 
-import java.lang.Math;
 import java.util.function.Function;
 
 public class PageEntity extends PageWithText {
@@ -88,24 +90,33 @@ public class PageEntity extends PageWithText {
 	}
 
 	public static void renderEntity(GuiGraphics graphics, Entity entity, int x, int y, int width, int height, float rotation, float renderScale, float offset, float pticks) {
+		Matrix3x2fStack pose = graphics.pose();
+		pose.pushMatrix();
+		Vector2f position = new Vector2f(x, y);
+		pose.translate(0.0F, offset);
+		position = pose.transformPosition(position);
+
+		int posX = Math.round(position.x);
+		int posY = Math.round(position.y);
+
 		EntityRenderDispatcher entityrenderdispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
 		EntityRenderer<? super Entity, ?> entityrenderer = entityrenderdispatcher.getRenderer(entity);
-		EntityRenderState entityrenderstate = entityrenderer.createRenderState(entity, 1f);
+		EntityRenderState entityrenderstate = entityrenderer.createRenderState(entity, pticks);
 		entityrenderstate.lightCoords = 0xf000f0;
 		entityrenderstate.hitboxesRenderState = null;
 		entityrenderstate.shadowPieces.clear();
 		entityrenderstate.outlineColor = 0;
-		Vector3f pos = graphics.pose().transform(x, y + offset, 0, new Vector3f());
-		Vector3f size = graphics.pose().transform(width, height, 0, new Vector3f());
+
 		Quaternionf rot = Axis.ZP.rotationDegrees(180);
 		rot = rot.mul(Axis.YP.rotationDegrees(rotation));
-		int x1 = (int) pos.x;
-		int y1 = (int) pos.y;
-		int x2 = (int) (pos.x + size.x);
-		int y2 = (int) (pos.y + size.y);
-		graphics.enableScissor(x, y, x + width, y + height);
-		graphics.submitEntityRenderState(entityrenderstate, renderScale, new Vector3f(), rot, new Quaternionf(), x1, y1, x2, y2);
+		int startX = posX - width;
+		int startY = posY - height;
+		int endX = posX + width;
+		int endY = posY + height;
+		graphics.enableScissor(10, 10, 107, 110);
+		graphics.submitEntityRenderState(entityrenderstate, renderScale, new Vector3f(-0.8125F, 0, 0), rot, new Quaternionf(), startX, startY, endX, endY);
 		graphics.disableScissor();
+		pose.popMatrix();
 	}
 
 	private void loadEntity(Level world) {
