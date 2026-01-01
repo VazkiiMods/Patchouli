@@ -584,4 +584,7 @@ public abstract class GuiBook extends Screen {
 		book.getContents().openLexiconGui(gui, push);
 	}
 
+	public float getScaleFactor() {
+		return scaleFactor;
+	}
 }
