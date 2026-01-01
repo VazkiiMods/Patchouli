@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import org.apache.commons.lang3.tuple.Pair;
@@ -34,16 +34,16 @@ public class BookRegistry {
 	public static final BookRegistry INSTANCE = new BookRegistry();
 	public static final String BOOKS_LOCATION = PatchouliAPI.MOD_ID + "_books";
 
-	public final Map<ResourceLocation, Book> books = new HashMap<>();
+	public final Map<Identifier, Book> books = new HashMap<>();
 	public static final Gson GSON = new GsonBuilder()
-			.registerTypeAdapter(ResourceLocation.class, (JsonDeserializer<ResourceLocation>) (json, typeOfT, context) -> ResourceLocation.CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, json)).getOrThrow())
+			.registerTypeAdapter(Identifier.class, (JsonDeserializer<Identifier>) (json, typeOfT, context) -> Identifier.CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, json)).getOrThrow())
 			.create();
 
 	private BookRegistry() {}
 
 	public void init() {
 		Collection<XplatModContainer> mods = IXplatAbstractions.INSTANCE.getAllMods();
-		Map<Pair<XplatModContainer, ResourceLocation>, String> foundBooks = new HashMap<>();
+		Map<Pair<XplatModContainer, Identifier>, String> foundBooks = new HashMap<>();
 
 		mods.forEach(mod -> {
 			String id = mod.getId();
@@ -62,7 +62,7 @@ public class BookRegistry {
 							}
 
 							String assetPath = fileStr.substring(fileStr.indexOf("data/"));
-							ResourceLocation bookId = ResourceLocation.fromNamespaceAndPath(id, bookName);
+							Identifier bookId = Identifier.fromNamespaceAndPath(id, bookName);
 							foundBooks.put(Pair.of(mod, bookId), assetPath);
 						}
 
@@ -72,7 +72,7 @@ public class BookRegistry {
 
 		foundBooks.forEach((pair, file) -> {
 			XplatModContainer mod = pair.getLeft();
-			ResourceLocation res = pair.getRight();
+			Identifier res = pair.getRight();
 
 			Path path = mod.getPath(file);
 			if (path == null)
@@ -89,7 +89,7 @@ public class BookRegistry {
 		IXplatAbstractions.INSTANCE.signalBooksLoaded();
 	}
 
-	public void loadBook(XplatModContainer mod, ResourceLocation res, InputStream stream,
+	public void loadBook(XplatModContainer mod, Identifier res, InputStream stream,
 			boolean external) {
 		Reader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		var tree = GSON.fromJson(reader, JsonObject.class);

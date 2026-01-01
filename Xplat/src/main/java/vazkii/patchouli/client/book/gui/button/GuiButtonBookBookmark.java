@@ -29,8 +29,8 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	}
 
 	@Override
-	public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		super.renderWidget(graphics, mouseX, mouseY, partialTicks);
+	protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+		super.renderContents(graphics, mouseX, mouseY, partialTicks);
 
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 		if (bookmark != null && entry != null) {

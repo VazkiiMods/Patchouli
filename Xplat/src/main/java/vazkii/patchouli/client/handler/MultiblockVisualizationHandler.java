@@ -1,19 +1,16 @@
 package vazkii.patchouli.client.handler;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
-import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.datafixers.util.Pair;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
@@ -32,7 +29,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.joml.Matrix4f;
 
 import vazkii.patchouli.api.IMultiblock;
-import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.common.multiblock.StateMatcher;
@@ -40,7 +36,6 @@ import vazkii.patchouli.common.util.RotationUtil;
 import vazkii.patchouli.mixin.client.AccessorMultiBufferSource;
 
 import java.util.Collection;
-import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.SequencedMap;
 import java.util.function.Function;
@@ -173,9 +168,9 @@ public final class MultiblockVisualizationHandler {
 		}
 
 		EntityRenderDispatcher erd = mc.getEntityRenderDispatcher();
-		double renderPosX = erd.camera.getPosition().x();
-		double renderPosY = erd.camera.getPosition().y();
-		double renderPosZ = erd.camera.getPosition().z();
+		double renderPosX = erd.camera.position().x();
+		double renderPosY = erd.camera.position().y();
+		double renderPosZ = erd.camera.position().z();
 		ms.pushPose();
 		ms.translate(-renderPosX, -renderPosY, -renderPosZ);
 
@@ -275,7 +270,7 @@ public final class MultiblockVisualizationHandler {
 		SequencedMap<RenderType, ByteBufferBuilder> layerBuffers = ((AccessorMultiBufferSource) original).getFixedBuffers();
 		SequencedMap<RenderType, ByteBufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
 		for (Map.Entry<RenderType, ByteBufferBuilder> e : layerBuffers.entrySet()) {
-			remapped.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
+			remapped.put(/*GhostRenderLayer.remap(*/e.getKey()/*)*/, e.getValue());
 		}
 		return new GhostBuffers(fallback, remapped);
 	}
@@ -287,18 +282,18 @@ public final class MultiblockVisualizationHandler {
 
 		@Override
 		public VertexConsumer getBuffer(RenderType type) {
-			return super.getBuffer(GhostRenderLayer.remap(type));
+			return super.getBuffer(/*GhostRenderLayer.remap(*/type/*)*/);
 		}
 	}
 
-	private static class GhostRenderLayer extends RenderType {
+	/*private static class GhostRenderLayer extends RenderType {
 		private static final Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
 		private final RenderType original;
-
+	
 		private GhostRenderLayer(RenderType original) {
 			super(String.format("%s_%s_ghost", original.toString(), PatchouliAPI.MOD_ID), original.bufferSize(), original.affectsCrumbling(), original.sortOnUpload(), () -> {
 				original.setupRenderState();
-
+	
 				//RenderSystem.disableDepthTest();
 				//RenderSystem.enableBlend();
 				//RenderSystem.setShaderColor(1, 1, 1, 0.4F);
@@ -306,32 +301,32 @@ public final class MultiblockVisualizationHandler {
 				//RenderSystem.setShaderColor(1, 1, 1, 1);
 				//RenderSystem.disableBlend();
 				//RenderSystem.enableDepthTest();
-
+	
 				original.clearRenderState();
 			});
 			this.original = original;
 		}
-
+	
 		@Override
 		public void draw(MeshData meshData) {
 			original.draw(meshData);
 		}
-
+	
 		@Override
 		public VertexFormat format() {
 			return original.format();
 		}
-
+	
 		@Override
 		public VertexFormat.Mode mode() {
 			return original.mode();
 		}
-
+	
 		@Override
 		public RenderPipeline pipeline() {
 			return original.pipeline();
 		}
-
+	
 		public static RenderType remap(RenderType in) {
 			if (in instanceof GhostRenderLayer) {
 				return in;
@@ -339,5 +334,5 @@ public final class MultiblockVisualizationHandler {
 				return remappedTypes.computeIfAbsent(in, GhostRenderLayer::new);
 			}
 		}
-	}
+	}*/
 }

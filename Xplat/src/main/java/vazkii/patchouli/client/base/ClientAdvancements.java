@@ -10,7 +10,7 @@ import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
 import vazkii.patchouli.common.book.Book;
@@ -38,7 +38,7 @@ public class ClientAdvancements {
 	}
 
 	public static boolean hasDone(String advancement) {
-		ResourceLocation id = ResourceLocation.tryParse(advancement);
+		Identifier id = Identifier.tryParse(advancement);
 		if (id != null) {
 			ClientPacketListener conn = Minecraft.getInstance().getConnection();
 			if (conn != null) {
@@ -66,7 +66,7 @@ public class ClientAdvancements {
 	}
 
 	public static class LexiconToast implements Toast {
-		private static final ResourceLocation BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("toast/advancement");
+		private static final Identifier BACKGROUND_SPRITE = Identifier.withDefaultNamespace("toast/advancement");
 		private final Book book;
 		private Visibility wantedVisibility;
 

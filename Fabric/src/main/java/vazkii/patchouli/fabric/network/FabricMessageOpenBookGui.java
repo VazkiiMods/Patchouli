@@ -3,7 +3,7 @@ package vazkii.patchouli.fabric.network;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 import vazkii.patchouli.client.book.ClientBookRegistry;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class FabricMessageOpenBookGui {
 
-	public static void send(ServerPlayer player, ResourceLocation book, @Nullable ResourceLocation entry, int page) {
+	public static void send(ServerPlayer player, Identifier book, @Nullable Identifier entry, int page) {
 		ServerPlayNetworking.send(player, new MessageOpenBookGui(book, entry, page));
 	}
 

@@ -28,7 +28,7 @@ public class GuiButtonEntry extends Button {
 	}
 
 	@Override
-	protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
 		if (!active) {
 			return;
 		}

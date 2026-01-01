@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.api.PatchouliAPI;
@@ -21,7 +21,7 @@ public sealed interface BookIcon permits BookIcon.StackIcon, BookIcon.TextureIco
 		}
 	}
 
-	record TextureIcon(ResourceLocation texture) implements BookIcon {
+	record TextureIcon(Identifier texture) implements BookIcon {
 		@Override
 		public void render(GuiGraphics graphics, int x, int y) {
 			//graphics.setColor(1F, 1F, 1F, 1F);
@@ -31,7 +31,7 @@ public sealed interface BookIcon permits BookIcon.StackIcon, BookIcon.TextureIco
 
 	static BookIcon from(String str, HolderLookup.Provider registries) {
 		if (str.endsWith(".png")) {
-			return new TextureIcon(ResourceLocation.tryParse(str));
+			return new TextureIcon(Identifier.tryParse(str));
 		} else {
 			try {
 				ItemStack stack = ItemStackUtil.loadStackFromString(str, registries);

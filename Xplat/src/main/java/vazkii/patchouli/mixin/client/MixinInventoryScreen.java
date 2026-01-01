@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.InventoryMenu;
 
@@ -32,7 +32,7 @@ public abstract class MixinInventoryScreen extends AbstractRecipeBookScreen<Inve
 
 	@Inject(at = @At("RETURN"), method = "init()V")
 	public void onGuiInitPost(CallbackInfo info) {
-		var bookID = ResourceLocation.tryParse(PatchouliConfig.get().inventoryButtonBook());
+		var bookID = Identifier.tryParse(PatchouliConfig.get().inventoryButtonBook());
 		Book book = BookRegistry.INSTANCE.books.get(bookID);
 		if (book == null) {
 			return;

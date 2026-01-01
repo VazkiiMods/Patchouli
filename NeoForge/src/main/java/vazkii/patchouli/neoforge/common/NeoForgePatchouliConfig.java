@@ -1,6 +1,6 @@
 package vazkii.patchouli.neoforge.common;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -30,7 +30,7 @@ public class NeoForgePatchouliConfig {
 		noAdvancementBooks = builder
 				.comment("Granular list of Book ID's to disable advancement locking for, e.g. [ \"botania:lexicon\" ]. Config Flags: advancements_disabled_<bookid>")
 				.defineListAllowEmpty(List.of("noAdvancementBooks"), Collections::emptyList,
-						o -> o instanceof String s && ResourceLocation.tryParse(s) != null);
+						o -> o instanceof String s && Identifier.tryParse(s) != null);
 
 		testingMode = builder
 				.comment("Enable testing mode. By default this doesn't do anything, but you can use the config flag in your books if you want. Config Flag: testing_mode")

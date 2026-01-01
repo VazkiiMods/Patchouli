@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.recipe.v1.ingredient.DefaultCustomIngredients;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -27,12 +27,12 @@ import java.util.List;
 
 public class FabricXplatImpl implements IXplatAbstractions {
 	@Override
-	public void fireDrawBookScreen(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics) {
+	public void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics) {
 		BookDrawScreenCallback.EVENT.invoker().trigger(book, gui, mouseX, mouseY, partialTicks, graphics);
 	}
 
 	@Override
-	public void fireBookReload(ResourceLocation book) {
+	public void fireBookReload(Identifier book) {
 		BookContentsReloadCallback.EVENT.invoker().trigger(book);
 	}
 
@@ -42,7 +42,7 @@ public class FabricXplatImpl implements IXplatAbstractions {
 	}
 
 	@Override
-	public void sendOpenBookGui(ServerPlayer player, ResourceLocation book, @Nullable ResourceLocation entry, int page) {
+	public void sendOpenBookGui(ServerPlayer player, Identifier book, @Nullable Identifier entry, int page) {
 		FabricMessageOpenBookGui.send(player, book, entry, page);
 	}
 

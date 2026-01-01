@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 
@@ -35,12 +35,12 @@ public class StubMultiblock implements IMultiblock {
 	}
 
 	@Override
-	public ResourceLocation getID() {
-		return ResourceLocation.fromNamespaceAndPath("patchouli", "stub");
+	public Identifier getID() {
+		return Identifier.fromNamespaceAndPath("patchouli", "stub");
 	}
 
 	@Override
-	public IMultiblock setId(ResourceLocation res) {
+	public IMultiblock setId(Identifier res) {
 		return this;
 	}
 

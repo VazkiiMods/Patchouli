@@ -8,9 +8,10 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.ResourceLocationArgument;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -26,22 +27,22 @@ public class OpenBookCommand {
 
 	public static void register(CommandDispatcher<CommandSourceStack> disp) {
 		disp.register(Commands.literal("open-patchouli-book")
-				.requires(cs -> cs.hasPermission(2))
+				.requires(cs -> cs.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
 				.then(Commands.argument("targets", EntityArgument.players())
-						.then(Commands.argument("book", ResourceLocationArgument.id())
+						.then(Commands.argument("book", IdentifierArgument.id())
 								.suggests(BOOK_ID_SUGGESTER)
 								.executes(ctx -> doIt(EntityArgument.getPlayers(ctx, "targets"),
-										ResourceLocationArgument.getId(ctx, "book"),
+										IdentifierArgument.getId(ctx, "book"),
 										null, 0))
-								.then(Commands.argument("entry", ResourceLocationArgument.id())
+								.then(Commands.argument("entry", IdentifierArgument.id())
 										.then(Commands.argument("page", IntegerArgumentType.integer(0))
 												.executes(ctx -> doIt(EntityArgument.getPlayers(ctx, "targets"),
-														ResourceLocationArgument.getId(ctx, "book"),
-														ResourceLocationArgument.getId(ctx, "entry"),
+														IdentifierArgument.getId(ctx, "book"),
+														IdentifierArgument.getId(ctx, "entry"),
 														IntegerArgumentType.getInteger(ctx, "page"))))))));
 	}
 
-	private static int doIt(Collection<ServerPlayer> players, ResourceLocation book, @Nullable ResourceLocation entry, int page) {
+	private static int doIt(Collection<ServerPlayer> players, Identifier book, @Nullable Identifier entry, int page) {
 		for (ServerPlayer player : players) {
 			if (entry != null) {
 				PatchouliAPI.get().openBookEntry(player, book, entry, page);

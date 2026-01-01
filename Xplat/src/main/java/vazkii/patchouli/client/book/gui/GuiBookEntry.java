@@ -9,7 +9,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
@@ -273,7 +273,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public boolean navigateToEntry(ResourceLocation entry, int page, boolean push) {
+	public boolean navigateToEntry(Identifier entry, int page, boolean push) {
 		BookEntry bookEntry = book.getContents().entries.get(entry);
 		if (bookEntry != null && !bookEntry.isLocked()) {
 			displayLexiconGui(new GuiBookEntry(book, bookEntry, page), push);
@@ -310,12 +310,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public ResourceLocation getBookTexture() {
+	public Identifier getBookTexture() {
 		return book.bookTexture;
 	}
 
 	@Override
-	public ResourceLocation getCraftingTexture() {
+	public Identifier getCraftingTexture() {
 		return book.craftingTexture;
 	}
 

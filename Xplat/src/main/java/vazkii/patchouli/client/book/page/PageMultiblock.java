@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 
@@ -26,7 +26,7 @@ public class PageMultiblock extends PageWithText {
 	private static final RandomSource RAND = RandomSource.createNewThreadLocalInstance();
 
 	String name = "";
-	@SerializedName("multiblock_id") ResourceLocation multiblockId;
+	@SerializedName("multiblock_id") Identifier multiblockId;
 
 	@SerializedName("multiblock") SerializedMultiblock serializedMultiblock;
 

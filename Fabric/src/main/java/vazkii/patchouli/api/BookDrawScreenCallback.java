@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * This event is fired after any
@@ -21,5 +21,5 @@ public interface BookDrawScreenCallback {
 				}
 			});
 
-	void trigger(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics);
+	void trigger(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics);
 }

@@ -3,7 +3,7 @@ package vazkii.patchouli.client.book.page;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -30,7 +30,7 @@ public class PageRelations extends PageWithText {
 
 		this.entryObjs = new ArrayList<>();
 		for (String s : this.entries) {
-			ResourceLocation targetId = ResourceLocation.tryParse(s);
+			Identifier targetId = Identifier.tryParse(s);
 			BookEntry targetEntry = builder.getEntry(targetId);
 			if (targetEntry == null) {
 				throw new IllegalArgumentException("Could not find entry " + targetId);

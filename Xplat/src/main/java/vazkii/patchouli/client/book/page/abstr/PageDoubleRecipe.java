@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.crafting.display.RecipeDisplay;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
@@ -18,8 +18,8 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class PageDoubleRecipe<D extends RecipeDisplay> extends PageWithText {
 
-	@SerializedName("recipe") ResourceLocation recipeId;
-	@SerializedName("recipe2") ResourceLocation recipe2Id;
+	@SerializedName("recipe") Identifier recipeId;
+	@SerializedName("recipe2") Identifier recipe2Id;
 	@SerializedName("link_recipe") boolean linkRecipe = true;
 	@SerializedName("link_recipe2") boolean linkRecipe2 = true;
 	String title;
@@ -81,7 +81,7 @@ public abstract class PageDoubleRecipe<D extends RecipeDisplay> extends PageWith
 
 	protected abstract void drawRecipe(GuiGraphics graphics, D recipe, ContextMap context, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
 
-	protected abstract @Nullable D loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, ResourceLocation loc, boolean linkRecipe);
+	protected abstract @Nullable D loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, Identifier loc, boolean linkRecipe);
 
 	protected abstract int getRecipeHeight();
 

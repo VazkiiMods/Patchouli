@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.BookEntry;
@@ -138,8 +138,8 @@ public class BookTextParser {
 					parameter = parameter.substring(0, hash);
 				}
 
-				ResourceLocation href;
-				href = parameter.contains(":") ? ResourceLocation.tryParse(parameter) : ResourceLocation.fromNamespaceAndPath(state.book.id.getNamespace(), parameter);
+				Identifier href;
+				href = parameter.contains(":") ? Identifier.tryParse(parameter) : Identifier.fromNamespaceAndPath(state.book.id.getNamespace(), parameter);
 				GuiBook gui = state.gui;
 				Book book = state.book;
 				BookEntry entry = book.getContents().entries.get(href);

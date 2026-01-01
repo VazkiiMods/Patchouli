@@ -32,6 +32,7 @@ neoForge {
 
         client {
             client()
+            systemProperty 'MC_DEBUG_RENDER_UI_LAYERING_RECTANGLES', 'true'
         }
         server {
             server()
@@ -97,7 +98,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId project.group
-            artifactId project.archivesBaseName
+            artifactId project.base.archivesName.get()
             version project.version
             artifact jar
             artifact sourcesJar

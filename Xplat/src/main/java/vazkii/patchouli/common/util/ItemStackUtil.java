@@ -14,7 +14,7 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
@@ -60,7 +60,7 @@ public final class ItemStackUtil {
 		var components = parsed.getMiddle();
 		var count = parsed.getRight();
 		if (!holder.isBound() && holder.unwrapKey().isPresent()) {
-			throw new RuntimeException("Unknown item ID: " + holder.unwrapKey().get().location());
+			throw new RuntimeException("Unknown item ID: " + holder.unwrapKey().get().identifier());
 		}
 		Item item = holder.value();
 		ItemStack stack = new ItemStack(item, count);
@@ -95,7 +95,7 @@ public final class ItemStackUtil {
 			if (s.isEmpty())
 				continue;
 			if (s.startsWith("tag:")) {
-				var key = TagKey.create(Registries.ITEM, ResourceLocation.parse(s.substring(4)));
+				var key = TagKey.create(Registries.ITEM, Identifier.parse(s.substring(4)));
 				registries.lookupOrThrow(Registries.ITEM).get(key).ifPresent(holders -> stacks.add(Either.right(holders)));
 			} else {
 				stacks.add(Either.left(loadStackFromString(s, registries)));
@@ -207,7 +207,7 @@ public final class ItemStackUtil {
 	public static ItemStack loadStackFromJson(JsonObject json, HolderLookup.Provider registries) {
 		String itemName = json.get("item").getAsString();
 
-		Item item = BuiltInRegistries.ITEM.getOptional(ResourceLocation.tryParse(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'")
+		Item item = BuiltInRegistries.ITEM.getOptional(Identifier.tryParse(itemName)).orElseThrow(() -> new IllegalArgumentException("Unknown item '" + itemName + "'")
 		);
 
 		ItemStack stack = new ItemStack(item, GsonHelper.getAsInt(json, "count", 1));

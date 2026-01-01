@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book;
 
 import com.google.gson.JsonElement;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 
 import vazkii.patchouli.common.book.Book;
@@ -19,10 +19,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public interface BookContentLoader {
-	void findFiles(Book book, String dir, List<ResourceLocation> list);
+	void findFiles(Book book, String dir, List<Identifier> list);
 
 	@Nullable
-	LoadResult loadJson(Book book, ResourceLocation file);
+	LoadResult loadJson(Book book, Identifier file);
 
 	/**
 	 * @param addedBy Opaque string to be shown to user in the book,

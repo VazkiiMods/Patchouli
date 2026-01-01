@@ -4,7 +4,7 @@ import com.google.common.base.Stopwatch;
 import com.google.gson.JsonElement;
 
 import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.ExtraCodecs;
@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  */
 public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadListener<JsonElement>
 		implements BookContentLoader {
-	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "resource_pack_books");
+	public static final Identifier ID = Identifier.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "resource_pack_books");
 	public static final BookContentResourceListenerLoader INSTANCE = new BookContentResourceListenerLoader();
 	private static final Pattern ID_READER = Pattern.compile(
 			"(?<bookId>[a-z0-9_.-]+)" +
@@ -35,15 +35,15 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 					"/(?<entryId>[a-z0-9/._-]+)");
 
 	// book id -> (entry id -> entry json)
-	private Map<ResourceLocation, Map<ResourceLocation, JsonElement>> data;
+	private Map<Identifier, Map<Identifier, JsonElement>> data;
 
 	private BookContentResourceListenerLoader() {
 		super(ExtraCodecs.JSON, FileToIdConverter.json("patchouli_books"));
 	}
 
 	@Override
-	protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager manager, ProfilerFiller profiler) {
-		Map<ResourceLocation, Map<ResourceLocation, JsonElement>> data = new HashMap<>();
+	protected void apply(Map<Identifier, JsonElement> map, ResourceManager manager, ProfilerFiller profiler) {
+		Map<Identifier, Map<Identifier, JsonElement>> data = new HashMap<>();
 		for (var entry : map.entrySet()) {
 			// namespace:book_name/en_us/entries/entry
 			var key = entry.getKey();
@@ -52,7 +52,7 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 				PatchouliAPI.LOGGER.trace("Ignored file {}", key);
 				continue;
 			}
-			var bookId = ResourceLocation.fromNamespaceAndPath(key.getNamespace(), matcher.group("bookId"));
+			var bookId = Identifier.fromNamespaceAndPath(key.getNamespace(), matcher.group("bookId"));
 
 			data.computeIfAbsent(bookId, id -> new HashMap<>()).put(entry.getKey(), entry.getValue());
 		}
@@ -63,21 +63,21 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 	}
 
 	@Override
-	public void findFiles(Book book, String dir, List<ResourceLocation> list) {
+	public void findFiles(Book book, String dir, List<Identifier> list) {
 		var stopwatch = Stopwatch.createStarted();
 
 		var map = data.get(book.id);
 		if (map == null) {
 			return;
 		}
-		for (ResourceLocation id : map.keySet()) {
+		for (Identifier id : map.keySet()) {
 			var matcher = ID_READER.matcher(id.getPath());
 			if (!matcher.matches()) {
 				continue;
 			}
 			if (dir.equals(matcher.group("folder"))
 					&& BookContentsBuilder.DEFAULT_LANG.equals(matcher.group("lang"))) {
-				list.add(ResourceLocation.fromNamespaceAndPath(id.getNamespace(), matcher.group("entryId")));
+				list.add(Identifier.fromNamespaceAndPath(id.getNamespace(), matcher.group("entryId")));
 			}
 		}
 
@@ -86,7 +86,7 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 
 	@Nullable
 	@Override
-	public LoadResult loadJson(Book book, ResourceLocation file) {
+	public LoadResult loadJson(Book book, Identifier file) {
 		PatchouliAPI.LOGGER.trace("Loading {}", file);
 		var map = data.get(book.id);
 		if (map == null) {
@@ -96,7 +96,7 @@ public class BookContentResourceListenerLoader extends SimpleJsonResourceReloadL
 		// Drop patchouli_books/ and json suffix
 		String relativizedPath = path.substring(0, path.length() - 5).split("/", 2)[1];
 
-		JsonElement json = map.get(ResourceLocation.fromNamespaceAndPath(file.getNamespace(), relativizedPath));
+		JsonElement json = map.get(Identifier.fromNamespaceAndPath(file.getNamespace(), relativizedPath));
 		if (json != null) {
 			return new LoadResult(
 					json,

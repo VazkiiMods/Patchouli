@@ -3,7 +3,7 @@ package vazkii.patchouli.client.book;
 import com.google.common.base.Preconditions;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -27,9 +27,9 @@ public final class BookContentResourceDirectLoader implements BookContentLoader 
 	private BookContentResourceDirectLoader() {}
 
 	@Override
-	public void findFiles(Book book, String dir, List<ResourceLocation> list) {
+	public void findFiles(Book book, String dir, List<Identifier> list) {
 		String prefix = String.format("%s/%s/%s/%s", BookRegistry.BOOKS_LOCATION, book.id.getPath(), BookContentsBuilder.DEFAULT_LANG, dir);
-		Collection<ResourceLocation> files = Minecraft.getInstance().getResourceManager().listResources(prefix, p -> p.getPath().endsWith(".json")).keySet();
+		Collection<Identifier> files = Minecraft.getInstance().getResourceManager().listResources(prefix, p -> p.getPath().endsWith(".json")).keySet();
 
 		files.stream()
 				.distinct()
@@ -45,14 +45,14 @@ public final class BookContentResourceDirectLoader implements BookContentLoader 
 					if (newPath.startsWith("/")) {
 						newPath = newPath.substring(1);
 					}
-					return ResourceLocation.fromNamespaceAndPath(file.getNamespace(), newPath);
+					return Identifier.fromNamespaceAndPath(file.getNamespace(), newPath);
 				})
 				.forEach(list::add);
 	}
 
 	@Nullable
 	@Override
-	public LoadResult loadJson(Book book, ResourceLocation file) {
+	public LoadResult loadJson(Book book, Identifier file) {
 		PatchouliAPI.LOGGER.debug("Loading {}", file);
 		ResourceManager manager = Minecraft.getInstance().getResourceManager();
 		try {

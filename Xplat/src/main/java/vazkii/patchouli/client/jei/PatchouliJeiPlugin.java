@@ -9,7 +9,7 @@ import mezz.jei.api.runtime.IJeiRuntime;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.input.KeyEvent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 import vazkii.patchouli.api.PatchouliAPI;
@@ -23,7 +23,7 @@ import java.util.Map;
 
 @JeiPlugin
 public class PatchouliJeiPlugin implements IModPlugin {
-	private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, PatchouliAPI.MOD_ID);
+	private static final Identifier UID = Identifier.fromNamespaceAndPath(PatchouliAPI.MOD_ID, PatchouliAPI.MOD_ID);
 
 	private static final KeyMapping showRecipe, showUses;
 
@@ -40,7 +40,7 @@ public class PatchouliJeiPlugin implements IModPlugin {
 
 	@NotNull
 	@Override
-	public ResourceLocation getPluginUid() {
+	public Identifier getPluginUid() {
 		return UID;
 	}
 

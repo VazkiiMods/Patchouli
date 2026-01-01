@@ -3,7 +3,7 @@ package vazkii.patchouli.common.item;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
@@ -56,7 +56,7 @@ public class ItemModBook extends Item {
 		return forBook(book.id);
 	}
 
-	public static ItemStack forBook(ResourceLocation book) {
+	public static ItemStack forBook(Identifier book) {
 		ItemStack stack = new ItemStack(PatchouliItems.BOOK);
 
 		stack.set(PatchouliDataComponents.BOOK, book);
@@ -74,14 +74,14 @@ public class ItemModBook extends Item {
 	}
 
 	public static Book getBook(ItemStack stack) {
-		ResourceLocation res = getBookId(stack);
+		Identifier res = getBookId(stack);
 		if (res == null) {
 			return null;
 		}
 		return BookRegistry.INSTANCE.books.get(res);
 	}
 
-	private static ResourceLocation getBookId(ItemStack stack) {
+	private static Identifier getBookId(ItemStack stack) {
 		if (!stack.has(PatchouliDataComponents.BOOK)) {
 			return null;
 		}
@@ -103,7 +103,7 @@ public class ItemModBook extends Item {
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flag) {
 		super.appendHoverText(stack, context, tooltipDisplay, tooltip, flag);
 
-		ResourceLocation rl = getBookId(stack);
+		Identifier rl = getBookId(stack);
 		if (flag.isAdvanced()) {
 			tooltip.accept(Component.literal("Book ID: " + rl).withStyle(ChatFormatting.GRAY));
 		}

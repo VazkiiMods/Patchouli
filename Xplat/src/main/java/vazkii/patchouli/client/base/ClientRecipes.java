@@ -1,8 +1,8 @@
 package vazkii.patchouli.client.base;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -41,7 +41,7 @@ public final class ClientRecipes {
 		return (Collection<RecipeHolder<? extends T>>) (Collection) recipesByType.getOrDefault(type, List.of());
 	}
 
-	public <R extends Recipe<?>> @Nullable RecipeHolder<R> getRecipeById(ResourceLocation id) {
+	public <R extends Recipe<?>> @Nullable RecipeHolder<R> getRecipeById(Identifier id) {
 		return getRecipeById(ResourceKey.create(Registries.RECIPE, id));
 	}
 }

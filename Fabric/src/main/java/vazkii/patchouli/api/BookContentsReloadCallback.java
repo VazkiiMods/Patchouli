@@ -2,7 +2,7 @@ package vazkii.patchouli.api;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * This event is fired after a
@@ -16,5 +16,5 @@ public interface BookContentsReloadCallback {
 				}
 			});
 
-	void trigger(ResourceLocation book);
+	void trigger(Identifier book);
 }

@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 
@@ -50,7 +50,7 @@ public interface IMultiblock {
 	 * Sets the multiblock's ID. Not something you need to
 	 * call yourself as the register method in the main API class does it for you.
 	 */
-	IMultiblock setId(ResourceLocation res);
+	IMultiblock setId(Identifier res);
 
 	// ================================================================================================
 	// Getters
@@ -63,7 +63,7 @@ public interface IMultiblock {
 	 */
 	boolean isSymmetrical();
 
-	ResourceLocation getID();
+	Identifier getID();
 
 	// ================================================================================================
 	// Actual functionality

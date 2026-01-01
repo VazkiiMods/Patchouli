@@ -2,7 +2,7 @@ package vazkii.patchouli.neoforge.xplat;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -32,12 +32,12 @@ public class NeoForgeXplatImpl implements IXplatAbstractions {
 	private final Map<String, NeoForgeXplatModContainer> modCache = new HashMap<>();
 
 	@Override
-	public void fireDrawBookScreen(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics) {
+	public void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics) {
 		NeoForge.EVENT_BUS.post(new BookDrawScreenEvent(book, gui, mouseX, mouseY, partialTicks, graphics));
 	}
 
 	@Override
-	public void fireBookReload(ResourceLocation book) {
+	public void fireBookReload(Identifier book) {
 		NeoForge.EVENT_BUS.post(new BookContentsReloadEvent(book));
 	}
 
@@ -47,7 +47,7 @@ public class NeoForgeXplatImpl implements IXplatAbstractions {
 	}
 
 	@Override
-	public void sendOpenBookGui(ServerPlayer player, ResourceLocation book, @Nullable ResourceLocation entry, int page) {
+	public void sendOpenBookGui(ServerPlayer player, Identifier book, @Nullable Identifier entry, int page) {
 		NeoForgeNetworkHandler.sendOpenBook(player, book, entry, page);
 	}
 

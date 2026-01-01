@@ -1,14 +1,14 @@
 package vazkii.patchouli.client.book;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 
 import vazkii.patchouli.api.PatchouliAPI;
 
 public final class BookReloadHook implements ResourceManagerReloadListener {
-	public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "reload_hook");
+	public static final Identifier ID = Identifier.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "reload_hook");
 	public static final ResourceManagerReloadListener INSTANCE = new BookReloadHook();
 
 	@Override

@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.template.test;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -24,7 +24,7 @@ public class RecipeTestProcessor implements IComponentProcessor {
 	public void setup(Level level, IVariableProvider variables) {
 		// TODO probably add a recipe serializer?
 		String recipeId = variables.get("recipe", level.registryAccess()).asString();
-		RecipeHolder<Recipe<?>> recipe = ClientRecipes.INSTANCE.getRecipeById(ResourceLocation.parse(recipeId));
+		RecipeHolder<Recipe<?>> recipe = ClientRecipes.INSTANCE.getRecipeById(Identifier.parse(recipeId));
 		if (recipe == null) {
 			throw new IllegalArgumentException("No recipe with id " + recipeId + " found");
 		}

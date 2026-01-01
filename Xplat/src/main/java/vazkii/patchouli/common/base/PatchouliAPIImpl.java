@@ -7,7 +7,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
@@ -80,31 +80,31 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	public void openBookGUI(ServerPlayer player, ResourceLocation book) {
+	public void openBookGUI(ServerPlayer player, Identifier book) {
 		BookOpenTrigger.INSTANCE.trigger(player, book);
 		IXplatAbstractions.INSTANCE.sendOpenBookGui(player, book, null, 0);
 	}
 
 	@Override
-	public void openBookEntry(ServerPlayer player, ResourceLocation book, ResourceLocation entry, int page) {
+	public void openBookEntry(ServerPlayer player, Identifier book, Identifier entry, int page) {
 		BookOpenTrigger.INSTANCE.trigger(player, book, entry, page);
 		IXplatAbstractions.INSTANCE.sendOpenBookGui(player, book, entry, page);
 	}
 
 	@Override
-	public void openBookGUI(ResourceLocation book) {
+	public void openBookGUI(Identifier book) {
 		assertPhysicalClient();
 		ClientBookRegistry.INSTANCE.displayBookGui(book, null, 0);
 	}
 
 	@Override
-	public void openBookEntry(ResourceLocation book, ResourceLocation entry, int page) {
+	public void openBookEntry(Identifier book, Identifier entry, int page) {
 		assertPhysicalClient();
 		ClientBookRegistry.INSTANCE.displayBookGui(book, entry, page);
 	}
 
 	@Override
-	public ResourceLocation getOpenBookGui() {
+	public Identifier getOpenBookGui() {
 		assertPhysicalClient();
 		Screen gui = Minecraft.getInstance().screen;
 		if (gui instanceof GuiBook) {
@@ -115,7 +115,7 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 
 	@NotNull
 	@Override
-	public Component getSubtitle(@NotNull ResourceLocation bookId) {
+	public Component getSubtitle(@NotNull Identifier bookId) {
 		Book book = BookRegistry.INSTANCE.books.get(bookId);
 		if (book == null) {
 			throw new IllegalArgumentException("Book not found: " + bookId);
@@ -136,12 +136,12 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	public ItemStack getBookStack(ResourceLocation book) {
+	public ItemStack getBookStack(Identifier book) {
 		return ItemModBook.forBook(book);
 	}
 
 	@Override
-	public void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider) {
+	public void registerTemplateAsBuiltin(Identifier res, Supplier<InputStream> streamProvider) {
 		assertPhysicalClient();
 		InputStream testStream = streamProvider.get();
 		if (testStream == null) {
@@ -161,12 +161,12 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
-	public IMultiblock getMultiblock(ResourceLocation res) {
+	public IMultiblock getMultiblock(Identifier res) {
 		return MultiblockRegistry.MULTIBLOCKS.get(res);
 	}
 
 	@Override
-	public IMultiblock registerMultiblock(ResourceLocation res, IMultiblock mb) {
+	public IMultiblock registerMultiblock(Identifier res, IMultiblock mb) {
 		return MultiblockRegistry.registerMultiblock(res, mb);
 	}
 

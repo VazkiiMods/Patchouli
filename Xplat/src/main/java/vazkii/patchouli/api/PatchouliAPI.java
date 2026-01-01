@@ -4,7 +4,7 @@ import com.google.common.base.Suppliers;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
@@ -87,7 +87,7 @@ public class PatchouliAPI {
 		 * Sends a network message to the given player
 		 * to open the given book to the last page that was open, or the landing page otherwise.
 		 */
-		void openBookGUI(ServerPlayer player, ResourceLocation book);
+		void openBookGUI(ServerPlayer player, Identifier book);
 
 		/**
 		 * Sends a network message to the given player
@@ -95,23 +95,23 @@ public class PatchouliAPI {
 		 * 
 		 * @param page Zero-indexed page number
 		 */
-		void openBookEntry(ServerPlayer player, ResourceLocation book, ResourceLocation entry, int page);
+		void openBookEntry(ServerPlayer player, Identifier book, Identifier entry, int page);
 
 		/**
-		 * Client version of {@link #openBookGUI(ServerPlayer, ResourceLocation)}.
+		 * Client version of {@link #openBookGUI(ServerPlayer, Identifier)}.
 		 */
-		void openBookGUI(ResourceLocation book);
+		void openBookGUI(Identifier book);
 
 		/**
-		 * Client version of {@link #openBookEntry(ServerPlayer, ResourceLocation, ResourceLocation, int)}
+		 * Client version of {@link #openBookEntry(ServerPlayer, Identifier, Identifier, int)}
 		 */
-		void openBookEntry(ResourceLocation book, ResourceLocation entry, int page);
+		void openBookEntry(Identifier book, Identifier entry, int page);
 
 		/**
 		 * Returns the book ID of the currently open book, if any. Only works clientside.
 		 */
 		@Nullable
-		ResourceLocation getOpenBookGui();
+		Identifier getOpenBookGui();
 
 		/**
 		 * Works on both sides.
@@ -120,12 +120,12 @@ public class PatchouliAPI {
 		 *                                  page) of the book.
 		 * @throws IllegalArgumentException if the book id given cannot be found
 		 */
-		Component getSubtitle(ResourceLocation bookId);
+		Component getSubtitle(Identifier bookId);
 
 		/**
 		 * Returns a book item with its NBT set to the book passed in. Works on both sides.
 		 */
-		ItemStack getBookStack(ResourceLocation book);
+		ItemStack getBookStack(Identifier book);
 
 		/**
 		 * Register a template you made as a built in template to be used with all books
@@ -133,7 +133,7 @@ public class PatchouliAPI {
 		 * reads a full json file, containing a template.
 		 * Only works on client.
 		 */
-		void registerTemplateAsBuiltin(ResourceLocation res, Supplier<InputStream> streamProvider);
+		void registerTemplateAsBuiltin(Identifier res, Supplier<InputStream> streamProvider);
 
 		/**
 		 * Register a Patchouli command, of the type $(cmdname).
@@ -162,13 +162,13 @@ public class PatchouliAPI {
 		 * Gets a multiblock by its ID, or null if none exists for it.
 		 */
 		@Nullable
-		IMultiblock getMultiblock(ResourceLocation id);
+		IMultiblock getMultiblock(Identifier id);
 
 		/**
 		 * Registers a multiblock given its resource location. This takes care of both registering it
 		 * and setting its resource location to the one passed.
 		 */
-		IMultiblock registerMultiblock(ResourceLocation id, IMultiblock mb);
+		IMultiblock registerMultiblock(Identifier id, IMultiblock mb);
 
 		/**
 		 * @return The multiblock currently being visualized in-world or null if no multiblock is visualized. Only works

@@ -1,7 +1,7 @@
 package vazkii.patchouli.common.book;
 
-import net.minecraft.ResourceLocationException;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.IdentifierException;
+import net.minecraft.resources.Identifier;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.xplat.IXplatAbstractions;
@@ -37,10 +37,10 @@ public class BookFolderLoader {
 		}
 
 		for (File dir : subdirs) {
-			ResourceLocation res;
+			Identifier res;
 			try {
-				res = ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, dir.getName());
-			} catch (ResourceLocationException ex) {
+				res = Identifier.fromNamespaceAndPath(PatchouliAPI.MOD_ID, dir.getName());
+			} catch (IdentifierException ex) {
 				PatchouliAPI.LOGGER.error("Invalid external book folder name {}, skipping", dir.getName(), ex);
 				continue;
 			}

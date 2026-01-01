@@ -2,7 +2,7 @@ package vazkii.patchouli.xplat;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
  */
 public interface IXplatAbstractions {
 	// Events
-	void fireDrawBookScreen(ResourceLocation book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics);
-	void fireBookReload(ResourceLocation book);
+	void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics);
+	void fireBookReload(Identifier book);
 
 	// Networking
 	void sendReloadContentsMessage(MinecraftServer server);
-	void sendOpenBookGui(ServerPlayer player, ResourceLocation book, @Nullable ResourceLocation entry, int page);
+	void sendOpenBookGui(ServerPlayer player, Identifier book, @Nullable Identifier entry, int page);
 
 	// FML/FabricLoader-related
 	Collection<XplatModContainer> getAllMods();

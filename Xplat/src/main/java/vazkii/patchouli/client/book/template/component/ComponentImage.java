@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -25,11 +25,11 @@ public class ComponentImage extends TemplateComponent {
 
 	public float scale = 1F;
 
-	transient ResourceLocation resource;
+	transient Identifier resource;
 
 	@Override
 	public void build(BookContentsBuilder builder, BookPage page, BookEntry entry, int pageNum) {
-		resource = ResourceLocation.tryParse(image);
+		resource = Identifier.tryParse(image);
 	}
 
 	@Override

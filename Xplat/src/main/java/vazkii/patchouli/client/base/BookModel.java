@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.item.BlockModelWrapper;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -27,9 +27,9 @@ import java.util.Map;
 
 public class BookModel implements ItemModel {
 	private final ItemModel base;
-	private final Map<ResourceLocation, ItemModel> bookModels;
+	private final Map<Identifier, ItemModel> bookModels;
 
-	public BookModel(ItemModel base, Map<ResourceLocation, ItemModel> bookModels) {
+	public BookModel(ItemModel base, Map<Identifier, ItemModel> bookModels) {
 		this.base = base;
 		this.bookModels = bookModels;
 	}
@@ -48,7 +48,7 @@ public class BookModel implements ItemModel {
 	}
 
 	public record Unbaked(BlockModelWrapper.Unbaked base) implements ItemModel.Unbaked {
-		public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "book");
+		public static final Identifier ID = Identifier.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "book");
 		public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
 				BlockModelWrapper.Unbaked.MAP_CODEC.forGetter(Unbaked::base)
 		).apply(inst, Unbaked::new));
@@ -60,9 +60,9 @@ public class BookModel implements ItemModel {
 
 		@Override
 		public ItemModel bake(BakingContext context) {
-			Map<ResourceLocation, BlockModelWrapper.Unbaked> models = new HashMap<>();
+			Map<Identifier, BlockModelWrapper.Unbaked> models = new HashMap<>();
 			for (Book book : BookRegistry.INSTANCE.books.values()) {
-				ResourceLocation modelLoc = book.model;
+				Identifier modelLoc = book.model;
 				models.computeIfAbsent(modelLoc, loc -> new BlockModelWrapper.Unbaked(loc, List.of()));
 			}
 			return new BookModel(base().bake(context), Maps.transformValues(models, m -> m.bake(context)));

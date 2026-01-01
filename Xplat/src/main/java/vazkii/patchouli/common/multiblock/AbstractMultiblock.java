@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.EntityBlock;
@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractMultiblock implements IMultiblock, BlockAndTintGetter {
-	public ResourceLocation id;
+	public Identifier id;
 	protected int offX, offY, offZ;
 	protected int viewOffX, viewOffY, viewOffZ;
 	private boolean symmetrical;
@@ -71,12 +71,12 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockAndTintGet
 	}
 
 	@Override
-	public ResourceLocation getID() {
+	public Identifier getID() {
 		return id;
 	}
 
 	@Override
-	public IMultiblock setId(ResourceLocation res) {
+	public IMultiblock setId(Identifier res) {
 		this.id = res;
 		return this;
 	}
