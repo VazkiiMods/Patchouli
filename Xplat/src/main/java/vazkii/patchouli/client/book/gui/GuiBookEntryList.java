@@ -1,5 +1,7 @@
 package vazkii.patchouli.client.book.gui;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -9,7 +11,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-import org.lwjgl.glfw.GLFW;
+import org.jspecify.annotations.Nullable;
 
 import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
@@ -26,13 +28,13 @@ public abstract class GuiBookEntryList extends GuiBook {
 	public static final int ENTRIES_PER_PAGE = 13;
 	public static final int ENTRIES_IN_FIRST_PAGE = 11;
 
-	private BookTextRenderer text;
+	private @Nullable BookTextRenderer text;
 
 	protected final List<Button> entryButtons = new ArrayList<>();
-	private List<BookEntry> allEntries;
+	private final List<BookEntry> allEntries = new ArrayList<>();
 	private final List<BookEntry> visibleEntries = new ArrayList<>();
 
-	private EditBox searchField;
+	private @Nullable EditBox searchField;
 
 	public GuiBookEntryList(Book book, Component title) {
 		super(book, title);
@@ -44,7 +46,8 @@ public abstract class GuiBookEntryList extends GuiBook {
 
 		text = new BookTextRenderer(this, Component.literal(getDescriptionText()), LEFT_PAGE_X, TOP_PADDING + 22);
 
-		allEntries = new ArrayList<>(getEntries());
+		allEntries.clear();
+		allEntries.addAll(getEntries());
 		allEntries.removeIf(BookEntry::shouldHide);
 		if (shouldSortEntryList()) {
 			Collections.sort(allEntries);
@@ -93,6 +96,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 			drawSeparator(graphics, book, LEFT_PAGE_X, TOP_PADDING + 12);
 			drawSeparator(graphics, book, RIGHT_PAGE_X, TOP_PADDING + 12);
 
+			assert text != null;
 			text.render(graphics, mouseX, mouseY, partialTicks);
 			if (shouldDrawProgressBar()) {
 				drawProgressBar(graphics, book, mouseX, mouseY, this::doesEntryCountForProgress);
@@ -101,6 +105,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 			drawPageFiller(graphics, book);
 		}
 
+		assert searchField != null;
 		if (!searchField.getValue().isEmpty()) {
 			//RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 			drawFromTexture(graphics, book, searchField.getX() - 8, searchField.getY(), 140, 183, 99, 14);
@@ -130,6 +135,8 @@ public abstract class GuiBookEntryList extends GuiBook {
 
 	@Override
 	public boolean mouseClickedScaled(MouseButtonEvent event, boolean doubleClick) {
+		assert text != null;
+		assert searchField != null;
 		return text.click(event, doubleClick)
 				|| searchField.mouseClicked(new MouseButtonEvent(event.x() - bookLeft, event.y() - bookTop, event.buttonInfo()), doubleClick)
 				|| super.mouseClickedScaled(event, doubleClick);
@@ -137,6 +144,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 
 	@Override
 	public boolean charTyped(CharacterEvent event) {
+		assert searchField != null;
 		String currQuery = searchField.getValue();
 		if (searchField.charTyped(event)) {
 			if (!searchField.getValue().equals(currQuery)) {
@@ -151,9 +159,10 @@ public abstract class GuiBookEntryList extends GuiBook {
 
 	@Override
 	public boolean keyPressed(KeyEvent event) {
+		assert searchField != null;
 		String currQuery = searchField.getValue();
 
-		if (event.key() == GLFW.GLFW_KEY_ENTER) {
+		if (event.key() == InputConstants.KEY_RETURN) {
 			if (visibleEntries.size() == 1) {
 				displayLexiconGui(new GuiBookEntry(book, visibleEntries.getFirst()), true);
 				return true;
@@ -187,6 +196,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 		entryButtons.clear();
 		visibleEntries.clear();
 
+		assert searchField != null;
 		String query = searchField.getValue().toLowerCase();
 		allEntries.stream().filter((e) -> e.isFoundByQuery(query)).forEach(visibleEntries::add);
 
@@ -230,7 +240,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 
 	public String getSearchQuery() {
-		return searchField.getValue();
+		return searchField == null ? "" : searchField.getValue();
 	}
 
 }

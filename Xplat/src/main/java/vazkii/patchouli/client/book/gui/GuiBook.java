@@ -1,5 +1,6 @@
 package vazkii.patchouli.client.book.gui;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.datafixers.util.Pair;
 
@@ -24,8 +25,6 @@ import net.minecraft.util.ARGB;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
-
-import org.lwjgl.glfw.GLFW;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
@@ -303,22 +302,22 @@ public abstract class GuiBook extends Screen {
 
 	public boolean mouseClickedScaled(MouseButtonEvent event, boolean doubleClick) {
 		switch (event.button()) {
-		case GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
+		case InputConstants.MOUSE_BUTTON_LEFT -> {
 			if (targetPage != null && event.hasShiftDown()) {
 				displayLexiconGui(new GuiBookEntry(book, targetPage.getFirst(), targetPage.getSecond()), true);
 				playBookFlipSound(book);
 				return true;
 			}
 		}
-		case GLFW.GLFW_MOUSE_BUTTON_RIGHT -> {
+		case InputConstants.MOUSE_BUTTON_RIGHT -> {
 			back(true);
 			return true;
 		}
-		case GLFW.GLFW_MOUSE_BUTTON_4 -> {
+		case InputConstants.MOUSE_BUTTON_4 -> {
 			changePage(true, true);
 			return true;
 		}
-		case GLFW.GLFW_MOUSE_BUTTON_5 -> {
+		case InputConstants.MOUSE_BUTTON_5 -> {
 			changePage(false, true);
 			return true;
 		}
@@ -326,7 +325,7 @@ public abstract class GuiBook extends Screen {
 
 		for (GuiEventListener listener : children()) {
 			if (listener.mouseClicked(event, doubleClick)) {
-				if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+				if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
 					setDragging(true);
 				}
 				return true;
@@ -340,7 +339,7 @@ public abstract class GuiBook extends Screen {
 		if (Minecraft.getInstance().options.keyInventory.matches(event) && !this.canSeeBackButton()) {
 			this.onClose();
 			return true;
-		} else if (event.key() == GLFW.GLFW_KEY_BACKSPACE) {
+		} else if (event.key() == InputConstants.KEY_BACKSPACE) {
 			back(true);
 			return true;
 		} else if (tooltipStack != null && IXplatAbstractions.INSTANCE.handleRecipeKeybind(event.key(), event.scancode(), tooltipStack)) {

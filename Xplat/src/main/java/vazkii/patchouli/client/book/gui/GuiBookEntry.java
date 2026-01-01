@@ -10,9 +10,13 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
+import net.minecraft.world.level.Level;
+
+import org.jspecify.annotations.Nullable;
 
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.client.base.PersistentData;
@@ -22,9 +26,6 @@ import vazkii.patchouli.client.book.BookEntry;
 import vazkii.patchouli.client.book.BookPage;
 import vazkii.patchouli.common.book.Book;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,8 +33,8 @@ import java.util.stream.Collectors;
 public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	protected final BookEntry entry;
-	@Nullable private BookPage leftPage;
-	@Nullable private BookPage rightPage;
+	private @Nullable BookPage leftPage;
+	private @Nullable BookPage rightPage;
 
 	public GuiBookEntry(Book book, BookEntry entry) {
 		this(book, entry, 0);
@@ -74,7 +75,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 				data.history.remove(key);
 			}
 
-			data.history.add(0, key);
+			data.history.addFirst(key);
 			while (data.history.size() > GuiBookEntryList.ENTRIES_PER_PAGE) {
 				data.history.remove(GuiBookEntryList.ENTRIES_PER_PAGE);
 			}
@@ -177,15 +178,15 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	boolean isBookmarkedAlready() {
-		if (entry == null || entry.getId() == null) {
+		if (entry.getId() == null) {
 			return false;
 		}
 
-		String entryKey = entry.getId().toString();
+		Identifier entryKey = entry.getId();
 		BookData data = PersistentData.data.getBookData(book);
 
 		for (Bookmark bookmark : data.bookmarks) {
-			if (bookmark.entry.equals(entryKey) && bookmark.spread == spread) {
+			if (bookmark.entry().equals(entryKey) && bookmark.spread() == spread) {
 				return true;
 			}
 		}
@@ -210,8 +211,8 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 			BookData data = PersistentData.data.getBookData(book);
 
 			if (gui.isBookmarkedAlready()) {
-				String key = entry.getId().toString();
-				data.bookmarks.removeIf((bm) -> bm.entry.equals(key) && bm.spread == 0);
+				Identifier key = entry.getId();
+				data.bookmarks.removeIf((bm) -> bm.entry().equals(key) && bm.spread() == 0);
 				PersistentData.save();
 				currGui.needsBookmarkUpdate = true;
 				return;
@@ -251,7 +252,12 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 
 	@Override
 	public void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
-		List<ItemStack> stacks = ingr.display().resolveForStacks(SlotDisplayContext.fromLevel(Minecraft.getInstance().level));
+		Level level = Minecraft.getInstance().level;
+		if (level == null) {
+			return;
+		}
+		ContextMap context = SlotDisplayContext.fromLevel(level);
+		List<ItemStack> stacks = ingr.display().resolveForStacks(context);
 		if (!stacks.isEmpty()) {
 			renderItemStack(graphics, x, y, mouseX, mouseY, stacks.get((ticksInBook / 20) % stacks.size()));
 		}
@@ -263,7 +269,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public void setHoverTooltipComponents(@NotNull List<Component> tooltip) {
+	public void setHoverTooltipComponents(List<Component> tooltip) {
 		setTooltip(tooltip);
 	}
 

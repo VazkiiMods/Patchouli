@@ -85,7 +85,7 @@ public class GuiButtonEntry extends Button {
 
 	@Override
 	public void playDownSound(SoundManager soundHandlerIn) {
-		if (entry != null && !entry.isLocked()) {
+		if (!entry.isLocked()) {
 			GuiBook.playBookFlipSound(parent.book);
 		}
 	}

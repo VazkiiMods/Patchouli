@@ -7,6 +7,9 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+
+import org.jspecify.annotations.Nullable;
 
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.book.BookCategory;
@@ -17,8 +20,6 @@ import vazkii.patchouli.client.book.gui.button.GuiButtonCategory;
 import vazkii.patchouli.client.book.gui.button.GuiButtonEntry;
 import vazkii.patchouli.client.gui.GuiAdvancementsExt;
 import vazkii.patchouli.common.book.Book;
-
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,7 +33,7 @@ public class GuiBookLanding extends GuiBook {
 	int loadedCategories = 0;
 
 	final List<Button> pamphletEntryButtons = new ArrayList<>();
-	List<BookEntry> entriesInPamphlet;
+	final List<BookEntry> entriesInPamphlet = new ArrayList<>();
 
 	public GuiBookLanding(Book book) {
 		super(book, Component.translatable(book.name));
@@ -66,7 +67,8 @@ public class GuiBookLanding extends GuiBook {
 					Component.translatable("patchouli.gui.lexicon.button.advancements")));
 		}
 
-		if (Minecraft.getInstance().player.isCreative()) {
+		Player player = Minecraft.getInstance().player;
+		if (player != null && player.isCreative()) {
 			addRenderableWidget(new GuiButtonBook(this, x + (pos++) * dist, y, 308, 9, 11, 11, this::handleButtonEdit,
 					Component.translatable("patchouli.gui.lexicon.button.editor"),
 					Component.translatable("patchouli.gui.lexicon.button.editor.info").withStyle(ChatFormatting.GRAY)));
@@ -88,7 +90,8 @@ public class GuiBookLanding extends GuiBook {
 			addCategoryButton(i, null);
 			loadedCategories = i + 1;
 		} else {
-			entriesInPamphlet = new ArrayList<>(book.getContents().entries.values());
+			entriesInPamphlet.clear();
+			entriesInPamphlet.addAll(book.getContents().entries.values());
 			entriesInPamphlet.removeIf(BookEntry::shouldHide);
 			Collections.sort(entriesInPamphlet);
 			buildEntryButtons();
@@ -100,7 +103,7 @@ public class GuiBookLanding extends GuiBook {
 
 	}
 
-	private void addCategoryButton(int i, BookCategory category) {
+	private void addCategoryButton(int i, @Nullable BookCategory category) {
 		int x = RIGHT_PAGE_X + 10 + (i % 4) * 24;
 		int y = TOP_PADDING + 25 + (i / 4) * 24;
 
@@ -221,6 +224,9 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	private void handleButtonAdvancements(Button button) {
+		if (minecraft.player == null) {
+			return;
+		}
 		minecraft.setScreen(new GuiAdvancementsExt(minecraft.player.connection.getAdvancements(), this, book.advancementsTab));
 	}
 
@@ -230,7 +236,9 @@ public class GuiBookLanding extends GuiBook {
 			book.reloadContents(minecraft.level, true);
 			book.reloadLocks(false);
 			displayLexiconGui(new GuiBookLanding(book), false);
-			minecraft.player.displayClientMessage(Component.translatable("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)), false);
+			if (minecraft.player != null) {
+				minecraft.player.displayClientMessage(Component.translatable("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)), false);
+			}
 		} else {
 			displayLexiconGui(new GuiBookWriter(book), true);
 		}

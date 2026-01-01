@@ -7,19 +7,19 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.ARGB;
 
+import org.jspecify.annotations.Nullable;
+
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookCategory;
 import vazkii.patchouli.client.book.BookIcon;
 import vazkii.patchouli.client.book.gui.GuiBook;
-
-import org.jetbrains.annotations.Nullable;
 
 public class GuiButtonCategory extends Button {
 
 	private static final int ANIM_TIME = 5;
 
 	private final GuiBook parent;
-	@Nullable private BookCategory category;
+	private @Nullable BookCategory category;
 	private final BookIcon icon;
 	private final Component name;
 	private final int u, v;
@@ -84,7 +84,7 @@ public class GuiButtonCategory extends Button {
 		}
 	}
 
-	public BookCategory getCategory() {
+	public @Nullable BookCategory getCategory() {
 		return category;
 	}
 

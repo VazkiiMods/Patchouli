@@ -33,7 +33,7 @@ public class GuiButtonBookResize extends GuiButtonBook {
 				sizeMsg = Component.translatable("patchouli.gui.lexicon.button.resize.verybig.container", sizeMsg);
 			}
 		}
-		return Arrays.asList(tooltip.get(0), sizeMsg.withStyle(ChatFormatting.GRAY));
+		return Arrays.asList(tooltip.getFirst(), sizeMsg.withStyle(ChatFormatting.GRAY));
 	}
 
 }
