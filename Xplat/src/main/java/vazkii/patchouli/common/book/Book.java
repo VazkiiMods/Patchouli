@@ -5,6 +5,8 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -255,7 +257,7 @@ public class Book {
 		if (indexIconRaw == null || indexIconRaw.isEmpty()) {
 			return new BookIcon.StackIcon(getBookItem());
 		} else {
-			return BookIcon.from(indexIconRaw);
+			return BookIcon.from(indexIconRaw, RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY));
 		}
 	}
 

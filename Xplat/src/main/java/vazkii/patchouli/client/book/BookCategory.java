@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book;
 import com.google.common.collect.Streams;
 import com.google.gson.JsonObject;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -39,12 +40,12 @@ public final class BookCategory extends AbstractReadStateHolder implements Compa
 	private boolean built;
 	// End mutable state
 
-	public BookCategory(JsonObject root, ResourceLocation id, Book book) {
+	public BookCategory(JsonObject root, ResourceLocation id, Book book, HolderLookup.Provider registries) {
 		this.book = book;
 		this.id = id;
 		this.name = GsonHelper.getAsString(root, "name");
 		this.description = GsonHelper.getAsString(root, "description");
-		this.icon = BookIcon.from(GsonHelper.getAsString(root, "icon"));
+		this.icon = BookIcon.from(GsonHelper.getAsString(root, "icon"), registries);
 		this.parent = GsonHelper.getAsString(root, "parent", null);
 		this.flag = GsonHelper.getAsString(root, "flag", "");
 		this.sortnum = GsonHelper.getAsInt(root, "sortnum", 0);
