@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonObject;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -62,7 +63,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 	private boolean built;
 	// End mutable state
 
-	public BookEntry(JsonObject root, ResourceLocation id, Book book, @Nullable String addedBy) {
+	public BookEntry(JsonObject root, ResourceLocation id, Book book, @Nullable String addedBy, HolderLookup.Provider registries) {
 		this.id = id;
 		this.book = book;
 		this.addedBy = addedBy;
@@ -77,7 +78,7 @@ public final class BookEntry extends AbstractReadStateHolder implements Comparab
 
 		this.name = GsonHelper.getAsString(root, "name");
 		this.flag = GsonHelper.getAsString(root, "flag", "");
-		this.icon = BookIcon.from(GsonHelper.getAsString(root, "icon"));
+		this.icon = BookIcon.from(GsonHelper.getAsString(root, "icon"), registries);
 		this.priority = GsonHelper.getAsBoolean(root, "priority", false);
 		this.secret = GsonHelper.getAsBoolean(root, "secret", false);
 		this.readByDefault = GsonHelper.getAsBoolean(root, "read_by_default", false);

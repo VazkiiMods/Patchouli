@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.mojang.datafixers.util.Pair;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
@@ -40,7 +41,7 @@ public class BookContentsBuilder {
 
 	private interface LoadFunc<T> {
 		@Nullable
-		T load(Book book, BookContentLoader loader, ResourceLocation id, ResourceLocation file);
+		T load(Book book, BookContentLoader loader, ResourceLocation id, ResourceLocation file, HolderLookup.Provider registries);
 	}
 
 	private BookContentsBuilder(Book book, boolean singleBookReload) {
@@ -71,16 +72,17 @@ public class BookContentsBuilder {
 	public static BookContents loadAndBuildFor(Level level, Book book, boolean singleBookReload) {
 		BookContentsBuilder builder = new BookContentsBuilder(book, singleBookReload);
 		SerializationUtil.VARIABLE_SERIALIZER.setRegistries(level.registryAccess());
-		builder.loadFiles();
+		builder.loadFiles(level.registryAccess());
 		return builder.build(level);
 	}
 
-	private void loadFiles() {
-		load("categories", BookContentsBuilder::loadCategory, categories);
+	private void loadFiles(HolderLookup.Provider registries) {
+		load("categories", BookContentsBuilder::loadCategory, categories, registries);
 		load("entries",
-				(b, l, id, file) -> BookContentsBuilder.loadEntry(b, l, id, file, categories::get),
-				entries);
-		load("templates", BookContentsBuilder::loadTemplate, templates);
+				(b, l, id, file, r) -> BookContentsBuilder.loadEntry(b, l, id, file, categories::get, r),
+				entries,
+				registries);
+		load("templates", BookContentsBuilder::loadTemplate, templates, registries);
 	}
 
 	private BookContents build(Level level) {
@@ -118,7 +120,7 @@ public class BookContentsBuilder {
 		);
 	}
 
-	private <T> void load(String thing, LoadFunc<T> loader, Map<ResourceLocation, T> builder) {
+	private <T> void load(String thing, LoadFunc<T> loader, Map<ResourceLocation, T> builder, HolderLookup.Provider registries) {
 		BookContentLoader contentLoader = getContentLoader();
 		List<ResourceLocation> foundIds = new ArrayList<>();
 		contentLoader.findFiles(book, thing, foundIds);
@@ -126,7 +128,7 @@ public class BookContentsBuilder {
 		for (ResourceLocation id : foundIds) {
 			String filePath = String.format("%s/%s/%s/%s/%s.json",
 					BookRegistry.BOOKS_LOCATION, book.id.getPath(), DEFAULT_LANG, thing, id.getPath());
-			T value = loader.load(book, contentLoader, id, ResourceLocation.fromNamespaceAndPath(id.getNamespace(), filePath));
+			T value = loader.load(book, contentLoader, id, ResourceLocation.fromNamespaceAndPath(id.getNamespace(), filePath), registries);
 			if (value != null) {
 				builder.put(id, value);
 			}
@@ -144,10 +146,10 @@ public class BookContentsBuilder {
 	}
 
 	@Nullable
-	private static BookCategory loadCategory(Book book, BookContentLoader loader, ResourceLocation id, ResourceLocation file) {
+	private static BookCategory loadCategory(Book book, BookContentLoader loader, ResourceLocation id, ResourceLocation file, HolderLookup.Provider registries) {
 		BookContentLoader.LoadResult result = loadLocalizedJson(book, loader, file);
 		// TODO: Render the "added by" text in the category UI somewhere
-		var category = new BookCategory(result.json().getAsJsonObject(), id, book);
+		var category = new BookCategory(result.json().getAsJsonObject(), id, book, registries);
 		if (category.canAdd()) {
 			return category;
 		}
@@ -156,9 +158,9 @@ public class BookContentsBuilder {
 
 	@Nullable
 	private static BookEntry loadEntry(Book book, BookContentLoader loader, ResourceLocation id,
-			ResourceLocation file, Function<ResourceLocation, BookCategory> categories) {
+			ResourceLocation file, Function<ResourceLocation, BookCategory> categories, HolderLookup.Provider registries) {
 		BookContentLoader.LoadResult result = loadLocalizedJson(book, loader, file);
-		var entry = new BookEntry(result.json().getAsJsonObject(), id, book, result.addedBy());
+		var entry = new BookEntry(result.json().getAsJsonObject(), id, book, result.addedBy(), registries);
 
 		if (entry.canAdd()) {
 			entry.initCategory(file, categories);
@@ -167,7 +169,7 @@ public class BookContentsBuilder {
 		return null;
 	}
 
-	private static Supplier<BookTemplate> loadTemplate(Book book, BookContentLoader loader, ResourceLocation key, ResourceLocation res) {
+	private static Supplier<BookTemplate> loadTemplate(Book book, BookContentLoader loader, ResourceLocation key, ResourceLocation res, HolderLookup.Provider registries) {
 		JsonElement json = loadLocalizedJson(book, loader, res).json();
 
 		Supplier<BookTemplate> supplier = () -> ClientBookRegistry.INSTANCE.gson.fromJson(json, BookTemplate.class);
