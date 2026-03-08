@@ -17,6 +17,8 @@ import vazkii.patchouli.client.base.*;
 import vazkii.patchouli.client.book.BookContentResourceListenerLoader;
 import vazkii.patchouli.client.book.BookReloadHook;
 import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.client.multiblock.MultiblockPiPRenderState;
+import vazkii.patchouli.client.multiblock.MultiblockPiPRenderer;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.handler.TooltipHandler;
@@ -72,6 +74,9 @@ public class NeoForgeClientInitializer {
 		modBus.addListener((RegisterGuiLayersEvent e) -> {
 			e.registerAbove(VanillaGuiLayers.CROSSHAIR, BookOverlayHud.ID, BookOverlayHud::render);
 			e.registerBelow(VanillaGuiLayers.BOSS_OVERLAY, MultiblockProgressHud.ID, MultiblockProgressHud::render);
+		});
+		modBus.addListener((RegisterPictureInPictureRenderersEvent e) -> {
+			e.register(MultiblockPiPRenderState.class, bufferSource -> new MultiblockPiPRenderer(bufferSource, Minecraft.getInstance(), Minecraft.getInstance().gameRenderer.getSubmitNodeStorage()));
 		});
 	}
 

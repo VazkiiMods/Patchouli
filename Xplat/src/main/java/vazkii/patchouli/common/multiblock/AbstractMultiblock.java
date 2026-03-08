@@ -17,6 +17,7 @@ import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
+import net.minecraft.world.phys.AABB;
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.TriPredicate;
 import vazkii.patchouli.common.util.RotationUtil;
@@ -184,5 +185,9 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockAndTintGet
 	@Override
 	public int getMinY() {
 		return 0;
+	}
+
+	public AABB getBounds() {
+		return new AABB(0, 0, 0, getSize().getX(), getSize().getY(), getSize().getZ());
 	}
 }

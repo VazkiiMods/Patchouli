@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.recipe.v1.sync.ClientRecipeSynchronizedEvent;
+import net.fabricmc.fabric.api.client.rendering.v1.SpecialGuiElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -16,6 +17,7 @@ import vazkii.patchouli.client.base.*;
 import vazkii.patchouli.client.book.BookContentResourceListenerLoader;
 import vazkii.patchouli.client.book.BookReloadHook;
 import vazkii.patchouli.client.book.ClientBookRegistry;
+import vazkii.patchouli.client.multiblock.MultiblockPiPRenderer;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.hud.BookOverlayHud;
@@ -48,5 +50,6 @@ public class FabricClientInitializer implements ClientModInitializer {
 		ClientRecipeSynchronizedEvent.EVENT.register((minecraft, synchronizedRecipes) -> {
 			ClientRecipes.INSTANCE.receivedRecipes(synchronizedRecipes.recipes());
 		});
+		SpecialGuiElementRegistry.register(ctx -> new MultiblockPiPRenderer(ctx.vertexConsumers(), ctx.client(), ctx.orderedRenderCommandQueue()));
 	}
 }

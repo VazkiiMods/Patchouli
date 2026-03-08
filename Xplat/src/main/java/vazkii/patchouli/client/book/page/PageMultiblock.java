@@ -2,13 +2,15 @@ package vazkii.patchouli.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
 
+import com.mojang.math.Axis;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 
+import org.joml.Vector3f;
 import vazkii.patchouli.api.IMultiblock;
+import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
 import vazkii.patchouli.client.book.BookContentsBuilder;
@@ -21,9 +23,9 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
+import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
 public class PageMultiblock extends PageWithText {
-	private static final RandomSource RAND = RandomSource.createNewThreadLocalInstance();
 
 	String name = "";
 	@SerializedName("multiblock_id") Identifier multiblockId;
@@ -73,15 +75,18 @@ public class PageMultiblock extends PageWithText {
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
-		//RenderSystem.enableBlend();
-		//graphics.setColor(1F, 1F, 1F, 1F);
 		GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
 
 		parent.drawCenteredStringNoShadow(graphics, i18n(name), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 
-		//if (multiblockObj != null) {
-		//	renderMultiblock(graphics);
-		//}
+		if (multiblockObj != null) {
+
+			float time = parent.ticksInBook * 0.5F;
+			if (!mc.hasShiftDown()) {
+				time += ClientTicker.partialTicks;
+			}
+			IClientXplatAbstractions.INSTANCE.submitMultiblockPiP(graphics, multiblockObj, 1, new Vector3f(), Axis.YP.rotationDegrees(time).mul(Axis.YP.rotationDegrees(45)), 0, 0,  106, 106);
+		}
 
 		super.render(graphics, mouseX, mouseY, pticks);
 	}
@@ -97,123 +102,4 @@ public class PageMultiblock extends PageWithText {
 			PersistentData.save();
 		}
 	}
-
-	// TODO multiblock PiP
-/*
-	private void renderMultiblock(GuiGraphics graphics) {
-		multiblockObj.setWorld(mc.level);
-		Vec3i size = multiblockObj.getSize();
-		int sizeX = size.getX();
-		int sizeY = size.getY();
-		int sizeZ = size.getZ();
-		float maxX = 90;
-		float maxY = 90;
-		float diag = (float) Math.sqrt(sizeX * sizeX + sizeZ * sizeZ);
-		float scaleX = maxX / diag;
-		float scaleY = maxY / sizeY;
-		float scale = -Math.min(scaleX, scaleY);
-
-		int xPos = GuiBook.PAGE_WIDTH / 2;
-		int yPos = 60;
-		graphics.pose().pushPose();
-		graphics.pose().translate(xPos, yPos, 100);
-		graphics.pose().scale(scale, scale, scale);
-		graphics.pose().translate(-(float) sizeX / 2, -(float) sizeY / 2, 0);
-
-		// Initial eye pos somewhere off in the distance in the -Z direction
-		Vector4f eye = new Vector4f(0, 0, -100, 1);
-		Matrix4f rotMat = new Matrix4f();
-		rotMat.identity();
-
-		// For each GL rotation done, track the opposite to keep the eye pos accurate
-		graphics.pose().mulPose(Axis.XP.rotationDegrees(-30F));
-		rotMat.rotation(Axis.XP.rotationDegrees(30));
-
-		float offX = (float) -sizeX / 2;
-		float offZ = (float) -sizeZ / 2 + 1;
-
-		float time = parent.ticksInBook * 0.5F;
-		if (!Screen.hasShiftDown()) {
-			time += ClientTicker.partialTicks;
-		}
-		graphics.pose().translate(-offX, 0, -offZ);
-		graphics.pose().mulPose(Axis.YP.rotationDegrees(time));
-		rotMat.rotation(Axis.YP.rotationDegrees(-time));
-		graphics.pose().mulPose(Axis.YP.rotationDegrees(45));
-		rotMat.rotation(Axis.YP.rotationDegrees(-45));
-		graphics.pose().translate(offX, 0, offZ);
-
-		// Finally apply the rotations
-		eye.mul(rotMat);
-		//eye.perspectiveDivide();//TODO find what replaces this
-		// TODO XXX This does not handle visualization of sparse multiblocks correctly.
-		//	Dense multiblocks store everything in positive X/Z, so this works, but sparse multiblocks store everything from the JSON as-is.
-		//	Potential solution: Rotate around the offset vars of the multiblock, and add AABB method for extent of the multiblock
-
-		renderElements(graphics, multiblockObj, BlockPos.betweenClosed(BlockPos.ZERO, new BlockPos(sizeX - 1, sizeY - 1, sizeZ - 1)), eye);
-
-		graphics.pose().popPose();
-	}
-
-	private void renderElements(GuiGraphics graphics, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, Vector4f eye) {
-		graphics.pose().pushPose();
-		graphics.setColor(1F, 1F, 1F, 1F);
-		graphics.pose().translate(0, 0, -1);
-
-		MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-		doWorldRenderPass(graphics, mb, blocks, buffers, eye);
-		doTileEntityRenderPass(graphics, mb, blocks, buffers, eye);
-
-		// todo 1.15 transparency sorting
-		buffers.endBatch();
-		graphics.pose().popPose();
-	}
-
-	private void doWorldRenderPass(GuiGraphics graphics, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, final @NotNull MultiBufferSource.BufferSource buffers, Vector4f eye) {
-		for (BlockPos pos : blocks) {
-			BlockState bs = mb.getBlockState(pos);
-			graphics.pose().pushPose();
-			graphics.pose().translate(pos.getX(), pos.getY(), pos.getZ());
-
-			final FluidState fluidState = bs.getFluidState();
-			final BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
-			if (!fluidState.isEmpty()) {
-				final RenderType layer = ItemBlockRenderTypes.getRenderLayer(fluidState);
-				final VertexConsumer buffer = buffers.getBuffer(layer);
-				blockRenderer.renderLiquid(pos, mb, new LiquidBlockVertexConsumer(buffer, graphics.pose(), pos), bs, fluidState);
-			}
-			IClientXplatAbstractions.INSTANCE.renderForMultiblock(bs, pos, mb, graphics.pose(), buffers, RAND);
-			graphics.pose().popPose();
-		}
-	}
-
-	// Hold errored TEs weakly, this may cause some dupe errors but will prevent spamming it every frame
-	private final transient Set<BlockEntity> erroredTiles = Collections.newSetFromMap(new WeakHashMap<>());
-
-	private void doTileEntityRenderPass(GuiGraphics graphics, AbstractMultiblock mb, Iterable<? extends BlockPos> blocks, MultiBufferSource buffers, Vector4f eye) {
-		for (BlockPos pos : blocks) {
-			BlockEntity te = mb.getBlockEntity(pos);
-			if (te != null && !erroredTiles.contains(te)) {
-				// Doesn't take pos anymore, maybe a problem?
-				te.setLevel(mc.level);
-
-				// fake cached state in case the renderer checks it as we don't want to query the actual world
-				te.setBlockState(mb.getBlockState(pos));
-
-				graphics.pose().pushPose();
-				graphics.pose().translate(pos.getX(), pos.getY(), pos.getZ());
-				try {
-					BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(te);
-					if (renderer != null) {
-						renderer.render(te, ClientTicker.partialTicks, graphics.pose(), buffers, 0xF000F0, OverlayTexture.NO_OVERLAY);
-					}
-				} catch (Exception e) {
-					erroredTiles.add(te);
-					PatchouliAPI.LOGGER.error("An exception occured rendering tile entity", e);
-				} finally {
-					graphics.pose().popPose();
-				}
-			}
-		}
-	}*/
 }
