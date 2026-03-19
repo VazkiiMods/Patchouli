@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.JsonOps;
 
+import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.commands.arguments.item.ItemParser;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -43,7 +44,7 @@ public final class ItemStackUtil {
 		StringReader reader = new StringReader(string.trim());
 		ItemParser itemParser = new ItemParser(registries);
 		try {
-			ItemParser.ItemResult result = itemParser.parse(reader);
+			ItemInput result = itemParser.parse(reader);
 			int count = 1;
 			if (reader.canRead()) {
 				reader.expect('#');

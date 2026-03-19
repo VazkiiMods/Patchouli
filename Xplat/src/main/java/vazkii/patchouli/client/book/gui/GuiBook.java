@@ -6,7 +6,7 @@ import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -123,7 +123,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		graphics.pose().pushMatrix();
 		if (scaleFactor != 1) {
 			graphics.pose().scale(scaleFactor, scaleFactor);
@@ -136,7 +136,7 @@ public abstract class GuiBook extends Screen {
 		graphics.pose().popMatrix();
 	}
 
-	private void drawScreenAfterScale(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	private void drawScreenAfterScale(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		resetTooltip();
 
 		graphics.pose().pushMatrix();
@@ -145,7 +145,7 @@ public abstract class GuiBook extends Screen {
 		drawForegroundElements(graphics, mouseX, mouseY, partialTicks);
 		graphics.pose().popMatrix();
 
-		super.render(graphics, mouseX, mouseY, partialTicks);
+		super.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 
 		IXplatAbstractions.INSTANCE.fireDrawBookScreen(this.book.id, this, mouseX, mouseY, partialTicks, graphics);
 
@@ -153,9 +153,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	@Override
-	public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-
-	}
+	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {}
 
 	public void addBookmarkButtons() {
 		removeDrawablesIf((b) -> b instanceof GuiButtonBookBookmark);
@@ -226,13 +224,13 @@ public abstract class GuiBook extends Screen {
 		}
 	}
 
-	final void drawBackgroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	final void drawBackgroundElements(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		drawFromTexture(graphics, book, 0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT);
 	}
 
-	void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {}
+	void drawForegroundElements(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {}
 
-	final void drawTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+	final void drawTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
 		if (tooltipStack != null) {
 			List<Component> tooltip = Screen.getTooltipFromItem(this.minecraft, tooltipStack);
 
@@ -245,9 +243,9 @@ public abstract class GuiBook extends Screen {
 				tooltip.add(t);
 				targetPage = provider;
 			}
-			graphics.renderTooltip(this.font, tooltip.stream().map(Component::getVisualOrderText).map(ClientTooltipComponent::create).toList(), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
+			graphics.tooltip(this.font, tooltip.stream().map(Component::getVisualOrderText).map(ClientTooltipComponent::create).toList(), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
 		} else if (tooltip != null && !tooltip.isEmpty()) {
-			graphics.renderTooltip(this.font, tooltip.stream().map(Component::getVisualOrderText).map(ClientTooltipComponent::create).toList(), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
+			graphics.tooltip(this.font, tooltip.stream().map(Component::getVisualOrderText).map(ClientTooltipComponent::create).toList(), mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
 		}
 	}
 
@@ -257,11 +255,11 @@ public abstract class GuiBook extends Screen {
 		targetPage = null;
 	}
 
-	public static void drawFromTexture(GuiGraphics graphics, Book book, int x, int y, int u, int v, int w, int h, int c) {
+	public static void drawFromTexture(GuiGraphicsExtractor graphics, Book book, int x, int y, int u, int v, int w, int h, int c) {
 		graphics.blit(RenderPipelines.GUI_TEXTURED, book.bookTexture, x, y, u, v, w, h, 512, 256, c);
 	}
 
-	public static void drawFromTexture(GuiGraphics graphics, Book book, int x, int y, int u, int v, int w, int h) {
+	public static void drawFromTexture(GuiGraphicsExtractor graphics, Book book, int x, int y, int u, int v, int w, int h) {
 		graphics.blit(RenderPipelines.GUI_TEXTURED, book.bookTexture, x, y, u, v, w, h, 512, 256);
 	}
 
@@ -290,7 +288,7 @@ public abstract class GuiBook extends Screen {
 				PersistentData.save();
 				needsBookmarkUpdate = true;
 			} else {
-				displayLexiconGui(new GuiBookEntry(book, bookmark.getEntry(book), bookmark.spread), true);
+				displayLexiconGui(new GuiBookEntry(book, bookmark.getEntry(book), bookmark.spread()), true);
 			}
 		}
 	}
@@ -442,7 +440,7 @@ public abstract class GuiBook extends Screen {
 		return absY - bookTop;
 	}
 
-	public void drawProgressBar(GuiGraphics graphics, Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
+	public void drawProgressBar(GuiGraphicsExtractor graphics, Book book, int mouseX, int mouseY, Predicate<BookEntry> filter) {
 		if (!book.showProgress || !book.advancementsEnabled()) {
 			return;
 		}
@@ -485,7 +483,7 @@ public abstract class GuiBook extends Screen {
 		drawGradient(graphics, barLeft + 1, barTop + 1, barLeft + barWidth - 1, barTop + barHeight - 1, book.progressBarBackground);
 		drawGradient(graphics, barLeft + 1, barTop + 1, barLeft + progressWidth, barTop + barHeight - 1, book.progressBarColor);
 
-		graphics.drawString(this.font, Component.translatable("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor, false);
+		graphics.text(this.font, Component.translatable("patchouli.gui.lexicon.progress_meter"), barLeft, barTop - 9, book.headerColor, false);
 
 		if (isMouseInRelativeRange(mouseX, mouseY, barLeft, barTop, barWidth, barHeight)) {
 			List<Component> tooltip = new ArrayList<>();
@@ -508,17 +506,17 @@ public abstract class GuiBook extends Screen {
 		}
 	}
 
-	private void drawGradient(GuiGraphics graphics, int x, int y, int w, int h, int color) {
+	private void drawGradient(GuiGraphicsExtractor graphics, int x, int y, int w, int h, int color) {
 		int darkerColor = new Color(color).darker().getRGB();
 		graphics.fillGradient(x, y, w, h, color, darkerColor);
 	}
 
-	public void drawCenteredStringNoShadow(GuiGraphics graphics, FormattedCharSequence s, int x, int y, int color) {
-		graphics.drawString(font, s, x - font.width(s) / 2, y, color, false);
+	public void drawCenteredStringNoShadow(GuiGraphicsExtractor graphics, FormattedCharSequence s, int x, int y, int color) {
+		graphics.text(font, s, x - font.width(s) / 2, y, color, false);
 	}
 
-	public void drawCenteredStringNoShadow(GuiGraphics graphics, String s, int x, int y, int color) {
-		graphics.drawString(font, s, x - font.width(s) / 2, y, color, false);
+	public void drawCenteredStringNoShadow(GuiGraphicsExtractor graphics, String s, int x, int y, int color) {
+		graphics.text(font, s, x - font.width(s) / 2, y, color, false);
 	}
 
 	private int getMaxAllowedScale() {
@@ -529,7 +527,7 @@ public abstract class GuiBook extends Screen {
 		return spread;
 	}
 
-	public static void drawSeparator(GuiGraphics graphics, Book book, int x, int y) {
+	public static void drawSeparator(GuiGraphicsExtractor graphics, Book book, int x, int y) {
 		int w = 110;
 		int h = 3;
 		int rx = x + PAGE_WIDTH / 2 - w / 2;
@@ -537,11 +535,11 @@ public abstract class GuiBook extends Screen {
 		drawFromTexture(graphics, book, rx, y, 140, 180, w, h, ARGB.color(0.8f, 0xffffff));
 	}
 
-	public static void drawLock(GuiGraphics graphics, Book book, int x, int y, int color) {
+	public static void drawLock(GuiGraphicsExtractor graphics, Book book, int x, int y, int color) {
 		drawFromTexture(graphics, book, x, y, 250, 180, 16, 16, color);
 	}
 
-	public static void drawMarking(GuiGraphics graphics, Book book, int x, int y, int rand, EntryDisplayState state) {
+	public static void drawMarking(GuiGraphicsExtractor graphics, Book book, int x, int y, int rand, EntryDisplayState state) {
 		if (!state.hasIcon) {
 			return;
 		}
@@ -552,11 +550,11 @@ public abstract class GuiBook extends Screen {
 		//RenderSystem.enableAlphaTest();
 	}
 
-	public static void drawPageFiller(GuiGraphics graphics, Book book) {
+	public static void drawPageFiller(GuiGraphicsExtractor graphics, Book book) {
 		drawPageFiller(graphics, book, RIGHT_PAGE_X, TOP_PADDING);
 	}
 
-	public static void drawPageFiller(GuiGraphics graphics, Book book, int x, int y) {
+	public static void drawPageFiller(GuiGraphicsExtractor graphics, Book book, int x, int y) {
 		graphics.blit(book.fillerTexture, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 

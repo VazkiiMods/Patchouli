@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.input.CharacterEvent;
@@ -44,7 +44,7 @@ public class GuiBookWriter extends GuiBook {
 	}
 
 	@Override
-	void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	void drawForegroundElements(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		super.drawForegroundElements(graphics, mouseX, mouseY, partialTicks);
 
 		drawCenteredStringNoShadow(graphics, I18n.get("patchouli.gui.lexicon.editor"), LEFT_PAGE_X + PAGE_WIDTH / 2, TOP_PADDING, book.headerColor);

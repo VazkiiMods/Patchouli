@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
@@ -47,9 +47,9 @@ public class ComponentEntity extends TemplateComponent {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (errored) {
-			graphics.drawString(page.fontRenderer, Component.translatable("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000, false);
+			graphics.text(page.fontRenderer, Component.translatable("patchouli.gui.lexicon.loading_error"), x, y, 0xFF0000, false);
 		}
 
 		if (entity != null) {

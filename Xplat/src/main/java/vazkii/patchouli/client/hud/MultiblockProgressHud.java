@@ -2,7 +2,7 @@ package vazkii.patchouli.client.hud;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -20,7 +20,7 @@ public final class MultiblockProgressHud {
 
 	private MultiblockProgressHud() {}
 
-	public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+	public static void extractRenderState(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
 		MultiblockVisualizationHandler handler = MultiblockVisualizationHandler.INSTANCE;
 		if (!handler.hasMultiblock()) {
 			return;
@@ -43,7 +43,7 @@ public final class MultiblockProgressHud {
 		int x = mc.getWindow().getGuiScaledWidth() / 2;
 		int y = 12;
 
-		graphics.drawCenteredString(mc.font, handler.name(), x, y, 0xFFFFFF);
+		graphics.centeredText(mc.font, handler.name(), x, y, 0xFFFFFF);
 
 		int width = 180;
 		int height = 9;
@@ -53,7 +53,7 @@ public final class MultiblockProgressHud {
 		if (handler.getTimeComplete() > 0) {
 			graphics.pose().pushMatrix();
 			graphics.pose().translate(0, Math.min(height + 5, animTime));
-			graphics.drawCenteredString(mc.font, Component.translatable("patchouli.gui.lexicon.structure_complete"), x, top + height - 10, 0x00FF00);
+			graphics.centeredText(mc.font, Component.translatable("patchouli.gui.lexicon.structure_complete"), x, top + height - 10, 0x00FF00);
 			graphics.pose().popMatrix();
 		}
 
@@ -67,7 +67,7 @@ public final class MultiblockProgressHud {
 		graphics.fillGradient(left, top, left + progressWidth, top + height, color, color2);
 
 		if (!handler.isAnchored()) {
-			graphics.drawCenteredString(mc.font, Component.translatable("patchouli.gui.lexicon.not_anchored"), x, top + height + 8, 0xFFFFFF);
+			graphics.centeredText(mc.font, Component.translatable("patchouli.gui.lexicon.not_anchored"), x, top + height + 8, 0xFFFFFF);
 		} else {
 			BlockState lookingState = handler.getLookingState();
 			if (lookingState != null) {
@@ -77,8 +77,8 @@ public final class MultiblockProgressHud {
 					ItemStack stack = lookingState.getCloneItemStack(mc.level, handler.getLookingPos(), false);
 
 					if (!stack.isEmpty()) {
-						graphics.drawString(mc.font, stack.getHoverName(), left + 20, top + height + 8, 0xFFFFFF, true);
-						graphics.renderItem(stack, left, top + height + 2);
+						graphics.text(mc.font, stack.getHoverName(), left + 20, top + height + 8, 0xFFFFFF, true);
+						graphics.item(stack, left, top + height + 2);
 					}
 				} catch (Exception ignored) {}
 			}
@@ -98,7 +98,7 @@ public final class MultiblockProgressHud {
 					posy += 2;
 				}
 
-				graphics.drawString(mc.font, progress, posx - mc.font.width(progress) / mult, posy, color, false);
+				graphics.text(mc.font, progress, posx - mc.font.width(progress) / mult, posy, color, false);
 			}
 		}
 

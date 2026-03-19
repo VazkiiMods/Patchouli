@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -40,7 +40,7 @@ public class GuiButtonCategory extends Button {
 	}
 
 	@Override
-	protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		if (active) {
 			if (isHoveredOrFocused()) {
 				timeHovered = Math.min(ANIM_TIME, timeHovered + ClientTicker.delta);
@@ -57,7 +57,7 @@ public class GuiButtonCategory extends Button {
 			if (locked) {
 				GuiBook.drawLock(graphics, parent.book, 2, 2, ARGB.color(0.7F, 0xffffff));
 			} else {
-				icon.render(graphics, 2, 2);
+				icon.extractRenderState(graphics, 2, 2);
 			}
 
 			graphics.pose().pushMatrix();

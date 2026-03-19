@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.item.crafting.*;
@@ -16,7 +16,7 @@ public class PageSmithing extends PageDoubleRecipeRegistry<SmithingRecipe, Smith
 	}
 
 	@Override
-	protected void drawRecipe(GuiGraphics graphics, SmithingRecipeDisplay recipe, ContextMap context, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
+	protected void drawRecipe(GuiGraphicsExtractor graphics, SmithingRecipeDisplay recipe, ContextMap context, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		graphics.blit(RenderPipelines.GUI_TEXTURED, book.craftingTexture, recipeX, recipeY, 11, 135, 96, 43, 128, 256);
 		parent.drawCenteredStringNoShadow(graphics, getTitle(second).getVisualOrderText(), GuiBook.PAGE_WIDTH / 2, recipeY - 10, book.headerColor);
 		parent.renderItemStack(graphics, recipeX + 4, recipeY + 4, mouseX, mouseY, recipe.base().resolveForFirstStack(context));

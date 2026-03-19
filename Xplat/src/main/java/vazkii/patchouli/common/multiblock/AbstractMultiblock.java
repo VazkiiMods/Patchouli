@@ -3,12 +3,12 @@ package vazkii.patchouli.common.multiblock;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.*;
-import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.BlockAndLightGetter;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,8 +16,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.lighting.LevelLightEngine;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-
 import net.minecraft.world.phys.AABB;
+
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.api.TriPredicate;
 import vazkii.patchouli.common.util.RotationUtil;
@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AbstractMultiblock implements IMultiblock, BlockAndTintGetter {
+public abstract class AbstractMultiblock implements IMultiblock, BlockAndLightGetter {
 	public Identifier id;
 	protected int offX, offY, offZ;
 	protected int viewOffX, viewOffY, viewOffZ;
@@ -151,19 +151,8 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockAndTintGet
 	public abstract Vec3i getSize();
 
 	@Override
-	public float getShade(Direction direction, boolean shaded) {
-		return 1.0F;
-	}
-
-	@Override
 	public LevelLightEngine getLightEngine() {
 		return null;
-	}
-
-	@Override
-	public int getBlockTint(BlockPos pos, ColorResolver color) {
-		var plains = world.registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(Biomes.PLAINS);
-		return color.getColor(plains.value(), pos.getX(), pos.getZ());
 	}
 
 	@Override

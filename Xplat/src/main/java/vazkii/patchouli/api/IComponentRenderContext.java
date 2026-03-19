@@ -1,6 +1,6 @@
 package vazkii.patchouli.api;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -21,9 +21,9 @@ public interface IComponentRenderContext {
 
 	Style getFontStyle();
 
-	void renderItemStack(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, ItemStack stack);
+	void renderItemStack(GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY, ItemStack stack);
 
-	void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Ingredient ingredient);
+	void renderIngredient(GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY, Ingredient ingredient);
 
 	boolean isAreaHovered(int mouseX, int mouseY, int x, int y, int w, int h);
 

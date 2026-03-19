@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
@@ -65,7 +65,7 @@ public abstract class BookPage {
 		parent.addRenderableWidget(button);
 	}
 
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {}
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {}
 
 	public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
 		return false;

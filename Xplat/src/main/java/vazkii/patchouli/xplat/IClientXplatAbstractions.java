@@ -1,19 +1,19 @@
 package vazkii.patchouli.xplat;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.render.state.GuiElementRenderState;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockAndLightGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 
@@ -37,9 +37,9 @@ public interface IClientXplatAbstractions {
 	}
 
 	// NB: Fluids handled at callsite in platform-independent manner
-	void renderForMultiblock(BlockRenderDispatcher blockRenderer, BlockState state, BlockPos pos, BlockAndTintGetter multiblock, PoseStack poseStack, Function<ChunkSectionLayer, VertexConsumer> bufferLookup, RandomSource rand);
+	void renderForMultiblock(BlockState state, BlockPos pos, BlockAndLightGetter multiblock, PoseStack poseStack, Function<ChunkSectionLayer, VertexConsumer> bufferLookup, RandomSource rand);
 
-	void submitGuiElement(GuiGraphics graphics, GuiElementRenderState renderState);
-	
-	void submitMultiblockPiP(GuiGraphics graphics, AbstractMultiblock multiblock, float scale, Vector3f translation, Quaternionf rotation, int x0, int y0, int x1, int y1);
+	void submitGuiElement(GuiGraphicsExtractor graphics, GuiElementRenderState renderState);
+
+	void submitMultiblockPiP(GuiGraphicsExtractor graphics, AbstractMultiblock multiblock, float scale, Vector3f translation, Quaternionf rotation, int x0, int y0, int x1, int y1);
 }

@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.template.test;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
@@ -25,9 +25,9 @@ public class ComponentCustomTest implements ICustomComponent {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
 		Component toRender = Component.literal(text).setStyle(context.getFontStyle());
-		graphics.drawString(Minecraft.getInstance().font, toRender, x, y, -1, true);
+		graphics.text(Minecraft.getInstance().font, toRender, x, y, -1, true);
 	}
 
 	@Override

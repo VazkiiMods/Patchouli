@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -34,7 +34,7 @@ public class PageSpotlight extends PageWithText {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {
 		int w = 66;
 		int h = 26;
 
@@ -53,7 +53,7 @@ public class PageSpotlight extends PageWithText {
 			parent.renderItemStack(graphics, GuiBook.PAGE_WIDTH / 2 - 8, 15, mouseX, mouseY, stacks[(parent.ticksInBook / 20) % stacks.length]);
 		}
 
-		super.render(graphics, mouseX, mouseY, pticks);
+		super.extractRenderState(graphics, mouseX, mouseY, pticks);
 	}
 
 	@Override

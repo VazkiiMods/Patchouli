@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 
@@ -18,11 +18,11 @@ public class GuiButtonBookEye extends GuiButtonBook {
 	}
 
 	@Override
-	protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		super.renderContents(graphics, mouseX, mouseY, partialTicks);
+	protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+		super.extractContents(graphics, mouseX, mouseY, partialTicks);
 
 		if (!PersistentData.data.clickedVisualize && (ClientTicker.ticksInGame) % 20 < 10) {
-			graphics.drawString(parent.getMinecraft().font, "!", getX(), getY(), 0xFF3333, true);
+			graphics.text(parent.getMinecraft().font, "!", getX(), getY(), 0xFF3333, true);
 		}
 	}
 }

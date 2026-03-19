@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.page.abstr;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextMap;
@@ -55,7 +55,7 @@ public abstract class PageDoubleRecipe<D extends RecipeDisplay> extends PageWith
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {
 		if (recipe1 != null) {
 			int recipeX = getX();
 			int recipeY = getY();
@@ -66,7 +66,7 @@ public abstract class PageDoubleRecipe<D extends RecipeDisplay> extends PageWith
 			}
 		}
 
-		super.render(graphics, mouseX, mouseY, pticks);
+		super.extractRenderState(graphics, mouseX, mouseY, pticks);
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public abstract class PageDoubleRecipe<D extends RecipeDisplay> extends PageWith
 		return getTextHeight() + 10 < GuiBook.PAGE_HEIGHT;
 	}
 
-	protected abstract void drawRecipe(GuiGraphics graphics, D recipe, ContextMap context, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
+	protected abstract void drawRecipe(GuiGraphicsExtractor graphics, D recipe, ContextMap context, int recipeX, int recipeY, int mouseX, int mouseY, boolean second);
 
 	protected abstract @Nullable D loadRecipe(Level level, BookContentsBuilder builder, BookEntry entry, Identifier loc, boolean linkRecipe);
 

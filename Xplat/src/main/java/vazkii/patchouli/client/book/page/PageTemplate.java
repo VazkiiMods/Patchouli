@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.level.Level;
 
@@ -39,8 +39,8 @@ public class PageTemplate extends BookPage {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
-		template.render(graphics, this, mouseX, mouseY, pticks);
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {
+		template.extractRenderState(graphics, this, mouseX, mouseY, pticks);
 	}
 
 	@Override

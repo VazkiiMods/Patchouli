@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
@@ -31,8 +31,8 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 	}
 
 	@Override
-	protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-		super.renderContents(graphics, mouseX, mouseY, partialTicks);
+	protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
+		super.extractContents(graphics, mouseX, mouseY, partialTicks);
 
 		BookEntry entry = bookmark == null ? null : bookmark.getEntry(book);
 		if (bookmark != null && entry != null) {
@@ -40,13 +40,13 @@ public class GuiButtonBookBookmark extends GuiButtonBook {
 			graphics.pose().scale(0.5F, 0.5F);
 			int px = getX() * 2 + (isHoveredOrFocused() ? 6 : 2);
 			int py = getY() * 2 + 2;
-			entry.getIcon().render(graphics, px, py);
+			entry.getIcon().extractRenderState(graphics, px, py);
 
 			String s = Integer.toString(bookmark.spread() + 1);
 			if (multiblock) {
 				s = I18n.get("patchouli.gui.lexicon.visualize_letter");
 			}
-			graphics.drawString(parent.getMinecraft().font, s, px + 12, py + 10, 0xFFFFFF, true);
+			graphics.text(parent.getMinecraft().font, s, px + 12, py + 10, 0xFFFFFF, true);
 			graphics.pose().popMatrix();
 		}
 	}

@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.recipebook.PlaceRecipeHelper;
@@ -22,7 +22,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>, RecipeDisp
 	}
 
 	@Override
-	protected void drawRecipe(GuiGraphics graphics, RecipeDisplay recipe, ContextMap context, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
+	protected void drawRecipe(GuiGraphicsExtractor graphics, RecipeDisplay recipe, ContextMap context, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
 		graphics.blit(RenderPipelines.GUI_TEXTURED, book.craftingTexture, recipeX - 2, recipeY - 2, 0, 0, 100, 62, 128, 256, 0xffffffff);
 
 		boolean shaped = recipe instanceof ShapedRecipe;

@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.text;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -42,17 +42,18 @@ public class Word {
 		this.text = text;
 	}
 
-	public void render(GuiGraphics graphics, Font font, Style styleOverride, int mouseX, int mouseY) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, Font font, Style styleOverride, int mouseX, int mouseY) {
 		MutableComponent toRender = text.copy().withStyle(styleOverride);
 		if (isClusterHovered(mouseX, mouseY)) {
 			if (onClick != null) {
 				toRender.withStyle(s -> s.withColor(TextColor.fromRgb(book.linkHoverColor)));
 			}
 
-			graphics.renderComponentHoverEffect(font, text.getStyle(), (int) gui.getRelativeX(mouseX), (int) gui.getRelativeY(mouseY));
+			// TODO 26.1
+			// graphics.renderComponentHoverEffect(font, text.getStyle(), (int) gui.getRelativeX(mouseX), (int) gui.getRelativeY(mouseY));
 		}
 
-		graphics.drawString(font, toRender, x, y, -1, false);
+		graphics.text(font, toRender, x, y, -1, false);
 	}
 
 	public boolean click(MouseButtonEvent event, boolean doubleClick) {

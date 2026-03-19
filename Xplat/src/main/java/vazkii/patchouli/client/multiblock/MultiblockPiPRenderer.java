@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexSorting;
 import com.mojang.math.Axis;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
+
 import vazkii.patchouli.client.book.LiquidBlockVertexConsumer;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.common.multiblock.AbstractMultiblock;
@@ -55,7 +57,8 @@ public class MultiblockPiPRenderer extends PictureInPictureRenderer<MultiblockPi
 	}
 
 	/**
-	 * @implNote Adapted from {@link SectionCompiler#compile(SectionPos, RenderSectionRegion, VertexSorting, SectionBufferBuilderPack)}
+	 * @implNote Adapted from
+	 *           {@link SectionCompiler#compile(SectionPos, RenderSectionRegion, VertexSorting, SectionBufferBuilderPack)}
 	 */
 	@Override
 	protected void renderToTexture(MultiblockPiPRenderState renderState, PoseStack poseStack) {

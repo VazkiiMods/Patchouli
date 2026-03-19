@@ -29,7 +29,8 @@ public class ReiCompat {
 				return false;
 			}
 			// Play a sound as some simple feedback that something happened
-			Minecraft.getInstance().player.playSound(PatchouliSounds.BOOK_OPEN, 1F, (float) (0.7 + Math.random() * 0.4));
+			Minecraft minecraft = Minecraft.getInstance();
+			minecraft.player.playSound(minecraft.getConnection().registryAccess().getOrThrow(PatchouliSounds.BOOK_OPEN).value(), 1F, (float) (0.7 + Math.random() * 0.4));
 			return true;
 		}
 

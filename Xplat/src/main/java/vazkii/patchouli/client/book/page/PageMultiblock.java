@@ -1,14 +1,15 @@
 package vazkii.patchouli.client.book.page;
 
 import com.google.gson.annotations.SerializedName;
-
 import com.mojang.math.Axis;
-import net.minecraft.client.gui.GuiGraphics;
+
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 
 import org.joml.Vector3f;
+
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData;
@@ -72,7 +73,7 @@ public class PageMultiblock extends PageWithText {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
 		GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
@@ -85,10 +86,10 @@ public class PageMultiblock extends PageWithText {
 			if (!mc.hasShiftDown()) {
 				time += ClientTicker.partialTicks;
 			}
-			IClientXplatAbstractions.INSTANCE.submitMultiblockPiP(graphics, multiblockObj, 1, new Vector3f(), Axis.YP.rotationDegrees(time).mul(Axis.YP.rotationDegrees(45)), 0, 0,  106, 106);
+			IClientXplatAbstractions.INSTANCE.submitMultiblockPiP(graphics, multiblockObj, 1, new Vector3f(), Axis.YP.rotationDegrees(time).mul(Axis.YP.rotationDegrees(45)), 0, 0, 106, 106);
 		}
 
-		super.render(graphics, mouseX, mouseY, pticks);
+		super.extractRenderState(graphics, mouseX, mouseY, pticks);
 	}
 
 	public void handleButtonVisualize(Button button) {

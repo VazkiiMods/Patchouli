@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.template.component;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import vazkii.patchouli.client.book.BookContentsBuilder;
 import vazkii.patchouli.client.book.BookEntry;
@@ -21,7 +21,7 @@ public class ComponentSeparator extends TemplateComponent {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, BookPage page, int mouseX, int mouseY, float pticks) {
 		GuiBook.drawSeparator(graphics, page.book, x, y);
 	}
 

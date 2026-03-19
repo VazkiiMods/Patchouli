@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -75,8 +75,8 @@ public class PageQuest extends PageWithText {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
-		super.render(graphics, mouseX, mouseY, pticks);
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {
+		super.extractRenderState(graphics, mouseX, mouseY, pticks);
 
 		parent.drawCenteredStringNoShadow(graphics, title == null || title.isEmpty() ? I18n.get("patchouli.gui.lexicon.objective") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		GuiBook.drawSeparator(graphics, book, 0, 12);

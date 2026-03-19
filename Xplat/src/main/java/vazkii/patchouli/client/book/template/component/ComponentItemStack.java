@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 
@@ -39,7 +39,7 @@ public class ComponentItemStack extends TemplateComponent {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (items.length == 0) {
 			return;
 		}

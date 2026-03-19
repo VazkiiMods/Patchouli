@@ -1,6 +1,6 @@
 package vazkii.patchouli.api;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 
 /**
@@ -24,7 +24,7 @@ public interface ICustomComponent extends IVariablesAvailableCallback {
 	 * Called every render tick. No special transformations are applied, so you're responsible
 	 * for putting everything in the right place.
 	 */
-	void render(GuiGraphics graphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY);
+	void extractRenderState(GuiGraphicsExtractor graphics, IComponentRenderContext context, float pticks, int mouseX, int mouseY);
 
 	/**
 	 * Called when this component first enters the screen. Good time to refresh anything that

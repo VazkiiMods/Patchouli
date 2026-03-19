@@ -3,7 +3,7 @@ package vazkii.patchouli.fabric.xplat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.DefaultCustomIngredients;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
@@ -27,7 +27,7 @@ import java.util.List;
 
 public class FabricXplatImpl implements IXplatAbstractions {
 	@Override
-	public void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics) {
+	public void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphicsExtractor graphics) {
 		BookDrawScreenCallback.EVENT.invoker().trigger(book, gui, mouseX, mouseY, partialTicks, graphics);
 	}
 

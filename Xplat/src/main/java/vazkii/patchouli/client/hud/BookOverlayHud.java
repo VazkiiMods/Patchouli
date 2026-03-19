@@ -6,7 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
@@ -23,7 +23,7 @@ public final class BookOverlayHud {
 
 	private BookOverlayHud() {}
 
-	public static void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
+	public static void extractRenderState(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
 		ItemStack bookStack = player.getMainHandItem();
@@ -38,21 +38,21 @@ public final class BookOverlayHud {
 						Window window = mc.getWindow();
 						int x = window.getGuiScaledWidth() / 2 + 3;
 						int y = window.getGuiScaledHeight() / 2 + 3;
-						entry.getIcon().render(graphics, x, y);
+						entry.getIcon().extractRenderState(graphics, x, y);
 
 						graphics.pose().pushMatrix();
 						graphics.pose().scale(0.5F, 0.5F);
-						graphics.renderItem(bookStack, (x + 8) * 2, (y + 8) * 2);
-						graphics.renderItemDecorations(mc.font, bookStack, (x + 8) * 2, (y + 8) * 2);
+						graphics.item(bookStack, (x + 8) * 2, (y + 8) * 2);
+						graphics.itemDecorations(mc.font, bookStack, (x + 8) * 2, (y + 8) * 2);
 						graphics.pose().popMatrix();
 
-						graphics.drawString(mc.font, entry.getName(), x + 18, y + 3, 0xFFFFFF, false);
+						graphics.text(mc.font, entry.getName(), x + 18, y + 3, 0xFFFFFF, false);
 
 						graphics.pose().pushMatrix();
 						graphics.pose().scale(0.75F, 0.75F);
 						Component s = Component.translatable("patchouli.gui.lexicon." + (player.isShiftKeyDown() ? "view" : "sneak"))
 								.withStyle(ChatFormatting.ITALIC);
-						graphics.drawString(mc.font, s, (int) ((x + 18) / 0.75F), (int) ((y + 14) / 0.75F), 0xBBBBBB, false);
+						graphics.text(mc.font, s, (int) ((x + 18) / 0.75F), (int) ((y + 14) / 0.75F), 0xBBBBBB, false);
 						graphics.pose().popMatrix();
 					}
 				}

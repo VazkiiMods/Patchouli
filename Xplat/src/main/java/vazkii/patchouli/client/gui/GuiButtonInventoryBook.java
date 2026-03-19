@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -18,7 +18,7 @@ public class GuiButtonInventoryBook extends Button {
 	private final Book book;
 
 	public GuiButtonInventoryBook(Book book, int x, int y) {
-		super(x, y, 20, 20, Component.empty(), (b) -> {
+		super(x, y, 20, 20, Component.empty(), (_) -> {
 			BookContents contents = book.getContents();
 			contents.openLexiconGui(contents.getCurrentGui(), false);
 		}, DEFAULT_NARRATION);
@@ -26,15 +26,15 @@ public class GuiButtonInventoryBook extends Button {
 	}
 
 	@Override
-	protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+	protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {
 		//graphics.setColor(1F, 1F, 1F, 1F);
 
 		boolean hovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
 		graphics.blit(Identifier.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "textures/gui/inventory_button.png"), getX(), getY(), (hovered ? 20 : 0), 0, width, height, 64, 64);
 
 		ItemStack stack = book.getBookItem();
-		graphics.renderItem(stack, getX() + 2, getY() + 2);
-		graphics.renderItemDecorations(Minecraft.getInstance().font, stack, getX() + 2, getY() + 2);
+		graphics.item(stack, getX() + 2, getY() + 2);
+		graphics.itemDecorations(Minecraft.getInstance().font, stack, getX() + 2, getY() + 2);
 
 		EntryDisplayState readState = book.getContents().getReadState();
 		if (readState.hasIcon && readState.showInInventory) {

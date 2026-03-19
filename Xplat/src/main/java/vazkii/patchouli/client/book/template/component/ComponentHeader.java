@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.template.component;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 
@@ -44,7 +44,7 @@ public class ComponentHeader extends TemplateComponent {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, BookPage page, int mouseX, int mouseY, float pticks) {
 		graphics.pose().pushMatrix();
 		graphics.pose().translate(x, y);
 		graphics.pose().scale(scale, scale);
@@ -52,7 +52,7 @@ public class ComponentHeader extends TemplateComponent {
 		if (centered) {
 			page.parent.drawCenteredStringNoShadow(graphics, page.i18n(actualText.getString()), 0, 0, color);
 		} else {
-			graphics.drawString(page.fontRenderer, page.i18n(actualText.getString()), 0, 0, color, false);
+			graphics.text(page.fontRenderer, page.i18n(actualText.getString()), 0, 0, color, false);
 		}
 		graphics.pose().popMatrix();
 	}

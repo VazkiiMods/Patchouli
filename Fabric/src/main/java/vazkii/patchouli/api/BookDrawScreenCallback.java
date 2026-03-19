@@ -2,7 +2,7 @@ package vazkii.patchouli.api;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.Identifier;
 
@@ -21,5 +21,5 @@ public interface BookDrawScreenCallback {
 				}
 			});
 
-	void trigger(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics);
+	void trigger(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphicsExtractor graphics);
 }

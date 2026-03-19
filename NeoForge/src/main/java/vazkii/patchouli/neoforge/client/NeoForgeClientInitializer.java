@@ -17,13 +17,13 @@ import vazkii.patchouli.client.base.*;
 import vazkii.patchouli.client.book.BookContentResourceListenerLoader;
 import vazkii.patchouli.client.book.BookReloadHook;
 import vazkii.patchouli.client.book.ClientBookRegistry;
-import vazkii.patchouli.client.multiblock.MultiblockPiPRenderState;
-import vazkii.patchouli.client.multiblock.MultiblockPiPRenderer;
 import vazkii.patchouli.client.handler.BookRightClickHandler;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.client.handler.TooltipHandler;
 import vazkii.patchouli.client.hud.BookOverlayHud;
 import vazkii.patchouli.client.hud.MultiblockProgressHud;
+import vazkii.patchouli.client.multiblock.MultiblockPiPRenderState;
+import vazkii.patchouli.client.multiblock.MultiblockPiPRenderer;
 
 import org.jetbrains.annotations.NotNull;
 

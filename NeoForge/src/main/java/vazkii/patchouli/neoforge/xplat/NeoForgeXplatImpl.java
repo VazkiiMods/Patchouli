@@ -1,6 +1,6 @@
 package vazkii.patchouli.neoforge.xplat;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
@@ -32,7 +32,7 @@ public class NeoForgeXplatImpl implements IXplatAbstractions {
 	private final Map<String, NeoForgeXplatModContainer> modCache = new HashMap<>();
 
 	@Override
-	public void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics) {
+	public void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphicsExtractor graphics) {
 		NeoForge.EVENT_BUS.post(new BookDrawScreenEvent(book, gui, mouseX, mouseY, partialTicks, graphics));
 	}
 

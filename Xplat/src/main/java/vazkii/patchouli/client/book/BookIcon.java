@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
@@ -11,19 +11,19 @@ import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.util.ItemStackUtil;
 
 public sealed interface BookIcon permits BookIcon.StackIcon, BookIcon.TextureIcon {
-	void render(GuiGraphics graphics, int x, int y);
+	void extractRenderState(GuiGraphicsExtractor graphics, int x, int y);
 
 	record StackIcon(ItemStack stack) implements BookIcon {
 		@Override
-		public void render(GuiGraphics graphics, int x, int y) {
-			graphics.renderItem(stack(), x, y);
-			graphics.renderItemDecorations(Minecraft.getInstance().font, stack(), x, y);
+		public void extractRenderState(GuiGraphicsExtractor graphics, int x, int y) {
+			graphics.item(stack(), x, y);
+			graphics.itemDecorations(Minecraft.getInstance().font, stack(), x, y);
 		}
 	}
 
 	record TextureIcon(Identifier texture) implements BookIcon {
 		@Override
-		public void render(GuiGraphics graphics, int x, int y) {
+		public void extractRenderState(GuiGraphicsExtractor graphics, int x, int y) {
 			//graphics.setColor(1F, 1F, 1F, 1F);
 			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture(), x, y, 16, 16);
 		}

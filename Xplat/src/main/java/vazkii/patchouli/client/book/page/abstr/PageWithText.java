@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.page.abstr;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
@@ -29,9 +29,9 @@ public abstract class PageWithText extends BookPage {
 	public abstract int getTextHeight();
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {
 		if (shouldRenderText()) {
-			textRender.render(graphics, mouseX, mouseY, pticks);
+			textRender.extractRenderState(graphics, mouseX, mouseY, pticks);
 		}
 	}
 

@@ -5,14 +5,13 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.item.BlockModelWrapper;
-import net.minecraft.client.renderer.item.ItemModel;
-import net.minecraft.client.renderer.item.ItemModelResolver;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.client.renderer.item.*;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+
+import org.joml.Matrix4fc;
 
 import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.common.book.Book;
@@ -24,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class BookModel implements ItemModel {
 	private final ItemModel base;
@@ -47,10 +47,10 @@ public class BookModel implements ItemModel {
 		model.update(renderState, stack, itemModelResolver, displayContext, level, owner, seed);
 	}
 
-	public record Unbaked(BlockModelWrapper.Unbaked base) implements ItemModel.Unbaked {
+	public record Unbaked(ItemModel.Unbaked base) implements ItemModel.Unbaked {
 		public static final Identifier ID = Identifier.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "book");
 		public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-				BlockModelWrapper.Unbaked.MAP_CODEC.forGetter(Unbaked::base)
+				ItemModels.CODEC.fieldOf("base").forGetter(Unbaked::base)
 		).apply(inst, Unbaked::new));
 
 		@Override
@@ -59,13 +59,13 @@ public class BookModel implements ItemModel {
 		}
 
 		@Override
-		public ItemModel bake(BakingContext context) {
-			Map<Identifier, BlockModelWrapper.Unbaked> models = new HashMap<>();
+		public ItemModel bake(BakingContext bakingContext, Matrix4fc matrix4fc) {
+			Map<Identifier, ItemModel.Unbaked> models = new HashMap<>();
 			for (Book book : BookRegistry.INSTANCE.books.values()) {
 				Identifier modelLoc = book.model;
-				models.computeIfAbsent(modelLoc, loc -> new BlockModelWrapper.Unbaked(loc, List.of()));
+				models.computeIfAbsent(modelLoc, loc -> new CuboidItemModelWrapper.Unbaked(loc, Optional.empty(), List.of()));
 			}
-			return new BookModel(base().bake(context), Maps.transformValues(models, m -> m.bake(context)));
+			return new BookModel(base().bake(bakingContext, matrix4fc), Maps.transformValues(models, m -> m.bake(bakingContext, matrix4fc)));
 		}
 
 		@Override

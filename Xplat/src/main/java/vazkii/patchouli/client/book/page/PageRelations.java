@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
@@ -57,11 +57,11 @@ public class PageRelations extends PageWithText {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {
 		parent.drawCenteredStringNoShadow(graphics, title == null || title.isEmpty() ? I18n.get("patchouli.gui.lexicon.relations") : i18n(title), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
 		GuiBook.drawSeparator(graphics, book, 0, 12);
 
-		super.render(graphics, mouseX, mouseY, pticks);
+		super.extractRenderState(graphics, mouseX, mouseY, pticks);
 	}
 
 	@Override

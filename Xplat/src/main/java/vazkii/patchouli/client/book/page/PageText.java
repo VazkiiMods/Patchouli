@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.Identifier;
 
@@ -30,8 +30,8 @@ public class PageText extends PageWithText {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
-		super.render(graphics, mouseX, mouseY, pticks);
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {
+		super.extractRenderState(graphics, mouseX, mouseY, pticks);
 
 		if (pageNum == 0) {
 			boolean renderedSmol = false;

@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.gui;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
@@ -115,9 +115,9 @@ public class GuiBookLanding extends GuiBook {
 	}
 
 	@Override
-	void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	void drawForegroundElements(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		if (text != null) {
-			text.render(graphics, mouseX, mouseY, partialTicks);
+			text.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 		}
 
 		int topSeparator = TOP_PADDING + 12;
@@ -150,7 +150,7 @@ public class GuiBookLanding extends GuiBook {
 			}
 		}
 
-		drawProgressBar(graphics, book, mouseX, mouseY, (e) -> true);
+		drawProgressBar(graphics, book, mouseX, mouseY, (_) -> true);
 	}
 
 	@Override
@@ -178,14 +178,14 @@ public class GuiBookLanding extends GuiBook {
 		}
 	}
 
-	private void drawHeader(GuiGraphics graphics) {
+	private void drawHeader(GuiGraphicsExtractor graphics) {
 		//RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 		drawFromTexture(graphics, book, -8, 12, 0, 180, 140, 31);
 
 		int color = book.nameplateColor;
-		graphics.drawString(font, book.getBookItem().getHoverName(), 13, 16, color, false);
+		graphics.text(font, book.getBookItem().getHoverName(), 13, 16, color, false);
 		Component toDraw = book.getSubtitle().withStyle(book.getFontStyle());
-		graphics.drawString(font, toDraw, 24, 24, color, false);
+		graphics.text(font, toDraw, 24, 24, color, false);
 	}
 
 	private void makeErrorTooltip() {
@@ -237,7 +237,7 @@ public class GuiBookLanding extends GuiBook {
 			book.reloadLocks(false);
 			displayLexiconGui(new GuiBookLanding(book), false);
 			if (minecraft.player != null) {
-				minecraft.player.displayClientMessage(Component.translatable("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)), false);
+				minecraft.player.sendSystemMessage(Component.translatable("patchouli.gui.lexicon.reloaded", (System.currentTimeMillis() - time)));
 			}
 		} else {
 			displayLexiconGui(new GuiBookWriter(book), true);

@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.page;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
@@ -29,7 +29,7 @@ public class PageImage extends PageWithText {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {
 
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
@@ -54,7 +54,7 @@ public class PageImage extends PageWithText {
 			graphics.fill(xs - 1, ys - 1, xs + 20, ys + 11, 0x44000000);
 		}
 
-		super.render(graphics, mouseX, mouseY, pticks);
+		super.extractRenderState(graphics, mouseX, mouseY, pticks);
 	}
 
 	public void handleButtonArrow(Button button) {

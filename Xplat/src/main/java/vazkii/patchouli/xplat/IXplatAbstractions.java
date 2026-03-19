@@ -1,6 +1,6 @@
 package vazkii.patchouli.xplat;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 public interface IXplatAbstractions {
 	// Events
-	void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphics graphics);
+	void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphicsExtractor graphics);
 	void fireBookReload(Identifier book);
 
 	// Networking

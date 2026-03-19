@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.gui.button;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
@@ -28,7 +28,7 @@ public class GuiButtonEntry extends Button {
 	}
 
 	@Override
-	protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		if (!active) {
 			return;
 		}
@@ -50,7 +50,7 @@ public class GuiButtonEntry extends Button {
 			//graphics.setColor(1F, 1F, 1F, 0.7F);
 			GuiBook.drawLock(graphics, parent.book, getX() * 2 + 2, getY() * 2 + 2, ARGB.color(0.7F, 0xffffff));
 		} else {
-			entry.getIcon().render(graphics, getX() * 2 + 2, getY() * 2 + 2);
+			entry.getIcon().extractRenderState(graphics, getX() * 2 + 2, getY() * 2 + 2);
 		}
 
 		graphics.pose().scale(2F, 2F);
@@ -66,7 +66,7 @@ public class GuiButtonEntry extends Button {
 		}
 
 		name = name.withStyle(entry.getBook().getFontStyle());
-		graphics.drawString(Minecraft.getInstance().font, name, getX() + 12, getY(), getColor(), false);
+		graphics.text(Minecraft.getInstance().font, name, getX() + 12, getY(), getColor(), false);
 
 		if (!entry.isLocked()) {
 			GuiBook.drawMarking(graphics, parent.book, getX() + width - 5, getY() + 1, entry.hashCode(), entry.getReadState());

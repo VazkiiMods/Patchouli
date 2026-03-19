@@ -1,16 +1,17 @@
 package vazkii.patchouli.client.handler;
 
 import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.gui.render.state.GuiElementRenderState;
+import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 public class TooltipHandler {
 	private static float lexiconLookupTime = 0;
 
-	public static void onTooltip(GuiGraphics graphics, ItemStack stack, int mouseX, int mouseY) {
+	public static void onTooltip(GuiGraphicsExtractor graphics, ItemStack stack, int mouseX, int mouseY) {
 		Minecraft mc = Minecraft.getInstance();
 		int tooltipX = mouseX;
 		int tooltipY = mouseY - 4;
@@ -85,19 +86,19 @@ public class TooltipHandler {
 
 				graphics.pose().pushMatrix();
 				//graphics.pose().translate(0, 0, 300);
-				graphics.renderItem(lexiconStack, x, tooltipY);
-				graphics.renderItemDecorations(mc.font, lexiconStack, x, tooltipY);
+				graphics.item(lexiconStack, x, tooltipY);
+				graphics.itemDecorations(mc.font, lexiconStack, x, tooltipY);
 				graphics.pose().popMatrix();
 
 				graphics.pose().pushMatrix();
 				//graphics.pose().translate(0, 0, 500);
-				graphics.drawString(mc.font, "?", x + 10, tooltipY + 8, 0xFFFFFFFF, true);
+				graphics.text(mc.font, "?", x + 10, tooltipY + 8, 0xFFFFFFFF, true);
 
 				graphics.pose().scale(0.5F, 0.5F);
 				boolean mac = Util.getPlatform() == Util.OS.OSX;
 				Component key = Component.literal(PatchouliConfig.get().useShiftForQuickLookup() ? "Shift" : mac ? "Cmd" : "Ctrl")
 						.withStyle(ChatFormatting.BOLD);
-				graphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF, true);
+				graphics.text(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF, true);
 				graphics.pose().popMatrix();
 			} else {
 				lexiconLookupTime = 0F;
@@ -121,7 +122,7 @@ public class TooltipHandler {
 			this.angles = angles;
 			this.r = r;
 			pipeline = RenderPipeline.builder()
-					.withBlend(BlendFunction.TRANSLUCENT)
+					.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
 					.build();
 			textureSetup = TextureSetup.noTexture();
 		}

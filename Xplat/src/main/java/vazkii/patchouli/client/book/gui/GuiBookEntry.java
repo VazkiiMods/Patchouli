@@ -1,7 +1,7 @@
 package vazkii.patchouli.client.book.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -89,7 +89,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	void drawForegroundElements(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		drawPage(graphics, leftPage, mouseX, mouseY, partialTicks);
 		drawPage(graphics, rightPage, mouseX, mouseY, partialTicks);
 
@@ -105,14 +105,14 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 				|| super.mouseClickedScaled(event, doubleClick);
 	}
 
-	void drawPage(GuiGraphics graphics, @Nullable BookPage page, int mouseX, int mouseY, float pticks) {
+	void drawPage(GuiGraphicsExtractor graphics, @Nullable BookPage page, int mouseX, int mouseY, float pticks) {
 		if (page == null) {
 			return;
 		}
 
 		graphics.pose().pushMatrix();
 		graphics.pose().translate(page.left, page.top);
-		page.render(graphics, mouseX - page.left, mouseY - page.top, pticks);
+		page.extractRenderState(graphics, mouseX - page.left, mouseY - page.top, pticks);
 		graphics.pose().popMatrix();
 	}
 
@@ -237,13 +237,13 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public void renderItemStack(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, ItemStack stack) {
+	public void renderItemStack(GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY, ItemStack stack) {
 		if (stack.isEmpty()) {
 			return;
 		}
 
-		graphics.renderItem(stack, x, y);
-		graphics.renderItemDecorations(font, stack, x, y);
+		graphics.item(stack, x, y);
+		graphics.itemDecorations(font, stack, x, y);
 
 		if (isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
 			setTooltipStack(stack);
@@ -251,7 +251,7 @@ public class GuiBookEntry extends GuiBook implements IComponentRenderContext {
 	}
 
 	@Override
-	public void renderIngredient(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
+	public void renderIngredient(GuiGraphicsExtractor graphics, int x, int y, int mouseX, int mouseY, Ingredient ingr) {
 		Level level = Minecraft.getInstance().level;
 		if (level == null) {
 			return;

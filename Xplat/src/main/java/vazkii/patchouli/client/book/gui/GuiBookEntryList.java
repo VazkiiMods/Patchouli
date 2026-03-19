@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.gui;
 
 import com.mojang.blaze3d.platform.InputConstants;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.input.CharacterEvent;
@@ -86,7 +86,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 	}
 
 	@Override
-	void drawForegroundElements(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	void drawForegroundElements(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		super.drawForegroundElements(graphics, mouseX, mouseY, partialTicks);
 
 		if (spread == 0) {
@@ -97,7 +97,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 			drawSeparator(graphics, book, RIGHT_PAGE_X, TOP_PADDING + 12);
 
 			assert text != null;
-			text.render(graphics, mouseX, mouseY, partialTicks);
+			text.extractRenderState(graphics, mouseX, mouseY, partialTicks);
 			if (shouldDrawProgressBar()) {
 				drawProgressBar(graphics, book, mouseX, mouseY, this::doesEntryCountForProgress);
 			}
@@ -110,7 +110,7 @@ public abstract class GuiBookEntryList extends GuiBook {
 			//RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 			drawFromTexture(graphics, book, searchField.getX() - 8, searchField.getY(), 140, 183, 99, 14);
 			Component toDraw = Component.literal(searchField.getValue()).setStyle(book.getFontStyle());
-			graphics.drawString(font, toDraw, searchField.getX() + 7, searchField.getY() + 1, book.textColor, false);
+			graphics.text(font, toDraw, searchField.getX() + 7, searchField.getY() + 1, book.textColor, false);
 		}
 
 		if (visibleEntries.isEmpty()) {

@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
@@ -61,7 +61,7 @@ public class BookTextRenderer implements Renderable {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		if (words.isEmpty()) {
 			return;
 		}
@@ -74,7 +74,7 @@ public class BookTextRenderer implements Renderable {
 		graphics.pose().translate(-first.x, -first.y);
 		int scaledX = (int) rescale(mouseX, first.x);
 		int scaledY = (int) rescale(mouseY, first.y);
-		words.forEach(word -> word.render(graphics, font, style, scaledX, scaledY));
+		words.forEach(word -> word.extractRenderState(graphics, font, style, scaledX, scaledY));
 		graphics.pose().popMatrix();
 	}
 

@@ -2,7 +2,7 @@ package vazkii.patchouli.client.book.template;
 
 import com.google.gson.annotations.SerializedName;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
@@ -136,11 +136,11 @@ public class BookTemplate {
 		}
 	}
 
-	public void render(GuiGraphics graphics, BookPage page, int mouseX, int mouseY, float pticks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, BookPage page, int mouseX, int mouseY, float pticks) {
 		if (compiled) {
 			components.forEach(c -> {
 				if (c.isVisible) {
-					c.render(graphics, page, mouseX, mouseY, pticks);
+					c.extractRenderState(graphics, page, mouseX, mouseY, pticks);
 				}
 			});
 		}

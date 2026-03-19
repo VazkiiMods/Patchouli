@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.mojang.math.Axis;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
@@ -63,7 +63,7 @@ public class PageEntity extends PageWithText {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float pticks) {
+	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {
 		int x = GuiBook.PAGE_WIDTH / 2 - 53;
 		int y = 7;
 		GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
@@ -77,7 +77,7 @@ public class PageEntity extends PageWithText {
 		}
 
 		if (errored) {
-			graphics.drawString(fontRenderer, I18n.get("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000, true);
+			graphics.text(fontRenderer, I18n.get("patchouli.gui.lexicon.loading_error"), 58, 60, 0xFF0000, true);
 		}
 
 		if (entity != null) {
@@ -88,10 +88,10 @@ public class PageEntity extends PageWithText {
 			graphics.pose().popMatrix();
 		}
 
-		super.render(graphics, mouseX, mouseY, pticks);
+		super.extractRenderState(graphics, mouseX, mouseY, pticks);
 	}
 
-	public static void renderEntity(GuiGraphics graphics, Entity entity, int x, int y, int width, int height, float rotation, float renderScale, float offset, float pticks) {
+	public static void renderEntity(GuiGraphicsExtractor graphics, Entity entity, int x, int y, int width, int height, float rotation, float renderScale, float offset, float pticks) {
 		Vector2f position = graphics.pose().transformPosition(x, y, new Vector2f());
 
 		int posX = Math.round(position.x);
@@ -110,7 +110,7 @@ public class PageEntity extends PageWithText {
 		int endX = posX + width;
 		int endY = posY + height;
 		graphics.enableScissor(3, 2, width - 3, height - 3);
-		graphics.submitEntityRenderState(entityrenderstate, renderScale, new Vector3f(-0.1f, offset, 0f), rot, new Quaternionf(), startX, startY, endX, endY);
+		graphics.entity(entityrenderstate, renderScale, new Vector3f(-0.1f, offset, 0f), rot, new Quaternionf(), startX, startY, endX, endY);
 		graphics.disableScissor();
 	}
 

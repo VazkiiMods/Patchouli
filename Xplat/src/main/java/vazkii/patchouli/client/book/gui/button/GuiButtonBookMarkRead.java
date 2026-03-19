@@ -1,6 +1,6 @@
 package vazkii.patchouli.client.book.gui.button;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
@@ -21,7 +21,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 	}
 
 	@Override
-	protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
+	protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTicks) {
 		int px = getX() + 1;
 		int py = (int) (getY() + 0.5);
 		GuiBook.drawFromTexture(graphics, book, getX(), getY(), 285, 160, 13, 10);
@@ -30,7 +30,7 @@ public class GuiButtonBookMarkRead extends GuiButtonBook {
 			GuiBook.drawFromTexture(graphics, book, px, py, u + 11, v, width, height);
 			parent.setTooltip(getTooltipLines());
 		}
-		graphics.drawString(parent.getMinecraft().font, "+", px, py, 0x00FF01, true);
+		graphics.text(parent.getMinecraft().font, "+", px, py, 0x00FF01, true);
 	}
 
 	@Override
