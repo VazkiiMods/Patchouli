@@ -24,12 +24,12 @@ import java.util.function.Function;
 public class FabricClientXplatImpl implements IClientXplatAbstractions {
 	@Override
 	public void renderForMultiblock(BlockState state, BlockPos pos, BlockAndLightGetter multiblock, PoseStack poseStack, Function<ChunkSectionLayer, VertexConsumer> bufferLookup, RandomSource rand) {
-		blockRenderer.renderBatched(state, pos, multiblock, poseStack, bufferLookup.apply(ItemBlockRenderTypes.getChunkRenderType(state)), false, blockRenderer.getBlockModel(state).collectParts(rand));
+		//blockRenderer.renderBatched(state, pos, multiblock, poseStack, bufferLookup.apply(ItemBlockRenderTypes.getChunkRenderType(state)), false, blockRenderer.getBlockModel(state).collectParts(rand));
 	}
 
 	@Override
 	public void submitGuiElement(GuiGraphicsExtractor graphics, GuiElementRenderState renderState) {
-		graphics.guiRenderState.submitGuiElement(renderState);
+		graphics.guiRenderState.addGuiElement(renderState);
 	}
 
 	@Override

@@ -22,7 +22,7 @@ import java.util.function.Function;
 
 public class NeoForgeClientXplatImpl implements IClientXplatAbstractions {
 	public void renderForMultiblock(BlockState state, BlockPos pos, BlockAndLightGetter multiblock, PoseStack poseStack, Function<ChunkSectionLayer, VertexConsumer> bufferLookup, RandomSource rand) {
-		blockRenderer.renderBatched(state, pos, multiblock, poseStack, bufferLookup, true, blockRenderer.getBlockModel(state).collectParts(multiblock, pos, state, rand));
+		//blockRenderer.renderBatched(state, pos, multiblock, poseStack, bufferLookup, true, blockRenderer.getBlockModel(state).collectParts(multiblock, pos, state, rand));
 	}
 
 	@Override

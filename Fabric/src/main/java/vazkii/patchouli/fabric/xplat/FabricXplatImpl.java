@@ -13,7 +13,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 import vazkii.patchouli.api.BookContentsReloadCallback;
 import vazkii.patchouli.api.BookDrawScreenCallback;
-import vazkii.patchouli.fabric.client.rei.ReiCompat;
 import vazkii.patchouli.fabric.network.FabricMessageOpenBookGui;
 import vazkii.patchouli.fabric.network.FabricMessageReloadBookContents;
 import vazkii.patchouli.xplat.IXplatAbstractions;
@@ -80,9 +79,9 @@ public class FabricXplatImpl implements IXplatAbstractions {
 		if (stack == null || stack.isEmpty()) {
 			return false;
 		}
-		if (FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) {
+		/*if (FabricLoader.getInstance().isModLoaded("roughlyenoughitems")) {
 			return ReiCompat.handleRecipeKeybind(keyCode, scanCode, stack);
-		}
+		}*/
 		return false;
 	}
 

@@ -72,8 +72,8 @@ public class NeoForgeClientInitializer {
 			e.register(BookModel.Unbaked.ID, BookModel.Unbaked.MAP_CODEC);
 		});
 		modBus.addListener((RegisterGuiLayersEvent e) -> {
-			e.registerAbove(VanillaGuiLayers.CROSSHAIR, BookOverlayHud.ID, BookOverlayHud::render);
-			e.registerBelow(VanillaGuiLayers.BOSS_OVERLAY, MultiblockProgressHud.ID, MultiblockProgressHud::render);
+			e.registerAbove(VanillaGuiLayers.CROSSHAIR, BookOverlayHud.ID, BookOverlayHud::extractRenderState);
+			e.registerBelow(VanillaGuiLayers.BOSS_OVERLAY, MultiblockProgressHud.ID, MultiblockProgressHud::extractRenderState);
 		});
 		modBus.addListener((RegisterPictureInPictureRenderersEvent e) -> {
 			e.register(MultiblockPiPRenderState.class, bufferSource -> new MultiblockPiPRenderer(bufferSource, Minecraft.getInstance(), Minecraft.getInstance().gameRenderer.getSubmitNodeStorage()));

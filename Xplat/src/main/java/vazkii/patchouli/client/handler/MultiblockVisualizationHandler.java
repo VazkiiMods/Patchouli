@@ -9,6 +9,10 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeStorage;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
+import net.minecraft.client.renderer.block.BlockModelResolver;
+import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -16,6 +20,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -187,6 +192,10 @@ public final class MultiblockVisualizationHandler {
 		lookingState = null;
 		lookingPos = checkPos;
 
+		BlockModelResolver blockModelResolver = new BlockModelResolver(mc.getModelManager());
+		BlockModelRenderState blockModelRenderState = new BlockModelRenderState();
+		SubmitNodeStorage submitNodeStorage = mc.gameRenderer.getFeatureRenderDispatcher().getSubmitNodeStorage();
+
 		Pair<BlockPos, Collection<IMultiblock.SimulateResult>> sim = multiblock.simulate(world, getStartPos(), getFacingRotation(), true);
 		for (IMultiblock.SimulateResult r : sim.getSecond()) {
 			float alpha = 0.3F;
@@ -203,7 +212,7 @@ public final class MultiblockVisualizationHandler {
 
 				if (!r.test(world, facingRotation)) {
 					BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame).rotate(facingRotation);
-					renderBlock(world, renderState, r.getWorldPosition(), alpha, ms);
+					renderBlock(blockModelResolver, submitNodeStorage, blockModelRenderState, renderState, r.getWorldPosition(), alpha, ms);
 
 					if (air) {
 						airFilled++;
@@ -222,7 +231,7 @@ public final class MultiblockVisualizationHandler {
 		}
 	}
 
-	public void renderBlock(Level world, BlockState state, BlockPos pos, float alpha, PoseStack ms) {
+	public void renderBlock(BlockModelResolver blockModelResolver, SubmitNodeStorage submitNodeStorage, BlockModelRenderState blockModelRenderState, BlockState state, BlockPos pos, float alpha, PoseStack ms) {
 		if (pos != null) {
 			ms.pushPose();
 			ms.translate(pos.getX(), pos.getY(), pos.getZ());
@@ -236,7 +245,8 @@ public final class MultiblockVisualizationHandler {
 				state = Blocks.RED_CONCRETE.defaultBlockState();
 			}
 
-			Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, ms, buffers, 0xF000F0, OverlayTexture.NO_OVERLAY);
+			blockModelResolver.update(blockModelRenderState, state, BlockDisplayContext.create());
+			blockModelRenderState.submit(ms, submitNodeStorage, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0xF000F0);
 
 			ms.popPose();
 		}

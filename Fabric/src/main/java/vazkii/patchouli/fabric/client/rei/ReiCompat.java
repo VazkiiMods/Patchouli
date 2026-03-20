@@ -1,16 +1,5 @@
-package vazkii.patchouli.fabric.client.rei;
+/*package vazkii.patchouli.fabric.client.rei;
 
-import me.shedaniel.rei.api.client.config.ConfigObject;
-import me.shedaniel.rei.api.client.favorites.FavoriteEntry;
-import me.shedaniel.rei.api.client.view.ViewSearchBuilder;
-import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.ItemStack;
-
-import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.common.base.PatchouliSounds;
 
 public class ReiCompat {
 	public static boolean handleRecipeKeybind(int keyCode, int scanCode, ItemStack stack) {
@@ -44,4 +33,4 @@ public class ReiCompat {
 		instance.getFavoriteEntries().remove(entry);
 		instance.getFavoriteEntries().add(entry);
 	}
-}
+}*/

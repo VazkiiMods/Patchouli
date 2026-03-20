@@ -4,7 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.recipe.v1.sync.ClientRecipeSynchronizedEvent;
-import net.fabricmc.fabric.api.client.rendering.v1.SpecialGuiElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.PictureInPictureRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -33,8 +33,8 @@ public class FabricClientInitializer implements ClientModInitializer {
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
 		ClientTickEvents.END_CLIENT_TICK.register(ClientTicker::endClientTick);
-		HudElementRegistry.attachElementAfter(VanillaHudElements.CROSSHAIR, BookOverlayHud.ID, BookOverlayHud::render);
-		HudElementRegistry.attachElementBefore(VanillaHudElements.BOSS_BAR, MultiblockProgressHud.ID, MultiblockProgressHud::render);
+		HudElementRegistry.attachElementAfter(VanillaHudElements.CROSSHAIR, BookOverlayHud.ID, BookOverlayHud::extractRenderState);
+		HudElementRegistry.attachElementBefore(VanillaHudElements.BOSS_BAR, MultiblockProgressHud.ID, MultiblockProgressHud::extractRenderState);
 		UseBlockCallback.EVENT.register(BookRightClickHandler::onRightClick);
 		UseBlockCallback.EVENT.register(MultiblockVisualizationHandler.INSTANCE::onPlayerInteract);
 		ClientTickEvents.END_CLIENT_TICK.register(MultiblockVisualizationHandler.INSTANCE::onClientTick);
@@ -44,12 +44,12 @@ public class FabricClientInitializer implements ClientModInitializer {
 		ItemModels.ID_MAPPER.put(BookModel.Unbaked.ID, BookModel.Unbaked.MAP_CODEC);
 		RangeSelectItemModelProperties.ID_MAPPER.put(BookCompletionModelProperty.ID, BookCompletionModelProperty.MAP_CODEC);
 
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(BookContentResourceListenerLoader.ID, BookContentResourceListenerLoader.INSTANCE);
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(BookReloadHook.ID, BookReloadHook.INSTANCE);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(BookContentResourceListenerLoader.ID, BookContentResourceListenerLoader.INSTANCE);
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(BookReloadHook.ID, BookReloadHook.INSTANCE);
 
 		ClientRecipeSynchronizedEvent.EVENT.register((minecraft, synchronizedRecipes) -> {
 			ClientRecipes.INSTANCE.receivedRecipes(synchronizedRecipes.recipes());
 		});
-		SpecialGuiElementRegistry.register(ctx -> new MultiblockPiPRenderer(ctx.vertexConsumers(), ctx.client(), ctx.orderedRenderCommandQueue()));
+		PictureInPictureRendererRegistry.register(ctx -> new MultiblockPiPRenderer(ctx.bufferSource(), ctx.minecraft(), ctx.submitNodeCollector()));
 	}
 }
