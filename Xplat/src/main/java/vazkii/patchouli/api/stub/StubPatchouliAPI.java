@@ -1,11 +1,16 @@
 package vazkii.patchouli.api.stub;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -120,6 +125,21 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 	@Override
 	public Component getSubtitle(Identifier bookId) {
 		throw new IllegalArgumentException("Patchouli is not loaded");
+	}
+
+	@Override
+	public Holder<Item> getBookItem() {
+		return Items.AIR.builtInRegistryHolder();
+	}
+
+	@Override
+	public TypedDataComponent<Identifier> makeBookDataComponent(Identifier book) {
+		throw new IllegalStateException("Patchouli is not loaded");
+	}
+
+	@Override
+	public @Nullable ItemStackTemplate getBookStackTemplate(Identifier book) {
+		return null;
 	}
 
 	@Override

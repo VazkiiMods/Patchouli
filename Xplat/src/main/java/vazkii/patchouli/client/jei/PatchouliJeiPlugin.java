@@ -46,7 +46,7 @@ public class PatchouliJeiPlugin implements IModPlugin {
 
 	@Override
 	public void registerItemSubtypes(@NotNull ISubtypeRegistration registration) {
-		registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, PatchouliItems.BOOK, (stack, context) -> {
+		registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, PatchouliItems.BOOK.value(), (stack, context) -> {
 			if (!stack.has(PatchouliDataComponents.BOOK)) {
 				return "";
 			}

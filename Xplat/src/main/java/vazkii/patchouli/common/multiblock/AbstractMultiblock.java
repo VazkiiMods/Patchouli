@@ -152,7 +152,7 @@ public abstract class AbstractMultiblock implements IMultiblock, BlockAndLightGe
 
 	@Override
 	public LevelLightEngine getLightEngine() {
-		return null;
+		return LevelLightEngine.EMPTY;
 	}
 
 	@Override

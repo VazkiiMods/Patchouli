@@ -15,6 +15,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.Level;
 
 import vazkii.patchouli.api.PatchouliAPI;
@@ -23,7 +24,6 @@ import vazkii.patchouli.client.base.ClientAdvancements;
 import vazkii.patchouli.client.book.*;
 import vazkii.patchouli.common.base.PatchouliConfig;
 import vazkii.patchouli.common.base.PatchouliSounds;
-import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.common.util.SerializationUtil;
 import vazkii.patchouli.xplat.XplatModContainer;
@@ -59,7 +59,7 @@ public class Book {
 
 	public final XplatModContainer owner;
 	public final Identifier id;
-	private Supplier<ItemStack> bookItem;
+	private final Supplier<@Nullable ItemStackTemplate> bookItem;
 
 	public final int textColor;
 	public final int headerColor;
@@ -177,16 +177,15 @@ public class Book {
 			// in registries; wrap in try-catch in case of faulty item definition
 			bookItem = Suppliers.memoize(() -> {
 				try {
-					return ItemStackUtil.loadFromParsed(
-							ItemStackUtil.deserializeStack(customBookItem, VanillaRegistries.createLookup()));
+					return ItemStackUtil.deserializeStack(customBookItem, VanillaRegistries.createLookup());
 				} catch (Exception e) {
 					PatchouliAPI.LOGGER.warn("Failed to parse item \"{}\" for book {} defined by mod {}, skipping",
 							customBookItem, id, owner.getId(), e);
-					return ItemStack.EMPTY;
+					return null;
 				}
 			});
 		} else {
-			bookItem = Suppliers.memoize(() -> ItemModBook.forBook(id));
+			bookItem = Suppliers.memoize(() -> PatchouliAPI.get().getBookStackTemplate(id));
 		}
 
 		macros.putAll(DEFAULT_MACROS);
@@ -196,7 +195,8 @@ public class Book {
 	}
 
 	public ItemStack getBookItem() {
-		return this.bookItem.get();
+		ItemStackTemplate template = this.bookItem.get();
+		return template == null ? ItemStack.EMPTY : template.create();
 	}
 
 	public void markUpdated() {

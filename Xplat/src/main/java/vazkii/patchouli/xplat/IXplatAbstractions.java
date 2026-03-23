@@ -2,9 +2,11 @@ package vazkii.patchouli.xplat;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -14,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.ServiceLoader;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 /**
@@ -60,4 +64,6 @@ public interface IXplatAbstractions {
 	Ingredient createComponentIngredient(ItemStack itemStack);
 
 	Ingredient createCompoundIngredient(Ingredient[] ingredients);
+
+	<T extends Item> Holder<Item> registerItem(String name, Function<Item.Properties, T> factory, UnaryOperator<Item.Properties> operator);
 }

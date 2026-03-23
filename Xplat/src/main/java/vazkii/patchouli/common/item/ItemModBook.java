@@ -1,6 +1,8 @@
 package vazkii.patchouli.common.item;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -11,6 +13,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
@@ -53,20 +56,16 @@ public class ItemModBook extends Item {
 	}
 
 	public static ItemStack forBook(Book book) {
-		return forBook(book.id);
+		return forBook(book.id).create();
 	}
 
-	public static ItemStack forBook(Identifier book) {
-		ItemStack stack = new ItemStack(PatchouliItems.BOOK);
-
-		stack.set(PatchouliDataComponents.BOOK, book);
-
-		return stack;
+	public static ItemStackTemplate forBook(Identifier book) {
+		return new ItemStackTemplate(PatchouliItems.BOOK, 1, DataComponentPatch.builder().set(PatchouliDataComponents.BOOK, book).build());
 	}
 
-	// SoftImplement IForgeItem
-	public String getCreatorModId(ItemStack stack) {
-		var book = getBook(stack);
+	// SoftImplement IItemExtension
+	public String getCreatorModId(HolderLookup.Provider registries, ItemStack itemStack) {
+		var book = getBook(itemStack);
 		if (book != null) {
 			return book.owner.getId();
 		}

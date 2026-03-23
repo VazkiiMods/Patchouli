@@ -3,11 +3,15 @@ package vazkii.patchouli.api;
 import com.google.common.base.Suppliers;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,7 +34,7 @@ import java.util.function.Supplier;
 public class PatchouliAPI {
 	private static final Supplier<IPatchouliAPI> LAZY_INSTANCE = Suppliers.memoize(() -> {
 		try {
-			return (IPatchouliAPI) Class.forName("vazkii.patchouli.common.base.PatchouliAPIImpl").newInstance();
+			return (IPatchouliAPI) Class.forName("vazkii.patchouli.common.base.PatchouliAPIImpl").getConstructor().newInstance();
 		} catch (ReflectiveOperationException e) {
 			LogManager.getLogger().warn("Unable to find PatchouliAPIImpl, using a dummy");
 			return StubPatchouliAPI.INSTANCE;
@@ -123,7 +127,23 @@ public class PatchouliAPI {
 		Component getSubtitle(Identifier bookId);
 
 		/**
-		 * Returns a book item with its NBT set to the book passed in. Works on both sides.
+		 * Returns the book item. Works on both sides.
+		 */
+		Holder<Item> getBookItem();
+
+		/**
+		 * Returns typed data component set to the book passed in. Works on both sides.
+		 */
+		TypedDataComponent<Identifier> makeBookDataComponent(Identifier book);
+
+		/**
+		 * Returns a book item stack template with its datacomponent set to the book passed in. Works on both sides.
+		 */
+		@Nullable
+		ItemStackTemplate getBookStackTemplate(Identifier book);
+
+		/**
+		 * Returns a book item stack with its datacomponent set to the book passed in. Works on both sides.
 		 */
 		ItemStack getBookStack(Identifier book);
 

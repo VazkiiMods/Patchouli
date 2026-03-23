@@ -5,12 +5,17 @@ import com.google.common.base.Preconditions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -31,7 +36,8 @@ import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
 import vazkii.patchouli.common.advancement.BookOpenTrigger;
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
-import vazkii.patchouli.common.item.ItemModBook;
+import vazkii.patchouli.common.item.PatchouliDataComponents;
+import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.common.multiblock.DenseMultiblock;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SparseMultiblock;
@@ -39,6 +45,7 @@ import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.xplat.IXplatAbstractions;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -124,6 +131,30 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	}
 
 	@Override
+	public Holder<Item> getBookItem() {
+		return PatchouliItems.BOOK;
+	}
+
+	@Override
+	public TypedDataComponent<Identifier> makeBookDataComponent(Identifier book) {
+		return new TypedDataComponent<>(PatchouliDataComponents.BOOK, book);
+	}
+
+	@Override
+	public @Nullable ItemStackTemplate getBookStackTemplate(Identifier book) {
+		return new ItemStackTemplate(
+				getBookItem(),
+				1,
+				DataComponentPatch.builder().set(makeBookDataComponent(book)).build());
+	}
+
+	@Override
+	public ItemStack getBookStack(Identifier book) {
+		var template = getBookStackTemplate(book);
+		return template == null ? ItemStack.EMPTY : template.create();
+	}
+
+	@Override
 	public void registerCommand(String name, Function<IStyleStack, String> command) {
 		assertPhysicalClient();
 		BookTextParser.register(command::apply, name);
@@ -133,11 +164,6 @@ public class PatchouliAPIImpl implements IPatchouliAPI {
 	public void registerFunction(String name, BiFunction<String, IStyleStack, String> function) {
 		assertPhysicalClient();
 		BookTextParser.register(function::apply, name);
-	}
-
-	@Override
-	public ItemStack getBookStack(Identifier book) {
-		return ItemModBook.forBook(book);
 	}
 
 	@Override

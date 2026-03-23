@@ -1,23 +1,24 @@
 package vazkii.patchouli.client.multiblock;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexSorting;
+import com.mojang.blaze3d.vertex.*;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.SectionBufferBuilderPack;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.block.*;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.chunk.RenderSectionRegion;
 import net.minecraft.client.renderer.chunk.SectionCompiler;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class MultiblockPiPRenderer extends PictureInPictureRenderer<MultiblockPiPRenderState> {
+import java.util.Map;
+
+public final class MultiblockPiPRenderer extends PictureInPictureRenderer<MultiblockPiPRenderState> {
 	private final Minecraft mc;
 	private final SubmitNodeCollector submitNodeCollector;
 	private final BlockEntityRenderDispatcher blockEntityRenderer;
@@ -40,7 +41,7 @@ public class MultiblockPiPRenderer extends PictureInPictureRenderer<MultiblockPi
 	 */
 	@Override
 	protected void renderToTexture(MultiblockPiPRenderState renderState, PoseStack poseStack) {
-		/*AbstractMultiblock multiblock = renderState.multiblock();
+		/*MultiblockTintWrapper multiblock = new MultiblockTintWrapper(renderState.multiblock());
 		multiblock.setWorld(mc.level);
 		AABB bounds = multiblock.getBounds();
 		double sizeX = bounds.getXsize();
@@ -69,11 +70,21 @@ public class MultiblockPiPRenderer extends PictureInPictureRenderer<MultiblockPi
 		poseStack.mulPose(renderState.rotation());
 		poseStack.translate(offX, 0, offZ);
 		
-		Function<ChunkSectionLayer, VertexConsumer> bufferLookup = layer -> bufferSource.getBuffer(layer != ChunkSectionLayer.TRANSLUCENT ? Sheets.cutoutBlockSheet() : Sheets.translucentBlockItemSheet());
+		BlockStateModelSet blockStateModelSet = mc.getModelManager().getBlockStateModelSet();
+		ModelBlockRenderer blockRenderer = new ModelBlockRenderer(false, true, mc.getBlockColors());
+		FluidRenderer fluidRenderer = new FluidRenderer(mc.getModelManager().getFluidStateModelSet());
+		
+		Map<ChunkSectionLayer, ByteBufferBuilder> builders = Util.makeEnumMap(ChunkSectionLayer.class, (layer) -> new ByteBufferBuilder(layer.bufferSize()));
+		Map<ChunkSectionLayer, BufferBuilder> startedLayers = new EnumMap<>(ChunkSectionLayer.class);
+		BlockQuadOutput quadOutput = (x, y, z, quad, instance) -> getOrBeginLayer(startedLayers, builders, quad.materialInfo().layer()).putBlockBakedQuad(x, y, z, quad, instance);
+		FluidRenderer.Output fluidOutput = layerx -> getOrBeginLayer(startedLayers, builders, layerx);
+		
 		CameraRenderState cameraRenderState = new CameraRenderState();
 		
 		for (BlockPos pos : BlockPos.betweenClosed(bounds)) {
 			BlockState blockstate = multiblock.getBlockState(pos);
+		
+			if (blockstate.isAir()) continue;
 		
 			if (blockstate.hasBlockEntity()) {
 				BlockEntity blockentity = multiblock.getBlockEntity(pos);
@@ -84,17 +95,26 @@ public class MultiblockPiPRenderer extends PictureInPictureRenderer<MultiblockPi
 		
 			FluidState fluidstate = blockstate.getFluidState();
 			if (!fluidstate.isEmpty()) {
-				ChunkSectionLayer layer = ItemBlockRenderTypes.getRenderLayer(fluidstate);
-				blockRenderer.renderLiquid(pos, multiblock, new LiquidBlockVertexConsumer(bufferLookup.apply(layer), poseStack, pos), blockstate, fluidstate);
+				fluidRenderer.tesselate(multiblock, pos, layer -> new LiquidBlockVertexConsumer(fluidOutput.getBuilder(layer), poseStack, pos), blockstate, fluidstate);
 			}
 		
 			if (blockstate.getRenderShape() == RenderShape.MODEL) {
-				RAND.setSeed(blockstate.getSeed(pos));
-				IClientXplatAbstractions.INSTANCE.renderForMultiblock(blockRenderer, blockstate, pos, multiblock, poseStack, bufferLookup, RAND);
+				blockRenderer.tesselateBlock(quadOutput, 0, 0, 0, multiblock, pos, blockstate, blockStateModelSet.get(blockstate), 0L);
 			}
 		}
 		
 		poseStack.popPose();*/
+	}
+
+	private static BufferBuilder getOrBeginLayer(Map<ChunkSectionLayer, BufferBuilder> startedLayers, Map<ChunkSectionLayer, ByteBufferBuilder> buffers, ChunkSectionLayer layer) {
+		BufferBuilder builder = startedLayers.get(layer);
+		if (builder == null) {
+			ByteBufferBuilder buffer = buffers.get(layer);
+			builder = new BufferBuilder(buffer, VertexFormat.Mode.QUADS, layer.vertexFormat());
+			startedLayers.put(layer, builder);
+		}
+
+		return builder;
 	}
 
 	private <E extends BlockEntity, S extends BlockEntityRenderState> void handleBlockEntity(E blockEntity, PoseStack poseStack, CameraRenderState cameraRenderState) {

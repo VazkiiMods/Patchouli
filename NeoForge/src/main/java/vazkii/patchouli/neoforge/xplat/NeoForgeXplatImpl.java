@@ -2,9 +2,11 @@ package vazkii.patchouli.neoforge.xplat;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.api.distmarker.Dist;
@@ -13,9 +15,11 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import vazkii.patchouli.api.BookContentsReloadEvent;
 import vazkii.patchouli.api.BookDrawScreenEvent;
+import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.neoforge.network.NeoForgeNetworkHandler;
 import vazkii.patchouli.xplat.IXplatAbstractions;
 import vazkii.patchouli.xplat.XplatModContainer;
@@ -27,9 +31,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class NeoForgeXplatImpl implements IXplatAbstractions {
 	private final Map<String, NeoForgeXplatModContainer> modCache = new HashMap<>();
+	public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(PatchouliAPI.MOD_ID);
 
 	@Override
 	public void fireDrawBookScreen(Identifier book, Screen gui, int mouseX, int mouseY, float partialTicks, GuiGraphicsExtractor graphics) {
@@ -100,5 +107,10 @@ public class NeoForgeXplatImpl implements IXplatAbstractions {
 	@Override
 	public Ingredient createCompoundIngredient(Ingredient[] ingredients) {
 		return CompoundIngredient.of(ingredients);
+	}
+
+	@Override
+	public <T extends Item> Holder<Item> registerItem(String name, Function<Item.Properties, T> factory, UnaryOperator<Item.Properties> operator) {
+		return ITEMS.registerItem(name, factory, operator);
 	}
 }

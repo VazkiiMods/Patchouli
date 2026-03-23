@@ -10,17 +10,12 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.SubmitNodeStorage;
-import net.minecraft.client.renderer.block.BlockModelRenderState;
-import net.minecraft.client.renderer.block.BlockModelResolver;
-import net.minecraft.client.renderer.block.model.BlockDisplayContext;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -30,18 +25,21 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 
-import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 
 import vazkii.patchouli.api.IMultiblock;
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.base.PersistentData.Bookmark;
+import vazkii.patchouli.client.multiblock.GhostBlockGeometry;
 import vazkii.patchouli.common.multiblock.StateMatcher;
 import vazkii.patchouli.common.util.RotationUtil;
 import vazkii.patchouli.mixin.client.AccessorMultiBufferSource;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
 import java.util.SequencedMap;
 import java.util.function.Function;
 
@@ -60,7 +58,6 @@ public final class MultiblockVisualizationHandler {
 	private int timeComplete;
 	private BlockState lookingState;
 	private BlockPos lookingPos;
-	private MultiBufferSource.BufferSource buffers = null;
 
 	public boolean hasMultiblock() {
 		return hasMultiblock;
@@ -120,7 +117,7 @@ public final class MultiblockVisualizationHandler {
 		}
 	}
 
-	public void onWorldRenderLast(PoseStack ms, Matrix4f pose) {
+	public void onWorldRenderLast(PoseStack ms, Matrix4fc pose) {
 		if (hasMultiblock && multiblock != null) {
 			renderMultiblock(Minecraft.getInstance().level, ms, pose);
 		}
@@ -153,7 +150,7 @@ public final class MultiblockVisualizationHandler {
 		}
 	}
 
-	public void renderMultiblock(Level world, PoseStack ms, Matrix4f pose) {
+	public void renderMultiblock(Level world, PoseStack ms, Matrix4fc pose) {
 		ms.mulPose(pose);
 		Minecraft mc = Minecraft.getInstance();
 		if (!isAnchored) {
@@ -172,16 +169,9 @@ public final class MultiblockVisualizationHandler {
 			facingRotation = Rotation.NONE;
 		}
 
-		EntityRenderDispatcher erd = mc.getEntityRenderDispatcher();
-		double renderPosX = erd.camera.position().x();
-		double renderPosY = erd.camera.position().y();
-		double renderPosZ = erd.camera.position().z();
 		ms.pushPose();
-		ms.translate(-renderPosX, -renderPosY, -renderPosZ);
-
-		if (buffers == null) {
-			buffers = initBuffers(mc.renderBuffers().bufferSource());
-		}
+		Vec3 cameraPosition = mc.getEntityRenderDispatcher().camera.position();
+		ms.translate(cameraPosition.multiply(-1, -1, -1));
 
 		BlockPos checkPos = null;
 		if (mc.hitResult instanceof BlockHitResult blockRes) {
@@ -192,14 +182,12 @@ public final class MultiblockVisualizationHandler {
 		lookingState = null;
 		lookingPos = checkPos;
 
-		BlockModelResolver blockModelResolver = new BlockModelResolver(mc.getModelManager());
-		BlockModelRenderState blockModelRenderState = new BlockModelRenderState();
 		SubmitNodeStorage submitNodeStorage = mc.gameRenderer.getFeatureRenderDispatcher().getSubmitNodeStorage();
 
 		Pair<BlockPos, Collection<IMultiblock.SimulateResult>> sim = multiblock.simulate(world, getStartPos(), getFacingRotation(), true);
 		for (IMultiblock.SimulateResult r : sim.getSecond()) {
 			float alpha = 0.3F;
-			if (r.getWorldPosition().equals(checkPos)) {
+			if (Objects.equals(r.getWorldPosition(), checkPos)) {
 				lookingState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame);
 				alpha = 0.6F + (float) (Math.sin(ClientTicker.total * 0.3F) + 1F) * 0.1F;
 			}
@@ -212,7 +200,15 @@ public final class MultiblockVisualizationHandler {
 
 				if (!r.test(world, facingRotation)) {
 					BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicker.ticksInGame).rotate(facingRotation);
-					renderBlock(blockModelResolver, submitNodeStorage, blockModelRenderState, renderState, r.getWorldPosition(), alpha, ms);
+					float scale = 1;
+					if (renderState.getBlock() == Blocks.AIR) {
+						renderState = Blocks.RED_CONCRETE.defaultBlockState();
+						scale = 0.3F;
+					}
+					submitNodeStorage.submitCustomGeometry(
+							ms,
+							RenderTypes.translucentMovingBlock(),
+							new GhostBlockGeometry(r.getWorldPosition(), renderState, alpha, scale));
 
 					if (air) {
 						airFilled++;
@@ -223,32 +219,10 @@ public final class MultiblockVisualizationHandler {
 			}
 		}
 
-		buffers.endBatch();
 		ms.popPose();
 
 		if (!isAnchored) {
 			blocks = blocksDone = 0;
-		}
-	}
-
-	public void renderBlock(BlockModelResolver blockModelResolver, SubmitNodeStorage submitNodeStorage, BlockModelRenderState blockModelRenderState, BlockState state, BlockPos pos, float alpha, PoseStack ms) {
-		if (pos != null) {
-			ms.pushPose();
-			ms.translate(pos.getX(), pos.getY(), pos.getZ());
-
-			if (state.getBlock() == Blocks.AIR) {
-				float scale = 0.3F;
-				float off = (1F - scale) / 2;
-				ms.translate(off, off, -off);
-				ms.scale(scale, scale, scale);
-
-				state = Blocks.RED_CONCRETE.defaultBlockState();
-			}
-
-			blockModelResolver.update(blockModelRenderState, state, BlockDisplayContext.create());
-			blockModelRenderState.submit(ms, submitNodeStorage, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0xF000F0);
-
-			ms.popPose();
 		}
 	}
 

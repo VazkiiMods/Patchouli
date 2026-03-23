@@ -5,14 +5,21 @@ import net.fabricmc.fabric.api.recipe.v1.ingredient.DefaultCustomIngredients;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import vazkii.patchouli.api.BookContentsReloadCallback;
 import vazkii.patchouli.api.BookDrawScreenCallback;
+import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.fabric.network.FabricMessageOpenBookGui;
 import vazkii.patchouli.fabric.network.FabricMessageReloadBookContents;
 import vazkii.patchouli.xplat.IXplatAbstractions;
@@ -23,6 +30,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public class FabricXplatImpl implements IXplatAbstractions {
 	@Override
@@ -93,5 +102,12 @@ public class FabricXplatImpl implements IXplatAbstractions {
 	@Override
 	public Ingredient createCompoundIngredient(Ingredient[] ingredients) {
 		return DefaultCustomIngredients.any(ingredients);
+	}
+
+	@Override
+	public <T extends Item> Holder<Item> registerItem(String name, Function<Item.Properties, T> factory, UnaryOperator<Item.Properties> operator) {
+		Identifier identifier = Identifier.fromNamespaceAndPath(PatchouliAPI.MOD_ID, name);
+		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, identifier);
+		return Registry.registerForHolder(BuiltInRegistries.ITEM, key, factory.apply(operator.apply(new Item.Properties()).setId(key)));
 	}
 }

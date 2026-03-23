@@ -8,11 +8,9 @@ import com.mojang.serialization.JsonOps;
 
 import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.commands.arguments.item.ItemParser;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -20,11 +18,10 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.display.SlotDisplayContext;
 import net.minecraft.world.level.Level;
-
-import org.apache.commons.lang3.tuple.Triple;
 
 import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.book.BookRegistry;
@@ -40,7 +37,7 @@ import java.util.List;
 public final class ItemStackUtil {
 	private ItemStackUtil() {}
 
-	public static Triple<Holder<Item>, DataComponentPatch, Integer> deserializeStack(String string, HolderLookup.Provider registries) {
+	public static ItemStackTemplate deserializeStack(String string, HolderLookup.Provider registries) {
 		StringReader reader = new StringReader(string.trim());
 		ItemParser itemParser = new ItemParser(registries);
 		try {
@@ -50,30 +47,14 @@ public final class ItemStackUtil {
 				reader.expect('#');
 				count = reader.readInt();
 			}
-			return Triple.of(result.item(), result.components(), count);
+			return new ItemStackTemplate(result.item(), count, result.components());
 		} catch (CommandSyntaxException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public static ItemStack loadFromParsed(Triple<Holder<Item>, DataComponentPatch, Integer> parsed) {
-		var holder = parsed.getLeft();
-		var components = parsed.getMiddle();
-		var count = parsed.getRight();
-		if (!holder.isBound() && holder.unwrapKey().isPresent()) {
-			throw new RuntimeException("Unknown item ID: " + holder.unwrapKey().get().identifier());
-		}
-		Item item = holder.value();
-		ItemStack stack = new ItemStack(item, count);
-
-		if (!components.isEmpty()) {
-			stack.applyComponents(components);
-		}
-		return stack;
-	}
-
 	public static ItemStack loadStackFromString(String res, HolderLookup.Provider registries) {
-		return loadFromParsed(deserializeStack(res, registries));
+		return deserializeStack(res, registries).create();
 	}
 
 	public static Ingredient loadIngredientFromString(String ingredientString, HolderLookup.Provider registries) {

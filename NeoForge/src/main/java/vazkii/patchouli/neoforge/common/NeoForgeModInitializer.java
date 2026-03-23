@@ -30,6 +30,7 @@ import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliDataComponents;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.neoforge.network.NeoForgeNetworkHandler;
+import vazkii.patchouli.neoforge.xplat.NeoForgeXplatImpl;
 
 @EventBusSubscriber(modid = PatchouliAPI.MOD_ID)
 @Mod(PatchouliAPI.MOD_ID)
@@ -39,15 +40,14 @@ public class NeoForgeModInitializer {
 
 		NeoForge.EVENT_BUS.addListener((OnDatapackSyncEvent evt) -> evt.sendRecipes(BuiltInRegistries.RECIPE_TYPE));
 		modBus.addListener(NeoForgeNetworkHandler::setupPackets);
+		NeoForgeXplatImpl.ITEMS.register(modBus);
+		PatchouliItems.init();
 		modBus.addListener((RegisterEvent evt) -> {
 			evt.register(Registries.SOUND_EVENT, rh -> {
 				PatchouliSounds.submitRegistrations(rh::register);
 			});
 			evt.register(Registries.DATA_COMPONENT_TYPE, rh -> {
 				PatchouliDataComponents.submitDataComponentRegistrations(rh::register);
-			});
-			evt.register(Registries.ITEM, rh -> {
-				PatchouliItems.submitItemRegistrations(rh::register);
 			});
 			evt.register(Registries.TRIGGER_TYPE, rh -> PatchouliCriteriaTriggers.submitTriggerRegistrations(rh::register));
 		});
