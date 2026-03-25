@@ -5,21 +5,6 @@ plugins {
     id 'eclipse'
 }
 
-version = "${mc_version}-${build_number}-NEOFORGE"
-if (System.getenv().RELEASE_MODE != "1") {
-    version += '-SNAPSHOT'
-}
-
-repositories {
-    maven {
-        name = "JEI"
-        url "https://maven.blamejared.com/"
-        content {
-            includeGroup "mezz.jei"
-        }
-    }
-}
-
 neoForge {
     version = neoforge_version
 
@@ -47,17 +32,11 @@ neoForge {
     }
 }
 
-dependencies {
-    implementation project(":Xplat")
-
-    compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"
-    testCompileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"
-}
-
 tasks.named('test').configure {
     //Disable builtin test as we have JUnit enabled in Xplat
     enabled(false)
 }
+
 jar {
     manifest {
         attributes([
@@ -71,20 +50,9 @@ jar {
     }
 }
 
-compileJava {
-    source(project(":Xplat").sourceSets.main.allSource)
-}
+tasks.register('apiJar', Jar) {
+    dependsOn classes
 
-sourcesJar {
-    from project(":Xplat").sourceSets.main.allJava
-}
-
-processResources {
-    from project(":Xplat").sourceSets.main.resources
-}
-
-task apiJar(type: Jar, dependsOn: classes) {
-    // Sources included because of MinecraftForge/ForgeGradle#369
     from project(":Xplat").sourceSets.main.allJava
     from(sourceSets.main.allJava)
     from(sourceSets.main.output)
@@ -94,20 +62,12 @@ task apiJar(type: Jar, dependsOn: classes) {
     archiveClassifier = 'api'
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId project.group
-            artifactId project.base.archivesName.get()
-            version project.version
-            artifact jar
-            artifact sourcesJar
-            artifact apiJar
-        }
-    }
-    repositories {
-        maven {
-            url "file://" + System.getenv("local_maven")
-        }
-    }
+artifacts {
+    archives jar
+    archives sourcesJar
+    archives apiJar
+}
+
+publishing.publications.named("mavenJava") {
+    artifact apiJar
 }

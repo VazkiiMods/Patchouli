@@ -14,18 +14,52 @@ subprojects {
     apply plugin: 'pmd'
     apply plugin: "com.diffplug.spotless"
     apply plugin: 'maven-publish'
-    java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+    java.toolchain.languageVersion = JavaLanguageVersion.of(java_version)
     java.withSourcesJar()
-    base.archivesName = "${mod_name}"
+    base.archivesName = "${mod_name}-${it.name}"
+
+    version = "${mc_version}-${build_number}"
+    if (System.getenv().RELEASE_MODE != "1") {
+        version += '-SNAPSHOT'
+    }
 
     repositories {
         mavenLocal()
         mavenCentral()
+        maven {
+            name = "JEI"
+            url "https://maven.blamejared.com/"
+            content {
+                includeGroup "mezz.jei"
+            }
+        }
+    }
+
+    dependencies {
+        compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"
+    }
+
+    if (it.name != 'Xplat') {
+        def xplat = project(":Xplat")
+
+        dependencies {
+            implementation xplat
+        }
+
+        gradle.projectsEvaluated {
+            jar {
+                from xplat.sourceSets.main.output
+            }
+    
+            sourcesJar {
+                from xplat.sourceSets.main.allJava
+            }
+        }
     }
 
     tasks.withType(JavaCompile).configureEach {
         it.options.encoding = 'UTF-8'
-        it.options.release = 25
+        it.options.release = java.toolchain.languageVersion.map { it.asInt() }
     }
 
     tasks.withType(GenerateModuleMetadata).configureEach {
@@ -61,6 +95,22 @@ subprojects {
             eclipse().configFile rootProject.file('spotless/eclipseformat.xml')
             removeUnusedImports()
             importOrderFile rootProject.file('spotless/eclipse.importorder')
+        }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                groupId project.group
+                artifactId project.base.archivesName.get()
+                version project.version
+                from components.java
+            }
+        }
+        repositories {
+            maven {
+                url System.getenv("local_maven")
+            }
         }
     }
 }
