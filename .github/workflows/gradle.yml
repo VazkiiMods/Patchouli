@@ -11,7 +11,7 @@ jobs:
       uses: actions/setup-java@v4
       with:
         distribution: 'adopt'
-        java-version: '21'
+        java-version: '25'
     - name: Validate gradlew integrity
       uses: gradle/wrapper-validation-action@v2
     - name: Restore cache
@@ -40,8 +40,8 @@ jobs:
         SNAPSHOT_SUFFIX=${{ !startsWith(github.ref, 'refs/tags/release-') && '-SNAPSHOT' || '' }}
         MC=$(awk -F '=' '/mc_version/ { print $2; }' gradle.properties)
         BUILD=$(awk -F '=' '/build_number/ { print $2; }' gradle.properties)
-        echo "neoforge=NeoForge/build/libs/Patchouli-${MC}-${BUILD}-NEOFORGE${SNAPSHOT_SUFFIX}.jar" >> "$GITHUB_OUTPUT"
-        echo "fabric=Fabric/build/libs/Patchouli-${MC}-${BUILD}-FABRIC${SNAPSHOT_SUFFIX}.jar" >> "$GITHUB_OUTPUT"
+        echo "neoforge=NeoForge/build/libs/Patchouli-NeoForge-${MC}-${BUILD}${SNAPSHOT_SUFFIX}.jar" >> "$GITHUB_OUTPUT"
+        echo "fabric=Fabric/build/libs/Patchouli-Fabric-${MC}-${BUILD}${SNAPSHOT_SUFFIX}.jar" >> "$GITHUB_OUTPUT"
     - name: Sign jars
       env:
         SIGNING_KEY: ${{ secrets.VIOLET_MOON_SIGNING_KEY }}
