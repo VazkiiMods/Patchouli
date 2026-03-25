@@ -16,12 +16,12 @@ Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and
 [[dependencies.patchouli]]
 modId="neoforge"
 type="REQUIRED"
-versionRange="[26.1.0.0-alpha.15,)"
+versionRange="[26.1.0.1-beta,26.2)"
 
 [[dependencies.patchouli]]
 modId="minecraft"
 type="REQUIRED"
-versionRange="[26.1-pre-3,26.2)"
+versionRange="[26.1,26.2)"
 
 [[mixins]]
 config="patchouli_xplat.mixins.json"
