@@ -38,8 +38,8 @@ jobs:
       run: |
         # Check is backwards because "" is falsey, which wouldn't work for boolean punning
         SNAPSHOT_SUFFIX=${{ !startsWith(github.ref, 'refs/tags/release-') && '-SNAPSHOT' || '' }}
-        MC=$(awk -F '=' '/mc_version/ { print $2; }' gradle.properties)
-        BUILD=$(awk -F '=' '/build_number/ { print $2; }' gradle.properties)
+        MC=$(awk -F '=' '$1~/^minecraft_version$/ { print $2; }' gradle.properties)
+        BUILD=$(awk -F '=' '$1~/^build_number$/ { print $2; }' gradle.properties)
         echo "neoforge=NeoForge/build/libs/Patchouli-NeoForge-${MC}-${BUILD}${SNAPSHOT_SUFFIX}.jar" >> "$GITHUB_OUTPUT"
         echo "fabric=Fabric/build/libs/Patchouli-Fabric-${MC}-${BUILD}${SNAPSHOT_SUFFIX}.jar" >> "$GITHUB_OUTPUT"
     - name: Sign jars
