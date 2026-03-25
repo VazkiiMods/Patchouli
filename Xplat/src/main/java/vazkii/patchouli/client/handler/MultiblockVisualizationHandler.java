@@ -151,6 +151,7 @@ public final class MultiblockVisualizationHandler {
 	}
 
 	public void renderMultiblock(Level world, PoseStack ms, Matrix4fc pose) {
+		ms.pushPose();
 		ms.mulPose(pose);
 		Minecraft mc = Minecraft.getInstance();
 		if (!isAnchored) {
@@ -219,11 +220,12 @@ public final class MultiblockVisualizationHandler {
 			}
 		}
 
-		ms.popPose();
-
 		if (!isAnchored) {
 			blocks = blocksDone = 0;
 		}
+
+		ms.popPose();
+		ms.popPose();
 	}
 
 	public IMultiblock getMultiblock() {

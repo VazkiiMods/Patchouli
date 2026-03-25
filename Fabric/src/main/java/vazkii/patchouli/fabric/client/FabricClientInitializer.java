@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.recipe.v1.sync.ClientRecipeSynchronizedEve
 import net.fabricmc.fabric.api.client.rendering.v1.PictureInPictureRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.client.renderer.item.ItemModels;
@@ -49,6 +50,9 @@ public class FabricClientInitializer implements ClientModInitializer {
 
 		ClientRecipeSynchronizedEvent.EVENT.register((minecraft, synchronizedRecipes) -> {
 			ClientRecipes.INSTANCE.receivedRecipes(synchronizedRecipes.recipes());
+		});
+		LevelRenderEvents.END_MAIN.register(context -> {
+			MultiblockVisualizationHandler.INSTANCE.onWorldRenderLast(context.poseStack(), context.levelState().cameraRenderState.viewRotationMatrix);
 		});
 		PictureInPictureRendererRegistry.register(ctx -> new MultiblockPiPRenderer(ctx.bufferSource(), ctx.minecraft(), ctx.submitNodeCollector()));
 	}

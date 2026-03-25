@@ -57,6 +57,9 @@ public class NeoForgeClientInitializer {
 		NeoForge.EVENT_BUS.addListener((RecipesReceivedEvent e) -> {
 			ClientRecipes.INSTANCE.receivedRecipes(e.getRecipeMap().values());
 		});
+		NeoForge.EVENT_BUS.addListener((RenderLevelStageEvent.AfterTranslucentParticles e) -> {
+			MultiblockVisualizationHandler.INSTANCE.onWorldRenderLast(e.getPoseStack(), e.getModelViewMatrix());
+		});
 		modBus.addListener((FMLClientSetupEvent e) -> {
 			ClientBookRegistry.INSTANCE.init();
 			PersistentData.setup();
@@ -78,6 +81,7 @@ public class NeoForgeClientInitializer {
 		modBus.addListener((RegisterPictureInPictureRenderersEvent e) -> {
 			e.register(MultiblockPiPRenderState.class, bufferSource -> new MultiblockPiPRenderer(bufferSource, Minecraft.getInstance(), Minecraft.getInstance().gameRenderer.getSubmitNodeStorage()));
 		});
+
 	}
 
 	private static @NotNull Identifier modLoc(String name) {
