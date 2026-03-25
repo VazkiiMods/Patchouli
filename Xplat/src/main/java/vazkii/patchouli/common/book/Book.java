@@ -125,7 +125,7 @@ public class Book {
 		this.bookTexture = SerializationUtil.getAsIdentifier(root, "book_texture", DEFAULT_BOOK_TEXTURE);
 		this.fillerTexture = SerializationUtil.getAsIdentifier(root, "filler_texture", DEFAULT_FILLER_TEXTURE);
 		this.craftingTexture = SerializationUtil.getAsIdentifier(root, "crafting_texture", DEFAULT_CRAFTING_TEXTURE);
-		this.model = SerializationUtil.getAsIdentifier(root, "model", DEFAULT_MODEL).withPrefix("item/");
+		this.model = SerializationUtil.getAsIdentifier(root, "model", DEFAULT_MODEL);
 		this.useBlockyFont = GsonHelper.getAsBoolean(root, "use_blocky_font", false);
 
 		this.owner = owner;
