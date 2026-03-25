@@ -16,7 +16,7 @@ subprojects {
     apply plugin: 'maven-publish'
     java.toolchain.languageVersion = JavaLanguageVersion.of(java_version)
     java.withSourcesJar()
-    base.archivesName = "${mod_name}-${it.name}"
+    base.archivesName = "${mod_name}-${it.name}".toLowerCase()
 
     version = "${mc_version}-${build_number}"
     if (System.getenv().RELEASE_MODE != "1") {
