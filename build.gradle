@@ -47,8 +47,12 @@ subprojects {
         }
 
         gradle.projectsEvaluated {
-            jar {
-                from xplat.sourceSets.main.output
+            compileJava {
+                source xplat.sourceSets.main.allSource
+            }
+
+            processResources {
+                from xplat.sourceSets.main.resources
             }
     
             sourcesJar {
