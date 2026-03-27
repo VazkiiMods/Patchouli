@@ -100,7 +100,6 @@ public class ItemModBook extends Item {
 
 	@Override
 	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltip, TooltipFlag flag) {
-		super.appendHoverText(stack, context, tooltipDisplay, tooltip, flag);
 
 		Identifier rl = getBookId(stack);
 		if (flag.isAdvanced()) {
@@ -115,7 +114,7 @@ public class ItemModBook extends Item {
 				tooltip.accept(Component.translatable("item.patchouli.guide_book.undefined")
 						.withStyle(ChatFormatting.DARK_GRAY));
 			} else {
-				tooltip.accept(Component.translatable("item.patchouli.guide_book.invalid", rl)
+				tooltip.accept(Component.translatable("item.patchouli.guide_book.invalid", rl.toString())
 						.withStyle(ChatFormatting.DARK_GRAY));
 			}
 		}
