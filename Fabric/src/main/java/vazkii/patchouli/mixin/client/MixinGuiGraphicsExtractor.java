@@ -12,9 +12,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import vazkii.patchouli.client.handler.TooltipHandler;
 
 @Mixin(GuiGraphicsExtractor.class)
-public class MixinGuiGraphics {
-	@Inject(at = @At("HEAD"), method = "tooltip(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V")
-	public void patchouli_onRenderTooltip(Font font, ItemStack stack, int x, int y, CallbackInfo info) {
-		TooltipHandler.onTooltip((GuiGraphicsExtractor) (Object) this, stack, x, y);
+public class MixinGuiGraphicsExtractor {
+	// Inject into setTooltipForNextFrame(Font font, ItemStack itemStack, int xo, int yo) at the head
+	@Inject(method = "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;II)V", at = @At("HEAD"))
+	public void patchouli_onSetTooltipForNextFrame(Font font, ItemStack itemStack, int xo, int yo, CallbackInfo ci) {
+		TooltipHandler.onTooltip((GuiGraphicsExtractor) (Object) this, itemStack, xo, yo);
 	}
 }
