@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "id": "patchouli",
+  "id": "${mod_id}",
   "version": "${version}",
 
-  "name": "Patchouli",
-  "description": "Patchouli: Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
   "authors": [
     "Vazkii",
     "williewillus"
@@ -35,8 +35,8 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.18.4",
-    "fabric-api": ">=0.144.0",
-    "minecraft": ">=26.1 <26.2"
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": ">=${fabric_api_version}",
+    "minecraft": ">=${mc_min_version} <${mc_max_version}"
   }
 }

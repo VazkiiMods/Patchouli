@@ -18,12 +18,12 @@ subprojects {
     java.withSourcesJar()
     base.archivesName = "${mod_name}-${it.name}".toLowerCase()
 
-    version = "${mc_version}-${build_number}"
+    it.version = "${mc_version}-${build_number}"
     if (System.getenv().RELEASE_MODE != "1") {
-        version += '-SNAPSHOT'
+        it.version += '-SNAPSHOT'
     }
 
-    repositories {
+    it.repositories {
         mavenLocal()
         mavenCentral()
         maven {
@@ -35,15 +35,35 @@ subprojects {
         }
     }
 
-    dependencies {
+    it.dependencies {
         compileOnly "mezz.jei:jei-${jei_mc_version}-common-api:${jei_version}"
     }
 
     if (it.name != 'Xplat') {
         def xplat = project(":Xplat")
 
-        dependencies {
+        it.dependencies {
             implementation xplat
+        }
+
+        def properties = [
+            "version": project.version,
+            "mod_name": mod_name,
+            "mod_id": mod_id,
+            "mod_description": mod_description,
+            "mc_min_version": mc_min_version,
+            "mc_max_version": mc_max_version,
+            "neoforge_version_range": neoforge_version_range,
+            "fabric_loader_version": fabric_loader,
+            "fabric_api_version": fabric_api,
+        ]
+
+        it.processResources {
+            inputs.properties properties
+
+            filesMatching(["fabric.mod.json", "META-INF/neoforge.mods.toml"]) {
+                expand properties
+            }
         }
 
         gradle.projectsEvaluated {
@@ -54,44 +74,42 @@ subprojects {
             processResources {
                 from xplat.sourceSets.main.resources
             }
-    
+
+            processTestResources {
+                from xplat.sourceSets.test.resources
+            }
+
             sourcesJar {
                 from xplat.sourceSets.main.allJava
             }
         }
     }
 
-    tasks.withType(JavaCompile).configureEach {
+    it.tasks.withType(JavaCompile).configureEach {
         it.options.encoding = 'UTF-8'
         it.options.release = java.toolchain.languageVersion.map { it.asInt() }
     }
 
-    tasks.withType(GenerateModuleMetadata).configureEach {
+    it.tasks.withType(GenerateModuleMetadata).configureEach {
         it.enabled = false
     }
 
-    pmd {
+    it.pmd {
         toolVersion '6.35.0'
         incrementalAnalysis.set(true)
         ruleSetFiles = rootProject.files("spotless/pmd-ruleset.xml")
     }
 
-    jar {
+    it.jar {
         from "LICENSE"
 
         exclude "**/*.bat"
         exclude "**/*.psd"
         exclude "**/*.exe"
         exclude "**/unused"
-
-        // exclude test data
-        exclude "**/assets/patchouli/patchouli_books/**"
-        exclude "**/data/patchouli/patchouli_books/**"
-        exclude "**/data/patchouli/advancements/**"
-        exclude "**/data/patchouli/recipes/**"
     }
 
-    spotless {
+    it.spotless {
         enforceCheck = false // workaround around jenkins having wrong line endings in some files
         // we explicitly check in github actions builds
         java {
@@ -102,7 +120,7 @@ subprojects {
         }
     }
 
-    publishing {
+    it.publishing {
         publications {
             mavenJava(MavenPublication) {
                 groupId project.group

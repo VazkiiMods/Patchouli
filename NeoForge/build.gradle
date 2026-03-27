@@ -8,11 +8,14 @@ plugins {
 neoForge {
     version = neoforge_version
 
+    addModdingDependenciesTo sourceSets.test
+
     runs {
         configureEach {
             gameDirectory = project.file('../run')
             systemProperty 'forge.logging.console.level', 'debug'
             systemProperty 'fml.earlyprogresswindow', 'false'
+            sourceSet = sourceSets.test
         }
 
         client {
@@ -25,10 +28,9 @@ neoForge {
         }
     }
 
-    mods {
-        "${mod_id}" {
-            sourceSet sourceSets.main
-        }
+    mods.register(project.ext.mod_id) {
+        sourceSet sourceSets.main
+        sourceSet sourceSets.test
     }
 }
 

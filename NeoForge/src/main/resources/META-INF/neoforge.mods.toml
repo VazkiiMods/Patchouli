@@ -5,23 +5,23 @@ issueTrackerURL="https://github.com/VazkiiMods/Patchouli"
 logoFile="logo.png"
 
 [[mods]]
-modId="patchouli"
-displayName="Patchouli"
-version="${file.jarVersion}"
-authors="Vazkii"
+modId="${mod_id}"
+displayName="${mod_name}"
+version="${version}"
+authors="Vazkii, williewillus"
 description='''
-Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and Pack Makers
+${mod_description}
 '''
 
 [[dependencies.patchouli]]
 modId="neoforge"
 type="REQUIRED"
-versionRange="[26.1.0.1-beta,26.2)"
+versionRange="${neoforge_version_range}"
 
 [[dependencies.patchouli]]
 modId="minecraft"
 type="REQUIRED"
-versionRange="[26.1,26.2)"
+versionRange="[${mc_min_version},${mc_max_version})"
 
 [[mixins]]
 config="patchouli_xplat.mixins.json"
