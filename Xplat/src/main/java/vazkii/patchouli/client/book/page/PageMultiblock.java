@@ -5,9 +5,18 @@ import com.mojang.math.Axis;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
+import net.minecraft.client.renderer.block.BlockModelResolver;
+import net.minecraft.client.renderer.block.model.BlockDisplayContext;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import vazkii.patchouli.api.IMultiblock;
@@ -21,10 +30,13 @@ import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.gui.button.GuiButtonBookEye;
 import vazkii.patchouli.client.book.page.abstr.PageWithText;
 import vazkii.patchouli.client.handler.MultiblockVisualizationHandler;
-import vazkii.patchouli.common.multiblock.AbstractMultiblock;
+import vazkii.patchouli.client.multiblock.MultiblockPiPRenderState;
 import vazkii.patchouli.common.multiblock.MultiblockRegistry;
 import vazkii.patchouli.common.multiblock.SerializedMultiblock;
 import vazkii.patchouli.xplat.IClientXplatAbstractions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PageMultiblock extends PageWithText {
 
@@ -35,18 +47,15 @@ public class PageMultiblock extends PageWithText {
 
 	@SerializedName("enable_visualize") boolean showVisualizeButton = true;
 
-	private transient AbstractMultiblock multiblockObj;
+	private transient final Camera camera = new Camera();
+	private transient IMultiblock multiblockObj;
 	private transient Button visualizeButton;
 
 	@Override
 	public void build(Level level, BookEntry entry, BookContentsBuilder builder, int pageNum) {
 		super.build(level, entry, builder, pageNum);
 		if (multiblockId != null) {
-			IMultiblock mb = MultiblockRegistry.MULTIBLOCKS.get(multiblockId);
-
-			if (mb instanceof AbstractMultiblock) {
-				multiblockObj = (AbstractMultiblock) mb;
-			}
+			multiblockObj = MultiblockRegistry.MULTIBLOCKS.get(multiblockId);
 		}
 
 		if (multiblockObj == null && serializedMultiblock != null) {
@@ -86,7 +95,28 @@ public class PageMultiblock extends PageWithText {
 			if (!mc.hasShiftDown()) {
 				time += ClientTicker.partialTicks;
 			}
-			IClientXplatAbstractions.INSTANCE.submitMultiblockPiP(graphics, multiblockObj, 1, new Vector3f(), Axis.YP.rotationDegrees(time).mul(Axis.YP.rotationDegrees(45)), 0, 0, 106, 106);
+
+			var simulated = multiblockObj.simulate(mc.level, BlockPos.ZERO, Rotation.NONE, true);
+			camera.setSceneOrigin(simulated.getFirst().getCenter());
+			camera.setYaw(time);
+
+			List<MultiblockPiPRenderState.BlockRenderState> blocks = new ArrayList<>();
+			BlockModelResolver blockModelResolver = new BlockModelResolver(mc.getModelManager());
+			BlockDisplayContext context = BlockDisplayContext.create();
+			for (IMultiblock.SimulateResult simulateResult : simulated.getSecond()) {
+				BlockPos pos = simulateResult.getWorldPosition();
+				BlockState state = simulateResult.getStateMatcher().getDisplayedState(Math.round(time));
+
+				if (state.isAir())
+					continue;
+
+				BlockModelRenderState modelRenderState = new BlockModelRenderState();
+				blockModelResolver.update(modelRenderState, state, context);
+				blocks.add(new MultiblockPiPRenderState.BlockRenderState(pos.immutable(), modelRenderState));
+			}
+
+			Matrix4f viewMatrix = camera.viewMatrix();
+			IClientXplatAbstractions.INSTANCE.submitPiPRenderState(graphics, scissor -> new MultiblockPiPRenderState(0, 0, 106, 106, 1f, scissor, viewMatrix, blocks));
 		}
 
 		super.extractRenderState(graphics, mouseX, mouseY, pticks);
@@ -101,6 +131,122 @@ public class PageMultiblock extends PageWithText {
 		if (!PersistentData.data.clickedVisualize) {
 			PersistentData.data.clickedVisualize = true;
 			PersistentData.save();
+		}
+	}
+
+	// Code donated by EnderIO
+	public static final class Camera {
+		private static final Quaternionf ROT_180_Z = Axis.ZP.rotation((float) Math.PI);
+
+		private Vec3 sceneOrigin;
+
+		private float scale = 20;
+		private float pitch;
+		private float yaw;
+
+		private Quaternionf blockTransform;
+		private Matrix4f viewMatrix;
+		private boolean isDirty = true;
+
+		public Camera(Vector3f sceneOrigin, float scale, float pitch, float yaw) {
+			this.sceneOrigin = new Vec3(sceneOrigin.x, sceneOrigin.y, sceneOrigin.z);
+			this.scale = scale;
+			this.pitch = pitch;
+			this.yaw = yaw;
+		}
+
+		public Camera() {
+			this(new Vector3f(), 1, 0, 0);
+		}
+
+		public Vec3 sceneOrigin() {
+			return sceneOrigin;
+		}
+
+		public float scale() {
+			return scale;
+		}
+
+		public float pitch() {
+			return pitch;
+		}
+
+		public float yaw() {
+			return yaw;
+		}
+
+		public void setSceneOrigin(Vec3 sceneOrigin) {
+			if (this.sceneOrigin.equals(sceneOrigin)) {
+				return;
+			}
+
+			this.sceneOrigin = sceneOrigin;
+			isDirty = true;
+		}
+
+		public void setScale(float scale) {
+			if (this.scale == scale) {
+				return;
+			}
+
+			this.scale = scale;
+			isDirty = true;
+		}
+
+		public void setPitch(float pitch) {
+			if (this.pitch == pitch) {
+				return;
+			}
+
+			this.pitch = pitch;
+			isDirty = true;
+		}
+
+		public void setYaw(float yaw) {
+			if (this.yaw == yaw) {
+				return;
+			}
+
+			this.yaw = yaw;
+			isDirty = true;
+		}
+
+		public Quaternionf blockTransform() {
+			if (isDirty) {
+				recompute();
+			}
+
+			return blockTransform;
+		}
+
+		public Matrix4f viewMatrix() {
+			if (isDirty) {
+				recompute();
+			}
+
+			return viewMatrix;
+		}
+
+		private void recompute() {
+			// Compute rotation
+			Quaternionf rotPitch = Axis.XN.rotationDegrees(pitch);
+			Quaternionf rotYaw = Axis.YP.rotationDegrees(yaw);
+
+			// Build block transformation matrix
+			// Rotate 180 around Z, otherwise the block is upside down
+			blockTransform = new Quaternionf(ROT_180_Z);
+			// Rotate around X (pitch) in negative direction
+			blockTransform.mul(rotPitch);
+			// Rotate around Y (yaw)
+			blockTransform.mul(rotYaw);
+
+			// Create view matrix
+			viewMatrix = new Matrix4f();
+			viewMatrix.scale(scale, scale, scale);
+			viewMatrix.rotate(blockTransform);
+			viewMatrix.translate((float) -sceneOrigin.x, (float) -sceneOrigin.y, (float) -sceneOrigin.z);
+
+			isDirty = false;
 		}
 	}
 }

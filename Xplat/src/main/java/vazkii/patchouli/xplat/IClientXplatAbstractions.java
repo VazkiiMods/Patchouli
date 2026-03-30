@@ -4,18 +4,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
+import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndLightGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
+import org.jspecify.annotations.Nullable;
 
 import vazkii.patchouli.api.PatchouliAPI;
-import vazkii.patchouli.common.multiblock.AbstractMultiblock;
 
 import java.util.ServiceLoader;
 import java.util.function.Function;
@@ -41,5 +41,7 @@ public interface IClientXplatAbstractions {
 
 	void submitGuiElement(GuiGraphicsExtractor graphics, GuiElementRenderState renderState);
 
-	void submitMultiblockPiP(GuiGraphicsExtractor graphics, AbstractMultiblock multiblock, float scale, Vector3f translation, Quaternionf rotation, int x0, int y0, int x1, int y1);
+	void submitPiPRenderState(GuiGraphicsExtractor graphics, Function<@Nullable ScreenRectangle, PictureInPictureRenderState> factory);
+
+	void submitPiPRenderState(GuiGraphicsExtractor graphics, PictureInPictureRenderState renderState);
 }

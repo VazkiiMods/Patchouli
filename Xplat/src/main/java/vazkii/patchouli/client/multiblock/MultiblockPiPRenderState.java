@@ -1,51 +1,49 @@
 package vazkii.patchouli.client.multiblock;
 
 import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
 import net.minecraft.client.renderer.state.gui.pip.PictureInPictureRenderState;
+import net.minecraft.core.BlockPos;
 
-import org.joml.Matrix3x2f;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
-
-import vazkii.patchouli.common.multiblock.AbstractMultiblock;
+import org.joml.*;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public record MultiblockPiPRenderState(
-		AbstractMultiblock multiblock,
-		Vector3f translation,
-		Quaternionf rotation,
 		int x0,
 		int y0,
 		int x1,
 		int y1,
 		float scale,
-		Matrix3x2f pose,
 		@Nullable ScreenRectangle scissorArea,
-		@Nullable ScreenRectangle bounds) implements PictureInPictureRenderState {
+		@Nullable ScreenRectangle bounds,
+		Matrix4f viewMatrix,
+		List<BlockRenderState> multiblock) implements PictureInPictureRenderState {
+
 	public MultiblockPiPRenderState(
-			AbstractMultiblock multiblock,
-			Vector3f translation,
-			Quaternionf rotation,
 			int x0,
 			int y0,
 			int x1,
 			int y1,
 			float scale,
-			Matrix3x2f pose,
-			@Nullable ScreenRectangle scissorArea) {
+			@Nullable ScreenRectangle scissorArea,
+			Matrix4f viewMatrix,
+			List<BlockRenderState> multiblock) {
 		this(
-				multiblock,
-				translation,
-				rotation,
 				x0,
 				y0,
 				x1,
 				y1,
 				scale,
-				pose,
 				scissorArea,
-				PictureInPictureRenderState.getBounds(x0, y0, x1, y1, scissorArea)
+				PictureInPictureRenderState.getBounds(x0, y0, x1, y1, scissorArea),
+				viewMatrix,
+				multiblock
 		);
+	}
+
+	public record BlockRenderState(BlockPos pos, BlockModelRenderState blockModelRenderState) {
 	}
 }
