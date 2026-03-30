@@ -79,7 +79,7 @@ public class NeoForgeClientInitializer {
 			e.registerBelow(VanillaGuiLayers.BOSS_OVERLAY, MultiblockProgressHud.ID, MultiblockProgressHud::extractRenderState);
 		});
 		modBus.addListener((RegisterPictureInPictureRenderersEvent e) -> {
-			e.register(MultiblockPiPRenderState.class, bufferSource -> new MultiblockPiPRenderer(bufferSource, Minecraft.getInstance(), Minecraft.getInstance().gameRenderer.getSubmitNodeStorage()));
+			e.register(MultiblockPiPRenderState.class, MultiblockPiPRenderer::new);
 		});
 
 	}

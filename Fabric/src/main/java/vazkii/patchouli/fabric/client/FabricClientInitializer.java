@@ -54,6 +54,6 @@ public class FabricClientInitializer implements ClientModInitializer {
 		LevelRenderEvents.END_MAIN.register(context -> {
 			MultiblockVisualizationHandler.INSTANCE.onWorldRenderLast(context.poseStack(), context.levelState().cameraRenderState.viewRotationMatrix);
 		});
-		PictureInPictureRendererRegistry.register(ctx -> new MultiblockPiPRenderer(ctx.bufferSource(), ctx.minecraft(), ctx.submitNodeCollector()));
+		PictureInPictureRendererRegistry.register(ctx -> new MultiblockPiPRenderer(ctx.bufferSource()));
 	}
 }

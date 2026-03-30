@@ -13,10 +13,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import vazkii.patchouli.api.IMultiblock;
@@ -97,8 +97,8 @@ public class PageMultiblock extends PageWithText {
 			}
 
 			var simulated = multiblockObj.simulate(mc.level, BlockPos.ZERO, Rotation.NONE, true);
-			camera.setSceneOrigin(simulated.getFirst().getCenter());
-			camera.setYaw(time);
+			camera.setSceneOrigin(simulated.getFirst().getCenter().toVector3f());
+			//camera.setYaw(time);
 
 			List<MultiblockPiPRenderState.BlockRenderState> blocks = new ArrayList<>();
 			BlockModelResolver blockModelResolver = new BlockModelResolver(mc.getModelManager());
@@ -115,11 +115,29 @@ public class PageMultiblock extends PageWithText {
 				blocks.add(new MultiblockPiPRenderState.BlockRenderState(pos.immutable(), modelRenderState));
 			}
 
-			Matrix4f viewMatrix = camera.viewMatrix();
-			IClientXplatAbstractions.INSTANCE.submitPiPRenderState(graphics, scissor -> new MultiblockPiPRenderState(0, 0, 106, 106, 1f, scissor, viewMatrix, blocks));
+			if (!blocks.isEmpty()) {
+				graphics.pose().pushMatrix();
+				graphics.pose().translate(x + 4, y + 4);
+				Matrix4f viewMatrix = camera.viewMatrix();
+				renderMultiblock(graphics, 0, 0, 99, 99, viewMatrix, blocks);
+				graphics.pose().popMatrix();
+			}
 		}
 
 		super.extractRenderState(graphics, mouseX, mouseY, pticks);
+	}
+
+	private static void renderMultiblock(GuiGraphicsExtractor graphics, int x, int y, int width, int height, Matrix4f viewMatrix, List<MultiblockPiPRenderState.BlockRenderState> blocks) {
+		Vector2f position = graphics.pose().transformPosition(x, y, new Vector2f());
+
+		int startX = Math.round(position.x) + 25;
+		int startY = Math.round(position.y) + 50;
+		int endX = startX + width;
+		int endY = startY + height;
+		graphics.enableScissor(0, 0, width, height);
+		//graphics.fill(RenderPipelines.GUI, -10, -10, 110, 110, 0xFF000000);
+		IClientXplatAbstractions.INSTANCE.submitPiPRenderState(graphics, scissor -> new MultiblockPiPRenderState(startX, startY, endX, endY, 1f, scissor, viewMatrix, blocks));
+		graphics.disableScissor();
 	}
 
 	public void handleButtonVisualize(Button button) {
@@ -138,9 +156,9 @@ public class PageMultiblock extends PageWithText {
 	public static final class Camera {
 		private static final Quaternionf ROT_180_Z = Axis.ZP.rotation((float) Math.PI);
 
-		private Vec3 sceneOrigin;
+		private Vector3f sceneOrigin;
 
-		private float scale = 20;
+		private float scale;
 		private float pitch;
 		private float yaw;
 
@@ -149,17 +167,17 @@ public class PageMultiblock extends PageWithText {
 		private boolean isDirty = true;
 
 		public Camera(Vector3f sceneOrigin, float scale, float pitch, float yaw) {
-			this.sceneOrigin = new Vec3(sceneOrigin.x, sceneOrigin.y, sceneOrigin.z);
+			this.sceneOrigin = new Vector3f(sceneOrigin.x, sceneOrigin.y, sceneOrigin.z);
 			this.scale = scale;
 			this.pitch = pitch;
 			this.yaw = yaw;
 		}
 
 		public Camera() {
-			this(new Vector3f(), 1, 0, 0);
+			this(new Vector3f(), 20, 0, 0);
 		}
 
-		public Vec3 sceneOrigin() {
+		public Vector3f sceneOrigin() {
 			return sceneOrigin;
 		}
 
@@ -175,7 +193,7 @@ public class PageMultiblock extends PageWithText {
 			return yaw;
 		}
 
-		public void setSceneOrigin(Vec3 sceneOrigin) {
+		public void setSceneOrigin(Vector3f sceneOrigin) {
 			if (this.sceneOrigin.equals(sceneOrigin)) {
 				return;
 			}
@@ -243,8 +261,8 @@ public class PageMultiblock extends PageWithText {
 			// Create view matrix
 			viewMatrix = new Matrix4f();
 			viewMatrix.scale(scale, scale, scale);
+			viewMatrix.translate(-sceneOrigin.x, -sceneOrigin.y, -sceneOrigin.z);
 			viewMatrix.rotate(blockTransform);
-			viewMatrix.translate((float) -sceneOrigin.x, (float) -sceneOrigin.y, (float) -sceneOrigin.z);
 
 			isDirty = false;
 		}
