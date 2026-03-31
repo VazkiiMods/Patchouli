@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.LightCoordsUtil;
-import net.minecraft.world.phys.Vec3;
 
 // Code adapted from EnderIO
 public final class MultiblockPiPRenderer extends PictureInPictureRenderer<MultiblockPiPRenderState> {
@@ -38,7 +37,7 @@ public final class MultiblockPiPRenderer extends PictureInPictureRenderer<Multib
 		this.gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_3D);
 		for (var block : renderState.multiblock()) {
 			poseStack.pushPose();
-			poseStack.translate(new Vec3(block.pos()));
+			poseStack.translate(block.pos().getCenter());
 			block.blockModelRenderState().submit(poseStack, this.submitNodeCollector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
 			poseStack.popPose();
 		}

@@ -5,6 +5,7 @@ import com.mojang.math.Axis;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.block.BlockModelRenderState;
 import net.minecraft.client.renderer.block.BlockModelResolver;
 import net.minecraft.client.renderer.block.model.BlockDisplayContext;
@@ -39,6 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PageMultiblock extends PageWithText {
+	private static final int WIDTH = 99;
+	private static final int HEIGHT = 99;
+	private static boolean debug = false;
 
 	String name = "";
 	@SerializedName("multiblock_id") Identifier multiblockId;
@@ -83,11 +87,11 @@ public class PageMultiblock extends PageWithText {
 
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float pticks) {
-		int x = GuiBook.PAGE_WIDTH / 2 - 53;
-		int y = 7;
-		GuiBook.drawFromTexture(graphics, book, x, y, 405, 149, 106, 106);
+		graphics.pose().pushMatrix();
+		graphics.pose().translate(GuiBook.PAGE_WIDTH / 2f, 0);
+		GuiBook.drawFromTexture(graphics, book, -53, 7, 405, 149, WIDTH + 7, HEIGHT + 7);
 
-		parent.drawCenteredStringNoShadow(graphics, i18n(name), GuiBook.PAGE_WIDTH / 2, 0, book.headerColor);
+		parent.drawCenteredStringNoShadow(graphics, i18n(name), 0, 0, book.headerColor);
 
 		if (multiblockObj != null) {
 
@@ -97,8 +101,9 @@ public class PageMultiblock extends PageWithText {
 			}
 
 			var simulated = multiblockObj.simulate(mc.level, BlockPos.ZERO, Rotation.NONE, true);
-			camera.setSceneOrigin(simulated.getFirst().getCenter().toVector3f());
-			//camera.setYaw(time);
+			//camera.setSceneOrigin(simulated.getFirst().getCenter().toVector3f());
+			camera.setYaw(time % 360);
+			camera.setPitch(30);
 
 			List<MultiblockPiPRenderState.BlockRenderState> blocks = new ArrayList<>();
 			BlockModelResolver blockModelResolver = new BlockModelResolver(mc.getModelManager());
@@ -117,27 +122,42 @@ public class PageMultiblock extends PageWithText {
 
 			if (!blocks.isEmpty()) {
 				graphics.pose().pushMatrix();
-				graphics.pose().translate(x + 4, y + 4);
-				Matrix4f viewMatrix = camera.viewMatrix();
-				renderMultiblock(graphics, 0, 0, 99, 99, viewMatrix, blocks);
+				graphics.pose().translate(-49, 11);
+				graphics.enableScissor(0, 0, WIDTH, HEIGHT);
+
+				if (debug) {
+					graphics.fill(RenderPipelines.GUI, -10, -10, WIDTH + 10, HEIGHT + 10, 0xFF000000);
+				}
+
+				graphics.pose().pushMatrix();
+				final float offsetX = (WIDTH / 2f);
+				final float offsetY = (HEIGHT / 2f);
+				graphics.pose().translate(offsetX, offsetY);
+				renderMultiblock(graphics, -offsetX, -offsetY, WIDTH, HEIGHT, camera.viewMatrix(), blocks);
+				graphics.pose().popMatrix();
+
+				if (debug) {
+					graphics.fill(RenderPipelines.GUI, Math.round(offsetX - 1), Math.round(offsetY - 1), Math.round(offsetX + 1), Math.round(offsetY + 1), 0xFFFF0000);
+				}
+
+				graphics.disableScissor();
 				graphics.pose().popMatrix();
 			}
 		}
+		graphics.pose().popMatrix();
 
 		super.extractRenderState(graphics, mouseX, mouseY, pticks);
 	}
 
-	private static void renderMultiblock(GuiGraphicsExtractor graphics, int x, int y, int width, int height, Matrix4f viewMatrix, List<MultiblockPiPRenderState.BlockRenderState> blocks) {
-		Vector2f position = graphics.pose().transformPosition(x, y, new Vector2f());
+	private static void renderMultiblock(GuiGraphicsExtractor graphics, float x, float y, int width, int height, Matrix4f viewMatrix, List<MultiblockPiPRenderState.BlockRenderState> blocks) {
+		Vector2f start = graphics.pose().transformPosition(new Vector2f(x, y));
+		Vector2f end = graphics.pose().transformPosition(new Vector2f(x + width, y + height));
 
-		int startX = Math.round(position.x) + 25;
-		int startY = Math.round(position.y) + 50;
-		int endX = startX + width;
-		int endY = startY + height;
-		graphics.enableScissor(0, 0, width, height);
-		//graphics.fill(RenderPipelines.GUI, -10, -10, 110, 110, 0xFF000000);
+		int startX = Math.round(start.x);
+		int startY = Math.round(start.y);
+		int endX = Math.round(end.x);
+		int endY = Math.round(end.y);
 		IClientXplatAbstractions.INSTANCE.submitPiPRenderState(graphics, scissor -> new MultiblockPiPRenderState(startX, startY, endX, endY, 1f, scissor, viewMatrix, blocks));
-		graphics.disableScissor();
 	}
 
 	public void handleButtonVisualize(Button button) {
