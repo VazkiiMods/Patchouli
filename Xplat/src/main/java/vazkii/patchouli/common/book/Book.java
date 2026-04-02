@@ -62,9 +62,9 @@ public class Book {
 
 	public final int textColor, headerColor, nameplateColor, linkColor, linkHoverColor, progressBarColor, progressBarBackground;
 
-	public final boolean isExternal;
-
 	// JSON Loaded properties
+
+	public final boolean useResourcePack;
 
 	public final String name;
 	public final String landingText;
@@ -116,7 +116,7 @@ public class Book {
 
 		this.owner = owner;
 		this.id = id;
-		this.isExternal = external;
+		this.useResourcePack = GsonHelper.getAsBoolean(root, "use_resource_pack", false);;
 		this.textColor = parseColor(root, "text_color", "000000");
 		this.headerColor = parseColor(root, "header_color", "333333");
 		this.nameplateColor = parseColor(root, "nameplate_color", "FFDD00");
@@ -139,8 +139,7 @@ public class Book {
 		this.i18n = GsonHelper.getAsBoolean(root, "i18n", false);
 		this.overflowMode = SerializationUtil.getAsEnum(root, "text_overflow_mode", PatchouliConfigAccess.TextOverflowMode.class, null);
 
-		boolean useResourcePack = GsonHelper.getAsBoolean(root, "use_resource_pack", false);
-		if (!this.isExternal && !useResourcePack) {
+		if (!external && !this.useResourcePack) {
 			String message = "Book %s has use_resource_pack set to false. ".formatted(this.id)
 					+ "This behaviour was removed in 1.20. "
 					+ "The book author should enable this flag and move all book contents clientside to /assets/, "
