@@ -25,7 +25,7 @@ public sealed interface BookIcon permits BookIcon.StackIcon, BookIcon.TextureIco
 		@Override
 		public void extractRenderState(GuiGraphicsExtractor graphics, int x, int y) {
 			//graphics.setColor(1F, 1F, 1F, 1F);
-			graphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture(), x, y, 16, 16);
+			graphics.blit(RenderPipelines.GUI_TEXTURED, texture(), x, y, 0, 0, 16, 16, 16, 16);
 		}
 	}
 
