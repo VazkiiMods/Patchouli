@@ -1,9 +1,9 @@
 package vazkii.patchouli.xplat;
 
-import org.jetbrains.annotations.Nullable;
+import org.apache.commons.io.function.IOSupplier;
 
+import java.io.InputStream;
 import java.nio.file.Path;
-import java.util.Collection;
 
 /**
  * Small cross-loader abstraction over mod containers
@@ -11,7 +11,10 @@ import java.util.Collection;
 public interface XplatModContainer {
 	String getId();
 	String getName();
-	@Nullable
-	Path getPath(String s);
-	Collection<Path> getRootPaths();
+	void visit(String basePath, Visitor visitor);
+
+	@FunctionalInterface
+	interface Visitor {
+		void visit(Path relativePath, IOSupplier<InputStream> file);
+	}
 }

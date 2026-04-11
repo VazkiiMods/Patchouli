@@ -4,10 +4,11 @@ import net.fabricmc.loader.api.ModContainer;
 
 import vazkii.patchouli.xplat.XplatModContainer;
 
-import org.jetbrains.annotations.Nullable;
-
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.Iterator;
 
 public class FabricXplatModContainer implements XplatModContainer {
 	private final ModContainer container;
@@ -27,12 +28,24 @@ public class FabricXplatModContainer implements XplatModContainer {
 	}
 
 	@Override
-	public @Nullable Path getPath(String file) {
-		return container.findPath(file).orElse(null);
-	}
+	public void visit(String basePath, Visitor visitor) {
+		for (Path rootPath : container.getRootPaths()) {
+			Path path = rootPath.resolve(basePath);
+			if (!Files.exists(path)) {
+				continue;
+			}
+			try (var stream = Files.walk(path, 2)) {
+				Iterator<Path> itr = stream.iterator();
 
-	@Override
-	public List<Path> getRootPaths() {
-		return container.getRootPaths();
+				while (itr.hasNext()) {
+					Path file = itr.next();
+					if (!Files.isRegularFile(file))
+						continue;
+					visitor.visit(file, () -> Files.newInputStream(file));
+				}
+			} catch (IOException e) {
+				throw new UncheckedIOException(e);
+			}
+		}
 	}
 }
