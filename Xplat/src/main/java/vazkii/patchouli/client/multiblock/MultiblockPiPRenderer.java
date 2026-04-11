@@ -7,22 +7,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.render.pip.PictureInPictureRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.SubmitNodeStorage;
 import net.minecraft.client.renderer.feature.FeatureRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.LightCoordsUtil;
 
 // Code adapted from EnderIO
 public final class MultiblockPiPRenderer extends PictureInPictureRenderer<MultiblockPiPRenderState> {
-	private final SubmitNodeCollector submitNodeCollector;
-	private final FeatureRenderDispatcher featureRenderDispatcher;
-	private final GameRenderer gameRenderer;
 
 	public MultiblockPiPRenderer(MultiBufferSource.BufferSource bufferSource) {
 		super(bufferSource);
-		this.gameRenderer = Minecraft.getInstance().gameRenderer;
-		this.featureRenderDispatcher = this.gameRenderer.getFeatureRenderDispatcher();
-		this.submitNodeCollector = this.featureRenderDispatcher.getSubmitNodeStorage();
 	}
 
 	@Override
@@ -34,14 +28,18 @@ public final class MultiblockPiPRenderer extends PictureInPictureRenderer<Multib
 	protected void renderToTexture(MultiblockPiPRenderState renderState, PoseStack poseStack) {
 		poseStack.pushPose();
 		poseStack.mulPose(renderState.viewMatrix());
-		this.gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_3D);
+		Minecraft minecraft = Minecraft.getInstance();
+		GameRenderer gameRenderer = minecraft.gameRenderer;
+		FeatureRenderDispatcher featureRenderDispatcher = gameRenderer.getFeatureRenderDispatcher();
+		SubmitNodeStorage submitNodeStorage = featureRenderDispatcher.getSubmitNodeStorage();
+		gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_3D);
 		for (var block : renderState.multiblock()) {
 			poseStack.pushPose();
 			poseStack.translate(block.pos().getCenter());
-			block.blockModelRenderState().submit(poseStack, this.submitNodeCollector, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
+			block.blockModelRenderState().submit(poseStack, submitNodeStorage, LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 0);
 			poseStack.popPose();
 		}
-		this.featureRenderDispatcher.renderAllFeatures();
+		featureRenderDispatcher.renderAllFeatures();
 		this.bufferSource.endBatch();
 		poseStack.popPose();
 	}
