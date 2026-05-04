@@ -1,7 +1,5 @@
 package vazkii.patchouli.client.handler;
 
-import com.mojang.blaze3d.pipeline.BlendFunction;
-import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
@@ -11,11 +9,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+
+import org.joml.Matrix3x2f;
+import org.jspecify.annotations.Nullable;
 
 import vazkii.patchouli.client.base.ClientTicker;
 import vazkii.patchouli.client.book.BookEntry;
@@ -26,9 +28,7 @@ import vazkii.patchouli.common.book.Book;
 import vazkii.patchouli.common.util.ItemStackUtil;
 import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
-import org.jetbrains.annotations.Nullable;
-
-public class TooltipHandler {
+public final class TooltipHandler {
 	private static float lexiconLookupTime = 0;
 
 	public static void onTooltip(GuiGraphicsExtractor graphics, ItemStack stack, int mouseX, int mouseY) {
@@ -73,7 +73,7 @@ public class TooltipHandler {
 					float requiredTime = PatchouliConfig.get().quickLookupTime();
 					float angles = lexiconLookupTime / requiredTime * 360F;
 
-					IClientXplatAbstractions.INSTANCE.submitGuiElement(graphics, new TooltipRenderState(cx, cy, angles, r));
+					IClientXplatAbstractions.INSTANCE.submitGuiElement(graphics, new TooltipRenderState(graphics.pose(), cx, cy, angles, r));
 
 					if (lexiconLookupTime >= requiredTime) {
 						mc.player.getInventory().setSelectedSlot(lexSlot);
@@ -108,56 +108,36 @@ public class TooltipHandler {
 		}
 	}
 
-	private static class TooltipRenderState implements GuiElementRenderState {
-		private final RenderPipeline pipeline;
-		private final TextureSetup textureSetup;
-		private final int cx;
-		private final int cy;
-		private final float angles;
-		private final float r;
+	private record TooltipRenderState(
+			RenderPipeline pipeline,
+			TextureSetup textureSetup,
+			Matrix3x2f pose,
+			int cx,
+			int cy,
+			float angle,
+			float r,
+			@Nullable ScreenRectangle bounds,
+			@Nullable ScreenRectangle scissorArea) implements GuiElementRenderState {
 
-		public TooltipRenderState(int cx, int cy, float angles, float r) {
-			this.cx = cx;
-			this.cy = cy;
-			this.angles = angles;
-			this.r = r;
-			pipeline = RenderPipeline.builder()
-					.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-					.build();
-			textureSetup = TextureSetup.noTexture();
+		TooltipRenderState(Matrix3x2f pose, int cx, int cy, float angle, float r) {
+			this(RenderPipelines.SUNRISE_SUNSET, TextureSetup.noTexture(), new Matrix3x2f(pose), cx, cy, angle, r, getBounds((int) (cx - r - 2), (int) (cy - r - 2), (int) (cx + r + 2), (int) (cy + r + 2), pose), null);
 		}
 
 		@Override
 		public void buildVertices(VertexConsumer buf) {
 			float a = 0.5F + 0.2F * ((float) Math.cos(ClientTicker.total / 10) * 0.5F + 0.5F);
-			buf.addVertex(cx, cy, 0).setColor(0F, 0.5F, 0F, a);
+			buf.addVertexWith2DPose(pose, cx, cy).setColor(0F, 0.5F, 0F, a);
 
-			for (float i = angles; i > 0; i--) {
+			for (float i = angle; i > 0; i--) {
 				double rad = (i - 90) / 180F * Math.PI;
-				buf.addVertex((float) (cx + Math.cos(rad) * r), (float) (cy + Math.sin(rad) * r), 0).setColor(0F, 1F, 0F, 1F);
+				buf.addVertexWith2DPose(pose, (float) (cx + Math.cos(rad) * r), (float) (cy + Math.sin(rad) * r)).setColor(0F, 1F, 0F, 1F);
 			}
 
-			buf.addVertex(cx, cy, 0).setColor(0F, 1F, 0F, 0F);
+			buf.addVertexWith2DPose(pose, cx, cy).setColor(0F, 1F, 0F, 0F);
 		}
 
-		@Override
-		public RenderPipeline pipeline() {
-			return pipeline;
-		}
-
-		@Override
-		public TextureSetup textureSetup() {
-			return textureSetup;
-		}
-
-		@Override
-		public @Nullable ScreenRectangle scissorArea() {
-			return null;
-		}
-
-		@Override
-		public @Nullable ScreenRectangle bounds() {
-			return null;
+		private static ScreenRectangle getBounds(int x0, int y0, int x1, int y1, Matrix3x2f pose) {
+			return (new ScreenRectangle(x0, y0, x1 - x0, y1 - y0)).transformMaxBounds(pose);
 		}
 	}
 }
