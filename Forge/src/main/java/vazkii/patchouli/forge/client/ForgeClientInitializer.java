@@ -30,6 +30,7 @@ import vazkii.patchouli.client.handler.TooltipHandler;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
+import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
 import java.util.List;
 import java.util.concurrent.locks.Condition;
@@ -110,6 +111,10 @@ public class ForgeClientInitializer {
 
 	@SubscribeEvent
 	public static void onInitializeClient(FMLClientSetupEvent evt) {
+		// ensure API implementations are loaded
+		PatchouliAPI.LOGGER.debug("Client API instances: {}",
+				List.of(IClientXplatAbstractions.INSTANCE));
+
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
 		MinecraftForge.EVENT_BUS.addListener((TickEvent.ClientTickEvent e) -> {

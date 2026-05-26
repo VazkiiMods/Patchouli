@@ -33,15 +33,21 @@ import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.fabric.network.FabricMessageOpenBookGui;
 import vazkii.patchouli.fabric.network.FabricMessageReloadBookContents;
+import vazkii.patchouli.xplat.IClientXplatAbstractions;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class FabricClientInitializer implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		// ensure API implementations are loaded
+		PatchouliAPI.LOGGER.debug("Client API instances: {}",
+				List.of(IClientXplatAbstractions.INSTANCE));
+
 		ClientBookRegistry.INSTANCE.init();
 		PersistentData.setup();
 		ClientTickEvents.END_CLIENT_TICK.register(ClientTicker::endClientTick);

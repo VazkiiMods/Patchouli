@@ -15,6 +15,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.RegisterEvent;
 
 import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.api.VariableHelper;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.command.OpenBookCommand;
@@ -23,11 +24,18 @@ import vazkii.patchouli.common.handler.ReloadContentsHandler;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
 import vazkii.patchouli.forge.network.ForgeNetworkHandler;
+import vazkii.patchouli.xplat.IXplatAbstractions;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = PatchouliAPI.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 @Mod(PatchouliAPI.MOD_ID)
 public class ForgeModInitializer {
 	public ForgeModInitializer() {
+		// ensure API implementations are loaded
+		PatchouliAPI.LOGGER.debug("API instances: {}",
+				List.of(PatchouliAPI.get(), IXplatAbstractions.INSTANCE, VariableHelper.instance()));
+
 		ForgePatchouliConfig.setup();
 	}
 
