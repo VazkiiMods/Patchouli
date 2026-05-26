@@ -12,6 +12,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 
+import vazkii.patchouli.api.PatchouliAPI;
+import vazkii.patchouli.api.VariableHelper;
 import vazkii.patchouli.common.base.PatchouliSounds;
 import vazkii.patchouli.common.book.BookRegistry;
 import vazkii.patchouli.common.command.OpenBookCommand;
@@ -19,10 +21,17 @@ import vazkii.patchouli.common.handler.LecternEventHandler;
 import vazkii.patchouli.common.handler.ReloadContentsHandler;
 import vazkii.patchouli.common.item.ItemModBook;
 import vazkii.patchouli.common.item.PatchouliItems;
+import vazkii.patchouli.xplat.IXplatAbstractions;
+
+import java.util.List;
 
 public class FabricModInitializer implements ModInitializer {
 	@Override
 	public void onInitialize() {
+		// ensure API implementations are loaded
+		PatchouliAPI.LOGGER.debug("API instances: {}",
+				List.of(PatchouliAPI.get(), IXplatAbstractions.INSTANCE, VariableHelper.instance()));
+
 		PatchouliSounds.submitRegistrations((id, e) -> Registry.register(BuiltInRegistries.SOUND_EVENT, id, e));
 		PatchouliItems.submitItemRegistrations((id, e) -> Registry.register(BuiltInRegistries.ITEM, id, e));
 		PatchouliItems.submitRecipeSerializerRegistrations((id, e) -> Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, e));
