@@ -21,12 +21,24 @@ import java.util.Map.Entry;
 
 public class SparseMultiblock extends AbstractMultiblock {
 	private final Map<BlockPos, IStateMatcher> data;
+	private final Map<BlockPos, IStateMatcher> bookData;
 	private final Vec3i size;
 
 	public SparseMultiblock(Map<BlockPos, IStateMatcher> data) {
 		Preconditions.checkArgument(!data.isEmpty(), "No data given to sparse multiblock!");
 		this.data = ImmutableMap.copyOf(data);
-		this.size = calculateSize();
+
+		int minX = data.keySet().stream().mapToInt(BlockPos::getX).min().getAsInt();
+		int maxX = data.keySet().stream().mapToInt(BlockPos::getX).max().getAsInt();
+		int minY = data.keySet().stream().mapToInt(BlockPos::getY).min().getAsInt();
+		int maxY = data.keySet().stream().mapToInt(BlockPos::getY).max().getAsInt();
+		int minZ = data.keySet().stream().mapToInt(BlockPos::getZ).min().getAsInt();
+		int maxZ = data.keySet().stream().mapToInt(BlockPos::getZ).max().getAsInt();
+		this.size = new Vec3i(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
+
+		ImmutableMap.Builder<BlockPos, IStateMatcher> builder = ImmutableMap.builder();
+		data.forEach((pos, matcher) -> builder.put(pos.offset(-minX, -minY, -minZ), matcher));
+		bookData = builder.build();
 	}
 
 	@Override
@@ -34,20 +46,10 @@ public class SparseMultiblock extends AbstractMultiblock {
 		return size;
 	}
 
-	private Vec3i calculateSize() {
-		int minX = data.keySet().stream().mapToInt(BlockPos::getX).min().getAsInt();
-		int maxX = data.keySet().stream().mapToInt(BlockPos::getX).max().getAsInt();
-		int minY = data.keySet().stream().mapToInt(BlockPos::getY).min().getAsInt();
-		int maxY = data.keySet().stream().mapToInt(BlockPos::getY).max().getAsInt();
-		int minZ = data.keySet().stream().mapToInt(BlockPos::getZ).min().getAsInt();
-		int maxZ = data.keySet().stream().mapToInt(BlockPos::getZ).max().getAsInt();
-		return new Vec3i(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1);
-	}
-
 	@Override
 	public BlockState getBlockState(BlockPos pos) {
 		long ticks = world != null ? world.getGameTime() : 0L;
-		return data.getOrDefault(pos, StateMatcher.AIR).getDisplayedState(ticks);
+		return bookData.getOrDefault(pos, StateMatcher.AIR).getDisplayedState(ticks);
 	}
 
 	@Override
