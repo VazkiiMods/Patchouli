@@ -136,7 +136,7 @@ public class BookContentsBuilder {
 	}
 
 	protected BookContentLoader getContentLoader() {
-		if (book.isExternal) {
+		if (!book.useResourcePack) {
 			return BookContentExternalLoader.INSTANCE;
 		}
 		// A quick reload should not reuse stale data, it is initiated by the user anyways
