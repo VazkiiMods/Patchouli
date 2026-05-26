@@ -346,9 +346,9 @@ public abstract class GuiBook extends Screen {
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-		if (scrollX < 0) {
+		if (scrollX < 0 || scrollY < 0) {
 			changePage(false, true);
-		} else if (scrollX > 0) {
+		} else if (scrollX > 0 || scrollY > 0) {
 			changePage(true, true);
 		}
 
