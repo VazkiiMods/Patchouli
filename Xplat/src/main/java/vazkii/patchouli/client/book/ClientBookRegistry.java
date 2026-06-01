@@ -31,6 +31,7 @@ public class ClientBookRegistry {
 			.registerTypeHierarchyAdapter(TemplateComponent.class, new TemplateComponentAdapter())
 			.create();
 	public String currentLang;
+	private boolean hasReloadedContents = false;
 
 	public static final ClientBookRegistry INSTANCE = new ClientBookRegistry();
 
@@ -62,10 +63,19 @@ public class ClientBookRegistry {
 	public void reload() {
 		currentLang = Minecraft.getInstance().getLanguageManager().getSelected();
 		BookRegistry.INSTANCE.reloadContents(Minecraft.getInstance().level);
+		hasReloadedContents = true;
 	}
 
 	public void reloadLocks(boolean suppressToasts) {
 		BookRegistry.INSTANCE.books.values().forEach(b -> b.reloadLocks(suppressToasts));
+	}
+
+	public boolean hasReloadedContents() {
+		return hasReloadedContents;
+	}
+
+	public void resetReloadedState() {
+		hasReloadedContents = false;
 	}
 
 	/**
@@ -73,6 +83,10 @@ public class ClientBookRegistry {
 	 * @param page    Zero-indexed page in the entry to force. Ignored if {@code entryId} is null.
 	 */
 	public void displayBookGui(ResourceLocation bookStr, @Nullable ResourceLocation entryId, int page) {
+		if (!hasReloadedContents) {
+			reload();
+		}
+
 		Minecraft mc = Minecraft.getInstance();
 		currentLang = mc.getLanguageManager().getSelected();
 

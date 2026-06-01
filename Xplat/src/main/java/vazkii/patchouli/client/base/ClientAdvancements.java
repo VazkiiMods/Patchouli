@@ -22,17 +22,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public class ClientAdvancements {
-	private static boolean gotFirstAdvPacket = false;
 
 	/* Hooked at the end of ClientAdvancementManager.read, when the advancement packet arrives clientside
 	The initial book load is done here when the first advancement packet arrives.
 	Doing it anytime before that leads to excessive toast spam because the book believes everything to be locked,
 	and then the first advancement packet unlocks everything.
+	Books may also be loaded lazily on first open via displayBookGui, for cases where
+	no advancement packet arrives before the book is opened.
 	*/
 	public static void onClientPacket() {
-		if (!gotFirstAdvPacket) {
+		if (!ClientBookRegistry.INSTANCE.hasReloadedContents()) {
 			ClientBookRegistry.INSTANCE.reload();
-			gotFirstAdvPacket = true;
 		} else {
 			ClientBookRegistry.INSTANCE.reloadLocks(false);
 		}
@@ -56,7 +56,7 @@ public class ClientAdvancements {
 	}
 
 	public static void playerLogout() {
-		gotFirstAdvPacket = false;
+		ClientBookRegistry.INSTANCE.resetReloadedState();
 	}
 
 	public static void sendBookToast(Book book) {
