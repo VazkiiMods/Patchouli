@@ -3,7 +3,7 @@ Accessible, Data-Driven, Dependency-Free Documentation for Minecraft Modders and
 
 For more information, see the [docs](https://vazkiimods.github.io/Patchouli/docs/intro).
 
-## What does the mod's name mean???1
+## What does the mod's name mean???
 https://en.touhouwiki.net/wiki/Patchouli_Knowledge
 
 ## Maven info
@@ -11,10 +11,14 @@ https://en.touhouwiki.net/wiki/Patchouli_Knowledge
 Maven artifacts are located [here](https://maven.blamejared.com/vazkii/patchouli/Patchouli/), each folder representing a version.
 
 Note: As of 1.16, intermediate (non-release) Maven builds are no longer persisted.
-That is, you must either depend on a *released* version of Patchouli, e.g. `1.16-37` or `1.16-37-FABRIC`, or specifically opt in to the bleeding-edge
-build of the next version. For example, `1.16-38-SNAPSHOT` or `1.16-38-FABRIC-SNAPSHOT` would be the current bleeding edge version of future version `1.16-38`. 
+That is, you must either depend on a *released* version of Patchouli, e.g. `26.1-94`, 
+or specifically opt in to the bleeding-edge build of the next version. For example, 
+`26.1-95-SNAPSHOT` would be the current bleeding edge version of future version `26.1-95`. 
 
-Note that `-SNAPSHOT` versions can be broken from time to time, and you are strongly discouraged from using them unless you are helping dogfood, test, or contribute to Patchouli. They may also be pruned from time to time to save disk space on the server. Do *not* rely on `-SNAPSHOT` versions for anything important!
+Note that `-SNAPSHOT` versions can be broken from time to time, and you are strongly 
+discouraged from using them unless you are helping dogfood, test, or contribute to Patchouli. 
+They may also be pruned from time to time to save disk space on the server. Do *not* rely 
+on `-SNAPSHOT` versions for anything important!
 
 In Fabric, add the following to your `build.gradle`
 ```gradle
@@ -23,27 +27,31 @@ repositories {
 }
 
 dependencies {
-    modImplementation "vazkii.patchouli:Patchouli:[VERSION]"
+    modImplementation "vazkii.patchouli:patchouli-fabric:[VERSION]"
 }
 ```
 
-In Forge, use the following:
+In NeoForge, use the following:
 ```gradle
 repositories {
     maven { url 'https://maven.blamejared.com' }
 }
 
 dependencies {
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:[VERSION]:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:[VERSION]")
+    compileOnly "vazkii.patchouli:patchouli-neoforge:[VERSION]:api"
+    runtimeOnly "vazkii.patchouli:patchouli-neoforge:[VERSION]"
 }
 ```
 
-Note: Any code not located in the package `vazkii.patchouli.api` is strictly implementation detail, and you should not rely on it as it will change without warning.
+Note: Any code not located in the package `vazkii.patchouli.api` is strictly implementation detail, 
+and you should not rely on it as it will change without warning.
 
-## Mixin Troubleshooting (Forge only)
-Patchouli uses Mixin to implement some of its features. On Forge, the game might crash when trying to launch in-dev, as ForgeGradle does not remap the refmap by itself. This can be worked around by specifying the refmap remapping manually: add [these lines](https://github.com/SpongePowered/Mixin/issues/462#issuecomment-791370319) to your build.gradle and regenerate your run configurations in the IDE afterwards.
-MixinGradle applies this fix automatically - if you are using Mixin in your project you shouldn't have to change anything.
+## Mixin Troubleshooting (Old versions using Forge only)
+Patchouli uses Mixin to implement some of its features. On Forge, the game might crash when trying 
+to launch in-dev, as ForgeGradle does not remap the refmap by itself. This can be worked around by 
+specifying the refmap remapping manually: add [these lines](https://github.com/SpongePowered/Mixin/issues/462#issuecomment-791370319) to your build.gradle and regenerate 
+your run configurations in the IDE afterwards. MixinGradle applies this fix automatically - if you 
+are using Mixin in your project you shouldn't have to change anything.
 
 ## License Information
 
@@ -67,21 +75,20 @@ will probably be in most modpacks anyways.
 From 1.18 onwards, Patchouli is developed with Fabric and Forge in the same branch of the
 same repository. This is a boon for productivity as most code can be shared without
 tedious merging of commits back and forth between branches. All code uses Mojang mappings
-(MojMap).
+(MojMap).  
+From 1.21.1 onwards, Patchouli drops support for MinecraftForge in favor of NeoForge.
 
-This scheme is based on the [Multi-Loader
-Template](https://github.com/jaredlll08/MultiLoader-Template) created by @jaredlll08 and
+This scheme is based on the [Multi-Loader Template](https://github.com/jaredlll08/MultiLoader-Template) created by @jaredlll08 and
 @Darkhax. Many thanks to them!
 
-How it works is we have three Gradle subprojects: `Xplat`, `Forge`, and `Fabric`.
+How it works is we have three Gradle subprojects: `Xplat`, `NeoForge`, and `Fabric`.
 `Xplat` contains code that is loader-agnostic. In the IDE, we set up this subproject
-using Sponge's `VanillaGradle` plugin, which sets up a basic Mojmap-mapped game JAR to aid
-in auto-complete, etc. while coding.  However, this subproject is not actually compiled on
-its own.
+using the NeoForge `ModDevGradle` plugin, which sets up a basic Mojmap-mapped game JAR to aid
+in auto-complete, etc. while coding.
 
-Instead, the loader-specific subprojects `Forge` and `Fabric` include the source of
-`Xplat` into their own sources when compiling. The loader-specific subprojects use the
-native loader's tools (ForgeGradle and Loom, respectively), so in nearly all respects this
+The loader-specific subprojects `NeoForge` and `Fabric` include the source of `Xplat` 
+into their own sources when compiling. The loader-specific subprojects use the
+native loader's tools (ModDevGradle and Loom, respectively), so in nearly all respects this
 is the same as copying and pasting the `Xplat` code into the loader-specific subproject.
 
 If a loader needs to be temporarily disabled, simply comment it out in `settings.gradle`.
@@ -96,9 +103,9 @@ If a loader needs to be temporarily disabled, simply comment it out in `settings
 4. Increment the build number in `gradle.properties` of the next release. Commit this
    separately.
 5. Push the branch and tag: `git push origin <branch> <tag>`
-6. Wait a bit and the binaries should magically be published to GitHub, CurseForge, and Modrinth for you
+6. Wait a bit and the binaries should magically be published to GitHub, CurseForge, and Modrinth 
+   for you.
 
 ## Signing
-Releases starting from 1.19.4-79 are signed with the Violet Moon signing key, see [this
-page](https://github.com/VazkiiMods/.github/blob/main/security/README.md) for information
-about how to verify the artifacts.
+Releases starting from 1.19.4-79 are signed with the Violet Moon signing key, see [this page](https://github.com/VazkiiMods/.github/blob/main/security/README.md) 
+for information about how to verify the artifacts.
