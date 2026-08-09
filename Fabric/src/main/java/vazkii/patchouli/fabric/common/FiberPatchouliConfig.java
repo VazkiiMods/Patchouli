@@ -30,7 +30,8 @@ public class FiberPatchouliConfig {
 	public static PropertyMirror<List<String>> noAdvancementBooks = PropertyMirror.create(ConfigTypes.makeList(ConfigTypes.STRING));
 	public static PropertyMirror<Boolean> testingMode = PropertyMirror.create(ConfigTypes.BOOLEAN);
 	public static PropertyMirror<String> inventoryButtonBook = PropertyMirror.create(ConfigTypes.STRING);
-	public static PropertyMirror<Boolean> useShiftForQuickLookup = PropertyMirror.create(ConfigTypes.BOOLEAN);
+  private static final EnumConfigType<PatchouliConfigAccess.QuickLookupMode> QUICK_LOOKUP_TYPE = ConfigTypes.makeEnum(PatchouliConfigAccess.QuickLookupMode.class);
+	public static PropertyMirror<PatchouliConfigAccess.QuickLookupMode> quickLookupMode = PropertyMirror.create(QUICK_LOOKUP_TYPE);
 	private static final EnumConfigType<PatchouliConfigAccess.TextOverflowMode> OVERFLOW_TYPE = ConfigTypes.makeEnum(PatchouliConfigAccess.TextOverflowMode.class);
 	public static PropertyMirror<PatchouliConfigAccess.TextOverflowMode> overflowMode = PropertyMirror.create(OVERFLOW_TYPE);
 	public static PropertyMirror<Integer> quickLookupTime = PropertyMirror.create(ConfigTypes.INTEGER);
@@ -52,9 +53,9 @@ public class FiberPatchouliConfig {
 			.withComment("Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.")
 			.finishValue(inventoryButtonBook::mirror)
 
-			.beginValue("useShiftForQuickLookup", ConfigTypes.BOOLEAN, false)
-			.withComment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
-			.finishValue(useShiftForQuickLookup::mirror)
+			.beginValue("quickLookupMode", QUICK_LOOKUP_TYPE, PatchouliConfigAccess.QuickLookupMode.CTRL)
+			.withComment("Set the modifier key (CTRL, SHIFT, or ALT) to use for the inventory quick lookup feature.")
+			.finishValue(quickLookupMode::mirror)
 
 			.beginValue("textOverflowMode", OVERFLOW_TYPE, PatchouliConfigAccess.TextOverflowMode.RESIZE)
 			.withComment("Set how to handle text overflow: OVERFLOW the text off the page, TRUNCATE overflowed text, or RESIZE everything to fit. Relogin after changing.")
@@ -96,9 +97,7 @@ public class FiberPatchouliConfig {
 			}
 
 			@Override
-			public boolean useShiftForQuickLookup() {
-				return useShiftForQuickLookup.getValue();
-			}
+			public QuickLookupMode quickLookupMode() { return quickLookupMode.getValue(); }
 
 			@Override
 			public TextOverflowMode overflowMode() {

@@ -11,11 +11,21 @@ public interface PatchouliConfigAccess {
 
 	String inventoryButtonBook();
 
-	boolean useShiftForQuickLookup();
+	QuickLookupMode quickLookupMode();
+
+  default boolean useShiftForQuickLookup() {
+    return quickLookupMode() == QuickLookupMode.SHIFT;
+  }
 
 	TextOverflowMode overflowMode();
 
 	int quickLookupTime();
+
+  enum QuickLookupMode {
+    CTRL,
+    SHIFT,
+    ALT
+  }
 
 	enum TextOverflowMode {
 		OVERFLOW,

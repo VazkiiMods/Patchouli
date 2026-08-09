@@ -62,7 +62,12 @@ public class TooltipHandler {
 				graphics.fill(x - 4, tooltipY - 4, x + 20, tooltipY + 26, 0x44000000);
 				graphics.fill(x - 6, tooltipY - 6, x + 22, tooltipY + 28, 0x44000000);
 
-				if (PatchouliConfig.get().useShiftForQuickLookup() ? Screen.hasShiftDown() : Screen.hasControlDown()) {
+
+        if (switch (PatchouliConfig.get().quickLookupMode()) {
+          case CTRL -> Screen.hasControlDown();
+          case SHIFT -> Screen.hasShiftDown();
+          case ALT -> Screen.hasAltDown();
+        }) {
 					lexiconLookupTime += ClientTicker.delta;
 
 					int cx = x + 8;
@@ -111,8 +116,11 @@ public class TooltipHandler {
 
 				graphics.pose().scale(0.5F, 0.5F, 1F);
 				boolean mac = Minecraft.ON_OSX;
-				Component key = Component.literal(PatchouliConfig.get().useShiftForQuickLookup() ? "Shift" : mac ? "Cmd" : "Ctrl")
-						.withStyle(ChatFormatting.BOLD);
+				Component key = Component.literal(switch (PatchouliConfig.get().quickLookupMode()) {
+          case CTRL -> mac ? "Cmd" : "Ctrl";
+          case SHIFT -> "Shift";
+          case ALT -> "Alt";
+        }).withStyle(ChatFormatting.BOLD);
 				graphics.drawString(mc.font, key, (x + 10) * 2 - 16, (tooltipY + 8) * 2 + 20, 0xFFFFFFFF, true);
 				graphics.pose().popPose();
 
