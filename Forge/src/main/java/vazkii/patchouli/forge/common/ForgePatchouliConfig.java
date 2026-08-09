@@ -5,6 +5,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 
+import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.api.PatchouliConfigAccess;
 import vazkii.patchouli.common.base.PatchouliConfig;
 
@@ -16,7 +17,7 @@ public class ForgePatchouliConfig {
 	public static final ForgeConfigSpec.ConfigValue<List<? extends String>> noAdvancementBooks;
 	public static final ForgeConfigSpec.ConfigValue<Boolean> testingMode;
 	public static final ForgeConfigSpec.ConfigValue<String> inventoryButtonBook;
-	public static final ForgeConfigSpec.ConfigValue<Boolean> useShiftForQuickLookup;
+	public static final ForgeConfigSpec.ConfigValue<PatchouliConfigAccess.QuickLookupMode> quickLookupMode;
 	public static final ForgeConfigSpec.EnumValue<PatchouliConfigAccess.TextOverflowMode> overflowMode;
 	public static final ForgeConfigSpec.ConfigValue<Integer> quickLookupTime;
 
@@ -40,9 +41,9 @@ public class ForgePatchouliConfig {
 				.comment("Set this to the ID of a book to have it show up in players' inventories, replacing the recipe book.")
 				.define("inventoryButtonBook", "");
 
-		useShiftForQuickLookup = builder
-				.comment("Set this to true to use Shift instead of Ctrl for the inventory quick lookup feature.")
-				.define("useShiftForQuickLookup", false);
+		quickLookupMode = builder
+				.comment("Set the modifier key (CTRL, SHIFT, or ALT) to use for the inventory quick lookup feature.")
+				.defineEnum("quickLookupMode", PatchouliConfigAccess.QuickLookupMode.CTRL);
 
 		overflowMode = builder
 				.comment("Set how text overflow should be coped with: overflow the text off the page, truncate overflowed text, or resize everything to fit. Relogin after changing.")
@@ -82,9 +83,7 @@ public class ForgePatchouliConfig {
 			}
 
 			@Override
-			public boolean useShiftForQuickLookup() {
-				return useShiftForQuickLookup.get();
-			}
+			public QuickLookupMode quickLookupMode() { return quickLookupMode.get(); }
 
 			@Override
 			public TextOverflowMode overflowMode() {

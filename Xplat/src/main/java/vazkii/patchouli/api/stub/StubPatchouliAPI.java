@@ -66,9 +66,10 @@ public class StubPatchouliAPI implements IPatchouliAPI {
 				return "";
 			}
 
+      @NotNull
 			@Override
-			public boolean useShiftForQuickLookup() {
-				return false;
+			public QuickLookupMode quickLookupMode() {
+				return QuickLookupMode.CTRL;
 			}
 
 			@NotNull
