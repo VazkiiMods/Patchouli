@@ -24,18 +24,7 @@ import java.util.Map;
 public class PatchouliJeiPlugin implements IModPlugin {
 	private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, PatchouliAPI.MOD_ID);
 
-	private static final KeyMapping showRecipe, showUses;
-
 	private static IJeiRuntime jeiRuntime;
-
-	static {
-		Map<String, KeyMapping> allKeyMappings = AccessorKeyMapping.getAllKeyMappings();
-		showRecipe = allKeyMappings.get("key.jei.showRecipe");
-		showUses = allKeyMappings.get("key.jei.showUses");
-		if (showRecipe == null || showUses == null) {
-			PatchouliAPI.LOGGER.warn("Could not locate JEI keybindings, lookups in books may not work");
-		}
-	}
 
 	@NotNull
 	@Override
@@ -58,7 +47,16 @@ public class PatchouliJeiPlugin implements IModPlugin {
 		PatchouliJeiPlugin.jeiRuntime = jeiRuntime;
 	}
 
+	@Override
+	public void onRuntimeUnavailable() {
+		PatchouliJeiPlugin.jeiRuntime = null;
+	}
+
 	public static boolean handleRecipeKeybind(int keyCode, int scanCode, ItemStack stack) {
+		if (jeiRuntime == null) return false;
+		Map<String, KeyMapping> allKeyMappings = AccessorKeyMapping.getAllKeyMappings();
+		KeyMapping showRecipe = allKeyMappings.get("key.jei.showRecipe");
+		KeyMapping showUses = allKeyMappings.get("key.jei.showUses");
 		if (showRecipe != null && showRecipe.matches(keyCode, scanCode)) {
 			var focus = jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.OUTPUT, VanillaTypes.ITEM_STACK, stack);
 			jeiRuntime.getRecipesGui().show(focus);
