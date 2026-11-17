@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.page;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -39,7 +40,7 @@ public class PageSpotlight extends PageWithText {
 		int h = 26;
 
 		//RenderSystem.enableBlend();
-		graphics.blit(book.craftingTexture, GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 256);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, book.craftingTexture, GuiBook.PAGE_WIDTH / 2 - w / 2, 10, 0, 128 - h, w, h, 128, 256);
 
 		Component toDraw;
 		if (title != null && !title.isEmpty()) {

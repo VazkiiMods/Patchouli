@@ -3,6 +3,7 @@ package vazkii.patchouli.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +31,7 @@ public class GuiButtonInventoryBook extends Button {
 		//graphics.setColor(1F, 1F, 1F, 1F);
 
 		boolean hovered = mouseX >= getX() && mouseY >= getY() && mouseX < getX() + width && mouseY < getY() + height;
-		graphics.blit(Identifier.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "textures/gui/inventory_button.png"), getX(), getY(), (hovered ? 20 : 0), 0, width, height, 64, 64);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "textures/gui/inventory_button.png"), getX(), getY(), (hovered ? 20 : 0), 0, width, height, 64, 64);
 
 		ItemStack stack = book.getBookItem();
 		graphics.item(stack, getX() + 2, getY() + 2);

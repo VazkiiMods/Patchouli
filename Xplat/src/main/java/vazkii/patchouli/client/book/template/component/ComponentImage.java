@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.template.component;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 
@@ -49,7 +50,7 @@ public class ComponentImage extends TemplateComponent {
 		graphics.pose().scale(scale, scale);
 		//graphics.setColor(1F, 1F, 1F, 1F);
 		//RenderSystem.enableBlend();
-		graphics.blit(resource, 0, 0, u, v, width, height, textureWidth, textureHeight);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, resource, 0, 0, u, v, width, height, textureWidth, textureHeight);
 		graphics.pose().popMatrix();
 	}
 

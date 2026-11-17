@@ -3,6 +3,7 @@ package vazkii.patchouli.client.book.template.component;
 import com.google.gson.annotations.SerializedName;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 
@@ -47,7 +48,7 @@ public class ComponentItemStack extends TemplateComponent {
 		if (framed) {
 			//RenderSystem.enableBlend();
 			//graphics.setColor(1F, 1F, 1F, 1F);
-			graphics.blit(page.book.craftingTexture, x - 5, y - 5, 20, 102, 26, 26, 128, 256);
+			graphics.blit(RenderPipelines.GUI_TEXTURED, page.book.craftingTexture, x - 5, y - 5, 20, 102, 26, 26, 128, 256);
 		}
 
 		page.parent.renderItemStack(graphics, x, y, mouseX, mouseY, items[(page.parent.ticksInBook / 20) % items.length]);

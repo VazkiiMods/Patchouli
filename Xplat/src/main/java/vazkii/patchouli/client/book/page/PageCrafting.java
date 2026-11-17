@@ -29,7 +29,7 @@ public class PageCrafting extends PageDoubleRecipeRegistry<Recipe<?>, RecipeDisp
 		if (!shaped) {
 			int iconX = recipeX + 62;
 			int iconY = recipeY + 2;
-			graphics.blit(book.craftingTexture, iconX, iconY, 0, 64, 11, 11, 128, 256);
+			graphics.blit(RenderPipelines.GUI_TEXTURED, book.craftingTexture, iconX, iconY, 0, 64, 11, 11, 128, 256);
 			if (parent.isMouseInRelativeRange(mouseX, mouseY, iconX, iconY, 11, 11)) {
 				parent.setTooltip(Component.translatable("patchouli.gui.lexicon.shapeless"));
 			}

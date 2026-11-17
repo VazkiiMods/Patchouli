@@ -555,7 +555,7 @@ public abstract class GuiBook extends Screen {
 	}
 
 	public static void drawPageFiller(GuiGraphicsExtractor graphics, Book book, int x, int y) {
-		graphics.blit(book.fillerTexture, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
+		graphics.blit(RenderPipelines.GUI_TEXTURED, book.fillerTexture, x + PAGE_WIDTH / 2 - 64, y + PAGE_HEIGHT / 2 - 74, 0, 0, 128, 128, 128, 128);
 	}
 
 	public static void playBookFlipSound(Book book) {
