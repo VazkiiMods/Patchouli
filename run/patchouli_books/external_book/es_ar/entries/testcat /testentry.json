@@ -1,0 +1,11 @@
+{
+  "name": "Quemado",
+  "icon": "minecraft:writable_book",
+  "category": "patchouli:testcat",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Fuera"
+    }
+  ]
+}
